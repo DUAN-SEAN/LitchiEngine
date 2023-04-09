@@ -30,7 +30,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 
 # Link dependencies    
 # target_link_libraries(${TARGET_NAME} PUBLIC imgui)
-#target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
+target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)
 
 #if(ENABLE_PHYSICS_DEBUG_RENDERER)
