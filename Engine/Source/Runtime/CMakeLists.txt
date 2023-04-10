@@ -19,11 +19,13 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 
 
 include_directories("../../ThridParty/glm-release/glm")
+include_directories("../../ThridParty/glfw/deps")
 
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
 # include(CMakeLists.txt.Physx)
 
-add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+# add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # 设置Target工程 C++17版本
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17)
@@ -36,7 +38,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 
 # Link dependencies    
 # target_link_libraries(${TARGET_NAME} PUBLIC imgui)
-target_link_libraries(${TARGET_NAME} PRIVATE glm)
+# target_link_libraries(${TARGET_NAME} PUBLIC glm)
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)
 # target_link_libraries(${TARGET_NAME} PUBLIC physX)
