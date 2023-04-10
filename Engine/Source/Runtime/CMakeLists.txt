@@ -22,6 +22,15 @@ include_directories("../../ThridParty/glm-release/glm")
 include_directories("../../ThridParty/glfw/deps")
 
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
+
+
+if (WIN32)
+    set(_GLFW_WIN32 1)
+    add_definitions(-D _GLFW_WIN32)
+    link_libraries(opengl32)
+    message(STATUS "Using Win32 for window creation")
+endif()
+
 # include(CMakeLists.txt.Physx)
 
 add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
@@ -42,6 +51,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PRIVATE stb)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)
+target_link_libraries(${TARGET_NAME} PUBLIC ${vulkan_lib})
 # target_link_libraries(${TARGET_NAME} PUBLIC physX)
 
 #if(ENABLE_PHYSICS_DEBUG_RENDERER)

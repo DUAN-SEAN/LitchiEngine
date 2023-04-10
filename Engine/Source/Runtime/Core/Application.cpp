@@ -49,6 +49,7 @@ namespace LitchiRuntime
 
 	void Application::Main()
 	{
+        init_opengl();
         while (!glfwWindowShouldClose(window))
         {
             float ratio;
