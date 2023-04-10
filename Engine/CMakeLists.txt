@@ -6,10 +6,10 @@ set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Asset")
 # option(ENABLE_PHYSICS_DEBUG_RENDERER "Enable Physics Debug Renderer" OFF)
 
 # 如果是MSVC环境，设置编译选项为MP,并且设置某个项目为启动项
-#if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-#    add_compile_options("/MP")
-#    set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT PiccoloEditor)
-#endif()
+if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    add_compile_options("/MP")
+    set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LitchiEditor)
+endif()
 
 # 平台相关设置
 #if(WIN32)
@@ -25,3 +25,6 @@ add_subdirectory(ThridParty)
 
 # 添加运行时构建子目录
 add_subdirectory(Source/Runtime)
+
+# 添加引擎编辑器构建子目录
+add_subdirectory(Source/Editor)

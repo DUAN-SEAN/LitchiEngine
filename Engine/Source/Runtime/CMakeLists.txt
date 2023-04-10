@@ -24,8 +24,8 @@ include_directories("../../ThridParty/glfw/deps")
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
 # include(CMakeLists.txt.Physx)
 
-# add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
-add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+#add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # 设置Target工程 C++17版本
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17)
@@ -40,6 +40,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 # target_link_libraries(${TARGET_NAME} PUBLIC imgui)
 # target_link_libraries(${TARGET_NAME} PUBLIC glm)
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
+target_link_libraries(${TARGET_NAME} PRIVATE stb)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)
 # target_link_libraries(${TARGET_NAME} PUBLIC physX)
 
@@ -48,5 +49,11 @@ target_link_libraries(${TARGET_NAME} PUBLIC glfw)
 #  target_link_libraries(${TARGET_NAME} PUBLIC TestFramework d3d12.lib shcore.lib)
 #endif()
 
+# 将Source目录添加到Link Target 的项目include中
+target_include_directories(
+  ${TARGET_NAME} 
+  PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>
+  $<INSTALL_INTERFACE:include/${TARGET_NAME}-${PROJECT_VERSION}>
+)
 
 
