@@ -21,6 +21,7 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 include_directories("../../ThridParty/glm-release/glm")
 include_directories("../../ThridParty/glfw/deps")
 
+include(CMakeLists.txt.glfw)
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
 
 
@@ -33,7 +34,7 @@ endif()
 
 # include(CMakeLists.txt.Physx)
 
-add_library(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
+add_library(${TARGET_NAME} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES})
 #add_executable(${TARGET_NAME} ${HEADER_FILES} ${SOURCE_FILES})
 
 # 设置Target工程 C++17版本
