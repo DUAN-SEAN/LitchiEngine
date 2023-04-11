@@ -4,8 +4,8 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 # 数学库
 if(NOT TARGET glm)
-    option(SPDLOG_BUILD_EXAMPLE "" OFF)
-    option(SPDLOG_INSTALL "" OFF)
+    option(GLM_BUILD_EXAMPLE "" OFF)
+    option(GLM_INSTALL "" OFF)
     add_subdirectory(glm-release)
     set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
 endif()

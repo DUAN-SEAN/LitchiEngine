@@ -19,18 +19,18 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 
 
 include_directories("../../ThridParty/glm-release/glm")
-include_directories("../../ThridParty/glfw/deps")
+# include_directories("../../ThridParty/glfw/deps")
 
 include(CMakeLists.txt.glfw)
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
 
 
-if (WIN32)
-    set(_GLFW_WIN32 1)
-    add_definitions(-D _GLFW_WIN32)
-    link_libraries(opengl32)
-    message(STATUS "Using Win32 for window creation")
-endif()
+# if (WIN32)
+    # set(_GLFW_WIN32 1)
+    # add_definitions(-D _GLFW_WIN32)
+    # link_libraries(opengl32)
+    # message(STATUS "Using Win32 for window creation")
+# endif()
 
 # include(CMakeLists.txt.Physx)
 
@@ -48,7 +48,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 
 # Link dependencies    
 # target_link_libraries(${TARGET_NAME} PUBLIC imgui)
-# target_link_libraries(${TARGET_NAME} PUBLIC glm)
+target_link_libraries(${TARGET_NAME} PUBLIC glm)
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PRIVATE stb)
 # target_link_libraries(${TARGET_NAME} PUBLIC glfw) # 不需要在这里link了，直接加入编译
