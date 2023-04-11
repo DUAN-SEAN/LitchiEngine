@@ -35,6 +35,14 @@ if(NOT TARGET stb)
     set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)
 endif()
 
+# # stb 通用多媒体处理库
+# if(NOT TARGET rttr)
+    # # include(rttr.cmake)
+	# # option(BUILD_STATIC "" ON)
+	# # option(BUILD_INSTALLER "" ON)
+	# add_subdirectory(rttr-0.9.6/src)
+    # set_target_properties(rttr PROPERTIES FOLDER ${third_party_folder}/rttr-0.9.6/src)
+# endif()
 
 # if(NOT TARGET physX)
     # option(SPDLOG_BUILD_EXAMPLE "" OFF)
