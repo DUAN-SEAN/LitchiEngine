@@ -31,6 +31,8 @@
 
 #include <cstdlib>
 
+#include "_detail.hpp"
+
 namespace glm{
 namespace detail
 {
