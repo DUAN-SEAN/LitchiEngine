@@ -1,7 +1,4 @@
-﻿//
-// Created by cp on 2022/4/23.
-//
-
+﻿
 #ifndef UNTITLED_PHYSICS_H
 #define UNTITLED_PHYSICS_H
 

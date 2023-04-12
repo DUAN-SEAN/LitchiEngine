@@ -1,11 +1,8 @@
-﻿//
-// Created by cp on 2022/4/23.
-//
-
+﻿
 #include "rigid_actor.h"
 #include "rttr/registration"
-#include "physics.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Core/Log/debug.h"
 #include "collider.h"
 

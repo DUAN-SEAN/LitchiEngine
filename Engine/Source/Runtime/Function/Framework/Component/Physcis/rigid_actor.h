@@ -1,7 +1,4 @@
-﻿//
-// Created by captainchen on 2022/5/7.
-//
-
+﻿
 #ifndef INTEGRATE_PHYSX_RIGID_ACTOR_H
 #define INTEGRATE_PHYSX_RIGID_ACTOR_H
 

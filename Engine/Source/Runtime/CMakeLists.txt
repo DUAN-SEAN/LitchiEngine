@@ -11,6 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 添加头文件
 include_directories("../../ThridParty/rttr")
+include_directories("../../ThridParty/rapidxml")
 include_directories("../../ThridParty/glm-release/glm")
 # include_directories("../../ThridParty/glfw/deps")
 

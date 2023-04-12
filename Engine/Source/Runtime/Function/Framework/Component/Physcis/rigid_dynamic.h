@@ -1,7 +1,4 @@
-﻿//
-// Created by cp on 2022/4/23.
-//
-
+﻿
 #ifndef UNTITLED_RIGID_DYNAMIC_H
 #define UNTITLED_RIGID_DYNAMIC_H
 

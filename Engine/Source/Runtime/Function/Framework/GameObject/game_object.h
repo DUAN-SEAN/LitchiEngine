@@ -9,8 +9,8 @@
 #include <memory>
 #include <list>
 #include <functional>
-#include "component.h"
 #include "Runtime/Core/DataStruct/tree.h"
+#include "Runtime/Function/Framework/Component/Base/component.h"
 
 class GameObject :public Tree::Node {
 public:

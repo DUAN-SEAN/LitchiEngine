@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 6/4/2022.
-//
-
+﻿
 #ifndef INTEGRATE_PHYSX_PHYSIC_ERROR_CALL_BACK_H
 #define INTEGRATE_PHYSX_PHYSIC_ERROR_CALL_BACK_H
 

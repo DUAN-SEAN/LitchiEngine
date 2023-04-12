@@ -1,10 +1,7 @@
-﻿//
-// Created by captain on 4/28/2022.
-//
-
+﻿
 #include "box_collider.h"
 #include "rttr/registration"
-#include "physics.h"
+#include "Runtime/Function/Physics/physics.h"
 
 using namespace rttr;
 RTTR_REGISTRATION//注册反射

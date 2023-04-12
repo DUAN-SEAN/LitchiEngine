@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 4/28/2022.
-//
-
+﻿
 #ifndef INTEGRATE_PHYSX_PHYSIC_MATERIAL_H
 #define INTEGRATE_PHYSX_PHYSIC_MATERIAL_H
 

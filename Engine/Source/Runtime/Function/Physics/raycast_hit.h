@@ -1,12 +1,9 @@
-﻿//
-// Created by captain on 6/4/2022.
-//
-
+﻿
 #ifndef INTEGRATE_PHYSX_RAYCAST_HIT_H
 #define INTEGRATE_PHYSX_RAYCAST_HIT_H
 
 #include "glm.hpp"
-#include "Runtime/Function/Framework/Component/Base/game_object.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 
 /// 射线检测结果
 class RaycastHit{

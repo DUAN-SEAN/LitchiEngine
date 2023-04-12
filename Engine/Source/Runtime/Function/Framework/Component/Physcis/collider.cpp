@@ -1,17 +1,12 @@
-﻿//
-// Created by captain on 4/28/2022.
-//
-
+﻿
 #include "collider.h"
 
 #include "rttr/registration"
-#include "physics.h"
-#include "Runtime/Function/Framework/Component/Base/transform.h"
 #include "Runtime/Core/Log/debug.h"
-#include "physic_material.h"
 #include "rigid_dynamic.h"
 #include "rigid_static.h"
-#include "Runtime/Function/Framework/Component/Base/game_object.h"
+#include "Runtime/Function/Physics/physics.h"
+#include "Runtime/Function/Physics/physic_material.h"
 
 using namespace rttr;
 RTTR_REGISTRATION{

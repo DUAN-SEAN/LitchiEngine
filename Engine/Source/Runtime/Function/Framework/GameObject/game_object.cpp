@@ -1,7 +1,6 @@
 ﻿
 #include "game_object.h"
 #include "rttr/registration"
-#include "component.h"
 #include "Runtime/Core/Log/debug.h"
 
 using namespace rttr;

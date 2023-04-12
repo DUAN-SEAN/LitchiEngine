@@ -9,6 +9,7 @@
 
 #include "Runtime/Core/Log/debug.h"
 #include "rttr/registration"
+
 using namespace rttr;
 
 class GameObject;

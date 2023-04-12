@@ -1,6 +1,6 @@
 ﻿
 #include "component.h"
-#include "game_object.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 
 //注册反射
 RTTR_REGISTRATION

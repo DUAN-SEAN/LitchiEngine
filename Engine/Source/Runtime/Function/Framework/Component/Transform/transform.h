@@ -2,9 +2,9 @@
 #ifndef UNTITLED_TRANSFORM_H
 #define UNTITLED_TRANSFORM_H
 
-#include "component.h"
 #include "core/type.hpp"
 #include "glm.hpp"
+#include "Runtime/Function/Framework/Component/Base/component.h"
 
 class Transform : public Component{
 public:
