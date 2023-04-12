@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/8/5.
-//
-
+﻿
 #ifndef UNTITLED_TIME_H
 #define UNTITLED_TIME_H
 

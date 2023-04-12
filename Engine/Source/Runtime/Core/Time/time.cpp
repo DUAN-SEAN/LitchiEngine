@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/8/5.
-//
-
+﻿
 #include "time.h"
 
 std::chrono::system_clock::time_point Time::startup_time_;

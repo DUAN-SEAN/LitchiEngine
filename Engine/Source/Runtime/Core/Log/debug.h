@@ -1,7 +1,4 @@
-﻿//
-// Created by captainchen on 2021/8/23.
-//
-
+﻿
 #ifndef UNTITLED_DEBUG_H
 #define UNTITLED_DEBUG_H
 
