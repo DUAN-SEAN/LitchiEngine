@@ -23,7 +23,7 @@ target_include_directories(
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "LitchiEditor")
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
-target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
+# target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
 
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 target_link_libraries(${TARGET_NAME} LitchiRuntime)

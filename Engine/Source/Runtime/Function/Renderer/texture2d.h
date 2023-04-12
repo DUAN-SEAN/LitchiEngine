@@ -1,8 +1,4 @@
-﻿//
-// Created by captain on 2021/4/5.
-// 图片加载与解析
-//
-
+﻿
 #ifndef UNTITLED_TEXTURE2D_H
 #define UNTITLED_TEXTURE2D_H
 

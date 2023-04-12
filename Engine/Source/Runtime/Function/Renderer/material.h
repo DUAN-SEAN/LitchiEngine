@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/5/3.
-//
-
+﻿
 #ifndef UNTITLED_MATERIAL_H
 #define UNTITLED_MATERIAL_H
 

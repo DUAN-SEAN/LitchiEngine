@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/5/3.
-//
-
+﻿
 #include "material.h"
 #include <iostream>
 #include <fstream>
@@ -64,8 +61,6 @@ void Material::Parse(string material_path) {
         material_texture_node=material_texture_node->next_sibling("texture");
     }
 }
-
-
 
 void Material::SetUniformMatrix4fv(std::string shader_property_name, float *pointer) {
     uniform_matrix4fv_vec.push_back(std::make_pair(shader_property_name,pointer));

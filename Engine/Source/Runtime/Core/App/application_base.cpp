@@ -34,7 +34,9 @@ void ApplicationBase::FixedUpdate(){
 }
 
 void ApplicationBase::OneFrame() {
-    
+    // 逻辑帧
+
+    // 渲染帧
 }
 
 void ApplicationBase::UpdateScreenSize() {

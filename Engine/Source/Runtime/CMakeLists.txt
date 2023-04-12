@@ -49,7 +49,7 @@ target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:
 # target_link_libraries(${TARGET_NAME} PUBLIC glm)
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PRIVATE stb)
-target_link_libraries(${TARGET_NAME} PRIVATE rttr)
+# target_link_libraries(${TARGET_NAME} PRIVATE rttr)
 # target_link_libraries(${TARGET_NAME} PUBLIC glfw) # 不需要在这里link了，直接加入编译
 # target_link_libraries(${TARGET_NAME} PUBLIC ${vulkan_lib})
 # target_link_libraries(${TARGET_NAME} PUBLIC physX)

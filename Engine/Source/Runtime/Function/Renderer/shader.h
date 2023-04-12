@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/4/25.
-//
-
+﻿
 #ifndef UNTITLED_SHADER_H
 #define UNTITLED_SHADER_H
 
