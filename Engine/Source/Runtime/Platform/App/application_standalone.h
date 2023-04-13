@@ -13,6 +13,8 @@ public:
 
     void Init() override;
 
+    void OneFrame() override;
+
     void Run();
 
 public:

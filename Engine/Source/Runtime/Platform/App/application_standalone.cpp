@@ -17,8 +17,12 @@
 #endif
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+#include "gtx/euler_angles.hpp"
+#include "gtx/transform.hpp"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/Input/input.h"
+#include "Runtime/Test/ShaderSource.h"
+#include "Runtime/Test/VertexData.h"
 
 static void error_callback(int error, const char* description)
 {
@@ -64,10 +68,138 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 	//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
+
+GLuint vertex_shader, fragment_shader, program;
+GLint mvp_location, vpos_location, vcol_location;
+
+void CompilerShader()
+{
+	// 创建vs GLuint
+	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	// 指定shader源码 
+	glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+	// 编译shader
+	glCompileShader(vertex_shader);
+	GLint compileResult = GL_FALSE;
+	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compileResult);
+	if(compileResult == GL_FALSE)
+	{
+		GLchar message[256];
+		glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
+		DEBUG_LOG_ERROR("compile vs error");
+		DEBUG_LOG_ERROR(message);
+	}
+
+	// 创建fs GLuint
+	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	// 指定shader源码
+	glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+	// 编译Shader
+	glCompileShader(fragment_shader);
+	// 获取编译结果
+	compileResult = GL_FALSE;
+	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compileResult);
+	if (compileResult == GL_FALSE)
+	{
+		GLchar message[256];
+		DEBUG_LOG_ERROR("compile fs error");
+		DEBUG_LOG_ERROR(message);
+	}
+
+	// 创建GPU程序
+	program = glCreateProgram();
+	// 附加Shader
+	glAttachShader(program, vertex_shader);
+	glAttachShader(program, fragment_shader);
+	// 将program链接到当前的OpenGL状态机
+	glLinkProgram(program);
+	// 获取编译结果
+	GLint linkResult = GL_FALSE;
+	glGetProgramiv(program, GL_LINK_STATUS, &linkResult);
+	if(linkResult == GL_FALSE)
+	{
+		GLchar message[256];
+		glGetProgramInfoLog(program, sizeof(message), 0, message);
+		DEBUG_LOG_ERROR("link program error");
+		DEBUG_LOG_ERROR(message);
+	}
+}
+
+
+
 void ApplicationStandalone::Init()
 {
 	ApplicationBase::Init();
 	InitGraphicsLibraryFramework();
+
+	// 编译Shader
+	CompilerShader();
+}
+void ApplicationStandalone::OneFrame()
+{
+	//获取shader属性ID
+	mvp_location = glGetUniformLocation(program, "u_mvp");
+	vpos_location = glGetAttribLocation(program, "a_pos");
+	vcol_location = glGetAttribLocation(program, "a_color");
+
+	float ratio;
+	int width, height;
+	glm::mat4 model, view, projection, mvp;
+
+	// 获取画面宽高
+	glfwGetFramebufferSize(glfw_window_, &width, &height);
+	ratio = width / (float)height;
+
+	glViewport(0,0, width, height);
+
+	// 清理屏幕缓存区，并设置缓冲区颜色
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClearColor(49.f / 255, 77.f / 255, 121.f / 255, 1.f);
+
+	// 坐标系变换
+	glm::mat4 trans = glm::translate(glm::vec3(0, 0, 0));
+	static float rotate_eulerAngle = 0.f;
+	rotate_eulerAngle += 1;
+	// 按照YXZ的顺序旋转
+	glm::mat4 rotation = glm::eulerAngleYXZ(glm::radians(rotate_eulerAngle),
+		glm::radians(rotate_eulerAngle), glm::radians(rotate_eulerAngle)); //使用欧拉角旋转;
+	glm::mat4 scale = glm::scale(glm::vec3(2.0f, 2.0f, 2.0f)); //缩放;
+
+	// 计算模型在世界中的变换矩阵
+	model = trans * scale * rotation;
+
+	// 计算相机的视口坐标系
+	view = glm::lookAt(glm::vec3(0, 0, 10), glm::vec3(0, 0,0), glm::vec3(0, 1, 0));
+	
+	// 构造相机透视投影
+	projection = glm::perspective(glm::radians(60.f), ratio, 1.f, 1000.f);
+	projection[0].x = 1.154f;
+	projection[1].y = 1.777f;
+
+	// 计算mvp矩阵（从模型空间到相机空间）
+	mvp = projection * view * model;
+
+	//指定GPU程序(就是指定顶点着色器、片段着色器)
+	glUseProgram(program);
+	glEnable(GL_DEPTH_TEST);// 开启深度测试
+	glEnable(GL_CULL_FACE);//开启背面剔除
+
+	//启用顶点Shader属性(a_pos)，指定与顶点坐标数据进行关联
+	glEnableVertexAttribArray(vpos_location);
+	glVertexAttribPointer(vpos_location, 3, GL_FLOAT, false, sizeof(glm::vec3), kPositions);
+
+	//启用顶点Shader属性(a_color)，指定与顶点颜色数据进行关联
+	glEnableVertexAttribArray(vcol_location);
+	glVertexAttribPointer(vcol_location, 3, GL_FLOAT, false, sizeof(glm::vec4), kColors);
+
+	//上传mvp矩阵
+	glUniformMatrix4fv(mvp_location, 1, GL_FALSE, &mvp[0][0]);
+	//上传顶点数据并进行绘制
+	glDrawArrays(GL_TRIANGLES, 0, 6 * 6);
+
+	// 交换缓冲区 双缓冲区
+	glfwSwapBuffers(glfw_window_);
+
 }
 
 
