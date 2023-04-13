@@ -64,6 +64,13 @@ static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 	//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
+void ApplicationStandalone::Init()
+{
+	ApplicationBase::Init();
+	InitGraphicsLibraryFramework();
+}
+
+
 void ApplicationStandalone::InitGraphicsLibraryFramework() {
 
 	glfwSetErrorCallback(error_callback);
@@ -97,6 +104,8 @@ void ApplicationStandalone::InitGraphicsLibraryFramework() {
 	glfwSetMouseButtonCallback(glfw_window_, mouse_button_callback);
 	glfwSetScrollCallback(glfw_window_, mouse_scroll_callback);
 	glfwSetCursorPosCallback(glfw_window_, mouse_move_callback);
+
+	DEBUG_LOG_INFO("ApplicationStandalone::InitGraphicsLibraryFramework done");
 }
 
 void ApplicationStandalone::Run() {
@@ -110,8 +119,6 @@ void ApplicationStandalone::Run() {
 
 		OneFrame();
 		glfwPollEvents();
-
-
 	}
 	Exit();
 }

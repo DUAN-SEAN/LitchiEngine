@@ -13,5 +13,7 @@ int main(int argc, char** argv)
     Application application;
     application.Init(new ApplicationStandalone());
 
+    application.Run();
+
     return 0;
 }

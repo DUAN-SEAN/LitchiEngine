@@ -11,6 +11,8 @@ public:
     ApplicationStandalone():ApplicationBase(){}
     ~ApplicationStandalone(){}
 
+    void Init() override;
+
     void Run();
 
 public:
