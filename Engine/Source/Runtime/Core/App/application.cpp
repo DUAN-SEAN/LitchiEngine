@@ -4,12 +4,12 @@
 
 ApplicationBase* Application::instance_= nullptr;
 
-void Application::Init(ApplicationBase* instance) {
+void Application::Initiliaze(ApplicationBase* instance) {
     instance_=instance;
     instance_->Init();
 }
 
-const std::string& Application::data_path() {
+const std::string& Application::GetDataPath() {
     return instance_->data_path();
 }
 

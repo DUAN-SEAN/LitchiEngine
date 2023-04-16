@@ -12,7 +12,11 @@ RTTR_REGISTRATION//注册反射
             .property("scale", &Transform::scale, &Transform::set_scale);
 }
 
-Transform::Transform():Component(),position_(0.f),rotation_(0.f),scale_(1.f) {
+Transform::Transform():Component(),
+	position_(0.f),
+	rotation_(glm::quat(1,0,0,0)),
+	scale_(1.f)
+{
 }
 
 Transform::~Transform() {

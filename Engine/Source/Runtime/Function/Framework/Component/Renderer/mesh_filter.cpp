@@ -25,7 +25,7 @@ MeshFilter::MeshFilter()
 
 void MeshFilter::LoadMesh(string mesh_file_path) {
     //读取 Mesh文件头
-    ifstream input_file_stream(Application::data_path()+mesh_file_path,ios::in | ios::binary);
+    ifstream input_file_stream(Application::GetDataPath()+mesh_file_path,ios::in | ios::binary);
     MeshFileHead mesh_file_head;
     input_file_stream.read((char*)&mesh_file_head,sizeof(mesh_file_head));
     //读取顶点数据

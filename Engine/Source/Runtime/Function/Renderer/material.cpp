@@ -25,7 +25,7 @@ Material::~Material() {
 
 void Material::Parse(string material_path) {
     //解析xml
-    rapidxml::file<> xml_file((Application::data_path()+material_path).c_str());
+    rapidxml::file<> xml_file((Application::GetDataPath()+material_path).c_str());
     rapidxml::xml_document<> document;
     document.parse<0>(xml_file.data());
 

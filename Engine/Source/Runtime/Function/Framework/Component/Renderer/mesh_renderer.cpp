@@ -6,6 +6,7 @@
 #include <gtx/transform2.hpp>
 #include <gtx/euler_angles.hpp>
 #include "mesh_filter.h"
+#include "gtx/quaternion.hpp"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/material.h"
@@ -39,11 +40,12 @@ void MeshRenderer::Render() {
         return;
     }
     glm::mat4 trans = glm::translate(transform->position());
-    auto rotation=transform->rotation();
-    glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
-    glm::mat4 scale = glm::scale(transform->scale()); //缩放;
-    glm::mat4 model = trans*scale*eulerAngleYXZ;
-    glm::mat4 mvp=projection_*view_*model;
+    //auto rotation=transform->rotation();
+    //glm::mat4 eulerAngleYXZ = glm::eulerAngleYXZ(glm::radians(rotation.y), glm::radians(rotation.x), glm::radians(rotation.z));
+    glm::mat4 rotation = glm::toMat4(transform->rotation());
+	glm::mat4 scale = glm::scale(transform->scale()); //缩放;
+    glm::mat4 model = trans*scale* rotation;// 旋转->缩放->平移
+    glm::mat4 mvp=projection_*view_*model;// 模型2世界->世界2相机->相机2投影
 
     //主动获取 MeshFilter 组件
     auto component_mesh_filter=game_object()->GetComponent<MeshFilter>();

@@ -7,9 +7,9 @@
 class ApplicationBase;
 class Application {
 public:
-    static void Init(ApplicationBase* instance);
+    static void Initiliaze(ApplicationBase* instance);
 
-    static const std::string& data_path();
+    static const std::string& GetDataPath();
 
     static void Run();
 private:

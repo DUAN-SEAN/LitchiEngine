@@ -1,5 +1,8 @@
 set(TARGET_NAME LitchiEditor)
 
+# dest build/****/Assets 和Editor目录平级
+file(COPY "../../Assets/" DESTINATION "../Assets/")
+
 file(GLOB EDITOR_HEADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
 file(GLOB EDITOR_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
@@ -14,16 +17,14 @@ add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOU
 add_compile_definitions("Litchi_ROOT_DIR=${BINARY_ROOT_DIR}")
 
 # 添加stb头文件
-target_include_directories(
-  ${TARGET_NAME} 
-  PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>
-)
+# target_include_directories(
+  # ${TARGET_NAME} 
+  # PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>
+# )
 
 # 设置相关编译选项
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "LitchiEditor")
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
-
-# target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
 
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 target_link_libraries(${TARGET_NAME} LitchiRuntime)

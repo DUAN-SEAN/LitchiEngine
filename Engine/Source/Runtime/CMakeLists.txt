@@ -4,18 +4,7 @@ set(TARGET_NAME LitchiRuntime)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# 示例，添加某个目录下的子工程 
-#set(JSON_INCLUDE ${THIRD_PARTY_DIR}/json11)
-#add_library(json11 ${JSON_INCLUDE}/json11.cpp)
-#set_target_properties(json11 PROPERTIES FOLDER "ThirdParty/json11")
-
-# 添加头文件
-include_directories("../../ThridParty/rttr")
-include_directories("../../ThridParty/rapidxml")
-include_directories("../../ThridParty/glm-release/glm")
-# include_directories("../../ThridParty/glfw/deps")
-
-# 引入cmakeList
+# 引入cmakeList 临时写法
 include(CMakeLists.txt.glfw)
 include(../../ThridParty/physx-4.1/CMakeLists.txt)
 
@@ -45,25 +34,22 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
 
 # Link dependencies    
-# target_link_libraries(${TARGET_NAME} PUBLIC imgui)
-# target_link_libraries(${TARGET_NAME} PUBLIC glm)
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PRIVATE stb)
-# target_link_libraries(${TARGET_NAME} PRIVATE rttr)
-# target_link_libraries(${TARGET_NAME} PUBLIC glfw) # 不需要在这里link了，直接加入编译
-# target_link_libraries(${TARGET_NAME} PUBLIC ${vulkan_lib})
-# target_link_libraries(${TARGET_NAME} PUBLIC physX)
-
-#if(ENABLE_PHYSICS_DEBUG_RENDERER)
-#  add_compile_definitions(ENABLE_PHYSICS_DEBUG_RENDERER)
-#  target_link_libraries(${TARGET_NAME} PUBLIC TestFramework d3d12.lib shcore.lib)
-#endif()
 
 # 将Source目录添加到Link Target 的项目include中
-target_include_directories(
-  ${TARGET_NAME} 
-  PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>
-  $<INSTALL_INTERFACE:include/${TARGET_NAME}-${PROJECT_VERSION}>
-)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>)
+
+# include rttr 
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/rttr>)
+
+# include glm
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/glm-release/glm>)
+
+# include rapidxml
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/rapidxml>)
+
+# include stb
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>)
 
 
