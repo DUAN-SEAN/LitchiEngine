@@ -6,7 +6,8 @@
 #include <memory>
 #include <iostream>
 #include "rttr/registration"
-#include "glad/gl.h"
+#include <glad/glad.h>
+
 #ifdef WIN32
 // 避免出现APIENTRY重定义警告。
 // freetype引用了windows.h，里面定义了APIENTRY。
@@ -76,7 +77,7 @@ void CompilerShader()
 {
 	// 创建vs GLuint
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	// 指定shader源码 
+	// 指定shader源码
 	glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
 	// 编译shader
 	glCompileShader(vertex_shader);
@@ -251,7 +252,8 @@ void ApplicationStandalone::InitGraphicsLibraryFramework() {
 
 	// 设置glfw
 	glfwMakeContextCurrent(glfw_window_);
-	gladLoadGL(glfwGetProcAddress);
+	gladLoadGL();
+	//gladLoadGL(glfwGetProcAddress);
 	glfwSwapInterval(1);
 
 	glfwSetKeyCallback(glfw_window_, key_callback);

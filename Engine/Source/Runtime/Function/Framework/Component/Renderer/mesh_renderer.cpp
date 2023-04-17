@@ -1,6 +1,6 @@
 ﻿
 #include "mesh_renderer.h"
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <rttr/registration>
 #include <gtc/matrix_transform.hpp>
 #include <gtx/transform2.hpp>

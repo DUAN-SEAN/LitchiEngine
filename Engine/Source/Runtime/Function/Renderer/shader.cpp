@@ -2,7 +2,7 @@
 #include "shader.h"
 #include <iostream>
 #include <fstream>
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <Runtime/Core/App/application.h>
 
 using std::ifstream;

@@ -5,7 +5,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <iostream>
-#include <glad/gl.h>
+#include <glad/glad.h>
 
 class Texture2D
 {

@@ -2,7 +2,7 @@
 #include "camera.h"
 #include <memory>
 #include <gtc/matrix_transform.hpp>
-#include <glad/gl.h>
+#include <glad/glad.h>
 #include <rttr/registration>
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"

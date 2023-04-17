@@ -3,12 +3,12 @@ set(third_party_folder "ThirdParty")
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 # 数学库
-if(NOT TARGET glm)
-    option(GLM_BUILD_EXAMPLE "" OFF)
-    option(GLM_INSTALL "" OFF)
-    add_subdirectory(glm-release)
-    set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
-endif()
+# if(NOT TARGET glm)
+    # option(GLM_BUILD_EXAMPLE "" OFF)
+    # option(GLM_INSTALL "" OFF)
+    # add_subdirectory(glm-release)
+    # set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
+# endif()
 
 # openGL
 if(NOT TARGET glfw)
@@ -16,9 +16,9 @@ if(NOT TARGET glfw)
     option(GLFW_BUILD_TESTS "" OFF)
     option(GLFW_BUILD_DOCS "" OFF)
     option(GLFW_INSTALL "" OFF)
-    add_subdirectory(glfw)
-    set_target_properties(glfw PROPERTIES FOLDER ${third_party_folder}/glfw)
-    # set_target_properties(update_mappings PROPERTIES FOLDER ${third_party_folder}/glfw)
+    add_subdirectory(glfw-3.3.8)
+    set_target_properties(glfw PROPERTIES FOLDER ${third_party_folder}/glfw-3.3.8)
+    set_target_properties(update_mappings PROPERTIES FOLDER ${third_party_folder}/glfw-3.3.8)
 endif()
 
 # Log
