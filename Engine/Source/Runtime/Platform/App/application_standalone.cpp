@@ -21,6 +21,8 @@
 #include "gtx/euler_angles.hpp"
 #include "gtx/transform.hpp"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Core/Screen/screen.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Input/input.h"
 #include "Runtime/Test/ShaderSource.h"
 #include "Runtime/Test/VertexData.h"
@@ -128,10 +130,18 @@ void CompilerShader()
 
 
 
+void ApplicationStandalone::UpdateScreenSize()
+{
+	int width, height;
+	glfwGetFramebufferSize(glfw_window_, &width, &height);
+	glViewport(0, 0, width, height);
+	Screen::set_width_height(width, height);
+}
+
 void ApplicationStandalone::Init()
 {
 	ApplicationBase::Init();
-	InitGraphicsLibraryFramework();
+
 
 	//// 编译Shader
 	//CompilerShader();
@@ -144,7 +154,10 @@ void ApplicationStandalone::Init()
 
 void ApplicationStandalone::OneFrame()
 {
-	
+	// 遍历所有的GameObject
+	ApplicationBase::OneFrame();
+
+	glfwSwapBuffers(glfw_window_);
 }
 
 //void ApplicationStandalone::OneFrame()

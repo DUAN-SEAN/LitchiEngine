@@ -11,6 +11,8 @@ public:
     ApplicationStandalone():ApplicationBase(){}
     ~ApplicationStandalone(){}
 
+    void UpdateScreenSize() override;
+
     void Init() override;
 
     void OneFrame() override;

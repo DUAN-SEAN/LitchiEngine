@@ -26,6 +26,12 @@ add_compile_definitions("Litchi_ROOT_DIR=${BINARY_ROOT_DIR}")
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "LitchiEditor")
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
+# if (MSVC)
+    # set_property(TARGET ${TARGET_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# else()
+    # add_definitions(-D _DEBUG)
+# endif ()
+
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 target_link_libraries(${TARGET_NAME} LitchiRuntime)
 

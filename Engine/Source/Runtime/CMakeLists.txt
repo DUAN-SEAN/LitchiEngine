@@ -29,6 +29,12 @@ set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17)
 # 将Target工程添加到目录Engine目录下 
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
+# if (MSVC)
+    # set_property(TARGET ${TARGET_NAME} PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+# else()
+    # add_definitions(-D _DEBUG)
+# endif ()
+
 # being a cross-platform target, we enforce standards conformance on MSVC
 # 这个配置会导致rttr编译报错
 # target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")

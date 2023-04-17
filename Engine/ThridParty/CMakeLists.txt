@@ -2,13 +2,13 @@ set(third_party_folder "ThirdParty")
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
-# 数学库
-# if(NOT TARGET glm)
-    # option(GLM_BUILD_EXAMPLE "" OFF)
-    # option(GLM_INSTALL "" OFF)
-    # add_subdirectory(glm-release)
-    # set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
-# endif()
+# 数学库 只用于显示工程,不参与编译Link
+if(NOT TARGET glm)
+    option(GLM_BUILD_EXAMPLE "" OFF)
+    option(GLM_INSTALL "" OFF)
+    add_subdirectory(glm-release)
+    set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
+endif()
 
 # openGL
 if(NOT TARGET glfw)
@@ -35,13 +35,14 @@ if(NOT TARGET stb)
     set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)
 endif()
 
+# 有报错,暂时不导入
 # # stb 通用多媒体处理库
 # if(NOT TARGET rttr)
     # # include(rttr.cmake)
 	# # option(BUILD_STATIC "" ON)
 	# # option(BUILD_INSTALLER "" ON)
-	# add_subdirectory(rttr-0.9.6/src)
-    # set_target_properties(rttr PROPERTIES FOLDER ${third_party_folder}/rttr-0.9.6/src)
+	# add_subdirectory(rttr/rttr)
+    # set_target_properties(rttr PROPERTIES FOLDER ${third_party_folder}/rttr/rttr)
 # endif()
 
 # if(NOT TARGET physX)

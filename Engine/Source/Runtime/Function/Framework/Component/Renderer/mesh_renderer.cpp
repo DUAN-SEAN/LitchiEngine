@@ -16,8 +16,8 @@
 using namespace rttr;
 RTTR_REGISTRATION
 {
-registration::class_<MeshRenderer>("MeshRenderer")
-.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+	registration::class_<MeshRenderer>("MeshRenderer")
+	.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 }
 
 MeshRenderer::MeshRenderer() {
