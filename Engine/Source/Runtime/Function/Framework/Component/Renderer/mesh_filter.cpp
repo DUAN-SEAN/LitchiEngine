@@ -24,6 +24,7 @@ MeshFilter::MeshFilter()
 }
 
 void MeshFilter::LoadMesh(string mesh_file_path) {
+    DEBUG_LOG_INFO(Application::GetDataPath() + mesh_file_path);
     //读取 Mesh文件头
     ifstream input_file_stream(Application::GetDataPath()+mesh_file_path,ios::in | ios::binary);
     MeshFileHead mesh_file_head;

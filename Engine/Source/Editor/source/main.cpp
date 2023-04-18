@@ -19,7 +19,15 @@ int main(int argc, char** argv)
 
     Application application;
     auto application_standalone=new ApplicationStandalone();
-    application_standalone->SetDataPath("../Assets/");
+
+    char* projectPath = nullptr;
+    projectPath = _getcwd(nullptr, 1);
+    std::string filePath(projectPath);
+
+    application_standalone->SetDataPath(filePath+"/../../Assets/");
+
+    delete projectPath;
+
     application.Initiliaze(application_standalone);
     auto s =  application.GetDataPath();
 

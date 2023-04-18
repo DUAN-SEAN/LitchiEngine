@@ -2,6 +2,7 @@
 #ifndef UNTITLED_APPLICATION_BASE_H
 #define UNTITLED_APPLICATION_BASE_H
 
+#include <direct.h>
 #include <string>
 
 class ApplicationBase {
@@ -12,7 +13,11 @@ public:
     void set_title(std::string title){title_=title;}
 
     const std::string& data_path(){return data_path_;}
-    void SetDataPath(std::string data_path){data_path_=data_path;}
+    void SetDataPath(std::string data_path)
+    {
+    	data_path_=data_path;
+	    // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
+    }
 
     /// 初始化OpenGL
     virtual void Init();

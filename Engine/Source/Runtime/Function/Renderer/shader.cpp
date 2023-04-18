@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <Runtime/Core/App/application.h>
 
+#include "Runtime/Core/Log/debug.h"
+
 using std::ifstream;
 using std::ios;
 using std::cout;
@@ -22,6 +24,10 @@ Shader::~Shader() {
 }
 
 Shader* Shader::Find(string shader_name) {
+
+    DEBUG_LOG_INFO("Shader::Find ShaderName:" + shader_name);
+
+
     unordered_map<string,Shader*>::iterator iter=kShaderMap.find(shader_name);
     if(iter!=kShaderMap.end()) {
         return iter->second;
@@ -43,6 +49,9 @@ void Shader::Parse(string shader_name) {
     string vertex_shader_file_path=Application::GetDataPath()+shader_name+".vs";
     string fragment_shader_file_path=Application::GetDataPath()+shader_name+".fs";
 
+    DEBUG_LOG_INFO("Shader::Find ShaderVSPath:" + vertex_shader_file_path);
+    DEBUG_LOG_INFO("Shader::Find ShaderFSPath:" + fragment_shader_file_path);
+
     //读取顶点Shader代码
     ifstream vertex_shader_input_file_stream(vertex_shader_file_path);
     string vertex_shader_source((std::istreambuf_iterator<char>(vertex_shader_input_file_stream)),std::istreambuf_iterator<char>());
@@ -50,6 +59,8 @@ void Shader::Parse(string shader_name) {
     ifstream fragment_shader_input_file_stream(fragment_shader_file_path);
     string fragment_shader_source((std::istreambuf_iterator<char>(fragment_shader_input_file_stream)),std::istreambuf_iterator<char>());
 
+    DEBUG_LOG_INFO("Shader::Find ShaderVS:" + vertex_shader_source);
+    DEBUG_LOG_INFO("Shader::Find ShaderFS:" + fragment_shader_source);
     CreateGPUProgram(vertex_shader_source.c_str(), fragment_shader_source.c_str());
 }
 

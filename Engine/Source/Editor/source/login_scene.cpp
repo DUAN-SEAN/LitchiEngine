@@ -54,6 +54,7 @@ void LoginScene::Awake() {
     Material* material=new Material();//设置材质
     material->Parse("material/fishsoup_pot.mat");
     mesh_renderer->SetMaterial(material);
+    DEBUG_LOG_INFO("LoadMaterial Done");
 
     ////创建相机2 GameObject
     //auto go_camera_2=new GameObject("main_camera");

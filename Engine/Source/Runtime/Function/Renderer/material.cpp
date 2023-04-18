@@ -26,13 +26,15 @@ Material::~Material() {
 
 void Material::Parse(string material_path) {
 
-    DEBUG_LOG_INFO("Parse");
-    DEBUG_LOG_INFO(Application::GetDataPath());
+    DEBUG_LOG_INFO("Material::Parse :"+ material_path);
 
+    DEBUG_LOG_INFO(Application::GetDataPath() + material_path);
     string dataPath = "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
 
     //解析xml
-    rapidxml::file<> xml_file((dataPath +material_path).c_str());
+    ifstream input_file_stream(Application::GetDataPath() + material_path, ios::in | ios::binary);
+
+    rapidxml::file<> xml_file(input_file_stream);
     rapidxml::xml_document<> document;
     document.parse<0>(xml_file.data());
 
