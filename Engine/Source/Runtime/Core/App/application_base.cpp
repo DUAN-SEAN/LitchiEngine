@@ -50,7 +50,7 @@ void ApplicationBase::Run() {
 }
 
 void ApplicationBase::Update(){
-        Time::Update();
+	Time::Update();
     UpdateScreenSize();
 
     GameObject::Foreach([](GameObject* game_object) {

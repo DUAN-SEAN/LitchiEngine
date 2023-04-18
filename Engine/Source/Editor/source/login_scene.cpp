@@ -21,6 +21,7 @@
 #include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Input/input.h"
 #include "Runtime/Core/Screen/screen.h"
+#include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Input/key_code.h"
 
 
@@ -86,13 +87,13 @@ void LoginScene::Update() {
    /* camera_2_->SetView(glm::vec3(transform_camera_2_->position().x, 0, 0), glm::vec3(0, 1, 0));
     camera_2_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);*/
 
-    camera_1_->SetView(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
+    camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
         static float rotate_eulerAngle=0.f;
-        rotate_eulerAngle+=0.1f;
+        rotate_eulerAngle+=0.1f*Time::delta_time();
 
         glm::quat rotation=transform_fishsoup_pot_->rotation();
 
@@ -106,10 +107,12 @@ void LoginScene::Update() {
     //旋转相机
     if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
         float degrees= Input::mousePosition().x - last_frame_mouse_position_.x;
+        float degreesY= Input::mousePosition().y - last_frame_mouse_position_.y;
 
         glm::mat4 old_mat4=glm::mat4(1.0f);
 //        std::cout<<glm::to_string(old_mat4)<<std::endl;
         glm::mat4 rotate_mat4=glm::rotate(old_mat4,glm::radians(degrees),glm::vec3(0.0f,1.0f,0.0f));//以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+        rotate_mat4 = glm::rotate(rotate_mat4, glm::radians(degreesY), glm::vec3(1.0f, 0.0f, 0.0f));
         glm::vec4 old_pos=glm::vec4(transform_camera_1_->position(),1.0f);
         glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
         std::cout<<glm::to_string(new_pos)<<std::endl;
