@@ -9,6 +9,7 @@
 #include "shader.h"
 #include "texture2d.h"
 #include "Runtime/Core/App/application.h"
+#include "Runtime/Core/Log/debug.h"
 
 using std::ifstream;
 using std::ios;
@@ -24,8 +25,14 @@ Material::~Material() {
 }
 
 void Material::Parse(string material_path) {
+
+    DEBUG_LOG_INFO("Parse");
+    DEBUG_LOG_INFO(Application::GetDataPath());
+
+    string dataPath = "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
+
     //解析xml
-    rapidxml::file<> xml_file((Application::GetDataPath()+material_path).c_str());
+    rapidxml::file<> xml_file((dataPath +material_path).c_str());
     rapidxml::xml_document<> document;
     document.parse<0>(xml_file.data());
 

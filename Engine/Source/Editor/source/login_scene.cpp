@@ -40,17 +40,17 @@ LoginScene::LoginScene() :Component()
 void LoginScene::Awake() {
     //创建模型 GameObject
     GameObject* go=new GameObject("fishsoup_pot");
-    go->set_layer(0x00);
+    go->set_layer(0x01);
 
     //挂上 Transform 组件
-    transform_fishsoup_pot_=dynamic_cast<Transform*>(go->AddComponent<Transform>());
+    transform_fishsoup_pot_=go->AddComponent<Transform>();
 
     //挂上 MeshFilter 组件
-    auto mesh_filter=dynamic_cast<MeshFilter*>(go->AddComponent<MeshFilter>());
+    auto mesh_filter=go->AddComponent<MeshFilter>();
     mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
 
     //挂上 MeshRenderer 组件
-    auto mesh_renderer=dynamic_cast<MeshRenderer*>(go->AddComponent<MeshRenderer>());
+    auto mesh_renderer=go->AddComponent<MeshRenderer>();
     Material* material=new Material();//设置材质
     material->Parse("material/fishsoup_pot.mat");
     mesh_renderer->SetMaterial(material);
@@ -85,7 +85,7 @@ void LoginScene::Update() {
    /* camera_2_->SetView(glm::vec3(transform_camera_2_->position().x, 0, 0), glm::vec3(0, 1, 0));
     camera_2_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);*/
 
-    camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+    camera_1_->SetView(glm::vec3(0, 0, 1), glm::vec3(0, 1, 0));
     camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
     //旋转物体

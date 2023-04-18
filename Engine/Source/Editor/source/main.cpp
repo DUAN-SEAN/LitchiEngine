@@ -21,7 +21,9 @@ int main(int argc, char** argv)
     auto application_standalone=new ApplicationStandalone();
     application_standalone->SetDataPath("../Assets/");
     application.Initiliaze(application_standalone);
-    application.GetDataPath();
+    auto s =  application.GetDataPath();
+
+    DEBUG_LOG_INFO( s);
 
     //// 创建游戏对象
     //GameObject* o = new GameObject("Person");
