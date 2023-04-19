@@ -8,7 +8,7 @@ set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Asset")
 # 如果是MSVC环境，设置编译选项为MP,并且设置某个项目为启动项
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     add_compile_options("/MTd")
-    # add_compile_options("/MP")
+    add_compile_options("/MP")
 	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LitchiEditor)
 endif()
