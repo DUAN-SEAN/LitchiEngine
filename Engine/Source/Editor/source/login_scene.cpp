@@ -87,9 +87,8 @@ void LoginScene::Update() {
    /* camera_2_->SetView(glm::vec3(transform_camera_2_->position().x, 0, 0), glm::vec3(0, 1, 0));
     camera_2_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);*/
 
-    camera_1_->SetView(glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
-    camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-
+    float speedMove = Time::delta_time() * 10.0f;
+    float speedRotation  = Time::delta_time() * 1.0f;
     //旋转物体
     if(Input::GetKeyDown(KEY_CODE_R)){
         static float rotate_eulerAngle=0.f;
@@ -104,21 +103,86 @@ void LoginScene::Update() {
         transform_fishsoup_pot_->set_rotation(rotation);
     }
 
-    //旋转相机
-    if(Input::GetKeyDown(KEY_CODE_LEFT_ALT) && Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
-        float degrees= Input::mousePosition().x - last_frame_mouse_position_.x;
-        float degreesY= Input::mousePosition().y - last_frame_mouse_position_.y;
-
-        glm::mat4 old_mat4=glm::mat4(1.0f);
-//        std::cout<<glm::to_string(old_mat4)<<std::endl;
-        glm::mat4 rotate_mat4=glm::rotate(old_mat4,glm::radians(degrees),glm::vec3(0.0f,1.0f,0.0f));//以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
-        rotate_mat4 = glm::rotate(rotate_mat4, glm::radians(degreesY), glm::vec3(1.0f, 0.0f, 0.0f));
-        glm::vec4 old_pos=glm::vec4(transform_camera_1_->position(),1.0f);
-        glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
-        std::cout<<glm::to_string(new_pos)<<std::endl;
-
-        transform_camera_1_->set_position(glm::vec3(new_pos));
+    // 平移相机
+    glm::vec3 cameraMoveDir = glm::vec3(0.0f, 0.0f, 0.0f);
+    if(Input::GetKeyDown(KEY_CODE_W))
+    {
+        cameraMoveDir.z = -1.0f;
+    }else if(Input::GetKeyDown(KEY_CODE_S))
+    {
+        cameraMoveDir.z = 1.0f;
     }
+    if (Input::GetKeyDown(KEY_CODE_A))
+    {
+        cameraMoveDir.x = -1.0f;
+    }
+    else if (Input::GetKeyDown(KEY_CODE_D))
+    {
+        cameraMoveDir.x = 1.0f;
+    }
+
+    glm::vec3 camerNewPos = transform_camera_1_->position() + cameraMoveDir * speedMove;
+    transform_camera_1_->set_position(camerNewPos);
+
+
+    ////旋转相机
+    //if(Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)){
+    //    float degrees= Input::mousePosition().x - last_frame_mouse_position_.x;
+    //    float degreesY= Input::mousePosition().y - last_frame_mouse_position_.y;
+    //    glm::mat4 old_mat4=glm::mat4(1.0f);
+    //	//        std::cout<<glm::to_string(old_mat4)<<std::endl;
+    //    glm::mat4 rotate_mat4=glm::rotate(old_mat4,glm::radians(degrees),glm::vec3(0.0f,1.0f,0.0f));//以相机所在坐标系位置，计算用于旋转的矩阵，这里是零点，所以直接用方阵。
+    //    rotate_mat4 = glm::rotate(rotate_mat4, glm::radians(degreesY), glm::vec3(1.0f, 0.0f, 0.0f));
+    //    glm::vec4 old_pos=glm::vec4(transform_camera_1_->position(),1.0f);
+    //    glm::vec4 new_pos=rotate_mat4*old_pos;//旋转矩阵 * 原来的坐标 = 相机以零点做旋转。
+    //    std::cout<<glm::to_string(new_pos)<<std::endl;
+    //    transform_camera_1_->set_position(glm::vec3(new_pos));
+    //    glm::vec3 cameraOriginCenter = glm::vec3(0, 0, -1);
+    //}
+
+    // 旋转相机
+    if (Input::GetMouseButtonDown(MOUSE_BUTTON_LEFT)) {
+        float degrees = Input::mousePosition().x - last_frame_mouse_position_.x;
+        float degreesY = Input::mousePosition().y - last_frame_mouse_position_.y;
+
+        auto curCameraRotation= transform_camera_1_->rotation();
+
+        glm::quat normalQuat;
+        auto rotationX= glm::rotate(normalQuat, degrees * speedRotation, glm::vec3(0, 1, 0));
+        auto rotationY= glm::rotate(normalQuat, degreesY * speedRotation, glm::vec3(1, 0, 0));
+
+        auto newRotation = rotationX * rotationY * curCameraRotation;
+
+        transform_camera_1_->set_rotation(newRotation);
+
+    }
+
+
+    if (Input::GetKeyDown(KEY_CODE_SPACE))
+    {
+        float degrees = 4.0f;
+
+        auto curCameraRotation = transform_camera_1_->rotation();
+
+        glm::quat normalQuat;
+        auto rotationZ = glm::rotate(normalQuat, degrees * speedRotation, glm::vec3(0, 0, 1));
+
+        auto newRotation = rotationZ * curCameraRotation ;
+
+        transform_camera_1_->set_rotation(newRotation);
+    }
+
+    glm::vec4 cameraOriginCenter = glm::vec4(0, 0, -1,1);
+    auto newCenterPos = transform_camera_1_->toWorldMatrix() * cameraOriginCenter;
+
+
+    glm::vec4 up = glm::vec4(0, 1, 0, 0);
+    auto newUp = transform_camera_1_->toWorldMatrix() * up;
+
+    camera_1_->SetView((glm::vec3(newCenterPos.x, newCenterPos.y, newCenterPos.z)), (glm::vec3(newUp.x, newUp.y, newUp.z)));
+    camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+
+
     last_frame_mouse_position_=Input::mousePosition();
 
     //鼠标滚轮控制相机远近
