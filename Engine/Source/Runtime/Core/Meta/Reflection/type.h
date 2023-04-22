@@ -10,6 +10,13 @@ using namespace rttr;
 class TypeManager {
 public:
 
+	static void Initiliaze(TypeManager* instance);
+
+	/**
+	 * \brief 获取类型句柄
+	 * \tparam T 
+	 * \return 
+	 */
 	template <class T>
 	rttr::type GetType()
 	{
@@ -19,16 +26,35 @@ public:
 		return t;	
 	}
 
-    static void Initiliaze(TypeManager* instance);
+	/**
+	 * \brief 
+	 * \tparam T 类型是否可序列化
+	 * \return 
+	 */
+	template <class T>
+	bool IsSerializable()
+	{
+		type t = type::get<T>();
+		return t.get_metadata("Serializable").to_bool();
+	}
+
+	/**
+	 * \brief 属性是否可序列化
+	 * \tparam T 
+	 * \param propertyName 
+	 * \return 
+	 */
+	template <class T>
+	bool IsSerializable(std::string propertyName)
+	{
+		type t = type::get<T>();
+		return t.get_property(propertyName).get_metadata("Serializable").to_bool();
+	}
 
 private:
     static TypeManager* instance_;
-
-
-    std::unordered_map<std::string, rttr::type> type_map_;
-
+	
 	std::vector<std::string> type_list_;
-
 };
 
 #endif //UNTITLED_TYPE_H
