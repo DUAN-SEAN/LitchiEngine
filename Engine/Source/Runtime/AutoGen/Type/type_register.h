@@ -21,10 +21,14 @@
 #include "Runtime/Function/Framework/Component/Physcis/rigid_static.h"
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
+#include "Runtime/Function/Renderer/material.h"
 
 using namespace rttr;
 RTTR_REGISTRATION //注册反射
 {
+
+	// 组件
+
 	// Componet
 	registration::class_<Component>("Component")
 		(
@@ -80,6 +84,17 @@ RTTR_REGISTRATION //注册反射
 	// SphereCollider
 	registration::class_<SphereCollider>("SphereCollider")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// 内存结构
+	registration::class_<TextureRes>("TextureRes")
+		.constructor<>()
+		.property("name",&TextureRes::GetName,&TextureRes::SetName)
+		.property("path",&TextureRes::GetPath,&TextureRes::SetPath);
+	
+	registration::class_<MaterialRes>("MaterialRes")
+		.constructor<>()
+		.property("shader", &MaterialRes::GetShaderPath, &MaterialRes::SetShaderPath)
+		.property("textureArr", &MaterialRes::GetTextureResArr, &MaterialRes::SetTextureResArr);
 }
 
 #endif

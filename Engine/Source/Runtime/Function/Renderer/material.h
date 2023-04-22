@@ -5,7 +5,23 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <rttr/rttr_enable.h>
+#include "texture2d.h"
 
+class MaterialRes
+{
+public:
+    void SetShaderPath(std::string shaderPath) { shader_path_ = shaderPath; }
+    std::string GetShaderPath() { return shader_path_; }
+
+    void SetTextureResArr(std::vector<TextureRes> textureResArr) { textureRes_arr_ = textureResArr; }
+    std::vector<TextureRes> GetTextureResArr() { return textureRes_arr_; }
+
+    std::string shader_path_;
+    std::vector<TextureRes> textureRes_arr_;
+
+    RTTR_ENABLE()
+};
 
 class Shader;
 class Texture2D;
@@ -23,6 +39,9 @@ public:
     Shader* shader(){return shader_;}
 
     std::vector<std::pair<std::string,Texture2D*>>& textures(){return textures_;}
+
+private:
+    MaterialRes material_res_;
 
 private:
     Shader* shader_;

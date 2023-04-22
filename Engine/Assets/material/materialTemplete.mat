@@ -1,0 +1,9 @@
+<root type="MaterialRes">
+	<shader name="shader" type="std::string" value="shader/unlit"/>
+	<textureArr name="textureArr" type="std::vector<>" subType="TextureRes">
+		<item name="item" type="TextureRes">
+			<name name="name" type="std::string" value="u_diffuse_texture"/>
+			<path name="path" type="std::string" value="images/diffuse_fishsoup_pot.cpt"/>
+		</item>
+	</field>
+</root>

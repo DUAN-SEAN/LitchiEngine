@@ -5,12 +5,7 @@
 #include "Editor/include/login_scene.h"
 #include <rttr/registration>
 
-#include <glad/glad.h>
-#include <glm.hpp>
 #include <ext.hpp>
-#include <gtx/transform2.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <gtx/euler_angles.hpp>
 #include <gtc/quaternion.hpp>
 
 #include "Runtime/Function/Framework/GameObject/game_object.h"
@@ -23,8 +18,6 @@
 #include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Input/key_code.h"
-
-
 
 using namespace rttr;
 RTTR_REGISTRATION

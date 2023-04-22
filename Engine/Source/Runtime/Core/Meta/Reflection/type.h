@@ -1,16 +1,18 @@
 ﻿
-#ifndef UNTITLED_TYPE_H
-#define UNTITLED_TYPE_H
+#ifndef UNTITLED_TYPEMANAGER_H
+#define UNTITLED_TYPEMANAGER_H
 
 #include "rttr/registration"
 #include "rttr/type"
+
+#include "Runtime/AutoGen/Type/type_register.h"
 
 using namespace rttr;
 
 class TypeManager {
 public:
 
-	static void Initiliaze(TypeManager* instance);
+	static void Initialize(TypeManager* instance);
 
 	/**
 	 * \brief 获取类型句柄
@@ -20,9 +22,13 @@ public:
 	template <class T>
 	rttr::type GetType()
 	{
-		//获取类名
+		// 获取类名
 		type t = type::get<T>();
-		std::string component_type_name = t.get_name().to_string();
+		if (!t.is_valid())
+		{
+			return rttr::type::get();
+		}
+
 		return t;	
 	}
 
@@ -35,6 +41,11 @@ public:
 	bool IsSerializable()
 	{
 		type t = type::get<T>();
+		if (!t.is_valid())
+		{
+			return false;
+		}
+
 		return t.get_metadata("Serializable").to_bool();
 	}
 
@@ -45,9 +56,14 @@ public:
 	 * \return 
 	 */
 	template <class T>
-	bool IsSerializable(std::string propertyName)
+	bool IsSerializable(std::string propertyName) 
 	{
 		type t = type::get<T>();
+		if(!t.is_valid())
+		{
+			return false;
+		}
+
 		return t.get_property(propertyName).get_metadata("Serializable").to_bool();
 	}
 
@@ -57,4 +73,4 @@ private:
 	std::vector<std::string> type_list_;
 };
 
-#endif //UNTITLED_TYPE_H
+#endif //UNTITLED_TYPEMANAGER_H

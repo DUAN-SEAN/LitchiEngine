@@ -6,6 +6,22 @@
 
 #include <iostream>
 #include <glad/glad.h>
+#include <rttr/rttr_enable.h>
+
+class TextureRes
+{
+public:
+
+    void SetName(std::string name) { texture_name_ = name; }
+    std::string GetName() { return texture_name_; }
+    void SetPath(std::string path) { texture_path_ = path; }
+    std::string GetPath() { return texture_path_; }
+
+    std::string texture_name_;
+    std::string texture_path_;
+
+    RTTR_ENABLE()
+};
 
 class Texture2D
 {
