@@ -8,12 +8,6 @@
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Physics/physic_material.h"
 
-using namespace rttr;
-RTTR_REGISTRATION{
-    registration::class_<Collider>("Collider")
-            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
-
 Collider::Collider(): px_shape_(nullptr), px_material_(nullptr), physic_material_(nullptr), rigid_actor_(nullptr) ,is_trigger_(false){
 
 }

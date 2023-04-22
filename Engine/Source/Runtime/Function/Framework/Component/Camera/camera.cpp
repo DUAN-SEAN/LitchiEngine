@@ -7,14 +7,6 @@
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
-
-using namespace rttr;
-RTTR_REGISTRATION//注册反射
-{
-    registration::class_<Camera>("Camera")
-            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
-
 std::vector<Camera*> Camera::all_camera_;
 Camera* Camera::current_camera_;
 

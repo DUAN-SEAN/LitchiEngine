@@ -3,13 +3,6 @@
 #include "rttr/registration"
 #include "Runtime/Function/Physics/physics.h"
 
-using namespace rttr;
-RTTR_REGISTRATION//注册反射
-{
-    registration::class_<SphereCollider>("SphereCollider")
-            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
-
 SphereCollider::SphereCollider():Collider(),radius_(1.0f)
 {
 

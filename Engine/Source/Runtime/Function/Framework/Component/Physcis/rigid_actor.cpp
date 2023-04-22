@@ -6,11 +6,6 @@
 #include "Runtime/Core/Log/debug.h"
 #include "collider.h"
 
-using namespace rttr;
-RTTR_REGISTRATION{
-    registration::class_<RigidActor>("RigidActor")
-            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
 
 RigidActor::RigidActor(): px_rigid_actor_(nullptr){
 

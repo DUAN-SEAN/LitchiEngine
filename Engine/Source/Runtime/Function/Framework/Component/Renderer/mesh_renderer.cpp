@@ -13,13 +13,13 @@
 #include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Renderer/shader.h"
 #include "Runtime/Function/Renderer/texture2d.h"
-
-using namespace rttr;
-RTTR_REGISTRATION
-{
-	registration::class_<MeshRenderer>("MeshRenderer")
-	.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
+//
+//using namespace rttr;
+//RTTR_REGISTRATION
+//{
+//	registration::class_<MeshRenderer>("MeshRenderer")
+//	.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+//}
 
 MeshRenderer::MeshRenderer() {
 

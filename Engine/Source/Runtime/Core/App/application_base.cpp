@@ -1,15 +1,17 @@
 ﻿
-#include "application_base.h"
 #include <memory>
 #include <iostream>
 #include <glad/glad.h>
 
+#include "Runtime/Core/Meta/Reflection/type.h"
 #include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Input/input.h"
+#include "application_base.h"
+
 //#include "Runtime/Function/Physics/physics.h"
 
 
@@ -26,6 +28,8 @@ void ApplicationBase::Init() {
     InitGraphicsLibraryFramework();
 
     UpdateScreenSize();
+
+    TypeManager::Initiliaze(new TypeManager());
 
     //初始化 fmod
     //Audio::Init();

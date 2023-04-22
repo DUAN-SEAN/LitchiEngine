@@ -6,12 +6,6 @@
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Physics/physics.h"
 
-using namespace rttr;
-RTTR_REGISTRATION{
-    registration::class_<RigidStatic>("RigidStatic")
-            .constructor<>()(rttr::policy::ctor::as_raw_ptr);
-}
-
 RigidStatic::RigidStatic() {
 
 }
