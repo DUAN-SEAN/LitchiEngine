@@ -1,4 +1,4 @@
-
+ï»¿
 #ifndef UNTITLED_TYPE_H
 #define UNTITLED_TYPE_H
 
@@ -13,14 +13,14 @@ public:
 	static void Initiliaze(TypeManager* instance);
 
 	/**
-	 * \brief »ñÈ¡ÀàĞÍ¾ä±ú
+	 * \brief è·å–ç±»å‹å¥æŸ„
 	 * \tparam T 
 	 * \return 
 	 */
 	template <class T>
 	rttr::type GetType()
 	{
-		//»ñÈ¡ÀàÃû
+		//è·å–ç±»å
 		type t = type::get<T>();
 		std::string component_type_name = t.get_name().to_string();
 		return t;	
@@ -28,7 +28,7 @@ public:
 
 	/**
 	 * \brief 
-	 * \tparam T ÀàĞÍÊÇ·ñ¿ÉĞòÁĞ»¯
+	 * \tparam T ç±»å‹æ˜¯å¦å¯åºåˆ—åŒ–
 	 * \return 
 	 */
 	template <class T>
@@ -39,7 +39,7 @@ public:
 	}
 
 	/**
-	 * \brief ÊôĞÔÊÇ·ñ¿ÉĞòÁĞ»¯
+	 * \brief å±æ€§æ˜¯å¦å¯åºåˆ—åŒ–
 	 * \tparam T 
 	 * \param propertyName 
 	 * \return 

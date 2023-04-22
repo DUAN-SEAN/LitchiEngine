@@ -1,4 +1,4 @@
-
+﻿
 #ifndef UNTITLED_TYPE_REGISTER_H
 #define UNTITLED_TYPE_REGISTER_H
 //
@@ -23,7 +23,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
 
 using namespace rttr;
-RTTR_REGISTRATION //ע�ᷴ��
+RTTR_REGISTRATION //注册反射
 {
 	// Componet
 	registration::class_<Component>("Component")
