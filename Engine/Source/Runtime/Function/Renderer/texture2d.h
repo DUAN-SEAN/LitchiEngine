@@ -10,7 +10,9 @@
 
 class TextureRes
 {
+    
 public:
+    TextureRes(){}
 
     void SetName(std::string name) { texture_name_ = name; }
     std::string GetName() { return texture_name_; }
