@@ -1,0 +1,9 @@
+{
+    "shader": "shader/unlit",
+    "textureArr": [
+        {
+            "name": "u_diffuse_texture",
+            "path": "images/diffuse_fishsoup_pot.cpt"
+        }
+    ]
+}

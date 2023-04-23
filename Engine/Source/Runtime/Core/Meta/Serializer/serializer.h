@@ -18,9 +18,9 @@ namespace LitchiRuntime
 	class SerializerManager {
 	public:
 
-		std::string SerializeToJson(rttr::instance obj);
+		static std::string SerializeToJson(rttr::instance obj);
 
-		bool DeserializeFromJson(const std::string& json, rttr::instance obj);
+		static bool DeserializeFromJson(const std::string& json, rttr::instance obj);
 
 		static void Initialize(SerializerManager* instance);
 

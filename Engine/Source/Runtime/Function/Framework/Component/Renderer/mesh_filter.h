@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2021/4/25.
-//
-
+﻿
 #ifndef UNTITLED_MESH_FILTER_H
 #define UNTITLED_MESH_FILTER_H
 

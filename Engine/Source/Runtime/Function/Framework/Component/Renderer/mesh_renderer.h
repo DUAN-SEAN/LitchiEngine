@@ -1,7 +1,4 @@
-﻿//
-// Created by captainchen on 2021/5/11.
-//
-
+﻿
 #ifndef UNTITLED_MESH_RENDERER_H
 #define UNTITLED_MESH_RENDERER_H
 

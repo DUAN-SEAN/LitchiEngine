@@ -50,7 +50,8 @@ namespace LitchiEditor
 		//挂上 MeshRenderer 组件
 		auto mesh_renderer = go->AddComponent<MeshRenderer>();
 		Material* material = new Material();//设置材质
-		material->Parse("material/fishsoup_pot.mat");
+		material->Parse("material/materialTemplete2.mat");
+		//material->Parse("material/fishsoup_pot.mat");
 		mesh_renderer->SetMaterial(material);
 		DEBUG_LOG_INFO("LoadMaterial Done");
 
