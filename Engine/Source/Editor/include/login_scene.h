@@ -7,7 +7,9 @@
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "glm.hpp"
+
 using namespace std;
+using namespace LitchiRuntime;
 
 class Transform;
 class Camera;

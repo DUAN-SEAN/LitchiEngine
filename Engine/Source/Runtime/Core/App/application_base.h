@@ -4,54 +4,56 @@
 
 #include <direct.h>
 #include <string>
+namespace LitchiRuntime
+{
 
-class ApplicationBase {
-public:
-    ApplicationBase(){}
-    virtual ~ApplicationBase(){}
+    class ApplicationBase {
+    public:
+        ApplicationBase() {}
+        virtual ~ApplicationBase() {}
 
-    void set_title(std::string title){title_=title;}
+        void set_title(std::string title) { title_ = title; }
 
-    const std::string& data_path(){return data_path_;}
-    void SetDataPath(std::string data_path)
-    {
-    	data_path_=data_path;
-	    // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
-    }
+        const std::string& data_path() { return data_path_; }
+        void SetDataPath(std::string data_path)
+        {
+            data_path_ = data_path;
+            // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
+        }
 
-    /// 初始化OpenGL
-    virtual void Init();
+        /// 初始化OpenGL
+        virtual void Init();
 
-    /// 初始化图形库，例如glfw
-    virtual void InitGraphicsLibraryFramework();
+        /// 初始化图形库，例如glfw
+        virtual void InitGraphicsLibraryFramework();
 
-    ///
-    virtual void InitLuaBinding();
+        ///
+        virtual void InitLuaBinding();
 
-    virtual void LoadConfig();
+        virtual void LoadConfig();
 
-    virtual void Run();
+        virtual void Run();
 
-    /// 一帧
-    virtual void OneFrame();
+        /// 一帧
+        virtual void OneFrame();
 
-    virtual void UpdateScreenSize();
+        virtual void UpdateScreenSize();
 
-    /// 每一帧内逻辑代码。
-    virtual void Update();
+        /// 每一帧内逻辑代码。
+        virtual void Update();
 
-    virtual void FixedUpdate();
+        virtual void FixedUpdate();
 
-    /// 逻辑代码执行后，应用到渲染。
-    virtual void Render();
+        /// 逻辑代码执行后，应用到渲染。
+        virtual void Render();
 
-    virtual void Exit();
+        virtual void Exit();
 
-protected:
-    std::string title_;//标题栏显示
+    protected:
+        std::string title_;//标题栏显示
 
-    std::string data_path_;//资源目录
-};
-
+        std::string data_path_;//资源目录
+    };
+}
 
 #endif //UNTITLED_APPLICATION_BASE_H

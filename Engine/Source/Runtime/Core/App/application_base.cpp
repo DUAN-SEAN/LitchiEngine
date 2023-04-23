@@ -15,107 +15,109 @@
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 
 //#include "Runtime/Function/Physics/physics.h"
+namespace LitchiRuntime
+{
 
+    void ApplicationBase::Init() {
 
-void ApplicationBase::Init() {
+        Debug::Init();
+        DEBUG_LOG_INFO("game start");
 
-	Debug::Init();
-    DEBUG_LOG_INFO("game start");
+        //LoadConfig();
 
-    //LoadConfig();
+        Time::Init();
 
-    Time::Init();
+        //初始化图形库，例如glfw
+        InitGraphicsLibraryFramework();
 
-    //初始化图形库，例如glfw
-    InitGraphicsLibraryFramework();
+        UpdateScreenSize();
 
-    UpdateScreenSize();
+        TypeManager::Initialize(new TypeManager());
 
-    TypeManager::Initialize(new TypeManager());
+        LithiRuntime::SerializerManager::Initialize(new LithiRuntime::SerializerManager());
 
-	LithiRuntime::SerializerManager::Initialize(new LithiRuntime::SerializerManager());
+        //初始化 fmod
+        //Audio::Init();
 
-    //初始化 fmod
-    //Audio::Init();
-
-    //初始化物理引擎
-    // Physics::Init();
-}
-
-/// 初始化图形库，例如glfw
-void ApplicationBase::InitGraphicsLibraryFramework() {
-
-}
-
-void ApplicationBase::InitLuaBinding() {
-}
-
-void ApplicationBase::LoadConfig() {
-}
-
-void ApplicationBase::Run() {
-
-}
-
-void ApplicationBase::Update(){
-	Time::Update();
-    UpdateScreenSize();
-
-    GameObject::Foreach([](GameObject* game_object) {
-        if (game_object->active()) {
-            game_object->ForeachComponent([](Component* component) {
-                component->Update();
-                });
-        }
-        });
-
-    Input::Update();
-    //Audio::Update();
-}
-
-
-void ApplicationBase::Render(){
-    //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
-    Camera::Foreach([&]() {
-        GameObject::Foreach([](GameObject* game_object) {
-            if (game_object->active() == false) {
-                return;
-            }
-            MeshRenderer* mesh_renderer = game_object->GetComponent<MeshRenderer>();
-            if (mesh_renderer == nullptr) {
-                return;
-            }
-            mesh_renderer->Render();
-            });
-        });
-}
-
-void ApplicationBase::FixedUpdate(){
-    //Physics::FixedUpdate();
-
-    GameObject::Foreach([](GameObject* game_object) {
-        if (game_object->active()) {
-            game_object->ForeachComponent([](Component* component) {
-                component->FixedUpdate();
-                });
-        }
-        });
-}
-
-void ApplicationBase::OneFrame() {
-    Update();
-    // 如果一帧卡了很久，就多执行几次FixedUpdate
-    float cost_time = Time::delta_time();
-    while (cost_time >= Time::fixed_update_time()) {
-        FixedUpdate();
-        cost_time -= Time::fixed_update_time();
+        //初始化物理引擎
+        // Physics::Init();
     }
 
-    Render();
-}
+    /// 初始化图形库，例如glfw
+    void ApplicationBase::InitGraphicsLibraryFramework() {
 
-void ApplicationBase::UpdateScreenSize() {
-}
+    }
 
-void ApplicationBase::Exit() {
+    void ApplicationBase::InitLuaBinding() {
+    }
+
+    void ApplicationBase::LoadConfig() {
+    }
+
+    void ApplicationBase::Run() {
+
+    }
+
+    void ApplicationBase::Update() {
+        Time::Update();
+        UpdateScreenSize();
+
+        GameObject::Foreach([](GameObject* game_object) {
+            if (game_object->active()) {
+                game_object->ForeachComponent([](Component* component) {
+                    component->Update();
+                    });
+            }
+            });
+
+        Input::Update();
+        //Audio::Update();
+    }
+
+
+    void ApplicationBase::Render() {
+        //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
+        Camera::Foreach([&]() {
+            GameObject::Foreach([](GameObject* game_object) {
+                if (game_object->active() == false) {
+                    return;
+                }
+                MeshRenderer* mesh_renderer = game_object->GetComponent<MeshRenderer>();
+                if (mesh_renderer == nullptr) {
+                    return;
+                }
+                mesh_renderer->Render();
+                });
+            });
+    }
+
+    void ApplicationBase::FixedUpdate() {
+        //Physics::FixedUpdate();
+
+        GameObject::Foreach([](GameObject* game_object) {
+            if (game_object->active()) {
+                game_object->ForeachComponent([](Component* component) {
+                    component->FixedUpdate();
+                    });
+            }
+            });
+    }
+
+    void ApplicationBase::OneFrame() {
+        Update();
+        // 如果一帧卡了很久，就多执行几次FixedUpdate
+        float cost_time = Time::delta_time();
+        while (cost_time >= Time::fixed_update_time()) {
+            FixedUpdate();
+            cost_time -= Time::fixed_update_time();
+        }
+
+        Render();
+    }
+
+    void ApplicationBase::UpdateScreenSize() {
+    }
+
+    void ApplicationBase::Exit() {
+    }
 }

@@ -20,6 +20,7 @@
 #include "Runtime/Function/Input/key_code.h"
 
 using namespace rttr;
+using namespace LitchiRuntime;
 RTTR_REGISTRATION
 {
     registration::class_<LoginScene>("LoginScene")

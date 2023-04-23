@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 
-namespace Litchi
+namespace LitchiRuntime
 {
     class EditorScaleAxis
     {

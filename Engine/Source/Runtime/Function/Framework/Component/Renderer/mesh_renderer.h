@@ -9,25 +9,29 @@
 #include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
 
-class Material;
-class MeshFilter;
-class Texture2D;
-class MeshRenderer :public Component {
-public:
-    MeshRenderer();
-    ~MeshRenderer();
+namespace LitchiRuntime
+{
 
-    void SetMaterial(Material* material);//设置Material
-    Material* material() { return material_; }
+    class Material;
+    class MeshFilter;
+    class Texture2D;
+    class MeshRenderer :public Component {
+    public:
+        MeshRenderer();
+        ~MeshRenderer();
 
-    void Render();//渲染
-private:
-    Material* material_;
+        void SetMaterial(Material* material);//设置Material
+        Material* material() { return material_; }
 
-    unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
-    unsigned int element_buffer_object_ = 0;//索引缓冲区对象
-    unsigned int vertex_array_object_ = 0;//顶点数组对象
-};
+        void Render();//渲染
+    private:
+        Material* material_;
+
+        unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
+        unsigned int element_buffer_object_ = 0;//索引缓冲区对象
+        unsigned int vertex_array_object_ = 0;//顶点数组对象
+    };
+}
 
 
 #endif //UNTITLED_MESH_RENDERER_H

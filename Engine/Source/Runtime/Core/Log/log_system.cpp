@@ -4,7 +4,7 @@
 #include <spdlog/sinks/stdout_color_sinks.h>
 #include <spdlog/spdlog.h>
 
-namespace Piccolo
+namespace LitchiRuntime
 {
     LogSystem::LogSystem()
     {

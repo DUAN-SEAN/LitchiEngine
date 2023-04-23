@@ -7,43 +7,44 @@
 #include <map>
 #include <rttr/rttr_enable.h>
 #include "texture2d.h"
-
-class MaterialRes
+namespace LitchiRuntime
 {
-public:
-    std::string shader_path_;
-    std::vector<TextureRes> textureRes_arr_;
+    class MaterialRes
+    {
+    public:
+        std::string shader_path_;
+        std::vector<TextureRes> textureRes_arr_;
 
-    RTTR_ENABLE()
-};
+        RTTR_ENABLE()
+    };
 
-class Shader;
-class Texture2D;
-class Material {
-public:
-    Material();
-    ~Material();
+    class Shader;
+    class Texture2D;
+    class Material {
+    public:
+        Material();
+        ~Material();
 
-    void Parse(std::string material_path);//加载Material文件并解析
+        void Parse(std::string material_path);//加载Material文件并解析
 
 
-    void SetUniformMatrix4fv(std::string shader_property_name,float* pointer);
-    void SetUniform1i(std::string shader_property_name,int value);
+        void SetUniformMatrix4fv(std::string shader_property_name, float* pointer);
+        void SetUniform1i(std::string shader_property_name, int value);
 
-    Shader* shader(){return shader_;}
+        Shader* shader() { return shader_; }
 
-    std::vector<std::pair<std::string,Texture2D*>>& textures(){return textures_;}
+        std::vector<std::pair<std::string, Texture2D*>>& textures() { return textures_; }
 
-private:
-    MaterialRes material_res_;
+    private:
+        MaterialRes material_res_;
 
-private:
-    Shader* shader_;
-    std::vector<std::pair<std::string,Texture2D*>> textures_;
+    private:
+        Shader* shader_;
+        std::vector<std::pair<std::string, Texture2D*>> textures_;
 
-    std::vector<std::pair<std::string,float*>> uniform_matrix4fv_vec;
-    std::vector<std::pair<std::string,int>> uniform_1i_vec;
-};
-
+        std::vector<std::pair<std::string, float*>> uniform_matrix4fv_vec;
+        std::vector<std::pair<std::string, int>> uniform_1i_vec;
+    };
+}
 
 #endif //UNTITLED_MATERIAL_H

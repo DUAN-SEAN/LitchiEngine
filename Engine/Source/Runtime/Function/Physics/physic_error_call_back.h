@@ -16,18 +16,20 @@ This class is provided in order to enable the SDK to be started with the minimum
 will use its own error callback, and log the error to file or otherwise make it visible. Warnings and error messages from
 the SDK are usually indicative that changes are required in order for PhysX to function correctly, and should not be ignored.
 */
-
-class PhysicErrorCallback : public PxErrorCallback
+namespace LitchiRuntime
 {
-public:
-    PhysicErrorCallback(){}
-    ~PhysicErrorCallback(){}
 
-    void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line) override{
-        const char* errorCode = NULL;
+    class PhysicErrorCallback : public PxErrorCallback
+    {
+    public:
+        PhysicErrorCallback() {}
+        ~PhysicErrorCallback() {}
 
-        switch (code)
-        {
+        void reportError(PxErrorCode::Enum code, const char* message, const char* file, int line) override {
+            const char* errorCode = NULL;
+
+            switch (code)
+            {
             case PxErrorCode::eNO_ERROR:
                 errorCode = "no error";
                 break;
@@ -58,28 +60,29 @@ public:
             case PxErrorCode::eMASK_ALL:
                 errorCode = "unknown error";
                 break;
-        }
+            }
 
-        PX_ASSERT(errorCode);
-        if(errorCode)
-        {
-            char buffer[1024];
-            sprintf(buffer, "%s (%d) : %s : %s\n", file, line, errorCode, message);
-
-            DEBUG_LOG_ERROR(buffer);
-
-            // in debug builds halt execution for abort codes
-            PX_ASSERT(e != PxErrorCode::eABORT);
-
-            // in release builds we also want to halt execution
-            // and make sure that the error message is flushed
-            while (code == PxErrorCode::eABORT)
+            PX_ASSERT(errorCode);
+            if (errorCode)
             {
+                char buffer[1024];
+                sprintf(buffer, "%s (%d) : %s : %s\n", file, line, errorCode, message);
+
                 DEBUG_LOG_ERROR(buffer);
-                physx::shdfnd::Thread::sleep(1000);
+
+                // in debug builds halt execution for abort codes
+                PX_ASSERT(e != PxErrorCode::eABORT);
+
+                // in release builds we also want to halt execution
+                // and make sure that the error message is flushed
+                while (code == PxErrorCode::eABORT)
+                {
+                    DEBUG_LOG_ERROR(buffer);
+                    physx::shdfnd::Thread::sleep(1000);
+                }
             }
         }
-    }
-};
+    };
+}
 #endif //INTEGRATE_PHYSX_PHYSIC_ERROR_CALL_BACK_H
 

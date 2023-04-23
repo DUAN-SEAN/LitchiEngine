@@ -4,23 +4,25 @@
 
 #include "glm.hpp"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+namespace LitchiRuntime
+{
+    /// 射线检测结果
+    class RaycastHit {
+    public:
+        RaycastHit() {}
+        ~RaycastHit() {}
 
-/// 射线检测结果
-class RaycastHit{
-public:
-    RaycastHit(){}
-    ~RaycastHit(){}
+        glm::vec3& position() { return position_; }
+        void set_position(float x, float y, float z) {
+            position_ = glm::vec3(x, y, z);
+        }
 
-    glm::vec3& position(){return position_;}
-    void set_position(float x,float y,float z){
-        position_=glm::vec3(x,y,z);
-    }
-
-    GameObject* game_object(){return game_object_;}
-    void set_game_object(GameObject* game_object){game_object_=game_object;}
-private:
-    glm::vec3 position_;//击中物体的坐标
-    GameObject* game_object_;//击中的物体
-};
+        GameObject* game_object() { return game_object_; }
+        void set_game_object(GameObject* game_object) { game_object_ = game_object; }
+    private:
+        glm::vec3 position_;//击中物体的坐标
+        GameObject* game_object_;//击中的物体
+    };
+}
 
 #endif //INTEGRATE_PHYSX_RAYCAST_HIT_H

@@ -5,9 +5,8 @@
 #include <cstdint>
 #include <stdexcept>
 
-namespace Piccolo
+namespace LitchiRuntime
 {
-
     class LogSystem final
     {
     public:

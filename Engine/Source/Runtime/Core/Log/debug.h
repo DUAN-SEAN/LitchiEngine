@@ -16,11 +16,12 @@
             DEBUG_LOG_ERROR("gl_error_code: {}",gl_error_code);\
         }\
     }
-
-class Debug {
-public:
-    static void Init();
-};
-
+namespace LitchiRuntime
+{
+    class Debug {
+    public:
+        static void Init();
+    };
+}
 
 #endif //UNTITLED_DEBUG_H

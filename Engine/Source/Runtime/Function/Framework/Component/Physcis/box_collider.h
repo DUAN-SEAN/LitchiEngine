@@ -8,21 +8,23 @@
 #include "core/type.hpp"
 
 using namespace rttr;
+namespace LitchiRuntime
+{
+    class BoxCollider : public Collider {
+    public:
+        BoxCollider();
+        ~BoxCollider();
 
-class BoxCollider : public Collider {
-public:
-    BoxCollider();
-    ~BoxCollider();
+    protected:
+        void CreateShape() override;
 
-protected:
-    void CreateShape() override;
+    private:
+        //~zh 碰撞器尺寸
+        glm::vec3 size_;
 
-private:
-    //~zh 碰撞器尺寸
-    glm::vec3 size_;
-
-RTTR_ENABLE(Collider);
-};
+        RTTR_ENABLE(Collider);
+    };
+}
 
 
 #endif //INTEGRATE_PHYSX_BOX_COLLIDER_H

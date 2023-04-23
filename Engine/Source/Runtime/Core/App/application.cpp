@@ -1,18 +1,20 @@
 ﻿
 #include "application.h"
 #include "application_base.h"
+namespace LitchiRuntime
+{
+    ApplicationBase* Application::instance_ = nullptr;
 
-ApplicationBase* Application::instance_= nullptr;
+    void Application::Initiliaze(ApplicationBase* instance) {
+        instance_ = instance;
+        instance_->Init();
+    }
 
-void Application::Initiliaze(ApplicationBase* instance) {
-    instance_=instance;
-    instance_->Init();
-}
+    const std::string& Application::GetDataPath() {
+        return instance_->data_path();
+    }
 
-const std::string& Application::GetDataPath() {
-    return instance_->data_path();
-}
-
-void Application::Run() {
-    instance_->Run();
+    void Application::Run() {
+        instance_->Run();
+    }
 }

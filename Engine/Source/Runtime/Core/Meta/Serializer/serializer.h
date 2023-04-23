@@ -12,22 +12,24 @@
 #include "Runtime/Core/Meta/Reflection/type.h"
 
 using namespace rttr;
-
-namespace LithiRuntime
+namespace LitchiRuntime
 {
-	class SerializerManager {
-	public:
+	namespace LithiRuntime
+	{
+		class SerializerManager {
+		public:
 
-		std::string SerializeToJson(rttr::instance obj);
+			std::string SerializeToJson(rttr::instance obj);
 
-		bool DeserializeFromJson(const std::string& json, rttr::instance obj);
+			bool DeserializeFromJson(const std::string& json, rttr::instance obj);
 
-		static void Initialize(SerializerManager* instance);
+			static void Initialize(SerializerManager* instance);
 
-	private:
+		private:
 
-		static SerializerManager* instance_;
-	};
-	
+			static SerializerManager* instance_;
+		};
+
+	}
 }
 #endif //UNTITLED_TYPE_H

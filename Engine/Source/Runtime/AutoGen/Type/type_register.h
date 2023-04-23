@@ -24,6 +24,8 @@
 #include "Runtime/Function/Renderer/material.h"
 
 using namespace rttr;
+namespace LitchiRuntime
+{
 RTTR_REGISTRATION //注册反射
 {
 
@@ -32,7 +34,7 @@ RTTR_REGISTRATION //注册反射
 	// Componet
 	registration::class_<Component>("Component")
 		(
-			rttr::metadata("Serializable", true)
+		rttr::metadata("Serializable", true)
 		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
@@ -51,7 +53,7 @@ RTTR_REGISTRATION //注册反射
 	// Transform
 	registration::class_<Transform>("Transform")
 		(
-			rttr::metadata("Serializable", true)
+		rttr::metadata("Serializable", true)
 		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("position", &Transform::position, &Transform::set_position)
@@ -90,7 +92,7 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()
 		.property("name",&TextureRes::texture_name_)
 		.property("path",&TextureRes::texture_path_);
-	
+
 	registration::class_<MaterialRes>("MaterialRes")
 		.constructor<>()
 		.property("shader", &MaterialRes::shader_path_)
@@ -102,6 +104,7 @@ RTTR_REGISTRATION //注册反射
 		.property("x", &glm::vec3::x)
 		.property("y", &glm::vec3::y)
 		.property("z", &glm::vec3::z);
+	}
 }
 
 #endif

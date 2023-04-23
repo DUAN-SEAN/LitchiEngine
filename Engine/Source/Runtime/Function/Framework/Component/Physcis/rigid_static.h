@@ -3,23 +3,24 @@
 #define UNTITLED_RIGID_STATIC_H
 
 #include "rigid_actor.h"
+namespace LitchiRuntime
+{
+    class Collider;
+    class RigidStatic : public RigidActor {
+    public:
+        RigidStatic();
+        ~RigidStatic();
 
-class Collider;
-class RigidStatic : public RigidActor{
-public:
-    RigidStatic();
-    ~RigidStatic();
+    public:
+        /// Awake里反序列化给成员变量赋值。
+        void Awake() override;
 
-public:
-    /// Awake里反序列化给成员变量赋值。
-    void Awake() override;
+        void Update() override;
 
-    void Update() override;
+        void FixedUpdate() override;
 
-    void FixedUpdate() override;
-
-RTTR_ENABLE(RigidActor)
-};
-
+        RTTR_ENABLE(RigidActor)
+    };
+}
 
 #endif //UNTITLED_RIGID_STATIC_H

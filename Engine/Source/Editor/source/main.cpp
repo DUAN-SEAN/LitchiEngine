@@ -7,7 +7,7 @@
 #include "Runtime/Core/App/application.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Platform/App/application_standalone.h"
-
+using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
     // std::filesystem::path executable_path(argv[0]);

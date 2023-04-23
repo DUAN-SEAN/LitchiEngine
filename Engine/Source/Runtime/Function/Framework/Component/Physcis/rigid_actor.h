@@ -6,24 +6,25 @@
 #include "Runtime/Function/Framework/Component/Base/component.h"
 
 using namespace physx;
+namespace LitchiRuntime
+{
+    class Collider;
+    class RigidActor : public Component {
+    public:
+        RigidActor();
+        ~RigidActor();
 
-class Collider;
-class RigidActor : public Component{
-public:
-    RigidActor();
-    ~RigidActor();
+        virtual void AttachColliderShape(Collider* collider);
+        virtual void DeAttachColliderShape(Collider* collider);
 
-    virtual void AttachColliderShape(Collider *collider);
-    virtual void DeAttachColliderShape(Collider *collider);
+    public:
+        void Awake() override;
 
-public:
-    void Awake() override;
+    protected:
+        PxRigidActor* px_rigid_actor_;
 
-protected:
-    PxRigidActor* px_rigid_actor_;
-
-RTTR_ENABLE(Component)
-};
-
+        RTTR_ENABLE(Component)
+    };
+}
 
 #endif //INTEGRATE_PHYSX_RIGID_ACTOR_H

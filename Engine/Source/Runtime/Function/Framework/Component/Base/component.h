@@ -11,41 +11,43 @@
 #include "rttr/registration"
 
 using namespace rttr;
+namespace LitchiRuntime
+{
+    class GameObject;
+    class Component {
+    public:
+        Component();
+        virtual ~Component();
 
-class GameObject;
-class Component {
-public:
-    Component();
-    virtual ~Component();
+        GameObject* game_object() { return game_object_; }
+        void set_game_object(GameObject* game_object) { game_object_ = game_object; }
 
-    GameObject* game_object(){return game_object_;}
-    void set_game_object(GameObject* game_object){game_object_=game_object;}
+    private:
 
-private:
+    public:
+        virtual void OnEnable();
+        virtual void Awake();
+        virtual void Update();
+        virtual void FixedUpdate();
 
-public:
-    virtual void OnEnable();
-    virtual void Awake();
-    virtual void Update();
-    virtual void FixedUpdate();
+        /// 渲染之前
+        virtual void OnPreRender();
+        /// 渲染之后
+        virtual void OnPostRender();
 
-    /// 渲染之前
-    virtual void OnPreRender();
-    /// 渲染之后
-    virtual void OnPostRender();
+        virtual void OnDisable();
 
-    virtual void OnDisable();
+        virtual void OnTriggerEnter(GameObject* game_object);
 
-    virtual void OnTriggerEnter(GameObject* game_object);
+        virtual void OnTriggerExit(GameObject* game_object);
 
-    virtual void OnTriggerExit(GameObject* game_object);
+        virtual void OnTriggerStay(GameObject* game_object);
+    private:
+        GameObject* game_object_;
 
-    virtual void OnTriggerStay(GameObject* game_object);
-private:
-    GameObject* game_object_;
-
-RTTR_ENABLE();
-};
+        RTTR_ENABLE();
+    };
+}
 
 
 #endif //UNTITLED_COMPONENT_H

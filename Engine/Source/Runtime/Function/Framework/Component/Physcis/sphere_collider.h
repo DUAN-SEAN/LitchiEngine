@@ -6,20 +6,21 @@
 #include "collider.h"
 
 using namespace rttr;
+namespace LitchiRuntime
+{
+    class SphereCollider : public Collider {
+    public:
+        SphereCollider();
+        ~SphereCollider();
+    protected:
+        void CreateShape() override;
 
-class SphereCollider : public Collider {
-public:
-    SphereCollider();
-    ~SphereCollider();
-protected:
-    void CreateShape() override;
+    private:
+        //~zh 球体碰撞器半径
+        float radius_;
 
-private:
-    //~zh 球体碰撞器半径
-    float radius_;
-
-RTTR_ENABLE(Collider);
-};
-
+        RTTR_ENABLE(Collider);
+    };
+}
 
 #endif //INTEGRATE_PHYSX_SPHERE_COLLIDER_H
