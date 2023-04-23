@@ -6,6 +6,7 @@
 #include <rttr/registration>
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+
 namespace LitchiRuntime
 {
     std::vector<Camera*> Camera::all_camera_;

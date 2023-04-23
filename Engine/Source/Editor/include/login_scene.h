@@ -7,12 +7,15 @@
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "glm.hpp"
+#include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 
 using namespace std;
 using namespace LitchiRuntime;
 
-class Transform;
-class Camera;
+namespace LitchiEditor
+{
+	
 class LoginScene:public Component{
 public:
     LoginScene();
@@ -30,5 +33,6 @@ private:
     glm::vec2 last_frame_mouse_position_;//上一帧的鼠标位置
 };
 
+}
 
 #endif //UNTITLED_LOGINSCENE_H

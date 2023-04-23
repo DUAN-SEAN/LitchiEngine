@@ -7,6 +7,7 @@
 #include <functional>
 #include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
+
 namespace LitchiRuntime
 {
     class Camera : public Component {
