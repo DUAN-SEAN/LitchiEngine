@@ -13,12 +13,7 @@ class TextureRes
     
 public:
     TextureRes(){}
-
-    void SetName(std::string name) { texture_name_ = name; }
-    std::string GetName() { return texture_name_; }
-    void SetPath(std::string path) { texture_path_ = path; }
-    std::string GetPath() { return texture_path_; }
-
+    
     std::string texture_name_;
     std::string texture_path_;
 

@@ -33,7 +33,7 @@ void ApplicationBase::Init() {
 
     TypeManager::Initialize(new TypeManager());
 
-    SerializerManager::Initialize(new SerializerManager());
+	LithiRuntime::SerializerManager::Initialize(new LithiRuntime::SerializerManager());
 
     //初始化 fmod
     //Audio::Init();

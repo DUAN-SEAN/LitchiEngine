@@ -13,27 +13,21 @@
 
 using namespace rttr;
 
-class SerializerManager {
-public:
+namespace LithiRuntime
+{
+	class SerializerManager {
+	public:
 
-	template <class T>
-	rapidxml::xml_document<> Serialize(T* obj)
-	{
-		auto type = TypeManager::GetType<T>();
+		std::string SerializeToJson(rttr::instance obj);
 
-		// 序列化成员
+		bool DeserializeFromJson(const std::string& json, rttr::instance obj);
 
-		// 递归构造Node
+		static void Initialize(SerializerManager* instance);
 
-		// 返回document
+	private:
 
-	}
-
-	static void Initialize(SerializerManager* instance);
-
-private:
-
-	static SerializerManager* instance_;
-};
-
+		static SerializerManager* instance_;
+	};
+	
+}
 #endif //UNTITLED_TYPE_H

@@ -11,12 +11,6 @@
 class MaterialRes
 {
 public:
-    void SetShaderPath(std::string shaderPath) { shader_path_ = shaderPath; }
-    std::string GetShaderPath() { return shader_path_; }
-
-    void SetTextureResArr(std::vector<TextureRes> textureResArr) { textureRes_arr_ = textureResArr; }
-    std::vector<TextureRes> GetTextureResArr() { return textureRes_arr_; }
-
     std::string shader_path_;
     std::vector<TextureRes> textureRes_arr_;
 

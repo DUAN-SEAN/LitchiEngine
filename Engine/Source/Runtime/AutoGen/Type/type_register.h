@@ -88,13 +88,20 @@ RTTR_REGISTRATION //注册反射
 	// 内存结构
 	registration::class_<TextureRes>("TextureRes")
 		.constructor<>()
-		.property("name",&TextureRes::GetName,&TextureRes::SetName)
-		.property("path",&TextureRes::GetPath,&TextureRes::SetPath);
+		.property("name",&TextureRes::texture_name_)
+		.property("path",&TextureRes::texture_path_);
 	
 	registration::class_<MaterialRes>("MaterialRes")
 		.constructor<>()
-		.property("shader", &MaterialRes::GetShaderPath, &MaterialRes::SetShaderPath)
-		.property("textureArr", &MaterialRes::GetTextureResArr, &MaterialRes::SetTextureResArr);
+		.property("shader", &MaterialRes::shader_path_)
+		.property("textureArr", &MaterialRes::textureRes_arr_);
+
+
+	registration::class_<glm::vec3>("Vec3")
+		.constructor()
+		.property("x", &glm::vec3::x)
+		.property("y", &glm::vec3::y)
+		.property("z", &glm::vec3::z);
 }
 
 #endif
