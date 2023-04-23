@@ -14,22 +14,17 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-	namespace LithiRuntime
-	{
-		class SerializerManager {
-		public:
 
-			std::string SerializeToJson(rttr::instance obj);
+	class SerializerManager {
+	public:
 
-			bool DeserializeFromJson(const std::string& json, rttr::instance obj);
+		std::string SerializeToJson(rttr::instance obj);
 
-			static void Initialize(SerializerManager* instance);
+		bool DeserializeFromJson(const std::string& json, rttr::instance obj);
 
-		private:
+		static void Initialize(SerializerManager* instance);
 
-			static SerializerManager* instance_;
-		};
-
-	}
+	private:
+	};
 }
 #endif //UNTITLED_TYPE_H

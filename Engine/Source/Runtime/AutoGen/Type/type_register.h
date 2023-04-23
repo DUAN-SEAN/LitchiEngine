@@ -98,12 +98,32 @@ RTTR_REGISTRATION //注册反射
 		.property("shader", &MaterialRes::shader_path_)
 		.property("textureArr", &MaterialRes::textureRes_arr_);
 
+	registration::class_<glm::vec2>("Vec2")
+		.constructor()
+		.property("x", &glm::vec2::x)
+		.property("y", &glm::vec2::y);
 
 	registration::class_<glm::vec3>("Vec3")
 		.constructor()
 		.property("x", &glm::vec3::x)
 		.property("y", &glm::vec3::y)
 		.property("z", &glm::vec3::z);
+
+	registration::class_<glm::vec4>("Vec4")
+		.constructor()
+		.property("x", &glm::vec4::x)
+		.property("y", &glm::vec4::y)
+		.property("y", &glm::vec4::z)
+		.property("w", &glm::vec4::w);
+
+
+	registration::class_<VertexRes>("VertexRes")
+		.constructor()
+		.property("pos", &VertexRes::pos_)
+		.property("color", &VertexRes::color_)
+		.property("uv", &VertexRes::uv_);
+
+
 	}
 }
 

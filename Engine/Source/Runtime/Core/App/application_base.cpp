@@ -13,6 +13,7 @@
 
 #include "Runtime/Core/Meta/Reflection/type.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
+#include "Runtime/Function/Physics/physics.h"
 
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
@@ -34,13 +35,13 @@ namespace LitchiRuntime
 
         TypeManager::Initialize(new TypeManager());
 
-        LithiRuntime::SerializerManager::Initialize(new LithiRuntime::SerializerManager());
+        SerializerManager::Initialize(new SerializerManager());
 
         //初始化 fmod
         //Audio::Init();
 
         //初始化物理引擎
-        // Physics::Init();
+        Physics::Init();
     }
 
     /// 初始化图形库，例如glfw

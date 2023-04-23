@@ -14,9 +14,10 @@ using std::ios;
 using std::cout;
 using std::endl;
 using namespace rapidjson;
+
 namespace LitchiRuntime
 {
-	void LithiRuntime::SerializerManager::Initialize(SerializerManager* instance)
+	void SerializerManager::Initialize(SerializerManager* instance)
 	{
 		MaterialRes materialRes;
 		materialRes.shader_path_ = "shader/XXX.fs";
@@ -34,6 +35,11 @@ namespace LitchiRuntime
 		json = instance->SerializeToJson(materialRes2);
 		DEBUG_LOG_INFO("SerializeToJson2::\n" + json);
 
+		VertexRes vertexRes;
+		vertexRes.pos_.x = 2.0f;
+		vertexRes.color_.x = 1.0f;
+		auto vertexResJson = instance->SerializeToJson(vertexRes);
+		DEBUG_LOG_INFO("vertexResJson2::\n" + vertexResJson);
 
 		//// instance_ = instance;
 
@@ -512,7 +518,7 @@ namespace LitchiRuntime
 
 #endif 
 
-	std::string LithiRuntime::SerializerManager::SerializeToJson(rttr::instance obj)
+	std::string SerializerManager::SerializeToJson(rttr::instance obj)
 	{
 		if (!obj.is_valid())
 			return std::string();
@@ -525,7 +531,7 @@ namespace LitchiRuntime
 		return sb.GetString();
 	}
 
-	bool LithiRuntime::SerializerManager::DeserializeFromJson(const std::string& json, rttr::instance obj)
+	bool SerializerManager::DeserializeFromJson(const std::string& json, rttr::instance obj)
 	{
 		Document document;  // Default template parameter uses UTF8 and MemoryPoolAllocator.
 

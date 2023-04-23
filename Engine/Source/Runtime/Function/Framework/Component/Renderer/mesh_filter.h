@@ -13,6 +13,16 @@ using std::string;
 
 namespace LitchiRuntime
 {
+	class VertexRes
+	{
+	public:
+
+        glm::vec3 pos_;
+        glm::vec4 color_;
+        glm::vec2 uv_;
+
+		RTTR_ENABLE()
+	};
 
     class MeshFilter :public Component {
     public:
