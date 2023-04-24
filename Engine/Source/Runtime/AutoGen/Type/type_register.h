@@ -28,76 +28,7 @@ namespace LitchiRuntime
 {
 RTTR_REGISTRATION //注册反射
 {
-
-	// 组件
-
-	// Componet
-	registration::class_<Component>("Component")
-		(
-		rttr::metadata("Serializable", true)
-		)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// Camera
-	registration::class_<Camera>("Camera")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// MeshRenderer
-	registration::class_<MeshRenderer>("MeshRenderer")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// MeshFilter
-	registration::class_<MeshFilter>("MeshFilter")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// Transform
-	registration::class_<Transform>("Transform")
-		(
-		rttr::metadata("Serializable", true)
-		)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("position", &Transform::position, &Transform::set_position)
-		(
-			rttr::metadata("Serializable", true)
-		)
-		.property("rotation", &Transform::rotation, &Transform::set_rotation)
-		.property("scale", &Transform::scale, &Transform::set_scale);
-
-	// RigidActor
-	registration::class_<RigidActor>("RigidActor")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// Collider
-	registration::class_<Collider>("Collider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// RigidDynamic
-	registration::class_<RigidDynamic>("RigidDynamic")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// RigidStatic
-	registration::class_<RigidStatic>("RigidStatic")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// BoxCollider
-	registration::class_<BoxCollider>("BoxCollider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// SphereCollider
-	registration::class_<SphereCollider>("SphereCollider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
 	// 内存结构
-	registration::class_<TextureRes>("TextureRes")
-		.constructor<>()
-		.property("name",&TextureRes::texture_name_)
-		.property("path",&TextureRes::texture_path_);
-
-	registration::class_<MaterialRes>("MaterialRes")
-		.constructor<>()
-		.property("shader", &MaterialRes::shader_path_)
-		.property("textureArr", &MaterialRes::textureRes_arr_);
-
 	registration::class_<glm::vec2>("Vec2")
 		.constructor()
 		.property("x", &glm::vec2::x)
@@ -124,6 +55,81 @@ RTTR_REGISTRATION //注册反射
 		.property("uv", &VertexRes::uv_);
 
 
+	registration::class_<TextureRes>("TextureRes")
+		.constructor<>()
+		.property("name",&TextureRes::texture_name_)
+		.property("path",&TextureRes::texture_path_);
+
+	registration::class_<MaterialRes>("MaterialRes")
+		.constructor<>()
+		.property("shader", &MaterialRes::shader_path_)
+		.property("textureArr", &MaterialRes::textureRes_arr_);
+
+	registration::class_<PhysicMaterialRes>("PhysicMaterialRes")
+		.constructor<>()
+		.property("dynamicFriction",  &PhysicMaterialRes::dynamic_friction, &PhysicMaterialRes::set_dynamic_friction)
+		.property("restitution", &PhysicMaterialRes::restitution,&PhysicMaterialRes::set_restitution)
+		.property("staticFriction", &PhysicMaterialRes::static_friction,&PhysicMaterialRes::set_static_friction);
+
+	// 组件
+
+	// Componet
+	registration::class_<Component>("Component")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// Camera
+	registration::class_<Camera>("Camera")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// MeshRenderer
+	registration::class_<MeshRenderer>("MeshRenderer")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// MeshFilter
+	registration::class_<MeshFilter>("MeshFilter")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// Transform
+	registration::class_<Transform>("Transform")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("position", &Transform::position, &Transform::set_position)
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.property("rotation", &Transform::rotation, &Transform::set_rotation)
+		.property("scale", &Transform::scale, &Transform::set_scale);
+
+	// RigidActor
+	registration::class_<RigidActor>("RigidActor")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// Collider
+	registration::class_<Collider>("Collider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("physicsMaterial",&Collider::GetPhysicMaterial,&Collider::SetPhysicMaterial);
+
+	// RigidDynamic
+	registration::class_<RigidDynamic>("RigidDynamic")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// RigidStatic
+	registration::class_<RigidStatic>("RigidStatic")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// BoxCollider
+	registration::class_<BoxCollider>("BoxCollider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// SphereCollider
+	registration::class_<SphereCollider>("SphereCollider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+	
 	}
 }
 

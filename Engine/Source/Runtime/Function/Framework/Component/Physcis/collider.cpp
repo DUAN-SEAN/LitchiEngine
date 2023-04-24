@@ -6,10 +6,9 @@
 #include "rigid_dynamic.h"
 #include "rigid_static.h"
 #include "Runtime/Function/Physics/physics.h"
-#include "Runtime/Function/Physics/physic_material.h"
 namespace LitchiRuntime
 {
-    Collider::Collider() : px_shape_(nullptr), px_material_(nullptr), physic_material_(nullptr), rigid_actor_(nullptr), is_trigger_(false) {
+    Collider::Collider() : px_shape_(nullptr), px_material_(nullptr), rigid_actor_(nullptr), is_trigger_(false) {
 
     }
 
@@ -25,11 +24,9 @@ namespace LitchiRuntime
     }
 
     void Collider::CreatePhysicMaterial() {
-        if (physic_material_ == nullptr) {
-            physic_material_ = new PhysicMaterial(0.5f, 0.5f, 0.5f);
-        }
+        
         if (px_material_ == nullptr) {
-            px_material_ = Physics::CreateMaterial(physic_material_->static_friction(), physic_material_->dynamic_friction(), physic_material_->restitution());
+            px_material_ = Physics::CreateMaterial(physic_material_.static_friction(), physic_material_.dynamic_friction(), physic_material_.restitution());
             px_material_->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
         }
     }

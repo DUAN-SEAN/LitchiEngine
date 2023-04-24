@@ -10,8 +10,28 @@ using namespace rttr;
 using namespace physx;
 namespace LitchiRuntime
 {
+
+    class PhysicMaterialRes {
+    public:
+        PhysicMaterialRes() {}
+        PhysicMaterialRes(float static_friction, float dynamic_friction, float restitution) : static_friction_(static_friction), dynamic_friction_(dynamic_friction), restitution_(restitution) {}
+
+        float static_friction()  { return static_friction_; }
+        void set_static_friction(float static_friction) { static_friction_ = static_friction; }
+
+        float dynamic_friction()  { return dynamic_friction_; }
+        void set_dynamic_friction(float dynamic_friction) { dynamic_friction_ = dynamic_friction; }
+
+        float restitution()  { return restitution_; }
+        void set_restitution(float restitution) { restitution_ = restitution; }
+
+    private:
+        float static_friction_;
+        float dynamic_friction_;
+        float restitution_;
+    };
+
     class RigidActor;
-    class PhysicMaterial;
     class Collider : public Component {
     public:
         Collider();
@@ -19,8 +39,8 @@ namespace LitchiRuntime
 
         PxShape* px_shape() { return px_shape_; }
 
-        bool is_trigger() { return is_trigger_; }
-        void set_is_trigger(bool is_trigger) {
+        bool Istrigger() { return is_trigger_; }
+        void SetIsTrigger(bool is_trigger) {
             if (is_trigger_ == is_trigger) {
                 return;
             }
@@ -30,6 +50,17 @@ namespace LitchiRuntime
             UpdateTriggerState();
             RegisterToRigidActor();
         }
+
+    public:
+        void SetPhysicMaterial(PhysicMaterialRes physic_material_res)
+        {
+            physic_material_ = physic_material_res;
+        }
+
+        PhysicMaterialRes GetPhysicMaterial()
+        {
+        	return physic_material_;
+		}
 
     public:
         /// Awake里反序列化给成员变量赋值。
@@ -55,9 +86,11 @@ namespace LitchiRuntime
         bool is_trigger_;//是触发器，触发器只检测碰撞，而不进行物理模拟。
 
     private:
-        PhysicMaterial* physic_material_;
         RigidActor* rigid_actor_;
 
+    private:
+        PhysicMaterialRes physic_material_;
+   
         RTTR_ENABLE();
     };
 }
