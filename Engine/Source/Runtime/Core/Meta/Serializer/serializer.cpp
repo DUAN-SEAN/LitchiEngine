@@ -40,6 +40,15 @@ namespace LitchiRuntime
 		vertexRes.color_.x = 1.0f;
 		auto vertexResJson = instance->SerializeToJson(vertexRes);
 		DEBUG_LOG_INFO("vertexResJson2::\n" + vertexResJson);
+
+		GameObject* go = new GameObject("TestObj");
+		auto transform = go->AddComponent<Transform>();
+		transform->set_position(glm::vec3(0, 1, 0));
+		auto collider = go->AddComponent<Collider>();
+		collider->SetPhysicMaterial(PhysicMaterialRes(0.5f, 1.0f, 0.7f));
+
+		json = instance->SerializeToJson(go);
+		DEBUG_LOG_INFO("GameObject2Josn::\n" + json);
 	}
 
 #if 1 // Serialize

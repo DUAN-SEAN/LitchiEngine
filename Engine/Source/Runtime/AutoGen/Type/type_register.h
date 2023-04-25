@@ -21,6 +21,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/rigid_static.h"
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/material.h"
 
 using namespace rttr;
@@ -47,6 +48,14 @@ RTTR_REGISTRATION //注册反射
 		.property("y", &glm::vec4::z)
 		.property("w", &glm::vec4::w);
 
+	registration::class_<glm::quat>("Quaternion")
+		.constructor()
+		.property("x", &glm::quat::x)
+		.property("y", &glm::quat::y)
+		.property("y", &glm::quat::z)
+		.property("w", &glm::quat::w);
+
+
 
 	registration::class_<VertexRes>("VertexRes")
 		.constructor()
@@ -71,8 +80,14 @@ RTTR_REGISTRATION //注册反射
 		.property("restitution", &PhysicMaterialRes::restitution,&PhysicMaterialRes::set_restitution)
 		.property("staticFriction", &PhysicMaterialRes::static_friction,&PhysicMaterialRes::set_static_friction);
 
-	// 组件
+	// 场景管理
+	// GO
+	registration::class_<GameObject>("GameObject")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("name", &GameObject::name_)
+		.property("components_map", &GameObject::components_map_);
 
+	// 组件
 	// Componet
 	registration::class_<Component>("Component")
 		(

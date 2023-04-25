@@ -91,7 +91,7 @@ namespace LitchiRuntime
     private:
         PhysicMaterialRes physic_material_;
    
-        RTTR_ENABLE();
+        RTTR_ENABLE(Component);
     };
 }
 

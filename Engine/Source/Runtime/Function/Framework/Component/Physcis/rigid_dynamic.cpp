@@ -24,7 +24,7 @@ namespace LitchiRuntime
 
     void RigidDynamic::Awake() {
         Transform* transform = game_object()->GetComponent<Transform>();
-        PxRigidDynamic* px_rigid_dynamic = Physics::CreateRigidDynamic(transform->position(), game_object()->name());
+        PxRigidDynamic* px_rigid_dynamic = Physics::CreateRigidDynamic(transform->position(), game_object()->name().c_str());
         px_rigid_actor_ = dynamic_cast<PxRigidActor*>(px_rigid_dynamic);
         RigidActor::Awake();
     }

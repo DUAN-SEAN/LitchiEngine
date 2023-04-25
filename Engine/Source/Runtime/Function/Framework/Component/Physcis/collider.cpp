@@ -25,10 +25,10 @@ namespace LitchiRuntime
 
     void Collider::CreatePhysicMaterial() {
         
-        if (px_material_ == nullptr) {
+      /*  if (px_material_ == nullptr) {
             px_material_ = Physics::CreateMaterial(physic_material_.static_friction(), physic_material_.dynamic_friction(), physic_material_.restitution());
             px_material_->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
-        }
+        }*/
     }
 
     void Collider::CreateShape() {

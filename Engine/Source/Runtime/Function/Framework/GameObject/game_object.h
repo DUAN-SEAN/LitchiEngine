@@ -16,11 +16,12 @@ namespace LitchiRuntime
 {
 	class GameObject :public Tree::Node {
 	public:
-		GameObject(const char* name);
+		GameObject(){}
+		GameObject(std::string name);
 		~GameObject();
 
-		const char* name() { return name_; }
-		void set_name(const char* name) { name_ = name; }
+		std::string name() { return name_; }
+		void set_name(std::string name) { name_ = name; }
 
 		unsigned char layer() { return layer_; }
 		void set_layer(unsigned char layer) { layer_ = layer; }
@@ -108,17 +109,18 @@ namespace LitchiRuntime
 		/// \param func
 		void ForeachComponent(std::function<void(Component*)> func);
 
+		std::string name_;
+		std::unordered_map<std::string, std::vector<Component*>> components_map_;
+
 		/// 遍历GameObject
 		/// \param func
 		static void Foreach(std::function<void(GameObject* game_object)> func);
 	private:
-		const char* name_;
 
 		unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
 
 		bool active_ = true;//是否激活
 
-		std::unordered_map<std::string, std::vector<Component*>> components_map_;
 
 		static Tree game_object_tree_;//用树存储所有的GameObject。
 

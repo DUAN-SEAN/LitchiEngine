@@ -37,7 +37,7 @@ namespace LitchiRuntime
         glm::quat rotation_;
         glm::vec3 scale_;
 
-        RTTR_ENABLE();
+        RTTR_ENABLE(Component);
     };
 }
 #endif //UNTITLED_TRANSFORM_H
