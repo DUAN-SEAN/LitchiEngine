@@ -66,7 +66,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 
 	//设置编辑器主线程使用的是 Editor Context
 	glfwMakeContextCurrent(editor_glfw_window_);
-
+	gladLoadGL();
 	//开启垂直同步
 	glfwSwapInterval(1); // Enable vsync
 
@@ -86,52 +86,63 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 	const char* glsl_version = "#version 330";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 
-	////游戏窗口 初始化渲染任务消费者(单独渲染线程)
-	//RenderTaskConsumer::Init(new RenderTaskConsumerEditor(game_glfw_window_));
+	//创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
+	frame_buffer_object_id_ = 0;
+	glGenFramebuffers(1, &frame_buffer_object_id_); __CHECK_GL_ERROR__
+		if (frame_buffer_object_id_ == 0) {
+			DEBUG_LOG_ERROR("CreateFBO FBO Error!");
+			return;
+		}
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
 
-	// //渲染相关的API调用需要放到渲染线程中。
-	//glfwMakeContextCurrent(window_);
-	//gladLoadGL(glfwGetProcAddress);
-	//    glfwSwapInterval(1);
+		//创建颜色纹理 Attach到FBO颜色附着点上
+		glGenTextures(1, &color_texture_id_);
+	glBindTexture(GL_TEXTURE_2D, color_texture_id_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 960, 640, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture_id_, 0); __CHECK_GL_ERROR__
 
+		//创建深度纹理 Attach到FBO深度附着点上
+		glGenTextures(1, &depth_texture_id_);
+	glBindTexture(GL_TEXTURE_2D, depth_texture_id_);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 960, 640, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_id_, 0); __CHECK_GL_ERROR__
 
+		//检测帧缓冲区完整性
+		GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
+		if (status != GL_FRAMEBUFFER_COMPLETE) {
+			DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
+			return;
+		}
 
+}
 
-	////创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
-	//GLuint frame_buffer_object_id = 0;
-	//glGenFramebuffers(1, &frame_buffer_object_id); __CHECK_GL_ERROR__
-	//	if (frame_buffer_object_id == 0) {
-	//		DEBUG_LOG_ERROR("CreateFBO FBO Error!");
-	//		return;
-	//	}
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
+void ApplicationEditor::Render()
+{
+	// 设置FBO
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
+	glEnable(GL_DEPTH_TEST);
+	//检测帧缓冲区完整性
+	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
+		if (status != GL_FRAMEBUFFER_COMPLETE) {
+			DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
+			return;
+		}
 
-	//	//创建颜色纹理 Attach到FBO颜色附着点上
-	//	glGenTextures(1, &color_texture_id_);
-	//glBindTexture(GL_TEXTURE_2D, color_texture_id_);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 960, 640, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
-	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture_id_, 0); __CHECK_GL_ERROR__
+	// 执行渲染
+	ApplicationBase::Render();
 
-	//	//创建深度纹理 Attach到FBO深度附着点上
-	//	glGenTextures(1, &depth_texture_id_);
-	//glBindTexture(GL_TEXTURE_2D, depth_texture_id_);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 960, 640, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
-	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_id_, 0); __CHECK_GL_ERROR__
-
-	//	//检测帧缓冲区完整性
-	//	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
-	//	if (status != GL_FRAMEBUFFER_COMPLETE) {
-	//		DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
-	//		return;
-	//	}
+	// 还原FBO
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
 }
 
 void ApplicationEditor::Run() {
@@ -148,49 +159,40 @@ void ApplicationEditor::Run() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		// 1. 状态
-		{
-			ImGui::Begin("Status");
-			ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			ImGui::End();
-		}
+		//渲染游戏
+		OneFrame();
 
-		//// 2. 游戏渲染画面
+		//// 1. 状态
 		//{
-		//	ImGui::Begin("ViewPort");
-		//	if (ImGui::BeginTabBar("ViewPortTabBar", ImGuiTabBarFlags_None)) {
-		//		// 2.1 Game视图
-		//		if (ImGui::BeginTabItem("Game")) {
-		//			RenderTaskConsumerEditor* render_task_consumer_editor = dynamic_cast<RenderTaskConsumerEditor*>(RenderTaskConsumer::Instance());
-
-		//			//从游戏渲染线程拿到FBO Attach Texture id
-		//			GLuint texture_id = render_task_consumer_editor->color_texture_id();
-		//			ImTextureID image_id = (void*)(intptr_t)texture_id;
-
-		//			// 第一个参数：生成的纹理的id
-		//			// 第2个参数：Image的大小
-		//			// 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
-		//			// 第5个参数：图片的色调
-		//			// 第6个参数：图片边框的颜色
-		//			ImGui::Image(image_id, ImVec2(480, 320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
-
-		//			ImGui::EndTabItem();
-		//		}
-		//		// 2.2 深度视图
-		//		if (ImGui::BeginTabItem("Depth")) {
-		//			RenderTaskConsumerEditor* render_task_consumer_editor = dynamic_cast<RenderTaskConsumerEditor*>(RenderTaskConsumer::Instance());
-
-		//			GLuint texture_id = render_task_consumer_editor->depth_texture_id();
-		//			ImTextureID image_id = (void*)(intptr_t)texture_id;
-
-		//			ImGui::Image(image_id, ImVec2(480, 320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
-
-		//			ImGui::EndTabItem();
-		//		}
-		//		ImGui::EndTabBar();
-		//	}
+		//	ImGui::Begin("Status");
+		//	ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 		//	ImGui::End();
 		//}
+
+		// 2. 游戏渲染画面
+		{
+			ImGui::Begin("ViewPort");
+			if (ImGui::BeginTabBar("ViewPortTabBar", ImGuiTabBarFlags_None)) {
+				// 2.1 Game视图
+				if (ImGui::BeginTabItem("Game")) {
+
+					//从游戏渲染线程拿到FBO Attach Texture id
+					GLuint texture_id = color_texture_id_;
+					ImTextureID image_id = (void*)(intptr_t)texture_id;
+
+					// 第一个参数：生成的纹理的id
+					// 第2个参数：Image的大小
+					// 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
+					// 第5个参数：图片的色调
+					// 第6个参数：图片边框的颜色
+					ImGui::Image(image_id, ImVec2(480, 320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+
+					ImGui::EndTabItem();
+				}
+				ImGui::EndTabBar();
+			}
+			ImGui::End();
+		}
 
 
 		//// 3. Hierarchy
@@ -262,7 +264,6 @@ void ApplicationEditor::Run() {
 		//	ImGui::End();
 		//}
 
-
 		//绘制
 		ImGui::Render();
 		int display_w, display_h;
@@ -274,8 +275,6 @@ void ApplicationEditor::Run() {
 
 		glfwSwapBuffers(editor_glfw_window_);
 
-		//渲染游戏
-		OneFrame();
 	}
 
 	Exit();

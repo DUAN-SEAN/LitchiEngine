@@ -5,11 +5,11 @@
 #include <string>
 #include "Runtime/Core/App/application_base.h"
 #include "Runtime/Core/DataStruct/tree.h"
+#include <glad/glad.h>
 
 using namespace LitchiRuntime;
 
 	struct GLFWwindow;
-	class GameObject;
 	class ApplicationEditor : public ApplicationBase {
 	public:
 		ApplicationEditor() :ApplicationBase() {}
@@ -26,6 +26,8 @@ using namespace LitchiRuntime;
 		/// 初始化图形库，例如glfw
 		virtual void InitGraphicsLibraryFramework() override;
 
+		virtual void Render() override;
+
 		virtual void Exit() override;
 	private:
 		GLFWwindow* editor_glfw_window_;//编辑器窗口
@@ -35,6 +37,7 @@ using namespace LitchiRuntime;
 
 		GLuint color_texture_id_ = 0;//FBO 颜色纹理
 		GLuint depth_texture_id_ = 0;//FBO 深度纹理
+		GLuint frame_buffer_object_id_ = 0;//FBO 深度纹理
 	};
 
 

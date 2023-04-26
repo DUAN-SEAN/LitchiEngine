@@ -14,17 +14,11 @@ file(GLOB_RECURSE rttr_cpp "../../ThridParty/rttr/*.cpp")
 file(GLOB_RECURSE GLAD_FILES "../../ThridParty/glad/*.c")
 file(GLOB_RECURSE HEADER_FILES "*.h")
 file(GLOB_RECURSE SOURCE_FILES "*.cpp")
-set(imgui_src ${THIRD_PARTY_DIR}/imgui/imgui.cpp
-        ${THIRD_PARTY_DIR}/imgui/imgui_demo.cpp
-        ${THIRD_PARTY_DIR}/imgui/imgui_draw.cpp
-        ${THIRD_PARTY_DIR}/imgui/imgui_tables.cpp
-        ${THIRD_PARTY_DIR}/imgui/imgui_widgets.cpp)
 
 #source_group(TREE "${ENGINE_ROOT_DIR}/schema" FILES ${SCHEMA_FILES})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_FILES})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${rttr_cpp})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${GLAD_FILES})
-source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${imgui_src})
 
 # 添加目标库
 # add_library(${TARGET_NAME} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES})
@@ -76,11 +70,6 @@ target_include_directories(${TARGET_NAME} PRIVATE $<BUILD_INTERFACE:${THIRD_PART
 
 # include stb
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>)
-
-# include imgui
-target_include_directories(${TARGET_NAME} 
-PUBLIC 
-  $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/imgui> ${THIRD_PARTY_DIR}/imgui/backends)
 
 # include mono
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/mono/Include/mono-2.0>)

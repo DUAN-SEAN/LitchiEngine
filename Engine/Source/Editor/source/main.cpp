@@ -3,10 +3,12 @@
 #include <string>
 #include <thread>
 
+#include "Editor/include/application_editor.h"
 #include "Editor/include/login_scene.h"
 #include "Runtime/Core/App/application.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Platform/App/application_standalone.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
+
 using namespace LitchiRuntime;
 using namespace LitchiEditor;
 int main(int argc, char** argv)
@@ -14,7 +16,8 @@ int main(int argc, char** argv)
     // std::filesystem::path executable_path(argv[0]);
 
     Application application;
-    auto application_standalone=new ApplicationStandalone();
+    // auto application_standalone=new ApplicationStandalone();
+    auto application_standalone=new ApplicationEditor();
 
     char* projectPath = nullptr;
     projectPath = _getcwd(nullptr, 1);
