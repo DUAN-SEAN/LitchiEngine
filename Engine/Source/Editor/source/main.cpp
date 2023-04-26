@@ -16,8 +16,8 @@ int main(int argc, char** argv)
     // std::filesystem::path executable_path(argv[0]);
 
     Application application;
-    // auto application_standalone=new ApplicationStandalone();
-    auto application_standalone=new ApplicationEditor();
+     // auto application_standalone=new ApplicationStandalone();
+     auto application_standalone=new ApplicationEditor();
 
     char* projectPath = nullptr;
     projectPath = _getcwd(nullptr, 1);
@@ -34,7 +34,7 @@ int main(int argc, char** argv)
     
     GameObject* o = new GameObject("LoginScene");
     auto loginScene = o->AddComponent<LoginScene>();
-
+    
     application.Run();
 
     delete o;

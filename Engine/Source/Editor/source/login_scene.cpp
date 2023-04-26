@@ -18,6 +18,7 @@
 #include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Input/key_code.h"
+#include "Runtime/Function/Renderer/render_texture.h"
 
 using namespace rttr;
 using namespace LitchiRuntime;
@@ -76,6 +77,11 @@ namespace LitchiEditor
 		//挂上 Camera 组件
 		camera_1_ = go_camera_1->AddComponent<Camera>();
 		camera_1_->set_depth(0);
+		auto rt = new RenderTexture();
+		rt->set_in_use(true);
+		rt->set_width(400);
+		rt->set_height(600);
+		camera_1_->set_target_render_texture(rt);
 
 
 		last_frame_mouse_position_ = Input::mousePosition();

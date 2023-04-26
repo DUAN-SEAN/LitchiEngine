@@ -10,6 +10,7 @@
 
 namespace LitchiRuntime
 {
+    class RenderTexture;
     class Camera : public Component {
     public:
         Camera();
@@ -53,6 +54,19 @@ namespace LitchiRuntime
         unsigned char culling_mask() { return culling_mask_; }
         void set_culling_mask(unsigned char culling_mask) { culling_mask_ = culling_mask; }
 
+        /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
+        void CheckRenderToTexture();
+
+        /// 检查是否要取消使用RenderTexture.
+        void CheckCancelRenderToTexture();
+
+        /// 设置渲染目标RenderTexture
+        /// \param render_texture
+        void set_target_render_texture(RenderTexture* render_texture);
+
+        /// 清空渲染目标RenderTexture
+        void clear_target_render_texture();
+
         /// 遍历所有Camera
         /// \param func
         static void Foreach(std::function<void()> func);
@@ -74,6 +88,9 @@ namespace LitchiRuntime
         unsigned char depth_;//排序深度
 
         unsigned char culling_mask_;//控制渲染哪些Layer的物体
+
+
+        RenderTexture* target_render_texture_;//渲染目标RenderTexture
 
         static std::vector<Camera*> all_camera_;//所有Camera，每一帧都遍历Camera，设置current_camera_。
         static Camera* current_camera_;//当前用于渲染的Camera，就是MeshRenderer在计算MVP的时候，用这个Camera的View Projection矩阵计算MVP。

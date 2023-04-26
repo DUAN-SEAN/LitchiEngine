@@ -10,6 +10,7 @@
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Renderer/gpu_resource_mapper.h"
 #include "Runtime/Function/Renderer/shader.h"
 #include "Runtime/Function/Renderer/texture2d.h"
 #include "Runtime/Function/Renderer/material.h"
@@ -119,7 +120,8 @@ namespace LitchiRuntime
                 //激活纹理单元0
                 glActiveTexture(GL_TEXTURE0 + texture_index);
                 //将加载的图片纹理句柄，绑定到纹理单元0的Texture2D上。
-                glBindTexture(GL_TEXTURE_2D, textures[texture_index].second->gl_texture_id());
+                
+                glBindTexture(GL_TEXTURE_2D, GPUResourceMapper::GetTexture(textures[texture_index].second->texture_handle()));
                 //设置Shader程序从纹理单元0读取颜色数据
                 glUniform1i(u_texture_location, texture_index);
             }

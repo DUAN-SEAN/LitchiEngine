@@ -45,18 +45,9 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-
-	//创建游戏窗口
-	game_glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
-	if (!game_glfw_window_)
-	{
-		DEBUG_LOG_ERROR("glfwCreateWindow error!");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-
+	
 	//创建编辑器窗口，并将游戏Context共享。
-	editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, game_glfw_window_);
+	editor_glfw_window_ = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+OpenGL3 example", NULL, NULL);
 	if (!editor_glfw_window_)
 	{
 		DEBUG_LOG_ERROR("glfwCreateWindow error!");
@@ -128,8 +119,8 @@ void ApplicationEditor::Render()
 {
 	// 设置FBO
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // We're not using stencil buffer now
+	glClearColor(0,0,0,1);
+	glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	//检测帧缓冲区完整性
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
@@ -142,7 +133,7 @@ void ApplicationEditor::Render()
 	ApplicationBase::Render();
 
 	// 还原FBO
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, -1); __CHECK_GL_ERROR__
 }
 
 void ApplicationEditor::Run() {
@@ -154,13 +145,13 @@ void ApplicationEditor::Run() {
 	{
 		glfwPollEvents();
 
+		//渲染游戏
+		OneFrame();
+
 		//ImGui刷帧
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-
-		//渲染游戏
-		OneFrame();
 
 		//// 1. 状态
 		//{
@@ -271,9 +262,11 @@ void ApplicationEditor::Run() {
 		glViewport(0, 0, display_w, display_h);
 		glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
 		glClear(GL_COLOR_BUFFER_BIT);
+
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(editor_glfw_window_);
+
 
 	}
 
@@ -318,7 +311,6 @@ void ApplicationEditor::Exit() {
 	ImGui::DestroyContext();
 
 	glfwDestroyWindow(editor_glfw_window_);
-	glfwDestroyWindow(game_glfw_window_);
 	glfwTerminate();
 }
 
