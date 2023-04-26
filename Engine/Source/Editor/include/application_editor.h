@@ -7,8 +7,7 @@
 #include "Runtime/Core/DataStruct/tree.h"
 
 using namespace LitchiRuntime;
-namespace LitchiEditor
-{
+
 	struct GLFWwindow;
 	class GameObject;
 	class ApplicationEditor : public ApplicationBase {
@@ -33,9 +32,12 @@ namespace LitchiEditor
 		GLFWwindow* game_glfw_window_;//游戏窗口
 
 		Tree::Node* selected_node_ = nullptr;//记录Hierarchy当前选中的Node
+
+		GLuint color_texture_id_ = 0;//FBO 颜色纹理
+		GLuint depth_texture_id_ = 0;//FBO 深度纹理
 	};
 
-}
+
 
 
 #endif //UNTITLED_APPLICATION_EDITOR_H
