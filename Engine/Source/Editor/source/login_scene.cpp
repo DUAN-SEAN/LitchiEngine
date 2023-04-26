@@ -77,11 +77,17 @@ namespace LitchiEditor
 		//挂上 Camera 组件
 		camera_1_ = go_camera_1->AddComponent<Camera>();
 		camera_1_->set_depth(0);
-		auto rt = new RenderTexture();
+
+
+		camera_1_->SetView((glm::vec3(0,0,0)), (glm::vec3(0, 1, 0)));
+		camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+
+
+		/*auto rt = new RenderTexture();
 		rt->set_in_use(true);
 		rt->set_width(400);
 		rt->set_height(600);
-		camera_1_->set_target_render_texture(rt);
+		camera_1_->set_target_render_texture(rt);*/
 
 
 		last_frame_mouse_position_ = Input::mousePosition();

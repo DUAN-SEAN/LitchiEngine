@@ -93,7 +93,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 960, 640, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 480, 320, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture_id_, 0); __CHECK_GL_ERROR__
 
 		//创建深度纹理 Attach到FBO深度附着点上
@@ -103,7 +103,7 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 960, 640, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 480, 320, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_id_, 0); __CHECK_GL_ERROR__
 
 		//检测帧缓冲区完整性
@@ -119,8 +119,8 @@ void ApplicationEditor::Render()
 {
 	// 设置FBO
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
-	glClearColor(0,0,0,1);
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClearColor(0,0,0,1);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);
 	//检测帧缓冲区完整性
 	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
@@ -133,7 +133,7 @@ void ApplicationEditor::Render()
 	ApplicationBase::Render();
 
 	// 还原FBO
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, -1); __CHECK_GL_ERROR__
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
 }
 
 void ApplicationEditor::Run() {

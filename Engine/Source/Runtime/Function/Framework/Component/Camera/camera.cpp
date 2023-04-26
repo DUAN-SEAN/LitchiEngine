@@ -64,10 +64,10 @@ namespace LitchiRuntime
 	void Camera::Foreach(std::function<void()> func) {
 		for (auto iter = all_camera_.begin(); iter != all_camera_.end(); iter++) {
 			current_camera_ = *iter;
-			current_camera_->CheckRenderToTexture();
-			current_camera_->Clear();
+			/*current_camera_->CheckRenderToTexture();
+			current_camera_->Clear();*/
 			func();
-			current_camera_->CheckCancelRenderToTexture();
+			//current_camera_->CheckCancelRenderToTexture();
 		}
 	}
 
