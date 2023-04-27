@@ -15,6 +15,8 @@
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Physics/physics.h"
 
+#include "Runtime/Function/Scene/scene_manager.h"
+
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {
@@ -63,7 +65,7 @@ namespace LitchiRuntime
         Time::Update();
         UpdateScreenSize();
 
-        GameObject::Foreach([](GameObject* game_object) {
+        SceneManager::Foreach([](GameObject* game_object) {
             if (game_object->active()) {
                 game_object->ForeachComponent([](Component* component) {
                     component->Update();
@@ -79,7 +81,7 @@ namespace LitchiRuntime
     void ApplicationBase::Render() {
         //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
         Camera::Foreach([&]() {
-            GameObject::Foreach([](GameObject* game_object) {
+            SceneManager::Foreach([](GameObject* game_object) {
                 if (game_object->active() == false) {
                     return;
                 }
@@ -94,8 +96,9 @@ namespace LitchiRuntime
 
     void ApplicationBase::FixedUpdate() {
         //Physics::FixedUpdate();
+        
 
-        GameObject::Foreach([](GameObject* game_object) {
+        SceneManager::Foreach([](GameObject* game_object) {
             if (game_object->active()) {
                 game_object->ForeachComponent([](Component* component) {
                     component->FixedUpdate();

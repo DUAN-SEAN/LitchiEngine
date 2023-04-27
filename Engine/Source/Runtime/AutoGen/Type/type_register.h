@@ -23,6 +23,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/material.h"
+#include "Runtime/Function/Scene/scene_manager.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -86,6 +87,10 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("name", &GameObject::name_)
 		.property("components_map", &GameObject::components_map_);
+
+	registration::class_<Scene>("Scene")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("gameObjects", &Scene::game_object_vec_);
 
 	// 组件
 	// Componet

@@ -1,49 +1,69 @@
-
 #ifndef UNTITLED_SCENEMANAGER_H
 #define UNTITLED_SCENEMANAGER_H
 
-#include "Runtime/Function/Framework/GameObject/game_object.h"
-
+#include <map>
+#include <string>
 #include "Runtime/Core/DataStruct/tree.h"
+
 namespace LitchiRuntime
 {
+	class GameObject;
 	class Scene
 	{
 	public:
+		Scene();
+		Scene(std::string name);
+		~Scene();
+
+		std::string GetName(){ return name_; }
+		void SetName(std::string name){name_ = name; }
+
+		void AddGameObject(GameObject* game_object);
 
 		/// 返回GameObject树结构
 		/// \return
 		Tree& game_object_tree() { return game_object_tree_; }
+
 		/// 遍历GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
 
-	private:
-		
-		std::vector<GameObject> game_object_vec_;// 序列化GameObject
+		/// 全局查找GameObject
+		/// \param name
+		/// \return
+		GameObject* Find(const char* name);
+
+		std::vector<GameObject*> game_object_vec_; //存储所有的GameObject。
 
 	private:
+		std::string name_; //场景名字
 
-		Tree game_object_tree_;//用树存储所有的GameObject。
+		Tree game_object_tree_; //用树存储所有的GameObject。
 
-		std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 	};
 
 
-	class SceneManager {
+	class SceneManager
+	{
 	public:
 
-		bool LoadScene(Scene* scene);
+		static bool LoadScene(Scene* scene);
 
-		Scene* CreateScene(std::string sceneName);
+		static Scene* CreateScene(std::string sceneName);
 
-		Scene* GetScene(std::string sceneName)
+		static bool DestroyScene(std::string sceneName);
+
+		static Scene* GetScene(std::string sceneName)
 		{
 			return scene_map_[sceneName];
 		}
 
+		/// 遍历所有Scene的GameObject
+		/// \param func
+		static void Foreach(std::function<void(GameObject* game_object)> func);
+
 	private:
-		std::map<std::string,Scene*> scene_map_;
+		static std::map<std::string, Scene*> scene_map_;
 	};
 }
 #endif //UNTITLED_TYPE_H

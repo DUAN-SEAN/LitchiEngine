@@ -2,16 +2,15 @@
 #include "game_object.h"
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Scene/scene_manager.h"
 
 using namespace rttr;
 namespace LitchiRuntime
 {
-    Tree GameObject::game_object_tree_;//用树存储所有的GameObject。
-    std::list<GameObject*> GameObject::game_object_list_;
-
-    GameObject::GameObject(std::string name) : Tree::Node(), layer_(0x01) {
-        set_name(name);
-        game_object_tree_.root_node()->AddChild(this);
+    GameObject::GameObject(std::string name,Scene* scene) : Tree::Node(), layer_(0x01) {
+    	set_name(name);
+       scene->AddGameObject(this);
+       this->SetScene(scene);
     }
 
     GameObject::~GameObject() {
@@ -28,16 +27,14 @@ namespace LitchiRuntime
         return true;
     }
 
-    GameObject* GameObject::Find(const char* name) {
-        GameObject* game_object_find = nullptr;
-        game_object_tree_.Find(game_object_tree_.root_node(), [&name](Tree::Node* node) {
-            GameObject* game_object = dynamic_cast<GameObject*>(node);
-            if (game_object->name() == name) {
-                return true;
-            }
-            return false;
-            }, reinterpret_cast<Node**>(&game_object_find));
-        return game_object_find;
+    Scene* GameObject::GetScene()
+    {
+        return scene_;
+    }
+
+    void GameObject::SetScene(Scene* scene)
+    {
+        scene_ = scene;
     }
 
     /// 遍历组件
@@ -50,14 +47,5 @@ namespace LitchiRuntime
             }
         }
     }
-
-    /// 遍历GameObject
-    /// \param func
-    void GameObject::Foreach(std::function<void(GameObject* game_object)> func) {
-        game_object_tree_.Post(game_object_tree_.root_node(), [&func](Tree::Node* node) {
-            auto n = node;
-            GameObject* game_object = dynamic_cast<GameObject*>(n);
-            func(game_object);
-            });
-    }
+    
 }

@@ -119,6 +119,7 @@ void ApplicationEditor::Render()
 {
 	// 设置FBO
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
+	glViewport(0, 0, 480, 320);
 	//glClearColor(0,0,0,1);
 	//glClear(GL_COLOR_BUFFER_BIT);
 	glEnable(GL_DEPTH_TEST);

@@ -19,7 +19,7 @@ namespace LitchiRuntime
 {
 	void SerializerManager::Initialize(SerializerManager* instance)
 	{
-		MaterialRes materialRes;
+		/*MaterialRes materialRes;
 		materialRes.shader_path_ = "shader/XXX.fs";
 		TextureRes textureRes;
 		textureRes.texture_name_ = "TXName";
@@ -48,7 +48,7 @@ namespace LitchiRuntime
 		collider->SetPhysicMaterial(PhysicMaterialRes(0.5f, 1.0f, 0.7f));
 
 		json = instance->SerializeToJson(go);
-		DEBUG_LOG_INFO("GameObject2Josn::\n" + json);
+		DEBUG_LOG_INFO("GameObject2Josn::\n" + json);*/
 	}
 
 #if 1 // Serialize

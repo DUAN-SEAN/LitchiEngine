@@ -43,8 +43,8 @@ namespace LitchiRuntime
 	}
 
 	void Camera::Clear() {
-		glClear(clear_flag_);
 		glClearColor(clear_color_.r, clear_color_.g, clear_color_.b, clear_color_.a);
+		glClear(clear_flag_);
 	}
 
 	void Camera::set_depth(unsigned char depth) {
@@ -64,8 +64,8 @@ namespace LitchiRuntime
 	void Camera::Foreach(std::function<void()> func) {
 		for (auto iter = all_camera_.begin(); iter != all_camera_.end(); iter++) {
 			current_camera_ = *iter;
-			/*current_camera_->CheckRenderToTexture();
-			current_camera_->Clear();*/
+			// current_camera_->CheckRenderToTexture();
+			current_camera_->Clear();
 			func();
 			//current_camera_->CheckCancelRenderToTexture();
 		}

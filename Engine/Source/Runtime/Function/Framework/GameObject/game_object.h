@@ -6,7 +6,6 @@
 #include <vector>
 #include <string>
 #include <unordered_map>
-#include <memory>
 #include <list>
 #include <functional>
 #include "Runtime/Core/DataStruct/tree.h"
@@ -14,10 +13,11 @@
 
 namespace LitchiRuntime
 {
+	class Scene;
 	class GameObject :public Tree::Node {
 	public:
 		GameObject(){}
-		GameObject(std::string name);
+		GameObject(std::string name, Scene* scene);
 		~GameObject();
 
 		std::string name() { return name_; }
@@ -34,11 +34,10 @@ namespace LitchiRuntime
 		/// \return
 		bool SetParent(GameObject* parent);
 
-		/// 全局查找GameObject
-		/// \param name
-		/// \return
-		static GameObject* Find(const char* name);
 	public:
+		Scene* GetScene();
+		void SetScene(Scene* scene);
+
 		/// 添加组件，仅用于C++中添加组件。
 		/// \tparam T 组件类型
 		/// \return 组件实例
@@ -70,8 +69,6 @@ namespace LitchiRuntime
 				components_map_[component_type_name].push_back(component);
 			}
 		}
-
-
 
 		/// 获取组件，仅用于C++中。
 		/// \tparam T 组件类型
@@ -111,20 +108,14 @@ namespace LitchiRuntime
 
 		std::string name_;
 		std::unordered_map<std::string, std::vector<Component*>> components_map_;
-
-		/// 遍历GameObject
-		/// \param func
-		static void Foreach(std::function<void(GameObject* game_object)> func);
+		
 	private:
 
 		unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。
 
+		Scene* scene_;//场景
+
 		bool active_ = true;//是否激活
-
-
-		static Tree game_object_tree_;//用树存储所有的GameObject。
-
-		static std::list<GameObject*> game_object_list_;//存储所有的GameObject。
 	};
 }
 
