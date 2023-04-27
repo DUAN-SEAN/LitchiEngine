@@ -2,7 +2,6 @@
 
 #include <filesystem>
 #include <fstream>
-#include <functional>
 #include <sstream>
 #include <string>
 
@@ -43,8 +42,10 @@ namespace LitchiRuntime
             }
 
             // write to json object and dump to string
-            auto&&        asset_json      = SerializerManager::SerializeToJson(out_asset);
-            std::string&& asset_json_text = asset_json.dump();
+          /*  auto&&        asset_json      = SerializerManager::SerializeToJson(out_asset);
+            std::string&& asset_json_text = asset_json.dump();*/
+
+            auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
 
             // write to file
             asset_json_file << asset_json_text;

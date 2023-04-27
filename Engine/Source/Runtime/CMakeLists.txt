@@ -38,8 +38,12 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 # being a cross-platform target, we enforce standards conformance on MSVC
 # 这个配置会导致rttr编译报错
 # target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-target_compile_options(${TARGET_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->")
-
+target_compile_options(${TARGET_NAME} 
+	PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->"
+	PRIVATE 
+	$<$<CXX_COMPILER_ID:MSVC>:/bigobj> 
+	$<$<CXX_COMPILER_ID:GNU>:-Wa,-mbig-obj>)
+	
 # Link dependencies    
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)

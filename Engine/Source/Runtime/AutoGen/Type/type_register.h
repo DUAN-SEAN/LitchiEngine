@@ -24,6 +24,7 @@
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Resource/config_manager.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -80,6 +81,12 @@ RTTR_REGISTRATION //注册反射
 		.property("dynamicFriction",  &PhysicMaterialRes::dynamic_friction, &PhysicMaterialRes::set_dynamic_friction)
 		.property("restitution", &PhysicMaterialRes::restitution,&PhysicMaterialRes::set_restitution)
 		.property("staticFriction", &PhysicMaterialRes::static_friction,&PhysicMaterialRes::set_static_friction);
+
+	registration::class_<ConfigRes>("ConfigRes")
+		.constructor<>()
+		.property("assetFolder", &ConfigRes::asset_folder_)
+		.property("rootFolder", &ConfigRes::root_folder_)
+		.property("defaultScenePath", &ConfigRes::default_scene_path_);
 
 	// 场景管理
 	// GO

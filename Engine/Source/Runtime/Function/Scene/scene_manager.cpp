@@ -53,6 +53,11 @@ namespace LitchiRuntime
     {
     	// 将scene添加到map中
         scene_map_[scene->GetName()] = scene;
+
+        // 初始化Scene中所有的GameObject,配置GameObject的层级关系
+
+
+
         return true;
     }
 

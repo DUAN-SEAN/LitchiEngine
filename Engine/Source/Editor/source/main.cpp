@@ -34,7 +34,7 @@ int main(int argc, char** argv)
 
     DEBUG_LOG_INFO( s);
 
-    auto scene= SceneManager::CreateScene("SampleScene");
+    auto scene= SceneManager::CreateScene("DefaultScene");
 
     GameObject* o = new GameObject("LoginScene", scene);
     auto loginScene = o->AddComponent<LoginScene>();

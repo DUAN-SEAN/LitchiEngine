@@ -24,9 +24,11 @@ namespace LitchiRuntime
     void ApplicationBase::Init() {
 
         Debug::Init();
+
         DEBUG_LOG_INFO("game start");
 
-        //LoadConfig();
+        // 第二个参数支持后续修改
+        ConfigManager::Initialize(new ConfigManager(), "ProjectConfig.Litchi");
 
         Time::Init();
 
@@ -44,6 +46,8 @@ namespace LitchiRuntime
 
         //初始化物理引擎
         Physics::Init();
+
+        // 初始化场景 如果没有场景则构建默认场景
     }
 
     /// 初始化图形库，例如glfw

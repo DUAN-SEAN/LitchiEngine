@@ -274,7 +274,7 @@ void ApplicationEditor::Run() {
 	Exit();
 }
 
-void ApplicationEditor::DrawHierarchy(Tree::Node* node, const char* label, int base_flags) {
+//void ApplicationEditor::DrawHierarchy(Tree::Node* node, const char* label, int base_flags) {
 	//int flags = base_flags;
 
 	//if (selected_node_ == node) {//如果当前Node是被选中的，那么设置flag，显示样式为选中。
@@ -302,7 +302,7 @@ void ApplicationEditor::DrawHierarchy(Tree::Node* node, const char* label, int b
 	//		selected_node_ = node;
 	//	}
 	//}
-}
+//}
 
 void ApplicationEditor::Exit() {
 	ApplicationBase::Exit();
