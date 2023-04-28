@@ -29,6 +29,11 @@ namespace LitchiRuntime
 		bool active() { return active_; }
 		void set_active(bool active) { active_ = active; }
 
+		/// 从资产中加载的后期加载
+		/// \param parent
+		/// \return
+		void PostLoadFromAsset();
+
 		/// 设置父节点
 		/// \param parent
 		/// \return

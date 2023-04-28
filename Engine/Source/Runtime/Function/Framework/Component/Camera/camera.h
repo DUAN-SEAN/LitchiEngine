@@ -10,6 +10,7 @@
 
 namespace LitchiRuntime
 {
+    class RenderCamera;
     class RenderTexture;
     class Camera : public Component {
     public:
@@ -89,6 +90,7 @@ namespace LitchiRuntime
 
         unsigned char culling_mask_;//控制渲染哪些Layer的物体
 
+        RenderCamera* 
 
         RenderTexture* target_render_texture_;//渲染目标RenderTexture
 

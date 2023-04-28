@@ -18,6 +18,15 @@ namespace LitchiRuntime
     }
 
 
+    void GameObject::PostLoadFromAsset()
+    {
+        // TODO: 从资产中加载的后期加载
+        for (auto iter = components_map_.begin();iter!=components_map_.end();iter++)
+        {
+            // 调用所有组件的PosLoadFromAsset
+        }
+    }
+
     bool GameObject::SetParent(GameObject* parent) {
         if (parent == nullptr) {
             DEBUG_LOG_ERROR("parent null");
