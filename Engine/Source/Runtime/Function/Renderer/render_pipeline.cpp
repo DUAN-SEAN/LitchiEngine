@@ -1,4 +1,4 @@
-#include "render_pipeline.h"
+ï»¿#include "render_pipeline.h"
 
 #include "render_pass.h"
 #include "render_texture.h"
@@ -36,11 +36,11 @@ namespace LitchiRuntime
 
 	void RenderPipeline::Render(RenderContext* render_context)
 	{
-		// ¸ù¾İÇ°ÏòºÍÑÓ³ÙÄ£Ê½äÖÈ¾äÖÈ¾·½Ê½
+		// æ ¹æ®å‰å‘å’Œå»¶è¿Ÿæ¨¡å¼æ¸²æŸ“æ¸²æŸ“æ–¹å¼
 
-		// ÒõÓ°pass
+		// é˜´å½±pass
 
-		// ÑÕÉ«pass
+		// é¢œè‰²pass
 		color_render_pass_->Render(render_context);
 
 		// 

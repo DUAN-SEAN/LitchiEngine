@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace LitchiRuntime
 {
@@ -7,15 +7,15 @@ namespace LitchiRuntime
 	class RenderCamera;
 
 	/**
-	 * \brief äÖÈ¾ÉÏÏÂÎÄ,ËùÓĞäÖÈ¾¹ÜÏßËùĞèµÄĞÅÏ¢À´Ô´ÓÚContext
-	 * todo:ÒÔºó»áÕë¶Ô²»Í¬¹ÜÏßÌá¹©²»Í¬µÄäÖÈ¾ÉÏÏÂÎÄ
+	 * \brief æ¸²æŸ“ä¸Šä¸‹æ–‡,æ‰€æœ‰æ¸²æŸ“ç®¡çº¿æ‰€éœ€çš„ä¿¡æ¯æ¥æºäºContext
+	 * todo:ä»¥åä¼šé’ˆå¯¹ä¸åŒç®¡çº¿æä¾›ä¸åŒçš„æ¸²æŸ“ä¸Šä¸‹æ–‡
 	 */
 	class RenderContext
 	{
 	public:
 		/**
-		 * \brief Ö÷äÖÈ¾Ïà»ú¾ä±ú
-		 * Ã¿¸ö¹ÜÏß¿É½ÓÊÕÒ»¸öÖ÷Ïà»ú,Èç¹û³¡¾°ÖĞ´æÔÚ¶à¸öÖ÷Ïà»ú,ÄÇÃ´Ö»ÓĞÒ»¸öÖ÷Ïà»úÉúĞ§
+		 * \brief ä¸»æ¸²æŸ“ç›¸æœºå¥æŸ„
+		 * æ¯ä¸ªç®¡çº¿å¯æ¥æ”¶ä¸€ä¸ªä¸»ç›¸æœº,å¦‚æœåœºæ™¯ä¸­å­˜åœ¨å¤šä¸ªä¸»ç›¸æœº,é‚£ä¹ˆåªæœ‰ä¸€ä¸ªä¸»ç›¸æœºç”Ÿæ•ˆ
 		 */
 		RenderCamera* main_render_camera_;
 
@@ -23,30 +23,31 @@ namespace LitchiRuntime
 		float height_;
 
 		/**
-		 * \brief ³¡¾°¾ä±ú
+		 * \brief åœºæ™¯å¥æŸ„
 		 */
 		Scene* scene_;
 		// more 
 	};
 
 	/**
-	 * \brief äÖÈ¾ÏµÍ³¶¨Òå
-	 * Ä¿Ç°´æÔÚÁ½¸ö¹ÜÏß
-	 *	Editor:äÖÈ¾±à¼­Æ÷Ä£Ê½ÏÂµÄ³¡¾°
-	 *	Game:äÖÈ¾ÓÎÏ·Ä£Ê½ÏÂµÄ³¡¾°
-	 * todo:ÒÔºó½«ĞÂÔöÆäËû¹ÜÏß£¬Èç²é¿´Ä£ĞÍ¡¢¶¯»­µÈ¹ÜÏß
+	 * \brief æ¸²æŸ“ç³»ç»Ÿå®šä¹‰
+	 * ç›®å‰å­˜åœ¨ä¸¤ä¸ªç®¡çº¿
+	 *	Editor:æ¸²æŸ“ç¼–è¾‘å™¨æ¨¡å¼ä¸‹çš„åœºæ™¯
+	 *	Game:æ¸²æŸ“æ¸¸æˆæ¨¡å¼ä¸‹çš„åœºæ™¯
+	 * todo:ä»¥åå°†æ–°å¢å…¶ä»–ç®¡çº¿ï¼Œå¦‚æŸ¥çœ‹æ¨¡å‹ã€åŠ¨ç”»ç­‰ç®¡çº¿
 	 */
 	class RenderSystem {
+
 	public:
 
 		RenderSystem();
 		~RenderSystem();
 
-		// äÖÈ¾ËùÓĞµÄäÖÈ¾¹ÜÏß
+		// æ¸²æŸ“æ‰€æœ‰çš„æ¸²æŸ“ç®¡çº¿
 		void Render();
 
 		/**
-		 * \brief »ñÈ¡äÖÈ¾ÉÏÏÂÎÄ
+		 * \brief è·å–æ¸²æŸ“ä¸Šä¸‹æ–‡
 		 * \return renderContext
 		 */
 		RenderContext* GetRenderContext() { return render_context_; }
@@ -54,11 +55,13 @@ namespace LitchiRuntime
 		RenderPipeline* GetEditorRenderPipeline() { return editor_render_pipeline_; }
 		RenderPipeline* GetGameRenderPipeline() { return game_render_pipeline_; }
 
+	public:
+
 		/**
 		 * \brief
-		 * \param instance system¾ä±ú
-		 * \param isUseEditor ÊÇ·ñÊ¹ÓÃEditor
-		 * \param isOutput2RT ÊÇ·ñÊä³öµ½RT
+		 * \param instance systemå¥æŸ„
+		 * \param isUseEditor æ˜¯å¦ä½¿ç”¨Editor
+		 * \param isOutput2RT æ˜¯å¦è¾“å‡ºåˆ°RT
 		 */
 		static void Initialize(RenderSystem* instance, bool isUseEditor, bool isOutput2RT);
 
@@ -66,16 +69,19 @@ namespace LitchiRuntime
 
 	private:
 
-		static RenderSystem* instance_;
-
 		RenderContext* render_context_;
 
 		bool is_use_editor;
 
-		// ±à¼­Æ÷ äÖÈ¾¹ÜÏß
+		// ç¼–è¾‘å™¨ æ¸²æŸ“ç®¡çº¿
 		RenderPipeline* editor_render_pipeline_;
 
-		// game äÖÈ¾¹ÜÏß
+		// game æ¸²æŸ“ç®¡çº¿
 		RenderPipeline* game_render_pipeline_;
+
+	private:
+
+		static RenderSystem* instance_;
+
 	};
 }

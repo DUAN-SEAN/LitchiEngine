@@ -1,4 +1,4 @@
-
+ï»¿
 #include "render_System.h"
 #include "render_pipeline.h"
 
@@ -33,6 +33,6 @@ namespace LitchiRuntime
 		{
 			editor_render_pipeline_->Render(render_context_);
 		}
-		// game_render_pipeline_->Render(render_context_);// todo ÏÈ¹ØµôGame¹ÜÏß
+		// game_render_pipeline_->Render(render_context_);// todo å…ˆå…³æŽ‰Gameç®¡çº¿
 	}
 }

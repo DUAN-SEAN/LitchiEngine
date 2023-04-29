@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 
 namespace LitchiRuntime
 {
 	class RenderCamera;
 	class RenderContext;
 	/**
-	 * \brief äÖÈ¾Pass
-	 * ½øĞĞÒ»´ÎÍêÕûµÄäÖÈ¾¹ÜÏß
-	 * Ö÷Ïà»úäÖÈ¾ £¨²»Í¸Ã÷ °ëÍ¸Ã÷£©
-	 * UIäÖÈ¾
+	 * \brief æ¸²æŸ“Pass
+	 * è¿›è¡Œä¸€æ¬¡å®Œæ•´çš„æ¸²æŸ“ç®¡çº¿
+	 * ä¸»ç›¸æœºæ¸²æŸ“ ï¼ˆä¸é€æ˜ åŠé€æ˜ï¼‰
+	 * UIæ¸²æŸ“
 	 */
 	class RenderPass
 	{
@@ -22,7 +22,7 @@ namespace LitchiRuntime
 	};
 
 	/**
-	 * \brief »æÖÆÑÕÉ«µÄPass
+	 * \brief ç»˜åˆ¶é¢œè‰²çš„Pass
 	 */
 	class ColorRenderPass :public RenderPass
 	{

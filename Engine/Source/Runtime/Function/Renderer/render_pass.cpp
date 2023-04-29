@@ -1,4 +1,4 @@
-#include "render_pass.h"
+ï»¿#include "render_pass.h"
 #include "render_pipeline.h"
 #include "render_system.h"
 #include "render_camera.h"
@@ -19,7 +19,7 @@ namespace LitchiRuntime
 	{
 		RenderPass::Render(render_context);
 
-		// »ñÈ¡µ±Ç°ÐèÒªäÖÈ¾µÄÏà»ú
+		// èŽ·å–å½“å‰éœ€è¦æ¸²æŸ“çš„ç›¸æœº
 		RenderCamera* render_camera = render_context->main_render_camera_;
 		Scene* scene = render_context->scene_;
 

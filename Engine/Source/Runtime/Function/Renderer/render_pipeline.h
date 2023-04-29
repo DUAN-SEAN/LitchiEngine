@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 namespace LitchiRuntime
 {
@@ -10,8 +10,8 @@ namespace LitchiRuntime
 	class RenderContext;
 
 	/**
-	 * \brief äÖÈ¾¹ÜÏß,»á°´ÕÕË³ĞòäÖÈ¾¶à¸öPass
-	 * ¹ÜÏßµÄ½á¹û½«Êä³öµ½FBO£¨Ä¬ÈÏµÄÆÁÄ»FBO»òÖ¸¶¨µÄFBO£©
+	 * \brief æ¸²æŸ“ç®¡çº¿,ä¼šæŒ‰ç…§é¡ºåºæ¸²æŸ“å¤šä¸ªPass
+	 * ç®¡çº¿çš„ç»“æœå°†è¾“å‡ºåˆ°FBOï¼ˆé»˜è®¤çš„å±å¹•FBOæˆ–æŒ‡å®šçš„FBOï¼‰
 	 */
 	class RenderPipeline
 	{
@@ -22,29 +22,29 @@ namespace LitchiRuntime
 		void Initialize(bool useRT);
 
 		/**
-		 * \brief äÖÈ¾Ç°Ö´ĞĞ
+		 * \brief æ¸²æŸ“å‰æ‰§è¡Œ
 		 */
 		void PreRender();
 
 		/**
-		 * \brief äÖÈ¾
+		 * \brief æ¸²æŸ“
 		 */
 		void Render(RenderContext* render_context);
 
 		/**
-		 * \brief »ñÈ¡RT, Èç¹ûÉèÖÃ¹ÜÏßµÄ×îÖÕÄ¿±êÊÇ
+		 * \brief è·å–RT, å¦‚æœè®¾ç½®ç®¡çº¿çš„æœ€ç»ˆç›®æ ‡æ˜¯
 		 * \return RT
 		 */
 		RenderTexture* GetOutputRT() { return output_renderTexture_;}
 
 	private:
 		/**
-		 * \brief »º´æäÖÈ¾¹ÜÏß,ÔİÊ±Ö»ÓĞÒ»¸ö
+		 * \brief ç¼“å­˜æ¸²æŸ“ç®¡çº¿,æš‚æ—¶åªæœ‰ä¸€ä¸ª
 		 */
 		ColorRenderPass* color_render_pass_;
 
 		/**
-		 * \brief Êä³öRT
+		 * \brief è¾“å‡ºRT
 		 */
 		RenderTexture* output_renderTexture_;
 
