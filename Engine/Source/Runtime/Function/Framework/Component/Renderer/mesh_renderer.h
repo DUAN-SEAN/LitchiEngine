@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-
+    class RenderCamera;
     class Material;
     class MeshFilter;
     class Texture2D;
@@ -20,7 +20,7 @@ namespace LitchiRuntime
         void SetMaterial(Material* material);//设置Material
         Material* material() { return material_; }
 
-        void Render();//渲染
+        void Render(RenderCamera* renderCamera);//渲染
     private:
         Material* material_;
 

@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2022/3/4.
-//
-
+﻿
 #ifndef UNTITLED_GPU_RESOURCE_MAPPER_H
 #define UNTITLED_GPU_RESOURCE_MAPPER_H
 

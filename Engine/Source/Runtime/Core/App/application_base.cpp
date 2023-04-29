@@ -16,6 +16,7 @@
 #include "Runtime/Function/Physics/physics.h"
 
 #include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Renderer/render_system.h"
 
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
@@ -36,6 +37,8 @@ namespace LitchiRuntime
         InitGraphicsLibraryFramework();
 
         UpdateScreenSize();
+
+        RenderSystem::Initialize(new RenderSystem(),true,true);
 
         TypeManager::Initialize(new TypeManager());
 
@@ -83,19 +86,22 @@ namespace LitchiRuntime
 
 
     void ApplicationBase::Render() {
-        //遍历所有相机，每个相机的View Projection，都用来做一次渲染。
-        Camera::Foreach([&]() {
-            SceneManager::Foreach([](GameObject* game_object) {
-                if (game_object->active() == false) {
-                    return;
-                }
-                MeshRenderer* mesh_renderer = game_object->GetComponent<MeshRenderer>();
-                if (mesh_renderer == nullptr) {
-                    return;
-                }
-                mesh_renderer->Render();
-                });
-            });
+
+        RenderSystem::Instance()->Render();
+
+        ////遍历所有相机，每个相机的View Projection，都用来做一次渲染。
+        //Camera::Foreach([&]() {
+        //    SceneManager::Foreach([](GameObject* game_object) {
+        //        if (game_object->active() == false) {
+        //            return;
+        //        }
+        //        MeshRenderer* mesh_renderer = game_object->GetComponent<MeshRenderer>();
+        //        if (mesh_renderer == nullptr) {
+        //            return;
+        //        }
+        //        mesh_renderer->Render();
+        //        });
+        //    });
     }
 
     void ApplicationBase::FixedUpdate() {

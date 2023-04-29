@@ -29,17 +29,18 @@ namespace LitchiRuntime
         material_ = material;
     }
 
-    void MeshRenderer::Render() {
+    void MeshRenderer::Render(RenderCamera* renderCamera) {
 
         //从当前Camera获取View Projection
-        auto current_camera = Camera::current_camera();
+        auto current_camera = renderCamera;
         if (current_camera == nullptr) {
             return;
         }
-        //判断相机的 culling_mask 是否包含当前物体 layer
-        if ((current_camera->culling_mask() & game_object()->layer()) == 0x00) {
-            return;
-        }
+
+        ////判断相机的 culling_mask 是否包含当前物体 layer
+        //if ((current_camera->culling_mask() & game_object()->layer()) == 0x00) {
+        //    return;
+        //}
 
         glm::mat4 view = current_camera->view_mat4();
         glm::mat4 projection = current_camera->projection_mat4();

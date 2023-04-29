@@ -1,7 +1,4 @@
-﻿//
-// Created by captain on 2022/3/4.
-//
-
+﻿
 #include "gpu_resource_mapper.h"
 
 namespace LitchiRuntime

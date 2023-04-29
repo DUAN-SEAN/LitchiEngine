@@ -7,6 +7,7 @@
 #include <functional>
 #include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/render_camera.h"
 
 namespace LitchiRuntime
 {
@@ -28,24 +29,17 @@ namespace LitchiRuntime
         /// \param farClip  远裁剪面
         void SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip);
 
-
-        glm::mat4& view_mat4() { return view_mat4_; }
-        glm::mat4& projection_mat4() { return projection_mat4_; }
-
         /// 设置清屏颜色
         /// \param r
         /// \param g
         /// \param b
         /// \param a
-        void set_clear_color(float r, float g, float b, float a) { clear_color_ = glm::vec4(r, g, b, a); }
+        void set_clear_color(float r, float g, float b, float a);
 
         /// 设置刷帧清屏内容种类
         /// \param clear_flag
-        void set_clear_flag(unsigned int clear_flag) { clear_flag_ = clear_flag; }
-
-        /// 刷帧清屏
-        void Clear();
-
+        void set_clear_flag(unsigned int clear_flag);
+        
         unsigned char depth() { return depth_; }
 
         /// 设置 depth，触发相机排序
@@ -54,48 +48,12 @@ namespace LitchiRuntime
 
         unsigned char culling_mask() { return culling_mask_; }
         void set_culling_mask(unsigned char culling_mask) { culling_mask_ = culling_mask; }
-
-        /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
-        void CheckRenderToTexture();
-
-        /// 检查是否要取消使用RenderTexture.
-        void CheckCancelRenderToTexture();
-
-        /// 设置渲染目标RenderTexture
-        /// \param render_texture
-        void set_target_render_texture(RenderTexture* render_texture);
-
-        /// 清空渲染目标RenderTexture
-        void clear_target_render_texture();
-
-        /// 遍历所有Camera
-        /// \param func
-        static void Foreach(std::function<void()> func);
-
-        /// 遍历all_camera_时，轮到的那个Camera。
-        /// \return
-        static Camera* current_camera() { return current_camera_; }
-
-        /// 按 depth_ 排序
-        static void Sort();
+        
     private:
-
-        glm::mat4 view_mat4_;//指定相机坐标和朝向
-        glm::mat4 projection_mat4_;//指定相机范围
-
-        glm::vec4 clear_color_;//清屏颜色
-        unsigned int clear_flag_;//刷新数据标志
 
         unsigned char depth_;//排序深度
 
         unsigned char culling_mask_;//控制渲染哪些Layer的物体
-
-        RenderCamera* 
-
-        RenderTexture* target_render_texture_;//渲染目标RenderTexture
-
-        static std::vector<Camera*> all_camera_;//所有Camera，每一帧都遍历Camera，设置current_camera_。
-        static Camera* current_camera_;//当前用于渲染的Camera，就是MeshRenderer在计算MVP的时候，用这个Camera的View Projection矩阵计算MVP。
     };
 }
 

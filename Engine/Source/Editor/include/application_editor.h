@@ -39,6 +39,7 @@ private:
 	Scene* selected_scene_;//记录Hierarchy当前选中的Node
 	GameObject* selected_go_;
 
+	// 当前控制的RenderCamera
 
 	GLuint color_texture_id_ = 0;//FBO 颜色纹理
 	GLuint depth_texture_id_ = 0;//FBO 深度纹理
