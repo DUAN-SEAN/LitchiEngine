@@ -88,20 +88,7 @@ namespace LitchiRuntime
     void ApplicationBase::Render() {
 
         RenderSystem::Instance()->Render();
-
-        ////遍历所有相机，每个相机的View Projection，都用来做一次渲染。
-        //Camera::Foreach([&]() {
-        //    SceneManager::Foreach([](GameObject* game_object) {
-        //        if (game_object->active() == false) {
-        //            return;
-        //        }
-        //        MeshRenderer* mesh_renderer = game_object->GetComponent<MeshRenderer>();
-        //        if (mesh_renderer == nullptr) {
-        //            return;
-        //        }
-        //        mesh_renderer->Render();
-        //        });
-        //    });
+        
     }
 
     void ApplicationBase::FixedUpdate() {

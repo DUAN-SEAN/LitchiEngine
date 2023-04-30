@@ -55,14 +55,22 @@ namespace LitchiRuntime
 		GPUResourceMapper::MapFBO(frame_buffer_object_handle_, frame_buffer_object_id);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
-			//将颜色纹理绑定到FBO颜色附着点
-			GLuint color_texture = GPUResourceMapper::GetTexture(color_texture_2d_->texture_handle());
+
+		//将颜色纹理绑定到FBO颜色附着点
+		GLuint color_texture = GPUResourceMapper::GetTexture(color_texture_2d_->texture_handle());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0); __CHECK_GL_ERROR__
-			//将深度纹理绑定到FBO深度附着点
-			GLuint depth_texture = GPUResourceMapper::GetTexture(depth_texture_2d_->texture_handle());
+
+		//将深度纹理绑定到FBO深度附着点
+		GLuint depth_texture = GPUResourceMapper::GetTexture(depth_texture_2d_->texture_handle());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0); __CHECK_GL_ERROR__
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
+	}
+
+	void RenderTexture::UpdateRT(unsigned short width, unsigned short height)
+	{
+		color_texture_2d_->UpdateImage(0, 0, width, height, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nullptr, 0);
+		depth_texture_2d_->UpdateImage(0, 0, width, height, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, nullptr, 0);
 	}
 
 }

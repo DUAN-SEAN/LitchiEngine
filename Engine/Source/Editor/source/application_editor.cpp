@@ -23,6 +23,7 @@
 #include "Editor/include/application_editor.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Input/input.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 #include "Runtime/Function/Renderer/render_pipeline.h"
 #include "Runtime/Function/Renderer/render_system.h"
@@ -34,6 +35,44 @@ using namespace LitchiRuntime;
 static void glfw_error_callback(int error, const char* description)
 {
 	DEBUG_LOG_ERROR("glfw error:{} description:{}", error, description);
+}
+/// 键盘回调
+/// \param window
+/// \param key
+/// \param scancode
+/// \param action
+/// \param mods
+static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	LitchiRuntime::Input::RecordKey(key, action);
+}
+/// 鼠标按键回调
+/// \param window
+/// \param button
+/// \param action
+/// \param mods
+static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
+{
+	LitchiRuntime::Input::RecordKey(button, action);
+	//    std::cout<<"mouse_button_callback:"<<button<<","<<action<<std::endl;
+}
+/// 鼠标移动回调
+/// \param window
+/// \param x
+/// \param y
+static void mouse_move_callback(GLFWwindow* window, double x, double y)
+{
+	LitchiRuntime::Input::set_mousePosition(x, y);
+	//    std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
+}
+/// 鼠标滚轮回调
+/// \param window
+/// \param x
+/// \param y
+static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
+{
+	LitchiRuntime::Input::RecordScroll(y);
+	//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
 void ApplicationEditor::InitGraphicsLibraryFramework() {
@@ -81,65 +120,19 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 	ImGui_ImplGlfw_InitForOpenGL(editor_glfw_window_, true);
 	const char* glsl_version = "#version 330";
 	ImGui_ImplOpenGL3_Init(glsl_version);
+	
 
-	////创建全局FBO，将整个游戏渲染到FBO，提供给编辑器，作为Game视图显示
-	//frame_buffer_object_id_ = 0;
-	//glGenFramebuffers(1, &frame_buffer_object_id_); __CHECK_GL_ERROR__
-	//	if (frame_buffer_object_id_ == 0) {
-	//		DEBUG_LOG_ERROR("CreateFBO FBO Error!");
-	//		return;
-	//	}
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
-
-	//	//创建颜色纹理 Attach到FBO颜色附着点上
-	//	glGenTextures(1, &color_texture_id_);
-	//glBindTexture(GL_TEXTURE_2D, color_texture_id_);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 480, 320, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
-	//	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture_id_, 0); __CHECK_GL_ERROR__
-
-	//	//创建深度纹理 Attach到FBO深度附着点上
-	//	glGenTextures(1, &depth_texture_id_);
-	//glBindTexture(GL_TEXTURE_2D, depth_texture_id_);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 480, 320, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, nullptr); __CHECK_GL_ERROR__
-	//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture_id_, 0); __CHECK_GL_ERROR__
-
-	//	//检测帧缓冲区完整性
-	//	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
-	//	if (status != GL_FRAMEBUFFER_COMPLETE) {
-	//		DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
-	//		return;
-	//	}
-
+	glfwSetKeyCallback(editor_glfw_window_, key_callback);
+	glfwSetMouseButtonCallback(editor_glfw_window_, mouse_button_callback);
+	glfwSetScrollCallback(editor_glfw_window_, mouse_scroll_callback);
+	glfwSetCursorPosCallback(editor_glfw_window_, mouse_move_callback);
 }
 
 void ApplicationEditor::Render()
 {
-	//// 设置FBO
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, frame_buffer_object_id_); __CHECK_GL_ERROR__
-	//glViewport(0, 0, 480, 320);
-	////glClearColor(0,0,0,1);
-	////glClear(GL_COLOR_BUFFER_BIT);
-	//glEnable(GL_DEPTH_TEST);
-	////检测帧缓冲区完整性
-	//GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
-	//	if (status != GL_FRAMEBUFFER_COMPLETE) {
-	//		DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);//36055 = 0x8CD7 GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT 附着点没有东西
-	//		return;
-	//	}
-
 	// 执行渲染
 	ApplicationBase::Render();
-
-	//// 还原FBO
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
+	
 }
 
 void ApplicationEditor::Run() {
@@ -149,7 +142,9 @@ void ApplicationEditor::Run() {
 	auto* render_camera =  new RenderCamera();
 	auto* scene = SceneManager::GetScene("DefaultScene");
 	RenderSystem::Instance()->InitRenderContext(render_camera, 480, 320, scene);
-
+	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(glm::vec3(0,0,-500), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetFov(60);
+	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAspectRatio(480/ 320);
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -189,7 +184,7 @@ void ApplicationEditor::Run() {
 					// 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
 					// 第5个参数：图片的色调
 					// 第6个参数：图片边框的颜色
-					ImGui::Image(image_id, ImVec2(480, 320), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+					ImGui::Image(image_id, ImVec2(RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->width(), RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
 
 					ImGui::EndTabItem();
 				}

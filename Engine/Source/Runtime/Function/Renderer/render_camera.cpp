@@ -15,7 +15,7 @@ namespace LitchiRuntime
 	RenderCamera::RenderCamera() :
 		clear_color_(49.f / 255, 77.f / 255, 121.f / 255, 1.f),
 		clear_flag_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT),
-		nearClip_(0.1f),
+		nearClip_(1.0f),
 		farClip_(1000.0f)
 	{
 

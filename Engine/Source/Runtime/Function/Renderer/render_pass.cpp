@@ -34,7 +34,7 @@ namespace LitchiRuntime
 		scene->Foreach([&](GameObject* game_object) {
 			if (game_object->active()) {
 				game_object->ForeachComponent([&](Component* component) {
-					auto* mesh_renderer = game_object->GetComponent<MeshRenderer>();
+					auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
 					if (mesh_renderer == nullptr) {
 						return;
 					}

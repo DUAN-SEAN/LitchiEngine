@@ -34,8 +34,7 @@ namespace LitchiRuntime
 
 		~Texture2D();
 		void UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data, unsigned int data_size);
-
-		void UpdateSubImage(int x, int y, int width, int height) const;
+		void UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data, unsigned int data_size);
 
 		static Texture2D* LoadFromFile(std::string& image_file_path);//加载一个图片文件
 	

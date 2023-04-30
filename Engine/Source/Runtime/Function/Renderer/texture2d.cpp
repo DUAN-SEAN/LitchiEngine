@@ -69,23 +69,21 @@ namespace LitchiRuntime
 		if (width <= 0 || height <= 0) {
 			return;
 		}
-		gl_texture_format_ = client_format;
 		glBindTexture(GL_TEXTURE_2D, texture_handle_); __CHECK_GL_ERROR__
-			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); __CHECK_GL_ERROR__
-			glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, client_format, data_type, data); __CHECK_GL_ERROR__
+		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); __CHECK_GL_ERROR__
+		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, client_format, data_type, data); __CHECK_GL_ERROR__
+		
 	}
 
-	void Texture2D::UpdateSubImage(int x, int y, int width, int height) const
-	{
+	void Texture2D::UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
+		unsigned char* data, unsigned int data_size) {
 		if (width <= 0 || height <= 0) {
 			return;
 		}
 		glBindTexture(GL_TEXTURE_2D, texture_handle_); __CHECK_GL_ERROR__
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); __CHECK_GL_ERROR__
-		// 注意textureFormat可能有问题
-		glTexSubImage2D(GL_TEXTURE_2D, 0, x, y, width, height, gl_texture_format_, 0,nullptr); __CHECK_GL_ERROR__
+		glTexImage2D(GL_TEXTURE_2D, 0, gl_texture_format_, width, height, 0, client_format, data_type, data); __CHECK_GL_ERROR__
 	}
-
 
 	Texture2D* Texture2D::Create(unsigned short width, unsigned short height, unsigned int server_format, unsigned int client_format,
 		unsigned int data_type, unsigned char* data, unsigned int data_size) {

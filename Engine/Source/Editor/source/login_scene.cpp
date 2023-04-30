@@ -19,6 +19,7 @@
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Input/key_code.h"
 #include "Runtime/Function/Renderer/render_texture.h"
+#include "Runtime/Function/Scene/scene_manager.h"
 
 using namespace rttr;
 using namespace LitchiRuntime;
@@ -55,6 +56,8 @@ namespace LitchiEditor
 		//material->Parse("material/fishsoup_pot.mat");
 		mesh_renderer->SetMaterial(material);
 		DEBUG_LOG_INFO("LoadMaterial Done");
+
+		transform_fishsoup_pot_->set_position(glm::vec3(0, 0, 0));
 
 		////创建相机2 GameObject
 		//auto go_camera_2=new GameObject("main_camera");
@@ -96,12 +99,35 @@ namespace LitchiEditor
 
 	void LoginScene::Update() {
 
+
+		auto go = SceneManager::GetScene("DefaultScene")->Find("fishsoup_pot");
+		auto trans = go->GetComponent<Transform>();
+
+		float speedMove = Time::delta_time() * 10.0f;
+		glm::vec3 moveDir = glm::vec3(0.0f, 0.0f, 0.0f);
+		if (Input::GetKeyDown(KEY_CODE_W))
+		{
+			moveDir.z = -1.0f;
+		}
+		else if (Input::GetKeyDown(KEY_CODE_S))
+		{
+			moveDir.z = 1.0f;
+		}
+		if (Input::GetKeyDown(KEY_CODE_A))
+		{
+			moveDir.x = -1.0f;
+		}
+		else if (Input::GetKeyDown(KEY_CODE_D))
+		{
+			moveDir.x = 1.0f;
+		}
+		glm::vec3 newPos = trans->position() + moveDir * speedMove;
+		trans->set_position(newPos);
 		return;
 
 		/* camera_2_->SetView(glm::vec3(transform_camera_2_->position().x, 0, 0), glm::vec3(0, 1, 0));
 		 camera_2_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);*/
-
-		float speedMove = Time::delta_time() * 10.0f;
+		
 		float speedRotation = Time::delta_time() * 1.0f;
 		//旋转物体
 		if (Input::GetKeyDown(KEY_CODE_R)) {

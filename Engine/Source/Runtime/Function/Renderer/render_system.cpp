@@ -40,6 +40,7 @@ namespace LitchiRuntime
 	{
 		if(is_use_editor)
 		{
+			editor_render_pipeline_->PreRender(render_context_);
 			editor_render_pipeline_->Render(render_context_);
 		}
 		// game_render_pipeline_->Render(render_context_);// todo 先关掉Game管线

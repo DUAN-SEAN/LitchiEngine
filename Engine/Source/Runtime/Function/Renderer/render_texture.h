@@ -30,6 +30,8 @@ namespace LitchiRuntime
 			height_ = height;
 		}
 
+		void UpdateRT(unsigned short width,unsigned short height);
+
 		unsigned int frame_buffer_object_handle() {
 			return frame_buffer_object_handle_;
 		}

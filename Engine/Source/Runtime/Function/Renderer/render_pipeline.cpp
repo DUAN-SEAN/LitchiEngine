@@ -54,8 +54,7 @@ namespace LitchiRuntime
 			output_renderTexture_->set_height(render_context->height_);
 
 			// 将RT的尺寸设置为当前屏幕的尺寸
-			output_renderTexture_->color_texture_2d()->UpdateSubImage(0, 0, render_context->width_, render_context->height_);
-			output_renderTexture_->depth_texture_2d()->UpdateSubImage(0, 0, render_context->width_, render_context->height_);
+			output_renderTexture_->UpdateRT(render_context->width_, render_context->height_);
 		}
 	}
 
@@ -66,8 +65,6 @@ namespace LitchiRuntime
 		// todo 先暂时在这里设置最终输出的RT
 		if(is_use_rt)
 		{
-			glViewport(0, 0, output_renderTexture_->width(), output_renderTexture_->height());
-
 			GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(output_renderTexture_->frame_buffer_object_handle());
 			glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
 				//检测帧缓冲区完整性，如果完整的话就开始进行绘制
