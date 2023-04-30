@@ -14,6 +14,7 @@
 #include "Runtime/Function/Renderer/shader.h"
 #include "Runtime/Function/Renderer/texture2d.h"
 #include "Runtime/Function/Renderer/material.h"
+#include "Runtime/Function/Renderer/render_camera.h"
 
 namespace LitchiRuntime
 {

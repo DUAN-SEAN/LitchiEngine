@@ -62,8 +62,7 @@ namespace LitchiRuntime
 			GLuint depth_texture = GPUResourceMapper::GetTexture(depth_texture_2d_->texture_handle());
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0); __CHECK_GL_ERROR__
 
-			glBindFramebuffer(GL_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
-
+		glBindFramebuffer(GL_FRAMEBUFFER, 0); __CHECK_GL_ERROR__
 	}
 
 }

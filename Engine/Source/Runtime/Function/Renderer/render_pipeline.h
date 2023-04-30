@@ -24,7 +24,7 @@ namespace LitchiRuntime
 		/**
 		 * \brief 渲染前执行
 		 */
-		void PreRender();
+		void PreRender(RenderContext* render_context);
 
 		/**
 		 * \brief 渲染
@@ -38,6 +38,9 @@ namespace LitchiRuntime
 		RenderTexture* GetOutputRT() { return output_renderTexture_;}
 
 	private:
+
+		bool is_use_rt;
+
 		/**
 		 * \brief 缓存渲染管线,暂时只有一个
 		 */

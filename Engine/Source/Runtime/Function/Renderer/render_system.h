@@ -19,8 +19,10 @@ namespace LitchiRuntime
 		 */
 		RenderCamera* main_render_camera_;
 
-		float width_;
-		float height_;
+		/**
+		 * \brief 当前需要渲染的目标 宽高
+		 */
+		float width_, height_;
 
 		/**
 		 * \brief 场景句柄

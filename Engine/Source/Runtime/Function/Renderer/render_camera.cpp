@@ -12,16 +12,20 @@
 
 namespace LitchiRuntime
 {
-	RenderCamera::RenderCamera() :clear_color_(49.f / 255, 77.f / 255, 121.f / 255, 1.f), clear_flag_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+	RenderCamera::RenderCamera() :
+		clear_color_(49.f / 255, 77.f / 255, 121.f / 255, 1.f),
+		clear_flag_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT),
+		nearClip_(0.1f),
+		farClip_(1000.0f)
 	{
 
 	}
-	void RenderCamera::SetView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp) {
+	void RenderCamera::SetAndUpdateView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp) {
 		view_mat4_ = glm::lookAt(cameraPos, centerPos, cameraUp);
 	}
 
-	void RenderCamera::SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
-		projection_mat4_ = glm::perspective(glm::radians(fovDegrees), aspectRatio, nearClip, farClip);
+	void RenderCamera::UpdateProjection() {
+		projection_mat4_ = glm::perspective(glm::radians(fov_), aspectRatio_, nearClip_, farClip_);
 	}
 
 	void RenderCamera::Clear() {

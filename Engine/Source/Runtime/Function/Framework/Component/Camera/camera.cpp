@@ -1,14 +1,9 @@
 ﻿
 #include "camera.h"
-#include <memory>
-#include <gtc/matrix_transform.hpp>
-#include <glad/glad.h>
-#include <rttr/registration>
-
-#include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/render_system.h"
+#include "Runtime/Function/Renderer/render_camera.h"
 
 namespace LitchiRuntime
 {
@@ -20,14 +15,14 @@ namespace LitchiRuntime
 	Camera::~Camera() {
 	}
 
-	void Camera::SetView(const glm::vec3& centerPos, const glm::vec3& cameraUp) {
+	/*void Camera::SetAndUpdateView(const glm::vec3& centerPos, const glm::vec3& cameraUp) {
 		auto transform = game_object()->GetComponent<Transform>();
-		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetView(transform->position(), centerPos, cameraUp);
+		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(transform->position(), centerPos, cameraUp);
 	}
 
-	void Camera::SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
+	void Camera::SetAndUpdateProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip) {
 
-		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetProjection(glm::radians(fovDegrees), aspectRatio, nearClip, farClip);
+		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateProjection(glm::radians(fovDegrees), aspectRatio, nearClip, farClip);
 	}
 	
 	void Camera::set_clear_color(float r, float g, float b, float a)
@@ -38,7 +33,7 @@ namespace LitchiRuntime
 	void Camera::set_clear_flag(unsigned int clear_flag)
 	{
 		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->set_clear_flag(clear_flag);
-	}
+	}*/
 
 	void Camera::set_depth(unsigned char depth) {
 		if (depth_ == depth) {
@@ -46,6 +41,19 @@ namespace LitchiRuntime
 		}
 		depth_ = depth;
 		// Sort();
+	}
+
+	void Camera::Update()
+	{
+		auto transform = game_object()->GetComponent<Transform>();
+
+		// 更新viewMatrix
+		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(transform->position(),glm::vec3(0,0,0),glm::vec3(0,1,0));
+
+		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetFov(60.0);
+
+		// todo depth mask
+		
 	}
 
 	//void Camera::Sort() {

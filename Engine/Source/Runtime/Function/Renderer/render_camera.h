@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include <algorithm>
 #include <glm.hpp>
 
 namespace LitchiRuntime
@@ -13,17 +14,29 @@ namespace LitchiRuntime
         RenderCamera();
         ~RenderCamera();
 
+        static constexpr float MIN_FOV{ 10.0f };
+        static constexpr float MAX_FOV{ 89.0f };
+
         /// 设置相机位置 朝向
         /// \param cameraFowrad 相机朝前方向
         /// \param cameraUp 相机朝上方向
-        void SetView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp);
+        void SetAndUpdateView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp);
 
         /// 设置相机视野
         /// \param fovDegrees   相机视野 可视角度
         /// \param aspectRatio  宽高比
         /// \param nearClip 近裁剪面
         /// \param farClip  远裁剪面
-        void SetProjection(float fovDegrees, float aspectRatio, float nearClip, float farClip);
+        void UpdateProjection();
+
+        float GetFov () { return fov_; }
+        void SetFov(float fovDegrees)
+        {
+            fov_ = std::clamp(fovDegrees, MIN_FOV, MAX_FOV);
+        }
+
+        float GetAspectRatio() { return aspectRatio_; }
+        void SetAspectRatio(float aspectRatio) { aspectRatio_ = aspectRatio; }
 
         /// 设置清屏颜色
         /// \param r
@@ -59,6 +72,12 @@ namespace LitchiRuntime
 
         glm::mat4 view_mat4_;//指定相机坐标和朝向
         glm::mat4 projection_mat4_;//指定相机范围
+
+        float fov_;
+
+        float aspectRatio_;
+        float nearClip_;
+        float farClip_;
 
         glm::vec4 clear_color_;//清屏颜色
         unsigned int clear_flag_;//刷新数据标志
