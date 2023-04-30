@@ -45,6 +45,8 @@ namespace LitchiRuntime
 		RenderSystem();
 		~RenderSystem();
 
+		void InitRenderContext(RenderCamera* renderCamera,float width,float height,Scene* scene);
+
 		// 渲染所有的渲染管线
 		void Render();
 

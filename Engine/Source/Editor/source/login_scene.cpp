@@ -69,19 +69,19 @@ namespace LitchiEditor
 		//camera_2_->set_culling_mask(0x02);
 
 
-		//创建相机1 GameObject
-		auto go_camera_1 = new GameObject("main_camera", this->game_object()->GetScene());
-		//挂上 Transform 组件
-		transform_camera_1_ = go_camera_1->AddComponent<Transform>();
-		transform_camera_1_->set_position(glm::vec3(0, 0, 10));
-		//挂上 Camera 组件
-		camera_1_ = go_camera_1->AddComponent<Camera>();
-		camera_1_->set_depth(0);
+		////创建相机1 GameObject
+		//auto go_camera_1 = new GameObject("main_camera", this->game_object()->GetScene());
+		////挂上 Transform 组件
+		//transform_camera_1_ = go_camera_1->AddComponent<Transform>();
+		//transform_camera_1_->set_position(glm::vec3(0, 0, 10));
+		////挂上 Camera 组件
+		//camera_1_ = go_camera_1->AddComponent<Camera>();
+		//camera_1_->set_depth(0);
 
 
-		camera_1_->SetView((glm::vec3(0,0,0)), (glm::vec3(0, 1, 0)));
-		// camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
-		camera_1_->SetProjection(60.f, 480/320.0, 1.f, 1000.f);
+		//camera_1_->SetView((glm::vec3(0,0,0)), (glm::vec3(0, 1, 0)));
+		//// camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+		//camera_1_->SetProjection(60.f, 480/320.0, 1.f, 1000.f);
 
 
 		/*auto rt = new RenderTexture();
@@ -194,8 +194,8 @@ namespace LitchiEditor
 		glm::vec4 up = glm::vec4(0, 1, 0, 0);
 		auto newUp = transform_camera_1_->toWorldMatrix() * up;
 
-		camera_1_->SetView((glm::vec3(newCenterPos.x, newCenterPos.y, newCenterPos.z)), (glm::vec3(newUp.x, newUp.y, newUp.z)));
-		camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
+		//camera_1_->SetView((glm::vec3(newCenterPos.x, newCenterPos.y, newCenterPos.z)), (glm::vec3(newUp.x, newUp.y, newUp.z)));
+		//camera_1_->SetProjection(60.f, Screen::aspect_ratio(), 1.f, 1000.f);
 
 
 		last_frame_mouse_position_ = Input::mousePosition();

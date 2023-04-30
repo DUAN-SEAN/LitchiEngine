@@ -8,6 +8,7 @@ namespace LitchiRuntime
 
 	void RenderSystem::Initialize(RenderSystem* instance, bool isUseEditor, bool isOutput2RT)
 	{
+		instance_ = instance;
 		instance_->is_use_editor = isUseEditor;
 		instance_->editor_render_pipeline_->Initialize(isOutput2RT);
 		instance_->game_render_pipeline_->Initialize(isOutput2RT);
@@ -25,6 +26,14 @@ namespace LitchiRuntime
 		delete game_render_pipeline_;
 		delete editor_render_pipeline_;
 		delete render_context_;
+	}
+
+	void RenderSystem::InitRenderContext(RenderCamera* renderCamera, float width, float height, Scene* scene)
+	{
+		render_context_->main_render_camera_ = renderCamera;
+		render_context_->width_ = width;
+		render_context_->height_ = height;
+		render_context_->scene_ = scene;
 	}
 
 	void RenderSystem::Render()

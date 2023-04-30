@@ -23,6 +23,11 @@
 #include "Editor/include/application_editor.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/render_pipeline.h"
+#include "Runtime/Function/Renderer/render_system.h"
+#include "Runtime/Function/Renderer/render_texture.h"
+#include "Runtime/Function/Renderer/texture2d.h"
 
 using namespace LitchiRuntime;
 
@@ -140,6 +145,12 @@ void ApplicationEditor::Render()
 void ApplicationEditor::Run() {
 	ApplicationBase::Run();
 
+	// 初始化RenderCamera
+	auto* render_camera =  new RenderCamera();
+	auto* scene = SceneManager::GetScene("DefaultScene");
+	RenderSystem::Instance()->InitRenderContext(render_camera, 480, 320, scene);
+
+
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	while (!glfwWindowShouldClose(editor_glfw_window_))
@@ -169,7 +180,8 @@ void ApplicationEditor::Run() {
 				if (ImGui::BeginTabItem("Game")) {
 
 					//从游戏渲染线程拿到FBO Attach Texture id
-					GLuint texture_id = color_texture_id_;
+					//GLuint texture_id = color_texture_id_;
+					GLuint texture_id = RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->color_texture_2d()->texture_handle();
 					ImTextureID image_id = (void*)(intptr_t)texture_id;
 
 					// 第一个参数：生成的纹理的id
