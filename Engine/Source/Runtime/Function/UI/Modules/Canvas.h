@@ -1,40 +1,34 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <algorithm>
+#include <vector>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Function/UI/Base/IDrawable.h"
+#include "Runtime/Function/UI/Panels/APanel.h"
+#include "Runtime/Function/UI/ImGui/imgui.h"
+#include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
+#include "Runtime/Function/UI/ImGui/imgui_impl_opengl3.h"
 
-#include "OvUI/API/IDrawable.h"
-#include "OvUI/Panels/APanel.h"
-#include "OvUI/ImGui/imgui.h"
-#include "OvUI/ImGui/imgui_impl_glfw.h"
-#include "OvUI/ImGui/imgui_impl_opengl3.h"
-
-namespace OvUI::Modules
+namespace LitchiRuntime
 {
 	/**
 	* A Canvas represents the whole frame available for UI drawing
 	*/
-	class Canvas : public API::IDrawable
+	class Canvas : public IDrawable
 	{
 	public:
 		/**
 		* Adds a panel to the canvas
 		* @param p_panel
 		*/
-		void AddPanel(Panels::APanel& p_panel);
+		void AddPanel(APanel& p_panel);
 
 		/**
 		* Removes a panel from the canvas
 		* @param p_panel
 		*/
-		void RemovePanel(Panels::APanel& p_panel);
+		void RemovePanel(APanel& p_panel);
 
 		/**
 		* Removes every panels from the canvas
@@ -57,7 +51,7 @@ namespace OvUI::Modules
 		void Draw() override;
 
 	private:
-		std::vector<std::reference_wrapper<Panels::APanel>> m_panels;
+		std::vector<std::reference_wrapper<APanel>> m_panels;
 		bool m_isDockspace = false;
 	};
 }
