@@ -7,7 +7,7 @@
 #pragma once
 
 
-namespace OvUI::Settings
+namespace LitchiRuntime
 {
 	/**
 	* Data structure to send to the panel window constructor to define its settings

@@ -6,7 +6,7 @@
 
 #pragma once
 
-namespace OvUI::Settings
+namespace LitchiRuntime
 {
 	/**
 	* Defines horizontal alignments
