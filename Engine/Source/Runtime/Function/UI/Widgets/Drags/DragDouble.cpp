@@ -1,12 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Drags/DragDouble.h"
+#include "DragDouble.h"
 
-OvUI::Widgets::Drags::DragDouble::DragDouble
+#include "Runtime/Function/UI/ImGui/imgui.h"
+
+LitchiRuntime::DragDouble::DragDouble
 (
 	double p_min,
 	double p_max,

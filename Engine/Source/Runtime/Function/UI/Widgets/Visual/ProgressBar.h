@@ -1,21 +1,15 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvMaths/FVector2.h>
+#include "core/type.hpp"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-#include "OvUI/Widgets/AWidget.h"
-
-namespace OvUI::Widgets::Visual
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget that display a progress bar
 	*/
-	class ProgressBar : public AWidget
+	class ProgressBar : public LitchiRuntime::AWidget
 	{
 	public:
 		/**
@@ -24,14 +18,14 @@ namespace OvUI::Widgets::Visual
 		* @param p_size
 		* @param p_overlay
 		*/
-		ProgressBar(float p_fraction = 0.0f, const OvMaths::FVector2& p_size = { 0.0f, 0.0f }, const std::string& p_overlay = "");
+		ProgressBar(float p_fraction = 0.0f, const glm::vec2& p_size = glm::vec2( 0.0f, 0.0f ), const std::string& p_overlay = "");
 
 	protected:
 		void _Draw_Impl() override;
 
 	public:
 		float fraction;
-		OvMaths::FVector2 size;
+		glm::vec2 size;
 		std::string overlay;
 	};
 }

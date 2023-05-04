@@ -1,16 +1,11 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include "OvUI/Widgets/Buttons/AButton.h"
+#include "AButton.h"
 
-namespace OvUI::Widgets::Buttons
+namespace LitchiRuntime
 {
 	/**
 	* Button widget with an arrow image

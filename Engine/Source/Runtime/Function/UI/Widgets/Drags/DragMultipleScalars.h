@@ -1,18 +1,11 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <array>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Drags
+namespace LitchiRuntime
 {
 	/**
 	* Drag widget of multiple generic type
@@ -75,7 +68,7 @@ namespace OvUI::Widgets::Drags
 		std::array<T, _Size> values;
 		std::string label;
 		std::string format;
-		OvTools::Eventing::Event<std::array<T, _Size>&> ValueChangedEvent;
+		Event<std::array<T, _Size>&> ValueChangedEvent;
 
 	protected:
 		ImGuiDataType_ m_dataType;

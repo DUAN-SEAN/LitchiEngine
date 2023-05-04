@@ -1,12 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Plugins/ContextualMenu.h"
+#include "ContextualMenu.h"
 
-void OvUI::Plugins::ContextualMenu::Execute()
+#include "Runtime/Function/UI/ImGui/imgui.h"
+
+void LitchiRuntime::ContextualMenu::Execute()
 {
 	if (ImGui::BeginPopupContextItem())
 	{
@@ -15,7 +12,7 @@ void OvUI::Plugins::ContextualMenu::Execute()
 	}
 }
 
-void OvUI::Plugins::ContextualMenu::Close()
+void LitchiRuntime::ContextualMenu::Close()
 {
 	ImGui::CloseCurrentPopup();
 }

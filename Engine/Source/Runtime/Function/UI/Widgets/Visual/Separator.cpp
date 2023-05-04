@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Visual/Separator.h"
+#include "Separator.h"
 
-void OvUI::Widgets::Visual::Separator::_Draw_Impl()
+void LitchiRuntime::Separator::_Draw_Impl()
 {
 	ImGui::Separator();
 }

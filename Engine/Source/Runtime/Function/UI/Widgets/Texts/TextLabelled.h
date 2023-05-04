@@ -1,14 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
+#include "Text.h"
 
-#include "OvUI/Widgets/Texts/Text.h"
-
-namespace OvUI::Widgets::Texts
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget to display a labelled text on a panel

@@ -1,8 +1,3 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
@@ -33,7 +28,7 @@ namespace LitchiRuntime
 		template<typename T, typename... Args>
 		T& AddPlugin(Args&& ... p_args)
 		{
-			static_assert(std::is_base_of<Plugins::IPlugin, T>::value, "T should derive from IPlugin");
+			static_assert(std::is_base_of<IPlugin, T>::value, "T should derive from IPlugin");
 
 			T* newPlugin = new T(std::forward<Args>(p_args)...);
 			m_plugins.push_back(newPlugin);
@@ -46,7 +41,7 @@ namespace LitchiRuntime
 		template<typename T>
 		T* GetPlugin()
 		{
-			static_assert(std::is_base_of<Plugins::IPlugin, T>::value, "T should derive from IPlugin");
+			static_assert(std::is_base_of<IPlugin, T>::value, "T should derive from IPlugin");
 
 			for (auto it = m_plugins.begin(); it != m_plugins.end(); ++it)
 			{

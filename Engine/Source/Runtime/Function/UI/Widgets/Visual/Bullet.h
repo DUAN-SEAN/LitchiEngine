@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/AWidget.h"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-namespace OvUI::Widgets::Visual
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget that display a bullet point

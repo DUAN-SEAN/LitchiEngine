@@ -67,12 +67,14 @@ namespace LitchiRuntime
 		{
 			GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(output_renderTexture_->frame_buffer_object_handle());
 			glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
-				//检测帧缓冲区完整性，如果完整的话就开始进行绘制
-				GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
-				if (status != GL_FRAMEBUFFER_COMPLETE) {
-					DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);
-					return;
-				}
+			glViewport(0, 0, render_context->width_, render_context->height_);
+
+			//检测帧缓冲区完整性，如果完整的话就开始进行绘制
+			GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
+			if (status != GL_FRAMEBUFFER_COMPLETE) {
+				DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} ! fbo_id:{}", status, frame_buffer_object_id);
+				return;
+			}
 		}
 
 		// 阴影pass

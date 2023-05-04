@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Sliders/SliderMultipleScalars.h"
+#include "SliderMultipleScalars.h"
 
-namespace OvUI::Widgets::Sliders
+namespace LitchiRuntime
 {
 	/**
 	* Slider widget of multiple type int

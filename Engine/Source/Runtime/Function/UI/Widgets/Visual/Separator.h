@@ -1,19 +1,14 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/AWidget.h"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-namespace OvUI::Widgets::Visual
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget that display a separator
 	*/
-	class Separator : public AWidget
+	class Separator : public LitchiRuntime::AWidget
 	{
 	protected:
 		void _Draw_Impl() override;

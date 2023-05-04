@@ -1,25 +1,23 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Buttons/Button.h"
-#include "OvUI/Internal/Converter.h"
-#include "OvUI/ImGui/imgui_internal.h"
+#include "Button.h"
 
-OvUI::Widgets::Buttons::Button::Button(const std::string& p_label, const OvMaths::FVector2& p_size, bool p_disabled) :
+#include "core/type.hpp"
+#include "Runtime/Function/UI/ImGui/imgui.h"
+#include "Runtime/Function/UI/ImGui/imgui_internal.h"
+#include "Runtime/Function/UI/Internal/Converter.h"
+
+LitchiRuntime::Button::Button(const std::string& p_label, const glm::vec2& p_size, bool p_disabled) :
 	label(p_label), size(p_size), disabled(p_disabled)
 {
 	auto& style = ImGui::GetStyle();
 
-	idleBackgroundColor		= Internal::Converter::ToColor(style.Colors[ImGuiCol_Button]);
-	hoveredBackgroundColor	= Internal::Converter::ToColor(style.Colors[ImGuiCol_ButtonHovered]);
-	clickedBackgroundColor	= Internal::Converter::ToColor(style.Colors[ImGuiCol_ButtonActive]);
-	textColor				= Internal::Converter::ToColor(style.Colors[ImGuiCol_Text]);
+	idleBackgroundColor		= Converter::ToColor(style.Colors[ImGuiCol_Button]);
+	hoveredBackgroundColor	= Converter::ToColor(style.Colors[ImGuiCol_ButtonHovered]);
+	clickedBackgroundColor	= Converter::ToColor(style.Colors[ImGuiCol_ButtonActive]);
+	textColor				= Converter::ToColor(style.Colors[ImGuiCol_Text]);
 }
 
-void OvUI::Widgets::Buttons::Button::_Draw_Impl()
+void LitchiRuntime::Button::_Draw_Impl()
 {
 	auto& style = ImGui::GetStyle();
 
@@ -28,12 +26,12 @@ void OvUI::Widgets::Buttons::Button::_Draw_Impl()
 	auto defaultClickedColor	= style.Colors[ImGuiCol_ButtonActive];
 	auto defaultTextColor		= style.Colors[ImGuiCol_Text];
 
-	style.Colors[ImGuiCol_Button]			= OvUI::Internal::Converter::ToImVec4(idleBackgroundColor);
-	style.Colors[ImGuiCol_ButtonHovered]	= OvUI::Internal::Converter::ToImVec4(hoveredBackgroundColor);
-	style.Colors[ImGuiCol_ButtonActive]		= OvUI::Internal::Converter::ToImVec4(clickedBackgroundColor);
-	style.Colors[ImGuiCol_Text]				= OvUI::Internal::Converter::ToImVec4(textColor);
+	style.Colors[ImGuiCol_Button]			= Converter::ToImVec4(idleBackgroundColor);
+	style.Colors[ImGuiCol_ButtonHovered]	= Converter::ToImVec4(hoveredBackgroundColor);
+	style.Colors[ImGuiCol_ButtonActive]		= Converter::ToImVec4(clickedBackgroundColor);
+	style.Colors[ImGuiCol_Text]				= Converter::ToImVec4(textColor);
 
-	if (ImGui::ButtonEx((label + m_widgetID).c_str(), Internal::Converter::ToImVec2(size), disabled ? ImGuiButtonFlags_Disabled : 0))
+	if (ImGui::ButtonEx((label + m_widgetID).c_str(), Converter::ToImVec2(size), disabled ? ImGuiButtonFlags_Disabled : 0))
 		ClickedEvent.Invoke();
 
 	style.Colors[ImGuiCol_Button]			= defaultIdleColor;

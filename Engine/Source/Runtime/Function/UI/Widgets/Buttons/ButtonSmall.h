@@ -1,17 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include "OvUI/Widgets/Buttons/AButton.h"
-#include "OvUI/Types/Color.h"
+#include "AButton.h"
+#include "Runtime/Function/UI/Types/Color.h"
 
-namespace OvUI::Widgets::Buttons
+namespace LitchiRuntime
 {
 	/**
 	* Small button widget
@@ -31,10 +26,10 @@ namespace OvUI::Widgets::Buttons
 	public:
 		std::string label;
 
-		Types::Color idleBackgroundColor;
-		Types::Color hoveredBackgroundColor;
-		Types::Color clickedBackgroundColor;
+		Color idleBackgroundColor;
+		Color hoveredBackgroundColor;
+		Color clickedBackgroundColor;
 
-		Types::Color textColor;
+		Color textColor;
 	};
 }

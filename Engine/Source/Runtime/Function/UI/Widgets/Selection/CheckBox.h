@@ -1,21 +1,15 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Selection
+namespace LitchiRuntime
 {
 	/**
 	* Checkbox widget that can be checked or not
 	*/
-	class CheckBox : public DataWidget<bool>
+	class CheckBox : public LitchiRuntime::DataWidget<bool>
 	{
 	public:
 		/** 
@@ -31,6 +25,6 @@ namespace OvUI::Widgets::Selection
 	public:
 		bool value;
 		std::string label;
-		OvTools::Eventing::Event<bool> ValueChangedEvent;
+		LitchiRuntime::Event<bool> ValueChangedEvent;
 	};
 }

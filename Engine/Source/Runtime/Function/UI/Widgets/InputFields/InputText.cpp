@@ -1,17 +1,11 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/InputFields/InputText.h"
-
-OvUI::Widgets::InputFields::InputText::InputText(const std::string& p_content, const std::string& p_label) :
+#include "InputText.h"
+LitchiRuntime::InputText::InputText(const std::string& p_content, const std::string& p_label) :
 	DataWidget<std::string>(content), content(p_content), label(p_label)
 {
 }
 
-void OvUI::Widgets::InputFields::InputText::_Draw_Impl()
+void LitchiRuntime::InputText::_Draw_Impl()
 {
 	std::string previousContent = content;
 

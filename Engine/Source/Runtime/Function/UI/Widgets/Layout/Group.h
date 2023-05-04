@@ -1,21 +1,17 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <vector>
 
-#include "OvUI/Internal/WidgetContainer.h"
+#include "Runtime/Function/UI/Internal/WidgetContainer.h"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Widget that can contains other widgets
 	*/
-	class Group : public AWidget, public Internal::WidgetContainer
+	class Group : public AWidget, public WidgetContainer
 	{
 	protected:
 		virtual void _Draw_Impl() override;

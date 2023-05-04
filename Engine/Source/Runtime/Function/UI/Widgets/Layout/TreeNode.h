@@ -1,24 +1,18 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <vector>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Internal/WidgetContainer.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Internal/WidgetContainer.h"
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Widget that allow columnification
 	*/
-	class TreeNode : public DataWidget<std::string>, public Internal::WidgetContainer 
+	class TreeNode : public DataWidget<std::string>, public WidgetContainer 
 	{
 	public:
 		/**
@@ -51,10 +45,10 @@ namespace OvUI::Widgets::Layout
 		bool selected = false;
 		bool leaf = false;
 
-		OvTools::Eventing::Event<> ClickedEvent;
-		OvTools::Eventing::Event<> DoubleClickedEvent;
-		OvTools::Eventing::Event<> OpenedEvent;
-		OvTools::Eventing::Event<> ClosedEvent;
+		Event<> ClickedEvent;
+		Event<> DoubleClickedEvent;
+		Event<> OpenedEvent;
+		Event<> ClosedEvent;
 
 	private:
 		bool m_arrowClickToOpen = false;

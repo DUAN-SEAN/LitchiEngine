@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/InputFields/InputMultipleScalars.h"
+#include "InputMultipleScalars.h"
 
-namespace OvUI::Widgets::InputFields
+namespace LitchiRuntime
 {
 	/**
 	* Input widget of multiple type double

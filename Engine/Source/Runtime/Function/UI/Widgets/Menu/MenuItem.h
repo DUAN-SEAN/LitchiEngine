@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Menu
+namespace LitchiRuntime
 {
 	/**
 	* Widget that can be added to a menu list. It is clickable and can be checkable
@@ -35,8 +29,8 @@ namespace OvUI::Widgets::Menu
 		std::string shortcut;
 		bool checkable;
 		bool checked;
-		OvTools::Eventing::Event<> ClickedEvent;
-		OvTools::Eventing::Event<bool> ValueChangedEvent;
+		Event<> ClickedEvent;
+		Event<bool> ValueChangedEvent;
 
 	private:
 		bool m_selected;

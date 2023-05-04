@@ -1,17 +1,16 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Menu/MenuList.h"
+#include "MenuList.h"
 
-OvUI::Widgets::Menu::MenuList::MenuList(const std::string & p_name, bool p_locked) :
+#include <string>
+
+#include "Runtime/Function/UI/ImGui/imgui.h"
+
+LitchiRuntime::MenuList::MenuList(const std::string & p_name, bool p_locked) :
 	name(p_name), locked(p_locked)
 {
 }
 
-void OvUI::Widgets::Menu::MenuList::_Draw_Impl()
+void LitchiRuntime::MenuList::_Draw_Impl()
 {
 	if (ImGui::BeginMenu(name.c_str(), !locked))
 	{

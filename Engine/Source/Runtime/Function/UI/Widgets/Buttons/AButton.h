@@ -1,18 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-#include "OvUI/Widgets/AWidget.h"
-
-namespace OvUI::Widgets::Buttons
+namespace LitchiRuntime
 {
 	/**
 	* Base class for any button widget
@@ -23,6 +17,6 @@ namespace OvUI::Widgets::Buttons
 		void _Draw_Impl() override = 0;
 
 	public:
-		OvTools::Eventing::Event<> ClickedEvent;
+		Event<> ClickedEvent;
 	};
 }

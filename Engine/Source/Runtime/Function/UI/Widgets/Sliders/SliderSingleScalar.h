@@ -1,19 +1,15 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvMaths/FVector2.h>
-#include <OvTools/Eventing/Event.h>
+#include <string>
 
-#include "OvUI/Widgets/DataWidget.h"
-#include "OvUI/Widgets/Sliders/ESliderOrientation.h"
-#include "OvUI/Internal/Converter.h"
+#include "ESliderOrientation.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/ImGui/imgui.h"
+#include "Runtime/Function/UI/Internal/Converter.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-namespace OvUI::Widgets::Sliders
+namespace LitchiRuntime
 {
 	/**
 	* Slider widget of generic type
@@ -64,7 +60,7 @@ namespace OvUI::Widgets::Sliders
 				valueChanged = ImGui::SliderScalar((label + this->m_widgetID).c_str(), m_dataType, &value, &min, &max, format.c_str());
 				break;
 			case ESliderOrientation::VERTICAL:
-				valueChanged = ImGui::VSliderScalar((label + this->m_widgetID).c_str(), Internal::Converter::ToImVec2(verticalModeSize), m_dataType, &value, &min, &max, format.c_str());
+				valueChanged = ImGui::VSliderScalar((label + this->m_widgetID).c_str(), Converter::ToImVec2(verticalModeSize), m_dataType, &value, &min, &max, format.c_str());
 				break;
 			}
 
@@ -80,10 +76,10 @@ namespace OvUI::Widgets::Sliders
 		T max;
 		T value;
 		ESliderOrientation orientation;
-		OvMaths::FVector2 verticalModeSize; /* Only applied with ESliderOrientation::VERTICAL */
+		glm::vec2 verticalModeSize; /* Only applied with ESliderOrientation::VERTICAL */
 		std::string label;
 		std::string format;
-		OvTools::Eventing::Event<T> ValueChangedEvent;
+		Event<T> ValueChangedEvent;
 
 	private:
 		ImGuiDataType m_dataType;

@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Visual/Bullet.h"
+#include "Bullet.h"
 
-void OvUI::Widgets::Visual::Bullet::_Draw_Impl()
+void LitchiRuntime::Bullet::_Draw_Impl()
 {
 	ImGui::Bullet();
 }

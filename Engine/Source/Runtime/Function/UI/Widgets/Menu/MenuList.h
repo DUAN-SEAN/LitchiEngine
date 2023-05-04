@@ -1,23 +1,17 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <vector>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/Layout/Group.h"
 
-#include "OvUI/Widgets/Layout/Group.h"
-
-namespace OvUI::Widgets::Menu
+namespace LitchiRuntime
 {
 	/**
 	* Widget that behave like a group with a menu display
 	*/
-	class MenuList : public Layout::Group
+	class MenuList : public Group
 	{
 	public:
 		/**
@@ -33,7 +27,7 @@ namespace OvUI::Widgets::Menu
 	public:
 		std::string name;
 		bool locked;
-		OvTools::Eventing::Event<> ClickedEvent;
+		Event<> ClickedEvent;
 
 	private:
 		bool m_opened;

@@ -1,17 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Menu/MenuItem.h"
+#include "MenuItem.h"
 
-OvUI::Widgets::Menu::MenuItem::MenuItem(const std::string & p_name, const std::string & p_shortcut, bool p_checkable, bool p_checked) :
+LitchiRuntime::MenuItem::MenuItem(const std::string & p_name, const std::string & p_shortcut, bool p_checkable, bool p_checked) :
 	DataWidget(m_selected), name(p_name), shortcut(p_shortcut), checkable(p_checkable), checked(p_checked)
 {
 }
 
-void OvUI::Widgets::Menu::MenuItem::_Draw_Impl()
+void LitchiRuntime::MenuItem::_Draw_Impl()
 {
 	bool previousValue = checked;
 

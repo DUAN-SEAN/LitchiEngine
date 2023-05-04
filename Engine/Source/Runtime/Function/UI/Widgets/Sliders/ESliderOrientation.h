@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-namespace OvUI::Widgets::Sliders
+namespace LitchiRuntime
 {
 	/**
 	* Defines the slider orientation

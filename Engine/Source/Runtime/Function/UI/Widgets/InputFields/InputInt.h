@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/InputFields/InputSingleScalar.h"
+#include "InputSingleScalar.h"
 
-namespace OvUI::Widgets::InputFields
+namespace LitchiRuntime
 {
 	/**
 	* Input widget of type int

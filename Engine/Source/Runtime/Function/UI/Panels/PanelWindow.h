@@ -1,24 +1,18 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <memory>
 
-#include <OvTools/Eventing/Event.h>
+#include "APanelTransformable.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 
-#include "OvUI/Panels/APanelTransformable.h"
-#include "OvUI/Settings/PanelWindowSettings.h"
-
-namespace OvUI::Panels
+namespace LitchiRuntime
 {
 	/**
 	* A PanelWindow is a panel that is localized and behave like a window (Movable, resizable...)
 	*/
-	class PanelWindow : public APanelTransformable
+	class PanelWindow : public LitchiRuntime::APanelTransformable
 	{
 	public:
 		/**
@@ -31,7 +25,7 @@ namespace OvUI::Panels
 		(
 			const std::string& p_name = "",
 			bool p_opened = true,
-			const Settings::PanelWindowSettings& p_panelSettings = Settings::PanelWindowSettings{}
+			const PanelWindowSettings& p_panelSettings = PanelWindowSettings{}
 		);
 
 		/**
@@ -101,8 +95,8 @@ namespace OvUI::Panels
 	public:
 		std::string name;
 
-		OvMaths::FVector2 minSize = { 0.f, 0.f };
-		OvMaths::FVector2 maxSize = { 0.f, 0.f };
+		glm::vec2 minSize = glm::vec2((0.f, 0.f));
+		glm::vec2 maxSize = glm::vec2( 0.f, 0.f );
 
 		bool resizable = true;
 		bool closable = false;
@@ -118,8 +112,8 @@ namespace OvUI::Panels
 		bool allowInputs = true;
 		bool titleBar = true;
 
-		OvTools::Eventing::Event<> OpenEvent;
-		OvTools::Eventing::Event<> CloseEvent;
+		Event<> OpenEvent;
+		Event<> CloseEvent;
 
 	private:
 		bool m_opened;

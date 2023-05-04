@@ -1,14 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Texts/Text.h"
-
-namespace OvUI::Widgets::Texts
+#include "Text.h"
+namespace LitchiRuntime
 {
 	/**
 	* Widget to display a disabled text on a panel

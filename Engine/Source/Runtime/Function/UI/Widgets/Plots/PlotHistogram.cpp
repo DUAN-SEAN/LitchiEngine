@@ -1,18 +1,14 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Plots/PlotHistogram.h"
-#include "OvUI/Internal/Converter.h"
+#include "PlotHistogram.h"
 
-OvUI::Widgets::Plots::PlotHistogram::PlotHistogram
+#include "Runtime/Function/UI/Internal/Converter.h"
+
+LitchiRuntime::PlotHistogram::PlotHistogram
 (
 	const std::vector<float>& p_data,
 	float p_minScale,
 	float p_maxScale,
-	const OvMaths::FVector2& p_size,
+	const glm::vec2& p_size,
 	const std::string& p_overlay,
 	const std::string& p_label,
 	int p_forceHover
@@ -20,7 +16,7 @@ OvUI::Widgets::Plots::PlotHistogram::PlotHistogram
 {
 }
 
-void OvUI::Widgets::Plots::PlotHistogram::_Draw_Impl()
+void LitchiRuntime::PlotHistogram::_Draw_Impl()
 {
-	ImGui::PlotHistogram((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Internal::Converter::ToImVec2(size), sizeof(float), forceHover);
+	ImGui::PlotHistogram((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Converter::ToImVec2(size), sizeof(float), forceHover);
 }

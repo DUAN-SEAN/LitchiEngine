@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-namespace OvUI::Styling
+namespace LitchiRuntime
 {
 	/**
 	* Some styles that you can use to modify the UI looks

@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Drags
+namespace LitchiRuntime
 {
 	/**
 	* Drag widget of generic type
@@ -67,7 +61,7 @@ namespace OvUI::Widgets::Drags
 		float speed;
 		std::string label;
 		std::string format;
-		OvTools::Eventing::Event<T> ValueChangedEvent;
+		Event<T> ValueChangedEvent;
 
 	private:
 		ImGuiDataType m_dataType;

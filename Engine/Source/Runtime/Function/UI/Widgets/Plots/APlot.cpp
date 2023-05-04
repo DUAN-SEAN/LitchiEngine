@@ -1,17 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Plots/APlot.h"
+#include "APlot.h"
 
-OvUI::Widgets::Plots::APlot::APlot
+LitchiRuntime::APlot::APlot
 (
 	const std::vector<float>& p_data,
 	float p_minScale,
 	float p_maxScale,
-	const OvMaths::FVector2& p_size,
+	const glm::vec2& p_size,
 	const std::string& p_overlay,
 	const std::string& p_label,
 	int p_forceHover

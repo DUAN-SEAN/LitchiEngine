@@ -1,22 +1,16 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Types/Color.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-#include "OvUI/Types/Color.h"
-
-namespace OvUI::Widgets::Selection
+namespace LitchiRuntime
 {
 	/**
 	* Widget that can open a color picker on click
 	*/
-	class ColorEdit : public DataWidget<Types::Color>
+	class ColorEdit : public LitchiRuntime::DataWidget<LitchiRuntime::Color>
 	{
 	public:
 		/**
@@ -24,14 +18,14 @@ namespace OvUI::Widgets::Selection
 		* @param p_enableAlpha
 		* @param p_defaultColor
 		*/
-		ColorEdit(bool p_enableAlpha = false, const Types::Color& p_defaultColor = {});
+		ColorEdit(bool p_enableAlpha = false, const LitchiRuntime::Color& p_defaultColor = {});
 
 	protected:
 		void _Draw_Impl() override;
 
 	public:
 		bool enableAlpha;
-		Types::Color color;
-		OvTools::Eventing::Event<Types::Color&> ColorChangedEvent;
+		LitchiRuntime::Color color;
+		LitchiRuntime::Event<LitchiRuntime::Color&> ColorChangedEvent;
 	};
 }

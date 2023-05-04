@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Panels/PanelUndecorated.h"
+#include "PanelUndecorated.h"
 
-void OvUI::Panels::PanelUndecorated::_Draw_Impl()
+void LitchiRuntime::PanelUndecorated::_Draw_Impl()
 {
 	auto& style = ImGui::GetStyle();
 	ImVec2 previousPadding = style.WindowPadding;
@@ -31,7 +26,7 @@ void OvUI::Panels::PanelUndecorated::_Draw_Impl()
 	}
 }
 
-int OvUI::Panels::PanelUndecorated::CollectFlags()
+int LitchiRuntime::PanelUndecorated::CollectFlags()
 {
 	ImGuiWindowFlags flags =
 		ImGuiWindowFlags_AlwaysUseWindowPadding |

@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/AWidget.h"
+#include "Runtime/Function/UI//Widgets/AWidget.h"
 
-namespace OvUI::Widgets
+namespace LitchiRuntime
 {
 	/**
 	* DataWidget are widgets that contains a value. It is very usefull in combination with

@@ -1,13 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 
-namespace OvUI::Types
+namespace LitchiRuntime
 {
 	/**
 	* Data structur that contains color information in a 0.f to 1.f float format

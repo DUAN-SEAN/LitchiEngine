@@ -1,17 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Selection/ColorEdit.h"
+#include "ColorEdit.h"
 
-OvUI::Widgets::Selection::ColorEdit::ColorEdit(bool p_enableAlpha, const Types::Color & p_defaultColor) :
-	DataWidget<Types::Color>(color), enableAlpha(p_enableAlpha), color(p_defaultColor)
+LitchiRuntime::ColorEdit::ColorEdit(bool p_enableAlpha, const Color & p_defaultColor) :
+	DataWidget<Color>(color), enableAlpha(p_enableAlpha), color(p_defaultColor)
 {
 }
 
-void OvUI::Widgets::Selection::ColorEdit::_Draw_Impl()
+void LitchiRuntime::ColorEdit::_Draw_Impl()
 {
 	int flags = !enableAlpha ? ImGuiColorEditFlags_NoAlpha : 0;
 	bool valueChanged = false;

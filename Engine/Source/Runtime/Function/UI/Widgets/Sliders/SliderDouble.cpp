@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Sliders/SliderDouble.h"
+#include "SliderDouble.h"
 
-OvUI::Widgets::Sliders::SliderDouble::SliderDouble
+LitchiRuntime::SliderDouble::SliderDouble
 (
 	double p_min,
 	double p_max,

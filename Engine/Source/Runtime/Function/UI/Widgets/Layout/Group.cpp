@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Layout/Group.h"
+#include "Group.h"
 
-void OvUI::Widgets::Layout::Group::_Draw_Impl()
+void LitchiRuntime::Group::_Draw_Impl()
 {
 	DrawWidgets();
 }

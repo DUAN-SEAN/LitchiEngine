@@ -1,18 +1,13 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 #include <unordered_map>
 
-#include "OvUI/Modules/Canvas.h"
-#include "OvUI/Styling/EStyle.h"
+#include "Runtime/Function/UI/Modules/Canvas.h"
+#include "Runtime/Function/UI/Styling/EStyle.h"
 
-namespace OvUI::Core
+namespace LitchiRuntime
 {
 	/**
 	* Handle the creation and drawing of the UI
@@ -26,7 +21,7 @@ namespace OvUI::Core
 		* @param p_style
 		* @param p_glslVersion (Ex: #version 150)
 		*/
-		UIManager(GLFWwindow* p_glfwWindow, Styling::EStyle p_style = Styling::EStyle::IM_DARK_STYLE, const std::string& p_glslVersion = "#version 150");
+		UIManager(GLFWwindow* p_glfwWindow, EStyle p_style = EStyle::IM_DARK_STYLE, const std::string& p_glslVersion = "#version 150");
 
 		/**
 		* Destroy the UI manager. Will handle ImGui destruction internally
@@ -37,7 +32,7 @@ namespace OvUI::Core
 		* Apply a new style to the UI elements
 		* @param p_style
 		*/
-		void ApplyStyle(Styling::EStyle p_style);
+		void ApplyStyle(EStyle p_style);
 
 		/**
 		* Load a font (Returns true on success)
@@ -111,7 +106,7 @@ namespace OvUI::Core
 		* Defines the canvas to use
 		* @param p_canvas
 		*/
-		void SetCanvas(Modules::Canvas& p_canvas);
+		void SetCanvas(Canvas& p_canvas);
 
 		/**
 		* Stop considering the current canvas (if any)
@@ -130,7 +125,7 @@ namespace OvUI::Core
 
 	private:
 		bool m_dockingState;
-		Modules::Canvas* m_currentCanvas = nullptr;
+		Canvas* m_currentCanvas = nullptr;
 		std::unordered_map<std::string, ImFont*> m_fonts;
 		std::string m_layoutSaveFilename = "imgui.ini";
 	};

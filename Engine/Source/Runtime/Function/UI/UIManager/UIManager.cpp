@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Core/UIManager.h"
+#include "UIManager.h"
 
-OvUI::Core::UIManager::UIManager(GLFWwindow* p_glfwWindow, Styling::EStyle p_style, const std::string& p_glslVersion)
+LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, const std::string& p_glslVersion)
 {
 	ImGui::CreateContext();
 
@@ -19,25 +14,25 @@ OvUI::Core::UIManager::UIManager(GLFWwindow* p_glfwWindow, Styling::EStyle p_sty
 	ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());
 }
 
-OvUI::Core::UIManager::~UIManager()
+LitchiRuntime::UIManager::~UIManager()
 {
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
-void OvUI::Core::UIManager::ApplyStyle(Styling::EStyle p_style)
+void LitchiRuntime::UIManager::ApplyStyle(EStyle p_style)
 {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
 	switch (p_style)
 	{
-	case OvUI::Styling::EStyle::IM_CLASSIC_STYLE:	ImGui::StyleColorsClassic();	break;
-	case OvUI::Styling::EStyle::IM_DARK_STYLE:		ImGui::StyleColorsDark();		break;
-	case OvUI::Styling::EStyle::IM_LIGHT_STYLE:		ImGui::StyleColorsLight();		break;
+	case EStyle::IM_CLASSIC_STYLE:	ImGui::StyleColorsClassic();	break;
+	case EStyle::IM_DARK_STYLE:		ImGui::StyleColorsDark();		break;
+	case EStyle::IM_LIGHT_STYLE:		ImGui::StyleColorsLight();		break;
 	}
 
-	if (p_style == OvUI::Styling::EStyle::DUNE_DARK)
+	if (p_style == EStyle::DUNE_DARK)
 	{
 		style->WindowPadding = ImVec2(15, 15);
 		style->WindowRounding = 5.0f;
@@ -93,7 +88,7 @@ void OvUI::Core::UIManager::ApplyStyle(Styling::EStyle p_style)
 
 		style->Colors[ImGuiCol_Tab] = style->Colors[ImGuiCol_TabUnfocused];
 	}
-    else if (p_style == OvUI::Styling::EStyle::ALTERNATIVE_DARK)
+    else if (p_style == EStyle::ALTERNATIVE_DARK)
     {
         style->WindowPadding = ImVec2(15, 15);
         style->WindowRounding = 0.0f;
@@ -168,7 +163,7 @@ void OvUI::Core::UIManager::ApplyStyle(Styling::EStyle p_style)
     }
 }
 
-bool OvUI::Core::UIManager::LoadFont(const std::string& p_id, const std::string & p_path, float p_fontSize)
+bool LitchiRuntime::UIManager::LoadFont(const std::string& p_id, const std::string & p_path, float p_fontSize)
 {
 	if (m_fonts.find(p_id) == m_fonts.end())
 	{
@@ -185,7 +180,7 @@ bool OvUI::Core::UIManager::LoadFont(const std::string& p_id, const std::string 
 	return false;
 }
 
-bool OvUI::Core::UIManager::UnloadFont(const std::string & p_id)
+bool LitchiRuntime::UIManager::UnloadFont(const std::string & p_id)
 {
 	if (m_fonts.find(p_id) != m_fonts.end())
 	{
@@ -196,7 +191,7 @@ bool OvUI::Core::UIManager::UnloadFont(const std::string & p_id)
 	return false;
 }
 
-bool OvUI::Core::UIManager::UseFont(const std::string & p_id)
+bool LitchiRuntime::UIManager::UseFont(const std::string & p_id)
 {
 	auto foundFont = m_fonts.find(p_id);
 
@@ -209,12 +204,12 @@ bool OvUI::Core::UIManager::UseFont(const std::string & p_id)
 	return false;
 }
 
-void OvUI::Core::UIManager::UseDefaultFont()
+void LitchiRuntime::UIManager::UseDefaultFont()
 {
 	ImGui::GetIO().FontDefault = nullptr;
 }
 
-void OvUI::Core::UIManager::EnableEditorLayoutSave(bool p_value)
+void LitchiRuntime::UIManager::EnableEditorLayoutSave(bool p_value)
 {
 	if (p_value)
 		ImGui::GetIO().IniFilename = m_layoutSaveFilename.c_str();
@@ -222,29 +217,29 @@ void OvUI::Core::UIManager::EnableEditorLayoutSave(bool p_value)
 		ImGui::GetIO().IniFilename = nullptr;
 }
 
-bool OvUI::Core::UIManager::IsEditorLayoutSaveEnabled() const
+bool LitchiRuntime::UIManager::IsEditorLayoutSaveEnabled() const
 {
 	return ImGui::GetIO().IniFilename != nullptr;
 }
 
-void OvUI::Core::UIManager::SetEditorLayoutSaveFilename(const std::string & p_filename)
+void LitchiRuntime::UIManager::SetEditorLayoutSaveFilename(const std::string & p_filename)
 {
 	m_layoutSaveFilename = p_filename;
 	if (IsEditorLayoutSaveEnabled())
 		ImGui::GetIO().IniFilename = m_layoutSaveFilename.c_str();
 }
 
-void OvUI::Core::UIManager::SetEditorLayoutAutosaveFrequency(float p_frequency)
+void LitchiRuntime::UIManager::SetEditorLayoutAutosaveFrequency(float p_frequency)
 {
 	ImGui::GetIO().IniSavingRate = p_frequency;
 }
 
-float OvUI::Core::UIManager::GetEditorLayoutAutosaveFrequency(float p_frequeny)
+float LitchiRuntime::UIManager::GetEditorLayoutAutosaveFrequency(float p_frequeny)
 {
 	return ImGui::GetIO().IniSavingRate;
 }
 
-void OvUI::Core::UIManager::EnableDocking(bool p_value)
+void LitchiRuntime::UIManager::EnableDocking(bool p_value)
 {
 	m_dockingState = p_value;
 
@@ -254,29 +249,29 @@ void OvUI::Core::UIManager::EnableDocking(bool p_value)
 		ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_DockingEnable;
 }
 
-void OvUI::Core::UIManager::ResetLayout(const std::string& p_config) const
+void LitchiRuntime::UIManager::ResetLayout(const std::string& p_config) const
 {
     ImGui::LoadIniSettingsFromDisk(p_config.c_str());
 }
 
-bool OvUI::Core::UIManager::IsDockingEnabled() const
+bool LitchiRuntime::UIManager::IsDockingEnabled() const
 {
 	return m_dockingState;
 }
 
-void OvUI::Core::UIManager::SetCanvas(Modules::Canvas& p_canvas)
+void LitchiRuntime::UIManager::SetCanvas(Canvas& p_canvas)
 {
 	RemoveCanvas();
 
 	m_currentCanvas = &p_canvas;
 }
 
-void OvUI::Core::UIManager::RemoveCanvas()
+void LitchiRuntime::UIManager::RemoveCanvas()
 {
 	m_currentCanvas = nullptr;
 }
 
-void OvUI::Core::UIManager::Render()
+void LitchiRuntime::UIManager::Render()
 {
 	if (m_currentCanvas)
 	{
@@ -285,12 +280,12 @@ void OvUI::Core::UIManager::Render()
 	}
 }
 
-void OvUI::Core::UIManager::PushCurrentFont()
+void LitchiRuntime::UIManager::PushCurrentFont()
 {
 
 }
 
-void OvUI::Core::UIManager::PopCurrentFont()
+void LitchiRuntime::UIManager::PopCurrentFont()
 {
 
 }

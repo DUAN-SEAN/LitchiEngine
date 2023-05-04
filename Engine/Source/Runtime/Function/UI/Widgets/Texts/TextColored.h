@@ -1,15 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Texts/Text.h"
-#include "OvUI/Types/Color.h"
+#include "Text.h"
+#include "Runtime/Function/UI/Types/Color.h"
 
-namespace OvUI::Widgets::Texts
+namespace LitchiRuntime
 {
 	/**
 	* Widget to display text on a panel that can be colored
@@ -22,10 +17,10 @@ namespace OvUI::Widgets::Texts
 		* @param p_content
 		* @param p_color
 		*/
-		TextColored(const std::string& p_content = "", const Types::Color& p_color = Types::Color(1.0f, 1.0f, 1.0f, 1.0f));
+		TextColored(const std::string& p_content = "", const Color& p_color = Color(1.0f, 1.0f, 1.0f, 1.0f));
 
 	public:
-		Types::Color color;
+		Color color;
 
 	protected:
 		virtual void _Draw_Impl() override;

@@ -27,7 +27,6 @@ namespace LitchiRuntime
 		RenderCamera* render_camera = render_context->main_render_camera_;
 		Scene* scene = render_context->scene_;
 
-		glViewport(0, 0, render_context->width_, render_context->width_);
 		render_camera->Clear();
 
 		// 遍历所有的物体,执行MeshRenderer的Render函数

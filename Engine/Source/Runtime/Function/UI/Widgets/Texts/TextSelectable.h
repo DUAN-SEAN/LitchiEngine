@@ -1,16 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
+#include "Text.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
 
-#include <OvTools/Eventing/Event.h>
-
-#include "OvUI/Widgets/Texts/Text.h"
-
-namespace OvUI::Widgets::Texts
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget to display a selectable text on a panel
@@ -33,8 +26,8 @@ namespace OvUI::Widgets::Texts
 		bool selected;
 		bool disabled;
 
-		OvTools::Eventing::Event<bool> ClickedEvent;
-		OvTools::Eventing::Event<> SelectedEvent;
-		OvTools::Eventing::Event<> UnselectedEvent;
+		Event<bool> ClickedEvent;
+		Event<> SelectedEvent;
+		Event<> UnselectedEvent;
 	};
 }

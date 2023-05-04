@@ -8,11 +8,10 @@
 
 #include <array>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Sliders
+namespace LitchiRuntime
 {
 	/**
 	* Slider widget of multiple generic type
@@ -74,7 +73,7 @@ namespace OvUI::Widgets::Sliders
 		std::array<T, _Size> values;
 		std::string label;
 		std::string format;
-		OvTools::Eventing::Event<std::array<T, _Size>&> ValueChangedEvent;
+		Event<std::array<T, _Size>&> ValueChangedEvent;
 
 	protected:
 		ImGuiDataType_ m_dataType;

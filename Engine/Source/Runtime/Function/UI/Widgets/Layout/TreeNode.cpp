@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Layout/TreeNode.h"
+#include "TreeNode.h"
 
-OvUI::Widgets::Layout::TreeNode::TreeNode(const std::string & p_name, bool p_arrowClickToOpen) :
+LitchiRuntime::TreeNode::TreeNode(const std::string & p_name, bool p_arrowClickToOpen) :
 	DataWidget(name),
 	name(p_name),
 	m_arrowClickToOpen(p_arrowClickToOpen)
@@ -14,24 +9,24 @@ OvUI::Widgets::Layout::TreeNode::TreeNode(const std::string & p_name, bool p_arr
 	m_autoExecutePlugins = false;
 }
 
-void OvUI::Widgets::Layout::TreeNode::Open()
+void LitchiRuntime::TreeNode::Open()
 {
 	m_shouldOpen = true;
 	m_shouldClose = false;
 }
 
-void OvUI::Widgets::Layout::TreeNode::Close()
+void LitchiRuntime::TreeNode::Close()
 {
 	m_shouldClose = true;
 	m_shouldOpen = false;
 }
 
-bool OvUI::Widgets::Layout::TreeNode::IsOpened() const
+bool LitchiRuntime::TreeNode::IsOpened() const
 {
 	return m_opened;
 }
 
-void OvUI::Widgets::Layout::TreeNode::_Draw_Impl()
+void LitchiRuntime::TreeNode::_Draw_Impl()
 {
 	bool prevOpened = m_opened;
 

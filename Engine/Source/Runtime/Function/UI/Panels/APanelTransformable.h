@@ -1,16 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <vector>
 #include <memory>
-
-#include <OvMaths/FVector2.h>
-#include <OvTools/Eventing/Event.h>
 
 #include "core/type.hpp"
 
@@ -36,10 +28,10 @@ namespace LitchiRuntime
 		*/
 		APanelTransformable
 		(
-			const OvMaths::FVector2& p_defaultPosition = OvMaths::FVector2(-1.f, -1.f),
-			const OvMaths::FVector2& p_defaultSize = OvMaths::FVector2(-1.f, -1.f),
-			Settings::EHorizontalAlignment p_defaultHorizontalAlignment = Settings::EHorizontalAlignment::LEFT,
-			Settings::EVerticalAlignment p_defaultVerticalAlignment = Settings::EVerticalAlignment::TOP,
+			const glm::vec2& p_defaultPosition = glm::vec2(-1.f, -1.f),
+			const glm::vec2& p_defaultSize = glm::vec2(-1.f, -1.f),
+			EHorizontalAlignment p_defaultHorizontalAlignment = EHorizontalAlignment::LEFT,
+			EVerticalAlignment p_defaultVerticalAlignment = EVerticalAlignment::TOP,
 			bool p_ignoreConfigFile = false
 		);
 
@@ -47,40 +39,40 @@ namespace LitchiRuntime
 		* Defines the position of the panel
 		* @param p_position
 		*/
-		void SetPosition(const OvMaths::FVector2& p_position);
+		void SetPosition(const glm::vec2& p_position);
 
 		/**
 		* Defines the size of the panel
 		* @param p_size
 		*/
-		void SetSize(const OvMaths::FVector2& p_size);
+		void SetSize(const glm::vec2& p_size);
 
 		/**
 		* Defines the alignment of the panel
 		* @param p_horizontalAlignment
 		* @param p_verticalAligment
 		*/
-		void SetAlignment(Settings::EHorizontalAlignment p_horizontalAlignment, Settings::EVerticalAlignment p_verticalAligment);
+		void SetAlignment(EHorizontalAlignment p_horizontalAlignment,EVerticalAlignment p_verticalAligment);
 
 		/**
 		* Returns the current position of the panel
 		*/
-		const OvMaths::FVector2& GetPosition() const;
+		const glm::vec2& GetPosition() const;
 
 		/**
 		* Returns the current size of the panel
 		*/
-		const OvMaths::FVector2& GetSize() const;
+		const glm::vec2& GetSize() const;
 
 		/**
 		* Returns the current horizontal alignment of the panel
 		*/
-		Settings::EHorizontalAlignment GetHorizontalAlignment() const;
+		EHorizontalAlignment GetHorizontalAlignment() const;
 
 		/**
 		* Returns the current vertical alignment of the panel
 		*/
-		Settings::EVerticalAlignment GetVerticalAlignment() const;
+		EVerticalAlignment GetVerticalAlignment() const;
 
 	protected:
 		void Update();

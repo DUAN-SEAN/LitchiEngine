@@ -81,7 +81,7 @@ namespace LitchiRuntime
 			return;
 		}
 		glBindTexture(GL_TEXTURE_2D, texture_handle_); __CHECK_GL_ERROR__
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1); __CHECK_GL_ERROR__
+		//glPixelStorei(GL_UNPACK_ALIGNMENT, 1); __CHECK_GL_ERROR__
 		glTexImage2D(GL_TEXTURE_2D, 0, gl_texture_format_, width, height, 0, client_format, data_type, data); __CHECK_GL_ERROR__
 	}
 

@@ -1,12 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Sliders/SliderInt.h"
 
-OvUI::Widgets::Sliders::SliderInt::SliderInt
+#include "SliderInt.h"
+
+LitchiRuntime::SliderInt::SliderInt
 (
 	int p_min,
 	int p_max,

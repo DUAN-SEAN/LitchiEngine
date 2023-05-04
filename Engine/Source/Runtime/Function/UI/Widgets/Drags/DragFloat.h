@@ -1,14 +1,11 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Drags/DragSingleScalar.h"
+#include <string>
 
-namespace OvUI::Widgets::Drags
+#include "DragSingleScalar.h"
+
+namespace LitchiRuntime
 {
 	/**
 	* Drag widget of type float

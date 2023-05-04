@@ -1,18 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvMaths/FVector2.h>
+#include "AButton.h"
+#include "core/type.hpp"
+#include "Runtime/Function/UI/Internal/TextureID.h"
+#include "Runtime/Function/UI/Types/Color.h"
 
-#include "OvUI/Internal/TextureID.h"
-#include "OvUI/Types/Color.h"
-#include "OvUI/Widgets/Buttons/AButton.h"
-
-namespace OvUI::Widgets::Buttons
+namespace LitchiRuntime
 {
 	/**
 	* Button widget with an image
@@ -25,7 +19,7 @@ namespace OvUI::Widgets::Buttons
 		* @param p_textureID
 		* @param p_size
 		*/
-		ButtonImage(uint32_t p_textureID, const OvMaths::FVector2& p_size);
+		ButtonImage(uint32_t p_textureID, const glm::vec2& p_size);
 
 	protected:
 		void _Draw_Impl() override;
@@ -33,10 +27,10 @@ namespace OvUI::Widgets::Buttons
 	public:
 		bool disabled = false;
 
-		OvUI::Types::Color background = { 0, 0, 0, 0 };
-		OvUI::Types::Color tint = { 1, 1, 1, 1 };
+		Color background = { 0, 0, 0, 0 };
+		Color tint = { 1, 1, 1, 1 };
 
-		Internal::TextureID textureID;
-		OvMaths::FVector2 size;
+		TextureID textureID;
+		glm::vec2 size;
 	};
 }

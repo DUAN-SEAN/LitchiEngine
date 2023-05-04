@@ -1,15 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Panels/PanelWindow.h"
-#include "OvUI/Internal/Converter.h"
+#include "PanelWindow.h"
 
-#include "OvUI/ImGui/imgui_internal.h"
+#include "Runtime/Function/UI/ImGui/imgui_internal.h"
+#include "Runtime/Function/UI/Internal/Converter.h"
 
-OvUI::Panels::PanelWindow::PanelWindow(const std::string& p_name, bool p_opened, const Settings::PanelWindowSettings& p_floatingPanelSettings) :
+LitchiRuntime::PanelWindow::PanelWindow(const std::string& p_name, bool p_opened, const PanelWindowSettings& p_floatingPanelSettings) :
 	name(p_name),
 	resizable(p_floatingPanelSettings.resizable),
 	closable(p_floatingPanelSettings.closable),
@@ -28,7 +23,7 @@ OvUI::Panels::PanelWindow::PanelWindow(const std::string& p_name, bool p_opened,
 	autoSize = p_floatingPanelSettings.autoSize;
 }
 
-void OvUI::Panels::PanelWindow::Open()
+void LitchiRuntime::PanelWindow::Open()
 {
 	if (!m_opened)
 	{
@@ -37,7 +32,7 @@ void OvUI::Panels::PanelWindow::Open()
 	}
 }
 
-void OvUI::Panels::PanelWindow::Close()
+void LitchiRuntime::PanelWindow::Close()
 {
 	if (m_opened)
 	{
@@ -46,12 +41,12 @@ void OvUI::Panels::PanelWindow::Close()
 	}
 }
 
-void OvUI::Panels::PanelWindow::Focus()
+void LitchiRuntime::PanelWindow::Focus()
 {
 	ImGui::SetWindowFocus((name + m_panelID).c_str());
 }
 
-void OvUI::Panels::PanelWindow::SetOpened(bool p_value)
+void LitchiRuntime::PanelWindow::SetOpened(bool p_value)
 {
 	if (p_value != m_opened)
 	{
@@ -64,22 +59,22 @@ void OvUI::Panels::PanelWindow::SetOpened(bool p_value)
 	}
 }
 
-bool OvUI::Panels::PanelWindow::IsOpened() const
+bool LitchiRuntime::PanelWindow::IsOpened() const
 {
 	return m_opened;
 }
 
-bool OvUI::Panels::PanelWindow::IsHovered() const
+bool LitchiRuntime::PanelWindow::IsHovered() const
 {
 	return m_hovered;
 }
 
-bool OvUI::Panels::PanelWindow::IsFocused() const
+bool LitchiRuntime::PanelWindow::IsFocused() const
 {
 	return m_focused;
 }
 
-bool OvUI::Panels::PanelWindow::IsAppearing() const
+bool LitchiRuntime::PanelWindow::IsAppearing() const
 {
 	if (auto window = ImGui::FindWindowByName((name + GetPanelID()).c_str()); window)
 		return window->Appearing;
@@ -87,27 +82,27 @@ bool OvUI::Panels::PanelWindow::IsAppearing() const
 		return false;
 }
 
-void OvUI::Panels::PanelWindow::ScrollToBottom()
+void LitchiRuntime::PanelWindow::ScrollToBottom()
 {
     m_mustScrollToBottom = true;
 }
 
-void OvUI::Panels::PanelWindow::ScrollToTop()
+void LitchiRuntime::PanelWindow::ScrollToTop()
 {
     m_mustScrollToTop = true;
 }
 
-bool OvUI::Panels::PanelWindow::IsScrolledToBottom() const
+bool LitchiRuntime::PanelWindow::IsScrolledToBottom() const
 {
     return m_scrolledToBottom;
 }
 
-bool OvUI::Panels::PanelWindow::IsScrolledToTop() const
+bool LitchiRuntime::PanelWindow::IsScrolledToTop() const
 {
     return m_scrolledToTop;
 }
 
-void OvUI::Panels::PanelWindow::_Draw_Impl()
+void LitchiRuntime::PanelWindow::_Draw_Impl()
 {
 	if (m_opened)
 	{
@@ -126,8 +121,8 @@ void OvUI::Panels::PanelWindow::_Draw_Impl()
         if (!scrollable)                windowFlags |= ImGuiWindowFlags_NoScrollWithMouse | ImGuiWindowFlags_NoScrollbar;
 		if (!titleBar)					windowFlags |= ImGuiWindowFlags_NoTitleBar;
 
-		ImVec2 minSizeConstraint = Internal::Converter::ToImVec2(minSize);
-		ImVec2 maxSizeConstraint = Internal::Converter::ToImVec2(maxSize);
+		ImVec2 minSizeConstraint = Converter::ToImVec2(minSize);
+		ImVec2 maxSizeConstraint = Converter::ToImVec2(maxSize);
 
 		/* Cancel constraint if x or y is <= 0.f */
 		if (minSizeConstraint.x <= 0.f || minSizeConstraint.y <= 0.f)

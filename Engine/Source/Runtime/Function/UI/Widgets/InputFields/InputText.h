@@ -6,11 +6,10 @@
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::InputFields
+namespace LitchiRuntime
 {
 	/**
 	* Input widget of type string
@@ -32,7 +31,7 @@ namespace OvUI::Widgets::InputFields
 		std::string content;
 		std::string label;
 		bool selectAllOnClick = false;
-		OvTools::Eventing::Event<std::string> ContentChangedEvent;
-		OvTools::Eventing::Event<std::string> EnterPressedEvent;
+		Event<std::string> ContentChangedEvent;
+		Event<std::string> EnterPressedEvent;
 	};
 }

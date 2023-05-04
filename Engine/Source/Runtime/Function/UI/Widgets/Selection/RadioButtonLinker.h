@@ -1,14 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Selection/RadioButton.h"
+#include "RadioButton.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-namespace OvUI::Widgets::Selection
+namespace LitchiRuntime
 {
 	/**
 	* Handle the link of radio buttons. Necessary to enable the correct behaviour
@@ -44,11 +40,11 @@ namespace OvUI::Widgets::Selection
 		void OnRadioButtonClicked(int p_radioID);
 
 	public:
-		OvTools::Eventing::Event<int> ValueChangedEvent;
+		Event<int> ValueChangedEvent;
 
 	private:
 		int m_availableRadioID = 0;
 		int m_selected = -1;
-		std::vector<std::pair<OvTools::Eventing::ListenerID, std::reference_wrapper<RadioButton>>> m_radioButtons;
+		std::vector<std::pair<ListenerID, std::reference_wrapper<RadioButton>>> m_radioButtons;
 	};
 }

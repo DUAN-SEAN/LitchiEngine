@@ -1,20 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/ImGui/imgui.h"
 
-#include "OvUI/ImGui/imgui.h"
-
-#include "OvUI/Plugins/IPlugin.h"
-
-namespace OvUI::Plugins
+namespace LitchiRuntime
 {
 	/**
 	* Represents a drag and drop source
@@ -82,8 +74,8 @@ namespace OvUI::Plugins
 		std::string identifier;
 		std::string tooltip;
 		T data;
-		OvTools::Eventing::Event<> DragStartEvent;
-		OvTools::Eventing::Event<> DragStopEvent;
+		Event<> DragStartEvent;
+		Event<> DragStopEvent;
 
 		bool hasTooltip = true;
 

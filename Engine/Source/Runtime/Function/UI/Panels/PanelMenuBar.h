@@ -1,8 +1,3 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
@@ -10,12 +5,10 @@
 #include <memory>
 #include <algorithm>
 
-#include <OvTools/Eventing/Event.h>
+#include "APanel.h"
+#include "Runtime/Function/UI//Widgets/Menu/MenuList.h"
 
-#include "OvUI/Panels/APanel.h"
-#include "OvUI/Widgets/Menu/MenuList.h"
-
-namespace OvUI::Panels
+namespace LitchiRuntime
 {
 	/**
 	* A simple panel that will be displayed on the top side of the canvas

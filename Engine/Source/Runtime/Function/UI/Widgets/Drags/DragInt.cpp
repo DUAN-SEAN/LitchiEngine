@@ -1,12 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Drags/DragInt.h"
+#include "DragInt.h"
 
-OvUI::Widgets::Drags::DragInt::DragInt
+#include "Runtime/Function/UI/ImGui/imgui.h"
+
+LitchiRuntime::DragInt::DragInt
 (
 	int p_min,
 	int p_max,

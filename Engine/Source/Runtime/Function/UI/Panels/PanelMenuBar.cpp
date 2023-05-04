@@ -1,12 +1,6 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Panels/PanelMenuBar.h"
-
-void OvUI::Panels::PanelMenuBar::_Draw_Impl()
+#include "PanelMenuBar.h"
+void LitchiRuntime::PanelMenuBar::_Draw_Impl()
 {
 	if (!m_widgets.empty() && ImGui::BeginMainMenuBar())
 	{

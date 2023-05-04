@@ -1,18 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Layout/GroupCollapsable.h"
-#include "OvUI/ImGui/imgui_internal.h"
+#include "GroupCollapsable.h"
 
-OvUI::Widgets::Layout::GroupCollapsable::GroupCollapsable(const std::string & p_name) :
+LitchiRuntime::GroupCollapsable::GroupCollapsable(const std::string & p_name) :
 	name(p_name)
 {
 }
 
-void OvUI::Widgets::Layout::GroupCollapsable::_Draw_Impl()
+void LitchiRuntime::GroupCollapsable::_Draw_Impl()
 {
 	bool previouslyOpened = opened;
 

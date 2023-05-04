@@ -1,18 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <vector>
 
-#include <OvTools/Eventing/Event.h>
+#include "Group.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
 
-#include "OvUI/Widgets/Layout/Group.h"
-
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Widget that can contains other widgets and is collapsable
@@ -33,7 +27,7 @@ namespace OvUI::Widgets::Layout
 		std::string name;
 		bool closable = false;
 		bool opened = true;
-		OvTools::Eventing::Event<> CloseEvent;
-		OvTools::Eventing::Event<> OpenEvent;
+		Event<> CloseEvent;
+		Event<> OpenEvent;
 	};
 }

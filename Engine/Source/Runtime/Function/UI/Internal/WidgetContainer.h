@@ -1,8 +1,3 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
@@ -64,7 +59,7 @@ namespace LitchiRuntime
 		template <typename T, typename ... Args>
 		T& CreateWidget(Args&&... p_args)
 		{
-			m_widgets.emplace_back(new T(p_args...), Internal::EMemoryMode::INTERNAL_MANAGMENT);
+			m_widgets.emplace_back(new T(p_args...), EMemoryMode::INTERNAL_MANAGMENT);
 			T& instance = *reinterpret_cast<T*>(m_widgets.back().first);
 			instance.SetParent(this);
 			return instance;

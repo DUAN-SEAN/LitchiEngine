@@ -12,7 +12,7 @@ include(../../ThridParty/physx-4.1/CMakeLists.txt)
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
 file(GLOB_RECURSE rttr_cpp "../../ThridParty/rttr/*.cpp")
 file(GLOB_RECURSE GLAD_FILES "../../ThridParty/glad/*.c")
-file(GLOB_RECURSE HEADER_FILES "*.h")
+file(GLOB_RECURSE HEADER_FILES "*.h" "*.inl")
 file(GLOB_RECURSE SOURCE_FILES "*.cpp")
 
 #source_group(TREE "${ENGINE_ROOT_DIR}/schema" FILES ${SCHEMA_FILES})

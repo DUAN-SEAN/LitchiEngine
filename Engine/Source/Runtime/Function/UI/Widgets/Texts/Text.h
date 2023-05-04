@@ -1,15 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/AWidget.h"
-#include "OvUI/Widgets/DataWidget.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-namespace OvUI::Widgets::Texts
+namespace LitchiRuntime
 {
 	/**
 	* Simple widget to display text on a panel

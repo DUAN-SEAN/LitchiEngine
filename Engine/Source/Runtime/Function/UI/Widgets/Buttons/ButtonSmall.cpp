@@ -1,25 +1,20 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Internal/Converter.h"
+#include "ButtonSmall.h"
 
-#include "OvUI/Widgets/Buttons/ButtonSmall.h"
+#include "Runtime/Function/UI/Internal/Converter.h"
 
-OvUI::Widgets::Buttons::ButtonSmall::ButtonSmall(const std::string& p_label) :
+LitchiRuntime::ButtonSmall::ButtonSmall(const std::string& p_label) :
 	label(p_label)
 {
 	auto& style = ImGui::GetStyle();
 
-	idleBackgroundColor = Internal::Converter::ToColor(style.Colors[ImGuiCol_Button]);
-	hoveredBackgroundColor = Internal::Converter::ToColor(style.Colors[ImGuiCol_ButtonHovered]);
-	clickedBackgroundColor = Internal::Converter::ToColor(style.Colors[ImGuiCol_ButtonActive]);
-	textColor = Internal::Converter::ToColor(style.Colors[ImGuiCol_Text]);
+	idleBackgroundColor = Converter::ToColor(style.Colors[ImGuiCol_Button]);
+	hoveredBackgroundColor = Converter::ToColor(style.Colors[ImGuiCol_ButtonHovered]);
+	clickedBackgroundColor = Converter::ToColor(style.Colors[ImGuiCol_ButtonActive]);
+	textColor = Converter::ToColor(style.Colors[ImGuiCol_Text]);
 }
 
-void OvUI::Widgets::Buttons::ButtonSmall::_Draw_Impl()
+void LitchiRuntime::ButtonSmall::_Draw_Impl()
 {
 	auto& style = ImGui::GetStyle();
 
@@ -28,10 +23,10 @@ void OvUI::Widgets::Buttons::ButtonSmall::_Draw_Impl()
 	auto defaultClickedColor	= style.Colors[ImGuiCol_ButtonActive];
 	auto defaultTextColor		= style.Colors[ImGuiCol_Text];
 
-	style.Colors[ImGuiCol_Button]			= OvUI::Internal::Converter::ToImVec4(idleBackgroundColor);
-	style.Colors[ImGuiCol_ButtonHovered]	= OvUI::Internal::Converter::ToImVec4(hoveredBackgroundColor);
-	style.Colors[ImGuiCol_ButtonActive]		= OvUI::Internal::Converter::ToImVec4(clickedBackgroundColor);
-	style.Colors[ImGuiCol_Text]				= OvUI::Internal::Converter::ToImVec4(textColor);
+	style.Colors[ImGuiCol_Button]			= Converter::ToImVec4(idleBackgroundColor);
+	style.Colors[ImGuiCol_ButtonHovered]	= Converter::ToImVec4(hoveredBackgroundColor);
+	style.Colors[ImGuiCol_ButtonActive]		= Converter::ToImVec4(clickedBackgroundColor);
+	style.Colors[ImGuiCol_Text]				= Converter::ToImVec4(textColor);
 
 	if (ImGui::SmallButton((label + m_widgetID).c_str()))
 		ClickedEvent.Invoke();

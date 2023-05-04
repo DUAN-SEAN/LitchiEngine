@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
+#include "DragMultipleScalars.h"
+#include "Runtime/Function/UI/ImGui/imgui.h"
 
-#include "OvUI/Widgets/Drags/DragMultipleScalars.h"
-
-namespace OvUI::Widgets::Drags
+namespace LitchiRuntime
 {
 	/**
 	* Drag widget of multiple type int

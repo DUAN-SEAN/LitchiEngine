@@ -1,14 +1,8 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
+#include "APanelTransformable.h"
 
-#include "OvUI/Panels/APanelTransformable.h"
-
-namespace OvUI::Panels
+namespace LitchiRuntime
 {
 	/**
 	* A simple panel that is transformable and without decorations (No background)

@@ -1,18 +1,11 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <array>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::InputFields
+namespace LitchiRuntime
 {
 	/**
 	* Input widget of multiple generic type
@@ -82,8 +75,8 @@ namespace OvUI::Widgets::InputFields
 		std::string label;
 		std::string format;
 		bool selectAllOnClick;
-		OvTools::Eventing::Event<std::array<T, _Size>&> ContentChangedEvent;
-		OvTools::Eventing::Event<std::array<T, _Size>&> EnterPressedEvent;
+		Event<std::array<T, _Size>&> ContentChangedEvent;
+		Event<std::array<T, _Size>&> EnterPressedEvent;
 
 	private:
 		ImGuiDataType m_dataType;

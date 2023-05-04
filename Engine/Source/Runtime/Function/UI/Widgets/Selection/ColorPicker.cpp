@@ -1,17 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Selection/ColorPicker.h"
+#include "ColorPicker.h"
 
-OvUI::Widgets::Selection::ColorPicker::ColorPicker(bool p_enableAlpha, const Types::Color & p_defaultColor) :
-	DataWidget<Types::Color>(color), enableAlpha(p_enableAlpha), color(p_defaultColor)
+LitchiRuntime::ColorPicker::ColorPicker(bool p_enableAlpha, const Color & p_defaultColor) :
+	DataWidget<Color>(color), enableAlpha(p_enableAlpha), color(p_defaultColor)
 {
 }
 
-void OvUI::Widgets::Selection::ColorPicker::_Draw_Impl()
+void LitchiRuntime::ColorPicker::_Draw_Impl()
 {
 	int flags = !enableAlpha ? ImGuiColorEditFlags_NoAlpha : 0;
 	bool valueChanged = false;

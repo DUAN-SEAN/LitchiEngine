@@ -1,14 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/Sliders/SliderSingleScalar.h"
+#include "SliderSingleScalar.h"
 
-namespace OvUI::Widgets::Sliders
+
+namespace LitchiRuntime
 {
 	/**
 	* Slider widget of type float

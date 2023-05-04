@@ -83,8 +83,8 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 		exit(EXIT_FAILURE);
 	}
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 #ifdef __APPLE__
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -118,14 +118,14 @@ void ApplicationEditor::InitGraphicsLibraryFramework() {
 
 	//配置后端
 	ImGui_ImplGlfw_InitForOpenGL(editor_glfw_window_, true);
-	const char* glsl_version = "#version 330";
+	const char* glsl_version = "#version 460";
 	ImGui_ImplOpenGL3_Init(glsl_version);
 	
 
 	glfwSetKeyCallback(editor_glfw_window_, key_callback);
-	glfwSetMouseButtonCallback(editor_glfw_window_, mouse_button_callback);
-	glfwSetScrollCallback(editor_glfw_window_, mouse_scroll_callback);
-	glfwSetCursorPosCallback(editor_glfw_window_, mouse_move_callback);
+	//glfwSetMouseButtonCallback(editor_glfw_window_, mouse_button_callback);
+	//glfwSetScrollCallback(editor_glfw_window_, mouse_scroll_callback);
+	//glfwSetCursorPosCallback(editor_glfw_window_, mouse_move_callback);
 }
 
 void ApplicationEditor::Render()
@@ -144,7 +144,7 @@ void ApplicationEditor::Run() {
 	RenderSystem::Instance()->InitRenderContext(render_camera, 480, 320, scene);
 	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(glm::vec3(0,0,-500), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
 	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetFov(60);
-	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAspectRatio(480/ 320);
+	RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAspectRatio(480.0/ 320);
 
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
@@ -152,13 +152,13 @@ void ApplicationEditor::Run() {
 	{
 		glfwPollEvents();
 
-		//渲染游戏
-		OneFrame();
-
 		//ImGui刷帧
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
+
+		//渲染游戏
+		OneFrame();
 
 		//// 1. 状态
 		//{
@@ -178,13 +178,18 @@ void ApplicationEditor::Run() {
 					//GLuint texture_id = color_texture_id_;
 					GLuint texture_id = RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->color_texture_2d()->texture_handle();
 					ImTextureID image_id = (void*)(intptr_t)texture_id;
-
+					
 					// 第一个参数：生成的纹理的id
 					// 第2个参数：Image的大小
 					// 第3，4个参数：UV的起点坐标和终点坐标，UV是被规范化到（0，1）之间的坐标
 					// 第5个参数：图片的色调
 					// 第6个参数：图片边框的颜色
-					ImGui::Image(image_id, ImVec2(RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->width(), RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->height()), ImVec2(0.0, 1.0), ImVec2(1.0, 0.0), ImVec4(255, 255, 255, 1), ImVec4(0, 255, 0, 1));
+					ImGui::Image(image_id, 
+						ImVec2(RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->width(), RenderSystem::Instance()->GetEditorRenderPipeline()->GetOutputRT()->height()), 
+						ImVec2(0.0, 1.0), 
+						ImVec2(1.0, 0.0), 
+						ImVec4(255, 255, 255, 1), 
+						ImVec4(0, 255, 0, 1));
 
 					ImGui::EndTabItem();
 				}
@@ -274,8 +279,6 @@ void ApplicationEditor::Run() {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(editor_glfw_window_);
-
-
 	}
 
 	Exit();

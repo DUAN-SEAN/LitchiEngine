@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Text.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
 
-#include "OvUI/Widgets/Texts/Text.h"
-
-namespace OvUI::Widgets::Texts
+namespace LitchiRuntime
 {
 	/**
 	* Widget to display text on a panel that is also clickable
@@ -28,7 +22,7 @@ namespace OvUI::Widgets::Texts
 		virtual void _Draw_Impl() override;
 
 	public:
-		OvTools::Eventing::Event<> ClickedEvent;
-		OvTools::Eventing::Event<> DoubleClickedEvent;
+		Event<> ClickedEvent;
+		Event<> DoubleClickedEvent;
 	};
 }

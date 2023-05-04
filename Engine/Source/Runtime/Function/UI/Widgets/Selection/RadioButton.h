@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Selection
+namespace LitchiRuntime
 {
 	class RadioButtonLinker;
 
@@ -50,7 +44,7 @@ namespace OvUI::Widgets::Selection
 
 	public:
 		std::string label;
-		OvTools::Eventing::Event<int> ClickedEvent;
+		Event<int> ClickedEvent;
 
 	private:
 		bool m_selected = false;

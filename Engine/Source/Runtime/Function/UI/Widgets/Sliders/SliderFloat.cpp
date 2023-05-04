@@ -1,12 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvUI/Widgets/Sliders/SliderFloat.h"
+#include "SliderFloat.h"
 
-OvUI::Widgets::Sliders::SliderFloat::SliderFloat
+LitchiRuntime::SliderFloat::SliderFloat
 (
 	float p_min,
 	float p_max,

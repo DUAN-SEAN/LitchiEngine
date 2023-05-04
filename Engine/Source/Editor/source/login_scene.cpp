@@ -18,6 +18,8 @@
 #include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Input/key_code.h"
+#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/render_System.h"
 #include "Runtime/Function/Renderer/render_texture.h"
 #include "Runtime/Function/Scene/scene_manager.h"
 
@@ -123,6 +125,25 @@ namespace LitchiEditor
 		}
 		glm::vec3 newPos = trans->position() + moveDir * speedMove;
 		trans->set_position(newPos);
+
+		if(Input::GetKeyDown(KEY_CODE_U))
+		{
+			RenderSystem::Instance()->GetRenderContext()->width_ = 800;
+			RenderSystem::Instance()->GetRenderContext()->height_ = 600;
+
+			RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAspectRatio(800 / 600);
+		}
+
+		if(Input::GetKeyDown(KEY_CODE_J))
+		{
+
+			RenderSystem::Instance()->GetRenderContext()->width_ = 480;
+			RenderSystem::Instance()->GetRenderContext()->height_ = 320;
+
+			RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAspectRatio(480 / 320);
+		}
+
+
 		return;
 
 		/* camera_2_->SetView(glm::vec3(transform_camera_2_->position().x, 0, 0), glm::vec3(0, 1, 0));

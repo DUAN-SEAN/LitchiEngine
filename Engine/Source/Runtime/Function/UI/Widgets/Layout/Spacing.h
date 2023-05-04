@@ -1,14 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvUI/Widgets/AWidget.h"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Widget that adds a space to the panel line

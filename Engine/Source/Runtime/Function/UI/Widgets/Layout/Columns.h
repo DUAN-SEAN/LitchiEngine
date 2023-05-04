@@ -1,22 +1,17 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <array>
 
-#include "OvUI/Internal/WidgetContainer.h"
+#include "Runtime/Function/UI/Internal/WidgetContainer.h"
 
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Widget that allow columnification
 	*/
 	template <size_t _Size>
-	class Columns : public AWidget, public Internal::WidgetContainer
+	class Columns : public AWidget, public WidgetContainer
 	{
 	public:
 		/**

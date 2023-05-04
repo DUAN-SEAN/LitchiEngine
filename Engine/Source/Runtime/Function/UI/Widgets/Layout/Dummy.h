@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include <OvMaths/FVector2.h>
+#include "core/type.hpp"
+#include "Runtime/Function/UI/Widgets/AWidget.h"
 
-#include "OvUI/Widgets/AWidget.h"
-
-namespace OvUI::Widgets::Layout
+namespace LitchiRuntime
 {
 	/**
 	* Dummy widget that takes the given size as space in the panel
@@ -22,12 +16,12 @@ namespace OvUI::Widgets::Layout
 		* Constructor
 		* @param p_size
 		*/
-		Dummy(const OvMaths::FVector2& p_size = { 0.0f, 0.0f });
+		Dummy(const glm::vec2& p_size = glm::vec2( 0.0f, 0.0f ));
 
 	protected:
 		void _Draw_Impl() override;
 
 	public:
-		OvMaths::FVector2 size;
+		glm::vec2 size;
 	};
 }

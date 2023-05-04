@@ -1,18 +1,12 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <map>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/UI/Widgets/DataWidget.h"
 
-#include "OvUI/Widgets/DataWidget.h"
-
-namespace OvUI::Widgets::Selection
+namespace LitchiRuntime
 {
 	/**
 	* Widget that can display a list of values that the user can select
@@ -34,6 +28,6 @@ namespace OvUI::Widgets::Selection
 		int currentChoice;
 
 	public:
-		OvTools::Eventing::Event<int> ValueChangedEvent;
+		Event<int> ValueChangedEvent;
 	};
 }

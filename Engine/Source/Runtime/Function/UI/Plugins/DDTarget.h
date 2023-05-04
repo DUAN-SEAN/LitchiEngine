@@ -1,20 +1,15 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include <OvTools/Eventing/Event.h>
+#include "Runtime/Core/Tools/Eventing/Event.h"
 
-#include "OvUI/ImGui/imgui.h"
+#include "Runtime/Function/UI/ImGui/imgui.h"
 
-#include "OvUI/Plugins/IPlugin.h"
+#include "Runtime/Function/UI/Plugins/IPlugin.h"
 
-namespace OvUI::Plugins
+namespace LitchiRuntime
 {
 	/**
 	* Represents a drag and drop target
@@ -75,9 +70,9 @@ namespace OvUI::Plugins
 
 	public:
 		std::string identifier;
-		OvTools::Eventing::Event<T> DataReceivedEvent;
-		OvTools::Eventing::Event<> HoverStartEvent;
-		OvTools::Eventing::Event<> HoverEndEvent;
+		Event<T> DataReceivedEvent;
+		Event<> HoverStartEvent;
+		Event<> HoverEndEvent;
 
 		bool showYellowRect = true;
 
