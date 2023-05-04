@@ -101,7 +101,7 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 
 	if (ext == "fbx" || ext == "obj")											return EFileType::MODEL;
 	else if (ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "tga")		return EFileType::TEXTURE;
-	else if (ext == "glsl")														return EFileType::SHADER;
+	else if (ext == "glsl" || ext == "vs" || ext  == "fs")														return EFileType::SHADER;
 	else if (ext == "ovmat")													return EFileType::MATERIAL;
 	else if (ext == "wav" || ext == "mp3" || ext == "ogg")						return EFileType::SOUND;
 	else if (ext == "ovscene")													return EFileType::SCENE;
