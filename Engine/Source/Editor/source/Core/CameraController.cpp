@@ -3,7 +3,7 @@
 
 #include <algorithm>
 
-LitchiRuntime::CameraController::CameraController
+LitchiEditor::CameraController::CameraController
 (
 	AView& p_view,
 	RenderCamera& p_camera,
@@ -22,7 +22,7 @@ LitchiRuntime::CameraController::CameraController
 	m_camera.SetFov(60.0f);
 }
 
-float GetActorFocusDist(LitchiRuntime::GameObject& p_actor)
+float GetActorFocusDist(LitchiEditor::GameObject& p_actor)
 {
 	float distance = 4.0f;
 
@@ -86,7 +86,7 @@ float GetActorFocusDist(LitchiRuntime::GameObject& p_actor)
 	return distance;
 }
 
-void LitchiRuntime::CameraController::HandleInputs(float p_deltaTime)
+void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
 	if (m_view.IsHovered())
 	{
@@ -204,47 +204,47 @@ void LitchiRuntime::CameraController::HandleInputs(float p_deltaTime)
 	}
 }
 
-void LitchiRuntime::CameraController::MoveToTarget(OvCore::ECS::Actor& p_target)
+void LitchiEditor::CameraController::MoveToTarget(GameObject& p_target)
 {
 	m_cameraDestinations.push({ p_target.transform.GetWorldPosition() - m_cameraRotation * OvMaths::FVector3::Forward * GetActorFocusDist(p_target), m_cameraRotation });
 }
 
-void LitchiRuntime::CameraController::SetSpeed(float p_speed)
+void LitchiEditor::CameraController::SetSpeed(float p_speed)
 {
 	m_cameraMoveSpeed = p_speed;
 }
 
-float LitchiRuntime::CameraController::GetSpeed() const
+float LitchiEditor::CameraController::GetSpeed() const
 {
 	return m_cameraMoveSpeed;
 }
 
-void LitchiRuntime::CameraController::SetPosition(const OvMaths::FVector3 & p_position)
+void LitchiEditor::CameraController::SetPosition(const OvMaths::FVector3 & p_position)
 {
 	m_cameraPosition = p_position;
 }
 
-void LitchiRuntime::CameraController::SetRotation(const glm::quat & p_rotation)
+void LitchiEditor::CameraController::SetRotation(const glm::quat & p_rotation)
 {
 	m_cameraRotation = p_rotation;
 }
 
-const OvMaths::FVector3& LitchiRuntime::CameraController::GetPosition() const
+const OvMaths::FVector3& LitchiEditor::CameraController::GetPosition() const
 {
 	return m_cameraPosition;
 }
 
-const glm::quat& LitchiRuntime::CameraController::GetRotation() const
+const glm::quat& LitchiEditor::CameraController::GetRotation() const
 {
 	return m_cameraRotation;
 }
 
-bool LitchiRuntime::CameraController::IsRightMousePressed() const
+bool LitchiEditor::CameraController::IsRightMousePressed() const
 {
 	return m_rightMousePressed;
 }
 
-void LitchiRuntime::CameraController::HandleCameraPanning(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouset)
+void LitchiEditor::CameraController::HandleCameraPanning(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouset)
 {
 	m_window.SetCursorShape(OvWindowing::Cursor::ECursorShape::HAND);
 
@@ -271,7 +271,7 @@ OvMaths::FVector3 RemoveRoll(const OvMaths::FVector3& p_ypr)
 	return result;
 }
 
-void LitchiRuntime::CameraController::HandleCameraOrbit(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouse)
+void LitchiEditor::CameraController::HandleCameraOrbit(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouse)
 {
 	auto mouseOffset = p_mouseOffset * m_cameraOrbitSpeed;
 
@@ -296,12 +296,12 @@ void LitchiRuntime::CameraController::HandleCameraOrbit(const OvMaths::FVector2&
 	m_cameraRotation = cameraTransform.GetWorldRotation();
 }
 
-void LitchiRuntime::CameraController::HandleCameraZoom()
+void LitchiEditor::CameraController::HandleCameraZoom()
 {
 	m_cameraPosition += m_cameraRotation * OvMaths::FVector3::Forward * ImGui::GetIO().MouseWheel;
 }
 
-void LitchiRuntime::CameraController::HandleCameraFPSMouse(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouse)
+void LitchiEditor::CameraController::HandleCameraFPSMouse(const OvMaths::FVector2& p_mouseOffset, bool p_firstMouse)
 {
 	auto mouseOffset = p_mouseOffset * m_mouseSensitivity;
 
@@ -318,7 +318,7 @@ void LitchiRuntime::CameraController::HandleCameraFPSMouse(const OvMaths::FVecto
 	m_cameraRotation = glm::quat(m_ypr);
 }
 
-void LitchiRuntime::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
+void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 {
 	m_targetSpeed = OvMaths::FVector3(0.f, 0.f, 0.f);
 
@@ -345,7 +345,7 @@ void LitchiRuntime::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 	m_cameraPosition += m_currentMovementSpeed;
 }
 
-void LitchiRuntime::CameraController::UpdateMouseState()
+void LitchiEditor::CameraController::UpdateMouseState()
 {
 	if (m_inputManager.IsMouseButtonPressed(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_LEFT))
 		m_leftMousePressed = true;

@@ -11,9 +11,10 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
-namespace OvEditor::Core { class EditorRenderer; }
+namespace LitchiRuntime { class EditorRenderer; }
 
-namespace LitchiRuntime
+using namespace LitchiRuntime;
+namespace LitchiEditor
 {
 	/**
 	* Base class for any view
@@ -110,7 +111,7 @@ namespace LitchiRuntime
 		void PrepareCamera();
 
 	protected:
-		OvEditor::Core::EditorRenderer& m_editorRenderer;
+		LitchiRuntime::EditorRenderer& m_editorRenderer;
 		RenderCamera* m_camera;
 		glm::vec3 m_cameraPosition;
 		glm::quat m_cameraRotation;

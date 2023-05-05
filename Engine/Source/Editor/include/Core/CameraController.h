@@ -4,10 +4,11 @@
 #include <queue>
 
 #include "Editor/include/Panels/AView.h"
+#include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 
-namespace LitchiRuntime
+namespace LitchiEditor
 {
 	/**
 	* A simple camera controller used to navigate into views
@@ -42,7 +43,7 @@ namespace LitchiRuntime
 		* Asks the camera to move to the target actor
 		* @param p_target
 		*/
-		void MoveToTarget(OvCore::ECS::Actor& p_target);
+		void MoveToTarget(GameObject& p_target);
 
 		/**
 		* Defines the speed of the camera
@@ -94,7 +95,7 @@ namespace LitchiRuntime
 	private:
 		InputManager& m_inputManager;
 		Window& m_window;
-		OvEditor::Panels::AView& m_view;
+		AView& m_view;
 		RenderCamera& m_camera;
 		glm::vec3& m_cameraPosition;
 		glm::quat& m_cameraRotation;

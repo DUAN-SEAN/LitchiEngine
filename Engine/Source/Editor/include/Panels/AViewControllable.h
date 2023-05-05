@@ -3,7 +3,7 @@
 
 #include "AView.h"
 
-namespace LitchiRuntime
+namespace LitchiEditor
 {
 	class AViewControllable : public AView
 	{

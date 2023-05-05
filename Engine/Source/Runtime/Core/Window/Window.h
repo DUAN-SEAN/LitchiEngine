@@ -309,7 +309,7 @@ namespace LitchiRuntime
 		/* This map is used by callbacks to find a "Window" instance out of a "GLFWwindow" instnace*/
 		static std::unordered_map<GLFWwindow*, Window*> __WINDOWS_MAP;
 
-		const Context::Device& m_device;
+		const Device& m_device;
 		GLFWwindow* m_glfwWindow;
 
 		/* Window settings */

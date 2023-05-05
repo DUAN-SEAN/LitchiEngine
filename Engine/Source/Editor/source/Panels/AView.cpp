@@ -4,7 +4,8 @@
 
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
-LitchiRuntime::AView::AView
+using namespace LitchiRuntime;
+LitchiEditor::AView::AView
 (
 	const std::string& p_title,
 	bool p_opened,
@@ -20,7 +21,7 @@ LitchiRuntime::AView::AView
     scrollable = false;
 }
 
-void LitchiRuntime::AView::Update(float p_deltaTime)
+void LitchiEditor::AView::Update(float p_deltaTime)
 {
 	auto[winWidth, winHeight] = GetSafeSize();
 
@@ -29,7 +30,7 @@ void LitchiRuntime::AView::Update(float p_deltaTime)
 	m_fbo.Resize(winWidth, winHeight);
 }
 
-void LitchiRuntime::AView::_Draw_Impl()
+void LitchiEditor::AView::_Draw_Impl()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0, 0));
 
@@ -38,7 +39,7 @@ void LitchiRuntime::AView::_Draw_Impl()
 	ImGui::PopStyleVar();
 }
 
-void LitchiRuntime::AView::Render()
+void LitchiEditor::AView::Render()
 {
 	FillEngineUBO();
 
@@ -51,48 +52,48 @@ void LitchiRuntime::AView::Render()
 	_Render_Impl();
 }
 
-void LitchiRuntime::AView::SetCameraPosition(const glm::vec3 & p_position)
+void LitchiEditor::AView::SetCameraPosition(const glm::vec3 & p_position)
 {
 	m_cameraPosition = p_position;
 }
 
-void LitchiRuntime::AView::SetCameraRotation(const glm::quat& p_rotation)
+void LitchiEditor::AView::SetCameraRotation(const glm::quat& p_rotation)
 {
 	m_cameraRotation = p_rotation;
 }
 
-const glm::vec3 & LitchiRuntime::AView::GetCameraPosition() const
+const glm::vec3 & LitchiEditor::AView::GetCameraPosition() const
 {
 	return m_cameraPosition;
 }
 
-const glm::quat& LitchiRuntime::AView::GetCameraRotation() const
+const glm::quat& LitchiEditor::AView::GetCameraRotation() const
 {
 	return m_cameraRotation;
 }
 
-LitchiRuntime::RenderCamera& LitchiRuntime::AView::GetCamera()
+LitchiEditor::RenderCamera& LitchiEditor::AView::GetCamera()
 {
 	return *m_camera;
 }
 
-std::pair<uint16_t, uint16_t> LitchiRuntime::AView::GetSafeSize() const
+std::pair<uint16_t, uint16_t> LitchiEditor::AView::GetSafeSize() const
 {
 	auto result = GetSize() - glm::vec2{ 0.f, 25.f }; // 25 == title bar height
 	return { static_cast<uint16_t>(result.x), static_cast<uint16_t>(result.y) };
 }
 
-const glm::vec3& LitchiRuntime::AView::GetGridColor() const
+const glm::vec3& LitchiEditor::AView::GetGridColor() const
 {
 	return m_gridColor;
 }
 
-void LitchiRuntime::AView::SetGridColor(const glm::vec3& p_color)
+void LitchiEditor::AView::SetGridColor(const glm::vec3& p_color)
 {
 	m_gridColor = p_color;
 }
 
-void LitchiRuntime::AView::FillEngineUBO()
+void LitchiEditor::AView::FillEngineUBO()
 {
 	auto& engineUBO = *EDITOR_CONTEXT(engineUBO);
 
@@ -104,7 +105,7 @@ void LitchiRuntime::AView::FillEngineUBO()
 	engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
 }
 
-void LitchiRuntime::AView::PrepareCamera()
+void LitchiEditor::AView::PrepareCamera()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
 	m_camera.CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
