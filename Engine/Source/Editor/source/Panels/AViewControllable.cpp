@@ -1,8 +1,3 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #include "Editor/include/Panels/AViewControllable.h"
 
