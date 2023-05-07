@@ -3,6 +3,11 @@
 
 #include <algorithm>
 
+#include "Editor/include/ApplicationEditor.h"
+#include "gtx/compatibility.hpp"
+#include "Runtime/Core/Math/MathHelper.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
+
 LitchiEditor::CameraController::CameraController
 (
 	AView& p_view,
@@ -11,8 +16,8 @@ LitchiEditor::CameraController::CameraController
 	glm::quat& p_rotation,
 	bool p_enableFocusInputs
 ) :
-	m_inputManager(*EDITOR_CONTEXT(inputManager)),
-	m_window(*EDITOR_CONTEXT(window)),
+	m_inputManager(*ApplicationEditor::Instance()->inputManager),
+	m_window(*ApplicationEditor::Instance()->window),
 	m_view(p_view),
 	m_camera(p_camera),
 	m_cameraPosition(p_position),
@@ -22,11 +27,11 @@ LitchiEditor::CameraController::CameraController
 	m_camera.SetFov(60.0f);
 }
 
-float GetActorFocusDist(LitchiEditor::GameObject& p_actor)
+float GetActorFocusDist(GameObject* p_actor)
 {
 	float distance = 4.0f;
 
-	if (p_actor.IsActive())
+	/*if (p_actor.IsActive())
 	{
 		if (auto pb = p_actor.GetComponent<OvCore::ECS::Components::CPhysicalBox>())
 		{
@@ -81,13 +86,15 @@ float GetActorFocusDist(LitchiEditor::GameObject& p_actor)
 
 		for (auto child : p_actor.GetChildren())
 			distance = std::max(distance, GetActorFocusDist(*child));
-	}
+	}*/
 
 	return distance;
 }
 
 void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
+	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
+
 	if (m_view.IsHovered())
 	{
 		UpdateMouseState();
@@ -96,38 +103,39 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 		if (!ImGui::IsAnyItemActive() && m_enableFocusInputs)
 		{
-			if (EDITOR_EXEC(IsAnyActorSelected()))
+			if (selectGO != nullptr)
 			{
-				auto targetPos = EDITOR_EXEC(GetSelectedActor()).transform.GetWorldPosition();
+				
+				auto targetPos = selectGO->GetComponent<Transform>()->position();
 
-				float dist = GetActorFocusDist(EDITOR_EXEC(GetSelectedActor()));
+				float dist = GetActorFocusDist(selectGO);
 
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_F))
+				if (m_inputManager.IsKeyPressed(EKey::KEY_F))
 				{
-					MoveToTarget(EDITOR_EXEC(GetSelectedActor()));
+					MoveToTarget(selectGO);
 				}
 
 				auto focusObjectFromAngle = [this, &targetPos, &dist]( const glm::vec3& offset)
 				{
 					auto camPos = targetPos + offset * dist;
-					auto direction = glm::vec3::Normalize(targetPos - camPos);
-					m_cameraRotation = glm::quat::LookAt(direction, abs(direction.y) == 1.0f ? glm::vec3::Right : glm::vec3::Up);
+					auto direction = glm::normalize(targetPos - camPos);
+					m_cameraRotation = LitchiRuntime::Math::LookAt(direction, abs(direction.y) == 1.0f ? LitchiRuntime::Math::Right : LitchiRuntime::Math::Up);
 					m_cameraDestinations.push({ camPos, m_cameraRotation });
 				};
 
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_UP))			focusObjectFromAngle(glm::vec3::Up);
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_DOWN))		focusObjectFromAngle(-glm::vec3::Up);
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_RIGHT))		focusObjectFromAngle(glm::vec3::Right);
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_LEFT))		focusObjectFromAngle(-glm::vec3::Right);
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_PAGE_UP))	focusObjectFromAngle(glm::vec3::Forward);
-				if (m_inputManager.IsKeyPressed(OvWindowing::Inputs::EKey::KEY_PAGE_DOWN))	focusObjectFromAngle(-glm::vec3::Forward);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_UP))			focusObjectFromAngle(LitchiRuntime::Math::Up);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_DOWN))		focusObjectFromAngle(-LitchiRuntime::Math::Up);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_RIGHT))		focusObjectFromAngle(LitchiRuntime::Math::Right);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_LEFT))		focusObjectFromAngle(-LitchiRuntime::Math::Right);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_PAGE_UP))	focusObjectFromAngle(LitchiRuntime::Math::Forward);
+				if (m_inputManager.IsKeyPressed(EKey::KEY_PAGE_DOWN))	focusObjectFromAngle(-LitchiRuntime::Math::Forward);
 			}
 		}
 	}
 
 	if (!m_cameraDestinations.empty())
 	{
-		m_currentMovementSpeed = 0.0f;
+		m_currentMovementSpeed = LitchiRuntime::Math::Zero;
 
 		while (m_cameraDestinations.size() != 1)
 			m_cameraDestinations.pop();
@@ -136,7 +144,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 		float t = m_focusLerpCoefficient * p_deltaTime;
 
-		if (glm::vec3::Distance(m_cameraPosition, destPos) <= 0.03f)
+		if (glm::distance(m_cameraPosition, destPos) <= 0.03f)
 		{
 			m_cameraPosition = destPos;
 			m_cameraRotation = destRotation;
@@ -144,8 +152,8 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 		}
 		else
 		{
-			m_cameraPosition = glm::vec3::Lerp(m_cameraPosition, destPos, t);
-			m_cameraRotation = glm::quat::Lerp(m_cameraRotation, destRotation, t);
+			m_cameraPosition = glm::lerp(m_cameraPosition, destPos, t);
+			m_cameraRotation = LitchiRuntime::Math::Lerp(m_cameraRotation, destRotation, t);
 		}
 	} 
 	else
@@ -180,9 +188,9 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			{
 				if (m_middleMousePressed)
 				{
-					if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_LEFT_ALT) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
+					if (m_inputManager.GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
 					{
-						if (EDITOR_EXEC(IsAnyActorSelected()))
+						if (selectGO != nullptr)
 						{
 							HandleCameraOrbit(mouseOffset, wasFirstMouse);
 						}
@@ -204,9 +212,10 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 	}
 }
 
-void LitchiEditor::CameraController::MoveToTarget(GameObject& p_target)
+void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
 {
-	m_cameraDestinations.push({ p_target.transform.GetWorldPosition() - m_cameraRotation * glm::vec3::Forward * GetActorFocusDist(p_target), m_cameraRotation });
+	auto goWorldPos = p_target->GetComponent<Transform>()->position();
+	m_cameraDestinations.push({ goWorldPos - m_cameraRotation * LitchiRuntime::Math::Forward * GetActorFocusDist(p_target), m_cameraRotation });
 }
 
 void LitchiEditor::CameraController::SetSpeed(float p_speed)
@@ -246,12 +255,12 @@ bool LitchiEditor::CameraController::IsRightMousePressed() const
 
 void LitchiEditor::CameraController::HandleCameraPanning(const glm::vec2& p_mouseOffset, bool p_firstMouset)
 {
-	m_window.SetCursorShape(OvWindowing::Cursor::ECursorShape::HAND);
+	m_window.SetCursorShape(ECursorShape::HAND);
 
 	auto mouseOffset = p_mouseOffset * m_cameraDragSpeed;
 
-	m_cameraPosition += m_cameraRotation * glm::vec3::Right * mouseOffset.x;
-	m_cameraPosition -= m_cameraRotation * glm::vec3::Up * mouseOffset.y;
+	m_cameraPosition += m_cameraRotation * LitchiRuntime::Math::Right * mouseOffset.x;
+	m_cameraPosition -= m_cameraRotation * LitchiRuntime::Math::Up * mouseOffset.y;
 }
 
 glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
@@ -273,32 +282,34 @@ glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
 
 void LitchiEditor::CameraController::HandleCameraOrbit(const glm::vec2& p_mouseOffset, bool p_firstMouse)
 {
+	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
 	auto mouseOffset = p_mouseOffset * m_cameraOrbitSpeed;
 
 	if (p_firstMouse)
 	{
-		m_ypr = glm::quat::EulerAngles(m_cameraRotation);
+		m_ypr = glm::eulerAngles(m_cameraRotation);
 		m_ypr = RemoveRoll(m_ypr);
-		m_orbitTarget = &EDITOR_EXEC(GetSelectedActor()).transform.GetFTransform();
-		m_orbitStartOffset = -glm::vec3::Forward * glm::vec3::Distance(m_orbitTarget->GetWorldPosition(), m_cameraPosition);
+		m_orbitTarget = selectGO->GetComponent<Transform>();
+		m_orbitStartOffset = -LitchiRuntime::Math::Forward * glm::distance(m_orbitTarget->position(), m_cameraPosition);
 	}
 
 	m_ypr.y += -mouseOffset.x;
 	m_ypr.x += -mouseOffset.y;
 	m_ypr.x = std::max(std::min(m_ypr.x, 90.0f), -90.0f);
 
-	auto& target = EDITOR_EXEC(GetSelectedActor()).transform.GetFTransform();
+	// TODO 绑定相机transform 和 物体Transform 目前还不能实现
+	/*auto target = selectGO->GetComponent<Transform>();
 	OvMaths::FTransform pivotTransform(target.GetWorldPosition());
 	OvMaths::FTransform cameraTransform(m_orbitStartOffset);
 	cameraTransform.SetParent(pivotTransform);
 	pivotTransform.RotateLocal(glm::quat(m_ypr));
 	m_cameraPosition = cameraTransform.GetWorldPosition();
-	m_cameraRotation = cameraTransform.GetWorldRotation();
+	m_cameraRotation = cameraTransform.GetWorldRotation();*/
 }
 
 void LitchiEditor::CameraController::HandleCameraZoom()
 {
-	m_cameraPosition += m_cameraRotation * glm::vec3::Forward * ImGui::GetIO().MouseWheel;
+	m_cameraPosition += m_cameraRotation * LitchiRuntime::Math::Forward * ImGui::GetIO().MouseWheel;
 }
 
 void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mouseOffset, bool p_firstMouse)
@@ -307,7 +318,7 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 
 	if (p_firstMouse)
 	{
-		m_ypr = glm::quat::EulerAngles(m_cameraRotation);
+		m_ypr = glm::eulerAngles(m_cameraRotation);
 		m_ypr = RemoveRoll(m_ypr);
 	}
 
@@ -324,57 +335,57 @@ void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 
 	if (m_rightMousePressed)
 	{
-		bool run = m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_LEFT_SHIFT) == OvWindowing::Inputs::EKeyState::KEY_DOWN;
+		bool run = m_inputManager.GetKeyState(EKey::KEY_LEFT_SHIFT) == EKeyState::KEY_DOWN;
 		float velocity = m_cameraMoveSpeed * p_deltaTime * (run ? 2.0f : 1.0f);
 
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_W) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * glm::vec3::Forward * velocity;
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_S) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * glm::vec3::Forward * -velocity;
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_A) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * glm::vec3::Right * velocity;
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_D) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * glm::vec3::Right * -velocity;
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_E) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += {0.0f, velocity, 0.0f};
-		if (m_inputManager.GetKeyState(OvWindowing::Inputs::EKey::KEY_Q) == OvWindowing::Inputs::EKeyState::KEY_DOWN)
-			m_targetSpeed += {0.0f, -velocity, 0.0f};
+		if (m_inputManager.GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN)
+			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Forward * velocity;
+		if (m_inputManager.GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN)
+			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Forward * -velocity;
+		if (m_inputManager.GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN)
+			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * velocity;
+		if (m_inputManager.GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
+			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * -velocity;
+		if (m_inputManager.GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
+			m_targetSpeed += glm::vec3{0.0f, velocity, 0.0f};
+		if (m_inputManager.GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
+			m_targetSpeed += glm::vec3{0.0f, -velocity, 0.0f};
 	}
 
-	m_currentMovementSpeed = glm::vec3::Lerp(m_currentMovementSpeed, m_targetSpeed, 10.0f * p_deltaTime);
+	m_currentMovementSpeed = glm::lerp(m_currentMovementSpeed, m_targetSpeed, 10.0f * p_deltaTime);
 	m_cameraPosition += m_currentMovementSpeed;
 }
 
 void LitchiEditor::CameraController::UpdateMouseState()
 {
-	if (m_inputManager.IsMouseButtonPressed(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_LEFT))
+	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_LEFT))
 		m_leftMousePressed = true;
 
-	if (m_inputManager.IsMouseButtonReleased(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_LEFT))
+	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_LEFT))
 	{
 		m_leftMousePressed = false;
 		m_firstMouse = true;
 	}
 
-	if (m_inputManager.IsMouseButtonPressed(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_MIDDLE))
+	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_MIDDLE))
 		m_middleMousePressed = true;
 
-	if (m_inputManager.IsMouseButtonReleased(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_MIDDLE))
+	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_MIDDLE))
 	{
 		m_middleMousePressed = false;
 		m_firstMouse = true;
 	}
 
-	if (m_inputManager.IsMouseButtonPressed(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_RIGHT))
+	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_RIGHT))
 	{
 		m_rightMousePressed = true;
-		m_window.SetCursorMode(OvWindowing::Cursor::ECursorMode::DISABLED);
+		m_window.SetCursorMode(ECursorMode::DISABLED);
 	}
 
-	if (m_inputManager.IsMouseButtonReleased(OvWindowing::Inputs::EMouseButton::MOUSE_BUTTON_RIGHT))
+	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_RIGHT))
 	{
 		m_rightMousePressed = false;
 		m_firstMouse = true;
-		m_window.SetCursorMode(OvWindowing::Cursor::ECursorMode::NORMAL);
+		m_window.SetCursorMode(ECursorMode::NORMAL);
 	}
 }

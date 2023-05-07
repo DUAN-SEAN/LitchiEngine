@@ -73,6 +73,11 @@ void LitchiEditor::ApplicationEditor::Update()
 {
 }
 
+void LitchiEditor::ApplicationEditor::RenderUI()
+{
+	uiManager->Render();
+}
+
 void LitchiEditor::ApplicationEditor::SetupUI()
 {
 	PanelWindowSettings settings;

@@ -16,8 +16,10 @@ LitchiEditor::AViewControllable::AViewControllable
 
 void LitchiEditor::AViewControllable::Update(float p_deltaTime)
 {
+	// 1. 更新cameraCtrl
 	m_cameraController.HandleInputs(p_deltaTime);
 
+	// 2. 更新View
 	AView::Update(p_deltaTime);
 }
 

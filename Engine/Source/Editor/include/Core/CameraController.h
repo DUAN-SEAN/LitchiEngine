@@ -43,7 +43,7 @@ namespace LitchiEditor
 		* Asks the camera to move to the target actor
 		* @param p_target
 		*/
-		void MoveToTarget(GameObject& p_target);
+		void MoveToTarget(GameObject* p_target);
 
 		/**
 		* Defines the speed of the camera

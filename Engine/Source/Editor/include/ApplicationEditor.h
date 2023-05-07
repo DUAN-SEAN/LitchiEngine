@@ -26,7 +26,17 @@ namespace LitchiEditor
 		void Update() override;
 		static ApplicationEditor* Instance() { return instance_; }
 
+
 	public:
+		// 提供一系列的绘制函数
+		// 如 RenderUI
+		void RenderUI();
+
+	public:
+
+		void SetSelectGameObject(GameObject* selectedGO) { m_selectGO = selectedGO; }
+		GameObject* GetSelectGameObject() { return m_selectGO; }
+
 		std::unique_ptr<Device>				device;
 		std::unique_ptr<Window>				window;
 		std::unique_ptr<InputManager>		inputManager;
@@ -50,5 +60,7 @@ namespace LitchiEditor
 		Canvas			m_canvas;
 		PanelsManager	m_panelsManager;
 		static ApplicationEditor* instance_;
+
+		GameObject* m_selectGO;
 	};
 }

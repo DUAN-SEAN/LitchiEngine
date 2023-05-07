@@ -7,6 +7,7 @@
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 #include"Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/render_system.h"
 
 using namespace LitchiRuntime;
 LitchiEditor::AView::AView
@@ -15,9 +16,12 @@ LitchiEditor::AView::AView
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings
 ) :
-	PanelWindow(p_title, p_opened, p_windowSettings),
-	m_editorRenderer(EDITOR_RENDERER())
+	PanelWindow(p_title, p_opened, p_windowSettings)
+	//, m_editorRenderer(EDITOR_RENDERER())
 {
+	// todo ³õÊ¼»¯Cameraf
+	m_camera = new RenderCamera();
+
 	m_cameraPosition = glm::vec3( - 10.0f, 3.0f, 10.0f );
 	m_cameraRotation = glm::quat(glm::vec3(0.0f, 135.0f, 0.0f));
 	//m_cameraRotation = glm::quat({0.0f, 135.0f, 0.0f});
@@ -52,10 +56,8 @@ void LitchiEditor::AView::Render()
 	auto [winWidth, winHeight] = GetSafeSize();
 
 	/*EDITOR_CONTEXT(shapeDrawer)->SetViewProjection(m_camera.GetProjectionMatrix() * m_camera.GetViewMatrix());*/
-
-	ApplicationEditor::Instance()->
-
-	EDITOR_CONTEXT(renderer)->SetViewPort(0, 0, winWidth, winHeight);
+	// RenderSystem::Instance()->Set
+	// EDITOR_CONTEXT(renderer)->SetViewPort(0, 0, winWidth, winHeight);
 
 	_Render_Impl();
 }

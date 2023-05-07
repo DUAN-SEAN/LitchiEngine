@@ -172,7 +172,6 @@ namespace LitchiEditor
 		void UpdateLightsInFrustum(OvCore::SceneSystem::Scene& p_scene, const OvRendering::Data::Frustum& p_frustum);
 
 	private:
-		Context& m_context;
 
 		Material* m_gridMaterial;
 		Material* m_stencilFillMaterial;
