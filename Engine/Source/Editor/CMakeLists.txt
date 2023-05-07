@@ -4,7 +4,7 @@ set(TARGET_NAME LitchiEditor)
 file(COPY "../../Assets/" DESTINATION "../Assets/")
 
 
-file(GLOB_RECURSE EDITOR_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h)
+file(GLOB_RECURSE EDITOR_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl)
 file(GLOB_RECURSE EDITOR_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 # file(GLOB_RECURSE imgui_src "../../ThridParty/imgui/backends/*.cpp")

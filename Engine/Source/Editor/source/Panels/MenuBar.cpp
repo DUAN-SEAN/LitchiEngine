@@ -116,7 +116,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	};
 //	sceneViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &sceneViewGridPicker]
 //	{
-//		EDITOR_PANEL(Panels::SceneView, "Scene View").SetGridColor(OvMaths::FVector3(0.176f, 0.176f, 0.176f));
+//		EDITOR_PANEL(Panels::SceneView, "Scene View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
 //		sceneViewGridPicker.color = OvUI::Types::Color(0.176f, 0.176f, 0.176f);
 //	};
 //
@@ -140,7 +140,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	};
 //	assetViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &assetViewGridPicker]
 //	{
-//		EDITOR_PANEL(Panels::AssetView, "Asset View").SetGridColor(OvMaths::FVector3(0.176f, 0.176f, 0.176f));
+//		EDITOR_PANEL(Panels::AssetView, "Asset View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
 //		assetViewGridPicker.color = OvUI::Types::Color(0.176f, 0.176f, 0.176f);
 //	};
 //
@@ -200,3 +200,8 @@ LitchiEditor::MenuBar::MenuBar()
 //	for (auto&[name, panel] : m_panels)
 //		panel.first.get().SetOpened(p_state);
 //}
+
+void LitchiEditor::MenuBar::CreateFileMenu()
+{
+	auto& fileMenu = CreateWidget<MenuList>("File");
+}

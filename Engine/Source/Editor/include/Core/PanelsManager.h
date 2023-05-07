@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 
+#include "Editor/include/Panels/MenuBar.h"
 #include "Runtime/Function/UI/Modules/Canvas.h"
 
 namespace LitchiEditor
@@ -29,11 +30,11 @@ namespace LitchiEditor
 		template<typename T, typename... Args>
 		void CreatePanel(const std::string& p_id, Args&&... p_args)
 		{
-			if constexpr (std::is_base_of<OvUI::Panels::PanelWindow, T>::value)
+			if constexpr (std::is_base_of<PanelWindow, T>::value)
 			{
 				m_panels.emplace(p_id, std::make_unique<T>(p_id, std::forward<Args>(p_args)...));
 				T& instance = *static_cast<T*>(m_panels.at(p_id).get());
-				GetPanelAs<LitchiRuntime::MenuBar>("Menu Bar").RegisterPanel(instance.name, instance);
+				GetPanelAs<LitchiEditor::MenuBar>("Menu Bar").RegisterPanel(instance.name, instance);
 			}
 			else
 			{

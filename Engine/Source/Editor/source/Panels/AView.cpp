@@ -2,7 +2,11 @@
 
 #include "Editor/include/Panels/AView.h"
 
+#include "Editor/include/ApplicationEditor.h"
+#include "Editor/include/Core/EditorRenderer.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
+
+#include"Runtime/Function/Renderer/render_camera.h"
 
 using namespace LitchiRuntime;
 LitchiEditor::AView::AView
@@ -10,7 +14,9 @@ LitchiEditor::AView::AView
 	const std::string& p_title,
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings
-) : PanelWindow(p_title, p_opened, p_windowSettings), m_editorRenderer(EDITOR_RENDERER())
+) :
+	PanelWindow(p_title, p_opened, p_windowSettings),
+	m_editorRenderer(EDITOR_RENDERER())
 {
 	m_cameraPosition = glm::vec3( - 10.0f, 3.0f, 10.0f );
 	m_cameraRotation = glm::quat(glm::vec3(0.0f, 135.0f, 0.0f));
@@ -45,7 +51,9 @@ void LitchiEditor::AView::Render()
 
 	auto [winWidth, winHeight] = GetSafeSize();
 
-	EDITOR_CONTEXT(shapeDrawer)->SetViewProjection(m_camera.GetProjectionMatrix() * m_camera.GetViewMatrix());
+	/*EDITOR_CONTEXT(shapeDrawer)->SetViewProjection(m_camera.GetProjectionMatrix() * m_camera.GetViewMatrix());*/
+
+	ApplicationEditor::Instance()->
 
 	EDITOR_CONTEXT(renderer)->SetViewPort(0, 0, winWidth, winHeight);
 
@@ -72,7 +80,7 @@ const glm::quat& LitchiEditor::AView::GetCameraRotation() const
 	return m_cameraRotation;
 }
 
-LitchiEditor::RenderCamera& LitchiEditor::AView::GetCamera()
+LitchiRuntime::RenderCamera& LitchiEditor::AView::GetCamera()
 {
 	return *m_camera;
 }
@@ -95,18 +103,18 @@ void LitchiEditor::AView::SetGridColor(const glm::vec3& p_color)
 
 void LitchiEditor::AView::FillEngineUBO()
 {
-	auto& engineUBO = *EDITOR_CONTEXT(engineUBO);
+	//auto& engineUBO = *EDITOR_CONTEXT(engineUBO);
 
-	auto[winWidth, winHeight] = GetSafeSize();
+	//auto[winWidth, winHeight] = GetSafeSize();
 
-	size_t offset = sizeof(OvMaths::FMatrix4); // We skip the model matrix (Which is a special case, modified every draw calls)
-	engineUBO.SetSubData(OvMaths::FMatrix4::Transpose(m_camera.GetViewMatrix()), std::ref(offset));
-	engineUBO.SetSubData(OvMaths::FMatrix4::Transpose(m_camera.GetProjectionMatrix()), std::ref(offset));
-	engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
+	//size_t offset = sizeof(glm::mat4); // We skip the model matrix (Which is a special case, modified every draw calls)
+	//engineUBO.SetSubData(glm::mat4::Transpose(m_camera.GetViewMatrix()), std::ref(offset));
+	//engineUBO.SetSubData(glm::mat4::Transpose(m_camera.GetProjectionMatrix()), std::ref(offset));
+	//engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
 }
 
 void LitchiEditor::AView::PrepareCamera()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
-	m_camera.CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
+	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
 }

@@ -29,17 +29,19 @@ int main(int argc, char** argv)
     delete projectPath;
 
     application.Initiliaze(application_standalone);
-    auto s =  application.GetDataPath();
 
-    DEBUG_LOG_INFO( s);
 
-    auto scene= SceneManager::CreateScene("DefaultScene");
+    //auto s =  application.GetDataPath();
 
-    GameObject* o = new GameObject("LoginScene", scene);
-    auto loginScene = o->AddComponent<LoginScene>();
+    //DEBUG_LOG_INFO( s);
 
-    auto json =  SerializerManager::SerializeToJson(scene);
-    DEBUG_LOG_INFO(json);
+    //auto scene= SceneManager::CreateScene("DefaultScene");
+
+    //GameObject* o = new GameObject("LoginScene", scene);
+    //auto loginScene = o->AddComponent<LoginScene>();
+
+    //auto json =  SerializerManager::SerializeToJson(scene);
+    //DEBUG_LOG_INFO(json);
 
 
     application.Run();

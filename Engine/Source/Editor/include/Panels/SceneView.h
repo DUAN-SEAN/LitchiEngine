@@ -4,12 +4,14 @@
 #include <string>
 
 #include "AViewControllable.h"
+#include "Editor/include/Core/GizmoBehaviour.h"
 #include "Runtime/Function/Scene/scene_manager.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
+#include <optional>
 
-namespace LitchiRuntime
+namespace LitchiEditor
 {
-	class SceneView : public LitchiRuntime::AViewControllable
+	class SceneView : public AViewControllable
 	{
 	public:
 		/**
@@ -57,7 +59,8 @@ namespace LitchiRuntime
 		GizmoBehaviour m_gizmoOperations;
 		EGizmoOperation m_currentOperation = EGizmoOperation::TRANSLATE;
 
-		std::optional<std::reference_wrapper<OvCore::ECS::Actor>> m_highlightedActor;
+		// std::optional<std::reference_wrapper<OvCore::ECS::Actor>> m_highlightedActor;
+		GameObject* m_highlightedActor;
 		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
 	};
 }

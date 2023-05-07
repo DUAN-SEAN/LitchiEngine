@@ -11,7 +11,7 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
-namespace LitchiRuntime { class EditorRenderer; }
+namespace LitchiEditor { class EditorRenderer; }
 
 using namespace LitchiRuntime;
 namespace LitchiEditor
@@ -111,7 +111,7 @@ namespace LitchiEditor
 		void PrepareCamera();
 
 	protected:
-		LitchiRuntime::EditorRenderer& m_editorRenderer;
+		EditorRenderer& m_editorRenderer;
 		RenderCamera* m_camera;
 		glm::vec3 m_cameraPosition;
 		glm::quat m_cameraRotation;

@@ -3,11 +3,11 @@
 
 #include "Runtime/Core/Window/Inputs/EKey.h"
 
-LitchiRuntime::SceneView::SceneView
+LitchiEditor::SceneView::SceneView
 (
 	const std::string& p_title,
 	bool p_opened,
-	const OvUI::Settings::PanelWindowSettings& p_windowSettings
+	const PanelWindowSettings& p_windowSettings
 ) : AViewControllable(p_title, p_opened, p_windowSettings, true),
 	m_sceneManager(EDITOR_CONTEXT(sceneManager))
 {
@@ -26,7 +26,7 @@ LitchiRuntime::SceneView::SceneView
 	};
 }
 
-void LitchiRuntime::SceneView::Update(float p_deltaTime)
+void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
 	AViewControllable::Update(p_deltaTime);
 
@@ -36,22 +36,22 @@ void LitchiRuntime::SceneView::Update(float p_deltaTime)
 	{
 		if (EDITOR_CONTEXT(inputManager)->IsKeyPressed(EKey::KEY_W))
 		{
-			m_currentOperation = OvEditor::Core::EGizmoOperation::TRANSLATE;
+			m_currentOperation = EGizmoOperation::TRANSLATE;
 		}
 
 		if (EDITOR_CONTEXT(inputManager)->IsKeyPressed(EKey::KEY_E))
 		{
-			m_currentOperation = OvEditor::Core::EGizmoOperation::ROTATE;
+			m_currentOperation = EGizmoOperation::ROTATE;
 		}
 
 		if (EDITOR_CONTEXT(inputManager)->IsKeyPressed(EKey::KEY_R))
 		{
-			m_currentOperation = OvEditor::Core::EGizmoOperation::SCALE;
+			m_currentOperation = EGizmoOperation::SCALE;
 		}
 	}
 }
 
-void LitchiRuntime::SceneView::_Render_Impl()
+void LitchiEditor::SceneView::_Render_Impl()
 {
 	PrepareCamera();
 
@@ -65,7 +65,7 @@ void LitchiRuntime::SceneView::_Render_Impl()
 	baseRenderer.ApplyStateMask(glState);
 }
 
-void LitchiRuntime::SceneView::RenderScene(uint8_t p_defaultRenderState)
+void LitchiEditor::SceneView::RenderScene(uint8_t p_defaultRenderState)
 {
 	auto& baseRenderer = *EDITOR_CONTEXT(renderer).get();
 	auto& currentScene = *m_sceneManager.GetCurrentScene();
@@ -138,7 +138,7 @@ void LitchiRuntime::SceneView::RenderScene(uint8_t p_defaultRenderState)
 	m_fbo.Unbind();
 }
 
-void LitchiRuntime::SceneView::RenderSceneForActorPicking()
+void LitchiEditor::SceneView::RenderSceneForActorPicking()
 {
 	auto& baseRenderer = *EDITOR_CONTEXT(renderer).get();
 
@@ -172,7 +172,7 @@ bool IsResizing()
 		cursor == ImGuiMouseCursor_ResizeAll;;
 }
 
-void LitchiRuntime::SceneView::HandleActorPicking()
+void LitchiEditor::SceneView::HandleActorPicking()
 {
 	using namespace OvWindowing::Inputs;
 
@@ -200,7 +200,7 @@ void LitchiRuntime::SceneView::HandleActorPicking()
 
 		uint32_t actorID = (0 << 24) | (pixel[2] << 16) | (pixel[1] << 8) | (pixel[0] << 0);
 		auto actorUnderMouse = EDITOR_CONTEXT(sceneManager).GetCurrentScene()->FindActorByID(actorID);
-		auto direction = m_gizmoOperations.IsPicking() ? m_gizmoOperations.GetDirection() : EDITOR_EXEC(IsAnyActorSelected()) && pixel[0] == 255 && pixel[1] == 255 && pixel[2] >= 252 && pixel[2] <= 254 ? static_cast<OvEditor::Core::GizmoBehaviour::EDirection>(pixel[2] - 252) : std::optional<Core::GizmoBehaviour::EDirection>{};
+		auto direction = m_gizmoOperations.IsPicking() ? m_gizmoOperations.GetDirection() : EDITOR_EXEC(IsAnyActorSelected()) && pixel[0] == 255 && pixel[1] == 255 && pixel[2] >= 252 && pixel[2] <= 254 ? static_cast<GizmoBehaviour::EDirection>(pixel[2] - 252) : std::optional<Core::GizmoBehaviour::EDirection>{};
 
 		m_highlightedActor = {};
 		m_highlightedGizmoDirection = {};
