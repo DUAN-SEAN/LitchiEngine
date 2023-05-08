@@ -1,7 +1,7 @@
 
+#include <glad/glad.h>
 #include "Framebuffer.h"
 
-#include <glad/glad.h>
 
 LitchiRuntime::Framebuffer::Framebuffer(uint16_t p_width, uint16_t p_height)
 {

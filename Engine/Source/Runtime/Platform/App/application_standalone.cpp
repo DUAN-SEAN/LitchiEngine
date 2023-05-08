@@ -1,8 +1,8 @@
 ﻿
+#include <glad/glad.h>
 #include "application_standalone.h"
 #include <memory>
 #include "rttr/registration"
-#include <glad/glad.h>
 
 #ifdef WIN32
 // 避免出现APIENTRY重定义警告。

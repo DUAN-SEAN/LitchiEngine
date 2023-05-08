@@ -1,6 +1,6 @@
-﻿#include "render_pipeline.h"
-
+﻿
 #include <glad/glad.h>
+#include "render_pipeline.h"
 
 #include "gpu_resource_mapper.h"
 #include "render_camera.h"
