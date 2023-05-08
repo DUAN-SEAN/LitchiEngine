@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include <GLFW/glfw3.h>
-
 #include "Context/Device.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Settings/WindowSettings.h"

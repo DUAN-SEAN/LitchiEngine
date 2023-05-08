@@ -1,15 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "Run/RawShaders.h"
+#include "Editor/include/Resources/RawShaders.h"
 
 #include <string>
 #include <utility>
 
-std::pair<std::string, std::string> OvEditor::Resources::RawShaders::GetGrid()
+std::pair<std::string, std::string> LitchiEditor::RawShaders::GetGrid()
 {
 	std::pair<std::string, std::string> source;
 
@@ -117,7 +112,7 @@ void main()
 	return source;
 }
 
-std::pair<std::string, std::string> OvEditor::Resources::RawShaders::GetGizmo()
+std::pair<std::string, std::string> LitchiEditor::RawShaders::GetGizmo()
 {
 	std::pair<std::string, std::string> source;
 
@@ -239,7 +234,7 @@ void main()
 	return source;
 }
 
-std::pair<std::string, std::string> OvEditor::Resources::RawShaders::GetBillboard()
+std::pair<std::string, std::string> LitchiEditor::RawShaders::GetBillboard()
 {
 	std::pair<std::string, std::string> source;
 

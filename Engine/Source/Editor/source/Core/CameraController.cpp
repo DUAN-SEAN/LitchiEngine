@@ -7,11 +7,13 @@
 #include "gtx/compatibility.hpp"
 #include "Runtime/Core/Math/MathHelper.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 
 LitchiEditor::CameraController::CameraController
 (
 	AView& p_view,
-	RenderCamera& p_camera,
+	RenderCamera* p_camera,
 	glm::vec3& p_position,
 	glm::quat& p_rotation,
 	bool p_enableFocusInputs
@@ -24,7 +26,7 @@ LitchiEditor::CameraController::CameraController
 	m_cameraRotation(p_rotation),
 	m_enableFocusInputs(p_enableFocusInputs)
 {
-	m_camera.SetFov(60.0f);
+	m_camera->SetFov(60.0f);
 }
 
 float GetActorFocusDist(GameObject* p_actor)

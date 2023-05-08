@@ -4,16 +4,16 @@
 #include <string>
 
 #include "core/type.hpp"
-#include "Editor/include/Core/CameraController.h"
 #include "gtc/quaternion.hpp"
 #include "Runtime/Function/Renderer/Framebuffer.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
-namespace LitchiEditor { class EditorRenderer; }
-
+// namespace LitchiEditor { class EditorRenderer; }
+namespace LitchiRuntime { class RenderCamera; }
 using namespace LitchiRuntime;
+
 namespace LitchiEditor
 {
 	/**
@@ -81,7 +81,7 @@ namespace LitchiEditor
 		/**
 		* Returns the camera used by this view
 		*/
-		RenderCamera& GetCamera();
+		RenderCamera* GetCamera();
 
 		/**
 		* Returns the size of the panel ignoring its titlebar height

@@ -1,9 +1,7 @@
 ﻿
 #include <memory>
 #include <iostream>
-#include <glad/glad.h>
 
-#include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"

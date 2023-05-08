@@ -5,9 +5,10 @@
 
 #include "Editor/include/Panels/AView.h"
 #include "Runtime/Core/Window/Inputs/InputManager.h"
-#include "Runtime/Function/Framework/Component/Transform/transform.h"
-#include "Runtime/Function/Renderer/render_camera.h"
 
+namespace LitchiRuntime { class RenderCamera; }
+namespace LitchiRuntime { class Transform; }
+namespace LitchiRuntime { class GameObject; }
 namespace LitchiEditor
 {
 	/**
@@ -27,7 +28,7 @@ namespace LitchiEditor
 		CameraController
 		(
 			AView& p_view,
-			RenderCamera& p_camera,
+			RenderCamera* p_camera,
 			glm::vec3& p_position,
 			glm::quat& p_rotation,
 			bool p_enableFocusInputs = false
@@ -96,7 +97,7 @@ namespace LitchiEditor
 		InputManager& m_inputManager;
 		Window& m_window;
 		AView& m_view;
-		RenderCamera& m_camera;
+		RenderCamera* m_camera;
 		glm::vec3& m_cameraPosition;
 		glm::quat& m_cameraRotation;
 

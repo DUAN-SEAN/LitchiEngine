@@ -22,7 +22,8 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${GLAD_FILES})
 
 # 添加目标库
 # add_library(${TARGET_NAME} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES})
-add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES} ${imgui_src})
+# add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES} ${imgui_src})
+add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${HEADER_FILES} ${SOURCE_FILES})
 
 # 设置Target工程 C++17版本
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17)

@@ -3,12 +3,10 @@
 #include <string>
 #include <thread>
 
-#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/App/application.h"
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
-#include "Runtime/Platform/App/application_standalone.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
-#include "Runtime/Function/Scene/scene_manager.h"
 
 using namespace LitchiEditor;
 using namespace LitchiRuntime;
@@ -46,7 +44,7 @@ int main(int argc, char** argv)
 
     application.Run();
 
-    delete o;
+    // delete o;
     delete application_standalone;
 
     return 0;

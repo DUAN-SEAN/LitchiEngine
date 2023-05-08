@@ -1,6 +1,5 @@
-﻿#include "render_pass.h"
-
-#include <glad/glad.h>
+﻿
+#include "render_pass.h"
 #include "render_system.h"
 #include "render_camera.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"

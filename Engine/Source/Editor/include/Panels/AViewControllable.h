@@ -2,6 +2,7 @@
 #pragma once
 
 #include "AView.h"
+#include "Editor/include/Core/CameraController.h"
 
 namespace LitchiEditor
 {

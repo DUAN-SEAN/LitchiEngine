@@ -2,13 +2,11 @@
 #include "material.h"
 #include <iostream>
 #include <fstream>
-#include <glad/glad.h>
 #include "rapidxml.hpp"
 #include "rapidxml_print.hpp"
 #include "rapidxml_utils.hpp"
 #include "shader.h"
 #include "texture2d.h"
-#include "Runtime/Core/App/application.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Resource/asset_manager.h"
 

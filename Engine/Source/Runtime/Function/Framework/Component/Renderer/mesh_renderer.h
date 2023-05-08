@@ -2,8 +2,6 @@
 #ifndef UNTITLED_MESH_RENDERER_H
 #define UNTITLED_MESH_RENDERER_H
 
-#include <memory>
-#include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
 
 namespace LitchiRuntime

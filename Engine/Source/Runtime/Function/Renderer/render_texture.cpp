@@ -1,7 +1,4 @@
-﻿//
-// Created by captainchen on 2022/8/19.
-//
-
+﻿
 #include <glad/glad.h>
 
 #include "gpu_resource_mapper.h"

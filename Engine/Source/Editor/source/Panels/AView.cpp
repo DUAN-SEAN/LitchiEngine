@@ -82,9 +82,9 @@ const glm::quat& LitchiEditor::AView::GetCameraRotation() const
 	return m_cameraRotation;
 }
 
-LitchiRuntime::RenderCamera& LitchiEditor::AView::GetCamera()
+LitchiRuntime::RenderCamera* LitchiEditor::AView::GetCamera()
 {
-	return *m_camera;
+	return m_camera;
 }
 
 std::pair<uint16_t, uint16_t> LitchiEditor::AView::GetSafeSize() const

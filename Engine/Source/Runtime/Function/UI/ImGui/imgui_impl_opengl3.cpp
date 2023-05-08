@@ -58,6 +58,8 @@
 #define _CRT_SECURE_NO_WARNINGS
 #endif
 
+#include <glad/glad.h>
+
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
@@ -75,8 +77,6 @@
 #if (defined(__APPLE__) && TARGET_OS_IOS) || (defined(__ANDROID__)) || (defined(__EMSCRIPTEN__))
 #define USE_GL_ES3
 #endif
-
-#include <glad/glad.h>
 
 // OpenGL Data
 static char         g_GlslVersionString[32] = "";

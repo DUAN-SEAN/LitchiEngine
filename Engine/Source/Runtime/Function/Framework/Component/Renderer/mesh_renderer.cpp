@@ -2,9 +2,7 @@
 #include "mesh_renderer.h"
 #include <glad/glad.h>
 #include <rttr/registration>
-#include <gtc/matrix_transform.hpp>
 #include <gtx/transform2.hpp>
-#include <gtx/euler_angles.hpp>
 #include "mesh_filter.h"
 #include "gtx/quaternion.hpp"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"

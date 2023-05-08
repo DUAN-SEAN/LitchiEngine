@@ -1,7 +1,6 @@
 ﻿
 #include "application_standalone.h"
 #include <memory>
-#include <iostream>
 #include "rttr/registration"
 #include <glad/glad.h>
 
@@ -16,13 +15,10 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #include "gtx/euler_angles.hpp"
-#include "gtx/transform.hpp"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Input/input.h"
 #include "Runtime/Test/ShaderSource.h"
-#include "Runtime/Test/VertexData.h"
 
 static void error_callback(int error, const char* description)
 {

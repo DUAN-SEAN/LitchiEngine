@@ -1,9 +1,10 @@
 
-#include "Driver.h"
-
-#include <string>
 #include <glad/glad.h>
+#include <string>
+
+#include "Driver.h"
 #include "Runtime/Core/Log/debug.h"
+
 LitchiRuntime::Driver::Driver(bool isDebugMode)
 {
 	InitGlad();

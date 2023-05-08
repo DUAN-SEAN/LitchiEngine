@@ -109,6 +109,7 @@ glm::vec2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const glm::mat4& p_vi
 	//result.y *= -1; // Screen coordinates are reversed, so we inverse the Y
 
 	//return glm::vec2::Normalize(result);
+	return glm::vec2();
 }
 
 void LitchiEditor::GizmoBehaviour::ApplyTranslation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const
