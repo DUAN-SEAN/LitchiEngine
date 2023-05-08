@@ -41,7 +41,7 @@ namespace LitchiEditor
 		* Render the actual scene
 		* @param p_defaultRenderState
 		*/
-		void RenderScene(uint8_t p_defaultRenderState);
+		void RenderScene();
 
 		/**
 		* Render the scene for actor picking (Using unlit colors)
@@ -54,7 +54,6 @@ namespace LitchiEditor
 		void HandleActorPicking();
 
 	private:
-		SceneManager& m_sceneManager;
 		Framebuffer m_actorPickingFramebuffer;
 		GizmoBehaviour m_gizmoOperations;
 		EGizmoOperation m_currentOperation = EGizmoOperation::TRANSLATE;

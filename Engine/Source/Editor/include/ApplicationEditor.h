@@ -11,6 +11,7 @@
 #include <Runtime/Function/Scene/scene_manager.h>
 
 #include "Core/PanelsManager.h"
+#include "Runtime/Function/Renderer/Driver.h"
 
 using namespace LitchiRuntime;
 
@@ -24,11 +25,17 @@ namespace LitchiEditor
 		void Init() override;
 		void Run() override;
 		void Update() override;
+		/**
+		* Returns true if the app is running
+		*/
+		bool IsRunning() const;
 		static ApplicationEditor* Instance() { return instance_; }
 
 
 	public:
 		// 提供一系列的绘制函数
+		void RenderViews(float p_deltaTime);
+
 		// 如 RenderUI
 		void RenderUI();
 
@@ -38,6 +45,7 @@ namespace LitchiEditor
 		GameObject* GetSelectGameObject() { return m_selectGO; }
 
 		std::unique_ptr<Device>				device;
+		std::unique_ptr<Driver>				driver;
 		std::unique_ptr<Window>				window;
 		std::unique_ptr<InputManager>		inputManager;
 		std::unique_ptr<UIManager>		uiManager;
@@ -57,6 +65,7 @@ namespace LitchiEditor
 
 	private:
 
+		uint64_t m_elapsedFrames = 0;
 		Canvas			m_canvas;
 		PanelsManager	m_panelsManager;
 		static ApplicationEditor* instance_;

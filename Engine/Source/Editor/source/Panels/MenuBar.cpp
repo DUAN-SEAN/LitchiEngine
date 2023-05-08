@@ -201,6 +201,14 @@ LitchiEditor::MenuBar::MenuBar()
 //		panel.first.get().SetOpened(p_state);
 //}
 
+void LitchiEditor::MenuBar::HandleShortcuts(float p_deltaTime)
+{
+}
+
+void LitchiEditor::MenuBar::RegisterPanel(const std::string& p_name, LitchiRuntime::PanelWindow& p_panel)
+{
+}
+
 void LitchiEditor::MenuBar::CreateFileMenu()
 {
 	auto& fileMenu = CreateWidget<MenuList>("File");
