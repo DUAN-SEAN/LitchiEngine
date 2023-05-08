@@ -205,3 +205,39 @@ void LitchiEditor::MenuBar::CreateFileMenu()
 {
 	auto& fileMenu = CreateWidget<MenuList>("File");
 }
+
+void LitchiEditor::MenuBar::CreateBuildMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateWindowMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateActorsMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateResourcesMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateSettingsMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateLayoutMenu()
+{
+}
+
+void LitchiEditor::MenuBar::CreateHelpMenu()
+{
+}
+
+void LitchiEditor::MenuBar::UpdateToggleableItems()
+{
+}
+
+void LitchiEditor::MenuBar::OpenEveryWindows(bool p_state)
+{
+}

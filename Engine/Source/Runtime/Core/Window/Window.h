@@ -50,7 +50,7 @@ namespace LitchiRuntime
 		* Set Icon
 		* @param p_filePath
 		*/
-		void SetIcon(const std::string& p_filePath);
+		void SetIcon(const std::string& p_filePath) const;
 
 		/**
 		* Set Icon from memory

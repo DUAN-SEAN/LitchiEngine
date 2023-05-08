@@ -55,11 +55,11 @@ LitchiRuntime::Window::~Window()
 	glfwDestroyWindow(m_glfwWindow);
 }
 
-void LitchiRuntime::Window::SetIcon(const std::string & p_filePath)
+void LitchiRuntime::Window::SetIcon(const std::string & p_filePath) const
 {
-	GLFWimage images[1];
+	/*GLFWimage images[1];
 	images[0].pixels = stbi_load(p_filePath.c_str(), &images[0].width, &images[0].height, 0, 4);
-	glfwSetWindowIcon(m_glfwWindow, 1, images);
+	glfwSetWindowIcon(m_glfwWindow, 1, images);*/
 }
 
 void LitchiRuntime::Window::SetIconFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height)
