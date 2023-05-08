@@ -20,7 +20,8 @@ namespace LitchiRuntime
 		nearClip_(1.0f),
 		farClip_(1000.0f),
 		m_frustumGeometryCulling(false),
-		m_frustumLightCulling(false)
+		m_frustumLightCulling(false),
+		m_projectionMode(ProjectionMode::PERSPECTIVE)
 	{
 
 	}
@@ -103,6 +104,7 @@ namespace LitchiRuntime
 
 	void LitchiRuntime::RenderCamera::CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const glm::vec3& p_position, const glm::quat& p_rotation)
 	{
+		SetAspectRatio(p_windowWidth / static_cast<float>(p_windowHeight));
 		CacheProjectionMatrix(p_windowWidth, p_windowHeight);
 		CacheViewMatrix(p_position, p_rotation);
 		CacheFrustum(view_mat4_, projection_mat4_);
@@ -216,8 +218,7 @@ namespace LitchiRuntime
 
 	glm::mat4 LitchiRuntime::RenderCamera::CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const
 	{
-		const auto ratio = p_windowWidth / static_cast<float>(p_windowHeight);
-
+		const auto ratio = aspectRatio_;
 		const auto right = m_size * ratio;
 		const auto left = -right;
 		const auto top = m_size;

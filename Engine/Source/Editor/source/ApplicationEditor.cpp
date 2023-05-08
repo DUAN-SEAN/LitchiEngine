@@ -6,6 +6,10 @@
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Time/time.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Renderer/material.h"
 
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
@@ -27,7 +31,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	deviceSettings.contextMinorVersion = 6;
 
 	WindowSettings windowSettings;
-	windowSettings.title = "Overload Editor";
+	windowSettings.title = "Litchi Editor";
 	windowSettings.width = 1280;
 	windowSettings.height = 720;
 	windowSettings.maximized = true;
@@ -62,6 +66,19 @@ void LitchiEditor::ApplicationEditor::Init()
 		uiManager->ResetLayout("Config\\layout.ini");
 
 	sceneManager = new SceneManager();
+	// 初始化默认场景
+	auto scene = sceneManager->CreateScene("Default Scene");
+	GameObject* go = new GameObject("Default",scene);
+	go->AddComponent<Transform>();
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	Material* material = new Material();//设置材质
+	material->Parse("material/materialTemplete2.mat");
+	mesh_renderer->SetMaterial(material);
+	go->set_layer(0x01);
+	
+	// scene->AddGameObject()
 
 	// EditorResource
 
@@ -118,6 +135,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
 	{
+		sceneView.Update(p_deltaTime);
 		sceneView.Render();
 	}
 }

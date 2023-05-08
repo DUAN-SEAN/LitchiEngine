@@ -22,8 +22,8 @@ LitchiEditor::AView::AView
 	// todo ≥ı ºªØCameraf
 	m_camera = new RenderCamera();
 
-	m_cameraPosition = glm::vec3( - 10.0f, 3.0f, 10.0f );
-	m_cameraRotation = glm::quat(glm::vec3(0.0f, 135.0f, 0.0f));
+	m_cameraPosition = glm::vec3( 0.0f, 0.0f, -10.0f );
+	m_cameraRotation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 	//m_cameraRotation = glm::quat({0.0f, 135.0f, 0.0f});
 
 	m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), glm::vec2{ 0.f, 0.f });

@@ -70,6 +70,6 @@ namespace LitchiEditor
 		PanelsManager	m_panelsManager;
 		static ApplicationEditor* instance_;
 
-		GameObject* m_selectGO;
+		GameObject* m_selectGO = nullptr;
 	};
 }

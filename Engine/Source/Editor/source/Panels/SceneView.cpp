@@ -2,7 +2,10 @@
 #include "Editor/include/Panels/SceneView.h"
 
 #include "Runtime/Core/Window/Inputs/EKey.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
+#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/render_system.h"
 
 LitchiEditor::SceneView::SceneView
 (
@@ -65,7 +68,25 @@ void LitchiEditor::SceneView::RenderScene()
 
 	m_fbo.Bind();
 
-	
+	// 调用管线渲染场景
+	// 获取当前需要渲染的相机 和 场景
+	RenderCamera* render_camera = m_camera;
+	Scene* scene = SceneManager::GetScene("Default Scene");
+
+	render_camera->Clear();
+
+	// 遍历所有的物体,执行MeshRenderer的Render函数
+	scene->Foreach([&](GameObject* game_object) {
+		if (game_object->active()) {
+			game_object->ForeachComponent([&](Component* component) {
+				auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
+				if (mesh_renderer == nullptr) {
+					return;
+				}
+				mesh_renderer->Render(render_camera);
+				});
+		}
+		});
 
 	m_fbo.Unbind();
 }
