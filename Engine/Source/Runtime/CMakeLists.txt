@@ -48,7 +48,7 @@ target_compile_options(${TARGET_NAME}
 # Link dependencies    
 target_link_libraries(${TARGET_NAME} PUBLIC spdlog::spdlog)
 target_link_libraries(${TARGET_NAME} PUBLIC glfw)
-target_link_libraries(${TARGET_NAME} PRIVATE stb)
+target_link_libraries(${TARGET_NAME} PUBLIC stb)
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/mono/Libs)
 target_link_libraries(${TARGET_NAME} PUBLIC mono-2.0-sgen)
 

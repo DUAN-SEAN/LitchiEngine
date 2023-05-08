@@ -4,9 +4,9 @@
 #include <string>
 #include <unordered_map>
 
-#include <GLFW/glfw3.h>
 
 #include "EDeviceError.h"
+#include "GLFW/glfw3.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Runtime/Core/Window/Cursor/ECursorShape.h"
 #include "Runtime/Core/Window/Settings/DeviceSettings.h"
