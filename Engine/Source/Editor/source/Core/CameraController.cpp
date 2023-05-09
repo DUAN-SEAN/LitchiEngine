@@ -1,10 +1,11 @@
 
-#include "Editor/include/Core/CameraController.h"
-
 #include <algorithm>
 
-#include "Editor/include/ApplicationEditor.h"
 #include "gtx/compatibility.hpp"
+
+#include "Editor/include/Core/CameraController.h"
+
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Math/MathHelper.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
@@ -96,6 +97,12 @@ float GetActorFocusDist(GameObject* p_actor)
 void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
 	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
+
+	if(m_inputManager.IsKeyPressed(EKey::KEY_R))
+	{
+		m_cameraRotation = glm::quat(1, 0, 0, 0);
+		m_cameraPosition = glm::vec3( 0, 0, 500);
+	}
 
 	if (m_view.IsHovered())
 	{
@@ -212,6 +219,9 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 		HandleCameraFPSKeyboard(p_deltaTime);
 	}
+
+	DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_ypr.x, m_ypr.y, m_ypr.z);
+	DEBUG_LOG_INFO("HandleCameraFPSMouse x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 }
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
@@ -328,7 +338,9 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 	m_ypr.x += -mouseOffset.y;
 	m_ypr.x = std::max(std::min(m_ypr.x, 90.0f), -90.0f);
 
-	m_cameraRotation = glm::quat(m_ypr);
+	// x , y z
+	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_ypr.x), glm::radians(m_ypr.y), glm::radians(m_ypr.z)));
+	// m_cameraRotation = glm::quat(glm::vec3(m_ypr.x, m_ypr.y, m_ypr.z));
 }
 
 void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
@@ -345,13 +357,13 @@ void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 		if (m_inputManager.GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Forward * -velocity;
 		if (m_inputManager.GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * velocity;
-		if (m_inputManager.GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * -velocity;
+		if (m_inputManager.GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
+			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * velocity;
 		if (m_inputManager.GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
-			m_targetSpeed += glm::vec3{0.0f, velocity, 0.0f};
-		if (m_inputManager.GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
 			m_targetSpeed += glm::vec3{0.0f, -velocity, 0.0f};
+		if (m_inputManager.GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
+			m_targetSpeed += glm::vec3{0.0f, velocity, 0.0f};
 	}
 
 	m_currentMovementSpeed = glm::lerp(m_currentMovementSpeed, m_targetSpeed, 10.0f * p_deltaTime);

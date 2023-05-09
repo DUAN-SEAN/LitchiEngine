@@ -1,6 +1,7 @@
 
 #include "Editor/include/Panels/SceneView.h"
 
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Window/Inputs/EKey.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
@@ -32,6 +33,10 @@ LitchiEditor::SceneView::SceneView
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
+	/*Scene* scene = SceneManager::GetScene("Default Scene");
+	auto go= scene->game_object_vec_.front();
+	ApplicationEditor::Instance()->SetSelectGameObject(go);*/
+
 	AViewControllable::Update(p_deltaTime);
 
 	/*using namespace OvWindowing::Inputs;
@@ -59,13 +64,11 @@ void LitchiEditor::SceneView::_Render_Impl()
 {
 	PrepareCamera();
 
-	
 	RenderScene();
 }
 
 void LitchiEditor::SceneView::RenderScene()
 {
-
 	m_fbo.Bind();
 
 	// 调用管线渲染场景
@@ -74,6 +77,7 @@ void LitchiEditor::SceneView::RenderScene()
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
 	render_camera->Clear();
+
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {

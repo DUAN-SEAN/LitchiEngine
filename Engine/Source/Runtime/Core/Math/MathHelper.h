@@ -3,8 +3,6 @@
 
 #include <algorithm>
 #include <cmath>
-#include <stdexcept>
-
 #include "core/type.hpp"
 #include "gtc/quaternion.hpp"
 
@@ -14,7 +12,7 @@ namespace LitchiRuntime
 	{
 		const glm::vec3 One(1.0f, 1.0f, 1.0f);
 		const glm::vec3 Zero(0.0f, 0.0f, 0.0f);
-		const glm::vec3 Forward(0.0f, 0.0f, 1.0f);
+		const glm::vec3 Forward(0.0f, 0.0f, -1.0f);
 		const glm::vec3 Right(1.0f, 0.0f, 0.0f);
 		const glm::vec3 Up(0.0f, 1.0f, 0.0f);
 

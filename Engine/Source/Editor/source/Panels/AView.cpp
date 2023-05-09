@@ -2,12 +2,14 @@
 
 #include "Editor/include/Panels/AView.h"
 
+#include <glad/glad.h>
+
 #include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Core/EditorRenderer.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
-#include"Runtime/Function/Renderer/render_camera.h"
-#include "Runtime/Function/Renderer/render_system.h"
+#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Core/Log/debug.h"
 
 using namespace LitchiRuntime;
 LitchiEditor::AView::AView
@@ -22,18 +24,20 @@ LitchiEditor::AView::AView
 	// todo 初始化Cameraf
 	m_camera = new RenderCamera();
 
-	m_cameraPosition = glm::vec3( 0.0f, 0.0f, -10.0f );
+	m_cameraPosition = glm::vec3(0.0f, 0.0f, 500.0f);
 	m_cameraRotation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 	//m_cameraRotation = glm::quat({0.0f, 135.0f, 0.0f});
 
 	m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), glm::vec2{ 0.f, 0.f });
 
-    scrollable = false;
+	scrollable = false;
 }
 
 void LitchiEditor::AView::Update(float p_deltaTime)
 {
-	auto[winWidth, winHeight] = GetSafeSize();
+	// 更新fbo的大小
+
+	auto [winWidth, winHeight] = GetSafeSize();
 
 	m_image->size = glm::vec2(static_cast<float>(winWidth), static_cast<float>(winHeight));
 
@@ -58,11 +62,13 @@ void LitchiEditor::AView::Render()
 	/*EDITOR_CONTEXT(shapeDrawer)->SetViewProjection(m_camera.GetProjectionMatrix() * m_camera.GetViewMatrix());*/
 	// RenderSystem::Instance()->Set
 	// EDITOR_CONTEXT(renderer)->SetViewPort(0, 0, winWidth, winHeight);
+	glViewport(0, 0, winWidth, winHeight);
+
 
 	_Render_Impl();
 }
 
-void LitchiEditor::AView::SetCameraPosition(const glm::vec3 & p_position)
+void LitchiEditor::AView::SetCameraPosition(const glm::vec3& p_position)
 {
 	m_cameraPosition = p_position;
 }
@@ -72,7 +78,7 @@ void LitchiEditor::AView::SetCameraRotation(const glm::quat& p_rotation)
 	m_cameraRotation = p_rotation;
 }
 
-const glm::vec3 & LitchiEditor::AView::GetCameraPosition() const
+const glm::vec3& LitchiEditor::AView::GetCameraPosition() const
 {
 	return m_cameraPosition;
 }
@@ -118,5 +124,11 @@ void LitchiEditor::AView::FillEngineUBO()
 void LitchiEditor::AView::PrepareCamera()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
+	
+	auto eulerAngleVec = glm::eulerAngles(m_cameraRotation);
+	/*DEBUG_LOG_INFO("PrepareCamera winWidth:{} winHeight:{}",winWidth,winHeight);
+	DEBUG_LOG_INFO("PrepareCamera CameraPosition x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
+	DEBUG_LOG_INFO("PrepareCamera EulerAngleVec x:{},y:{},z:{}", eulerAngleVec.x, eulerAngleVec.y, eulerAngleVec.z);*/
+
 	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
 }

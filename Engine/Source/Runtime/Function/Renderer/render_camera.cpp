@@ -240,7 +240,7 @@ namespace LitchiRuntime
 	glm::mat4 LitchiRuntime::RenderCamera::CalculateViewMatrix(const glm::vec3& p_position, const glm::quat& p_rotation) const
 	{
 		glm::vec3 up = p_rotation * glm::vec3(0,1,0);
-		glm::vec3 forward = p_rotation * glm::vec3(0,0,1);
+		glm::vec3 forward = p_rotation * glm::vec3(0,0,-1);
 		return glm::lookAt
 		(
 			glm::vec3(p_position.x, p_position.y, p_position.z),											// Position

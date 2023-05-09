@@ -2,7 +2,6 @@
 
 
 #include <algorithm>
-#include <glm.hpp>
 
 #include "gtc/quaternion.hpp"
 #include "Runtime/Core/DataStruct/Frustum.h"
