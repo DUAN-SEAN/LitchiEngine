@@ -121,6 +121,8 @@ namespace LitchiRuntime
 			return dynamic_cast<T*>(component_vec[0]);
 		}
 
+		std::unordered_map<std::string, std::vector<Component*>>& GetComponentsMap() { return components_map_; }
+
 		/// 遍历组件
 		/// \param func
 		void ForeachComponent(std::function<void(Component*)> func);
