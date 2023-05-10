@@ -272,5 +272,5 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 
 	// 暂时不用点击和双击事件 回头再加
 	textSelectable.ClickedEvent += std::bind(&ApplicationEditor::SelectActor, ApplicationEditor::Instance(), p_actor);
-	// textSelectable.DoubleClickedEvent += EDITOR_BIND(MoveToTarget, std::ref(p_actor));
+	// textSelectable.DoubleClickedEvent += EDITOR_BIND(MoveToTarget, std::ref(p_actor));// 将相机对焦到物体
 }

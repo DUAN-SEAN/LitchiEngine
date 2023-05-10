@@ -23,6 +23,22 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
 
+GameObject* CreateDefaultObject(Scene* scene,std::string name,float y)
+{
+	GameObject* go = new GameObject(name, scene);
+	auto transform = go->AddComponent<Transform>();
+	transform->set_position(glm::vec3(0.0, y, 0.0));
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	Material* material = new Material();//设置材质
+	material->Parse("material/materialTemplete2.mat");
+	mesh_renderer->SetMaterial(material);
+	go->set_layer(0x01);
+
+	return go;
+}
+
 void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
@@ -83,17 +99,14 @@ void LitchiEditor::ApplicationEditor::Init()
 	sceneManager = new SceneManager();
 	// 初始化默认场景
 	auto scene = sceneManager->CreateScene("Default Scene");
-	GameObject* go = new GameObject("Default", scene);
-	go->AddComponent<Transform>();
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	Material* material = new Material();//设置材质
-	material->Parse("material/materialTemplete2.mat");
-	mesh_renderer->SetMaterial(material);
-	go->set_layer(0x01);
+	GameObject* go = CreateDefaultObject(scene,"liubei", 0);
 	auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
+
+	GameObject* go2 = CreateDefaultObject(scene, "diaochan", 3);
+	GameObject* go3 = CreateDefaultObject(scene,"xiaoqiao", -3);
 	hierachy.AddActorByInstance(go);
+	hierachy.AddActorByInstance(go2);
+	hierachy.AddActorByInstance(go3);
 }
 
 void LitchiEditor::ApplicationEditor::Run()

@@ -33,7 +33,6 @@ namespace LitchiRuntime
             return false;
         }
         parent->AddChild(this);
-        SetParent(parent);
         return true;
     }
 
