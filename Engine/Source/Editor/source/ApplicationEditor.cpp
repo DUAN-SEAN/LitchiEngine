@@ -3,6 +3,7 @@
 
 #include <filesystem>
 
+#include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Time/time.h"
@@ -65,19 +66,6 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(std::string(getenv("APPDATA")) + "\\OverloadTech\\OvEditor\\layout.ini"))
 		uiManager->ResetLayout("Config\\layout.ini");
 
-	sceneManager = new SceneManager();
-	// 初始化默认场景
-	auto scene = sceneManager->CreateScene("Default Scene");
-	GameObject* go = new GameObject("Default",scene);
-	go->AddComponent<Transform>();
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	Material* material = new Material();//设置材质
-	material->Parse("material/materialTemplete2.mat");
-	mesh_renderer->SetMaterial(material);
-	go->set_layer(0x01);
-	
 	// scene->AddGameObject()
 
 	// EditorResource
@@ -92,6 +80,20 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// 初始化默认场景
 
+	sceneManager = new SceneManager();
+	// 初始化默认场景
+	auto scene = sceneManager->CreateScene("Default Scene");
+	GameObject* go = new GameObject("Default", scene);
+	go->AddComponent<Transform>();
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	Material* material = new Material();//设置材质
+	material->Parse("material/materialTemplete2.mat");
+	mesh_renderer->SetMaterial(material);
+	go->set_layer(0x01);
+	auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
+	hierachy.AddActorByInstance(go);
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -145,6 +147,17 @@ void LitchiEditor::ApplicationEditor::RenderUI()
 	uiManager->Render();
 }
 
+void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
+{
+	auto name = p_target->name();
+	auto transform = p_target->GetComponent<Transform>();
+	auto position = transform->position();
+	auto rotation = transform->rotation();
+	auto rotationEuler = glm::eulerAngles(rotation);
+	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
+	// todo Inspector 选择
+}
+
 void LitchiEditor::ApplicationEditor::SetupUI()
 {
 	PanelWindowSettings settings;
@@ -154,7 +167,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 
 	m_panelsManager.CreatePanel<MenuBar>("Menu Bar");
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
-	m_panelsManager.CreatePanel<SceneView>("Hierarchy", true, settings);
+	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 
 	//m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, engineAssetsPath, projectAssetsPath, projectScriptsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);

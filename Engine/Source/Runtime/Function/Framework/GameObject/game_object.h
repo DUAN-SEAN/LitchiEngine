@@ -39,6 +39,20 @@ namespace LitchiRuntime
 		/// \return
 		bool SetParent(GameObject* parent);
 
+		bool HasParent() { return parent() != nullptr; }
+
+		GameObject* GetParent() { return (GameObject*)parent(); }
+
+		std::list<GameObject*>& GetChildren()
+		{
+			std::list<GameObject*> dadList;
+			for (auto a : children()) {
+				dadList.push_back((GameObject*)a);       //依次加到父类List里
+			}
+
+			return dadList;
+		}
+
 	public:
 		Scene* GetScene();
 		void SetScene(Scene* scene);

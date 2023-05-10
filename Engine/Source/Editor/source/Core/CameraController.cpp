@@ -220,8 +220,8 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 		HandleCameraFPSKeyboard(p_deltaTime);
 	}
 
-	DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_ypr.x, m_ypr.y, m_ypr.z);
-	DEBUG_LOG_INFO("HandleCameraFPSMouse x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
+	// DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_ypr.x, m_ypr.y, m_ypr.z);
+	// DEBUG_LOG_INFO("HandleCameraFPSMouse x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 }
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)

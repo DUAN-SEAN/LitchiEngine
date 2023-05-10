@@ -82,6 +82,6 @@ namespace LitchiEditor
 	private:
 		TreeNode* m_sceneRoot;
 
-		std::unordered_map<GameObject* p_actor, TreeNode*> m_widgetActorLink;
+		std::unordered_map<GameObject*, TreeNode*> m_widgetActorLink;
 	};
 }

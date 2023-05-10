@@ -1,8 +1,10 @@
 
 #include "Editor/include/Panels/Hierarchy.h"
 
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
+#include "Runtime/Function/UI/Plugins/DDSource.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
@@ -12,33 +14,33 @@ using namespace LitchiRuntime;
 class HierarchyContextualMenu : public LitchiRuntime::ContextualMenu
 {
 public:
-    HierarchyContextualMenu(LitchiRuntime::GameObject* p_target, TreeNode& p_treeNode, bool p_panelMenu = false) :
-        m_target(p_target),
-        m_treeNode(p_treeNode)
-    {
-       /* if (m_target)
-        {
-            auto& focusButton = CreateWidget<MenuItem>("Focus");
-            focusButton.ClickedEvent += [this]
-            {
-                EDITOR_EXEC(MoveToTarget(*m_target));
-            };
+	HierarchyContextualMenu(LitchiRuntime::GameObject* p_target, TreeNode& p_treeNode, bool p_panelMenu = false) :
+		m_target(p_target),
+		m_treeNode(p_treeNode)
+	{
+		/* if (m_target)
+		 {
+			 auto& focusButton = CreateWidget<MenuItem>("Focus");
+			 focusButton.ClickedEvent += [this]
+			 {
+				 EDITOR_EXEC(MoveToTarget(*m_target));
+			 };
 
-            auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
-            duplicateButton.ClickedEvent += [this]
-            {
-                EDITOR_EXEC(DelayAction(EDITOR_BIND(DuplicateActor, std::ref(*m_target), nullptr, true), 0));
-            };
+			 auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
+			 duplicateButton.ClickedEvent += [this]
+			 {
+				 EDITOR_EXEC(DelayAction(EDITOR_BIND(DuplicateActor, std::ref(*m_target), nullptr, true), 0));
+			 };
 
-            auto& deleteButton = CreateWidget<MenuItem>("Delete");
-            deleteButton.ClickedEvent += [this]
-            {
-                EDITOR_EXEC(DestroyActor(std::ref(*m_target)));
-            };
-        }
+			 auto& deleteButton = CreateWidget<MenuItem>("Delete");
+			 deleteButton.ClickedEvent += [this]
+			 {
+				 EDITOR_EXEC(DestroyActor(std::ref(*m_target)));
+			 };
+		 }
 
-		auto& createActor = CreateWidget<MenuList>("Create...");
-        OvEditor::Utils::ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));*/
+		 auto& createActor = CreateWidget<MenuList>("Create...");
+		 OvEditor::Utils::ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));*/
 	}
 
 	virtual void Execute() override
@@ -83,7 +85,7 @@ void ExpandTreeNodeAndEnable(TreeNode& p_toExpand, const TreeNode* p_root)
 
 LitchiEditor::Hierarchy::Hierarchy
 (
-	const std::string & p_title,
+	const std::string& p_title,
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings
 ) : PanelWindow(p_title, p_opened, p_windowSettings)
@@ -145,17 +147,18 @@ LitchiEditor::Hierarchy::Hierarchy
 
 		m_sceneRoot->ConsiderWidget(*p_element.second);
 
-		p_element.first->DetachFromParent();
+		// p_element.first->DetachFromParent();
 	};
-    m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
 
-	EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
+	m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
+
+	/*EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
 	EDITOR_CONTEXT(sceneManager).SceneUnloadEvent += std::bind(&Hierarchy::Clear, this);
 	OvCore::ECS::Actor::CreatedEvent += std::bind(&Hierarchy::AddActorByInstance, this, std::placeholders::_1);
 	OvCore::ECS::Actor::DestroyedEvent += std::bind(&Hierarchy::DeleteActorByInstance, this, std::placeholders::_1);
 	EDITOR_EVENT(ActorSelectedEvent) += std::bind(&Hierarchy::SelectActorByInstance, this, std::placeholders::_1);
 	OvCore::ECS::Actor::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
-	OvCore::ECS::Actor::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);
+	OvCore::ECS::Actor::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);*/
 }
 
 void LitchiEditor::Hierarchy::Clear()
@@ -172,14 +175,14 @@ void LitchiEditor::Hierarchy::UnselectActorsWidgets()
 		widget.second->selected = false;
 }
 
-void LitchiEditor::Hierarchy::SelectActorByInstance(OvCore::ECS::Actor& p_actor)
+void LitchiEditor::Hierarchy::SelectActorByInstance(GameObject* p_actor)
 {
-	if (auto result = m_widgetActorLink.find(&p_actor); result != m_widgetActorLink.end())
+	if (auto result = m_widgetActorLink.find(p_actor); result != m_widgetActorLink.end())
 		if (result->second)
 			SelectActorByWidget(*result->second);
 }
 
-void LitchiEditor::Hierarchy::SelectActorByWidget(TreeNode & p_widget)
+void LitchiEditor::Hierarchy::SelectActorByWidget(TreeNode& p_widget)
 {
 	UnselectActorsWidgets();
 
@@ -193,7 +196,7 @@ void LitchiEditor::Hierarchy::SelectActorByWidget(TreeNode & p_widget)
 
 void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 {
-	auto actorWidget = m_widgetActorLink.find(&p_actor);
+	auto actorWidget = m_widgetActorLink.find(p_actor);
 
 	if (actorWidget != m_widgetActorLink.end())
 	{
@@ -202,9 +205,9 @@ void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 		if (widget->HasParent())
 			widget->GetParent()->UnconsiderWidget(*widget);
 
-		if (p_actor.HasParent())
+		if (p_actor->HasParent())
 		{
-			auto parentWidget = m_widgetActorLink.at(p_actor.GetParent());
+			auto parentWidget = m_widgetActorLink.at(p_actor->GetParent());
 			parentWidget->leaf = false;
 			parentWidget->ConsiderWidget(*widget);
 		}
@@ -213,11 +216,11 @@ void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::DetachFromParent(GameObject* p_actor)
 {
-	if (auto actorWidget = m_widgetActorLink.find(&p_actor); actorWidget != m_widgetActorLink.end())
+	if (auto actorWidget = m_widgetActorLink.find(p_actor); actorWidget != m_widgetActorLink.end())
 	{
-		if (p_actor.HasParent() && p_actor.GetParent()->GetChildren().size() == 1)
+		if (p_actor->HasParent() && p_actor->GetParent()->GetChildren().size() == 1)
 		{
-			if (auto parentWidget = m_widgetActorLink.find(p_actor.GetParent()); parentWidget != m_widgetActorLink.end())
+			if (auto parentWidget = m_widgetActorLink.find(p_actor->GetParent()); parentWidget != m_widgetActorLink.end())
 			{
 				parentWidget->second->leaf = true;
 			}
@@ -234,7 +237,7 @@ void LitchiEditor::Hierarchy::DetachFromParent(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::DeleteActorByInstance(GameObject* p_actor)
 {
-	if (auto result = m_widgetActorLink.find(&p_actor); result != m_widgetActorLink.end())
+	if (auto result = m_widgetActorLink.find(p_actor); result != m_widgetActorLink.end())
 	{
 		if (result->second)
 		{
@@ -247,11 +250,11 @@ void LitchiEditor::Hierarchy::DeleteActorByInstance(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 {
-	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor.GetName(), true);
+	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->name(), true);
 	textSelectable.leaf = true;
-	textSelectable.AddPlugin<HierarchyContextualMenu>(&p_actor, textSelectable);
-	textSelectable.AddPlugin<OvUI::Plugins::DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(&p_actor, &textSelectable));
-	textSelectable.AddPlugin<OvUI::Plugins::DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [&p_actor, &textSelectable](std::pair<GameObject*, TreeNode*> p_element)
+	textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
+	textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(p_actor, &textSelectable));
+	textSelectable.AddPlugin<DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [p_actor, &textSelectable](std::pair<GameObject*, TreeNode*> p_element)
 	{
 		if (p_element.second->HasParent())
 			p_element.second->GetParent()->UnconsiderWidget(*p_element.second);
@@ -260,13 +263,14 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 
 		p_element.first->SetParent(p_actor);
 	};
-	auto& dispatcher = textSelectable.AddPlugin<OvUI::Plugins::DataDispatcher<std::string>>();
+	auto& dispatcher = textSelectable.AddPlugin<DataDispatcher<std::string>>();
 
-	GameObject* targetPtr = &p_actor;
-	dispatcher.RegisterGatherer([targetPtr] { return targetPtr->GetName(); });
+	GameObject* targetPtr = p_actor;
+	dispatcher.RegisterGatherer([targetPtr] { return targetPtr->name(); });
 
 	m_widgetActorLink[targetPtr] = &textSelectable;
 
-	textSelectable.ClickedEvent += EDITOR_BIND(SelectActor, std::ref(p_actor));
-	textSelectable.DoubleClickedEvent += EDITOR_BIND(MoveToTarget, std::ref(p_actor));
+	// 暂时不用点击和双击事件 回头再加
+	textSelectable.ClickedEvent += std::bind(&ApplicationEditor::SelectActor, ApplicationEditor::Instance(), p_actor);
+	// textSelectable.DoubleClickedEvent += EDITOR_BIND(MoveToTarget, std::ref(p_actor));
 }

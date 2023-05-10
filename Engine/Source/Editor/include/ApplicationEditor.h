@@ -60,6 +60,13 @@ namespace LitchiEditor
 		const std::string projectScriptsPath;
 		const std::string editorAssetsPath;
 
+
+	public:
+		/**
+		* Select an actor and show him in inspector
+		* @param p_target
+		*/
+		void SelectActor(GameObject* p_target);
 	private:
 		void SetupUI();
 
