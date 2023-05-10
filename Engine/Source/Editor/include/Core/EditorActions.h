@@ -154,7 +154,7 @@
 //		* @param p_focusOnCreation
 //		* @param p_parent
 //		*/
-//		template<typename T> OvCore::ECS::Actor& CreateMonoComponentActor(bool p_focusOnCreation = true, OvCore::ECS::Actor* p_parent = nullptr);
+//		template<typename T> OvCore::ECS::Actor& CreateMonoComponentActor(bool p_focusOnCreation = true, GameObject* p_parent = nullptr);
 //
 //		/**
 //		* Calculate the position where to spawn the actor using the current camera position and forward
@@ -168,7 +168,7 @@
 //		* @param p_parent
 //        * @param p_name
 //		*/
-//		OvCore::ECS::Actor&	CreateEmptyActor(bool p_focusOnCreation = true, OvCore::ECS::Actor* p_parent = nullptr, const std::string& p_name = "");
+//		OvCore::ECS::Actor&	CreateEmptyActor(bool p_focusOnCreation = true, GameObject* p_parent = nullptr, const std::string& p_name = "");
 //
 //		/**
 //		* Create an actor with a model renderer and a material renderer. The model renderer with use the model identified
@@ -178,7 +178,7 @@
 //		* @param p_parent
 //        * @param p_name
 //		*/
-//		OvCore::ECS::Actor&	CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation = true, OvCore::ECS::Actor* p_parent = nullptr, const std::string& p_name = "");
+//		OvCore::ECS::Actor&	CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation = true, GameObject* p_parent = nullptr, const std::string& p_name = "");
 //
 //		/**
 //		* Destroy an actor from his scene
@@ -193,7 +193,7 @@
 //		* @param p_forcedParent
 //		* @param bool
 //		*/
-//		void DuplicateActor(OvCore::ECS::Actor& p_toDuplicate, OvCore::ECS::Actor* p_forcedParent = nullptr, bool p_focus = true);
+//		void DuplicateActor(OvCore::ECS::Actor& p_toDuplicate, GameObject* p_forcedParent = nullptr, bool p_focus = true);
 //		#pragma endregion
 //
 //		#pragma region ACTOR_MANIPULATION

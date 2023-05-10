@@ -11,7 +11,7 @@
 //namespace OvEditor::Core
 //{
 //	template<typename T>
-//	inline OvCore::ECS::Actor & EditorActions::CreateMonoComponentActor(bool p_focusOnCreation, OvCore::ECS::Actor* p_parent)
+//	inline GameObject* EditorActions::CreateMonoComponentActor(bool p_focusOnCreation, GameObject* p_parent)
 //	{
 //		auto& instance = CreateEmptyActor(false, p_parent);
 //

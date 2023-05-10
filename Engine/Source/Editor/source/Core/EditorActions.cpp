@@ -73,7 +73,7 @@
 //
 //	m_context.sceneManager.LoadScene(p_path, p_absolute);
 //	OVLOG_INFO("Scene loaded from disk: " + m_context.sceneManager.GetCurrentSceneSourcePath());
-//	m_panelsManager.GetPanelAs<OvEditor::Panels::SceneView>("Scene View").Focus();
+//	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 //}
 //
 //bool OvEditor::Core::EditorActions::IsCurrentSceneLoadedFromDisk() const
@@ -437,7 +437,7 @@
 //			tinyxml2::XMLNode* node = m_sceneBackup.NewElement("root");
 //			m_sceneBackup.InsertFirstChild(node);
 //			m_context.sceneManager.GetCurrentScene()->OnSerialize(m_sceneBackup, node);
-//			m_panelsManager.GetPanelAs<OvEditor::Panels::GameView>("Game View").Focus();
+//			m_panelsManager.GetPanelAs<LitchiEditor::GameView>("Game View").Focus();
 //			m_context.sceneManager.GetCurrentScene()->Play();
 //			SetEditorMode(EEditorMode::PLAY);
 //		}
@@ -488,11 +488,11 @@
 //
 //OvMaths::FVector3 OvEditor::Core::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 //{
-//	auto& sceneView = m_panelsManager.GetPanelAs<OvEditor::Panels::SceneView>("Scene View");
+//	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
 //	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * OvMaths::FVector3::Forward * p_distanceToCamera;
 //}
 //
-//OvCore::ECS::Actor & OvEditor::Core::EditorActions::CreateEmptyActor(bool p_focusOnCreation, OvCore::ECS::Actor* p_parent, const std::string& p_name)
+//GameObject* OvEditor::Core::EditorActions::CreateEmptyActor(bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
 //{
 //    const auto currentScene = m_context.sceneManager.GetCurrentScene();
 //	auto& instance = p_name.empty() ? currentScene->CreateActor() : currentScene->CreateActor(p_name);
@@ -511,7 +511,7 @@
 //	return instance;
 //}
 //
-//OvCore::ECS::Actor & OvEditor::Core::EditorActions::CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation, OvCore::ECS::Actor* p_parent, const std::string& p_name)
+//GameObject* OvEditor::Core::EditorActions::CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
 //{
 //	auto& instance = CreateEmptyActor(false, p_parent, p_name);
 //
@@ -532,7 +532,7 @@
 //	return instance;
 //}
 //
-//bool OvEditor::Core::EditorActions::DestroyActor(OvCore::ECS::Actor & p_actor)
+//bool OvEditor::Core::EditorActions::DestroyActor(GameObject* p_actor)
 //{
 //	p_actor.MarkAsDestroy();
 //	OVLOG_INFO("Actor destroyed");
@@ -553,7 +553,7 @@
 //    return OvTools::Utils::String::GenerateUnique(p_duplicated.GetName(), availabilityChecker);
 //}
 //
-//void OvEditor::Core::EditorActions::DuplicateActor(OvCore::ECS::Actor & p_toDuplicate, OvCore::ECS::Actor* p_forcedParent, bool p_focus)
+//void OvEditor::Core::EditorActions::DuplicateActor(GameObject* p_toDuplicate, GameObject* p_forcedParent, bool p_focus)
 //{
 //	tinyxml2::XMLDocument doc;
 //	tinyxml2::XMLNode* actorsRoot = doc.NewElement("actors");
@@ -590,7 +590,7 @@
 //		DuplicateActor(*child, &newActor, false);
 //}
 //
-//void OvEditor::Core::EditorActions::SelectActor(OvCore::ECS::Actor & p_target)
+//void OvEditor::Core::EditorActions::SelectActor(GameObject* p_target)
 //{
 //	EDITOR_PANEL(Panels::Inspector, "Inspector").FocusActor(p_target);
 //}
@@ -605,7 +605,7 @@
 //	return EDITOR_PANEL(Panels::Inspector, "Inspector").GetTargetActor();
 //}
 //
-//OvCore::ECS::Actor & OvEditor::Core::EditorActions::GetSelectedActor() const
+//GameObject* OvEditor::Core::EditorActions::GetSelectedActor() const
 //{
 //	return *EDITOR_PANEL(Panels::Inspector, "Inspector").GetTargetActor();
 //}

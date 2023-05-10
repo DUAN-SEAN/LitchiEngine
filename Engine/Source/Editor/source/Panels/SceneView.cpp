@@ -19,7 +19,7 @@ LitchiEditor::SceneView::SceneView
 	m_camera->SetClearColor(glm::vec3{ 0.098f, 0.098f, 0.098f });
 	m_camera->SetFar(5000.0f);
 
-	//m_image->AddPlugin<OvUI::Plugins::DDTarget<std::pair<std::string, OvUI::Widgets::Layout::Group*>>>("File").DataReceivedEvent += [this](auto p_data)
+	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
 	//{
 	//	std::string path = p_data.first;
 
@@ -33,9 +33,15 @@ LitchiEditor::SceneView::SceneView
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
-	/*Scene* scene = SceneManager::GetScene("Default Scene");
+	Scene* scene = SceneManager::GetScene("Default Scene");
 	auto go= scene->game_object_vec_.front();
-	ApplicationEditor::Instance()->SetSelectGameObject(go);*/
+	auto trans = go->GetComponent<Transform>();
+
+	auto rotation = trans->rotation();
+	auto next = glm::quat(glm::vec3(glm::radians(60.0) * p_deltaTime, glm::radians(30.0) * p_deltaTime, 0));
+	rotation = rotation * next;
+	trans->set_rotation(rotation);
+	// ApplicationEditor::Instance()->SetSelectGameObject(go);
 
 	AViewControllable::Update(p_deltaTime);
 

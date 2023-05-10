@@ -565,7 +565,7 @@
 //    }
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderActorCollider(OvCore::ECS::Actor & p_actor)
+//void OvEditor::Core::EditorRenderer::RenderActorCollider(GameObject* p_actor)
 //{
 //	using namespace OvCore::ECS::Components;
 //	using namespace OvPhysics::Entities;

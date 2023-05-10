@@ -154,6 +154,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 
 	m_panelsManager.CreatePanel<MenuBar>("Menu Bar");
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
+	m_panelsManager.CreatePanel<SceneView>("Hierarchy", true, settings);
 
 	//m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, engineAssetsPath, projectAssetsPath, projectScriptsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
