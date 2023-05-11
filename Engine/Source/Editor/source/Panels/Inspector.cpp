@@ -8,11 +8,16 @@
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/Component/Physcis/collider.h"
+#include "Runtime/Function/Framework/Component/Physcis/rigid_actor.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/UI/Helpers/GUIDrawer.h"
+#include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
+#include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 LitchiEditor::Inspector::Inspector
 (
@@ -69,24 +74,16 @@ LitchiEditor::Inspector::Inspector
 			auto defineButtonsStates = [&addComponentButton](bool p_componentExists)
 			{
 				addComponentButton.disabled = p_componentExists;
-				addComponentButton.idleBackgroundColor = !p_componentExists ? OvUI::Types::Color{ 0.7f, 0.5f, 0.f } : OvUI::Types::Color{ 0.1f, 0.1f, 0.1f };
+				addComponentButton.idleBackgroundColor = !p_componentExists ? Color{ 0.7f, 0.5f, 0.f } : Color{ 0.1f, 0.1f, 0.1f };
 			};
 
 			switch (p_value)
 			{
-			case 0: defineButtonsStates(GetTargetActor()->GetComponent<CModelRenderer>());		return;
-			case 1: defineButtonsStates(GetTargetActor()->GetComponent<CCamera>());				return;
-			case 2: defineButtonsStates(GetTargetActor()->GetComponent<CPhysicalObject>());		return;
-			case 3: defineButtonsStates(GetTargetActor()->GetComponent<CPhysicalObject>());		return;
-			case 4: defineButtonsStates(GetTargetActor()->GetComponent<CPhysicalObject>());		return;
-			case 5: defineButtonsStates(GetTargetActor()->GetComponent<CPointLight>());			return;
-			case 6: defineButtonsStates(GetTargetActor()->GetComponent<CDirectionalLight>());	return;
-			case 7: defineButtonsStates(GetTargetActor()->GetComponent<CSpotLight>());			return;
-			case 8: defineButtonsStates(GetTargetActor()->GetComponent<CAmbientBoxLight>());	return;
-			case 9: defineButtonsStates(GetTargetActor()->GetComponent<CAmbientSphereLight>());	return;
-			case 10: defineButtonsStates(GetTargetActor()->GetComponent<CMaterialRenderer>());	return;
-			case 11: defineButtonsStates(GetTargetActor()->GetComponent<CAudioSource>());		return;
-			case 12: defineButtonsStates(GetTargetActor()->GetComponent<CAudioListener>());		return;
+			case 0: defineButtonsStates(GetTargetActor()->GetComponent<MeshRenderer>());		return;
+			case 1: defineButtonsStates(GetTargetActor()->GetComponent<MeshFilter>());				return;
+			case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
+			case 3: defineButtonsStates(GetTargetActor()->GetComponent<Collider>());		return;
+			case 4: defineButtonsStates(GetTargetActor()->GetComponent<RigidActor>());		return;
 			}
 		};
 
@@ -97,74 +94,74 @@ LitchiEditor::Inspector::Inspector
 	{
 		m_scriptSelectorWidget = &m_inspectorHeader->CreateWidget<InputText>("");
         m_scriptSelectorWidget->lineBreak = false;
-		auto& ddTarget = m_scriptSelectorWidget->AddPlugin<DDTarget<std::pair<std::string, Layout::Group*>>>("File");
+		auto& ddTarget = m_scriptSelectorWidget->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File");
 		
-		auto& addScriptButton = m_inspectorHeader->CreateWidget<OvUI::Widgets::Buttons::Button>("Add Script", OvMaths::FVector2{ 100.f, 0 });
-		addScriptButton.idleBackgroundColor = OvUI::Types::Color{ 0.7f, 0.5f, 0.f };
-		addScriptButton.textColor = OvUI::Types::Color::White;
+		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", glm::vec2{ 100.f, 0 });
+		addScriptButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
+		addScriptButton.textColor = Color::White;
 
         // Add script button state updater
-        const auto updateAddScriptButton = [&addScriptButton, this](const std::string& p_script)
-        {
-            const std::string realScriptPath = EDITOR_CONTEXT(projectScriptsPath) + p_script + ".lua";
+  //      const auto updateAddScriptButton = [&addScriptButton, this](const std::string& p_script)
+  //      {
+  //          const std::string realScriptPath = EDITOR_CONTEXT(projectScriptsPath) + p_script + ".lua";
 
-            const auto targetActor = GetTargetActor();
-            const bool isScriptValid = std::filesystem::exists(realScriptPath) && targetActor && !targetActor->GetBehaviour(p_script);
+  //          const auto targetActor = GetTargetActor();
+  //          const bool isScriptValid = std::filesystem::exists(realScriptPath) && targetActor && !targetActor->GetBehaviour(p_script);
 
-            addScriptButton.disabled = !isScriptValid;
-            addScriptButton.idleBackgroundColor = isScriptValid ? OvUI::Types::Color{ 0.7f, 0.5f, 0.f } : OvUI::Types::Color{ 0.1f, 0.1f, 0.1f };
-        };
+  //          addScriptButton.disabled = !isScriptValid;
+  //          addScriptButton.idleBackgroundColor = isScriptValid ? OvUI::Types::Color{ 0.7f, 0.5f, 0.f } : OvUI::Types::Color{ 0.1f, 0.1f, 0.1f };
+  //      };
 
-        m_scriptSelectorWidget->ContentChangedEvent += updateAddScriptButton;
+  //      m_scriptSelectorWidget->ContentChangedEvent += updateAddScriptButton;
 
-		addScriptButton.ClickedEvent += [updateAddScriptButton, this]
-		{
-            const std::string realScriptPath = EDITOR_CONTEXT(projectScriptsPath) + m_scriptSelectorWidget->content + ".lua";
+		//addScriptButton.ClickedEvent += [updateAddScriptButton, this]
+		//{
+  //          const std::string realScriptPath = EDITOR_CONTEXT(projectScriptsPath) + m_scriptSelectorWidget->content + ".lua";
 
-            // Ensure that the script is a valid one
-            if (std::filesystem::exists(realScriptPath))
-            {
-                GetTargetActor()->AddBehaviour(m_scriptSelectorWidget->content);
-                updateAddScriptButton(m_scriptSelectorWidget->content);
-            }
-		};
+  //          // Ensure that the script is a valid one
+  //          if (std::filesystem::exists(realScriptPath))
+  //          {
+  //              GetTargetActor()->AddBehaviour(m_scriptSelectorWidget->content);
+  //              updateAddScriptButton(m_scriptSelectorWidget->content);
+  //          }
+		//};
 
-        ddTarget.DataReceivedEvent += [updateAddScriptButton, this](std::pair<std::string, Layout::Group*> p_data)
-        {
-            m_scriptSelectorWidget->content = EDITOR_EXEC(GetScriptPath(p_data.first));
-            updateAddScriptButton(m_scriptSelectorWidget->content);
-        };
+  //      ddTarget.DataReceivedEvent += [updateAddScriptButton, this](std::pair<std::string, Group*> p_data)
+  //      {
+  //          m_scriptSelectorWidget->content = EDITOR_EXEC(GetScriptPath(p_data.first));
+  //          updateAddScriptButton(m_scriptSelectorWidget->content);
+  //      };
 	}
 
-	m_inspectorHeader->CreateWidget<OvUI::Widgets::Visual::Separator>();
+	m_inspectorHeader->CreateWidget<Separator>();
 
-	m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject& p_destroyed)
+	/*m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject* p_destroyed)
 	{ 
 		if (&p_destroyed == m_targetActor)
 			UnFocus();
-	};
+	};*/
 }
 
 LitchiEditor::Inspector::~Inspector()
 {
-	GameObject::DestroyedEvent -= m_destroyedListener;
+	// GameObject::DestroyedEvent -= m_destroyedListener;
 
 	UnFocus();
 }
 
-void LitchiEditor::Inspector::FocusActor(GameObject& p_target)
+void LitchiEditor::Inspector::FocusActor(GameObject* p_target)
 {
 	if (m_targetActor)
 		UnFocus();
 
 	m_actorInfo->RemoveAllWidgets();
 
-	m_targetActor = &p_target;
+	m_targetActor = p_target;
 
-	m_componentAddedListener = m_targetActor->ComponentAddedEvent += [this] (auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };
+	/*m_componentAddedListener = m_targetActor->ComponentAddedEvent += [this] (auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };
 	m_behaviourAddedListener =		m_targetActor->BehaviourAddedEvent += [this](auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };
 	m_componentRemovedListener =	m_targetActor->ComponentRemovedEvent += [this](auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };
-	m_behaviourRemovedListener =	m_targetActor->BehaviourRemovedEvent += [this](auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };
+	m_behaviourRemovedListener =	m_targetActor->BehaviourRemovedEvent += [this](auto& useless) { EDITOR_EXEC(DelayAction([this] { Refresh(); })); };*/
 
 	m_inspectorHeader->enabled = true;
 
@@ -174,17 +171,17 @@ void LitchiEditor::Inspector::FocusActor(GameObject& p_target)
 	m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
     m_scriptSelectorWidget->ContentChangedEvent.Invoke(m_scriptSelectorWidget->content);
 
-	EDITOR_EVENT(ActorSelectedEvent).Invoke(*m_targetActor);
+	// EDITOR_EVENT(ActorSelectedEvent).Invoke(*m_targetActor);
 }
 
 void LitchiEditor::Inspector::UnFocus()
 {
 	if (m_targetActor)
 	{
-		m_targetActor->ComponentAddedEvent		-= m_componentAddedListener;
+		/*m_targetActor->ComponentAddedEvent		-= m_componentAddedListener;
 		m_targetActor->ComponentRemovedEvent	-= m_componentRemovedListener;
 		m_targetActor->BehaviourAddedEvent		-= m_behaviourAddedListener;
-		m_targetActor->BehaviourRemovedEvent	-= m_behaviourRemovedListener;
+		m_targetActor->BehaviourRemovedEvent	-= m_behaviourRemovedListener;*/
 	}
 
 	SoftUnFocus();
@@ -194,7 +191,7 @@ void LitchiEditor::Inspector::SoftUnFocus()
 {
     if (m_targetActor)
     {
-        EDITOR_EVENT(ActorUnselectedEvent).Invoke(*m_targetActor);
+        // EDITOR_EVENT(ActorUnselectedEvent).Invoke(*m_targetActor);
         m_inspectorHeader->enabled = false;
         m_targetActor = nullptr;
         m_actorInfo->RemoveAllWidgets();
@@ -265,6 +262,6 @@ void LitchiEditor::Inspector::Refresh()
 	if (m_targetActor)
 	{
 		m_actorInfo->RemoveAllWidgets();
-		CreateActorInspector(*m_targetActor);
+		CreateActorInspector(m_targetActor);
 	}
 }

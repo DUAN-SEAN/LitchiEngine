@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include "Editor/include/Panels/Hierarchy.h"
+#include "Editor/include/Panels/Inspector.h"
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Time/time.h"
@@ -168,7 +169,11 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 	auto rotation = transform->rotation();
 	auto rotationEuler = glm::eulerAngles(rotation);
 	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
+
 	// todo Inspector Ñ¡Ôñ
+
+	auto& inspector = m_panelsManager.GetPanelAs<Inspector>("Inspector");
+	inspector.FocusActor(p_target);
 }
 
 void LitchiEditor::ApplicationEditor::SetupUI()
@@ -181,6 +186,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<MenuBar>("Menu Bar");
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
+	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 
 	//m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, engineAssetsPath, projectAssetsPath, projectScriptsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
