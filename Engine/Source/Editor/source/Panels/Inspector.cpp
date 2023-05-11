@@ -11,19 +11,21 @@
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/rigid_actor.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/UI/Helpers/GUIDrawer.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
+#include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 LitchiEditor::Inspector::Inspector
 (
 	const std::string& p_title,
 	bool p_opened,
-	const LitchiRuntime::PanelWindowSettings & p_windowSettings
+	const LitchiRuntime::PanelWindowSettings& p_windowSettings
 ) : PanelWindow(p_title, p_opened, p_windowSettings)
 {
 	m_inspectorHeader = &CreateWidget<Group>();
@@ -93,14 +95,14 @@ LitchiEditor::Inspector::Inspector
 	/* Script selector + button */
 	{
 		m_scriptSelectorWidget = &m_inspectorHeader->CreateWidget<InputText>("");
-        m_scriptSelectorWidget->lineBreak = false;
+		m_scriptSelectorWidget->lineBreak = false;
 		auto& ddTarget = m_scriptSelectorWidget->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File");
-		
+
 		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", glm::vec2{ 100.f, 0 });
 		addScriptButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
 		addScriptButton.textColor = Color::White;
 
-        // Add script button state updater
+		// Add script button state updater
   //      const auto updateAddScriptButton = [&addScriptButton, this](const std::string& p_script)
   //      {
   //          const std::string realScriptPath = EDITOR_CONTEXT(projectScriptsPath) + p_script + ".lua";
@@ -136,7 +138,7 @@ LitchiEditor::Inspector::Inspector
 	m_inspectorHeader->CreateWidget<Separator>();
 
 	/*m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject* p_destroyed)
-	{ 
+	{
 		if (&p_destroyed == m_targetActor)
 			UnFocus();
 	};*/
@@ -167,9 +169,9 @@ void LitchiEditor::Inspector::FocusActor(GameObject* p_target)
 
 	CreateActorInspector(p_target);
 
-    // Force component and script selectors to trigger their ChangedEvent to update button states
+	// Force component and script selectors to trigger their ChangedEvent to update button states
 	m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
-    m_scriptSelectorWidget->ContentChangedEvent.Invoke(m_scriptSelectorWidget->content);
+	m_scriptSelectorWidget->ContentChangedEvent.Invoke(m_scriptSelectorWidget->content);
 
 	// EDITOR_EVENT(ActorSelectedEvent).Invoke(*m_targetActor);
 }
@@ -189,16 +191,16 @@ void LitchiEditor::Inspector::UnFocus()
 
 void LitchiEditor::Inspector::SoftUnFocus()
 {
-    if (m_targetActor)
-    {
-        // EDITOR_EVENT(ActorUnselectedEvent).Invoke(*m_targetActor);
-        m_inspectorHeader->enabled = false;
-        m_targetActor = nullptr;
-        m_actorInfo->RemoveAllWidgets();
-    }
+	if (m_targetActor)
+	{
+		// EDITOR_EVENT(ActorUnselectedEvent).Invoke(*m_targetActor);
+		m_inspectorHeader->enabled = false;
+		m_targetActor = nullptr;
+		m_actorInfo->RemoveAllWidgets();
+	}
 }
 
-GameObject * LitchiEditor::Inspector::GetTargetActor() const
+GameObject* LitchiEditor::Inspector::GetTargetActor() const
 {
 	return m_targetActor;
 }
@@ -206,11 +208,11 @@ GameObject * LitchiEditor::Inspector::GetTargetActor() const
 void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 {
 	auto& components = p_target->GetComponentsMap();
-	
+
 	for (auto& [name, componentArr] : components)
 		for (auto component : componentArr)
 		{
-			DrawComponent(component);
+			DrawComponent(name, component);
 		}
 
 	/*auto& behaviours = p_target.GetBehaviours();
@@ -219,24 +221,223 @@ void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 		DrawBehaviour(behaviour);*/
 }
 
-void LitchiEditor::Inspector::DrawComponent(Component* p_component)
+static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& obj);
+
+static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName);
+
+static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const variant& var, const string_view propertyName)
+{
+	if (t.is_arithmetic())
+	{
+		if (t == type::get<bool>())
+		{
+			auto boolValue =var.to_bool();
+			GUIDrawer::DrawBoolean(p_root, propertyName.to_string(), boolValue);
+		}
+		else if (t == type::get<char>())
+			writer.Bool(var.to_bool());
+		else if (t == type::get<int8_t>())
+			writer.Int(var.to_int8());
+		else if (t == type::get<int16_t>())
+			writer.Int(var.to_int16());
+		else if (t == type::get<int32_t>())
+			writer.Int(var.to_int32());
+		else if (t == type::get<int64_t>())
+			writer.Int64(var.to_int64());
+		else if (t == type::get<uint8_t>())
+			writer.Uint(var.to_uint8());
+		else if (t == type::get<uint16_t>())
+			writer.Uint(var.to_uint16());
+		else if (t == type::get<uint32_t>())
+			writer.Uint(var.to_uint32());
+		else if (t == type::get<uint64_t>())
+			writer.Uint64(var.to_uint64());
+		else if (t == type::get<float>())
+			writer.Double(var.to_double());
+		else if (t == type::get<double>())
+			writer.Double(var.to_double());
+
+		return true;
+	}
+	else if (t.is_enumeration())
+	{
+		bool ok = false;
+		auto result = var.to_string(&ok);
+		if (ok)
+		{
+			writer.String(var.to_string());
+		}
+		else
+		{
+			ok = false;
+			auto value = var.to_uint64(&ok);
+			if (ok)
+				writer.Uint64(value);
+			else
+				writer.Null();
+		}
+
+		return true;
+	}
+	else if (t == type::get<std::string>())
+	{
+		writer.String(var.to_string());
+		return true;
+	}
+
+	return false;
+}
+
+static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName)
+{
+	for (const auto& item : view)
+	{
+		if (item.is_sequential_container())
+		{
+			DrawArray(item.create_sequential_view(), writer);
+		}
+		else
+		{
+			variant wrapped_var = item.extract_wrapped_value();
+			type value_type = wrapped_var.get_type();
+			if (value_type.is_arithmetic() || value_type == type::get<std::string>() || value_type.is_enumeration())
+			{
+				DrawAtomicTypeObject(value_type, wrapped_var, writer);
+			}
+			else // object
+			{
+				DrawInstanceInternalRecursively(wrapped_var, writer);
+			}
+		}
+	}
+	writer.EndArray();
+}
+
+static void DrawAssociativeContainer(WidgetContainer& p_root, const variant_associative_view& view, const string_view propertyName)
+{
+	static const string_view key_name("key");
+	static const string_view value_name("value");
+
+	writer.StartArray();
+
+	if (view.is_key_only_type())
+	{
+		for (auto& item : view)
+		{
+			DrawProperty(item.first, writer);
+		}
+	}
+	else
+	{
+		for (auto& item : view)
+		{
+			writer.StartObject();
+			writer.String(key_name.data(), static_cast<rapidjson::SizeType>(key_name.length()), false);
+
+			DrawProperty(item.first, writer);
+
+			writer.String(value_name.data(), static_cast<rapidjson::SizeType>(value_name.length()), false);
+
+			DrawProperty(item.second, writer);
+
+			writer.EndObject();
+		}
+	}
+
+	writer.EndArray();
+}
+
+static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName)
+{
+	auto value_type = var.get_type();
+	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
+	bool is_wrapper = wrapped_type != value_type;
+
+	if (DrawAtomicTypeObject(p_root, is_wrapper ? wrapped_type : value_type,
+		is_wrapper ? var.extract_wrapped_value() : var, propertyName))
+	{
+	}
+	else if (var.is_sequential_container())
+	{
+		DrawArray(p_root, var.create_sequential_view(), propertyName);
+	}
+	else if (var.is_associative_container())
+	{
+		DrawAssociativeContainer(p_root,var.create_associative_view(), propertyName);
+	}
+	else
+	{
+		auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
+		auto propertyRoot= p_root.CreateWidget<Group>(propertyName);
+		if (!child_props.empty())
+		{
+			DrawInstanceInternalRecursively(propertyRoot,var);
+		}
+		else
+		{
+			bool ok = false;
+			auto text = var.to_string(&ok);
+			if (!ok)
+			{
+				writer.String(text);
+				return false;
+			}
+
+			writer.String(text);
+		}
+	}
+
+	return true;
+}
+
+static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& obj2)
+{
+	instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
+
+	auto prop_list = obj.get_derived_type().get_properties();
+	for (auto prop : prop_list)
+	{
+		if (prop.get_metadata("NO_SERIALIZE"))
+			continue;
+
+		variant prop_value = prop.get_value(obj);
+		if (!prop_value)
+			continue; // cannot serialize, because we cannot retrieve the value
+
+		const auto name = prop.get_name();
+		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
+		if (!DrawProperty(p_root, prop_value, name))
+		{
+			DEBUG_LOG_ERROR("cannot serialize property:{}", name);
+		}
+	}
+
+}
+
+void DrawInstance(WidgetContainer& p_root, rttr::instance obj)
+{
+	if (!obj.is_valid())
+		return;
+
+	DrawInstanceInternalRecursively(p_root, obj);
+}
+
+void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_component)
 {
 	// 反射读取component的所有字段
-
-
-	/*if (auto inspectorItem = dynamic_cast<OvCore::API::IInspectorItem*>(&p_component); inspectorItem)
+	auto& header = m_actorInfo->CreateWidget<GroupCollapsable>(name);
+	header.closable = !dynamic_cast<Transform*>(p_component);
+	header.CloseEvent += [this, &header, &p_component]
 	{
-		auto& header = m_actorInfo->CreateWidget<GroupCollapsable>(p_component.GetName());
-		header.closable = !dynamic_cast<OvCore::ECS::Components::CTransform*>(&p_component);
-		header.CloseEvent += [this, &header, &p_component]
-		{ 
-			if (p_component.owner.RemoveComponent(p_component))
-				m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
-		};
-		auto& columns = header.CreateWidget<Columns<2>>();
-		columns.widths[0] = 200;
-		inspectorItem->OnInspector(columns);
-	}*/
+		if (p_component->game_object()->RemoveComponent(p_component))
+			m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
+	};
+	auto& columns = header.CreateWidget<Columns<2>>();
+	columns.widths[0] = 200;
+
+
+
+	DrawInstance(header,*p_component);
 
 }
 

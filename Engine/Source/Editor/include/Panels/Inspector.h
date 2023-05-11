@@ -66,7 +66,7 @@ namespace LitchiEditor
 		/**
 		* Draw the given component in inspector
 		*/
-		void DrawComponent(Component* p_component);
+		void DrawComponent(std::string name,Component* p_component);
 
 		///**
 		//* Draw the given behaviour in inspector
