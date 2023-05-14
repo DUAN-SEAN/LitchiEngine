@@ -9,12 +9,13 @@
 
 #include "Runtime/Core/Log/debug.h"
 #include "rttr/registration"
+#include "Runtime/Core/Meta/Reflection/object.h"
 
 using namespace rttr;
 namespace LitchiRuntime
 {
     class GameObject;
-    class Component {
+    class Component :public Object{
     public:
         Component();
         virtual ~Component();

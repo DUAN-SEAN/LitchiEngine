@@ -5,6 +5,7 @@
 
 #include "Runtime/Core/App/application.h"
 #include "Editor/include/ApplicationEditor.h"
+#include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 
@@ -12,6 +13,10 @@ using namespace LitchiEditor;
 using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
+    std::vector<std::string> propertyNameList;
+    propertyNameList.push_back("position");
+    propertyNameList.push_back("x");
+
     auto vecType  = type::get<glm::vec3>();
 
     // 创建transform
@@ -21,6 +26,12 @@ int main(int argc, char** argv)
     // 设置pos
     auto& tran = *tranVar.get_value<Transform*>();
     tran.set_position(glm::vec3(5.0, 0.0, 0.0));
+
+
+    PropertyField property_field(&tran, propertyNameList);
+    property_field.SetValue(12.0);
+
+
 
     // 获取pos的熟悉
     auto posProp = transformType.get_property("position");

@@ -9,6 +9,7 @@
 
 #include <rttr/registration.h>
 
+#include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
@@ -64,6 +65,11 @@ RTTR_REGISTRATION //注册反射
 		.property("pos", &VertexRes::pos_)
 		.property("color", &VertexRes::color_)
 		.property("uv", &VertexRes::uv_);
+
+
+
+	/*registration::class_<Object>("Object")
+		.constructor<>(rttr::policy::ctor::as_raw_ptr);*/
 
 
 	registration::class_<TextureRes>("TextureRes")

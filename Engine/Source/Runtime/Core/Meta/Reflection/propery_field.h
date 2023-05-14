@@ -3,22 +3,25 @@
 
 #include <rttr/type>
 
+
 namespace LitchiRuntime
 {
+	class Object;
+	class Component;
 	class PropertyField
 	{
 	public:
-		PropertyField(rttr::type type,std::vector<std::string> propertyNameList);
+		PropertyField(Component* root,const std::vector<std::string>& propertyNameList);
 		~PropertyField();
 
 		/**
 		 * \brief …Ë÷√÷µ
 		 * \return
 		 */
-		bool SetValue(rttr::instance instance, rttr::variant value);
+		bool SetValue(rttr::variant value) const;
 
 	private:
-		rttr::type m_type;
+		Component* m_root;
 		std::vector<std::string> m_propertyNameList;
 
 	};
