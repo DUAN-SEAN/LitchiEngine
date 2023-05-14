@@ -20,6 +20,8 @@ namespace LitchiRuntime
 		 */
 		bool SetValue(rttr::variant value) const;
 
+		rttr::variant GetValue() const;
+
 	private:
 		Object* m_root;
 		std::vector<std::string> m_propertyNameList;

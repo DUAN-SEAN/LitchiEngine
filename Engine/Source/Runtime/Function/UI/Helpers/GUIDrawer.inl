@@ -2,6 +2,7 @@
 #pragma once
 
 #include "GUIDrawer.h"
+#include "Runtime/Function/UI/Widgets/Drags/DragSingleScalar.h"
 
 namespace LitchiRuntime
 {

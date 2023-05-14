@@ -5,6 +5,7 @@
 
 #include "Editor/include/Panels/Inspector.h"
 
+#include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
@@ -221,73 +222,127 @@ void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 		DrawBehaviour(behaviour);*/
 }
 
-static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& obj){}
-//
-//static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName);
-//
-//static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t,const variant& var, instance propertyObj, const string_view propertyName)
-//{
-//	if (t.is_arithmetic())
-//	{
-//		if (t == type::get<bool>())
-//		{
-//			auto boolValue =var.to_bool();
-//			GUIDrawer::DrawBoolean(p_root, propertyName.to_string(), boolValue);
-//		}
-//		else if (t == type::get<char>())
-//			writer.Bool(var.to_bool());
-//		else if (t == type::get<int8_t>())
-//			writer.Int(var.to_int8());
-//		else if (t == type::get<int16_t>())
-//			writer.Int(var.to_int16());
-//		else if (t == type::get<int32_t>())
-//			writer.Int(var.to_int32());
-//		else if (t == type::get<int64_t>())
-//			writer.Int64(var.to_int64());
-//		else if (t == type::get<uint8_t>())
-//			writer.Uint(var.to_uint8());
-//		else if (t == type::get<uint16_t>())
-//			writer.Uint(var.to_uint16());
-//		else if (t == type::get<uint32_t>())
-//			writer.Uint(var.to_uint32());
-//		else if (t == type::get<uint64_t>())
-//			writer.Uint64(var.to_uint64());
-//		else if (t == type::get<float>())
-//			writer.Double(var.to_double());
-//		else if (t == type::get<double>())
-//			writer.Double(var.to_double());
-//
-//		return true;
-//	}
-//	else if (t.is_enumeration())
-//	{
-//		bool ok = false;
-//		auto result = var.to_string(&ok);
-//		if (ok)
-//		{
-//			writer.String(var.to_string());
-//		}
-//		else
-//		{
-//			ok = false;
-//			auto value = var.to_uint64(&ok);
-//			if (ok)
-//				writer.Uint64(value);
-//			else
-//				writer.Null();
-//		}
-//
-//		return true;
-//	}
-//	else if (t == type::get<std::string>())
-//	{
-//		writer.String(var.to_string());
-//		return true;
-//	}
-//
-//	return false;
-//}
-//
+static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& inputIns, Object* obj, std::vector<string> propertyPathList);
+
+static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList);
+
+static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
+{
+	PropertyField property_field(obj, propertyPathList);
+	if (t.is_arithmetic())
+	{
+		if (t == type::get<bool>() || t == type::get<char>())
+		{
+			auto getBool = [var, property_field]
+			{
+				return property_field.GetValue().to_bool();
+			};
+
+			auto setBool = [property_field](bool value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawBoolean(p_root, propertyName.to_string(), getBool, setBool);
+		}
+		/*else if (t == type::get<int8_t>())
+		{
+			writer.Int(var.to_int8());
+		}
+		else if (t == type::get<int16_t>())
+			writer.Int(var.to_int16());
+		else if (t == type::get<int32_t>())
+			writer.Int(var.to_int32());
+		else if (t == type::get<int64_t>())
+			writer.Int64(var.to_int64());
+		else if (t == type::get<uint8_t>())
+			writer.Uint(var.to_uint8());
+		else if (t == type::get<uint16_t>())
+			writer.Uint(var.to_uint16());
+		else if (t == type::get<uint32_t>())
+			writer.Uint(var.to_uint32());
+		else if (t == type::get<uint64_t>())
+			writer.Uint64(var.to_uint64());*/
+		else if (t == type::get<float>())
+		{
+			auto getFloat = [var, property_field]
+			{
+				return property_field.GetValue().to_float();
+			};
+
+			auto setFloat = [property_field](float value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawScalar<float>(p_root, propertyName.to_string(), getFloat, setFloat);
+		}
+		else if (t == type::get<double>())
+		{
+			auto getDouble = [var, property_field]
+			{
+				return property_field.GetValue().to_double();
+			};
+
+			auto setDouble = [property_field](double value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawScalar<double>(p_root, propertyName.to_string(), getDouble, setDouble);
+		}
+
+		return true;
+	}
+	else if (t.is_enumeration())
+	{
+		bool ok = false;
+		auto result = var.to_string(&ok);
+		if (ok)
+		{
+			auto getString = [var, property_field]
+			{
+				return property_field.GetValue().to_string();
+			};
+
+			auto setString = [property_field](std::string value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawString(p_root, propertyName.to_string(), getString, setString);
+		}
+		else
+		{
+			/*ok = false;
+			auto value = var.to_uint64(&ok);
+			if (ok)
+				writer.Uint64(value);
+			else
+				writer.Null();*/
+		}
+
+		return true;
+	}
+	else if (t == type::get<std::string>())
+	{
+		auto getString = [var,property_field]
+		{
+			return property_field.GetValue().to_string();
+		};
+
+		auto setString = [property_field](std::string value)
+		{
+			property_field.SetValue(value);
+		};
+
+		GUIDrawer::DrawString(p_root, propertyName.to_string(), getString, setString);
+		return true;
+	}
+
+	return false;
+}
+
 //static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName)
 //{
 //	for (const auto& item : view)
@@ -311,6 +366,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 //		}
 //	}
 //}
+
 //
 //static void DrawAssociativeContainer(WidgetContainer& p_root, const variant_associative_view& view, const string_view propertyName)
 //{
@@ -345,81 +401,87 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 //
 //	writer.EndArray();
 //}
-//
-//static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName)
-//{
-//	auto value_type = var.get_type();
-//	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
-//	bool is_wrapper = wrapped_type != value_type;
-//
-//	if (DrawAtomicTypeObject(p_root, is_wrapper ? wrapped_type : value_type,
-//		is_wrapper ? var.extract_wrapped_value() : var, propertyName))
-//	{
-//	}
-//	else if (var.is_sequential_container())
-//	{
-//		DrawArray(p_root, var.create_sequential_view(), propertyName);
-//	}
-//	else if (var.is_associative_container())
-//	{
-//		DrawAssociativeContainer(p_root,var.create_associative_view(), propertyName);
-//	}
-//	else
-//	{
-//		auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
-//		auto propertyRoot= p_root.CreateWidget<Group>(propertyName);
-//		if (!child_props.empty())
-//		{
-//			DrawInstanceInternalRecursively(propertyRoot,var);
-//		}
-//		else
-//		{
-//			bool ok = false;
-//			auto text = var.to_string(&ok);
-//			if (!ok)
-//			{
-//				writer.String(text);
-//				return false;
-//			}
-//
-//			writer.String(text);
-//		}
-//	}
-//
-//	return true;
-//}
-//
-//static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& obj2)
-//{
-//	instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
-//
-//	auto prop_list = obj.get_derived_type().get_properties();
-//	for (auto prop : prop_list)
-//	{
-//		if (prop.get_metadata("NO_SERIALIZE"))
-//			continue;
-//
-//		variant prop_value = prop.get_value(obj);
-//		if (!prop_value)
-//			continue; // cannot serialize, because we cannot retrieve the value
-//
-//		const auto name = prop.get_name();
-//		auto propertyObj = prop.get_value(obj);
-//		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
-//		if (!DrawProperty(p_root, prop_value, name))
-//		{
-//			DEBUG_LOG_ERROR("cannot serialize property:{}", name);
-//		}
-//	}
-//
-//}
 
-void DrawInstance(WidgetContainer& p_root, rttr::instance obj)
+static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
 {
-	if (!obj.is_valid())
+	auto value_type = var.get_type();
+	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
+	bool is_wrapper = wrapped_type != value_type;
+
+	if (DrawAtomicTypeObject(p_root, is_wrapper ? wrapped_type : value_type,
+		is_wrapper ? var.extract_wrapped_value() : var, propertyName, obj, propertyPathList))
+	{
+	}
+	else if (var.is_sequential_container())
+	{
+		// DrawArray(p_root, var.create_sequential_view(), propertyName);
+	}
+	/*else if (var.is_associative_container())
+	{
+		DrawAssociativeContainer(p_root,var.create_associative_view(), propertyName);
+	}*/
+	else
+	{
+		auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
+		auto& propertyRoot = p_root.CreateWidget<GroupCollapsable>(propertyName.to_string());
+		if (!child_props.empty())
+		{
+			DrawInstanceInternalRecursively(propertyRoot, var, obj, propertyPathList);
+		}
+		else
+		{
+			/*bool ok = false;
+			auto text = var.to_string(&ok);
+			if (!ok)
+			{
+				writer.String(text);
+				return false;
+			}
+
+			writer.String(text);*/
+		}
+	}
+
+	return true;
+}
+
+static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& inputIns, Object* obj, std::vector<string> propertyPathList)
+{
+	instance ins = inputIns.get_type().get_raw_type().is_wrapper() ? inputIns.get_wrapped_instance() : inputIns;
+
+	auto prop_list = ins.get_derived_type().get_properties();
+
+	for (auto prop : prop_list)
+	{
+		if (prop.get_metadata("NO_SERIALIZE"))
+			continue;
+
+		variant prop_value = prop.get_value(ins);
+		if (!prop_value)
+			continue; // cannot serialize, because we cannot retrieve the value
+
+		const auto name = prop.get_name();
+
+		// auto propertyObj = prop.get_value(obj);
+		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
+
+		propertyPathList.push_back(name.to_string());
+		if (!DrawProperty(p_root, prop_value, name, obj, propertyPathList))
+		{
+			DEBUG_LOG_ERROR("cannot serialize property:{}", name.to_string());
+		}
+		propertyPathList.pop_back();
+	}
+
+}
+
+void DrawInstance(WidgetContainer& p_root, rttr::instance ins, Object* obj)
+{
+	if (!ins.is_valid())
 		return;
 
-	DrawInstanceInternalRecursively(p_root, obj);
+	std::vector<string> propertyPathList;
+	DrawInstanceInternalRecursively(p_root, ins, obj, propertyPathList);
 }
 
 void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_component)
@@ -435,10 +497,7 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	auto& columns = header.CreateWidget<Columns<2>>();
 	columns.widths[0] = 200;
 
-
-
-	DrawInstance(header,*p_component);
-
+	DrawInstance(header, *p_component, p_component);
 }
 
 //void LitchiEditor::Inspector::DrawBehaviour(OvCore::ECS::Components::Behaviour & p_behaviour)
