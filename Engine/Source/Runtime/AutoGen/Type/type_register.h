@@ -48,14 +48,14 @@ RTTR_REGISTRATION //注册反射
 		.constructor()
 		.property("x", &glm::vec4::x)
 		.property("y", &glm::vec4::y)
-		.property("y", &glm::vec4::z)
+		.property("z", &glm::vec4::z)
 		.property("w", &glm::vec4::w);
 
 	registration::class_<glm::quat>("Quaternion")
 		.constructor()
 		.property("x", &glm::quat::x)
 		.property("y", &glm::quat::y)
-		.property("y", &glm::quat::z)
+		.property("z", &glm::quat::z)
 		.property("w", &glm::quat::w);
 
 
