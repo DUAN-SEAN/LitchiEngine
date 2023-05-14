@@ -1,5 +1,7 @@
-
+﻿
 #pragma once
+
+#include "rttr/registration"
 
 namespace LitchiRuntime
 {
@@ -8,5 +10,8 @@ namespace LitchiRuntime
 	public:
 		Object(){}
 		~Object() {}
+
+
+		RTTR_ENABLE()
 	};
 }

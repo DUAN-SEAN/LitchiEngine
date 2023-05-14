@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include <rttr/type>
@@ -11,17 +11,17 @@ namespace LitchiRuntime
 	class PropertyField
 	{
 	public:
-		PropertyField(Component* root,const std::vector<std::string>& propertyNameList);
+		PropertyField(Object* root, const std::vector<std::string>& propertyNameList);
 		~PropertyField();
 
 		/**
-		 * \brief ÉèÖÃÖµ
+		 * \brief è®¾ç½®å€¼
 		 * \return
 		 */
 		bool SetValue(rttr::variant value) const;
 
 	private:
-		Component* m_root;
+		Object* m_root;
 		std::vector<std::string> m_propertyNameList;
 
 	};

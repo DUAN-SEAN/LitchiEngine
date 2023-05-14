@@ -1,4 +1,4 @@
-
+ï»¿
 #include <map>
 #include <string>
 
@@ -424,7 +424,7 @@ void DrawInstance(WidgetContainer& p_root, rttr::instance obj)
 
 void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_component)
 {
-	// ·´Éä¶ÁÈ¡componentµÄËùÓÐ×Ö¶Î
+	// åå°„è¯»å–componentçš„æ‰€æœ‰å­—æ®µ
 	auto& header = m_actorInfo->CreateWidget<GroupCollapsable>(name);
 	header.closable = !dynamic_cast<Transform*>(p_component);
 	header.CloseEvent += [this, &header, &p_component]
