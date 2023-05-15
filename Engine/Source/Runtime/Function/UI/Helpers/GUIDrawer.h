@@ -46,9 +46,9 @@ namespace LitchiRuntime
 		static void DrawQuat(WidgetContainer& p_root, const std::string& p_name, glm::quat& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
 		static void DrawString(WidgetContainer& p_root, const std::string& p_name, std::string& p_data);
 	/*	static void DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha = false);
-		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, OvRendering::Resources::Model*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
-		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, OvRendering::Resources::Texture*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
-		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, OvRendering::Resources::Shader*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
+		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Model*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
+		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Texture*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
+		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Shader*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, OvCore::Resources::Material*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Text& DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::Resources::Sound*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Text& DrawAsset(WidgetContainer& p_root, const std::string& p_name, std::string& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);*/

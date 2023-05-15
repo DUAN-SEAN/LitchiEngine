@@ -35,6 +35,12 @@ if(NOT TARGET stb)
     set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)
 endif()
 
+# # assimp fbx解析库
+# if(NOT TARGET assimp)
+    # set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)
+# endif()
+
+
 # 有报错,暂时不导入
 # # stb 通用多媒体处理库
 # if(NOT TARGET rttr)

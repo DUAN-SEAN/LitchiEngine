@@ -4,12 +4,12 @@
 
 namespace LitchiRuntime
 {
-	/**
-	* Data structure that defines a bounding sphere (Position + radius)
-	*/
-	struct BoundingSphere
-	{
-		glm::vec3 position;
-		float radius;
-	};
+	///**
+	//* Data structure that defines a bounding sphere (Position + radius)
+	//*/
+	//struct BoundingSphere
+	//{
+	//	glm::vec3 position;
+	//	float radius;
+	//};
 }

@@ -88,7 +88,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	dispatcher.RegisterReference(p_color);
 //}
 //
-//Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, OvRendering::Resources::Model *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Model *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //
@@ -126,7 +126,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	return widget;
 //}
 //
-//OvUI::Widgets::Visual::Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std::string & p_name, OvRendering::Resources::Texture *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//OvUI::Widgets::Visual::Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Texture *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //
@@ -164,7 +164,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	return widget;
 //}
 //
-//Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, OvRendering::Resources::Shader *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Shader *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //
