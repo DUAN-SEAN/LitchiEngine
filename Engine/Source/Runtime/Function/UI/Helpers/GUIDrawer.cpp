@@ -6,6 +6,8 @@
 #include "Runtime/Function/Renderer/texture2d.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Drags/DragMultipleScalars.h"
+#include "Runtime/Function/UI/Widgets/InputFields/InputDouble.h"
+#include "Runtime/Function/UI/Widgets/InputFields/InputFloat.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
 #include "Runtime/Function/UI/Widgets/Layout/Group.h"
 #include "Runtime/Function/UI/Widgets/Selection/CheckBox.h"
@@ -430,6 +432,24 @@ void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::st
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<ColorEdit>(p_hasAlpha);
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<Color>>();
+	dispatcher.RegisterGatherer(p_gatherer);
+	dispatcher.RegisterProvider(p_provider);
+}
+
+void LitchiRuntime::GUIDrawer::DrawInputField4Float(WidgetContainer& p_root, const std::string& p_name, std::function<float(void)> p_gatherer, std::function<void(float)> p_provider)
+{
+	CreateTitle(p_root, p_name);
+	auto& widget = p_root.CreateWidget<InputFloat>();
+	auto& dispatcher = widget.AddPlugin<DataDispatcher<float>>();
+	dispatcher.RegisterGatherer(p_gatherer);
+	dispatcher.RegisterProvider(p_provider);
+}
+
+void LitchiRuntime::GUIDrawer::DrawInputField4Double(WidgetContainer& p_root, const std::string& p_name, std::function<double(void)> p_gatherer, std::function<void(double)> p_provider)
+{
+	CreateTitle(p_root, p_name);
+	auto& widget = p_root.CreateWidget<InputDouble>();
+	auto& dispatcher = widget.AddPlugin<DataDispatcher<double>>();
 	dispatcher.RegisterGatherer(p_gatherer);
 	dispatcher.RegisterProvider(p_provider);
 }

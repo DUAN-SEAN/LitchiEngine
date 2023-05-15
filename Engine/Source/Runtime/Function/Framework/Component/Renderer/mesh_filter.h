@@ -52,6 +52,9 @@ namespace LitchiRuntime
         void LoadMesh(string mesh_file_path);//加载Mesh文件
 
         Mesh* mesh() { return mesh_; };//Mesh对象
+    public:
+
+        RTTR_ENABLE()
     private:
         Mesh* mesh_;//Mesh对象
     };

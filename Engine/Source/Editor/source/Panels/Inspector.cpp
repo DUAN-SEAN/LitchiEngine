@@ -18,6 +18,7 @@
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
+#include "Runtime/Function/UI/Widgets/InputFields/InputFloat.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
 #include "Runtime/Function/UI/Widgets/Layout/Dummy.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
@@ -282,8 +283,8 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			{
 				property_field.SetValue(value);
 			};
-
-			GUIDrawer::DrawScalar<float>(propertyRoot, propertyName.to_string(), getFloat, setFloat);
+			
+			GUIDrawer::DrawInputField4Float(propertyRoot, propertyName.to_string(), getFloat, setFloat);
 		}
 		else if (t == type::get<double>())
 		{
@@ -296,8 +297,8 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			{
 				property_field.SetValue(value);
 			};
-
-			GUIDrawer::DrawScalar<double>(propertyRoot, propertyName.to_string(), getDouble, setDouble);
+			
+			GUIDrawer::DrawInputField4Double(propertyRoot, propertyName.to_string(), getDouble, setDouble);
 		}
 
 		return true;
@@ -434,7 +435,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 
 		// x 垂直, y 水平
 		auto& col = p_root.CreateWidget<Columns<2>>();
-		col.widths[0] = 100.0;
+		col.widths[0] = 75.0f;
 		auto& text = col.CreateWidget<Text>(propertyName.to_string());
 		auto& propertyRoot = col.CreateWidget<Group>();
 		if (!child_props.empty())
@@ -502,7 +503,7 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	// 反射读取component的所有字段
 	auto& header = m_actorInfo->CreateWidget<GroupCollapsable>(name);
 	header.closable = !dynamic_cast<Transform*>(p_component);
-	header.CloseEvent += [this, &header, &p_component]
+	header.CloseEvent += [this, &header, p_component]
 	{
 		if (p_component->game_object()->RemoveComponent(p_component))
 			m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);

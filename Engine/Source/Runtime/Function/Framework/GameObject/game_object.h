@@ -129,42 +129,43 @@ namespace LitchiRuntime
 		bool RemoveComponent(Component* component)
 		{
 			//获取类名
-			type t = type::get(component);
+			type t = component->get_type();
 			std::string component_type_name = t.get_name().to_string();
-			std::vector<Component*> component_vec;
 			if (components_map_.find(component_type_name) != components_map_.end())
 			{
-				component_vec = components_map_[component_type_name];
-			}
-			if (component_vec.size() == 0)
-			{
-				//没有找到组件,就去查找子类组件
-				auto derived_classes = t.get_derived_classes();
-				for (auto derived_class : derived_classes)
+				std::vector<Component*>& component_vec = components_map_[component_type_name];
+
+				if (component_vec.size() == 0)
 				{
-					std::string derived_class_type_name = derived_class.get_name().to_string();
-					if (components_map_.find(derived_class_type_name) != components_map_.end())
+					//没有找到组件,就去查找子类组件
+					auto derived_classes = t.get_derived_classes();
+					for (auto derived_class : derived_classes)
 					{
-						component_vec = components_map_[derived_class_type_name];
-						if (component_vec.size() != 0)
+						std::string derived_class_type_name = derived_class.get_name().to_string();
+						if (components_map_.find(derived_class_type_name) != components_map_.end())
 						{
-							break;
+							component_vec = components_map_[derived_class_type_name];
+							if (component_vec.size() != 0)
+							{
+								break;
+							}
 						}
 					}
 				}
-			}
-			if (component_vec.size() == 0)
-			{
-				return false;
-			}
-			for (auto iter = component_vec.begin(); iter != component_vec.end(); iter++)
-			{
-				if (*iter == component)
+				if (component_vec.size() == 0)
 				{
-					component_vec.erase(iter);
-					return true;
+					return false;
+				}
+				for (auto iter = component_vec.begin(); iter != component_vec.end(); iter++)
+				{
+					if (*iter == component)
+					{
+						component_vec.erase(iter);
+						return true;
+					}
 				}
 			}
+			
 			return false;
 		}
 
