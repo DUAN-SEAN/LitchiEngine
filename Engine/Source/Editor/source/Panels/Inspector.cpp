@@ -19,6 +19,7 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
+#include "Runtime/Function/UI/Widgets/Layout/Dummy.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
@@ -228,6 +229,13 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 
 static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
 {
+	/*auto& col = p_root.CreateWidget<Columns<2>>();
+	col.widths[0] = 10.0f;
+	auto& dumy = col.CreateWidget<Dummy>(glm::vec2(0.0f, 5.0f));
+	auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());*/
+
+	auto& propertyRoot = p_root;
+
 	PropertyField property_field(obj, propertyPathList);
 	if (t.is_arithmetic())
 	{
@@ -243,7 +251,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 				property_field.SetValue(value);
 			};
 
-			GUIDrawer::DrawBoolean(p_root, propertyName.to_string(), getBool, setBool);
+			GUIDrawer::DrawBoolean(propertyRoot, propertyName.to_string(), getBool, setBool);
 		}
 		/*else if (t == type::get<int8_t>())
 		{
@@ -275,7 +283,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 				property_field.SetValue(value);
 			};
 
-			GUIDrawer::DrawScalar<float>(p_root, propertyName.to_string(), getFloat, setFloat);
+			GUIDrawer::DrawScalar<float>(propertyRoot, propertyName.to_string(), getFloat, setFloat);
 		}
 		else if (t == type::get<double>())
 		{
@@ -289,7 +297,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 				property_field.SetValue(value);
 			};
 
-			GUIDrawer::DrawScalar<double>(p_root, propertyName.to_string(), getDouble, setDouble);
+			GUIDrawer::DrawScalar<double>(propertyRoot, propertyName.to_string(), getDouble, setDouble);
 		}
 
 		return true;
@@ -310,7 +318,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 				property_field.SetValue(value);
 			};
 
-			GUIDrawer::DrawString(p_root, propertyName.to_string(), getString, setString);
+			GUIDrawer::DrawString(propertyRoot, propertyName.to_string(), getString, setString);
 		}
 		else
 		{
@@ -423,7 +431,12 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 	else
 	{
 		auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
-		auto& propertyRoot = p_root.CreateWidget<GroupCollapsable>(propertyName.to_string());
+
+		// x 垂直, y 水平
+		auto& col = p_root.CreateWidget<Columns<2>>();
+		col.widths[0] = 100.0;
+		auto& text = col.CreateWidget<Text>(propertyName.to_string());
+		auto& propertyRoot = col.CreateWidget<Group>();
 		if (!child_props.empty())
 		{
 			DrawInstanceInternalRecursively(propertyRoot, var, obj, propertyPathList);
