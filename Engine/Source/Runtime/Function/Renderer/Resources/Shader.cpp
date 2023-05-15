@@ -3,7 +3,10 @@
 #include "Shader.h"
 
 #include <glad/glad.h>
+
+#include "Texture.h"
 #include "Runtime/Core/Log/debug.h"
+
 LitchiRuntime::Shader::Shader(const std::string p_path, uint32_t p_id) : path(p_path), id(p_id)
 {
 	QueryUniforms();
@@ -109,7 +112,7 @@ uint32_t LitchiRuntime::Shader::GetUniformLocation(const std::string& name)
 	const int location = glGetUniformLocation(id, name.c_str());
 
 	if (location == -1)
-		DEBUG_LOG_("Uniform: '" + name + "' doesn't exist");
+		DEBUG_LOG_ERROR("Uniform: '" + name + "' doesn't exist");
 
 	m_uniformLocationCache[name] = location;
 
