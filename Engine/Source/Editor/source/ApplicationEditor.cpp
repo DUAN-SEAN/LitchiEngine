@@ -68,6 +68,10 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	ApplicationBase::Init();
 
+	renderer = std::make_unique<Renderer>(*driver);
+	renderer->SetCapability(ERenderingCapability::MULTISAMPLE, true);
+	shapeDrawer = std::make_unique<ShapeDrawer>(*renderer);
+
 	// ≥ı ºªØInputManager
 	inputManager = std::make_unique<InputManager>(*window);
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::ALTERNATIVE_DARK);

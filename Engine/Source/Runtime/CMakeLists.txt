@@ -52,6 +52,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC stb)
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/mono/Libs)
 target_link_libraries(${TARGET_NAME} PUBLIC mono-2.0-sgen)
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/assimp/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mt)
 
 # 将Source目录添加到Link Target 的项目include中
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>)
