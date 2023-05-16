@@ -160,7 +160,7 @@
 //		* Calculate the position where to spawn the actor using the current camera position and forward
 //		* @param p_distanceToCamera
 //		*/
-//		OvMaths::FVector3 CalculateActorSpawnPoint(float p_distanceToCamera);
+//		glm::vec3 CalculateActorSpawnPoint(float p_distanceToCamera);
 //
 //		/**
 //		* Create an empty actor

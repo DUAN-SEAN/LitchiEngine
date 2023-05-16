@@ -15,8 +15,8 @@ using namespace LitchiEditor;
 using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
-	Loaders::TextureLoader::Create("C:/Users/lenovo/Desktop/1.png", ETextureFilteringMode::LINEAR, ETextureFilteringMode::LINEAR, true);
-	Loaders::ModelLoader::Create("");
+	/*Loaders::TextureLoader::Create("C:/Users/lenovo/Desktop/1.png", ETextureFilteringMode::LINEAR, ETextureFilteringMode::LINEAR, true);
+	Loaders::ModelLoader::Create("");*/
 
 	// 测试代码
 	std::vector<std::string> propertyNameList;

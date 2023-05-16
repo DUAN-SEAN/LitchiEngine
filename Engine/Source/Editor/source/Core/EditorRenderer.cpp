@@ -30,10 +30,10 @@
 //using namespace OvRendering::Resources;
 //using namespace OvCore::Resources;
 //
-//const OvMaths::FVector3 DEBUG_BOUNDS_COLOR		= { 1.0f, 0.0f, 0.0f };
-//const OvMaths::FVector3 LIGHT_VOLUME_COLOR		= { 1.0f, 1.0f, 0.0f };
-//const OvMaths::FVector3 COLLIDER_COLOR			= { 0.0f, 1.0f, 0.0f };
-//const OvMaths::FVector3 FRUSTUM_COLOR			= { 1.0f, 1.0f, 1.0f };
+//const glm::vec3 DEBUG_BOUNDS_COLOR		= { 1.0f, 0.0f, 0.0f };
+//const glm::vec3 LIGHT_VOLUME_COLOR		= { 1.0f, 1.0f, 0.0f };
+//const glm::vec3 COLLIDER_COLOR			= { 0.0f, 1.0f, 0.0f };
+//const glm::vec3 FRUSTUM_COLOR			= { 1.0f, 1.0f, 1.0f };
 //
 //OvEditor::Core::EditorRenderer::EditorRenderer(Context& p_context) : m_context(p_context)
 //{
@@ -58,7 +58,7 @@
 //			sizeof(OvMaths::FMatrix4) +
 //			sizeof(OvMaths::FMatrix4) +
 //			sizeof(OvMaths::FMatrix4) +
-//			sizeof(OvMaths::FVector3) +
+//			sizeof(glm::vec3) +
 //			sizeof(float)
 //		);
 //	});
@@ -157,7 +157,7 @@
 //	return translation * rotation;
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderScene(const OvMaths::FVector3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum)
+//void OvEditor::Core::EditorRenderer::RenderScene(const glm::vec3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum)
 //{
 //	/* Render the actors */
 //	m_context.lightSSBO->Bind(0);
@@ -309,7 +309,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderGizmo(const OvMaths::FVector3& p_position, const OvMaths::FQuaternion& p_rotation, OvEditor::Core::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis)
+//void OvEditor::Core::EditorRenderer::RenderGizmo(const glm::vec3& p_position, const OvMaths::FQuaternion& p_rotation, OvEditor::Core::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis)
 //{
 //	using namespace OvMaths;
 //
@@ -439,18 +439,18 @@
 //}
 //
 //void DrawFrustumLines(OvRendering::Core::ShapeDrawer& p_drawer,
-//                      const OvMaths::FVector3& pos,
-//                      const OvMaths::FVector3& forward,
+//                      const glm::vec3& pos,
+//                      const glm::vec3& forward,
 //                      float near,
 //                      const float far,
-//                      const OvMaths::FVector3& a,
-//                      const OvMaths::FVector3& b,
-//                      const OvMaths::FVector3& c,
-//                      const OvMaths::FVector3& d,
-//                      const OvMaths::FVector3& e,
-//                      const OvMaths::FVector3& f,
-//                      const OvMaths::FVector3& g,
-//                      const OvMaths::FVector3& h)
+//                      const glm::vec3& a,
+//                      const glm::vec3& b,
+//                      const glm::vec3& c,
+//                      const glm::vec3& d,
+//                      const glm::vec3& e,
+//                      const glm::vec3& f,
+//                      const glm::vec3& g,
+//                      const glm::vec3& h)
 //{
 //    // Convenient lambda to draw a frustum line
 //    auto draw = [&](const FVector3& p_start, const FVector3& p_end, const float planeDistance)
@@ -577,24 +577,24 @@
 //	if (auto boxColliderComponent = p_actor.GetComponent<OvCore::ECS::Components::CPhysicalBox>(); boxColliderComponent)
 //	{
 //		OvMaths::FQuaternion rotation = p_actor.transform.GetWorldRotation();
-//		OvMaths::FVector3 center = p_actor.transform.GetWorldPosition();
-//		OvMaths::FVector3 colliderSize = boxColliderComponent->GetSize();
-//		OvMaths::FVector3 actorScale = p_actor.transform.GetWorldScale();
-//		OvMaths::FVector3 halfSize = { colliderSize.x * actorScale.x, colliderSize.y * actorScale.y, colliderSize.z * actorScale.z };
-//		OvMaths::FVector3 size = halfSize * 2.f;
+//		glm::vec3 center = p_actor.transform.GetWorldPosition();
+//		glm::vec3 colliderSize = boxColliderComponent->GetSize();
+//		glm::vec3 actorScale = p_actor.transform.GetWorldScale();
+//		glm::vec3 halfSize = { colliderSize.x * actorScale.x, colliderSize.y * actorScale.y, colliderSize.z * actorScale.z };
+//		glm::vec3 size = halfSize * 2.f;
 //		
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ -halfSize.x, +halfSize.y, -halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ +halfSize.x, halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, +halfSize.y, -halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, +halfSize.y, -halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, +halfSize.y, -halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, center	+ rotation * OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ -halfSize.x, +halfSize.y, -halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ +halfSize.x, halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, +halfSize.y, -halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, +halfSize.y, -halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, +halfSize.y, -halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, center	+ rotation * glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //	}
 //
 //	/* Draw the sphere collider if any */
@@ -602,14 +602,14 @@
 //	{
 //		FVector3 actorScale = p_actor.transform.GetWorldScale();
 //		OvMaths::FQuaternion rotation = p_actor.transform.GetWorldRotation();
-//		OvMaths::FVector3 center = p_actor.transform.GetWorldPosition();
+//		glm::vec3 center = p_actor.transform.GetWorldPosition();
 //		float radius = sphereColliderComponent->GetRadius() * std::max(std::max(std::max(actorScale.x, actorScale.y), actorScale.z), 0.0f);
 //
 //		for (float i = 0; i <= 360.0f; i += 10.0f)
 //		{
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } * radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } * radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //		}
 //	}
 //
@@ -622,30 +622,30 @@
 //
 //		FVector3 actorScale = p_actor.transform.GetWorldScale();
 //		OvMaths::FQuaternion rotation = p_actor.transform.GetWorldRotation();
-//		OvMaths::FVector3 center = p_actor.transform.GetWorldPosition();
+//		glm::vec3 center = p_actor.transform.GetWorldPosition();
 //
-//		OvMaths::FVector3 hVec = { 0.0f, halfHeight, 0.0f };
+//		glm::vec3 hVec = { 0.0f, halfHeight, 0.0f };
 //		for (float i = 0; i < 360.0f; i += 10.0f)
 //		{
-//			m_context.shapeDrawer->DrawLine(center + rotation * (hVec + OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (hVec + OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//			m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (-hVec + OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (hVec + glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (hVec + glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (-hVec + glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //
 //			if (i < 180.f)
 //			{
-//				m_context.shapeDrawer->DrawLine(center + rotation * (hVec + OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (hVec + OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//				m_context.shapeDrawer->DrawLine(center + rotation * (hVec + OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (hVec + OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//				m_context.shapeDrawer->DrawLine(center + rotation * (hVec + glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (hVec + glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//				m_context.shapeDrawer->DrawLine(center + rotation * (hVec + glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (hVec + glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //			}
 //			else
 //			{
-//				m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (-hVec + OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//				m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (-hVec + OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//				m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } * radius), center + rotation * (-hVec + glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//				m_context.shapeDrawer->DrawLine(center + rotation * (-hVec + glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } * radius), center + rotation * (-hVec + glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } * radius), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //			}
 //		}
 //
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ -radius, -halfHeight, 0.f }),	center + rotation * (OvMaths::FVector3{ -radius, +halfHeight, 0.f }), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ radius, -halfHeight, 0.f }),	center + rotation * (OvMaths::FVector3{ radius, +halfHeight, 0.f }), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ 0.f, -halfHeight, -radius }),	center + rotation * (OvMaths::FVector3{ 0.f, +halfHeight, -radius }), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ 0.f, -halfHeight, radius }),	center + rotation * (OvMaths::FVector3{ 0.f, +halfHeight, radius }), OvMaths::FVector3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ -radius, -halfHeight, 0.f }),	center + rotation * (glm::vec3{ -radius, +halfHeight, 0.f }), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ radius, -halfHeight, 0.f }),	center + rotation * (glm::vec3{ radius, +halfHeight, 0.f }), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, -halfHeight, -radius }),	center + rotation * (glm::vec3{ 0.f, +halfHeight, -radius }), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, -halfHeight, radius }),	center + rotation * (glm::vec3{ 0.f, +halfHeight, radius }), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //	}
 //
 //	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
@@ -660,16 +660,16 @@
 //	auto& data = p_light.GetData();
 //
 //	OvMaths::FQuaternion rotation = data.GetTransform().GetWorldRotation();
-//	OvMaths::FVector3 center = data.GetTransform().GetWorldPosition();
+//	glm::vec3 center = data.GetTransform().GetWorldPosition();
 //	float radius = data.GetEffectRange();
 //
 //	if (!std::isinf(radius))
 //	{
 //		for (float i = 0; i <= 360.0f; i += 10.0f)
 //		{
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *radius), DEBUG_BOUNDS_COLOR, 1.f);
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *radius), center + rotation * (OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *radius), DEBUG_BOUNDS_COLOR, 1.f);
-//			m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *radius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *radius), center + rotation * (glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *radius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), DEBUG_BOUNDS_COLOR, 1.f);
 //		}
 //	}
 //
@@ -687,23 +687,23 @@
 //		FMatrix4::Translation(p_ambientBoxLight.owner.transform.GetWorldPosition()) *
 //		FMatrix4::Scaling({ data.constant * 2.f, data.linear * 2.f, data.quadratic * 2.f });
 //
-//	OvMaths::FVector3 center = p_ambientBoxLight.owner.transform.GetWorldPosition();
-//	OvMaths::FVector3 size = { data.constant * 2.f, data.linear * 2.f, data.quadratic * 2.f };
-//	OvMaths::FVector3 actorScale = p_ambientBoxLight.owner.transform.GetWorldScale();
-//	OvMaths::FVector3 halfSize = size / 2.f;
+//	glm::vec3 center = p_ambientBoxLight.owner.transform.GetWorldPosition();
+//	glm::vec3 size = { data.constant * 2.f, data.linear * 2.f, data.quadratic * 2.f };
+//	glm::vec3 actorScale = p_ambientBoxLight.owner.transform.GetWorldScale();
+//	glm::vec3 halfSize = size / 2.f;
 //
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ -halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, center + OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ +halfSize.x, halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, +halfSize.y, -halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, -halfSize.y, +halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
-//	m_context.shapeDrawer->DrawLine(center + OvMaths::FVector3{ -halfSize.x, +halfSize.y, +halfSize.z }, center + OvMaths::FVector3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, halfSize.y, -halfSize.z }, center + glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + glm::vec3{ -halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, center + glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, center + glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ +halfSize.x, halfSize.y, -halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, -halfSize.z }, center + glm::vec3{ +halfSize.x, -halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, +halfSize.y, -halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, -halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, center + glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
+//	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
 //
 //	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //}
@@ -716,14 +716,14 @@
 //	auto& data = p_ambientSphereLight.GetData();
 //
 //	OvMaths::FQuaternion rotation = p_ambientSphereLight.owner.transform.GetWorldRotation();
-//	OvMaths::FVector3 center = p_ambientSphereLight.owner.transform.GetWorldPosition();
+//	glm::vec3 center = p_ambientSphereLight.owner.transform.GetWorldPosition();
 //	float radius = data.constant;
 //
 //	for (float i = 0; i <= 360.0f; i += 10.0f)
 //	{
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *radius), LIGHT_VOLUME_COLOR, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *radius), center + rotation * (OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *radius), LIGHT_VOLUME_COLOR, 1.f);
-//		m_context.shapeDrawer->DrawLine(center + rotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), LIGHT_VOLUME_COLOR, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *radius), LIGHT_VOLUME_COLOR, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *radius), center + rotation * (glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *radius), LIGHT_VOLUME_COLOR, 1.f);
+//		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), LIGHT_VOLUME_COLOR, 1.f);
 //	}
 //
 //	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
@@ -742,9 +742,9 @@
 //	{
 //		auto& actor = p_modelRenderer.owner;
 //
-//		OvMaths::FVector3 actorScale = actor.transform.GetWorldScale();
+//		glm::vec3 actorScale = actor.transform.GetWorldScale();
 //		OvMaths::FQuaternion actorRotation = actor.transform.GetWorldRotation();
-//		OvMaths::FVector3 actorPosition = actor.transform.GetWorldPosition();
+//		glm::vec3 actorPosition = actor.transform.GetWorldPosition();
 //
 //		const auto& modelBoundingsphere = 
 //			p_modelRenderer.GetFrustumBehaviour() == OvCore::ECS::Components::CModelRenderer::EFrustumBehaviour::CULL_CUSTOM ?
@@ -755,13 +755,13 @@
 //		float scaledRadius = modelBoundingsphere.radius * radiusScale;
 //		auto sphereOffset = OvMaths::FQuaternion::RotatePoint(modelBoundingsphere.position, actorRotation) * radiusScale;
 //
-//		OvMaths::FVector3 boundingSphereCenter = actorPosition + sphereOffset;
+//		glm::vec3 boundingSphereCenter = actorPosition + sphereOffset;
 //
 //		for (float i = 0; i <= 360.0f; i += 10.0f)
 //		{
-//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
-//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
-//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//			m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
 //		}
 //
 //		if (p_modelRenderer.GetFrustumBehaviour() == OvCore::ECS::Components::CModelRenderer::EFrustumBehaviour::CULL_MESHES)
@@ -776,13 +776,13 @@
 //					float scaledRadius = meshBoundingSphere.radius * radiusScale;
 //					auto sphereOffset = OvMaths::FQuaternion::RotatePoint(meshBoundingSphere.position, actorRotation) * radiusScale;
 //
-//					OvMaths::FVector3 boundingSphereCenter = actorPosition + sphereOffset;
+//					glm::vec3 boundingSphereCenter = actorPosition + sphereOffset;
 //
 //					for (float i = 0; i <= 360.0f; i += 10.0f)
 //					{
-//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
-//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
-//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (OvMaths::FVector3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), sin(i * (3.14f / 180.0f)), 0.f } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), sin((i + 10.0f) * (3.14f / 180.0f)), 0.f } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ 0.f, sin(i * (3.14f / 180.0f)), cos(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ 0.f, sin((i + 10.0f) * (3.14f / 180.0f)), cos((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
+//						m_context.shapeDrawer->DrawLine(boundingSphereCenter + actorRotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *scaledRadius), boundingSphereCenter + actorRotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *scaledRadius), DEBUG_BOUNDS_COLOR, 1.f);
 //					}
 //				}
 //			}
@@ -813,7 +813,7 @@
 //	m_context.renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Sphere"), p_material, &model, &m_emptyMaterial);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderGrid(const OvMaths::FVector3& p_viewPos, const OvMaths::FVector3& p_color)
+//void OvEditor::Core::EditorRenderer::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
 //{
 //    constexpr float gridSize = 5000.0f;
 //
@@ -821,9 +821,9 @@
 //	m_gridMaterial.Set("u_Color", p_color);
 //	m_context.renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Plane"), m_gridMaterial, &model);
 //
-//    m_context.shapeDrawer->DrawLine(OvMaths::FVector3(-gridSize + p_viewPos.x, 0.0f, 0.0f), OvMaths::FVector3(gridSize + p_viewPos.x, 0.0f, 0.0f), OvMaths::FVector3(1.0f, 0.0f, 0.0f), 1.0f);
-//    m_context.shapeDrawer->DrawLine(OvMaths::FVector3(0.0f, -gridSize + p_viewPos.y, 0.0f), OvMaths::FVector3(0.0f, gridSize + p_viewPos.y, 0.0f), OvMaths::FVector3(0.0f, 1.0f, 0.0f), 1.0f);
-//    m_context.shapeDrawer->DrawLine(OvMaths::FVector3(0.0f, 0.0f, -gridSize + p_viewPos.z), OvMaths::FVector3(0.0f, 0.0f, gridSize + p_viewPos.z), OvMaths::FVector3(0.0f, 0.0f, 1.0f), 1.0f);
+//    m_context.shapeDrawer->DrawLine(glm::vec3(-gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+//    m_context.shapeDrawer->DrawLine(glm::vec3(0.0f, -gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
+//    m_context.shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
 //}
 //
 //void OvEditor::Core::EditorRenderer::UpdateLights(OvCore::SceneSystem::Scene& p_scene)

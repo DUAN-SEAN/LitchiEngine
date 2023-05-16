@@ -486,10 +486,10 @@
 //		SetEditorMode(EEditorMode::FRAME_BY_FRAME);
 //}
 //
-//OvMaths::FVector3 OvEditor::Core::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
+//glm::vec3 OvEditor::Core::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 //{
 //	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
-//	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * OvMaths::FVector3::Forward * p_distanceToCamera;
+//	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3::Forward * p_distanceToCamera;
 //}
 //
 //GameObject* OvEditor::Core::EditorActions::CreateEmptyActor(bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)

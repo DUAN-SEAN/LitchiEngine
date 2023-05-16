@@ -42,7 +42,7 @@
 //		* @param p_cameraPosition
 //		* @param p_camera
 //		*/
-//		void RenderScene(const OvMaths::FVector3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum = nullptr);
+//		void RenderScene(const glm::vec3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum = nullptr);
 //
 //		/**
 //		* Render the scene for actor picking (Unlit version of the scene with colors indicating actor IDs)
@@ -72,7 +72,7 @@
 //		* @param p_pickable (Determine the shader to use to render the gizmo)
 //		* @param p_highlightedAxis (-1 to highlight no axis, 0 for X, 1 for Y, 2 for Z)
 //		*/
-//		void RenderGizmo(const OvMaths::FVector3& p_position, const OvMaths::FQuaternion& p_rotation, LitchiEditor::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis = -1);
+//		void RenderGizmo(const glm::vec3& p_position, const OvMaths::FQuaternion& p_rotation, LitchiEditor::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis = -1);
 //
 //		/**
 //		* Render a model to the stencil buffer
@@ -157,7 +157,7 @@
 //		/**
 //		* Render the grid
 //		*/
-//		void RenderGrid(const OvMaths::FVector3& p_viewPos, const OvMaths::FVector3& p_color);
+//		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
 //
 //		/**
 //		* Update the light SSBO with the current scene

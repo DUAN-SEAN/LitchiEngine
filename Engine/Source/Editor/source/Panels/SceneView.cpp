@@ -72,7 +72,19 @@ void LitchiEditor::SceneView::_Render_Impl()
 
 	RenderScene();
 }
+void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
+{
+	constexpr float gridSize = 5000.0f;
 
+	glm::mat4 model = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
+
+	/*m_gridMaterial.Set("u_Color", p_color);
+	LitchiEditor::ApplicationEditor::Instance()->renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Plane"), m_gridMaterial, &model);*/
+
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(-gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, -gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
+}
 void LitchiEditor::SceneView::RenderScene()
 {
 	m_fbo.Bind();
@@ -83,7 +95,7 @@ void LitchiEditor::SceneView::RenderScene()
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
 	render_camera->Clear();
-
+	RenderGrid(glm::vec3(0), glm::vec3(0.098f, 0.898f, 0.098f));
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
