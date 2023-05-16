@@ -1,15 +1,21 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvRendering/Core/ShapeDrawer.h"
-#include "OvRendering/Resources/Loaders/ShaderLoader.h"
+#include <vector>
+
+#include "ShapeDrawer.h"
+
+#include <string>
+
+#include "Geometry/Vertex.h"
+#include "Resources/Mesh.h"
+#include "Resources/Shader.h"
+#include "Resources/Loaders/ShaderLoader.h"
+#include "Settings/EPrimitiveMode.h"
+#include "Settings/ERenderingCapability.h"
+#include "Settings/ERasterizationMode.h"
 
 OvRendering::Core::ShapeDrawer::ShapeDrawer(OvRendering::Core::Renderer& p_renderer) : m_renderer(p_renderer)
 {
-	std::vector<Vertex> vertices;
+	std::vector<LitchiRuntime::Vertex> vertices;
 	vertices.push_back
 	({
 		0, 0, 0,
@@ -27,7 +33,7 @@ OvRendering::Core::ShapeDrawer::ShapeDrawer(OvRendering::Core::Renderer& p_rende
 		0, 0, 0
 	});
 
-	m_lineMesh = new Resources::Mesh(vertices, { 0, 1 }, 0);
+	m_lineMesh = new LitchiRuntime::Mesh(vertices, { 0, 1 }, 0);
 
 	std::string vertexShader = R"(
 #version 430 core
@@ -134,11 +140,11 @@ void OvRendering::Core::ShapeDrawer::DrawLine(const glm::vec3& p_start, const gl
 	m_lineShader->SetUniformVec3("end", p_end);
 	m_lineShader->SetUniformVec3("color", p_color);
 
-	m_renderer.SetRasterizationMode(OvRendering::Settings::ERasterizationMode::LINE);
+	m_renderer.SetRasterizationMode(LitchiRuntime::ERasterizationMode::LINE);
 	m_renderer.SetRasterizationLinesWidth(p_lineWidth);
-	m_renderer.Draw(*m_lineMesh, Settings::EPrimitiveMode::LINES);
+	m_renderer.Draw(*m_lineMesh, LitchiRuntime::EPrimitiveMode::LINES);
 	m_renderer.SetRasterizationLinesWidth(1.0f);
-	m_renderer.SetRasterizationMode(OvRendering::Settings::ERasterizationMode::FILL);
+	m_renderer.SetRasterizationMode(LitchiRuntime::ERasterizationMode::FILL);
 
 	m_lineShader->Unbind();
 }
@@ -152,23 +158,23 @@ void OvRendering::Core::ShapeDrawer::DrawGrid(const glm::vec3& p_viewPos, const 
 	m_gridShader->SetUniformFloat("quadratic", p_quadratic);
 	m_gridShader->SetUniformFloat("fadeThreshold", p_fadeThreshold);
 
-	m_renderer.SetRasterizationMode(OvRendering::Settings::ERasterizationMode::LINE);
+	m_renderer.SetRasterizationMode(LitchiRuntime::ERasterizationMode::LINE);
 	m_renderer.SetRasterizationLinesWidth(p_lineWidth);
-	m_renderer.SetCapability(OvRendering::Settings::ERenderingCapability::BLEND, true);
+	m_renderer.SetCapability(LitchiRuntime::ERenderingCapability::BLEND, true);
 
 	for (int32_t i = -p_gridSize + 1; i < p_gridSize; ++i)
 	{
-		m_gridShader->SetUniformVec3("start", { -(float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
-		m_gridShader->SetUniformVec3("end", { (float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
-		m_renderer.Draw(*m_lineMesh, Settings::EPrimitiveMode::LINES);
+		m_gridShader->SetUniformVec3("start", glm::vec3{ -(float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
+		m_gridShader->SetUniformVec3("end", glm::vec3{ (float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
+		m_renderer.Draw(*m_lineMesh, EPrimitiveMode::LINES);
 
-		m_gridShader->SetUniformVec3("start", { (float)i + std::floor(p_viewPos.x), 0.f, -(float)p_gridSize + std::floor(p_viewPos.z) });
-		m_gridShader->SetUniformVec3("end", { (float)i + std::floor(p_viewPos.x), 0.f, (float)p_gridSize + std::floor(p_viewPos.z) });
-		m_renderer.Draw(*m_lineMesh, Settings::EPrimitiveMode::LINES);
+		m_gridShader->SetUniformVec3("start", glm::vec3{ (float)i + std::floor(p_viewPos.x), 0.f, -(float)p_gridSize + std::floor(p_viewPos.z) });
+		m_gridShader->SetUniformVec3("end", glm::vec3{ (float)i + std::floor(p_viewPos.x), 0.f, (float)p_gridSize + std::floor(p_viewPos.z) });
+		m_renderer.Draw(*m_lineMesh, EPrimitiveMode::LINES);
 	}
 
-	m_renderer.SetCapability(OvRendering::Settings::ERenderingCapability::BLEND, false);
+	m_renderer.SetCapability(LitchiRuntime::ERenderingCapability::BLEND, false);
 	m_renderer.SetRasterizationLinesWidth(1.0f);
-	m_renderer.SetRasterizationMode(OvRendering::Settings::ERasterizationMode::FILL);
+	m_renderer.SetRasterizationMode(LitchiRuntime::ERasterizationMode::FILL);
 	m_gridShader->Unbind();
 }

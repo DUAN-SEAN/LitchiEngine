@@ -1,13 +1,19 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
-#include "OvRendering/Core/Renderer.h"
-#include "OvRendering/Resources/Mesh.h"
+#include <cstdint>
+
+#include "core/type.hpp"
+
+namespace LitchiRuntime
+{
+	namespace Resource
+	{
+		class Shader;
+	}
+
+	class Mesh;
+}
 
 namespace OvRendering::Core
 {
@@ -56,8 +62,8 @@ namespace OvRendering::Core
 		void DrawGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color, int32_t p_gridSize = 50, float p_linear = 0.0f, float p_quadratic = 0.0f, float p_fadeThreshold = 0.0f, float p_lineWidth = 1.0f);
 
 	private:
-		LitchiRuntime::Shader* m_lineShader = nullptr;
-		LitchiRuntime::Shader* m_gridShader = nullptr;
+		LitchiRuntime::Resource::Shader* m_lineShader = nullptr;
+		LitchiRuntime::Resource::Shader* m_gridShader = nullptr;
 		LitchiRuntime::Mesh* m_lineMesh = nullptr;
 		OvRendering::Core::Renderer& m_renderer;
 	};

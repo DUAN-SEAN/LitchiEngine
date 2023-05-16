@@ -6,7 +6,8 @@
 #include <vector>
 #include <map>
 #include <rttr/rttr_enable.h>
-#include "texture2d.h"
+#include "Resources/texture2d.h"
+
 namespace LitchiRuntime
 {
     class MaterialRes

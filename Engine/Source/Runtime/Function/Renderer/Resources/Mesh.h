@@ -5,6 +5,9 @@
 #include <memory>
 
 #include "IMesh.h"
+#include "Runtime/Function/Renderer/Buffers/IndexBuffer.h"
+#include "Runtime/Function/Renderer/Buffers/VertexArray.h"
+#include "Runtime/Function/Renderer/Buffers/VertexBuffer.h"
 #include "Runtime/Function/Renderer/Geometry/BoundingSphere.h"
 #include "Runtime/Function/Renderer/Geometry/Vertex.h"
 

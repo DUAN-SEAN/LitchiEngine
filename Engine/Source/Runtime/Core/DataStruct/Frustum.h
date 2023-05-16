@@ -3,9 +3,9 @@
 
 #include <array>
 
-#include "BoundingSphere.h"
 #include "core/type.hpp"
 #include "gtc/quaternion.hpp"
+#include "Runtime/Function/Renderer/Geometry/BoundingSphere.h"
 
 namespace LitchiRuntime
 {
