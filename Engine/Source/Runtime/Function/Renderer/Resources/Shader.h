@@ -8,18 +8,22 @@
 #include "core/type.hpp"
 
 
-namespace LitchiRuntime
+namespace LitchiRuntime::Resource
 {
-	namespace Loaders { class ShaderLoader; }
+	//namespace Loaders { class ShaderLoader; }
 
 	/**
 	* OpenGL shader program wrapper
 	*/
 	class Shader
 	{
-	friend class Loaders::ShaderLoader;
+	//friend class Loaders::ShaderLoader;
 
 	public:
+
+		Shader(const std::string p_path, uint32_t p_id);
+		~Shader();
+
 		/**
 		* Bind the program
 		*/
@@ -120,9 +124,6 @@ namespace LitchiRuntime
 		void QueryUniforms();
 
 	private:
-		Shader(const std::string p_path, uint32_t p_id);
-		~Shader();
-
 		static bool IsEngineUBOMember(const std::string& p_uniformName);
 		uint32_t GetUniformLocation(const std::string& name);
 

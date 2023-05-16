@@ -1,21 +1,17 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
+
+#include "ShaderLoader.h"
 
 #include <sstream>
 #include <fstream>
+#include <glad/glad.h>
 
-#include <GL/glew.h>
+#include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Renderer/Resources/Shader.h"
 
-#include <OvDebug/Logger.h>
-
-#include "OvRendering/Resources/Loaders/ShaderLoader.h"
 
 std::string LitchiRuntime::Loaders::ShaderLoader::__FILE_TRACE;
 
-LitchiRuntime::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(const std::string& p_filePath)
+LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(const std::string& p_filePath)
 {
 	__FILE_TRACE = p_filePath;
 
@@ -24,22 +20,22 @@ LitchiRuntime::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(const std::s
 	uint32_t programID = CreateProgram(source.first, source.second);
 
 	if (programID)
-		return new Shader(p_filePath, programID);
+		return new LitchiRuntime::Resource::Shader(p_filePath, programID);
 
 	return nullptr;
 }
 
-LitchiRuntime::Shader* LitchiRuntime::Loaders::ShaderLoader::CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader)
+LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader)
 {
 	uint32_t programID = CreateProgram(p_vertexShader, p_fragmentShader);
 
 	if (programID)
-		return new Shader("", programID);
+		return new Resource::Shader("", programID);
 
 	return nullptr;
 }
 
-void LitchiRuntime::Loaders::ShaderLoader::Recompile(Shader& p_shader, const std::string& p_filePath)
+void LitchiRuntime::Loaders::ShaderLoader::Recompile(Resource::Shader& p_shader, const std::string& p_filePath)
 {
 	__FILE_TRACE = p_filePath;
 
@@ -51,7 +47,7 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(Shader& p_shader, const std
 	if (newProgram)
 	{
 		/* Pointer to the shaderID (const data member, tricks to access it) */
-		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(Shader, id);
+		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(Resource::Shader, id);
 
 		/* Deletes the previous program */
 		glDeleteProgram(*shaderID);
@@ -61,15 +57,15 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(Shader& p_shader, const std
 
 		p_shader.QueryUniforms();
 
-		OVLOG_INFO("[COMPILE] \"" + __FILE_TRACE + "\": Success!");
+		DEBUG_LOG_INFO("[COMPILE] \"" + __FILE_TRACE + "\": Success!");
 	}
 	else
 	{
-		OVLOG_ERROR("[COMPILE] \"" + __FILE_TRACE + "\": Failed! Previous shader version keept");
+		DEBUG_LOG_ERROR("[COMPILE] \"" + __FILE_TRACE + "\": Failed! Previous shader version keept");
 	}
 }
 
-bool LitchiRuntime::Loaders::ShaderLoader::Destroy(Shader*& p_shader)
+bool LitchiRuntime::Loaders::ShaderLoader::Destroy(Resource::Shader*& p_shader)
 {
 	if (p_shader)
 	{
@@ -139,7 +135,7 @@ uint32_t LitchiRuntime::Loaders::ShaderLoader::CreateProgram(const std::string& 
 		std::string errorLog(maxLength, ' ');
 		glGetProgramInfoLog(program, maxLength, &maxLength, errorLog.data());
 
-		OVLOG_ERROR("[LINK] \"" + __FILE_TRACE + "\":\n" + errorLog);
+		DEBUG_LOG_ERROR("[LINK] \"" + __FILE_TRACE + "\":\n" + errorLog);
 
 		glDeleteProgram(program);
 
@@ -176,7 +172,7 @@ uint32_t LitchiRuntime::Loaders::ShaderLoader::CompileShader(uint32_t p_type, co
 
 		std::string shaderTypeString = p_type == GL_VERTEX_SHADER ? "VERTEX SHADER" : "FRAGMENT SHADER";
 		std::string errorHeader = "[" + shaderTypeString + "] \"";
-		OVLOG_ERROR(errorHeader + __FILE_TRACE + "\":\n" + errorLog);
+		DEBUG_LOG_ERROR(errorHeader + __FILE_TRACE + "\":\n" + errorLog);
 
 		glDeleteShader(id);
 

@@ -1,9 +1,9 @@
 
-#include "AssimpParser.h"
-
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/matrix4x4.h>
+
+#include "AssimpParser.h"
 
 bool LitchiRuntime::Parsers::AssimpParser::LoadModel(const std::string & p_fileName, std::vector<Mesh*>& p_meshes, std::vector<std::string>& p_materials, EModelParserFlags p_parserFlags)
 {

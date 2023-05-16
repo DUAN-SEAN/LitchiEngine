@@ -1,5 +1,6 @@
 
 #pragma once
+#include <glad/glad.h>
 
 namespace LitchiRuntime
 {

@@ -1,15 +1,15 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 
-#include "OvRendering/Resources/Model.h"
-#include "OvRendering/Resources/Parsers/AssimpParser.h"
+#include "Runtime/Function/Renderer/Resources/Parsers/AssimpParser.h"
+#include "Runtime/Function/Renderer/Resources/Parsers/EModelParserFlags.h"
+
+namespace LitchiRuntime
+{
+	class Model;
+}
 
 namespace LitchiRuntime::Loaders
 {

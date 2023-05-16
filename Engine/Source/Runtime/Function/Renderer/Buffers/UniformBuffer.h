@@ -6,10 +6,12 @@
 
 #include "EAccessSpecifier.h"
 
-namespace LitchiRuntime { class Shader; }
-
 namespace LitchiRuntime
 {
+	namespace Resource
+	{
+		class Shader;
+	}
 	/**
 	* Wraps OpenGL UBO
 	*/
@@ -67,7 +69,7 @@ namespace LitchiRuntime
 		* @param p_uniformBlockLocation
 		* @param p_bindingPoint
 		*/
-		static void BindBlockToShader(Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint = 0);
+		static void BindBlockToShader(Resource::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint = 0);
 
 		/**
 		* Bind a block identified by the given name to the given shader
@@ -75,14 +77,14 @@ namespace LitchiRuntime
 		* @param p_name
 		* @param p_bindingPoint
 		*/
-		static void BindBlockToShader(Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint = 0);
+		static void BindBlockToShader(Resource::Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint = 0);
 
 		/**
 		* Return the location of the block (ID)
 		* @param p_shader
 		* @param p_name
 		*/
-		static uint32_t GetBlockLocation(Shader& p_shader, const std::string& p_name);
+		static uint32_t GetBlockLocation(Resource::Shader& p_shader, const std::string& p_name);
 
 	private:
 		uint32_t m_bufferID;

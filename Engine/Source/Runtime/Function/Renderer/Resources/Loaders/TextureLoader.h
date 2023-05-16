@@ -12,6 +12,11 @@
 #include "OvRendering/Resources/Texture.h"
 
 
+namespace LitchiRuntime
+{
+	class Texture;
+}
+
 namespace LitchiRuntime::Loaders
 {
 	/**
@@ -32,7 +37,7 @@ namespace LitchiRuntime::Loaders
 		* @param p_secondFilter
 		* @param p_generateMipmap
 		*/
-		static Texture* Create(const std::string& p_filepath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
+		static Texture* Create(const std::string& p_filepath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
 
 		/**
 		* Create a texture from a single pixel color
@@ -41,7 +46,7 @@ namespace LitchiRuntime::Loaders
 		* @param p_secondFilter
 		* @param p_generateMipmap
 		*/
-		static Texture* CreateColor(uint32_t p_data, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
+		static Texture* CreateColor(uint32_t p_data, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
 
 		/**
 		* Create a texture from memory
@@ -52,7 +57,7 @@ namespace LitchiRuntime::Loaders
 		* @param p_secondFilter
 		* @param p_generateMipmap
 		*/
-		static Texture* CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
+		static Texture* CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
 
 		/**
 		* Reload a texture from file
@@ -62,7 +67,7 @@ namespace LitchiRuntime::Loaders
 		* @param p_secondFilter
 		* @param p_generateMipmap
 		*/
-		static void Reload(Texture& p_texture, const std::string& p_filePath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
+		static void Reload(Texture& p_texture, const std::string& p_filePath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
 
 		/**
 		* Destroy a texture

@@ -5,8 +5,6 @@
 
 #include "EAccessSpecifier.h"
 
-namespace OvRendering::Resources { class Shader; }
-
 namespace LitchiRuntime
 {
 	/**

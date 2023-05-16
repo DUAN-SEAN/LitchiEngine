@@ -1,10 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
-#include "OvRendering/Resources/Loaders/ModelLoader.h"
+
+#include "Runtime/Function/Renderer/Resources/Parsers/AssimpParser.h"
+
+#include "ModelLoader.h"
+
+#include "Runtime/Function/Renderer/Resources/Model.h"
 
 LitchiRuntime::Parsers::AssimpParser LitchiRuntime::Loaders::ModelLoader::__ASSIMP;
 

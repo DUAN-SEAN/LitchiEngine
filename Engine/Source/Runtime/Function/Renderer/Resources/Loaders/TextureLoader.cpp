@@ -1,17 +1,14 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #define STB_IMAGE_IMPLEMENTATION
 
-#include <GL/glew.h>
-#include <stb_image/stb_image.h>
+#include <glad/glad.h>
 
-#include "OvRendering/Resources/Loaders/TextureLoader.h"
+#include "TextureLoader.h"
+#include "stb_image.h"
+#include "Runtime/Function/Renderer/Resources/Texture.h"
+#include "src/internal.h"
 
-LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std::string& p_filepath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
+LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std::string& p_filepath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
 	GLuint textureID;
 	int textureWidth;
@@ -41,7 +38,7 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std:
 		stbi_image_free(dataBuffer);
 		glBindTexture(GL_TEXTURE_2D, 0);
 
-		return new Texture(p_filepath, textureID, textureWidth, textureHeight, bitsPerPixel, p_firstFilter, p_secondFilter, p_generateMipmap);
+		return new LitchiRuntime::Texture(p_filepath, textureID, textureWidth, textureHeight, bitsPerPixel, p_firstFilter, p_secondFilter, p_generateMipmap);
 	}
 	else
 	{
@@ -51,7 +48,7 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std:
 	}
 }
 
-LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateColor(uint32_t p_data, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
+LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateColor(uint32_t p_data, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
@@ -71,10 +68,10 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateColor(uint3
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	return new Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	return new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
 }
 
-LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
+LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
@@ -94,12 +91,12 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	return new Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	return new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
 }
 
-void LitchiRuntime::Loaders::TextureLoader::Reload(Texture& p_texture, const std::string& p_filePath, OvRendering::Settings::ETextureFilteringMode p_firstFilter, OvRendering::Settings::ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
+void LitchiRuntime::Loaders::TextureLoader::Reload(LitchiRuntime::Texture& p_texture, const std::string& p_filePath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
-	Texture* newTexture = Create(p_filePath, p_firstFilter, p_secondFilter, p_generateMipmap);
+	LitchiRuntime::Texture* newTexture = Create(p_filePath, p_firstFilter, p_secondFilter, p_generateMipmap);
 
 	if (newTexture)
 	{
@@ -116,7 +113,7 @@ void LitchiRuntime::Loaders::TextureLoader::Reload(Texture& p_texture, const std
 	}
 }
 
-bool LitchiRuntime::Loaders::TextureLoader::Destroy(Texture*& p_textureInstance)
+bool LitchiRuntime::Loaders::TextureLoader::Destroy(LitchiRuntime::Texture*& p_textureInstance)
 {
 	if (p_textureInstance)
 	{

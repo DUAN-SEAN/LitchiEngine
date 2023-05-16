@@ -1,12 +1,17 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
+#include <string>
+
 #include "OvRendering/Resources/Shader.h"
+
+namespace LitchiRuntime
+{
+	namespace Resource
+	{
+		class Shader;
+	}
+}
 
 namespace LitchiRuntime::Loaders
 {
@@ -25,27 +30,27 @@ namespace LitchiRuntime::Loaders
 		* Create a shader
 		* @param p_filePath
 		*/
-		static Shader* Create(const std::string& p_filePath);
+		static Resource::Shader* Create(const std::string& p_filePath);
 
 		/**
 		* Create a shader from source
 		* @param p_vertexShader
 		* @param p_fragmentShader
 		*/
-		static Shader* CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader);
+		static Resource::Shader* CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader);
 
 		/**
 		* Recompile a shader
 		* @param p_shader
 		* @param p_filePath
 		*/
-		static void	Recompile(Shader& p_shader, const std::string& p_filePath);
+		static void	Recompile(Resource::Shader& p_shader, const std::string& p_filePath);
 
 		/**
 		* Destroy a shader
 		* @param p_shader
 		*/
-		static bool Destroy(Shader*& p_shader);
+		static bool Destroy(Resource::Shader*& p_shader);
 
 	private:
 		static std::pair<std::string, std::string> ParseShader(const std::string& p_filePath);
