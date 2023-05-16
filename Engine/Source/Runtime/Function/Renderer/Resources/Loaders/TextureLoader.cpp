@@ -2,11 +2,10 @@
 #define STB_IMAGE_IMPLEMENTATION
 
 #include <glad/glad.h>
+#include "stb_image.h"
 
 #include "TextureLoader.h"
-#include "stb_image.h"
 #include "Runtime/Function/Renderer/Resources/Texture.h"
-#include "src/internal.h"
 
 LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std::string& p_filepath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
 {
@@ -106,8 +105,8 @@ void LitchiRuntime::Loaders::TextureLoader::Reload(LitchiRuntime::Texture& p_tex
 		*const_cast<uint32_t*>(&p_texture.width) = newTexture->width;
 		*const_cast<uint32_t*>(&p_texture.height) = newTexture->height;
 		*const_cast<uint32_t*>(&p_texture.bitsPerPixel) = newTexture->bitsPerPixel;
-		*const_cast<Settings::ETextureFilteringMode*>(&p_texture.firstFilter) = newTexture->firstFilter;
-		*const_cast<Settings::ETextureFilteringMode*>(&p_texture.secondFilter) = newTexture->secondFilter;
+		*const_cast<LitchiRuntime::ETextureFilteringMode*>(&p_texture.firstFilter) = newTexture->firstFilter;
+		*const_cast<LitchiRuntime::ETextureFilteringMode*>(&p_texture.secondFilter) = newTexture->secondFilter;
 		*const_cast<bool*>(&p_texture.isMimapped) = newTexture->isMimapped;
 		delete newTexture;
 	}

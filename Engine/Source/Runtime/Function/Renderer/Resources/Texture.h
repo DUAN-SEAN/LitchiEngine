@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <string>
 
+#include "Runtime/Function/Renderer/Settings/ETextureFilteringMode.h"
+
 
 namespace LitchiRuntime
 {

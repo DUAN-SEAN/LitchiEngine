@@ -1,16 +1,10 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
 #include <vector>
 
-#include "OvRendering/Resources/Texture.h"
-
+#include "Runtime/Function/Renderer/Settings/ETextureFilteringMode.h"
 
 namespace LitchiRuntime
 {

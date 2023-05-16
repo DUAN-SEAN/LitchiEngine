@@ -1,9 +1,7 @@
 
-
+#include <glad/glad.h>
 
 #include "VertexArray.h"
-
-#include <glad/glad.h>
 
 LitchiRuntime::VertexArray::VertexArray()
 {

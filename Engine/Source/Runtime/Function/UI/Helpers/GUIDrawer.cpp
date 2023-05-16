@@ -3,7 +3,6 @@
 
 #include <array>
 
-#include "Runtime/Function/Renderer/texture2d.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Drags/DragMultipleScalars.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputDouble.h"
@@ -202,7 +201,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	return widget;
 //}
 //
-//Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, OvCore::Resources::Material *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, OvCore::LitchiRuntime::Material *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //
@@ -240,7 +239,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	return widget;
 //}
 //
-//Text& LitchiRuntime::GUIDrawer::DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::Resources::Sound*& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//Text& LitchiRuntime::GUIDrawer::DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::LitchiRuntime::Sound*& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //

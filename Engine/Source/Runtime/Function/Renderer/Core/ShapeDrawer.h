@@ -3,6 +3,7 @@
 
 #include <cstdint>
 
+#include "Renderer.h"
 #include "core/type.hpp"
 
 namespace LitchiRuntime
@@ -15,7 +16,7 @@ namespace LitchiRuntime
 	class Mesh;
 }
 
-namespace OvRendering::Core
+namespace LitchiRuntime
 {
 	/**
 	* The ShapeDrawer handles the drawing of basic shapes
@@ -27,7 +28,7 @@ namespace OvRendering::Core
 		* Creates the ShapeDrawer instance. It needs a renderer
 		* @param p_renderer
 		*/
-		ShapeDrawer(OvRendering::Core::Renderer& p_renderer);
+		ShapeDrawer(LitchiRuntime::Renderer& p_renderer);
 
 		/**
 		* Destructor
@@ -65,6 +66,6 @@ namespace OvRendering::Core
 		LitchiRuntime::Resource::Shader* m_lineShader = nullptr;
 		LitchiRuntime::Resource::Shader* m_gridShader = nullptr;
 		LitchiRuntime::Mesh* m_lineMesh = nullptr;
-		OvRendering::Core::Renderer& m_renderer;
+		LitchiRuntime::Renderer& m_renderer;
 	};
 }

@@ -4,7 +4,7 @@
 
 #include "core/type.hpp"
 #include "gtc/quaternion.hpp"
-#include "Runtime/Function/Renderer/texture2d.h"
+#include "Runtime/Function/Renderer/Resources/texture2d.h"
 #include "Runtime/Function/UI/Types/Color.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -49,8 +49,8 @@ namespace LitchiRuntime
 		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Model*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Texture*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Shader*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
-		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, OvCore::Resources::Material*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
-		static Text& DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::Resources::Sound*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
+		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, OvCore::LitchiRuntime::Material*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
+		static Text& DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::LitchiRuntime::Sound*& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);
 		static Text& DrawAsset(WidgetContainer& p_root, const std::string& p_name, std::string& p_data, OvTools::Eventing::Event<>* p_updateNotifier = nullptr);*/
 
 		template <typename T>

@@ -2,8 +2,6 @@
 #pragma once
 
 #include <cstdint>
-#include <GL/gl.h>
-
 #include "VertexBuffer.h"
 
 namespace LitchiRuntime

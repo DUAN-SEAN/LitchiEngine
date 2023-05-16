@@ -6,7 +6,6 @@
 #include "rapidxml_print.hpp"
 #include "rapidxml_utils.hpp"
 #include "shader.h"
-#include "texture2d.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Resource/asset_manager.h"
 

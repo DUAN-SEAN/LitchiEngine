@@ -3,8 +3,6 @@
 
 #include <string>
 
-#include "OvRendering/Resources/Shader.h"
-
 namespace LitchiRuntime
 {
 	namespace Resource

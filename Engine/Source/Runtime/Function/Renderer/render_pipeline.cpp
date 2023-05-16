@@ -7,7 +7,6 @@
 #include "render_pass.h"
 #include "render_System.h"
 #include "render_texture.h"
-#include "texture2d.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
 

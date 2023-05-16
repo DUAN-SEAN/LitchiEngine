@@ -1,19 +1,12 @@
 
 #include <vector>
 
-#include "ShapeDrawer.h"
-
 #include <string>
 
-#include "Geometry/Vertex.h"
-#include "Resources/Mesh.h"
-#include "Resources/Shader.h"
-#include "Resources/Loaders/ShaderLoader.h"
-#include "Settings/EPrimitiveMode.h"
-#include "Settings/ERenderingCapability.h"
-#include "Settings/ERasterizationMode.h"
+#include "ShapeDrawer.h"
+#include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 
-OvRendering::Core::ShapeDrawer::ShapeDrawer(OvRendering::Core::Renderer& p_renderer) : m_renderer(p_renderer)
+LitchiRuntime::ShapeDrawer::ShapeDrawer(LitchiRuntime::Renderer& p_renderer) : m_renderer(p_renderer)
 {
 	std::vector<LitchiRuntime::Vertex> vertices;
 	vertices.push_back
@@ -115,13 +108,13 @@ void main()
 	m_gridShader = LitchiRuntime::Loaders::ShaderLoader::CreateFromSource(vertexShader, fragmentShader);
 }
 
-OvRendering::Core::ShapeDrawer::~ShapeDrawer()
+LitchiRuntime::ShapeDrawer::~ShapeDrawer()
 {
 	delete m_lineMesh;
 	LitchiRuntime::Loaders::ShaderLoader::Destroy(m_lineShader);
 }
 
-void OvRendering::Core::ShapeDrawer::SetViewProjection(const glm::mat4& p_viewProjection)
+void LitchiRuntime::ShapeDrawer::SetViewProjection(const glm::mat4& p_viewProjection)
 {
 	m_lineShader->Bind();
 	m_lineShader->SetUniformMat4("viewProjection", p_viewProjection);
@@ -132,7 +125,7 @@ void OvRendering::Core::ShapeDrawer::SetViewProjection(const glm::mat4& p_viewPr
 	m_gridShader->Unbind();
 }
 
-void OvRendering::Core::ShapeDrawer::DrawLine(const glm::vec3& p_start, const glm::vec3& p_end, const glm::vec3& p_color, float p_lineWidth)
+void LitchiRuntime::ShapeDrawer::DrawLine(const glm::vec3& p_start, const glm::vec3& p_end, const glm::vec3& p_color, float p_lineWidth)
 {
 	m_lineShader->Bind();
 
@@ -149,7 +142,7 @@ void OvRendering::Core::ShapeDrawer::DrawLine(const glm::vec3& p_start, const gl
 	m_lineShader->Unbind();
 }
 
-void OvRendering::Core::ShapeDrawer::DrawGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color, int32_t p_gridSize, float p_linear, float p_quadratic, float p_fadeThreshold, float p_lineWidth)
+void LitchiRuntime::ShapeDrawer::DrawGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color, int32_t p_gridSize, float p_linear, float p_quadratic, float p_fadeThreshold, float p_lineWidth)
 {
 	m_gridShader->Bind();
 	m_gridShader->SetUniformVec3("color", p_color);
