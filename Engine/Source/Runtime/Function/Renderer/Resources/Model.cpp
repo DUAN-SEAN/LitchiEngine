@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include "core/func_geometric.hpp"
 #include "Runtime/Core/DataStruct/BoundingSphere.h"
 
 

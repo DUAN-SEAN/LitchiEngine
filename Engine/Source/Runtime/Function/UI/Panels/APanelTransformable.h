@@ -3,8 +3,7 @@
 
 #include <vector>
 #include <memory>
-
-#include "core/type.hpp"
+#include <glm.hpp>
 
 #include "Runtime/Function/UI/Settings/Alignment.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"

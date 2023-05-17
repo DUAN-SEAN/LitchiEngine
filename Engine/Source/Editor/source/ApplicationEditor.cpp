@@ -24,11 +24,11 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
 
-GameObject* CreateDefaultObject(Scene* scene,std::string name,float y)
+GameObject* CreateDefaultObject(Scene* scene,std::string name,float y, float z)
 {
 	GameObject* go = new GameObject(name, scene);
 	auto transform = go->AddComponent<Transform>();
-	transform->set_position(glm::vec3(0.0, y, 0.0));
+	transform->set_position(glm::vec3(0.0, y, z));
 	auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
@@ -104,11 +104,11 @@ void LitchiEditor::ApplicationEditor::Init()
 	sceneManager = new SceneManager();
 	// 初始化默认场景
 	auto scene = sceneManager->CreateScene("Default Scene");
-	GameObject* go = CreateDefaultObject(scene,"liubei", 0);
+	GameObject* go = CreateDefaultObject(scene,"liubei", 0,-10);
 	auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 
-	GameObject* go2 = CreateDefaultObject(scene, "diaochan", 3);
-	GameObject* go3 = CreateDefaultObject(scene,"xiaoqiao", -3);
+	GameObject* go2 = CreateDefaultObject(scene, "diaochan", 10,-30);
+	GameObject* go3 = CreateDefaultObject(scene,"xiaoqiao", -10,0);
 	hierachy.AddActorByInstance(go);
 	hierachy.AddActorByInstance(go2);
 	hierachy.AddActorByInstance(go3);

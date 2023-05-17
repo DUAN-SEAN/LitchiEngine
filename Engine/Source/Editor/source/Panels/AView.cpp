@@ -24,7 +24,7 @@ LitchiEditor::AView::AView
 	// todo ³õÊ¼»¯Cameraf
 	m_camera = new RenderCamera();
 
-	m_cameraPosition = glm::vec3(0.0f, 0.0f, 500.0f);
+	m_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_cameraRotation = glm::quat(glm::vec3(0.0f, 0.0f, 0.0f));
 	//m_cameraRotation = glm::quat({0.0f, 135.0f, 0.0f});
 
@@ -125,10 +125,11 @@ void LitchiEditor::AView::PrepareCamera()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
 	
-	auto eulerAngleVec = glm::eulerAngles(m_cameraRotation);
-	/*DEBUG_LOG_INFO("PrepareCamera winWidth:{} winHeight:{}",winWidth,winHeight);
-	DEBUG_LOG_INFO("PrepareCamera CameraPosition x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-	DEBUG_LOG_INFO("PrepareCamera EulerAngleVec x:{},y:{},z:{}", eulerAngleVec.x, eulerAngleVec.y, eulerAngleVec.z);*/
+	//auto eulerAngleVec = glm::eulerAngles(m_cameraRotation);
+	//DEBUG_LOG_INFO("PrepareCamera winWidth:{} winHeight:{}",winWidth,winHeight);
+	//DEBUG_LOG_INFO("PrepareCamera CameraPosition x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
+	//DEBUG_LOG_INFO("PrepareCamera EulerAngleVec x:{},y:{},z:{}", glm::degrees(eulerAngleVec.x), glm::degrees(eulerAngleVec.y), glm::degrees(eulerAngleVec.z));
 
+	m_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
 }

@@ -1,11 +1,9 @@
 
 #pragma once
 
-#include "gtc/quaternion.hpp"
-#include "gtx/quaternion.hpp"
 #include <string>
+#include <detail/type_quat.hpp>
 
-#include "core/type.hpp"
 #include "Runtime/Function/Renderer/Framebuffer.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"

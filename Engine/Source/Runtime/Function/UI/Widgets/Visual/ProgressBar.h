@@ -1,8 +1,9 @@
 
 #pragma once
 
-#include "core/type.hpp"
+#include "glm.hpp"
 #include "Runtime/Function/UI/Widgets/AWidget.h"
+#include <fwd.hpp>
 
 namespace LitchiRuntime
 {

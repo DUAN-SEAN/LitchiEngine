@@ -117,12 +117,14 @@ namespace LitchiEditor
 		bool m_firstMouse = true;
 		double m_lastMousePosX = 0.0;
 		double m_lastMousePosY = 0.0;
-		glm::vec3 m_ypr;
+		glm::vec3 m_xyz;
 		float m_mouseSensitivity = 0.01f;
 		float m_cameraDragSpeed = 0.03f;
 		float m_cameraOrbitSpeed = 0.5f;
 		float m_cameraMoveSpeed = 15.0f;
 		float m_focusDistance = 15.0f;
 		float m_focusLerpCoefficient = 8.0f;
+		float m_yaw = 0.0;
+		float m_pitch = 0.0;
 	};
 }

@@ -3,7 +3,7 @@
 
 #include <array>
 
-#include "core/type.hpp"
+#include "glm.hpp"
 #include "gtc/quaternion.hpp"
 #include "Runtime/Function/Renderer/Geometry/BoundingSphere.h"
 

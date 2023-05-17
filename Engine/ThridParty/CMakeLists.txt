@@ -6,8 +6,10 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 if(NOT TARGET glm)
     option(GLM_BUILD_EXAMPLE "" OFF)
     option(GLM_INSTALL "" OFF)
-    add_subdirectory(glm-release)
-    set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
+    # add_subdirectory(glm-release)
+    add_subdirectory(glm-0.9.9.8)
+    # set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-release)
+    set_target_properties(glm PROPERTIES FOLDER ${third_party_folder}/glm-0.9.9.8)
 endif()
 
 # openGL

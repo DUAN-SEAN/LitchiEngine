@@ -3,6 +3,8 @@
 
 #include <glad/glad.h>
 
+#include "gtx/quaternion.hpp"
+#include "gtc/quaternion.hpp"
 #include "gtc/matrix_transform.hpp"
 
 #include "Runtime/Core/Log/debug.h"
@@ -239,8 +241,14 @@ namespace LitchiRuntime
 
 	glm::mat4 LitchiRuntime::RenderCamera::CalculateViewMatrix(const glm::vec3& p_position, const glm::quat& p_rotation) const
 	{
-		glm::vec3 up = p_rotation * glm::vec3(0,1,0);
-		glm::vec3 forward = p_rotation * glm::vec3(0,0,-1);
+		glm::vec3 up = glm::normalize(p_rotation) * glm::vec3(0,1.0,0);
+			
+		glm::vec3 forward = glm::normalize(p_rotation)* glm::vec3(0, 0, -1.0);
+
+	/*	DEBUG_LOG_INFO("---------------------------------");
+		DEBUG_LOG_INFO("CalculateViewMatrix eulerRotation.X:{},eulerRotation.Y:{},eulerRotation.Z:{}", eulerRotation.x, eulerRotation.y, eulerRotation.z);
+		DEBUG_LOG_INFO("CalculateViewMatrix forward.X:{},forward.Y:{},forward.Z:{}", forward.x, forward.y, forward.z);*/
+
 		return glm::lookAt
 		(
 			glm::vec3(p_position.x, p_position.y, p_position.z),											// Position

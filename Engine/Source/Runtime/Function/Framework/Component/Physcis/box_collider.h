@@ -5,7 +5,7 @@
 #include "rttr/registration"
 #include "glm.hpp"
 #include "collider.h"
-#include "core/type.hpp"
+#include "glm.hpp"
 
 using namespace rttr;
 namespace LitchiRuntime

@@ -2,7 +2,6 @@
 #include <algorithm>
 
 #include "Mesh.h"
-#include "core/func_geometric.hpp"
 
 LitchiRuntime::Mesh::Mesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex) :
 	m_vertexCount(static_cast<uint32_t>(p_vertices.size())),

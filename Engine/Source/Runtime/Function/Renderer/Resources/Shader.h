@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 #include "UniformInfo.h"
-#include "core/type.hpp"
+#include "glm.hpp"
 
 
 namespace LitchiRuntime::Resource

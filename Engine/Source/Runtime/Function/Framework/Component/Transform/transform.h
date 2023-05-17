@@ -2,7 +2,7 @@
 #ifndef UNTITLED_TRANSFORM_H
 #define UNTITLED_TRANSFORM_H
 
-#include "core/type.hpp"
+#include "glm.hpp"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include <gtc/matrix_transform.hpp>
 #include <gtc/quaternion.hpp>

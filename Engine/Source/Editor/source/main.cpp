@@ -15,6 +15,17 @@ using namespace LitchiEditor;
 using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
+
+	auto rotationEuler = glm::vec3(0.0, 0.0, 90.0);
+
+	// x , y z
+	auto cameraRotation = glm::quat(glm::vec3(glm::radians(rotationEuler.x), glm::radians(rotationEuler.y), glm::radians(rotationEuler.z)));
+	
+
+	auto newForward =   cameraRotation * glm::vec3(1.0, 0.0, 0.0);
+	auto ypr = glm::eulerAngles(cameraRotation);
+
+
 	/*Loaders::TextureLoader::Create("C:/Users/lenovo/Desktop/1.png", ETextureFilteringMode::LINEAR, ETextureFilteringMode::LINEAR, true);
 	Loaders::ModelLoader::Create("");*/
 

@@ -2,7 +2,7 @@
 #include <algorithm>
 
 #include "gtx/compatibility.hpp"
-
+#include "gtx/quaternion.hpp"
 #include "Editor/include/Core/CameraController.h"
 
 #include "Editor/include/ApplicationEditor.h"
@@ -100,7 +100,8 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 	if(m_inputManager.IsKeyPressed(EKey::KEY_R))
 	{
-		m_cameraRotation = glm::quat(1, 0, 0, 0);
+		m_cameraRotation = glm::quat(glm::radians(glm::vec3(0.0, 5.0, 0.0)));
+		// m_cameraRotation = glm::quat(1, 0, 0, 0);
 		m_cameraPosition = glm::vec3( 0, 0, 500);
 	}
 
@@ -220,7 +221,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 		HandleCameraFPSKeyboard(p_deltaTime);
 	}
 
-	// DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_ypr.x, m_ypr.y, m_ypr.z);
+	// DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_xyz.x, m_xyz.y, m_xyz.z);
 	// DEBUG_LOG_INFO("HandleCameraFPSMouse x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 }
 
@@ -281,40 +282,41 @@ glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
 
 	if (result.z >= 179.0f || result.z <= -179.0f)
 	{
-		result.x += result.z;
-		result.y = 180.0f - result.y;
+		// result.y += result.z;
+		result.x = 180.0f - result.x;
 		result.z = 0.0f;
 	}
 
-	if (result.x > 180.0f) result.x -= 360.0f;
-	if (result.x < -180.0f) result.x += 360.0f;
+	if (result.y > 180.0f) result.y -= 360.0f;
+	if (result.y < -180.0f) result.y += 360.0f;
 
 	return result;
 }
 
 void LitchiEditor::CameraController::HandleCameraOrbit(const glm::vec2& p_mouseOffset, bool p_firstMouse)
 {
-	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
+	/*auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
 	auto mouseOffset = p_mouseOffset * m_cameraOrbitSpeed;
 
 	if (p_firstMouse)
 	{
-		m_ypr = glm::eulerAngles(m_cameraRotation);
-		m_ypr = RemoveRoll(m_ypr);
+		m_xyz = glm::eulerAngles(m_cameraRotation);
+		m_xyz = RemoveRoll(m_xyz);
 		m_orbitTarget = selectGO->GetComponent<Transform>();
 		m_orbitStartOffset = -LitchiRuntime::Math::Forward * glm::distance(m_orbitTarget->position(), m_cameraPosition);
 	}
 
-	m_ypr.y += -mouseOffset.x;
-	m_ypr.x += -mouseOffset.y;
-	m_ypr.x = std::max(std::min(m_ypr.x, 90.0f), -90.0f);
+	m_xyz.y -= mouseOffset.x;
+	m_xyz.x += -mouseOffset.y;
+	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
+	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);*/
 
 	// TODO 绑定相机transform 和 物体Transform 目前还不能实现
 	/*auto target = selectGO->GetComponent<Transform>();
 	OvMaths::FTransform pivotTransform(target.GetWorldPosition());
 	OvMaths::FTransform cameraTransform(m_orbitStartOffset);
 	cameraTransform.SetParent(pivotTransform);
-	pivotTransform.RotateLocal(glm::quat(m_ypr));
+	pivotTransform.RotateLocal(glm::quat(m_xyz));
 	m_cameraPosition = cameraTransform.GetWorldPosition();
 	m_cameraRotation = cameraTransform.GetWorldRotation();*/
 }
@@ -326,21 +328,45 @@ void LitchiEditor::CameraController::HandleCameraZoom()
 
 void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mouseOffset, bool p_firstMouse)
 {
+	//DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_xyz.x, m_xyz.y, m_xyz.z);
+
 	auto mouseOffset = p_mouseOffset * m_mouseSensitivity;
 
 	if (p_firstMouse)
 	{
-		m_ypr = glm::eulerAngles(m_cameraRotation);
-		m_ypr = RemoveRoll(m_ypr);
+		m_xyz = glm::eulerAngles(m_cameraRotation);
+		m_xyz = RemoveRoll(m_xyz);
 	}
 
-	m_ypr.y -= mouseOffset.x;
-	m_ypr.x += -mouseOffset.y;
-	m_ypr.x = std::max(std::min(m_ypr.x, 90.0f), -90.0f);
+	m_xyz.y -= mouseOffset.x;
+	m_xyz.x += -mouseOffset.y;
+	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
+	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);
 
 	// x , y z
-	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_ypr.x), glm::radians(m_ypr.y), glm::radians(m_ypr.z)));
-	// m_cameraRotation = glm::quat(glm::vec3(m_ypr.x, m_ypr.y, m_ypr.z));
+	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_xyz.x), glm::radians(m_xyz.y), glm::radians(0.0)));
+	// m_cameraRotation = glm::quat(glm::vec3(m_xyz.x, m_xyz.y, m_xyz.z));
+
+	
+
+	//GLfloat sensitivity = 0.05;	// Change this value to your liking
+	//
+
+	//m_yaw += mouseOffset.x;
+	//m_pitch += mouseOffset.y;
+
+	//// Make sure that when pitch is out of bounds, screen doesn't get flipped
+	//if (m_pitch > 89.0f)
+	//	m_pitch = 89.0f;
+	//if (m_pitch < -89.0f)
+	//	m_pitch = -89.0f;
+
+	//glm::vec3 front;
+	//front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_yaw));
+	//front.y = sin(glm::radians(m_pitch));
+	//front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+	//m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_pitch), glm::radians(m_yaw), glm::radians(0.0)));
+	//m_cameraRotation = glm::rotate(glm::vec3(0.0, 0.0, -1.0), front);
 }
 
 void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
