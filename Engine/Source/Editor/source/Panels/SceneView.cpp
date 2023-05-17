@@ -95,7 +95,7 @@ void LitchiEditor::SceneView::RenderScene()
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
 	render_camera->Clear();
-	RenderGrid(glm::vec3(0), glm::vec3(0.098f, 0.898f, 0.098f));
+	RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {

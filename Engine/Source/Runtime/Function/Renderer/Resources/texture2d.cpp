@@ -2,9 +2,9 @@
 #include "texture2d.h"
 #include <fstream>
 
-#include "gpu_resource_mapper.h"
 #include "Runtime/Core/App/application.h"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Renderer/gpu_resource_mapper.h"
 
 using std::ifstream;
 using std::ios;

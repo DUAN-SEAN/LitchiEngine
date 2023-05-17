@@ -10,7 +10,6 @@
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/gpu_resource_mapper.h"
 #include "Runtime/Function/Renderer/shader.h"
-#include "Runtime/Function/Renderer/texture2d.h"
 #include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 

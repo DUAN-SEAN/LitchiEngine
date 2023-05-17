@@ -59,9 +59,9 @@ void LitchiEditor::AView::Render()
 
 	auto [winWidth, winHeight] = GetSafeSize();
 
-	/*EDITOR_CONTEXT(shapeDrawer)->SetViewProjection(m_camera.GetProjectionMatrix() * m_camera.GetViewMatrix());*/
-	// RenderSystem::Instance()->Set
-	// EDITOR_CONTEXT(renderer)->SetViewPort(0, 0, winWidth, winHeight);
+
+	ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix() * m_camera->GetViewMatrix());
+
 	glViewport(0, 0, winWidth, winHeight);
 
 
