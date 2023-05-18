@@ -130,6 +130,6 @@ void LitchiEditor::AView::PrepareCamera()
 	//DEBUG_LOG_INFO("PrepareCamera CameraPosition x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
 	//DEBUG_LOG_INFO("PrepareCamera EulerAngleVec x:{},y:{},z:{}", glm::degrees(eulerAngleVec.x), glm::degrees(eulerAngleVec.y), glm::degrees(eulerAngleVec.z));
 
-	m_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	// m_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
 	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
 }

@@ -102,7 +102,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 	{
 		m_cameraRotation = glm::quat(glm::radians(glm::vec3(0.0, 5.0, 0.0)));
 		// m_cameraRotation = glm::quat(1, 0, 0, 0);
-		m_cameraPosition = glm::vec3( 0, 0, 500);
+		m_cameraPosition = glm::vec3( 0, 0, 0);
 	}
 
 	if (m_view.IsHovered())
@@ -282,7 +282,7 @@ glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
 
 	if (result.z >= 179.0f || result.z <= -179.0f)
 	{
-		// result.y += result.z;
+		result.y += result.z;
 		result.x = 180.0f - result.x;
 		result.z = 0.0f;
 	}
@@ -334,7 +334,7 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 
 	if (p_firstMouse)
 	{
-		m_xyz = glm::eulerAngles(m_cameraRotation);
+		m_xyz = glm::degrees(glm::eulerAngles(m_cameraRotation));
 		m_xyz = RemoveRoll(m_xyz);
 	}
 
