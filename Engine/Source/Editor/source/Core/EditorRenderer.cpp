@@ -27,7 +27,7 @@
 //#include "OvEditor/Core/EditorActions.h"
 //
 //using namespace OvMaths;
-//using namespace OvRendering::Resources;
+//using namespace LitchiRuntime::Resources;
 //using namespace OvCore::Resources;
 //
 //const glm::vec3 DEBUG_BOUNDS_COLOR		= { 1.0f, 0.0f, 0.0f };
@@ -35,11 +35,11 @@
 //const glm::vec3 COLLIDER_COLOR			= { 0.0f, 1.0f, 0.0f };
 //const glm::vec3 FRUSTUM_COLOR			= { 1.0f, 1.0f, 1.0f };
 //
-//OvEditor::Core::EditorRenderer::EditorRenderer(Context& p_context) : m_context(p_context)
+//LitchiEditor::EditorRenderer::EditorRenderer(Context& p_context) : m_context(p_context)
 //{
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::STENCIL_TEST, true);
-//	m_context.renderer->SetStencilOperations(OvRendering::Settings::EOperation::KEEP, OvRendering::Settings::EOperation::KEEP, OvRendering::Settings::EOperation::REPLACE);
-//	m_context.renderer->SetStencilAlgorithm(OvRendering::Settings::EComparaisonAlgorithm::ALWAYS, 1, 0xFF);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::STENCIL_TEST, true);
+//	m_context.renderer->SetStencilOperations(LitchiRuntime::EOperation::KEEP, LitchiRuntime::EOperation::KEEP, LitchiRuntime::EOperation::REPLACE);
+//	m_context.renderer->SetStencilAlgorithm(LitchiRuntime::EComparaisonAlgorithm::ALWAYS, 1, 0xFF);
 //
 //	InitMaterials();
 //
@@ -64,18 +64,18 @@
 //	});
 //}
 //
-//void OvEditor::Core::EditorRenderer::InitMaterials()
+//void LitchiEditor::EditorRenderer::InitMaterials()
 //{
 //	/* Default Material */
 //	m_defaultMaterial.SetShader(m_context.shaderManager[":Shaders\\Standard.glsl"]);
 //	m_defaultMaterial.Set("u_Diffuse", FVector4(1.f, 1.f, 1.f, 1.f));
 //	m_defaultMaterial.Set("u_Shininess", 100.0f);
-//	m_defaultMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_defaultMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //	/* Empty Material */
 //	m_emptyMaterial.SetShader(m_context.shaderManager[":Shaders\\Unlit.glsl"]);
 //	m_emptyMaterial.Set("u_Diffuse", FVector4(1.f, 0.f, 1.f, 1.0f));
-//	m_emptyMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_emptyMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //	/* Grid Material */
 //	m_gridMaterial.SetShader(m_context.editorResources->GetShader("Grid"));
@@ -86,7 +86,7 @@
 //	/* Camera Material */
 //	m_cameraMaterial.SetShader(m_context.shaderManager[":Shaders\\Lambert.glsl"]);
 //	m_cameraMaterial.Set("u_Diffuse", FVector4(0.0f, 0.3f, 0.7f, 1.0f));
-//	m_cameraMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_cameraMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //	/* Light Material */
 //	m_lightMaterial.SetShader(m_context.editorResources->GetShader("Billboard"));
@@ -100,18 +100,18 @@
 //	m_stencilFillMaterial.SetBackfaceCulling(true);
 //	m_stencilFillMaterial.SetDepthTest(false);
 //	m_stencilFillMaterial.SetColorWriting(false);
-//	m_stencilFillMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_stencilFillMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //	/* Texture Material */
 //	m_textureMaterial.SetShader(m_context.shaderManager[":Shaders\\Unlit.glsl"]);
 //	m_textureMaterial.Set("u_Diffuse", FVector4(1.f, 1.f, 1.f, 1.f));
 //	m_textureMaterial.SetBackfaceCulling(false);
 //	m_textureMaterial.SetBlendable(true);
-//	m_textureMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_textureMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //	/* Outline Material */
 //	m_outlineMaterial.SetShader(m_context.shaderManager[":Shaders\\Unlit.glsl"]);
-//	m_outlineMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_outlineMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //	m_outlineMaterial.SetDepthTest(false);
 //
 //	/* Gizmo Arrow Material */
@@ -134,12 +134,12 @@
 //	/* Picking Material */
 //	m_actorPickingMaterial.SetShader(m_context.shaderManager[":Shaders\\Unlit.glsl"]);
 //	m_actorPickingMaterial.Set("u_Diffuse", FVector4(1.f, 1.f, 1.f, 1.0f));
-//	m_actorPickingMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//	m_actorPickingMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //	m_actorPickingMaterial.SetFrontfaceCulling(false);
 //	m_actorPickingMaterial.SetBackfaceCulling(false);
 //}
 //
-//void OvEditor::Core::EditorRenderer::PreparePickingMaterial(OvCore::ECS::Actor& p_actor, OvCore::Resources::Material& p_material)
+//void LitchiEditor::EditorRenderer::PreparePickingMaterial(OvCore::ECS::Actor& p_actor, OvCore::Material& p_material)
 //{
 //	uint32_t actorID = static_cast<uint32_t>(p_actor.GetID());
 //
@@ -149,7 +149,7 @@
 //	p_material.Set("u_Diffuse", color);
 //}
 //
-//OvMaths::FMatrix4 OvEditor::Core::EditorRenderer::CalculateCameraModelMatrix(OvCore::ECS::Actor& p_actor)
+//OvMaths::FMatrix4 LitchiEditor::EditorRenderer::CalculateCameraModelMatrix(OvCore::ECS::Actor& p_actor)
 //{
 //	auto translation = FMatrix4::Translation(p_actor.transform.GetWorldPosition());
 //	auto rotation = FQuaternion::ToMatrix4(p_actor.transform.GetWorldRotation());
@@ -157,7 +157,7 @@
 //	return translation * rotation;
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderScene(const glm::vec3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum)
+//void LitchiEditor::EditorRenderer::RenderScene(const glm::vec3& p_cameraPosition, const LitchiRuntime::LowRenderer::Camera& p_camera, const LitchiRuntime::Data::Frustum* p_customFrustum)
 //{
 //	/* Render the actors */
 //	m_context.lightSSBO->Bind(0);
@@ -165,7 +165,7 @@
 //	m_context.lightSSBO->Unbind();
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderSceneForActorPicking()
+//void LitchiEditor::EditorRenderer::RenderSceneForActorPicking()
 //{
 //	auto& scene = *m_context.sceneManager.GetCurrentScene();
 //
@@ -187,7 +187,7 @@
 //
 //					for (auto mesh : model->GetMeshes())
 //					{
-//						OvCore::Resources::Material* material = nullptr;
+//						OvCore::Material* material = nullptr;
 //
 //						if (mesh->GetMaterialIndex() < MAX_MATERIAL_COUNT)
 //						{
@@ -234,7 +234,7 @@
 //
 //		m_lightMaterial.SetDepthTest(true);
 //		m_lightMaterial.Set<float>("u_Scale", Settings::EditorSettings::LightBillboardScale * 0.1f);
-//		m_lightMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", nullptr);
+//		m_lightMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 //
 //		for (auto light : m_context.sceneManager.GetCurrentScene()->GetFastAccessComponents().lights)
 //		{
@@ -251,12 +251,12 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderUI()
+//void LitchiEditor::EditorRenderer::RenderUI()
 //{
 //	m_context.uiManager->Render();
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderCameras()
+//void LitchiEditor::EditorRenderer::RenderCameras()
 //{
 //	using namespace OvMaths;
 //
@@ -274,7 +274,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderLights()
+//void LitchiEditor::EditorRenderer::RenderLights()
 //{
 //	using namespace OvMaths;
 //
@@ -290,32 +290,32 @@
 //			auto& model = *m_context.editorResources->GetModel("Vertical_Plane");
 //			auto modelMatrix = FMatrix4::Translation(actor.transform.GetWorldPosition());
 //
-//			OvRendering::Resources::Texture* texture = nullptr;
+//			LitchiRuntime::Texture* texture = nullptr;
 //
-//			switch (static_cast<OvRendering::Entities::Light::Type>(static_cast<int>(light->GetData().type)))
+//			switch (static_cast<LitchiRuntime::Entities::Light::Type>(static_cast<int>(light->GetData().type)))
 //			{
-//			case OvRendering::Entities::Light::Type::POINT:				texture = m_context.editorResources->GetTexture("Bill_Point_Light");			break;
-//			case OvRendering::Entities::Light::Type::SPOT:				texture = m_context.editorResources->GetTexture("Bill_Spot_Light");				break;
-//			case OvRendering::Entities::Light::Type::DIRECTIONAL:		texture = m_context.editorResources->GetTexture("Bill_Directional_Light");		break;
-//			case OvRendering::Entities::Light::Type::AMBIENT_BOX:		texture = m_context.editorResources->GetTexture("Bill_Ambient_Box_Light");		break;
-//			case OvRendering::Entities::Light::Type::AMBIENT_SPHERE:	texture = m_context.editorResources->GetTexture("Bill_Ambient_Sphere_Light");	break;
+//			case LitchiRuntime::Entities::Light::Type::POINT:				texture = m_context.editorResources->GetTexture("Bill_Point_Light");			break;
+//			case LitchiRuntime::Entities::Light::Type::SPOT:				texture = m_context.editorResources->GetTexture("Bill_Spot_Light");				break;
+//			case LitchiRuntime::Entities::Light::Type::DIRECTIONAL:		texture = m_context.editorResources->GetTexture("Bill_Directional_Light");		break;
+//			case LitchiRuntime::Entities::Light::Type::AMBIENT_BOX:		texture = m_context.editorResources->GetTexture("Bill_Ambient_Box_Light");		break;
+//			case LitchiRuntime::Entities::Light::Type::AMBIENT_SPHERE:	texture = m_context.editorResources->GetTexture("Bill_Ambient_Sphere_Light");	break;
 //			}
 //
 //			const auto& lightColor = light->GetColor();
-//			m_lightMaterial.Set<OvRendering::Resources::Texture*>("u_DiffuseMap", texture);
+//			m_lightMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", texture);
 //			m_lightMaterial.Set<OvMaths::FVector4>("u_Diffuse", OvMaths::FVector4(lightColor.x, lightColor.y, lightColor.z, 0.75f));
 //			m_context.renderer->DrawModelWithSingleMaterial(model, m_lightMaterial, &modelMatrix);
 //		}
 //	}
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderGizmo(const glm::vec3& p_position, const OvMaths::FQuaternion& p_rotation, OvEditor::Core::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis)
+//void LitchiEditor::EditorRenderer::RenderGizmo(const glm::vec3& p_position, const OvMaths::FQuaternion& p_rotation, LitchiEditor::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis)
 //{
 //	using namespace OvMaths;
 //
 //	FMatrix4 model = FMatrix4::Translation(p_position) * FQuaternion::ToMatrix4(FQuaternion::Normalize(p_rotation));
 //
-//	OvRendering::Resources::Model* arrowModel = nullptr;
+//	LitchiRuntime::Model* arrowModel = nullptr;
 //
 //	if (!p_pickable)
 //	{
@@ -325,13 +325,13 @@
 //
 //		switch (p_operation)
 //		{
-//		case OvEditor::Core::EGizmoOperation::TRANSLATE:
+//		case LitchiEditor::EGizmoOperation::TRANSLATE:
 //			arrowModel = m_context.editorResources->GetModel("Arrow_Translate");
 //			break;
-//		case OvEditor::Core::EGizmoOperation::ROTATE:
+//		case LitchiEditor::EGizmoOperation::ROTATE:
 //			arrowModel = m_context.editorResources->GetModel("Arrow_Rotate");
 //			break;
-//		case OvEditor::Core::EGizmoOperation::SCALE:
+//		case LitchiEditor::EGizmoOperation::SCALE:
 //			arrowModel = m_context.editorResources->GetModel("Arrow_Scale");
 //			break;
 //		}
@@ -347,25 +347,25 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderModelToStencil(const OvMaths::FMatrix4& p_worldMatrix, OvRendering::Resources::Model& p_model)
+//void LitchiEditor::EditorRenderer::RenderModelToStencil(const OvMaths::FMatrix4& p_worldMatrix, LitchiRuntime::Model& p_model)
 //{
 //	m_context.renderer->SetStencilMask(0xFF);
 //	m_context.renderer->DrawModelWithSingleMaterial(p_model, m_stencilFillMaterial, &p_worldMatrix);
 //	m_context.renderer->SetStencilMask(0x00);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderModelOutline(const OvMaths::FMatrix4& p_worldMatrix, OvRendering::Resources::Model& p_model, float p_width)
+//void LitchiEditor::EditorRenderer::RenderModelOutline(const OvMaths::FMatrix4& p_worldMatrix, LitchiRuntime::Model& p_model, float p_width)
 //{
-//	m_context.renderer->SetStencilAlgorithm(OvRendering::Settings::EComparaisonAlgorithm::NOTEQUAL, 1, 0xFF);
-//	m_context.renderer->SetRasterizationMode(OvRendering::Settings::ERasterizationMode::LINE);
+//	m_context.renderer->SetStencilAlgorithm(LitchiRuntime::EComparaisonAlgorithm::NOTEQUAL, 1, 0xFF);
+//	m_context.renderer->SetRasterizationMode(LitchiRuntime::ERasterizationMode::LINE);
 //	m_context.renderer->SetRasterizationLinesWidth(p_width);
 //	m_context.renderer->DrawModelWithSingleMaterial(p_model, m_outlineMaterial, &p_worldMatrix);
 //	m_context.renderer->SetRasterizationLinesWidth(1.f);
-//	m_context.renderer->SetRasterizationMode(OvRendering::Settings::ERasterizationMode::FILL);
-//	m_context.renderer->SetStencilAlgorithm(OvRendering::Settings::EComparaisonAlgorithm::ALWAYS, 1, 0xFF);
+//	m_context.renderer->SetRasterizationMode(LitchiRuntime::ERasterizationMode::FILL);
+//	m_context.renderer->SetStencilAlgorithm(LitchiRuntime::EComparaisonAlgorithm::ALWAYS, 1, 0xFF);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderActorOutlinePass(OvCore::ECS::Actor& p_actor, bool p_toStencil, bool p_isSelected)
+//void LitchiEditor::EditorRenderer::RenderActorOutlinePass(OvCore::ECS::Actor& p_actor, bool p_toStencil, bool p_isSelected)
 //{
 //	float outlineWidth = p_isSelected ? 5.0f : 2.5f;
 //
@@ -438,7 +438,7 @@
 //	}
 //}
 //
-//void DrawFrustumLines(OvRendering::Core::ShapeDrawer& p_drawer,
+//void DrawFrustumLines(LitchiRuntime::Core::ShapeDrawer& p_drawer,
 //                      const glm::vec3& pos,
 //                      const glm::vec3& forward,
 //                      float near,
@@ -480,7 +480,7 @@
 //    draw(d + forward * near, h + forward * far, 0);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderCameraPerspectiveFrustum(std::pair<uint16_t, uint16_t>& p_size, OvCore::ECS::Components::CCamera& p_camera)
+//void LitchiEditor::EditorRenderer::RenderCameraPerspectiveFrustum(std::pair<uint16_t, uint16_t>& p_size, OvCore::ECS::Components::CCamera& p_camera)
 //{
 //    const auto& owner = p_camera.owner;
 //    auto& camera = p_camera.GetCamera();
@@ -516,7 +516,7 @@
 //    DrawFrustumLines(*m_context.shapeDrawer, cameraPos, cameraForward, near, far, a, b, c, d, e, f, g, h);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderCameraOrthographicFrustum(std::pair<uint16_t, uint16_t>& p_size, OvCore::ECS::Components::CCamera& p_camera)
+//void LitchiEditor::EditorRenderer::RenderCameraOrthographicFrustum(std::pair<uint16_t, uint16_t>& p_size, OvCore::ECS::Components::CCamera& p_camera)
 //{
 //    auto& owner = p_camera.owner;
 //    auto& camera = p_camera.GetCamera();
@@ -543,7 +543,7 @@
 //    DrawFrustumLines(*m_context.shapeDrawer, cameraPos, cameraForward, near, far, a, b, c, d, a, b, c, d);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderCameraFrustum(OvCore::ECS::Components::CCamera& p_camera)
+//void LitchiEditor::EditorRenderer::RenderCameraFrustum(OvCore::ECS::Components::CCamera& p_camera)
 //{
 //    auto& gameView = EDITOR_PANEL(Panels::GameView, "Game View");
 //    auto gameViewSize = gameView.GetSafeSize();
@@ -555,23 +555,23 @@
 //
 //    switch (p_camera.GetProjectionMode())
 //    {
-//    case OvRendering::Settings::EProjectionMode::ORTHOGRAPHIC:
+//    case LitchiRuntime::EProjectionMode::ORTHOGRAPHIC:
 //        RenderCameraOrthographicFrustum(gameViewSize, p_camera);
 //        break;
 //    
-//    case OvRendering::Settings::EProjectionMode::PERSPECTIVE:
+//    case LitchiRuntime::EProjectionMode::PERSPECTIVE:
 //        RenderCameraPerspectiveFrustum(gameViewSize, p_camera);
 //        break;
 //    }
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderActorCollider(GameObject* p_actor)
+//void LitchiEditor::EditorRenderer::RenderActorCollider(GameObject* p_actor)
 //{
 //	using namespace OvCore::ECS::Components;
 //	using namespace OvPhysics::Entities;
 //
-//	bool depthTestBackup = m_context.renderer->GetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST);
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, false);
+//	bool depthTestBackup = m_context.renderer->GetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, false);
 //
 //	/* Draw the box collider if any */
 //	if (auto boxColliderComponent = p_actor.GetComponent<OvCore::ECS::Components::CPhysicalBox>(); boxColliderComponent)
@@ -648,14 +648,14 @@
 //		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ 0.f, -halfHeight, radius }),	center + rotation * (glm::vec3{ 0.f, +halfHeight, radius }), glm::vec3{ 0.f, 1.f, 0.f }, 1.f);
 //	}
 //
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //	m_context.renderer->SetRasterizationLinesWidth(1.0f);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderLightBounds(OvCore::ECS::Components::CLight& p_light)
+//void LitchiEditor::EditorRenderer::RenderLightBounds(OvCore::ECS::Components::CLight& p_light)
 //{
-//	bool depthTestBackup = m_context.renderer->GetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST);
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, false);
+//	bool depthTestBackup = m_context.renderer->GetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, false);
 //
 //	auto& data = p_light.GetData();
 //
@@ -673,13 +673,13 @@
 //		}
 //	}
 //
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderAmbientBoxVolume(OvCore::ECS::Components::CAmbientBoxLight & p_ambientBoxLight)
+//void LitchiEditor::EditorRenderer::RenderAmbientBoxVolume(OvCore::ECS::Components::CAmbientBoxLight & p_ambientBoxLight)
 //{
-//	bool depthTestBackup = m_context.renderer->GetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST);
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, false);
+//	bool depthTestBackup = m_context.renderer->GetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, false);
 //
 //	auto& data = p_ambientBoxLight.GetData();
 //
@@ -705,13 +705,13 @@
 //	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, -halfSize.y, +halfSize.z }, center + glm::vec3{ +halfSize.x, -halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
 //	m_context.shapeDrawer->DrawLine(center + glm::vec3{ -halfSize.x, +halfSize.y, +halfSize.z }, center + glm::vec3{ +halfSize.x, +halfSize.y, +halfSize.z }, LIGHT_VOLUME_COLOR, 1.f);
 //
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderAmbientSphereVolume(OvCore::ECS::Components::CAmbientSphereLight & p_ambientSphereLight)
+//void LitchiEditor::EditorRenderer::RenderAmbientSphereVolume(OvCore::ECS::Components::CAmbientSphereLight & p_ambientSphereLight)
 //{
-//	bool depthTestBackup = m_context.renderer->GetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST);
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, false);
+//	bool depthTestBackup = m_context.renderer->GetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, false);
 //
 //	auto& data = p_ambientSphereLight.GetData();
 //
@@ -726,16 +726,16 @@
 //		m_context.shapeDrawer->DrawLine(center + rotation * (glm::vec3{ cos(i * (3.14f / 180.0f)), 0.f, sin(i * (3.14f / 180.0f)) } *radius), center + rotation * (glm::vec3{ cos((i + 10.0f) * (3.14f / 180.0f)), 0.f, sin((i + 10.0f) * (3.14f / 180.0f)) } *radius), LIGHT_VOLUME_COLOR, 1.f);
 //	}
 //
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderBoundingSpheres(OvCore::ECS::Components::CModelRenderer& p_modelRenderer)
+//void LitchiEditor::EditorRenderer::RenderBoundingSpheres(OvCore::ECS::Components::CModelRenderer& p_modelRenderer)
 //{
 //	using namespace OvCore::ECS::Components;
 //	using namespace OvPhysics::Entities;
 //
-//	bool depthTestBackup = m_context.renderer->GetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST);
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, false);
+//	bool depthTestBackup = m_context.renderer->GetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, false);
 //
 //	/* Draw the sphere collider if any */
 //	if (auto model = p_modelRenderer.GetModel())
@@ -789,17 +789,17 @@
 //		}
 //	}
 //
-//	m_context.renderer->SetCapability(OvRendering::Settings::ERenderingCapability::DEPTH_TEST, depthTestBackup);
+//	m_context.renderer->SetCapability(LitchiRuntime::ERenderingCapability::DEPTH_TEST, depthTestBackup);
 //	m_context.renderer->SetRasterizationLinesWidth(1.0f);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderModelAsset(OvRendering::Resources::Model& p_model)
+//void LitchiEditor::EditorRenderer::RenderModelAsset(LitchiRuntime::Model& p_model)
 //{
 //	FMatrix4 model = OvMaths::FMatrix4::Scaling({ 3.f, 3.f, 3.f });
 //	m_context.renderer->DrawModelWithSingleMaterial(p_model, m_defaultMaterial, &model);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderTextureAsset(OvRendering::Resources::Texture & p_texture)
+//void LitchiEditor::EditorRenderer::RenderTextureAsset(LitchiRuntime::Texture & p_texture)
 //{
 //	FMatrix4 model = FMatrix4::RotateOnAxisX(FMatrix4::Scaling({ 5.f, 5.f, 5.f }), 90.f * 0.0174f);
 //
@@ -807,13 +807,13 @@
 //	m_context.renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Plane"), m_textureMaterial, &model);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderMaterialAsset(OvCore::Resources::Material & p_material)
+//void LitchiEditor::EditorRenderer::RenderMaterialAsset(OvCore::Material & p_material)
 //{
 //	FMatrix4 model = OvMaths::FMatrix4::Scaling({ 3.f, 3.f, 3.f });
 //	m_context.renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Sphere"), p_material, &model, &m_emptyMaterial);
 //}
 //
-//void OvEditor::Core::EditorRenderer::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
+//void LitchiEditor::EditorRenderer::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
 //{
 //    constexpr float gridSize = 5000.0f;
 //
@@ -826,14 +826,14 @@
 //    m_context.shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
 //}
 //
-//void OvEditor::Core::EditorRenderer::UpdateLights(OvCore::SceneSystem::Scene& p_scene)
+//void LitchiEditor::EditorRenderer::UpdateLights(OvCore::SceneSystem::Scene& p_scene)
 //{
 //	PROFILER_SPY("Light SSBO Update");
 //	auto lightMatrices = m_context.renderer->FindLightMatrices(p_scene);
 //	m_context.lightSSBO->SendBlocks<FMatrix4>(lightMatrices.data(), lightMatrices.size() * sizeof(FMatrix4));
 //}
 //
-//void OvEditor::Core::EditorRenderer::UpdateLightsInFrustum(OvCore::SceneSystem::Scene& p_scene, const OvRendering::Data::Frustum& p_frustum)
+//void LitchiEditor::EditorRenderer::UpdateLightsInFrustum(OvCore::SceneSystem::Scene& p_scene, const LitchiRuntime::Data::Frustum& p_frustum)
 //{
 //	PROFILER_SPY("Light SSBO Update (Frustum culled)");
 //	auto lightMatrices = m_context.renderer->FindLightMatricesInFrustum(p_scene, p_frustum);

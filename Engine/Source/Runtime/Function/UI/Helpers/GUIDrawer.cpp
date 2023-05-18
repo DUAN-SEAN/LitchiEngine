@@ -3,6 +3,7 @@
 
 #include <array>
 
+#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Drags/DragMultipleScalars.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputDouble.h"
@@ -19,9 +20,9 @@ const Color LitchiRuntime::GUIDrawer::TitleColor = { 0.85f, 0.65f, 0.0f };
 const Color LitchiRuntime::GUIDrawer::ClearButtonColor = { 0.5f, 0.0f, 0.0f };
 const float LitchiRuntime::GUIDrawer::_MIN_FLOAT = -999999999.f;
 const float LitchiRuntime::GUIDrawer::_MAX_FLOAT = +999999999.f;
-Texture2D* LitchiRuntime::GUIDrawer::__EMPTY_TEXTURE = nullptr;
+Texture* LitchiRuntime::GUIDrawer::__EMPTY_TEXTURE = nullptr;
 
-void LitchiRuntime::GUIDrawer::ProvideEmptyTexture(Texture2D& p_emptyTexture)
+void LitchiRuntime::GUIDrawer::ProvideEmptyTexture(Texture& p_emptyTexture)
 {
 	__EMPTY_TEXTURE = &p_emptyTexture;
 }

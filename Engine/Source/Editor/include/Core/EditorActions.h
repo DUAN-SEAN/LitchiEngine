@@ -14,12 +14,12 @@
 //#include "OvEditor/Core/EditorRenderer.h"
 //#include "OvEditor/Core/PanelsManager.h"
 //
-//#define EDITOR_EXEC(action)					OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>().action
-//#define EDITOR_BIND(method, ...)			std::bind(&OvEditor::Core::EditorActions::method, &OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>(), ##__VA_ARGS__)
-//#define EDITOR_EVENT(target)				OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>().target
-//#define EDITOR_CONTEXT(instance)			OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>().GetContext().instance
-//#define EDITOR_RENDERER()					OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>().GetRenderer()
-//#define EDITOR_PANEL(type, id)				OvCore::Global::ServiceLocator::Get<OvEditor::Core::EditorActions>().GetPanelsManager().GetPanelAs<type>(id)
+//#define EDITOR_EXEC(action)					OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>().action
+//#define EDITOR_BIND(method, ...)			std::bind(&LitchiEditor::EditorActions::method, &OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>(), ##__VA_ARGS__)
+//#define EDITOR_EVENT(target)				OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>().target
+//#define EDITOR_CONTEXT(instance)			OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>().GetContext().instance
+//#define EDITOR_RENDERER()					OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>().GetRenderer()
+//#define EDITOR_PANEL(type, id)				OvCore::Global::ServiceLocator::Get<LitchiEditor::EditorActions>().GetPanelsManager().GetPanelAs<type>(id)
 //
 //namespace OvEditor::Core
 //{

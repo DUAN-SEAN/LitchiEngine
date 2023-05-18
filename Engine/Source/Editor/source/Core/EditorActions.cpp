@@ -33,12 +33,12 @@
 //#include "OvEditor/Panels/ProjectSettings.h"
 //#include "OvEditor/Panels/MaterialEditor.h"
 //
-//OvEditor::Core::EditorActions::EditorActions(Context& p_context, EditorRenderer& p_editorRenderer, PanelsManager& p_panelsManager) :
+//LitchiEditor::EditorActions::EditorActions(Context& p_context, EditorRenderer& p_editorRenderer, PanelsManager& p_panelsManager) :
 //	m_context(p_context), 
 //	m_renderer(p_editorRenderer),
 //	m_panelsManager(p_panelsManager)
 //{
-//	OvCore::Global::ServiceLocator::Provide<OvEditor::Core::EditorActions>(*this);
+//	OvCore::Global::ServiceLocator::Provide<LitchiEditor::EditorActions>(*this);
 //
 //	m_context.sceneManager.CurrentSceneSourcePathChangedEvent += [this](const std::string& p_newPath)
 //	{
@@ -47,7 +47,7 @@
 //	};
 //}
 //
-//void OvEditor::Core::EditorActions::LoadEmptyScene()
+//void LitchiEditor::EditorActions::LoadEmptyScene()
 //{
 //	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 //		StopPlaying();
@@ -56,7 +56,7 @@
 //	OVLOG_INFO("New scene created");
 //}
 //
-//void OvEditor::Core::EditorActions::SaveCurrentSceneTo(const std::string& p_path)
+//void LitchiEditor::EditorActions::SaveCurrentSceneTo(const std::string& p_path)
 //{
 //	tinyxml2::XMLDocument doc;
 //	tinyxml2::XMLNode* node = doc.NewElement("root");
@@ -66,7 +66,7 @@
 //	doc.SaveFile(p_path.c_str());
 //}
 //
-//void OvEditor::Core::EditorActions::LoadSceneFromDisk(const std::string& p_path, bool p_absolute)
+//void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, bool p_absolute)
 //{
 //	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 //		StopPlaying();
@@ -76,12 +76,12 @@
 //	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 //}
 //
-//bool OvEditor::Core::EditorActions::IsCurrentSceneLoadedFromDisk() const
+//bool LitchiEditor::EditorActions::IsCurrentSceneLoadedFromDisk() const
 //{
 //	return m_context.sceneManager.IsCurrentSceneLoadedFromDisk();
 //}
 //
-//void OvEditor::Core::EditorActions::SaveSceneChanges()
+//void LitchiEditor::EditorActions::SaveSceneChanges()
 //{
 //	if (IsCurrentSceneLoadedFromDisk())
 //	{
@@ -94,7 +94,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::SaveAs()
+//void LitchiEditor::EditorActions::SaveAs()
 //{
 //	OvWindowing::Dialogs::SaveFileDialog dialog("New Scene");
 //	dialog.SetInitialDirectory(m_context.projectAssetsPath + "New Scene");
@@ -118,7 +118,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::RefreshScripts()
+//void LitchiEditor::EditorActions::RefreshScripts()
 //{
 //	m_context.scriptInterpreter->RefreshAll();
 //	m_panelsManager.GetPanelAs<Panels::Inspector>("Inspector").Refresh();
@@ -126,7 +126,7 @@
 //		OVLOG_INFO("Scripts interpretation succeeded!");
 //}
 //
-//std::optional<std::string> OvEditor::Core::EditorActions::SelectBuildFolder()
+//std::optional<std::string> LitchiEditor::EditorActions::SelectBuildFolder()
 //{
 //	OvWindowing::Dialogs::SaveFileDialog dialog("Build location");
 //	dialog.DefineExtension("Game Build", "..");
@@ -149,7 +149,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::Build(bool p_autoRun, bool p_tempFolder)
+//void LitchiEditor::EditorActions::Build(bool p_autoRun, bool p_tempFolder)
 //{
 //	std::string destinationFolder;
 //
@@ -174,7 +174,7 @@
 //	BuildAtLocation(m_context.projectSettings.Get<bool>("dev_build") ? "Development" : "Shipping", destinationFolder, p_autoRun);
 //}
 //
-//void OvEditor::Core::EditorActions::BuildAtLocation(const std::string & p_configuration, const std::string p_buildPath, bool p_autoRun)
+//void LitchiEditor::EditorActions::BuildAtLocation(const std::string & p_configuration, const std::string p_buildPath, bool p_autoRun)
 //{
 //	std::string buildPath(p_buildPath);
 //	std::string executableName = m_context.projectSettings.Get<std::string>("executable_name") + ".exe";
@@ -320,12 +320,12 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::DelayAction(std::function<void()> p_action, uint32_t p_frames)
+//void LitchiEditor::EditorActions::DelayAction(std::function<void()> p_action, uint32_t p_frames)
 //{
 //	m_delayedActions.emplace_back(p_frames + 1, p_action);
 //}
 //
-//void OvEditor::Core::EditorActions::ExecuteDelayedActions()
+//void LitchiEditor::EditorActions::ExecuteDelayedActions()
 //{
 //	std::for_each(m_delayedActions.begin(), m_delayedActions.end(), [](std::pair<uint32_t, std::function<void()>> & p_element)
 //	{
@@ -341,22 +341,22 @@
 //	}), m_delayedActions.end());
 //}
 //
-//OvEditor::Core::Context& OvEditor::Core::EditorActions::GetContext()
+//LitchiEditor::Context& LitchiEditor::EditorActions::GetContext()
 //{
 //	return m_context;
 //}
 //
-//OvEditor::Core::EditorRenderer & OvEditor::Core::EditorActions::GetRenderer()
+//LitchiEditor::EditorRenderer & LitchiEditor::EditorActions::GetRenderer()
 //{
 //	return m_renderer;
 //}
 //
-//OvEditor::Core::PanelsManager& OvEditor::Core::EditorActions::GetPanelsManager()
+//LitchiEditor::PanelsManager& LitchiEditor::EditorActions::GetPanelsManager()
 //{
 //	return m_panelsManager;
 //}
 //
-//void OvEditor::Core::EditorActions::SetActorSpawnAtOrigin(bool p_value)
+//void LitchiEditor::EditorActions::SetActorSpawnAtOrigin(bool p_value)
 //{
 //	if (p_value)
 //		m_actorSpawnMode = EActorSpawnMode::ORIGIN;
@@ -364,37 +364,37 @@
 //		m_actorSpawnMode = EActorSpawnMode::FRONT;
 //}
 //
-//void OvEditor::Core::EditorActions::SetActorSpawnMode(EActorSpawnMode p_value)
+//void LitchiEditor::EditorActions::SetActorSpawnMode(EActorSpawnMode p_value)
 //{
 //	m_actorSpawnMode = p_value;
 //}
 //
-//void OvEditor::Core::EditorActions::ResetLayout()
+//void LitchiEditor::EditorActions::ResetLayout()
 //{
 //    DelayAction([this]() {m_context.uiManager->ResetLayout("Config\\layout.ini"); });
 //}
 //
-//void OvEditor::Core::EditorActions::SetSceneViewCameraSpeed(int p_speed)
+//void LitchiEditor::EditorActions::SetSceneViewCameraSpeed(int p_speed)
 //{
 //	EDITOR_PANEL(Panels::SceneView, "Scene View").GetCameraController().SetSpeed((float)p_speed);
 //}
 //
-//int OvEditor::Core::EditorActions::GetSceneViewCameraSpeed()
+//int LitchiEditor::EditorActions::GetSceneViewCameraSpeed()
 //{
 //	return (int)EDITOR_PANEL(Panels::SceneView, "Scene View").GetCameraController().GetSpeed();
 //}
 //
-//void OvEditor::Core::EditorActions::SetAssetViewCameraSpeed(int p_speed)
+//void LitchiEditor::EditorActions::SetAssetViewCameraSpeed(int p_speed)
 //{
 //	EDITOR_PANEL(Panels::AssetView, "Asset View").GetCameraController().SetSpeed((float)p_speed);
 //}
 //
-//int OvEditor::Core::EditorActions::GetAssetViewCameraSpeed()
+//int LitchiEditor::EditorActions::GetAssetViewCameraSpeed()
 //{
 //	return (int)EDITOR_PANEL(Panels::AssetView, "Asset View").GetCameraController().GetSpeed();
 //}
 //
-//void OvEditor::Core::EditorActions::ResetSceneViewCameraPosition()
+//void LitchiEditor::EditorActions::ResetSceneViewCameraPosition()
 //{
 //	EDITOR_PANEL(Panels::SceneView, "Scene View").GetCameraController().SetPosition({ -10.0f, 4.0f, 10.0f });
 //	// TODO
@@ -403,7 +403,7 @@
 //	// EDITOR_PANEL(Panels::SceneView, "Scene View").GetCamera().SetRoll(0.0f);
 //}
 //
-//void OvEditor::Core::EditorActions::ResetAssetViewCameraPosition()
+//void LitchiEditor::EditorActions::ResetAssetViewCameraPosition()
 //{
 //	EDITOR_PANEL(Panels::AssetView, "Asset View").GetCameraController().SetPosition({ -10.0f, 4.0f, 10.0f });
 //	// TODO
@@ -412,18 +412,18 @@
 //	// EDITOR_PANEL(Panels::AssetView, "Asset View").GetCamera().SetRoll(0.0f);
 //}
 //
-//OvEditor::Core::EditorActions::EEditorMode OvEditor::Core::EditorActions::GetCurrentEditorMode() const
+//LitchiEditor::EditorActions::EEditorMode LitchiEditor::EditorActions::GetCurrentEditorMode() const
 //{
 //	return m_editorMode;
 //}
 //
-//void OvEditor::Core::EditorActions::SetEditorMode(EEditorMode p_newEditorMode)
+//void LitchiEditor::EditorActions::SetEditorMode(EEditorMode p_newEditorMode)
 //{
 //	m_editorMode = p_newEditorMode;
 //	EditorModeChangedEvent.Invoke(m_editorMode);
 //}
 //
-//void OvEditor::Core::EditorActions::StartPlaying()
+//void LitchiEditor::EditorActions::StartPlaying()
 //{
 //	if (m_editorMode == EEditorMode::EDIT)
 //	{
@@ -449,13 +449,13 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::PauseGame()
+//void LitchiEditor::EditorActions::PauseGame()
 //{
 //	SetEditorMode(EEditorMode::PAUSE);
 //	m_context.audioEngine->Suspend();
 //}
 //
-//void OvEditor::Core::EditorActions::StopPlaying()
+//void LitchiEditor::EditorActions::StopPlaying()
 //{
 //	if (m_editorMode != EEditorMode::EDIT)
 //	{
@@ -480,19 +480,19 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::NextFrame()
+//void LitchiEditor::EditorActions::NextFrame()
 //{
 //	if (m_editorMode == EEditorMode::PLAY || m_editorMode == EEditorMode::PAUSE)
 //		SetEditorMode(EEditorMode::FRAME_BY_FRAME);
 //}
 //
-//glm::vec3 OvEditor::Core::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
+//glm::vec3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 //{
 //	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
 //	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3::Forward * p_distanceToCamera;
 //}
 //
-//GameObject* OvEditor::Core::EditorActions::CreateEmptyActor(bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
+//GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
 //{
 //    const auto currentScene = m_context.sceneManager.GetCurrentScene();
 //	auto& instance = p_name.empty() ? currentScene->CreateActor() : currentScene->CreateActor(p_name);
@@ -511,7 +511,7 @@
 //	return instance;
 //}
 //
-//GameObject* OvEditor::Core::EditorActions::CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
+//GameObject* LitchiEditor::EditorActions::CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation, GameObject* p_parent, const std::string& p_name)
 //{
 //	auto& instance = CreateEmptyActor(false, p_parent, p_name);
 //
@@ -532,7 +532,7 @@
 //	return instance;
 //}
 //
-//bool OvEditor::Core::EditorActions::DestroyActor(GameObject* p_actor)
+//bool LitchiEditor::EditorActions::DestroyActor(GameObject* p_actor)
 //{
 //	p_actor.MarkAsDestroy();
 //	OVLOG_INFO("Actor destroyed");
@@ -553,7 +553,7 @@
 //    return OvTools::Utils::String::GenerateUnique(p_duplicated.GetName(), availabilityChecker);
 //}
 //
-//void OvEditor::Core::EditorActions::DuplicateActor(GameObject* p_toDuplicate, GameObject* p_forcedParent, bool p_focus)
+//void LitchiEditor::EditorActions::DuplicateActor(GameObject* p_toDuplicate, GameObject* p_forcedParent, bool p_focus)
 //{
 //	tinyxml2::XMLDocument doc;
 //	tinyxml2::XMLNode* actorsRoot = doc.NewElement("actors");
@@ -590,44 +590,44 @@
 //		DuplicateActor(*child, &newActor, false);
 //}
 //
-//void OvEditor::Core::EditorActions::SelectActor(GameObject* p_target)
+//void LitchiEditor::EditorActions::SelectActor(GameObject* p_target)
 //{
 //	EDITOR_PANEL(Panels::Inspector, "Inspector").FocusActor(p_target);
 //}
 //
-//void OvEditor::Core::EditorActions::UnselectActor()
+//void LitchiEditor::EditorActions::UnselectActor()
 //{
 //	EDITOR_PANEL(Panels::Inspector, "Inspector").UnFocus();
 //}
 //
-//bool OvEditor::Core::EditorActions::IsAnyActorSelected() const
+//bool LitchiEditor::EditorActions::IsAnyActorSelected() const
 //{
 //	return EDITOR_PANEL(Panels::Inspector, "Inspector").GetTargetActor();
 //}
 //
-//GameObject* OvEditor::Core::EditorActions::GetSelectedActor() const
+//GameObject* LitchiEditor::EditorActions::GetSelectedActor() const
 //{
 //	return *EDITOR_PANEL(Panels::Inspector, "Inspector").GetTargetActor();
 //}
 //
-//void OvEditor::Core::EditorActions::MoveToTarget(OvCore::ECS::Actor& p_target)
+//void LitchiEditor::EditorActions::MoveToTarget(OvCore::ECS::Actor& p_target)
 //{
 //	EDITOR_PANEL(Panels::SceneView, "Scene View").GetCameraController().MoveToTarget(p_target);
 //}
 //
-//void OvEditor::Core::EditorActions::CompileShaders()
+//void LitchiEditor::EditorActions::CompileShaders()
 //{
 //	for (auto shader : m_context.shaderManager.GetResources())
-//		OvRendering::Resources::Loaders::ShaderLoader::Recompile(*shader.second, GetRealPath(shader.second->path));
+//		LitchiRuntime::Loaders::ShaderLoader::Recompile(*shader.second, GetRealPath(shader.second->path));
 //}
 //
-//void OvEditor::Core::EditorActions::SaveMaterials()
+//void LitchiEditor::EditorActions::SaveMaterials()
 //{
 //	for (auto& [id, material] : m_context.materialManager.GetResources())
-//		OvCore::Resources::Loaders::MaterialLoader::Save(*material, GetRealPath(material->path));
+//		OvCore::Loaders::MaterialLoader::Save(*material, GetRealPath(material->path));
 //}
 //
-//bool OvEditor::Core::EditorActions::ImportAsset(const std::string& p_initialDestinationDirectory)
+//bool LitchiEditor::EditorActions::ImportAsset(const std::string& p_initialDestinationDirectory)
 //{
 //	using namespace OvWindowing::Dialogs;
 //
@@ -671,7 +671,7 @@
 //	return false;
 //}
 //
-//bool OvEditor::Core::EditorActions::ImportAssetAtLocation(const std::string& p_destination)
+//bool LitchiEditor::EditorActions::ImportAssetAtLocation(const std::string& p_destination)
 //{
 //	using namespace OvWindowing::Dialogs;
 //
@@ -705,7 +705,7 @@
 //}
 //
 //// Duplicate from AResourceManager.h
-//std::string OvEditor::Core::EditorActions::GetRealPath(const std::string & p_path)
+//std::string LitchiEditor::EditorActions::GetRealPath(const std::string & p_path)
 //{
 //	std::string result;
 //
@@ -721,7 +721,7 @@
 //	return result;
 //}
 //
-//std::string OvEditor::Core::EditorActions::GetResourcePath(const std::string & p_path, bool p_isFromEngine)
+//std::string LitchiEditor::EditorActions::GetResourcePath(const std::string & p_path, bool p_isFromEngine)
 //{
 //	std::string result = p_path;
 //
@@ -734,7 +734,7 @@
 //	return result;
 //}
 //
-//std::string OvEditor::Core::EditorActions::GetScriptPath(const std::string & p_path)
+//std::string LitchiEditor::EditorActions::GetScriptPath(const std::string & p_path)
 //{
 //	std::string result = p_path;
 //
@@ -744,7 +744,7 @@
 //	return result;
 //}
 //
-//void OvEditor::Core::EditorActions::PropagateFolderRename(std::string p_previousName, std::string p_newName)
+//void LitchiEditor::EditorActions::PropagateFolderRename(std::string p_previousName, std::string p_newName)
 //{
 //	p_previousName = OvTools::Utils::PathParser::MakeNonWindowsStyle(p_previousName);
 //	p_newName = OvTools::Utils::PathParser::MakeNonWindowsStyle(p_newName);
@@ -768,7 +768,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::PropagateFolderDestruction(std::string p_folderPath)
+//void LitchiEditor::EditorActions::PropagateFolderDestruction(std::string p_folderPath)
 //{
 //	for (auto& p : std::filesystem::recursive_directory_iterator(p_folderPath))
 //	{
@@ -779,7 +779,7 @@
 //	}
 //}
 //
-//void OvEditor::Core::EditorActions::PropagateScriptRename(std::string p_previousName, std::string p_newName)
+//void LitchiEditor::EditorActions::PropagateScriptRename(std::string p_previousName, std::string p_newName)
 //{
 //	p_previousName = GetScriptPath(p_previousName);
 //	p_newName = GetScriptPath(p_newName);
@@ -794,7 +794,7 @@
 //	EDITOR_PANEL(Panels::Inspector, "Inspector").Refresh();
 //}
 //
-//void OvEditor::Core::EditorActions::PropagateFileRename(std::string p_previousName, std::string p_newName)
+//void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName, std::string p_newName)
 //{
 //	p_previousName = GetResourcePath(p_previousName);
 //	p_newName = GetResourcePath(p_newName);
@@ -805,32 +805,32 @@
 //
 //		if (OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ModelManager>().MoveResource(p_previousName, p_newName))
 //		{
-//			OvRendering::Resources::Model* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ModelManager>()[p_newName];
-//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvRendering::Resources::Model, path)) = p_newName;
+//			LitchiRuntime::Model* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ModelManager>()[p_newName];
+//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Model, path)) = p_newName;
 //		}
 //
 //		if (OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::TextureManager>().MoveResource(p_previousName, p_newName))
 //		{
-//			OvRendering::Resources::Texture* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::TextureManager>()[p_newName];
-//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvRendering::Resources::Texture, path)) = p_newName;
+//			LitchiRuntime::Texture* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::TextureManager>()[p_newName];
+//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Texture, path)) = p_newName;
 //		}
 //
 //		if (OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ShaderManager>().MoveResource(p_previousName, p_newName))
 //		{
-//			OvRendering::Resources::Shader* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ShaderManager>()[p_newName];
-//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvRendering::Resources::Shader, path)) = p_newName;
+//			LitchiRuntime::Shader* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::ShaderManager>()[p_newName];
+//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Shader, path)) = p_newName;
 //		}
 //
 //		if (OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::MaterialManager>().MoveResource(p_previousName, p_newName))
 //		{
-//			OvCore::Resources::Material* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::MaterialManager>()[p_newName];
-//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvCore::Resources::Material, path)) = p_newName;
+//			OvCore::Material* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::MaterialManager>()[p_newName];
+//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvCore::Material, path)) = p_newName;
 //		}
 //
 //		if (OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::SoundManager>().MoveResource(p_previousName, p_newName))
 //		{
-//			OvAudio::Resources::Sound* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::SoundManager>()[p_newName];
-//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvAudio::Resources::Sound, path)) = p_newName;
+//			OvAudio::Sound* resource = OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::SoundManager>()[p_newName];
+//			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(OvAudio::Sound, path)) = p_newName;
 //		}
 //	}
 //	else
@@ -840,14 +840,14 @@
 //			for (auto[name, instance] : OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::MaterialManager>().GetResources())
 //				if (instance)
 //					for (auto&[name, value] : instance->GetUniformsData())
-//						if (value.has_value() && value.type() == typeid(OvRendering::Resources::Texture*))
-//							if (std::any_cast<OvRendering::Resources::Texture*>(value) == texture)
-//								value = static_cast<OvRendering::Resources::Texture*>(nullptr);
+//						if (value.has_value() && value.type() == typeid(LitchiRuntime::Texture*))
+//							if (std::any_cast<LitchiRuntime::Texture*>(value) == texture)
+//								value = static_cast<LitchiRuntime::Texture*>(nullptr);
 //
 //			auto& assetView = EDITOR_PANEL(Panels::AssetView, "Asset View");
 //			auto assetViewRes = assetView.GetResource();
-//			if (auto pval = std::get_if<OvRendering::Resources::Texture*>(&assetViewRes); pval && *pval)
-//				assetView.SetResource(static_cast<OvRendering::Resources::Texture*>(nullptr));
+//			if (auto pval = std::get_if<LitchiRuntime::Texture*>(&assetViewRes); pval && *pval)
+//				assetView.SetResource(static_cast<LitchiRuntime::Texture*>(nullptr));
 //
 //			OvCore::Global::ServiceLocator::Get<OvCore::ResourceManagement::TextureManager>().UnloadResource(p_previousName);
 //		}
@@ -867,8 +867,8 @@
 //		{
 //			auto& assetView = EDITOR_PANEL(Panels::AssetView, "Asset View");
 //			auto assetViewRes = assetView.GetResource();
-//			if (auto pval = std::get_if<OvRendering::Resources::Model*>(&assetViewRes); pval && *pval)
-//				assetView.SetResource(static_cast<OvRendering::Resources::Model*>(nullptr));
+//			if (auto pval = std::get_if<LitchiRuntime::Model*>(&assetViewRes); pval && *pval)
+//				assetView.SetResource(static_cast<LitchiRuntime::Model*>(nullptr));
 //
 //			if (auto currentScene = m_context.sceneManager.GetCurrentScene())
 //				for (auto actor : currentScene->GetActors())
@@ -887,8 +887,8 @@
 //
 //			auto& assetView = EDITOR_PANEL(Panels::AssetView, "Asset View");
 //			auto assetViewRes = assetView.GetResource();
-//			if (auto pval = std::get_if<OvCore::Resources::Material*>(&assetViewRes); pval && *pval)
-//				assetView.SetResource(static_cast<OvCore::Resources::Material*>(nullptr));
+//			if (auto pval = std::get_if<OvCore::Material*>(&assetViewRes); pval && *pval)
+//				assetView.SetResource(static_cast<OvCore::Material*>(nullptr));
 //
 //			if (auto currentScene = m_context.sceneManager.GetCurrentScene())
 //				for (auto actor : currentScene->GetActors())
@@ -932,7 +932,7 @@
 //	EDITOR_PANEL(Panels::MaterialEditor, "Material Editor").Refresh();
 //}
 //
-//void OvEditor::Core::EditorActions::PropagateFileRenameThroughSavedFilesOfType(const std::string& p_previousName, const std::string& p_newName, OvTools::Utils::PathParser::EFileType p_fileType)
+//void LitchiEditor::EditorActions::PropagateFileRenameThroughSavedFilesOfType(const std::string& p_previousName, const std::string& p_newName, OvTools::Utils::PathParser::EFileType p_fileType)
 //{
 //	for (auto& entry : std::filesystem::recursive_directory_iterator(m_context.projectAssetsPath))
 //	{

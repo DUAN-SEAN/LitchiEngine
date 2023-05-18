@@ -42,7 +42,7 @@
 //		* @param p_cameraPosition
 //		* @param p_camera
 //		*/
-//		void RenderScene(const glm::vec3& p_cameraPosition, const OvRendering::LowRenderer::Camera& p_camera, const OvRendering::Data::Frustum* p_customFrustum = nullptr);
+//		void RenderScene(const glm::vec3& p_cameraPosition, const LitchiRuntime::LowRenderer::Camera& p_camera, const LitchiRuntime::Data::Frustum* p_customFrustum = nullptr);
 //
 //		/**
 //		* Render the scene for actor picking (Unlit version of the scene with colors indicating actor IDs)
@@ -77,7 +77,7 @@
 //		/**
 //		* Render a model to the stencil buffer
 //		*/
-//		void RenderModelToStencil(const OvMaths::FMatrix4& p_worldMatrix, OvRendering::Resources::Model& p_model);
+//		void RenderModelToStencil(const OvMaths::FMatrix4& p_worldMatrix, LitchiRuntime::Model& p_model);
 //
 //		/**
 //		* Render a model outline using the data stored in the stencil buffer
@@ -85,7 +85,7 @@
 //		* @param p_model
 //		* @param p_width
 //		*/
-//		void RenderModelOutline(const OvMaths::FMatrix4& p_worldMatrix, OvRendering::Resources::Model& p_model, float p_width);
+//		void RenderModelOutline(const OvMaths::FMatrix4& p_worldMatrix, LitchiRuntime::Model& p_model, float p_width);
 //
 //		/**
 //		* Render the actor as a selected actor (Outline)
@@ -142,12 +142,12 @@
 //		/**
 //		* Render model
 //		*/
-//		void RenderModelAsset(OvRendering::Resources::Model& p_model);
+//		void RenderModelAsset(LitchiRuntime::Model& p_model);
 //
 //		/**
 //		* Render texture
 //		*/
-//		void RenderTextureAsset(OvRendering::Resources::Texture& p_texture);
+//		void RenderTextureAsset(LitchiRuntime::Texture& p_texture);
 //
 //		/**
 //		* Render material
@@ -169,7 +169,7 @@
 //		* Update the light SSBO with the current scene (Lights outside of the given frustum are culled)
 //		* @param p_scene
 //		*/
-//		void UpdateLightsInFrustum(OvCore::SceneSystem::Scene& p_scene, const OvRendering::Data::Frustum& p_frustum);
+//		void UpdateLightsInFrustum(OvCore::SceneSystem::Scene& p_scene, const LitchiRuntime::Data::Frustum& p_frustum);
 //
 //	private:
 //

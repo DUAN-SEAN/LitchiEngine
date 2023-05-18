@@ -4,6 +4,7 @@
 
 #include "glm.hpp"
 #include "gtc/quaternion.hpp"
+#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "Runtime/Function/Renderer/Resources/texture2d.h"
 #include "Runtime/Function/UI/Types/Color.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
@@ -28,7 +29,7 @@ namespace LitchiRuntime
 		* Defines the texture to use when there is no texture in a texture resource field
 		* @param p_emptyTexture
 		*/
-		static void ProvideEmptyTexture(Texture2D& p_emptyTexture);
+		static void ProvideEmptyTexture(Texture& p_emptyTexture);
 
 		/**
 		* Draw a title with the title color
@@ -74,7 +75,7 @@ namespace LitchiRuntime
 		static std::string GetFormat();
 
 	private:
-		static Texture2D* __EMPTY_TEXTURE;
+		static Texture* __EMPTY_TEXTURE;
 	};
 }
 
