@@ -54,7 +54,7 @@ void LitchiRuntime::Resource::Shader::SetUniformVec4(const std::string& p_name, 
 
 void LitchiRuntime::Resource::Shader::SetUniformMat4(const std::string& p_name, const glm::mat4& p_mat4)
 {
-	glUniformMatrix4fv(GetUniformLocation(p_name), 1, GL_TRUE, &p_mat4[0][0]);
+	glUniformMatrix4fv(GetUniformLocation(p_name), 1, GL_FALSE, &p_mat4[0][0]);
 }
 
 int LitchiRuntime::Resource::Shader::GetUniformInt(const std::string& p_name)

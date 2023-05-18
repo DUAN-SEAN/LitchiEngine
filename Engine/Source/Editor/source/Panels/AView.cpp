@@ -60,7 +60,7 @@ void LitchiEditor::AView::Render()
 	auto [winWidth, winHeight] = GetSafeSize();
 
 
-	ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix() * m_camera->GetViewMatrix());
+	ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix()*m_camera->GetViewMatrix());
 
 	glViewport(0, 0, winWidth, winHeight);
 

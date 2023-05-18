@@ -345,28 +345,6 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 
 	// x , y z
 	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_xyz.x), glm::radians(m_xyz.y), glm::radians(0.0)));
-	// m_cameraRotation = glm::quat(glm::vec3(m_xyz.x, m_xyz.y, m_xyz.z));
-
-	
-
-	//GLfloat sensitivity = 0.05;	// Change this value to your liking
-	//
-
-	//m_yaw += mouseOffset.x;
-	//m_pitch += mouseOffset.y;
-
-	//// Make sure that when pitch is out of bounds, screen doesn't get flipped
-	//if (m_pitch > 89.0f)
-	//	m_pitch = 89.0f;
-	//if (m_pitch < -89.0f)
-	//	m_pitch = -89.0f;
-
-	//glm::vec3 front;
-	//front.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_yaw));
-	//front.y = sin(glm::radians(m_pitch));
-	//front.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
-	//m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_pitch), glm::radians(m_yaw), glm::radians(0.0)));
-	//m_cameraRotation = glm::rotate(glm::vec3(0.0, 0.0, -1.0), front);
 }
 
 void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
