@@ -10,6 +10,7 @@
 #include "Runtime/Function/UI/UIManager/UIManager.h"
 #include <Runtime/Function/Scene/scene_manager.h>
 
+#include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Function/Renderer/Driver.h"
 #include "Runtime/Function/Renderer/Core/Renderer.h"
@@ -53,16 +54,17 @@ namespace LitchiEditor
 		std::unique_ptr<Window>				window;
 		std::unique_ptr<InputManager>		inputManager;
 		std::unique_ptr<UIManager>		uiManager;
+		std::unique_ptr<EditorResources>		editorResources;
 
 		SceneManager* sceneManager;
 
-		const std::string projectPath;
-		const std::string projectName;
-		const std::string projectFilePath;
-		const std::string engineAssetsPath;
-		const std::string projectAssetsPath;
-		const std::string projectScriptsPath;
-		const std::string editorAssetsPath;
+		std::string projectPath;
+		std::string projectName;
+		std::string projectFilePath;
+		std::string engineAssetsPath;
+		std::string projectAssetsPath;
+		std::string projectScriptsPath;
+		std::string editorAssetsPath;
 
 
 	public:

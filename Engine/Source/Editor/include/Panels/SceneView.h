@@ -9,6 +9,8 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include <optional>
 
+#include "Runtime/Function/Renderer/Resources/Material.h"
+
 namespace LitchiEditor
 {
 	class SceneView : public AViewControllable
@@ -52,7 +54,8 @@ namespace LitchiEditor
 		* Render the scene for actor picking and handle the logic behind it
 		*/
 		void HandleActorPicking();
-
+	private:
+		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
 	private:
 		Framebuffer m_actorPickingFramebuffer;
 		GizmoBehaviour m_gizmoOperations;
@@ -61,5 +64,8 @@ namespace LitchiEditor
 		// std::optional<std::reference_wrapper<OvCore::ECS::Actor>> m_highlightedActor;
 		GameObject* m_highlightedActor;
 		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
+
+
+		Resource::Material m_gridMaterial;
 	};
 }

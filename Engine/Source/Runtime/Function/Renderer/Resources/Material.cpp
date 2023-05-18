@@ -1,0 +1,177 @@
+
+
+#include "Material.h"
+
+#include "Runtime/Function/Renderer/Buffers/UniformBuffer.h"
+
+void LitchiRuntime::Resource::Material::SetShader(LitchiRuntime::Resource::Shader* p_shader)
+{
+	m_shader = p_shader;
+	if (m_shader)
+	{
+		UniformBuffer::BindBlockToShader(*m_shader, "EngineUBO");
+		FillUniform();
+	}
+	else
+	{
+		m_uniformsData.clear();
+	}
+}
+
+void LitchiRuntime::Resource::Material::FillUniform()
+{
+	m_uniformsData.clear();
+
+	for (const UniformInfo& element : m_shader->uniforms)
+		m_uniformsData.emplace(element.name, element.defaultValue);
+}
+
+void LitchiRuntime::Resource::Material::Bind(Texture* p_emptyTexture)
+{
+	if (HasShader())
+	{
+		m_shader->Bind();
+
+		int textureSlot = 0;
+
+		for (auto&[name, value] : m_uniformsData)
+		{
+			auto uniformData = m_shader->GetUniformInfo(name);
+
+			if (uniformData)
+			{
+				switch (uniformData->type)
+				{
+				case UniformType::UNIFORM_BOOL:			if (value.type() == typeid(bool))		m_shader->SetUniformInt(name, std::any_cast<bool>(value));			break;
+				case UniformType::UNIFORM_INT:			if (value.type() == typeid(int))		m_shader->SetUniformInt(name, std::any_cast<int>(value));			break;
+				case UniformType::UNIFORM_FLOAT:		if (value.type() == typeid(float))		m_shader->SetUniformFloat(name, std::any_cast<float>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC2:	if (value.type() == typeid(glm::vec2))	m_shader->SetUniformVec2(name, std::any_cast<glm::vec2>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC3:	if (value.type() == typeid(glm::vec3))	m_shader->SetUniformVec3(name, std::any_cast<glm::vec3>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC4:	if (value.type() == typeid(glm::vec4))	m_shader->SetUniformVec4(name, std::any_cast<glm::vec4>(value));		break;
+				case UniformType::UNIFORM_SAMPLER_2D:
+					{
+						if (value.type() == typeid(Texture*))
+						{
+							if (auto tex = std::any_cast<Texture*>(value); tex)
+							{
+								tex->Bind(textureSlot);
+								m_shader->SetUniformInt(uniformData->name, textureSlot++);
+							}
+							else if (p_emptyTexture)
+							{
+								p_emptyTexture->Bind(textureSlot);
+								m_shader->SetUniformInt(uniformData->name, textureSlot++);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+void LitchiRuntime::Resource::Material::UnBind()
+{
+	if (HasShader())
+		m_shader->Unbind();
+}
+
+LitchiRuntime::Resource::Shader*& LitchiRuntime::Resource::Material::GetShader()
+{
+	return m_shader;
+}
+
+bool LitchiRuntime::Resource::Material::HasShader() const
+{
+	return m_shader;
+}
+
+void LitchiRuntime::Resource::Material::SetBlendable(bool p_transparent)
+{
+	m_blendable = p_transparent;
+}
+
+void LitchiRuntime::Resource::Material::SetBackfaceCulling(bool p_backfaceCulling)
+{
+	m_backfaceCulling = p_backfaceCulling;
+}
+
+void LitchiRuntime::Resource::Material::SetFrontfaceCulling(bool p_frontfaceCulling)
+{
+	m_frontfaceCulling = p_frontfaceCulling;
+}
+
+void LitchiRuntime::Resource::Material::SetDepthTest(bool p_depthTest)
+{
+	m_depthTest = p_depthTest;
+}
+
+void LitchiRuntime::Resource::Material::SetDepthWriting(bool p_depthWriting)
+{
+	m_depthWriting = p_depthWriting;
+}
+
+void LitchiRuntime::Resource::Material::SetColorWriting(bool p_colorWriting)
+{
+	m_colorWriting = p_colorWriting;
+}
+
+void LitchiRuntime::Resource::Material::SetGPUInstances(int p_instances)
+{
+	m_gpuInstances = p_instances;
+}
+
+bool LitchiRuntime::Resource::Material::IsBlendable() const
+{
+	return m_blendable;
+}
+
+bool LitchiRuntime::Resource::Material::HasBackfaceCulling() const
+{
+	return m_backfaceCulling;
+}
+
+bool LitchiRuntime::Resource::Material::HasFrontfaceCulling() const
+{
+	return m_frontfaceCulling;
+}
+
+bool LitchiRuntime::Resource::Material::HasDepthTest() const
+{
+	return m_depthTest;
+}
+
+bool LitchiRuntime::Resource::Material::HasDepthWriting() const
+{
+	return m_depthWriting;
+}
+
+bool LitchiRuntime::Resource::Material::HasColorWriting() const
+{
+	return m_colorWriting;
+}
+
+int LitchiRuntime::Resource::Material::GetGPUInstances() const
+{
+	return m_gpuInstances;
+}
+
+uint8_t LitchiRuntime::Resource::Material::GenerateStateMask() const
+{
+	uint8_t result = 0;
+
+	if (m_depthWriting)								result |= 0b0000'0001;
+	if (m_colorWriting)								result |= 0b0000'0010;
+	if (m_blendable)								result |= 0b0000'0100;
+	if (m_backfaceCulling || m_frontfaceCulling)	result |= 0b0000'1000;
+	if (m_depthTest)								result |= 0b0001'0000;
+	if (m_backfaceCulling)							result |= 0b0010'0000;
+	if (m_frontfaceCulling)							result |= 0b0100'0000;
+
+	return result;
+}
+
+std::map<std::string, std::any>& LitchiRuntime::Resource::Material::GetUniformsData()
+{
+	return m_uniformsData;
+}

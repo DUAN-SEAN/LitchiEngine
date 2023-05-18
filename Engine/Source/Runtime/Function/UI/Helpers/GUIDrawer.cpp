@@ -202,7 +202,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	return widget;
 //}
 //
-//Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, OvCore::LitchiRuntime::Material *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
+//Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, OvCore::LitchiRuntime::Resource::Material *& p_data, OvTools::Eventing::Event<>* p_updateNotifier)
 //{
 //	CreateTitle(p_root, p_name);
 //

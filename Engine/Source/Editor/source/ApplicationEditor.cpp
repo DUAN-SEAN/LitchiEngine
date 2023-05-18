@@ -18,6 +18,11 @@ LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 
 LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(m_canvas)
 {
+	char* projectPath = nullptr;
+	projectPath = _getcwd(nullptr, 1);
+	std::string filePath(projectPath);
+	editorAssetsPath = filePath + "/../../Assets/Editor/";
+	engineAssetsPath = filePath + "/../../Assets/Engine/";
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -68,6 +73,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	ApplicationBase::Init();
 
+	editorResources = std::make_unique<EditorResources>(editorAssetsPath);
 	renderer = std::make_unique<Renderer>(*driver);
 	renderer->SetCapability(ERenderingCapability::MULTISAMPLE, true);
 	shapeDrawer = std::make_unique<ShapeDrawer>(*renderer);

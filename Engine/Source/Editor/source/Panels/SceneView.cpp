@@ -29,6 +29,12 @@ LitchiEditor::SceneView::SceneView
 	//	case OvTools::Utils::PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
 	//	}
 	//};
+
+
+	m_gridMaterial.SetShader(ApplicationEditor::Instance()->editorResources->GetShader("Grid"));
+	m_gridMaterial.SetBlendable(true);
+	m_gridMaterial.SetBackfaceCulling(false);
+	m_gridMaterial.SetDepthTest(false);
 }
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
@@ -71,19 +77,6 @@ void LitchiEditor::SceneView::_Render_Impl()
 	PrepareCamera();
 
 	RenderScene();
-}
-void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
-{
-	constexpr float gridSize = 5000.0f;
-
-	glm::mat4 model = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
-
-	/*m_gridMaterial.Set("u_Color", p_color);
-	LitchiEditor::ApplicationEditor::Instance()->renderer->DrawModelWithSingleMaterial(*m_context.editorResources->GetModel("Plane"), m_gridMaterial, &model);*/
-
-	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(-gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
-	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, -gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
-	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
 }
 void LitchiEditor::SceneView::RenderScene()
 {
@@ -131,4 +124,29 @@ bool IsResizing()
 
 void LitchiEditor::SceneView::HandleActorPicking()
 {
+}
+
+void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
+{
+	constexpr float gridSize = 5000.0f;
+
+	// »æÖÆplane
+	glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
+	m_gridMaterial.Set("u_Color", p_color);
+	if (p_modelMatrix)
+		m_modelMatrixSender(*p_modelMatrix);
+
+	uint8_t stateMask = m_gridMaterial.GenerateStateMask();
+	LitchiEditor::ApplicationEditor::Instance()->renderer->ApplyStateMask(stateMask);
+
+	/* Draw the mesh */
+	m_gridMaterial.Bind(ApplicationEditor::Instance()->editorResources->GetTexture("Empty_Texture"));
+	auto planeModel = ApplicationEditor::Instance()->editorResources->GetModel("Plane");
+	LitchiEditor::ApplicationEditor::Instance()->renderer->Draw(*planeModel->GetMeshes().front(), EPrimitiveMode::TRIANGLES, m_gridMaterial.GetGPUInstances());
+	m_gridMaterial.UnBind();
+
+
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(-gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, -gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
+	LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
 }
