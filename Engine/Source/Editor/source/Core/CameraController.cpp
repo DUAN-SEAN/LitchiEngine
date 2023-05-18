@@ -27,6 +27,10 @@ LitchiEditor::CameraController::CameraController
 	m_cameraRotation(p_rotation),
 	m_enableFocusInputs(p_enableFocusInputs)
 {
+	// 设置相机默认的位置和姿态
+	m_cameraPosition = glm::vec3(10.0f, 10.0f, 10.0f);
+	m_cameraRotation = glm::quat(glm::radians(glm::vec3(-45.0f, 45.0f, 0.0f)));
+
 	m_camera->SetFov(60.0f);
 }
 
@@ -100,9 +104,8 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 	if(m_inputManager.IsKeyPressed(EKey::KEY_R))
 	{
-		m_cameraRotation = glm::quat(glm::radians(glm::vec3(0.0, 5.0, 0.0)));
-		// m_cameraRotation = glm::quat(1, 0, 0, 0);
-		m_cameraPosition = glm::vec3( 0, 0, 0);
+		m_cameraPosition = glm::vec3(10.0f, 10.0f, 10.0f);
+		m_cameraRotation = glm::quat(glm::radians(glm::vec3(-45.0f, 45.0f, 0.0f)));
 	}
 
 	if (m_view.IsHovered())
