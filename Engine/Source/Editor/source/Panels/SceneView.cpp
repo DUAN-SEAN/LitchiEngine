@@ -74,12 +74,15 @@ void LitchiEditor::SceneView::Update(float p_deltaTime)
 
 void LitchiEditor::SceneView::_Render_Impl()
 {
+	// 准备相机数据
 	PrepareCamera();
 
+	// 绘制场景
 	RenderScene();
 }
 void LitchiEditor::SceneView::RenderScene()
 {
+	// 绑定FBO
 	m_fbo.Bind();
 
 	// 调用管线渲染场景
