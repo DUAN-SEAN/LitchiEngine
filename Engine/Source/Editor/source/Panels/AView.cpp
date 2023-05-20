@@ -34,9 +34,15 @@ LitchiEditor::AView::AView
 void LitchiEditor::AView::Update(float p_deltaTime)
 {
 	// 更新fbo的大小
+	auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
+	size_t offset = sizeof(glm::mat4); // We skip the model matrix (Which is a special case, modified every draw calls)
+	engineUBO.SetSubData(m_camera->GetViewMatrix(), std::ref(offset));
+	engineUBO.SetSubData(m_camera->GetProjectionMatrix(), std::ref(offset));
+	engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
 
 	auto [winWidth, winHeight] = GetSafeSize();
 
+	
 	m_image->size = glm::vec2(static_cast<float>(winWidth), static_cast<float>(winHeight));
 
 	m_fbo.Resize(winWidth, winHeight);

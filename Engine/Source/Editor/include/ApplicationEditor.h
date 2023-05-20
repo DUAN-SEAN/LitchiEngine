@@ -55,6 +55,7 @@ namespace LitchiEditor
 		std::unique_ptr<InputManager>		inputManager;
 		std::unique_ptr<UIManager>		uiManager;
 		std::unique_ptr<EditorResources>		editorResources;
+		std::unique_ptr<UniformBuffer>	engineUBO;
 
 		SceneManager* sceneManager;
 

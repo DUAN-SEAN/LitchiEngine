@@ -133,9 +133,17 @@ void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::
 	// »æÖÆplane
 	glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
 	m_gridMaterial.Set("u_Color", p_color);
-	if (p_modelMatrix)
-		m_modelMatrixSender(*p_modelMatrix);
 
+	// ÉèÖÃubo
+	/*
+		mat4    ubo_Model;
+	    mat4    ubo_View;
+	    mat4    ubo_Projection;
+	    vec3    ubo_ViewPos;
+	    float   ubo_Time;
+    */
+	ApplicationEditor::Instance()->engineUBO->SetSubData(modelMatrix, 0);
+	
 	uint8_t stateMask = m_gridMaterial.GenerateStateMask();
 	LitchiEditor::ApplicationEditor::Instance()->renderer->ApplyStateMask(stateMask);
 
