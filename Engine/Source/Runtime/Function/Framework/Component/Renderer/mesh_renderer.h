@@ -3,6 +3,7 @@
 #define UNTITLED_MESH_RENDERER_H
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/Resources/Material.h"
 
 namespace LitchiRuntime
 {
@@ -20,14 +21,12 @@ namespace LitchiRuntime
 
 		void Render(RenderCamera* renderCamera);//渲染
 
+
+
+
 	public:
 
 		void PostResourceLoaded() override;
-
-		/**
-		 * \brief 材质名称
-		 */
-		std::string material_name;
 
 		RTTR_ENABLE()
 	private:
@@ -36,6 +35,14 @@ namespace LitchiRuntime
 		unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
 		unsigned int element_buffer_object_ = 0;//索引缓冲区对象
 		unsigned int vertex_array_object_ = 0;//顶点数组对象
+
+	public:
+		LitchiRuntime::Resource::Material* m_material;
+
+		/**
+		 * \brief 材质名称
+		 */
+		std::string material_path;
 	};
 }
 

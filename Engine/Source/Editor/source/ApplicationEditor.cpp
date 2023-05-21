@@ -12,6 +12,7 @@
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/material.h"
+#include "Runtime/Function/Renderer/Resources/Loaders/ModelLoader.h"
 
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
@@ -28,6 +29,27 @@ LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
+
+GameObject* CreateDefaultObject(Scene* scene, std::string name,Model* model , float y, float z)
+{
+	GameObject* go = new GameObject(name, scene);
+	auto transform = go->AddComponent<Transform>();
+	transform->set_position(glm::vec3(0.0, y, z));
+
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
+
+
+
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	Material* material = new Material();//ÉèÖÃ²ÄÖÊ
+	material->Parse("material/materialTemplete2.mat");
+	mesh_renderer->SetMaterial(material);
+	go->set_layer(0x01);
+
+	return go;
+}
+
 
 GameObject* CreateDefaultObject(Scene* scene,std::string name,float y, float z)
 {
@@ -131,6 +153,11 @@ void LitchiEditor::ApplicationEditor::Init()
 	hierachy.AddActorByInstance(go);
 	hierachy.AddActorByInstance(go2);
 	hierachy.AddActorByInstance(go3);
+
+
+	std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
+	auto model = Loaders::ModelLoader::Create(fbxPath);
+	
 }
 
 void LitchiEditor::ApplicationEditor::Run()

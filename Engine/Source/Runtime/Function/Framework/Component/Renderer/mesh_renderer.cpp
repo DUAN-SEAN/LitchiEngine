@@ -135,7 +135,7 @@ namespace LitchiRuntime
     }
     void MeshRenderer::PostResourceLoaded()
     {
-        DEBUG_LOG_INFO("New Material Name {}", material_name);
+        DEBUG_LOG_INFO("New Material Path {}", material_path);
     }
 }
 

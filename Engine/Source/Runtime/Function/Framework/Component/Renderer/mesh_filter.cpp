@@ -14,6 +14,12 @@ namespace LitchiRuntime
 
     }
 
+    void MeshFilter::LoadMeshFromModel(Model* model)
+    {
+        const auto& meshArr = model->GetMeshes();
+        const auto mesh = meshArr.at(0);
+    }
+
     void MeshFilter::LoadMesh(string mesh_file_path) {
         DEBUG_LOG_INFO(Application::GetDataPath() + mesh_file_path);
         //读取 Mesh文件头

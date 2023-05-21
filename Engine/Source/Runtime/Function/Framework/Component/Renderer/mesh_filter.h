@@ -5,6 +5,7 @@
 #include <string>
 #include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/Resources/Model.h"
 
 using std::string;
 
@@ -48,6 +49,8 @@ namespace LitchiRuntime
             Vertex* vertex_data_;//顶点数据
             unsigned short* vertex_index_data_;//顶点索引数据
         };
+
+        void LoadMeshFromModel(Model* model);
 
         void LoadMesh(string mesh_file_path);//加载Mesh文件
 

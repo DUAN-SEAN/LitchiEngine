@@ -15,7 +15,6 @@ using namespace LitchiEditor;
 using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
-
 	auto rotationEuler = glm::vec3(0.0, 0.0, 90.0);
 
 	// x , y z

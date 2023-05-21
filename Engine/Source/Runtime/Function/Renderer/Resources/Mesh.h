@@ -57,6 +57,16 @@ namespace LitchiRuntime
 		*/
 		const BoundingSphere& GetBoundingSphere() const;
 
+		VertexBuffer<float>* GetVertexBuffer() const
+		{
+			return m_vertexBuffer.get();
+		}
+
+		IndexBuffer* GetIndexBuffer() const
+		{
+			return m_indexBuffer.get();
+		}
+
 	private:
 		void CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices);
 		void ComputeBoundingSphere(const std::vector<Vertex>& p_vertices);
