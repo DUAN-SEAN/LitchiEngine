@@ -22,6 +22,8 @@ namespace LitchiRuntime
 
 		rttr::variant GetValue() const;
 
+		Object* GetObject() const { return m_root; }
+
 	private:
 		Object* m_root;
 		std::vector<std::string> m_propertyNameList;

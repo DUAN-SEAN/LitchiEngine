@@ -43,6 +43,12 @@ namespace LitchiRuntime
         virtual void OnTriggerExit(GameObject* game_object);
 
         virtual void OnTriggerStay(GameObject* game_object);
+
+        /**
+         * \brief 当资源加载完成后调用
+         */
+        virtual void PostResourceLoaded() override;
+
     private:
         GameObject* game_object_;
 

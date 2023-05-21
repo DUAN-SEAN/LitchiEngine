@@ -19,7 +19,15 @@ namespace LitchiRuntime
 		Material* material() { return material_; }
 
 		void Render(RenderCamera* renderCamera);//渲染
+
 	public:
+
+		void PostResourceLoaded() override;
+
+		/**
+		 * \brief 材质名称
+		 */
+		std::string material_name;
 
 		RTTR_ENABLE()
 	private:

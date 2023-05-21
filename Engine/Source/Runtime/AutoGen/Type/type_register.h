@@ -119,7 +119,8 @@ RTTR_REGISTRATION //注册反射
 
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("MaterialName",&MeshRenderer::material_name);
 
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")
