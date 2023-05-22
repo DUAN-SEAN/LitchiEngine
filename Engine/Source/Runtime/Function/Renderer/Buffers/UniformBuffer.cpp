@@ -35,17 +35,17 @@ GLuint LitchiRuntime::UniformBuffer::GetID() const
 	return m_bufferID;
 }
 
-void LitchiRuntime::UniformBuffer::BindBlockToShader(Resource::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint)
+void LitchiRuntime::UniformBuffer::BindBlockToShader(LitchiRuntime::Resource::Shader& p_shader, uint32_t p_uniformBlockLocation, uint32_t p_bindingPoint)
 {
 	glUniformBlockBinding(p_shader.id, p_uniformBlockLocation, p_bindingPoint);
 }
 
-void LitchiRuntime::UniformBuffer::BindBlockToShader(Resource::Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint)
+void LitchiRuntime::UniformBuffer::BindBlockToShader(LitchiRuntime::Resource::Shader& p_shader, const std::string& p_name, uint32_t p_bindingPoint)
 {
 	glUniformBlockBinding(p_shader.id, GetBlockLocation(p_shader, p_name), p_bindingPoint);
 }
 
-uint32_t LitchiRuntime::UniformBuffer::GetBlockLocation(Resource::Shader& p_shader, const std::string& p_name)
+uint32_t LitchiRuntime::UniformBuffer::GetBlockLocation(LitchiRuntime::Resource::Shader& p_shader, const std::string& p_name)
 {
 	return glGetUniformBlockIndex(p_shader.id, p_name.c_str());
 }

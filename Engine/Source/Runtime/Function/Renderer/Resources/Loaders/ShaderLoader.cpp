@@ -30,12 +30,12 @@ LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::CreateFro
 	uint32_t programID = CreateProgram(p_vertexShader, p_fragmentShader);
 
 	if (programID)
-		return new Resource::Shader("", programID);
+		return new LitchiRuntime::Resource::Shader("", programID);
 
 	return nullptr;
 }
 
-void LitchiRuntime::Loaders::ShaderLoader::Recompile(Resource::Shader& p_shader, const std::string& p_filePath)
+void LitchiRuntime::Loaders::ShaderLoader::Recompile(LitchiRuntime::Resource::Shader& p_shader, const std::string& p_filePath)
 {
 	__FILE_TRACE = p_filePath;
 
@@ -47,7 +47,7 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(Resource::Shader& p_shader,
 	if (newProgram)
 	{
 		/* Pointer to the shaderID (const data member, tricks to access it) */
-		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(Resource::Shader, id);
+		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(LitchiRuntime::Resource::Shader, id);
 
 		/* Deletes the previous program */
 		glDeleteProgram(*shaderID);
@@ -65,7 +65,7 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(Resource::Shader& p_shader,
 	}
 }
 
-bool LitchiRuntime::Loaders::ShaderLoader::Destroy(Resource::Shader*& p_shader)
+bool LitchiRuntime::Loaders::ShaderLoader::Destroy(LitchiRuntime::Resource::Shader*& p_shader)
 {
 	if (p_shader)
 	{

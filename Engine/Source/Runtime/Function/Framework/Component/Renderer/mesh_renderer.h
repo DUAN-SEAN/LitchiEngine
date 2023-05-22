@@ -21,9 +21,6 @@ namespace LitchiRuntime
 
 		void Render(RenderCamera* renderCamera);//渲染
 
-
-
-
 	public:
 
 		void PostResourceLoaded() override;

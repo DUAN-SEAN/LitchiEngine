@@ -101,7 +101,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	{
 //		if (OvTools::Utils::PathParser::GetFileType(p_receivedData.first) == OvTools::Utils::PathParser::EFileType::MODEL)
 //		{
-//			if (auto resource = OVSERVICE(OvCore::ResourceManagement::ModelManager).GetResource(p_receivedData.first); resource)
+//			if (auto resource = OVSERVICE(LitchiRuntime::ModelManager).GetResource(p_receivedData.first); resource)
 //			{
 //				p_data = resource;
 //				widget.content = p_receivedData.first;
@@ -139,7 +139,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	{
 //		if (OvTools::Utils::PathParser::GetFileType(p_receivedData.first) == OvTools::Utils::PathParser::EFileType::TEXTURE)
 //		{
-//			if (auto resource = OVSERVICE(OvCore::ResourceManagement::TextureManager).GetResource(p_receivedData.first); resource)
+//			if (auto resource = OVSERVICE(LitchiRuntime::TextureManager).GetResource(p_receivedData.first); resource)
 //			{
 //				p_data = resource;
 //				widget.textureID.id = resource->id;
@@ -177,7 +177,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	{
 //		if (OvTools::Utils::PathParser::GetFileType(p_receivedData.first) == OvTools::Utils::PathParser::EFileType::SHADER)
 //		{
-//			if (auto resource = OVSERVICE(OvCore::ResourceManagement::ShaderManager).GetResource(p_receivedData.first); resource)
+//			if (auto resource = OVSERVICE(LitchiRuntime::ShaderManager).GetResource(p_receivedData.first); resource)
 //			{
 //				p_data = resource;
 //				widget.content = p_receivedData.first;
@@ -215,7 +215,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	{
 //		if (OvTools::Utils::PathParser::GetFileType(p_receivedData.first) == OvTools::Utils::PathParser::EFileType::MATERIAL)
 //		{
-//			if (auto resource = OVSERVICE(OvCore::ResourceManagement::MaterialManager).GetResource(p_receivedData.first); resource)
+//			if (auto resource = OVSERVICE(LitchiRuntime::MaterialManager).GetResource(p_receivedData.first); resource)
 //			{
 //				p_data = resource;
 //				widget.content = p_receivedData.first;
@@ -253,7 +253,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 //	{
 //		if (OvTools::Utils::PathParser::GetFileType(p_receivedData.first) == OvTools::Utils::PathParser::EFileType::SOUND)
 //		{
-//			if (auto resource = OVSERVICE(OvCore::ResourceManagement::SoundManager).GetResource(p_receivedData.first); resource)
+//			if (auto resource = OVSERVICE(LitchiRuntime::SoundManager).GetResource(p_receivedData.first); resource)
 //			{
 //				p_data = resource;
 //				widget.content = p_receivedData.first;

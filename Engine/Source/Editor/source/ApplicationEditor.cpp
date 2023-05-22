@@ -13,6 +13,10 @@
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ModelLoader.h"
+#include "Runtime/Resource/MaterialManager.h"
+#include "Runtime/Resource/ModelManager.h"
+#include "Runtime/Resource/ShaderManager.h"
+#include "Runtime/Resource/TextureManager.h"
 
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
@@ -24,6 +28,14 @@ LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(
 	std::string filePath(projectPath);
 	editorAssetsPath = filePath + "/../../Assets/Editor/";
 	engineAssetsPath = filePath + "/../../Assets/Engine/";
+
+	// todo 暂时这样写
+	projectAssetsPath = editorAssetsPath;
+
+	ModelManager::ProvideAssetPaths(projectAssetsPath, engineAssetsPath);
+	TextureManager::ProvideAssetPaths(projectAssetsPath, engineAssetsPath);
+	ShaderManager::ProvideAssetPaths(projectAssetsPath, engineAssetsPath);
+	MaterialManager::ProvideAssetPaths(projectAssetsPath, engineAssetsPath);
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -128,7 +140,11 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(std::string(getenv("APPDATA")) + "\\OverloadTech\\OvEditor\\layout.ini"))
 		uiManager->ResetLayout("Config\\layout.ini");
 
-	// scene->AddGameObject()
+	// 初始化ResourceManager
+	modelManager = std::make_unique<ModelManager>();
+	materialManager = std::make_unique<MaterialManager>();
+	textureManager = std::make_unique<TextureManager>();
+	shaderManager = std::make_unique<ShaderManager>();
 
 	// EditorResource
 
@@ -156,6 +172,9 @@ void LitchiEditor::ApplicationEditor::Init()
 
 
 	std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
+	std::string fbxPath2 = "../model/fbx_extra.fbx";
+
+	auto model2 = modelManager->CreateResource(fbxPath2);
 	auto model = Loaders::ModelLoader::Create(fbxPath);
 	
 }

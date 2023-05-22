@@ -3,7 +3,7 @@
 
 #include "Runtime/Function/Renderer/Resources/Material.h"
 
-LitchiRuntime::Resource::Material * LitchiRuntime::Loaders::MaterialLoader::Create(const std::string & p_path)
+LitchiRuntime::Resource::Material* LitchiRuntime::Loaders::MaterialLoader::Create(const std::string & p_path)
 {
 	/*tinyxml2::XMLDocument doc;
 	doc.LoadFile(p_path.c_str());
@@ -26,7 +26,7 @@ LitchiRuntime::Resource::Material * LitchiRuntime::Loaders::MaterialLoader::Crea
 	return nullptr;
 }
 
-void LitchiRuntime::Loaders::MaterialLoader::Reload(Resource::Material& p_material, const std::string& p_path)
+void LitchiRuntime::Loaders::MaterialLoader::Reload(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)
 {
 	/*tinyxml2::XMLDocument doc;
 	doc.LoadFile(p_path.c_str());
@@ -38,7 +38,7 @@ void LitchiRuntime::Loaders::MaterialLoader::Reload(Resource::Material& p_materi
 	}*/
 }
 
-void LitchiRuntime::Loaders::MaterialLoader::Save(Resource::Material& p_material, const std::string& p_path)
+void LitchiRuntime::Loaders::MaterialLoader::Save(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)
 {
 	/*tinyxml2::XMLDocument doc;
 	tinyxml2::XMLNode* node = doc.NewElement("root");
@@ -52,7 +52,7 @@ void LitchiRuntime::Loaders::MaterialLoader::Save(Resource::Material& p_material
 		OVLOG_ERROR("[MATERIAL] \"" + p_path + "\": Failed to save");*/
 }
 
-bool LitchiRuntime::Loaders::MaterialLoader::Destroy(Resource::Material *& p_material)
+bool LitchiRuntime::Loaders::MaterialLoader::Destroy(LitchiRuntime::Resource::Material*& p_material)
 {
 	if (p_material)
 	{

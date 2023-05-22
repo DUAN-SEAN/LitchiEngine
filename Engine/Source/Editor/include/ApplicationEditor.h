@@ -15,6 +15,10 @@
 #include "Runtime/Function/Renderer/Driver.h"
 #include "Runtime/Function/Renderer/Core/Renderer.h"
 #include "Runtime/Function/Renderer/Core/ShapeDrawer.h"
+#include "Runtime/Resource/MaterialManager.h"
+#include "Runtime/Resource/ModelManager.h"
+#include "Runtime/Resource/ShaderManager.h"
+#include "Runtime/Resource/TextureManager.h"
 
 using namespace LitchiRuntime;
 
@@ -56,6 +60,11 @@ namespace LitchiEditor
 		std::unique_ptr<UIManager>		uiManager;
 		std::unique_ptr<EditorResources>		editorResources;
 		std::unique_ptr<UniformBuffer>	engineUBO;
+
+		std::unique_ptr<ModelManager> modelManager;
+		std::unique_ptr<MaterialManager> materialManager;
+		std::unique_ptr<TextureManager> textureManager;
+		std::unique_ptr<ShaderManager> shaderManager;
 
 		SceneManager* sceneManager;
 

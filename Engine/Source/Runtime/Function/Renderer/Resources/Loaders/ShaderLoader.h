@@ -28,27 +28,27 @@ namespace LitchiRuntime::Loaders
 		* Create a shader
 		* @param p_filePath
 		*/
-		static Resource::Shader* Create(const std::string& p_filePath);
+		static LitchiRuntime::Resource::Shader* Create(const std::string& p_filePath);
 
 		/**
 		* Create a shader from source
 		* @param p_vertexShader
 		* @param p_fragmentShader
 		*/
-		static Resource::Shader* CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader);
+		static LitchiRuntime::Resource::Shader* CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader);
 
 		/**
 		* Recompile a shader
 		* @param p_shader
 		* @param p_filePath
 		*/
-		static void	Recompile(Resource::Shader& p_shader, const std::string& p_filePath);
+		static void	Recompile(LitchiRuntime::Resource::Shader& p_shader, const std::string& p_filePath);
 
 		/**
 		* Destroy a shader
 		* @param p_shader
 		*/
-		static bool Destroy(Resource::Shader*& p_shader);
+		static bool Destroy(LitchiRuntime::Resource::Shader*& p_shader);
 
 	private:
 		static std::pair<std::string, std::string> ParseShader(const std::string& p_filePath);
