@@ -6,14 +6,38 @@
 
 #include "Shader.h"
 #include "Texture.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Renderer/shader.h"
 
 namespace LitchiRuntime::Resource
 {
+
+	class MaterialResSetting
+	{
+	public:
+		bool blendable;
+
+		RTTR_ENABLE()
+	};
+	
+
+	class MaterialRes
+	{
+	public:
+		std::string shaderPath;
+
+
+		std::vector<MaterialResSetting> settingList;
+		std::vector<UniformInfo> settingList;
+
+		RTTR_ENABLE()
+	};
+
+
 	/**
 	* A material is a combination of a shader and some settings (Material settings and shader settings)
 	*/
-	class Material
+	class Material : public Object
 	{
 	public:
 		/**

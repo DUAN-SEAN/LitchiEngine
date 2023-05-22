@@ -174,7 +174,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
 	std::string fbxPath2 = "../model/fbx_extra.fbx";
 
-	auto model2 = modelManager->CreateResource(fbxPath2);
+	auto model2 = modelManager->LoadResource(fbxPath2);
 	auto model = Loaders::ModelLoader::Create(fbxPath);
 	
 }
