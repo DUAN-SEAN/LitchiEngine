@@ -7,6 +7,7 @@
 #include "Editor/include/Panels/Inspector.h"
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
+#include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
@@ -173,6 +174,12 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
 	std::string fbxPath2 = "../model/fbx_extra.fbx";
+
+	auto sceneJson  = SerializerManager::SerializeToJson(*scene);
+
+	auto scene2 = sceneManager->CreateScene("Default Scene");
+	SerializerManager::DeserializeFromJson(sceneJson ,*scene2);
+	DEBUG_LOG_INFO(sceneJson);
 
 	auto model2 = modelManager->LoadResource(fbxPath2);
 	auto model = Loaders::ModelLoader::Create(fbxPath);

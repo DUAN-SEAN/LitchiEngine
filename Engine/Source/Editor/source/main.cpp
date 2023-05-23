@@ -15,37 +15,32 @@ using namespace LitchiEditor;
 using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
-	auto rotationEuler = glm::vec3(0.0, 0.0, 90.0);
 
-	// x , y z
-	auto cameraRotation = glm::quat(glm::vec3(glm::radians(rotationEuler.x), glm::radians(rotationEuler.y), glm::radians(rotationEuler.z)));
-	
+	LitchiRuntime::Resource::MaterialRes res;
+	res.shaderPath = "XXXX";
+	res.settings.backfaceCulling = true;
 
-	auto newForward =   cameraRotation * glm::vec3(1.0, 0.0, 0.0);
-	auto ypr = glm::eulerAngles(cameraRotation);
+	auto uniformFloat = new Resource::UniformInfoFloat();
+	uniformFloat->name = "shineness";
+	uniformFloat->value = 64;
+
+	auto uniformVec4 = new Resource::UniformInfoVector4();
+	uniformVec4->name = "diffuseColor";
+	uniformVec4->vector = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	auto uniformFloatType = uniformFloat->get_type();
+	auto uniformVec4Type = uniformVec4->get_type();
+	auto uniform = uniformFloat;
+	auto uniformType = uniform->get_type();
 
 
-	/*Loaders::TextureLoader::Create("C:/Users/lenovo/Desktop/1.png", ETextureFilteringMode::LINEAR, ETextureFilteringMode::LINEAR, true);
-	Loaders::ModelLoader::Create("");*/
+	res.uniformInfoList.push_back(uniformFloat);
+	res.uniformInfoList.push_back(uniformVec4);
 
-	// 测试代码
-	std::vector<std::string> propertyNameList;
-	propertyNameList.push_back("position");
-	propertyNameList.push_back("x");
+	auto serializeJson = SerializerManager::SerializeToJson(res);
 
-	auto vecType = type::get<glm::vec3>();
-
-	// 创建transform
-	auto transformType = type::get<Transform>();
-	auto tranVar = transformType.create();
-
-	// 设置pos
-	auto& tran = *tranVar.get_value<Transform*>();
-	tran.set_position(glm::vec3(5.0, 0.0, 0.0));
-
-	// 创建propertyField
-	PropertyField property_field(&tran, propertyNameList);
-	property_field.SetValue(12.0);
+	LitchiRuntime::Resource::MaterialRes res2;
+	SerializerManager::DeserializeFromJson(serializeJson, res2);
 
 	Application application;
 	// auto application_standalone=new ApplicationStandalone();

@@ -231,6 +231,9 @@ namespace LitchiRuntime
 
 	static void to_json_recursively(const instance& obj2, PrettyWriter<StringBuffer>& writer)
 	{
+		// todo 需要检查obj2是否是指针类型, 如果是指针类型则需要获取特性,如果特性打了多态
+		// todo 如果打了多态, 则需要将多态的类型信息注入到json中
+
 		writer.StartObject();
 		instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
 
@@ -392,8 +395,17 @@ namespace LitchiRuntime
 
 	void fromjson_recursively(instance obj2, Value& json_object)
 	{
-		instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
-		const auto prop_list = obj.get_derived_type().get_properties();
+		// todo 需要检查obj2是否是指针类型, 如果是指针类型则需要获取特性,如果特性打了多态
+		// todo 如果打了多态, 则需要从json中获取多态信息
+
+
+		auto rawType = obj2.get_type().get_raw_type();
+		auto isWrapper = rawType.is_wrapper();
+		instance obj = isWrapper ? obj2.get_wrapped_instance() : obj2;
+
+		auto rawType2 = obj.get_type().get_raw_type();
+		auto derivedType = obj.get_derived_type().get_raw_type();
+		const auto prop_list = derivedType.get_properties();
 
 		for (auto prop : prop_list)
 		{

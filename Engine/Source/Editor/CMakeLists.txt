@@ -29,7 +29,12 @@ include(../../ThridParty/physx-4.1/CMakeLists.txt)
 add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE})
 
 add_compile_definitions("Litchi_ROOT_DIR=${BINARY_ROOT_DIR}")
-
+target_compile_options(${TARGET_NAME} 
+	PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->"
+	PRIVATE 
+	$<$<CXX_COMPILER_ID:MSVC>:/bigobj> 
+	$<$<CXX_COMPILER_ID:GNU>:-Wa,-mbig-obj>)
+	
 # 添加stb头文件
 # target_include_directories(
   # ${TARGET_NAME} 

@@ -172,6 +172,7 @@ namespace LitchiRuntime
 		std::string name_;
 		std::unordered_map<std::string, std::vector<Component*>> components_map_;
 
+		RTTR_ENABLE()
 	private:
 
 		unsigned char layer_;//将物体分不同的层，用于相机分层、物理碰撞分层等。

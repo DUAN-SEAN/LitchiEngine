@@ -163,7 +163,57 @@ RTTR_REGISTRATION //注册反射
 	// SphereCollider
 	registration::class_<SphereCollider>("SphereCollider")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-	
+
+	/* Material Resource  */
+	// UniformInfoBase
+	registration::class_<Resource::UniformInfoBase>("UniformInfoBase")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("name", &Resource::UniformInfoBase::name);
+
+
+	registration::class_<Resource::UniformInfoVector4>("UniformInfoVector4")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &Resource::UniformInfoVector4::vector);
+
+	registration::class_<Resource::UniformInfoPath>("UniformInfoPath")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("path", &Resource::UniformInfoPath::path);
+
+	registration::class_<Resource::UniformInfoFloat>("UniformInfoFloat")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &Resource::UniformInfoFloat::value);
+
+	registration::class_<Resource::MaterialResSetting>("MaterialResSetting")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()
+		.property("blendable", &Resource::MaterialResSetting::blendable)
+		.property("backfaceCulling", &Resource::MaterialResSetting::backfaceCulling)
+		.property("depthTest", &Resource::MaterialResSetting::depthTest)
+		.property("gpuInstances", &Resource::MaterialResSetting::gpuInstances);
+
+	registration::class_<Resource::MaterialRes>("MaterialResNew")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()
+		.property("shaderPath", &Resource::MaterialRes::shaderPath)
+		.property("settings", &Resource::MaterialRes::settings)
+		.property("uniformInfoList", &Resource::MaterialRes::uniformInfoList);
+
 	}
 }
 

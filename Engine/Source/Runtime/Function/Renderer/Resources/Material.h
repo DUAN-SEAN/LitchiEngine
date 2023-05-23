@@ -11,24 +11,52 @@
 
 namespace LitchiRuntime::Resource
 {
+	class UniformInfoBase
+	{
+	public:
+		std::string name;
+		RTTR_ENABLE()
+	};
+
+	class UniformInfoVector4 :public UniformInfoBase
+	{
+	public:
+		glm::vec4 vector;
+		RTTR_ENABLE()
+	};
+
+	class UniformInfoPath :public UniformInfoBase
+	{
+	public:
+		std::string path;
+		RTTR_ENABLE()
+	};
+
+	class UniformInfoFloat :public UniformInfoBase
+	{
+	public:
+		float value;
+		RTTR_ENABLE()
+	};
 
 	class MaterialResSetting
 	{
 	public:
 		bool blendable;
+		bool backfaceCulling;
+		bool depthTest;
+		int gpuInstances;
 
 		RTTR_ENABLE()
 	};
-	
+
 
 	class MaterialRes
 	{
 	public:
 		std::string shaderPath;
-
-
-		std::vector<MaterialResSetting> settingList;
-		std::vector<UniformInfo> settingList;
+		MaterialResSetting settings;
+		std::vector<UniformInfoBase*> uniformInfoList;
 
 		RTTR_ENABLE()
 	};
@@ -171,20 +199,20 @@ namespace LitchiRuntime::Resource
 		* Returns the uniforms data of the material
 		*/
 		std::map<std::string, std::any>& GetUniformsData();
-		
+
 		const std::string path;
 
 	private:
 		LitchiRuntime::Resource::Shader* m_shader = nullptr;
 		std::map<std::string, std::any> m_uniformsData;
 
-		bool m_blendable		= false;
-		bool m_backfaceCulling	= true;
+		bool m_blendable = false;
+		bool m_backfaceCulling = true;
 		bool m_frontfaceCulling = false;
-		bool m_depthTest		= true;
-		bool m_depthWriting		= true;
-		bool m_colorWriting		= true;
-		int m_gpuInstances		= 1;
+		bool m_depthTest = true;
+		bool m_depthWriting = true;
+		bool m_colorWriting = true;
+		int m_gpuInstances = 1;
 	};
 }
 
