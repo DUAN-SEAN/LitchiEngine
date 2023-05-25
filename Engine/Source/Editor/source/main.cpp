@@ -24,6 +24,27 @@ int main(int argc, char** argv)
 	uniformFloat->name = "shineness";
 	uniformFloat->value = 64;
 
+	auto unfiromBase = new Resource::UniformInfoBase();
+	auto type1 = uniformFloat->get_type();
+	auto type2 = unfiromBase->get_type();
+	auto flag = type2.is_base_of(type1);
+
+	rttr::instance ins = unfiromBase;
+	auto insType= ins.get_type();
+	auto isWrapper = insType.is_wrapper();
+	auto is_pointer = insType.is_pointer();
+	auto type22 = type2.get_raw_type();
+	auto insType2 = insType.get_raw_type();
+	auto vv = insType.get_metadata("Polymorphic");
+	if(vv.is_valid())
+	{
+		auto f = vv.to_bool();
+	}
+	for (auto base_class : uniformFloat->get_type().get_base_classes())
+	{
+		auto v = base_class.get_metadata("Polymorphic");
+	}
+
 	auto uniformVec4 = new Resource::UniformInfoVector4();
 	uniformVec4->name = "diffuseColor";
 	uniformVec4->vector = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);

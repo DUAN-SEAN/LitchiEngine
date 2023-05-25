@@ -217,10 +217,19 @@ struct sequential_container_mapper_wrapper : iterator_wrapper_base<Tp>
             base_class::get_value(get_container(container), index) = value.get_value<value_t>();
             return true;
         }
-        else
+        else if (value.get_type().is_pointer()) 
         {
-            return false;
+            auto currType = ::rttr::type::get<value_t>();
+            auto currRawType = currType.get_raw_type();
+            auto valueRawType = value.get_type().get_raw_type();
+            if (currRawType.is_base_of(valueRawType))
+            {
+                base_class::get_value(get_container(container), index) = value.get_value<value_t>();
+                return true;
+            }
         }
+  
+        return false;
     }
 
     template<typename..., typename C = ConstType, typename ReturnType = decltype(base_class::get_value(std::declval<C&>(), 0)),

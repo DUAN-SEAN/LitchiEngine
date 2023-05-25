@@ -237,6 +237,24 @@ namespace LitchiRuntime
 		writer.StartObject();
 		instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
 
+		auto objType = obj.get_type();
+		if (objType.is_pointer())
+		{
+			objType = objType.get_raw_type();
+		}
+		const std::string key = "Type";
+		if (objType.get_metadata("Polymorphic").to_bool() == true)
+		{
+			writer.String(key.c_str(), key.length(), false);
+			auto objDerivedType = obj.get_derived_type();
+			if (objDerivedType.is_pointer())
+			{
+				objDerivedType = objDerivedType.get_raw_type();
+			}
+			std::string typeName = objDerivedType.get_name().data();
+			writer.String(typeName.c_str(), typeName.length(), false);
+		}
+
 		auto prop_list = obj.get_derived_type().get_properties();
 		for (auto prop : prop_list)
 		{
@@ -312,6 +330,7 @@ namespace LitchiRuntime
 
 	static void write_array_recursively(variant_sequential_view& view, Value& json_array_value)
 	{
+		bool result = false;
 		view.set_size(json_array_value.Size());
 		for (SizeType i = 0; i < json_array_value.Size(); ++i)
 		{
@@ -325,8 +344,25 @@ namespace LitchiRuntime
 			{
 				variant var_tmp = view.get_value(i);
 				variant wrapped_var = var_tmp.extract_wrapped_value();
+
+				auto rawType2 = wrapped_var.get_type().get_raw_type();
+
+				const std::string key = "Type";
+				if (rawType2.get_metadata("Polymorphic"))
+				{
+					Value::MemberIterator ret = json_index_value.FindMember(key);
+					auto realTypeName = std::string(ret->value.GetString(), ret->value.GetStringLength());
+					rawType2 = (rttr::type::get_by_name(realTypeName));
+					wrapped_var = rawType2.create();
+					auto isPointer = wrapped_var.get_type().is_pointer();
+				}
+
 				fromjson_recursively(wrapped_var, json_index_value);
-				view.set_value(i, wrapped_var);
+				result = view.set_value(i, wrapped_var);
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("write_array_recursively WriteObject False");
+				}
 			}
 			else
 			{
@@ -334,6 +370,10 @@ namespace LitchiRuntime
 				variant extracted_value = extract_basic_types(json_index_value);
 				if (extracted_value.convert(array_type))
 					view.set_value(i, extracted_value);
+				else
+				{
+					DEBUG_LOG_ERROR("write_array_recursively Write Basic False");
+				}
 			}
 		}
 	}
@@ -403,16 +443,25 @@ namespace LitchiRuntime
 		auto isWrapper = rawType.is_wrapper();
 		instance obj = isWrapper ? obj2.get_wrapped_instance() : obj2;
 
-		auto rawType2 = obj.get_type().get_raw_type();
-		auto derivedType = obj.get_derived_type().get_raw_type();
-		const auto prop_list = derivedType.get_properties();
+		const auto prop_list = obj.get_derived_type().get_properties();
 
 		for (auto prop : prop_list)
 		{
 			Value::MemberIterator ret = json_object.FindMember(prop.get_name().data());
 			if (ret == json_object.MemberEnd())
 				continue;
-			const type value_t = prop.get_type();
+			type value_t = prop.get_type();
+
+
+			auto rawType2 = value_t.get_raw_type();
+
+			const std::string key = "Type";
+			if (rawType2.get_metadata("Polymorphic"))
+			{
+				Value::MemberIterator ret = json_object.FindMember(key);
+				auto realTypeName = std::string(ret->value.GetString(), ret->value.GetStringLength());
+				value_t = rttr::type::get_by_name(realTypeName);
+			}
 
 			auto& json_value = ret->value;
 			switch (json_value.GetType())
@@ -439,14 +488,16 @@ namespace LitchiRuntime
 			case kObjectType:
 			{
 				variant var = prop.get_value(obj);
+
 				fromjson_recursively(var, json_value);
 				prop.set_value(obj, var);
 				break;
 			}
 			default:
 			{
+				const type value_t2 = prop.get_type();
 				variant extracted_value = extract_basic_types(json_value);
-				if (extracted_value.convert(value_t)) // REMARK: CONVERSION WORKS ONLY WITH "const type", check whether this is correct or not!
+				if (extracted_value.convert(value_t2)) // REMARK: CONVERSION WORKS ONLY WITH "const type", check whether this is correct or not!
 					prop.set_value(obj, extracted_value);
 			}
 			}

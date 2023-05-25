@@ -22,21 +22,21 @@ namespace LitchiRuntime::Resource
 	{
 	public:
 		glm::vec4 vector;
-		RTTR_ENABLE()
+		RTTR_ENABLE(UniformInfoBase)
 	};
 
 	class UniformInfoPath :public UniformInfoBase
 	{
 	public:
 		std::string path;
-		RTTR_ENABLE()
+		RTTR_ENABLE(UniformInfoBase)
 	};
 
 	class UniformInfoFloat :public UniformInfoBase
 	{
 	public:
 		float value;
-		RTTR_ENABLE()
+		RTTR_ENABLE(UniformInfoBase)
 	};
 
 	class MaterialResSetting

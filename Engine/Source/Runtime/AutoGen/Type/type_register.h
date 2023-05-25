@@ -109,7 +109,8 @@ RTTR_REGISTRATION //注册反射
 	// Componet
 	registration::class_<Component>("Component")
 		(
-			rttr::metadata("Serializable", true)
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
@@ -168,7 +169,8 @@ RTTR_REGISTRATION //注册反射
 	// UniformInfoBase
 	registration::class_<Resource::UniformInfoBase>("UniformInfoBase")
 		(
-			rttr::metadata("Serializable", true)
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("name", &Resource::UniformInfoBase::name);
