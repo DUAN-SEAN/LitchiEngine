@@ -97,9 +97,12 @@ RTTR_REGISTRATION //注册反射
 	// 场景管理
 	// GO
 	registration::class_<GameObject>("GameObject")
+		(
+			rttr::metadata("Polymorphic", true)
+		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("name", &GameObject::name_)
-		.property("components_map", &GameObject::components_map_);
+		.property("componentList", &GameObject::component_list_);
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)

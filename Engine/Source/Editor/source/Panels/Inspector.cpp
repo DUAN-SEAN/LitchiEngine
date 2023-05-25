@@ -210,13 +210,14 @@ GameObject* LitchiEditor::Inspector::GetTargetActor() const
 
 void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 {
-	auto& components = p_target->GetComponentsMap();
+	auto& components = p_target->GetComponents();
 
-	for (auto& [name, componentArr] : components)
-		for (auto component : componentArr)
-		{
-			DrawComponent(name, component);
-		}
+	for (auto component : components)
+	{
+		auto name = component->get_type().get_name().to_string();
+		DrawComponent(name, component);
+	}
+		
 
 	/*auto& behaviours = p_target.GetBehaviours();
 

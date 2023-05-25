@@ -57,7 +57,7 @@ namespace LitchiRuntime
         Mesh* mesh() { return mesh_; };//Mesh对象
     public:
 
-        RTTR_ENABLE()
+        RTTR_ENABLE(Component)
     private:
         Mesh* mesh_;//Mesh对象
     };

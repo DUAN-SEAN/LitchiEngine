@@ -52,7 +52,7 @@ namespace LitchiRuntime
     private:
         GameObject* game_object_;
 
-        RTTR_ENABLE();
+        RTTR_ENABLE(Object);
     };
 }
 

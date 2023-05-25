@@ -16,7 +16,7 @@ using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
 
-	LitchiRuntime::Resource::MaterialRes res;
+	/*LitchiRuntime::Resource::MaterialRes res;
 	res.shaderPath = "XXXX";
 	res.settings.backfaceCulling = true;
 
@@ -61,7 +61,7 @@ int main(int argc, char** argv)
 	auto serializeJson = SerializerManager::SerializeToJson(res);
 
 	LitchiRuntime::Resource::MaterialRes res2;
-	SerializerManager::DeserializeFromJson(serializeJson, res2);
+	SerializerManager::DeserializeFromJson(serializeJson, res2);*/
 
 	Application application;
 	// auto application_standalone=new ApplicationStandalone();

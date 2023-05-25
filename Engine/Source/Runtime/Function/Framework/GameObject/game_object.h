@@ -78,15 +78,9 @@ namespace LitchiRuntime
 			//获取类名
 			type t = type::get<T>();
 			std::string component_type_name = t.get_name().to_string();
-
-			if (components_map_.find(component_type_name) == components_map_.end()) {
-				std::vector<Component*> component_vec;
-				component_vec.push_back(component);
-				components_map_[component_type_name] = component_vec;
-			}
-			else {
-				components_map_[component_type_name].push_back(component);
-			}
+			
+			component_list_.push_back(component);
+			
 		}
 
 		/// 获取组件，仅用于C++中。
@@ -99,29 +93,17 @@ namespace LitchiRuntime
 			std::string component_type_name = t.get_name().to_string();
 			std::vector<Component*> component_vec;
 
-			if (components_map_.find(component_type_name) != components_map_.end()) {
-				component_vec = components_map_[component_type_name];
-			}
-			if (component_vec.size() == 0) {
-				//没有找到组件,就去查找子类组件
-				auto derived_classes = t.get_derived_classes();
-				for (auto derived_class : derived_classes) {
-					std::string derived_class_type_name = derived_class.get_name().to_string();
-					if (components_map_.find(derived_class_type_name) != components_map_.end()) {
-						component_vec = components_map_[derived_class_type_name];
-						if (component_vec.size() != 0) {
-							break;
-						}
-					}
+			for (auto iter = component_list_.begin(); iter != component_list_.end(); iter++)
+			{
+				if ((*iter)->get_type().get_name() == component_type_name)
+				{
+					return dynamic_cast<T*>(*iter);
 				}
 			}
-			if (component_vec.size() == 0) {
-				return nullptr;
-			}
-			return dynamic_cast<T*>(component_vec[0]);
+			return nullptr;
 		}
 
-		std::unordered_map<std::string, std::vector<Component*>>& GetComponentsMap() { return components_map_; }
+		 std::vector<Component*>& GetComponents() { return component_list_; }
 
 		/// 遍历组件
 		/// \param func
@@ -131,46 +113,20 @@ namespace LitchiRuntime
 			//获取类名
 			type t = component->get_type();
 			std::string component_type_name = t.get_name().to_string();
-			if (components_map_.find(component_type_name) != components_map_.end())
+			for (auto iter = component_list_.begin(); iter != component_list_.end(); iter++)
 			{
-				std::vector<Component*>& component_vec = components_map_[component_type_name];
-
-				if (component_vec.size() == 0)
+				if (*iter == component)
 				{
-					//没有找到组件,就去查找子类组件
-					auto derived_classes = t.get_derived_classes();
-					for (auto derived_class : derived_classes)
-					{
-						std::string derived_class_type_name = derived_class.get_name().to_string();
-						if (components_map_.find(derived_class_type_name) != components_map_.end())
-						{
-							component_vec = components_map_[derived_class_type_name];
-							if (component_vec.size() != 0)
-							{
-								break;
-							}
-						}
-					}
-				}
-				if (component_vec.size() == 0)
-				{
-					return false;
-				}
-				for (auto iter = component_vec.begin(); iter != component_vec.end(); iter++)
-				{
-					if (*iter == component)
-					{
-						component_vec.erase(iter);
-						return true;
-					}
+					component_list_.erase(iter);
+					return true;
 				}
 			}
-			
+
 			return false;
 		}
 
 		std::string name_;
-		std::unordered_map<std::string, std::vector<Component*>> components_map_;
+		std::vector<Component*> component_list_;
 
 		RTTR_ENABLE()
 	private:

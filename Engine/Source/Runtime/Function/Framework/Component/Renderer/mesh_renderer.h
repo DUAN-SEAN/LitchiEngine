@@ -25,7 +25,7 @@ namespace LitchiRuntime
 
 		void PostResourceLoaded() override;
 
-		RTTR_ENABLE()
+		RTTR_ENABLE(Component)
 	private:
 		Material* material_;
 

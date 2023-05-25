@@ -415,6 +415,7 @@ namespace LitchiRuntime
 					value_itr != json_index_value.MemberEnd())
 				{
 					auto key_var = extract_value(key_itr, view.get_key_type());
+
 					auto value_var = extract_value(value_itr, view.get_value_type());
 					if (key_var && value_var)
 					{
@@ -443,7 +444,7 @@ namespace LitchiRuntime
 		auto isWrapper = rawType.is_wrapper();
 		instance obj = isWrapper ? obj2.get_wrapped_instance() : obj2;
 
-		const auto prop_list = obj.get_derived_type().get_properties();
+		const auto prop_list = obj.get_type().get_raw_type().get_properties();
 
 		for (auto prop : prop_list)
 		{
