@@ -43,7 +43,7 @@ namespace LitchiRuntime
 	void Component::OnTriggerStay(GameObject* game_object) {
 	}
 
-	void Component::PostResourceLoaded()
+	void Component::PostResourceModify()
 	{
 
 	}

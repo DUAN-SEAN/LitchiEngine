@@ -99,7 +99,7 @@ bool LitchiRuntime::PropertyField::SetValue(rttr::variant value) const
 	WriteChild(instance, m_propertyNameList, propIndex, value);
 
 	// 调用资源加载完毕接口,重新刷新资源
-	m_root->PostResourceLoaded();
+	m_root->PostResourceModify();
 
 	return true;
 }

@@ -1,41 +1,29 @@
 
 #include "MaterialLoader.h"
 
+#include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 
 LitchiRuntime::Resource::Material* LitchiRuntime::Loaders::MaterialLoader::Create(const std::string & p_path)
 {
-	/*tinyxml2::XMLDocument doc;
-	doc.LoadFile(p_path.c_str());
-	if (!doc.Error())
+	Resource::Material* material = new Resource::Material();
+	if(SerializerManager::DeserializeFromJson(p_path, material))
 	{
-		tinyxml2::XMLNode* root = doc.FirstChild();
-
-		Material* material = new Material();
-
-		material->OnDeserialize(doc, root);
+		material->PostResourceLoaded();
 
 		return material;
 	}
-	else
-	{
-		return nullptr;
-	}*/
-
-
+	
 	return nullptr;
 }
 
 void LitchiRuntime::Loaders::MaterialLoader::Reload(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)
 {
-	/*tinyxml2::XMLDocument doc;
-	doc.LoadFile(p_path.c_str());
-	if (!doc.Error())
+	if (SerializerManager::DeserializeFromJson(p_path, p_material))
 	{
-		tinyxml2::XMLNode* root = doc.FirstChild();
-
-		p_material.OnDeserialize(doc, root);
-	}*/
+		p_material.PostResourceLoaded();
+		
+	}
 }
 
 void LitchiRuntime::Loaders::MaterialLoader::Save(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)

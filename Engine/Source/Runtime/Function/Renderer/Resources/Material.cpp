@@ -175,3 +175,17 @@ std::map<std::string, std::any>& LitchiRuntime::Resource::Material::GetUniformsD
 {
 	return m_uniformsData;
 }
+
+void LitchiRuntime::Resource::Material::PostResourceModify()
+{
+	// todo 将资源的修改写入到本地
+}
+
+void LitchiRuntime::Resource::Material::PostResourceLoaded()
+{
+	// todo 用加载好的资源 初始化运行时字段
+
+	// 设置shader
+	// 设置setting
+	// 设置uniform
+}

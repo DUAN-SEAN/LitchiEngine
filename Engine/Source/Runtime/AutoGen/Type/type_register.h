@@ -77,10 +77,10 @@ RTTR_REGISTRATION //注册反射
 		.property("name",&TextureRes::texture_name_)
 		.property("path",&TextureRes::texture_path_);
 
-	registration::class_<MaterialRes>("MaterialRes")
+	/*registration::class_<MaterialRes>("MaterialRes")
 		.constructor<>()
 		.property("shader", &MaterialRes::shader_path_)
-		.property("textureArr", &MaterialRes::textureRes_arr_);
+		.property("textureArr", &MaterialRes::textureRes_arr_);*/
 
 	registration::class_<PhysicMaterialRes>("PhysicMaterialRes")
 		.constructor<>()
@@ -210,7 +210,7 @@ RTTR_REGISTRATION //注册反射
 		.property("depthTest", &Resource::MaterialResSetting::depthTest)
 		.property("gpuInstances", &Resource::MaterialResSetting::gpuInstances);
 
-	registration::class_<Resource::MaterialRes>("MaterialResNew")
+	registration::class_<Resource::MaterialRes>("MaterialRes")
 		(
 			rttr::metadata("Serializable", true)
 			)
@@ -218,6 +218,17 @@ RTTR_REGISTRATION //注册反射
 		.property("shaderPath", &Resource::MaterialRes::shaderPath)
 		.property("settings", &Resource::MaterialRes::settings)
 		.property("uniformInfoList", &Resource::MaterialRes::uniformInfoList);
+
+	// 内存中的material句柄, 需要在Asset中显示, 需要被反射
+	registration::class_<Resource::Material>("Material")
+		(
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
+			)
+		.constructor<>()
+		.property("materialPath", &Resource::Material::path)
+		.property("materialRes", &Resource::Material::materialRes);
+
 
 	}
 }

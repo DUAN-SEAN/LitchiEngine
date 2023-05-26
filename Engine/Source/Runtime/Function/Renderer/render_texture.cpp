@@ -3,7 +3,8 @@
 
 #include "gpu_resource_mapper.h"
 #include "render_texture.h"
-#include "texture2d.h"
+
+#include "Resources/texture2d.h"
 #include "Runtime/Core/Log/debug.h"
 
 namespace LitchiRuntime

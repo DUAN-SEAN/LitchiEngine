@@ -200,7 +200,17 @@ namespace LitchiRuntime::Resource
 		*/
 		std::map<std::string, std::any>& GetUniformsData();
 
+	public:
+
+		void PostResourceModify() override;
+
+		void PostResourceLoaded() override;
+
+		MaterialRes* materialRes;
+
 		const std::string path;
+
+		RTTR_ENABLE(Object)
 
 	private:
 		LitchiRuntime::Resource::Shader* m_shader = nullptr;

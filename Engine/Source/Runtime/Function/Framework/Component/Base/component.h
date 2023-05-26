@@ -47,7 +47,7 @@ namespace LitchiRuntime
         /**
          * \brief 当资源加载完成后调用
          */
-        virtual void PostResourceLoaded() override;
+        virtual void PostResourceModify() override;
 
     private:
         GameObject* game_object_;
