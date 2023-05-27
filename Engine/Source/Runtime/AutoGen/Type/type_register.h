@@ -72,10 +72,10 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 
-	registration::class_<TextureRes>("TextureRes")
+	/*registration::class_<TextureRes>("TextureRes")
 		.constructor<>()
 		.property("name",&TextureRes::texture_name_)
-		.property("path",&TextureRes::texture_path_);
+		.property("path",&TextureRes::texture_path_);*/
 
 	/*registration::class_<MaterialRes>("MaterialRes")
 		.constructor<>()

@@ -9,8 +9,6 @@
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/gpu_resource_mapper.h"
-#include "Runtime/Function/Renderer/shader.h"
-#include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 
 namespace LitchiRuntime
@@ -133,9 +131,14 @@ namespace LitchiRuntime
         }
 
     }
+    void MeshRenderer::PostResourceLoaded()
+    {
+        DEBUG_LOG_INFO("PostResourceLoaded Path {}", material_path);
+
+    }
     void MeshRenderer::PostResourceModify()
     {
-        DEBUG_LOG_INFO("New Material Path {}", material_path);
+        DEBUG_LOG_INFO("PostResourceModify Path {}", material_path);
     }
 }
 

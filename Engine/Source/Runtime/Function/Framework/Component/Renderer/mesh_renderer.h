@@ -8,7 +8,6 @@
 namespace LitchiRuntime
 {
 	class RenderCamera;
-	class Material;
 	class MeshFilter;
 	class Texture2D;
 	class MeshRenderer :public Component {
@@ -16,18 +15,18 @@ namespace LitchiRuntime
 		MeshRenderer();
 		~MeshRenderer();
 
-		void SetMaterial(Material* material);//设置Material
-		Material* material() { return material_; }
+		void SetMaterial(Resource::Material* material);//设置Material
+		Resource::Material* material() { return material_; }
 
 		void Render(RenderCamera* renderCamera);//渲染
 
 	public:
-
+		void PostResourceLoaded() override;
 		void PostResourceModify() override;
 
 		RTTR_ENABLE(Component)
 	private:
-		Material* material_;
+		Resource::Material* material_;
 
 		unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
 		unsigned int element_buffer_object_ = 0;//索引缓冲区对象
