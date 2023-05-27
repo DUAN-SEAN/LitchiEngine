@@ -7,20 +7,38 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Runtime/Core/Meta/Reflection/object.h"
+#include "rttr/registration"
+
 #include "Runtime/Function/Renderer/shader.h"
 
 namespace LitchiRuntime::Resource
 {
+	enum UniformInfoType
+	{
+		Invalid,
+		Vector4,
+		Path,
+		Float
+	};
+
 	class UniformInfoBase
 	{
 	public:
 		std::string name;
+		virtual UniformInfoType GetUniformType() {
+			return UniformInfoType
+				::Invalid;
+		}
 		RTTR_ENABLE()
 	};
 
 	class UniformInfoVector4 :public UniformInfoBase
 	{
 	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Vector4;
+		}
 		glm::vec4 vector;
 		RTTR_ENABLE(UniformInfoBase)
 	};
@@ -28,6 +46,10 @@ namespace LitchiRuntime::Resource
 	class UniformInfoPath :public UniformInfoBase
 	{
 	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Path;
+		}
 		std::string path;
 		RTTR_ENABLE(UniformInfoBase)
 	};
@@ -35,6 +57,10 @@ namespace LitchiRuntime::Resource
 	class UniformInfoFloat :public UniformInfoBase
 	{
 	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Float;
+		}
 		float value;
 		RTTR_ENABLE(UniformInfoBase)
 	};
@@ -68,6 +94,9 @@ namespace LitchiRuntime::Resource
 	class Material : public Object
 	{
 	public:
+		Material() {}
+		~Material() {}
+
 		/**
 		* Defines the shader to attach to this material instance
 		* @param p_shader
@@ -208,7 +237,7 @@ namespace LitchiRuntime::Resource
 
 		MaterialRes* materialRes;
 
-		const std::string path;
+		std::string path;
 
 		RTTR_ENABLE(Object)
 

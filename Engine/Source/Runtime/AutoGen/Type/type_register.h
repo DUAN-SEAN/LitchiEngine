@@ -225,7 +225,7 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Serializable", true),
 			rttr::metadata("Polymorphic", true)
 			)
-		.constructor<>()
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("materialPath", &Resource::Material::path)
 		.property("materialRes", &Resource::Material::materialRes);
 

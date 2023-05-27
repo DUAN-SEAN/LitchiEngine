@@ -1,14 +1,19 @@
 
-#include "MaterialLoader.h"
+#include "rttr/registration"
 
+#include "MaterialLoader.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
+#include "Runtime/Resource/asset_manager.h"
 
 LitchiRuntime::Resource::Material* LitchiRuntime::Loaders::MaterialLoader::Create(const std::string & p_path)
 {
-	Resource::Material* material = new Resource::Material();
-	if(SerializerManager::DeserializeFromJson(p_path, material))
+	Resource::MaterialRes* materialRes = new Resource::MaterialRes();
+	if(AssetManager::LoadAsset(p_path, *materialRes))
 	{
+		Resource::Material* material = new Resource::Material();
+		material->materialRes = materialRes;
+		material->path = p_path;
 		material->PostResourceLoaded();
 
 		return material;

@@ -2,6 +2,8 @@
 
 #include "Material.h"
 
+#include "Loaders/ShaderLoader.h"
+#include "Runtime/Core/App/application_base.h"
 #include "Runtime/Function/Renderer/Buffers/UniformBuffer.h"
 
 void LitchiRuntime::Resource::Material::SetShader(LitchiRuntime::Resource::Shader* p_shader)
@@ -34,7 +36,7 @@ void LitchiRuntime::Resource::Material::Bind(Texture* p_emptyTexture)
 
 		int textureSlot = 0;
 
-		for (auto&[name, value] : m_uniformsData)
+		for (auto& [name, value] : m_uniformsData)
 		{
 			auto uniformData = m_shader->GetUniformInfo(name);
 
@@ -49,21 +51,21 @@ void LitchiRuntime::Resource::Material::Bind(Texture* p_emptyTexture)
 				case UniformType::UNIFORM_FLOAT_VEC3:	if (value.type() == typeid(glm::vec3))	m_shader->SetUniformVec3(name, std::any_cast<glm::vec3>(value));		break;
 				case UniformType::UNIFORM_FLOAT_VEC4:	if (value.type() == typeid(glm::vec4))	m_shader->SetUniformVec4(name, std::any_cast<glm::vec4>(value));		break;
 				case UniformType::UNIFORM_SAMPLER_2D:
+				{
+					if (value.type() == typeid(Texture*))
 					{
-						if (value.type() == typeid(Texture*))
+						if (auto tex = std::any_cast<Texture*>(value); tex)
 						{
-							if (auto tex = std::any_cast<Texture*>(value); tex)
-							{
-								tex->Bind(textureSlot);
-								m_shader->SetUniformInt(uniformData->name, textureSlot++);
-							}
-							else if (p_emptyTexture)
-							{
-								p_emptyTexture->Bind(textureSlot);
-								m_shader->SetUniformInt(uniformData->name, textureSlot++);
-							}
+							tex->Bind(textureSlot);
+							m_shader->SetUniformInt(uniformData->name, textureSlot++);
+						}
+						else if (p_emptyTexture)
+						{
+							p_emptyTexture->Bind(textureSlot);
+							m_shader->SetUniformInt(uniformData->name, textureSlot++);
 						}
 					}
+				}
 				}
 			}
 		}
@@ -185,7 +187,25 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 {
 	// todo 用加载好的资源 初始化运行时字段
 
+	if (materialRes == nullptr || path.empty())
+	{
+		return;
+	}
+
 	// 设置shader
+	m_shader =  ApplicationBase::Instance()->shaderManager->LoadResource(materialRes->shaderPath);
+
 	// 设置setting
+	m_backfaceCulling = materialRes->settings.backfaceCulling;
+	m_blendable = materialRes->settings.blendable;
+	m_depthTest = materialRes->settings.depthTest;
+	m_gpuInstances = materialRes->settings.gpuInstances;
+
 	// 设置uniform
+	FillUniform();
+	for (auto uniformInfo : materialRes->uniformInfoList)
+	{
+
+	}
+
 }

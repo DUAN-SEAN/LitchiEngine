@@ -16,13 +16,21 @@ using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
 
-	/*LitchiRuntime::Resource::MaterialRes res;
+	LitchiRuntime::Resource::MaterialRes res;
 	res.shaderPath = "XXXX";
 	res.settings.backfaceCulling = true;
 
 	auto uniformFloat = new Resource::UniformInfoFloat();
 	uniformFloat->name = "shineness";
 	uniformFloat->value = 64;
+
+	auto uniformPath = new Resource::UniformInfoPath();
+	uniformPath->name = "diffuseTexture";
+	uniformPath->path = "";
+
+	auto uniformPath2 = new Resource::UniformInfoPath();
+	uniformPath2->name = "specularTexture";
+	uniformPath2->path = "";
 
 	auto unfiromBase = new Resource::UniformInfoBase();
 	auto type1 = uniformFloat->get_type();
@@ -57,11 +65,13 @@ int main(int argc, char** argv)
 
 	res.uniformInfoList.push_back(uniformFloat);
 	res.uniformInfoList.push_back(uniformVec4);
+	res.uniformInfoList.push_back(uniformPath);
+	res.uniformInfoList.push_back(uniformPath2);
 
 	auto serializeJson = SerializerManager::SerializeToJson(res);
 
 	LitchiRuntime::Resource::MaterialRes res2;
-	SerializerManager::DeserializeFromJson(serializeJson, res2);*/
+	SerializerManager::DeserializeFromJson(serializeJson, res2);
 
 	Application application;
 	// auto application_standalone=new ApplicationStandalone();

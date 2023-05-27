@@ -19,8 +19,9 @@
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {
-
+    ApplicationBase* ApplicationBase::instance_;
     void ApplicationBase::Init() {
+        instance_ = this;
 
         Debug::Init();
 

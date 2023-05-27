@@ -16,7 +16,8 @@ namespace LitchiRuntime
         static bool LoadAsset(const std::string& asset_url, AssetType& out_asset)
         {
             // read json file to string
-            std::filesystem::path asset_path = GetFullPath(asset_url);
+            // std::filesystem::path asset_path = GetFullPath(asset_url);
+            const std::filesystem::path asset_path = asset_url;
             std::ifstream asset_json_file(asset_path);
             if (!asset_json_file)
             {

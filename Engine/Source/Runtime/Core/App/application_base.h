@@ -4,6 +4,12 @@
 
 #include <direct.h>
 #include <string>
+
+#include "Runtime/Resource/MaterialManager.h"
+#include "Runtime/Resource/ModelManager.h"
+#include "Runtime/Resource/ShaderManager.h"
+#include "Runtime/Resource/TextureManager.h"
+
 namespace LitchiRuntime
 {
 
@@ -49,6 +55,14 @@ namespace LitchiRuntime
 
         virtual void Exit();
 
+        std::unique_ptr<ModelManager> modelManager;
+        std::unique_ptr<MaterialManager> materialManager;
+        std::unique_ptr<TextureManager> textureManager;
+        std::unique_ptr<ShaderManager> shaderManager;
+
+
+        static ApplicationBase* Instance() { return instance_; }
+        static ApplicationBase* instance_;
     protected:
         std::string title_;//标题栏显示
 

@@ -61,11 +61,6 @@ namespace LitchiEditor
 		std::unique_ptr<EditorResources>		editorResources;
 		std::unique_ptr<UniformBuffer>	engineUBO;
 
-		std::unique_ptr<ModelManager> modelManager;
-		std::unique_ptr<MaterialManager> materialManager;
-		std::unique_ptr<TextureManager> textureManager;
-		std::unique_ptr<ShaderManager> shaderManager;
-
 		SceneManager* sceneManager;
 
 		std::string projectPath;
