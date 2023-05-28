@@ -18,22 +18,20 @@ namespace LitchiRuntime
 		void SetMaterial(Resource::Material* material);//设置Material
 		Resource::Material* material() { return material_; }
 
-		void Render(RenderCamera* renderCamera);//渲染
-
+		// void RenderOld(RenderCamera* renderCamera);//渲染
+		void Render(RenderCamera* renderCamera);
 	public:
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;
 
 		RTTR_ENABLE(Component)
 	private:
-		Resource::Material* material_;
-
 		unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
 		unsigned int element_buffer_object_ = 0;//索引缓冲区对象
 		unsigned int vertex_array_object_ = 0;//顶点数组对象
 
 	public:
-		LitchiRuntime::Resource::Material* m_material;
+		LitchiRuntime::Resource::Material* material_;
 
 		/**
 		 * \brief 材质名称

@@ -2,6 +2,8 @@
 #include "mesh_filter.h"
 #include <fstream>
 #include "Runtime/Core/App/application.h"
+#include "Runtime/Core/App/application_base.h"
+#include "Runtime/Resource/ModelManager.h"
 
 using std::ifstream;
 using std::ios;
@@ -10,41 +12,36 @@ namespace LitchiRuntime
 {
 
     MeshFilter::MeshFilter()
-        :mesh_(nullptr) {
+        :model_(nullptr),mesh_Index_(0) {
 
     }
 
-    //void MeshFilter::LoadMeshFromModel(Model* model)
-    //{
-    //    const auto& meshArr = model->GetMeshes();
-    //    const auto mesh = meshArr.at(0);
-    //}
-
-    //void MeshFilter::LoadMesh(string mesh_file_path) {
-    //    DEBUG_LOG_INFO(Application::GetDataPath() + mesh_file_path);
-    //    //读取 Mesh文件头
-    //    ifstream input_file_stream(Application::GetDataPath() + mesh_file_path, ios::in | ios::binary);
-    //    MeshFileHead mesh_file_head;
-    //    input_file_stream.read((char*)&mesh_file_head, sizeof(mesh_file_head));
-    //    //读取顶点数据
-    //    unsigned char* vertex_data = (unsigned char*)malloc(mesh_file_head.vertex_num_ * sizeof(Vertex));
-    //    input_file_stream.read((char*)vertex_data, mesh_file_head.vertex_num_ * sizeof(Vertex));
-    //    //读取顶点索引数据
-    //    unsigned short* vertex_index_data = (unsigned short*)malloc(mesh_file_head.vertex_index_num_ * sizeof(unsigned short));
-    //    input_file_stream.read((char*)vertex_index_data, mesh_file_head.vertex_index_num_ * sizeof(unsigned short));
-    //    input_file_stream.close();
-
-    //    mesh_ = new Mesh();
-    //    mesh_->vertex_num_ = mesh_file_head.vertex_num_;
-    //    mesh_->vertex_index_num_ = mesh_file_head.vertex_index_num_;
-    //    mesh_->vertex_data_ = (Vertex*)vertex_data;
-    //    mesh_->vertex_index_data_ = vertex_index_data;
-    //}
-
-
-
     MeshFilter::~MeshFilter() {
-        delete(mesh_);
-        mesh_ = nullptr;
+
+    }
+
+
+    void MeshFilter::PostResourceLoaded()
+    {
+        // 资源加载后
+        if(model_path.empty())
+        {
+            return;
+        }
+
+        // 通过路径加载模型资源
+        model_ = ApplicationBase::Instance()->modelManager->LoadResource(model_path);
+    }
+
+    void MeshFilter::PostResourceModify()
+    {
+        // 资源加载后
+        if (model_path.empty())
+        {
+            return;
+        }
+
+        // 通过路径加载模型资源
+        model_ = ApplicationBase::Instance()->modelManager->LoadResource(model_path);
     }
 }

@@ -53,13 +53,11 @@ namespace LitchiEditor
 
 		std::unique_ptr<Device>				device;
 		std::unique_ptr<Driver>				driver;
-		std::unique_ptr<Renderer>					renderer;
 		std::unique_ptr<ShapeDrawer>			shapeDrawer;
 		std::unique_ptr<Window>				window;
 		std::unique_ptr<InputManager>		inputManager;
 		std::unique_ptr<UIManager>		uiManager;
 		std::unique_ptr<EditorResources>		editorResources;
-		std::unique_ptr<UniformBuffer>	engineUBO;
 
 		SceneManager* sceneManager;
 

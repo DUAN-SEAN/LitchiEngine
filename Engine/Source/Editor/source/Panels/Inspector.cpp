@@ -254,6 +254,19 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			};
 
 			GUIDrawer::DrawBoolean(propertyRoot, propertyName.to_string(), getBool, setBool);
+		}else if(t==type::get<int32_t>())
+		{
+			auto getInt32 = [var, property_field]
+			{
+				return property_field.GetValue().to_int32();
+			};
+
+			auto setInt32 = [property_field](int32_t value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawInputField4Int32(propertyRoot, propertyName.to_string(), getInt32, setInt32);
 		}
 		/*else if (t == type::get<int8_t>())
 		{
@@ -300,6 +313,9 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			};
 			
 			GUIDrawer::DrawInputField4Double(propertyRoot, propertyName.to_string(), getDouble, setDouble);
+		}else
+		{
+			return false;
 		}
 
 		return true;

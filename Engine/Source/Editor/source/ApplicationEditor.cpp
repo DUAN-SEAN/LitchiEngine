@@ -12,7 +12,6 @@
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
-#include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ModelLoader.h"
 #include "Runtime/Resource/MaterialManager.h"
@@ -44,40 +43,21 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
 
-GameObject* CreateDefaultObject(Scene* scene, std::string name,Model* model , float y, float z)
+GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string modelPath,std::string materialPath , float y, float z)
 {
 	GameObject* go = new GameObject(name, scene);
 	auto transform = go->AddComponent<Transform>();
 	transform->set_position(glm::vec3(0.0, y, z));
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
-
-
+	mesh_filter->model_path = modelPath;
+	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	Material* material = new Material();//设置材质
-	material->Parse("material/materialTemplete2.mat");
-	mesh_renderer->SetMaterial(material);
+	mesh_renderer->material_path = materialPath;
+	mesh_renderer->PostResourceLoaded();
 	go->set_layer(0x01);
-
-	return go;
-}
-
-
-GameObject* CreateDefaultObject(Scene* scene,std::string name,float y, float z)
-{
-	GameObject* go = new GameObject(name, scene);
-	auto transform = go->AddComponent<Transform>();
-	transform->set_position(glm::vec3(0.0, y, z));
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->LoadMesh("model/fishsoup_pot.mesh");
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	Material* material = new Material();//设置材质
-	material->Parse("material/materialTemplete2.mat");
-	mesh_renderer->SetMaterial(material);
-	go->set_layer(0x01);
-
+	
 	return go;
 }
 
@@ -167,11 +147,12 @@ void LitchiEditor::ApplicationEditor::Init()
 	// 初始化默认场景
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
-		GameObject* go = CreateDefaultObject(scene, "liubei", 0, -10);
-		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
+		GameObject* go = CreateDefaultObject(scene, "liubei","../Engine/Models/Cube.fbx","../material/Default.mat", 0, -10);
 
-		GameObject* go2 = CreateDefaultObject(scene, "diaochan", 10, -30);
-		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", -10, 0);
+		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
+		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/Default.mat", -10, 0);
+
+		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		hierachy.AddActorByInstance(go);
 		hierachy.AddActorByInstance(go2);
 		hierachy.AddActorByInstance(go3);
@@ -184,7 +165,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 		auto sceneJson = SerializerManager::SerializeToJson(*scene);
 
-		auto scene2 = sceneManager->CreateScene("Default Scene");
+		auto scene2 = sceneManager->CreateScene("Default Scene 2");
 		SerializerManager::DeserializeFromJson(sceneJson, *scene2);
 		DEBUG_LOG_INFO(sceneJson);
 

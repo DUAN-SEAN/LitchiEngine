@@ -5,6 +5,7 @@
 
 #include "Runtime/Function/Renderer/Driver.h"
 #include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/Resources/Material.h"
 #include "Runtime/Function/Renderer/Resources/Shader.h"
 #include "Runtime/Function/Renderer/Resources/Model.h"
 #include "Runtime/Function/Renderer/Settings/EComparaisonAlgorithm.h"
@@ -261,6 +262,14 @@ namespace LitchiRuntime
 		void ClearFrameInfo();
 
 		/**
+		*  Draw Mesh
+		*  @param p_mesh
+		*  @param p_material
+		*  @param p_modelMatrix
+		*/
+		void DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix);
+
+		/**
 		* Draw the given model the amount of times passed in parameter (Instance rendering if p_instance > 1)
 		* @param p_mesh
 		* @param p_primitiveMode
@@ -311,5 +320,7 @@ namespace LitchiRuntime
 		Driver&	m_driver;
 		FrameInfo			m_frameInfo;
 		uint8_t				m_state;
+
+		Texture* m_emptyTexture = nullptr;
 	};
 }

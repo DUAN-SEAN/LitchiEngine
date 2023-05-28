@@ -6,7 +6,6 @@
 #include <rapidjson/document.h>
 
 #include "serializer.h"
-#include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Core/App/application.h"
 
 using std::ifstream;

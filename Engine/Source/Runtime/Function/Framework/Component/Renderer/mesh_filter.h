@@ -27,39 +27,27 @@ namespace LitchiRuntime
         MeshFilter();
         ~MeshFilter();
     public:
-        ////顶点
-        //struct Vertex
-        //{
-        //    glm::vec3 pos_;
-        //    glm::vec4 color_;
-        //    glm::vec2 uv_;
-        //};
-
         ////Mesh文件头
-        //struct MeshFileHead {
-        //    char type_[4];
-        //    unsigned short vertex_num_;//顶点个数
-        //    unsigned short vertex_index_num_;//索引个数
-        //};
+        //
+        Model* GetModel() { return model_; };//Mesh对象
 
-        ////Mesh数据
-        //struct Mesh {
-        //    unsigned short vertex_num_;//顶点个数
-        //    unsigned short vertex_index_num_;//索引个数
-        //    Vertex* vertex_data_;//顶点数据
-        //    unsigned short* vertex_index_data_;//顶点索引数据
-        //};
+        int GetMeshIndex(){ return mesh_Index_; }
 
-        //void LoadMeshFromModel(Model* model);
-
-        //void LoadMesh(string mesh_file_path);//加载Mesh文件
-
-        Mesh* mesh() { return mesh_; };//Mesh对象
     public:
+
+        void PostResourceLoaded() override;
+        void PostResourceModify() override;
+
+    	/**
+         * \brief 模型路径
+         */
+        std::string model_path;
+
+        int mesh_Index_;
 
         RTTR_ENABLE(Component)
     private:
-        Mesh* mesh_;//Mesh对象
+        Model* model_;//Mesh对象
     };
 }
 #endif //UNTITLED_MESH_FILTER_H

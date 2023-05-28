@@ -23,7 +23,6 @@
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
-#include "Runtime/Function/Renderer/material.h"
 #include "Runtime/Function/Scene/scene_manager.h"
 #include "Runtime/Resource/config_manager.h"
 
@@ -124,11 +123,13 @@ RTTR_REGISTRATION //注册反射
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("MaterialName",&MeshRenderer::material_path);
+		.property("materialPath",&MeshRenderer::material_path);
 
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("modelPath",&MeshFilter::model_path)
+		.property("meshIndex",&MeshFilter::mesh_Index_);
 
 	// Transform
 	registration::class_<Transform>("Transform")

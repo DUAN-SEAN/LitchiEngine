@@ -3,7 +3,20 @@
 
 #include "Renderer.h"
 
-LitchiRuntime::Renderer::Renderer(Driver& p_driver) : m_driver(p_driver), m_state(0)
+#include "Runtime/Core/App/application_base.h"
+#include "Runtime/Function/Renderer/Resources/Material.h"
+#include "Runtime/Function/Renderer/Resources/Loaders/TextureLoader.h"
+
+LitchiRuntime::Renderer::Renderer(Driver& p_driver) :
+	m_driver(p_driver),
+	m_state(0),
+	m_emptyTexture(Loaders::TextureLoader::CreateColor
+	(
+		(255 << 24) | (255 << 16) | (255 << 8) | 255,
+		ETextureFilteringMode::NEAREST,
+		ETextureFilteringMode::NEAREST,
+		false
+	))
 {
 }
 
@@ -194,6 +207,24 @@ void LitchiRuntime::Renderer::ClearFrameInfo()
 	m_frameInfo.batchCount		= 0;
 	m_frameInfo.instanceCount	= 0;
 	m_frameInfo.polyCount		= 0;
+}
+
+void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
+{
+	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
+	{
+		if (p_modelMatrix)
+			ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
+			// m_modelMatrixSender(*p_modelMatrix);
+
+		uint8_t stateMask = p_material.GenerateStateMask();
+		ApplyStateMask(stateMask);
+
+		/* Draw the mesh */
+		p_material.Bind(m_emptyTexture);
+		Draw(p_mesh, EPrimitiveMode::TRIANGLES, p_material.GetGPUInstances());
+		p_material.UnBind();
+	}
 }
 
 void LitchiRuntime::Renderer::Draw(LitchiRuntime::IMesh& p_mesh, LitchiRuntime::EPrimitiveMode p_primitiveMode, uint32_t p_instances)
