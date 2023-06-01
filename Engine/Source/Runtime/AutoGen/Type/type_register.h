@@ -179,6 +179,33 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("name", &Resource::UniformInfoBase::name);
 
+	registration::class_<Resource::UniformInfoBool>("UniformInfoBool")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &Resource::UniformInfoBool::value);
+
+	registration::class_<Resource::UniformInfoFloat>("UniformInfoFloat")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &Resource::UniformInfoFloat::value);
+
+	registration::class_<Resource::UniformInfoVector2>("UniformInfoVector2")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &Resource::UniformInfoVector2::vector);
+
+	registration::class_<Resource::UniformInfoVector3>("UniformInfoVector3")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &Resource::UniformInfoVector3::vector);
 
 	registration::class_<Resource::UniformInfoVector4>("UniformInfoVector4")
 		(
@@ -193,13 +220,6 @@ RTTR_REGISTRATION //注册反射
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("path", &Resource::UniformInfoPath::path);
-
-	registration::class_<Resource::UniformInfoFloat>("UniformInfoFloat")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("value", &Resource::UniformInfoFloat::value);
 
 	registration::class_<Resource::MaterialResSetting>("MaterialResSetting")
 		(

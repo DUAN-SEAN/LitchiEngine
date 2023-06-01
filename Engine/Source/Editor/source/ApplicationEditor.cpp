@@ -150,7 +150,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		GameObject* go = CreateDefaultObject(scene, "liubei","../Engine/Models/Cube.fbx","../material/Default.mat", 0, -10);
 
 		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
-		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/Default.mat", -10, 0);
+		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		hierachy.AddActorByInstance(go);

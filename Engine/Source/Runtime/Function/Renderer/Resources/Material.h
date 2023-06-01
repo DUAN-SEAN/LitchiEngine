@@ -16,9 +16,12 @@ namespace LitchiRuntime::Resource
 	enum UniformInfoType
 	{
 		Invalid,
+		Bool,
+		Float,
+		Vector2,
+		Vector3,
 		Vector4,
 		Path,
-		Float
 	};
 
 	class UniformInfoBase
@@ -30,6 +33,51 @@ namespace LitchiRuntime::Resource
 				::Invalid;
 		}
 		RTTR_ENABLE()
+	};
+
+
+	class UniformInfoBool :public UniformInfoBase
+	{
+	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Bool;
+		}
+		float value;
+		RTTR_ENABLE(UniformInfoBase)
+	};
+
+	class UniformInfoFloat :public UniformInfoBase
+	{
+	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Float;
+		}
+		float value;
+		RTTR_ENABLE(UniformInfoBase)
+	};
+
+	class UniformInfoVector2 :public UniformInfoBase
+	{
+	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Vector2;
+		}
+		glm::vec2 vector;
+		RTTR_ENABLE(UniformInfoBase)
+	};
+
+	class UniformInfoVector3 :public UniformInfoBase
+	{
+	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Vector3;
+		}
+		glm::vec3 vector;
+		RTTR_ENABLE(UniformInfoBase)
 	};
 
 	class UniformInfoVector4 :public UniformInfoBase
@@ -51,17 +99,6 @@ namespace LitchiRuntime::Resource
 			return UniformInfoType::Path;
 		}
 		std::string path;
-		RTTR_ENABLE(UniformInfoBase)
-	};
-
-	class UniformInfoFloat :public UniformInfoBase
-	{
-	public:
-		UniformInfoType GetUniformType() override
-		{
-			return UniformInfoType::Float;
-		}
-		float value;
 		RTTR_ENABLE(UniformInfoBase)
 	};
 

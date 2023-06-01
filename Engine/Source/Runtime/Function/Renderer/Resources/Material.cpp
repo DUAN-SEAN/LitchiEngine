@@ -180,7 +180,10 @@ std::map<std::string, std::any>& LitchiRuntime::Resource::Material::GetUniformsD
 
 void LitchiRuntime::Resource::Material::PostResourceModify()
 {
-	// todo 将资源的修改写入到本地
+	PostResourceLoaded();
+
+	// 写入本地
+	// 获取当前Material句柄在资源管理器的路径, 将句柄写入路径下
 }
 
 void LitchiRuntime::Resource::Material::PostResourceLoaded()
@@ -193,7 +196,8 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 	}
 
 	// 设置shader
-	m_shader =  ApplicationBase::Instance()->shaderManager->LoadResource(materialRes->shaderPath);
+	m_shader = ApplicationBase::Instance()->shaderManager->LoadResource(materialRes->shaderPath);
+	SetShader(m_shader);
 
 	// 设置setting
 	m_backfaceCulling = materialRes->settings.backfaceCulling;
@@ -205,7 +209,66 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 	FillUniform();
 	for (auto uniformInfo : materialRes->uniformInfoList)
 	{
+		auto& uniformData = m_uniformsData.find(uniformInfo->name);
+		if (uniformData == m_uniformsData.end())
+		{
+			DEBUG_LOG_ERROR("Material::PostResourceLoaded Not Found Uniform uniformName:{}", uniformInfo->name);
+			continue;
 
+		}
+		else
+		{
+			switch (uniformInfo->GetUniformType())
+			{
+			case UniformInfoType::Bool:
+			{
+				auto uniformInfoBool = static_cast<UniformInfoBool*>(uniformInfo);
+				uniformData->second = std::make_any<bool>(uniformInfoBool->value);
+				break;
+			}
+			case UniformInfoType::Float:
+			{
+				auto uniformInfoFloat = static_cast<UniformInfoFloat*>(uniformInfo);
+				uniformData->second = std::make_any<float>(uniformInfoFloat->value);
+				break;
+			}
+			case UniformInfoType::Vector2:
+			{
+				auto uniformInfoVector2 = static_cast<UniformInfoVector2*>(uniformInfo);
+				uniformData->second = std::make_any<glm::vec2>(uniformInfoVector2->vector);
+				break;
+			}
+			case UniformInfoType::Vector3:
+			{
+				auto uniformInfoVector3 = static_cast<UniformInfoVector3*>(uniformInfo);
+				uniformData->second = std::make_any<glm::vec3>(uniformInfoVector3->vector);
+				break;
+			}
+			case UniformInfoType::Vector4:
+			{
+				auto uniformInfoVector4 = static_cast<UniformInfoVector4*>(uniformInfo);
+				uniformData->second = std::make_any<glm::vec4>(uniformInfoVector4->vector);
+				break;
+			}
+			case UniformInfoType::Path:
+			{
+				auto uniformInfoPath = static_cast<UniformInfoPath*>(uniformInfo);
+
+				// 读取路径下的贴图
+				auto texture = ApplicationBase::Instance()->textureManager->LoadResource(uniformInfoPath->path);
+				uniformData->second = std::make_any<Texture*>(texture);
+
+				break;
+			}
+			default:
+			{
+				DEBUG_LOG_ERROR("Material::PostResourceLoaded UniformInfoType Not Availiable Type:{}", uniformInfo->GetUniformType());
+
+				break;
+			}
+
+			}
+
+		}
 	}
-
 }
