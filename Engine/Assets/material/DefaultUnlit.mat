@@ -1,0 +1,42 @@
+{
+    "shaderPath": "../shader/Unlit.glsl",
+    "settings": {
+        "blendable": true,
+        "backfaceCulling": true,
+        "depthTest": true,
+        "gpuInstances": 1
+    },
+    "uniformInfoList": [
+        {
+            "Type": "UniformInfoVector4",
+            "name": "u_Diffuse",
+            "vector": {
+                "x": 0.7,
+                "y": 0.2,
+                "z": 0.9,
+                "w": 0.8
+            }
+        },
+		{
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureTiling",
+            "vector": {
+                "x": 1.0,
+                "y": 1.0
+            }
+        },
+		{
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureOffset",
+            "vector": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        {
+            "Type": "UniformInfoPath",
+            "name": "u_DiffuseMap",
+            "path": ""
+        }
+    ]
+}
