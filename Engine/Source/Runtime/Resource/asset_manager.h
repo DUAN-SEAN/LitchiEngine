@@ -9,7 +9,11 @@
 
 namespace LitchiRuntime
 {
-    class AssetManager
+	/**
+	 * \brief 资产管理器
+	 * 目前只负责加载和保存资产
+	 */
+	class AssetManager
     {
     public:
         template<typename AssetType>
