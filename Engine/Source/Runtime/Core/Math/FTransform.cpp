@@ -1,25 +1,25 @@
 ﻿
 #include <functional>
 #include <gtx/quaternion.hpp>
-#include <gtx/transform2.hpp>
+#include <gtx/Transform2.hpp>
 
 #include "MathHelper.h"
-#include "Transform.h"
+#include "FTransform.h"
 
 
-LitchiRuntime::Transform::Transform(glm::vec3 p_localPosition, glm::quat p_localRotation, glm::vec3 p_localScale) :
+LitchiRuntime::FTransform::FTransform(glm::vec3 p_localPosition, glm::quat p_localRotation, glm::vec3 p_localScale) :
 	m_notificationHandlerID(-1),
 	m_parent(nullptr)
 {
 	GenerateMatrices(p_localPosition, p_localRotation, p_localScale);
 }
 
-LitchiRuntime::Transform::~Transform()
+LitchiRuntime::FTransform::~FTransform()
 {
-	Notifier.NotifyChildren(TransformNotifier::ENotification::TRANSFORM_DESTROYED);
+	Notifier.NotifyChildren(TransformNotifier::ENotification::TRANSFORM_CHANGED);
 }
 
-void LitchiRuntime::Transform::NotificationHandler(TransformNotifier::ENotification p_notification)
+void LitchiRuntime::FTransform::NotificationHandler(TransformNotifier::ENotification p_notification)
 {
 	switch (p_notification)
 	{
@@ -39,16 +39,16 @@ void LitchiRuntime::Transform::NotificationHandler(TransformNotifier::ENotificat
 	}
 }
 
-void LitchiRuntime::Transform::SetParent(Transform& p_parent)
+void LitchiRuntime::FTransform::SetParent(FTransform& p_parent)
 {
 	m_parent = &p_parent;
 
-	m_notificationHandlerID = m_parent->Notifier.AddNotificationHandler(std::bind(&Transform::NotificationHandler, this, std::placeholders::_1));
+	m_notificationHandlerID = m_parent->Notifier.AddNotificationHandler(std::bind(&FTransform::NotificationHandler, this, std::placeholders::_1));
 
 	UpdateWorldMatrix();
 }
 
-bool LitchiRuntime::Transform::RemoveParent()
+bool LitchiRuntime::FTransform::RemoveParent()
 {
 	if (m_parent != nullptr)
 	{
@@ -62,12 +62,12 @@ bool LitchiRuntime::Transform::RemoveParent()
 	return false;
 }
 
-bool LitchiRuntime::Transform::HasParent() const
+bool LitchiRuntime::FTransform::HasParent() const
 {
 	return m_parent != nullptr;
 }
 
-void LitchiRuntime::Transform::GenerateMatrices(glm::vec3 p_position, glm::quat p_rotation, glm::vec3 p_scale)
+void LitchiRuntime::FTransform::GenerateMatrices(glm::vec3 p_position, glm::quat p_rotation, glm::vec3 p_scale)
 {
 	m_localMatrix = glm::translate(p_position) * glm::toMat4(glm::normalize(p_rotation)) * glm::scale(p_scale);
 	m_localPosition = p_position;
@@ -77,7 +77,7 @@ void LitchiRuntime::Transform::GenerateMatrices(glm::vec3 p_position, glm::quat 
 	UpdateWorldMatrix();
 }
 
-void LitchiRuntime::Transform::UpdateWorldMatrix()
+void LitchiRuntime::FTransform::UpdateWorldMatrix()
 {
 	m_worldMatrix = HasParent() ? m_parent->m_worldMatrix * m_localMatrix : m_localMatrix;
 	PreDecomposeWorldMatrix();
@@ -85,47 +85,47 @@ void LitchiRuntime::Transform::UpdateWorldMatrix()
 	Notifier.NotifyChildren(TransformNotifier::ENotification::TRANSFORM_CHANGED);
 }
 
-void LitchiRuntime::Transform::SetLocalPosition(glm::vec3 p_newPosition)
+void LitchiRuntime::FTransform::SetLocalPosition(glm::vec3 p_newPosition)
 {
 	GenerateMatrices(p_newPosition, m_localRotation, m_localScale);
 }
 
-void LitchiRuntime::Transform::SetLocalRotation(glm::quat p_newRotation)
+void LitchiRuntime::FTransform::SetLocalRotation(glm::quat p_newRotation)
 {
 	GenerateMatrices(m_localPosition, p_newRotation, m_localScale);
 }
 
-void LitchiRuntime::Transform::SetLocalScale(glm::vec3 p_newScale)
+void LitchiRuntime::FTransform::SetLocalScale(glm::vec3 p_newScale)
 {
 	GenerateMatrices(m_localPosition, m_localRotation, p_newScale);
 }
 
-void LitchiRuntime::Transform::SetWorldPosition(glm::vec3 p_newPosition)
+void LitchiRuntime::FTransform::SetWorldPosition(glm::vec3 p_newPosition)
 {
 	GenerateMatrices(p_newPosition, m_worldRotation, m_worldScale);
 }
 
-void LitchiRuntime::Transform::SetWorldRotation(glm::quat p_newRotation)
+void LitchiRuntime::FTransform::SetWorldRotation(glm::quat p_newRotation)
 {
 	GenerateMatrices(m_worldPosition, p_newRotation, m_worldScale);
 }
 
-void LitchiRuntime::Transform::SetWorldScale(glm::vec3 p_newScale)
+void LitchiRuntime::FTransform::SetWorldScale(glm::vec3 p_newScale)
 {
 	GenerateMatrices(m_worldPosition, m_worldRotation, p_newScale);
 }
 
-void LitchiRuntime::Transform::TranslateLocal(const glm::vec3& p_translation)
+void LitchiRuntime::FTransform::TranslateLocal(const glm::vec3& p_translation)
 {
 	SetLocalPosition(m_localPosition + p_translation);
 }
 
-void LitchiRuntime::Transform::RotateLocal(const glm::quat& p_rotation)
+void LitchiRuntime::FTransform::RotateLocal(const glm::quat& p_rotation)
 {
 	SetLocalRotation(m_localRotation * p_rotation);
 }
 
-void LitchiRuntime::Transform::ScaleLocal(const glm::vec3& p_scale)
+void LitchiRuntime::FTransform::ScaleLocal(const glm::vec3& p_scale)
 {
 	SetLocalScale(glm::vec3
 	(
@@ -135,77 +135,77 @@ void LitchiRuntime::Transform::ScaleLocal(const glm::vec3& p_scale)
 	));
 }
 
-const glm::vec3& LitchiRuntime::Transform::GetLocalPosition() const
+const glm::vec3& LitchiRuntime::FTransform::GetLocalPosition() const
 {
 	return m_localPosition;
 }
 
-const glm::quat& LitchiRuntime::Transform::GetLocalRotation() const
+const glm::quat& LitchiRuntime::FTransform::GetLocalRotation() const
 {
 	return m_localRotation;
 }
 
-const glm::vec3& LitchiRuntime::Transform::GetLocalScale() const
+const glm::vec3& LitchiRuntime::FTransform::GetLocalScale() const
 {
 	return m_localScale;
 }
 
-const glm::vec3& LitchiRuntime::Transform::GetWorldPosition() const
+const glm::vec3& LitchiRuntime::FTransform::GetWorldPosition() const
 {
 	return m_worldPosition;
 }
 
-const glm::quat& LitchiRuntime::Transform::GetWorldRotation() const
+const glm::quat& LitchiRuntime::FTransform::GetWorldRotation() const
 {
 	return m_worldRotation;
 }
 
-const glm::vec3& LitchiRuntime::Transform::GetWorldScale() const
+const glm::vec3& LitchiRuntime::FTransform::GetWorldScale() const
 {
 	return m_worldScale;
 }
 
-const glm::mat4& LitchiRuntime::Transform::GetLocalMatrix() const
+const glm::mat4& LitchiRuntime::FTransform::GetLocalMatrix() const
 {
 	return m_localMatrix;
 }
 
-const glm::mat4& LitchiRuntime::Transform::GetWorldMatrix() const
+const glm::mat4& LitchiRuntime::FTransform::GetWorldMatrix() const
 {
 	return m_worldMatrix;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetWorldForward() const
+glm::vec3 LitchiRuntime::FTransform::GetWorldForward() const
 {
 	return m_worldRotation * Math::Forward;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetWorldUp() const
+glm::vec3 LitchiRuntime::FTransform::GetWorldUp() const
 {
 	return m_worldRotation * Math::Up;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetWorldRight() const
+glm::vec3 LitchiRuntime::FTransform::GetWorldRight() const
 {
 	return m_worldRotation * Math::Right;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetLocalForward() const
+glm::vec3 LitchiRuntime::FTransform::GetLocalForward() const
 {
 	return m_localRotation * Math::Forward;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetLocalUp() const
+glm::vec3 LitchiRuntime::FTransform::GetLocalUp() const
 {
 	return m_localRotation * Math::Up;
 }
 
-glm::vec3 LitchiRuntime::Transform::GetLocalRight() const
+glm::vec3 LitchiRuntime::FTransform::GetLocalRight() const
 {
 	return m_localRotation * Math::Right;
 }
 
-void LitchiRuntime::Transform::PreDecomposeWorldMatrix()
+void LitchiRuntime::FTransform::PreDecomposeWorldMatrix()
 {
 	m_worldPosition.x = m_worldMatrix[0][3];
 	m_worldPosition.y = m_worldMatrix[1][3];
@@ -245,7 +245,7 @@ void LitchiRuntime::Transform::PreDecomposeWorldMatrix()
 	m_worldRotation = glm::quat(rotationMatrix);
 }
 
-void LitchiRuntime::Transform::PreDecomposeLocalMatrix()
+void LitchiRuntime::FTransform::PreDecomposeLocalMatrix()
 {
 	m_worldPosition.x = m_worldMatrix[0][3];
 	m_worldPosition.y = m_worldMatrix[1][3];
