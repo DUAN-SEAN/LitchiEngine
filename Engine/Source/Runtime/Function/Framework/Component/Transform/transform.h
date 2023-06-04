@@ -2,10 +2,10 @@
 #ifndef UNTITLED_TRANSFORM_H
 #define UNTITLED_TRANSFORM_H
 
-#include "glm.hpp"
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Core/Math/FTransform.h"
+#include "glm.hpp"
 #include <gtc/matrix_transform.hpp>
-#include <gtc/quaternion.hpp>
 #include <gtx/transform2.hpp>
 #include "gtx/quaternion.hpp"
 
@@ -16,26 +16,28 @@ namespace LitchiRuntime
         Transform();
         ~Transform();
 
-        glm::vec3 position() const { return position_; }
-        glm::quat rotation() const { return rotation_; }
-        glm::vec3 scale() const { return scale_; }
+        glm::vec3 position() const { return m_transform.GetLocalPosition(); }
+        glm::quat rotation() const { return m_transform.GetLocalRotation(); }
+        glm::vec3 scale() const { return m_transform.GetLocalScale(); }
         glm::mat4 toWorldMatrix() const
         {
 
-            glm::mat4 trans = glm::translate(position_);
-            glm::mat4 rotation = glm::toMat4(rotation_);
-            glm::mat4 scale = glm::scale(scale_); //缩放;
+            glm::mat4 trans = glm::translate(m_transform.GetWorldPosition());
+            glm::mat4 rotation = glm::toMat4(m_transform.GetWorldRotation());
+            glm::mat4 scale = glm::scale(m_transform.GetWorldScale()); //缩放;
             return trans * rotation * scale;
         }
 
-        void set_position(glm::vec3 position) { position_ = position; }
-        void set_rotation(glm::quat rotation) { rotation_ = rotation; }
-        void set_scale(glm::vec3 scale) { scale_ = scale; }
+        void set_position(glm::vec3 position) { m_transform.SetLocalPosition(position); }
+        void set_rotation(glm::quat rotation) { m_transform.SetLocalRotation(rotation); }
+        void set_scale(glm::vec3 scale) { m_transform.SetLocalScale(scale); }
 
     private:
-        glm::vec3 position_;
+        /*glm::vec3 position_;
         glm::quat rotation_;
-        glm::vec3 scale_;
+        glm::vec3 scale_;*/
+        FTransform m_transform;
+
 
         RTTR_ENABLE(Component);
     };

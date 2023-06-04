@@ -5,10 +5,7 @@
 
 #include "Runtime/Core/App/application.h"
 #include "Editor/include/ApplicationEditor.h"
-#include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/ModelLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/TextureLoader.h"
 
 using namespace LitchiEditor;

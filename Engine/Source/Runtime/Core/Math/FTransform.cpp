@@ -1,11 +1,16 @@
 ﻿
 #include <functional>
-#include <gtx/quaternion.hpp>
-#include <gtx/Transform2.hpp>
 
-#include "MathHelper.h"
+#include <gtx/Transform2.hpp>
+#include <gtx/quaternion.hpp>
+
 #include "FTransform.h"
 
+const glm::vec3 One(1.0f, 1.0f, 1.0f);
+const glm::vec3 Zero(0.0f, 0.0f, 0.0f);
+const glm::vec3 Forward(0.0f, 0.0f, -1.0f);
+const glm::vec3 Right(1.0f, 0.0f, 0.0f);
+const glm::vec3 Up(0.0f, 1.0f, 0.0f);
 
 LitchiRuntime::FTransform::FTransform(glm::vec3 p_localPosition, glm::quat p_localRotation, glm::vec3 p_localScale) :
 	m_notificationHandlerID(-1),
@@ -177,32 +182,32 @@ const glm::mat4& LitchiRuntime::FTransform::GetWorldMatrix() const
 
 glm::vec3 LitchiRuntime::FTransform::GetWorldForward() const
 {
-	return m_worldRotation * Math::Forward;
+	return m_worldRotation * Forward;
 }
 
 glm::vec3 LitchiRuntime::FTransform::GetWorldUp() const
 {
-	return m_worldRotation * Math::Up;
+	return m_worldRotation * Up;
 }
 
 glm::vec3 LitchiRuntime::FTransform::GetWorldRight() const
 {
-	return m_worldRotation * Math::Right;
+	return m_worldRotation * Right;
 }
 
 glm::vec3 LitchiRuntime::FTransform::GetLocalForward() const
 {
-	return m_localRotation * Math::Forward;
+	return m_localRotation * Forward;
 }
 
 glm::vec3 LitchiRuntime::FTransform::GetLocalUp() const
 {
-	return m_localRotation * Math::Up;
+	return m_localRotation * Up;
 }
 
 glm::vec3 LitchiRuntime::FTransform::GetLocalRight() const
 {
-	return m_localRotation * Math::Right;
+	return m_localRotation * Right;
 }
 
 void LitchiRuntime::FTransform::PreDecomposeWorldMatrix()
