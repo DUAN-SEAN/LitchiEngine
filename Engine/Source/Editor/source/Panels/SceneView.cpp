@@ -1,4 +1,4 @@
-
+ï»¿
 #include "Editor/include/Panels/SceneView.h"
 
 #include "Editor/include/ApplicationEditor.h"
@@ -74,26 +74,28 @@ void LitchiEditor::SceneView::Update(float p_deltaTime)
 
 void LitchiEditor::SceneView::_Render_Impl()
 {
-	// ×¼±¸Ïà»úÊý¾Ý
+	// å‡†å¤‡ç›¸æœºæ•°æ®
 	PrepareCamera();
 
-	// »æÖÆ³¡¾°
+	// ç»˜åˆ¶åœºæ™¯
 	RenderScene();
 }
 void LitchiEditor::SceneView::RenderScene()
 {
-	// °ó¶¨FBO
+	// ç»‘å®šFBO
 	m_fbo.Bind();
 
-	// µ÷ÓÃ¹ÜÏßäÖÈ¾³¡¾°
-	// »ñÈ¡µ±Ç°ÐèÒªäÖÈ¾µÄÏà»ú ºÍ ³¡¾°
+	// ç»‘å®šLightçš„SSBO
+
+	// è°ƒç”¨ç®¡çº¿æ¸²æŸ“åœºæ™¯
+	// èŽ·å–å½“å‰éœ€è¦æ¸²æŸ“çš„ç›¸æœº å’Œ åœºæ™¯
 	RenderCamera* render_camera = m_camera;
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
 	render_camera->Clear();
 	RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
 
-	// ±éÀúËùÓÐµÄÎïÌå,Ö´ÐÐMeshRendererµÄRenderº¯Êý
+	// éåŽ†æ‰€æœ‰çš„ç‰©ä½“,æ‰§è¡ŒMeshRendererçš„Renderå‡½æ•°
 	scene->Foreach([&](GameObject* game_object) {
 		if (game_object->active()) {
 			game_object->ForeachComponent([&](Component* component) {
@@ -133,11 +135,11 @@ void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::
 {
 	constexpr float gridSize = 5000.0f;
 
-	// »æÖÆplane
+	// ç»˜åˆ¶plane
 	glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
 	m_gridMaterial.Set("u_Color", p_color);
 
-	// ÉèÖÃubo
+	// è®¾ç½®ubo
 	/*
 		mat4    ubo_Model;
 	    mat4    ubo_View;

@@ -207,39 +207,39 @@ glm::vec3 LitchiRuntime::FTransform::GetLocalRight() const
 
 void LitchiRuntime::FTransform::PreDecomposeWorldMatrix()
 {
-	m_worldPosition.x = m_worldMatrix[0][3];
-	m_worldPosition.y = m_worldMatrix[1][3];
-	m_worldPosition.z = m_worldMatrix[2][3];
+	m_worldPosition.x = m_worldMatrix[3][0];
+	m_worldPosition.y = m_worldMatrix[3][1];
+	m_worldPosition.z = m_worldMatrix[3][2];
 
-	glm::vec3 columns[3] = 
+	glm::vec3 rows[3] = 
 	{
-		{ m_worldMatrix[0][0], m_worldMatrix[1][0], m_worldMatrix[2][0]},
-		{ m_worldMatrix[0][1], m_worldMatrix[1][1], m_worldMatrix[2][1]},
-		{ m_worldMatrix[0][2], m_worldMatrix[1][2], m_worldMatrix[2][2]},
+		{ m_worldMatrix[0][0], m_worldMatrix[0][1], m_worldMatrix[0][2]},
+		{ m_worldMatrix[1][0], m_worldMatrix[1][1], m_worldMatrix[1][2]},
+		{ m_worldMatrix[2][0], m_worldMatrix[2][1], m_worldMatrix[2][2]},
 	};
 
-	m_worldScale.x = glm::length(columns[0]);
-	m_worldScale.y = glm::length(columns[1]);
-	m_worldScale.z = glm::length(columns[2]);
+	m_worldScale.x = glm::length(rows[0]);
+	m_worldScale.y = glm::length(rows[1]);
+	m_worldScale.z = glm::length(rows[2]);
 
 	if (m_worldScale.x)
 	{
-		columns[0] /= m_worldScale.x;
+		rows[0] /= m_worldScale.x;
 	}
 	if (m_worldScale.y)
 	{
-		columns[1] /= m_worldScale.y;
+		rows[1] /= m_worldScale.y;
 	}
 	if (m_worldScale.z)
 	{
-		columns[2] /= m_worldScale.z;
+		rows[2] /= m_worldScale.z;
 	}
 
 	glm::mat3 rotationMatrix
 	(
-		columns[0].x, columns[1].x, columns[2].x,
-		columns[0].y, columns[1].y, columns[2].y,
-		columns[0].z, columns[1].z, columns[2].z
+		rows[0].x, rows[0].y, rows[0].z,
+		rows[1].x, rows[1].y, rows[1].z,
+		rows[2].x, rows[2].y, rows[2].z
 	);
 
 	m_worldRotation = glm::quat(rotationMatrix);
@@ -247,39 +247,39 @@ void LitchiRuntime::FTransform::PreDecomposeWorldMatrix()
 
 void LitchiRuntime::FTransform::PreDecomposeLocalMatrix()
 {
-	m_worldPosition.x = m_worldMatrix[0][3];
-	m_worldPosition.y = m_worldMatrix[1][3];
-	m_worldPosition.z = m_worldMatrix[2][3];
+	m_worldPosition.x = m_worldMatrix[3][0];
+	m_worldPosition.y = m_worldMatrix[3][1];
+	m_worldPosition.z = m_worldMatrix[3][2];
 
-	glm::vec3 columns[3] =
+	glm::vec3 rows[3] =
 	{
-		{ m_worldMatrix[0][0], m_worldMatrix[1][0], m_worldMatrix[2][0]},
-		{ m_worldMatrix[0][1], m_worldMatrix[1][1], m_worldMatrix[2][1]},
-		{ m_worldMatrix[0][2], m_worldMatrix[1][2], m_worldMatrix[2][2]},
+		{ m_worldMatrix[0][0], m_worldMatrix[0][1], m_worldMatrix[0][2]},
+		{ m_worldMatrix[1][0], m_worldMatrix[1][1], m_worldMatrix[1][2]},
+		{ m_worldMatrix[2][0], m_worldMatrix[2][1], m_worldMatrix[2][2]},
 	};
 
-	m_localScale.x = glm::length(columns[0]);
-	m_localScale.y = glm::length(columns[1]);
-	m_localScale.z = glm::length(columns[2]);
+	m_localScale.x = glm::length(rows[0]);
+	m_localScale.y = glm::length(rows[1]);
+	m_localScale.z = glm::length(rows[2]);
 
 	if (m_localScale.x)
 	{
-		columns[0] /= m_localScale.x;
+		rows[0] /= m_localScale.x;
 	}
 	if (m_localScale.y)
 	{
-		columns[1] /= m_localScale.y;
+		rows[1] /= m_localScale.y;
 	}
 	if (m_localScale.z)
 	{
-		columns[2] /= m_localScale.z;
+		rows[2] /= m_localScale.z;
 	}
 
 	glm::mat3 rotationMatrix
 	(
-		columns[0].x, columns[1].x, columns[2].x,
-		columns[0].y, columns[1].y, columns[2].y,
-		columns[0].z, columns[1].z, columns[2].z
+		rows[0].x, rows[0].y, rows[0].z,
+		rows[1].x, rows[1].y, rows[1].z,
+		rows[2].x, rows[2].y, rows[2].z
 	);
 
 	m_localRotation = glm::quat(rotationMatrix);
