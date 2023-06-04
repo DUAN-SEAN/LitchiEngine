@@ -7,6 +7,7 @@
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 #include "Runtime/Function/Renderer/render_system.h"
+#include "Runtime/Function/Renderer/Light/Light.h"
 
 LitchiEditor::SceneView::SceneView
 (
@@ -86,6 +87,15 @@ void LitchiEditor::SceneView::RenderScene()
 	m_fbo.Bind();
 
 	// 绑定Light的SSBO
+	auto& ssbo= ApplicationEditor::Instance()->lightSSBO;
+	ssbo->Bind(0);
+
+	// 测试
+	FTransform lightTransform;
+	Light light(lightTransform, Light::Type::DIRECTIONAL);
+	std::vector<glm::mat4> lightMatrixArr;
+	lightMatrixArr.push_back(light.GenerateMatrix());
+	ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
 
 	// 调用管线渲染场景
 	// 获取当前需要渲染的相机 和 场景
@@ -107,6 +117,8 @@ void LitchiEditor::SceneView::RenderScene()
 				});
 		}
 		});
+
+	ssbo->Unbind();
 
 	m_fbo.Unbind();
 }

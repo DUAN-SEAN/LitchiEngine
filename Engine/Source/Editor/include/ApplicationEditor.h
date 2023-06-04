@@ -59,6 +59,9 @@ namespace LitchiEditor
 		std::unique_ptr<UIManager>		uiManager;
 		std::unique_ptr<EditorResources>		editorResources;
 
+
+		std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
+
 		SceneManager* sceneManager;
 
 		std::string projectPath;

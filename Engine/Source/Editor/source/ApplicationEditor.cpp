@@ -96,19 +96,6 @@ void LitchiEditor::ApplicationEditor::Init()
 	renderer->SetCapability(ERenderingCapability::MULTISAMPLE, true);
 	shapeDrawer = std::make_unique<ShapeDrawer>(*renderer);
 
-	engineUBO = std::make_unique<UniformBuffer>
-		(
-			/* UBO Data Layout */
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
-			sizeof(float) +
-			sizeof(glm::mat4),
-			0, 0,
-			EAccessSpecifier::STREAM_DRAW
-		);
-
 	// ≥ı ºªØInputManager
 	inputManager = std::make_unique<InputManager>(*window);
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::ALTERNATIVE_DARK);
@@ -135,9 +122,21 @@ void LitchiEditor::ApplicationEditor::Init()
 	// EditorResource
 
 	// UBO
+	engineUBO = std::make_unique<UniformBuffer>
+		(
+			/* UBO Data Layout */
+			sizeof(glm::mat4) +
+			sizeof(glm::mat4) +
+			sizeof(glm::mat4) +
+			sizeof(glm::mat4) +
+			sizeof(float) +
+			sizeof(glm::mat4),
+			0, 0,
+			EAccessSpecifier::STREAM_DRAW
+		);
 
-	// Light 
-
+	// Light
+	lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
 
 	// Setup UI
 	SetupUI();
