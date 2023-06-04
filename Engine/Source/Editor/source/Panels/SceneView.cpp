@@ -3,6 +3,7 @@
 
 #include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Window/Inputs/EKey.h"
+#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
@@ -90,17 +91,24 @@ void LitchiEditor::SceneView::RenderScene()
 	auto& ssbo= ApplicationEditor::Instance()->lightSSBO;
 	ssbo->Bind(0);
 
-	// 测试
-	FTransform lightTransform;
-	Light light(lightTransform, Light::Type::DIRECTIONAL);
-	std::vector<glm::mat4> lightMatrixArr;
-	lightMatrixArr.push_back(light.GenerateMatrix());
-	ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
-
 	// 调用管线渲染场景
 	// 获取当前需要渲染的相机 和 场景
 	RenderCamera* render_camera = m_camera;
 	Scene* scene = SceneManager::GetScene("Default Scene");
+
+
+
+	// 测试
+	FTransform lightTransform;
+	Light light(Light::Type::DIRECTIONAL);
+	std::vector<glm::mat4> lightMatrixArr;
+	//lightMatrixArr.push_back(light.GenerateMatrix(lightTransform));
+
+	auto directionalLightGO = scene->Find("DirectionalLight");
+	auto directionalLight = directionalLightGO->GetComponent<DirectionalLight>();
+	auto directionalLightTran = directionalLightGO->GetComponent<Transform>();
+	lightMatrixArr.push_back(directionalLight->GetData().GenerateMatrix(directionalLightTran->GetTransform()));
+	ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
 
 	render_camera->Clear();
 	RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));

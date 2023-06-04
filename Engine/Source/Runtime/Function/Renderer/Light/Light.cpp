@@ -11,23 +11,23 @@ uint32_t Pack(const glm::vec3& p_toPack)
 	return Pack(static_cast<uint8_t>(p_toPack.x * 255.f), static_cast<uint8_t>(p_toPack.y * 255.f), static_cast<uint8_t>(p_toPack.z * 255.f), 0);
 }
 
-LitchiRuntime::Light::Light(FTransform & p_tranform, Type p_type) : m_transform(p_tranform), type(static_cast<float>(p_type))
+LitchiRuntime::Light::Light(Type p_type) : type(static_cast<float>(p_type))
 {
 	
 }
 
-glm::mat4 LitchiRuntime::Light::GenerateMatrix() const
+glm::mat4 LitchiRuntime::Light::GenerateMatrix(FTransform& p_transform) const
 {
 	glm::mat4 result;
 
 	// lightPosition = lightMat[0]
-	auto position = m_transform.GetWorldPosition();
+	auto position = p_transform.GetWorldPosition();
 	result[0][0] = position.x; // 0
 	result[0][1] = position.y;// 1
 	result[0][2] = position.z;// 2
 
 	// lightForward = lightMat[1]
-	auto forward = m_transform.GetWorldForward();
+	auto forward = p_transform.GetWorldForward();
 	result[1][0] = forward.x;// 4
 	result[1][1] = forward.y;// 5
 	result[1][2] = forward.z;// 6
@@ -103,20 +103,15 @@ float CalculateAmbientBoxLightRadius(const glm::vec3& p_position, const glm::vec
 	return glm::distance(p_position, p_position + p_size);
 }
 
-float LitchiRuntime::Light::GetEffectRange() const
+float LitchiRuntime::Light::GetEffectRange(FTransform& p_transform) const
 {
 	switch (static_cast<LitchiRuntime::Light::Type>(static_cast<int>(type)))
 	{
 	case Type::POINT:
 	case Type::SPOT:			return CalculatePointLightRadius(constant, linear, quadratic, intensity);
-	case Type::AMBIENT_BOX:		return CalculateAmbientBoxLightRadius(m_transform.GetWorldPosition(), { constant, linear, quadratic });
+	case Type::AMBIENT_BOX:		return CalculateAmbientBoxLightRadius(p_transform.GetWorldPosition(), { constant, linear, quadratic });
 	case Type::AMBIENT_SPHERE:	return constant;
 	}
 
 	return std::numeric_limits<float>::infinity();
-}
-
-const LitchiRuntime::FTransform& LitchiRuntime::Light::GetTransform() const
-{
-	return m_transform;
 }

@@ -61,6 +61,21 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 	return go;
 }
 
+GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm::quat rotation)
+{
+	GameObject* go = new GameObject(name, scene);
+
+	auto transform = go->AddComponent<Transform>();
+	transform->set_position(pos);
+	transform->set_rotation(rotation);
+
+	auto directionalLight = go->AddComponent<DirectionalLight>();
+	directionalLight->SetColor(glm::vec3(0.3, 0.6, 0.7));
+	directionalLight->SetIntensity(3.0f);
+
+	return go;
+}
+
 void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
@@ -150,11 +165,14 @@ void LitchiEditor::ApplicationEditor::Init()
 
 		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
+		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0),glm::angleAxis(60.f,glm::vec3(1,0,0)));
+
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		hierachy.AddActorByInstance(go);
 		hierachy.AddActorByInstance(go2);
 		hierachy.AddActorByInstance(go3);
+		hierachy.AddActorByInstance(go4);
 	}
 
 	// ≤‚ ‘¥˙¬Î

@@ -32,6 +32,8 @@ namespace LitchiRuntime
         void set_rotation(glm::quat rotation) { m_transform.SetLocalRotation(rotation); }
         void set_scale(glm::vec3 scale) { m_transform.SetLocalScale(scale); }
 
+        FTransform& GetTransform() { return m_transform; }
+
     private:
         /*glm::vec3 position_;
         glm::quat rotation_;

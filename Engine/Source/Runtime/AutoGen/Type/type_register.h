@@ -12,6 +12,8 @@
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Litght/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
@@ -23,6 +25,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/scene_manager.h"
 #include "Runtime/Resource/config_manager.h"
 
@@ -93,81 +96,6 @@ RTTR_REGISTRATION //注册反射
 		.property("rootFolder", &ConfigRes::root_folder_)
 		.property("defaultScenePath", &ConfigRes::default_scene_path_);
 
-	// 场景管理
-	// GO
-	registration::class_<GameObject>("GameObject")
-		(
-			rttr::metadata("Polymorphic", true)
-		)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("name", &GameObject::name_)
-		.property("componentList", &GameObject::component_list_);
-
-	registration::class_<Scene>("Scene")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("gameObjects", &Scene::game_object_vec_);
-
-	// 组件
-	// Componet
-	registration::class_<Component>("Component")
-		(
-			rttr::metadata("Serializable", true),
-			rttr::metadata("Polymorphic", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// Camera
-	registration::class_<Camera>("Camera")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// MeshRenderer
-	registration::class_<MeshRenderer>("MeshRenderer")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("materialPath",&MeshRenderer::material_path);
-
-	// MeshFilter
-	registration::class_<MeshFilter>("MeshFilter")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("modelPath",&MeshFilter::model_path)
-		.property("meshIndex",&MeshFilter::mesh_Index_);
-
-	// Transform
-	registration::class_<Transform>("Transform")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("position", &Transform::position, &Transform::set_position)
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.property("rotation", &Transform::rotation, &Transform::set_rotation)
-		.property("scale", &Transform::scale, &Transform::set_scale);
-
-	// RigidActor
-	registration::class_<RigidActor>("RigidActor")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// Collider
-	registration::class_<Collider>("Collider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("physicsMaterial",&Collider::GetPhysicMaterial,&Collider::SetPhysicMaterial);
-
-	// RigidDynamic
-	registration::class_<RigidDynamic>("RigidDynamic")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// RigidStatic
-	registration::class_<RigidStatic>("RigidStatic")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// BoxCollider
-	registration::class_<BoxCollider>("BoxCollider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// SphereCollider
-	registration::class_<SphereCollider>("SphereCollider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	/* Material Resource  */
 	// UniformInfoBase
@@ -250,6 +178,106 @@ RTTR_REGISTRATION //注册反射
 		.property("materialPath", &Resource::Material::path)
 		.property("materialRes", &Resource::Material::materialRes);
 
+	// 内存中的material句柄, 需要在Asset中显示, 需要被反射
+	registration::class_<LitchiRuntime::Light>("Light")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("lightType", &Light::type)
+		.property("color", &Light::color)
+		.property("intensity", &Light::intensity)
+		.property("constant", &Light::constant)
+		.property("linear", &Light::linear)
+		.property("quadratic", &Light::quadratic)
+		.property("cutoff", &Light::cutoff)
+		.property("outerCutoff", &Light::outerCutoff);
+
+
+	// 场景管理
+	// GO
+	registration::class_<GameObject>("GameObject")
+		(
+			rttr::metadata("Polymorphic", true)
+		)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("name", &GameObject::name_)
+		.property("componentList", &GameObject::component_list_);
+
+	registration::class_<Scene>("Scene")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("gameObjects", &Scene::game_object_vec_);
+
+	// 组件
+	// Componet
+	registration::class_<Component>("Component")
+		(
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// Camera
+	registration::class_<Camera>("Camera")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// MeshRenderer
+	registration::class_<MeshRenderer>("MeshRenderer")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("materialPath",&MeshRenderer::material_path);
+
+	// MeshFilter
+	registration::class_<MeshFilter>("MeshFilter")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("modelPath",&MeshFilter::model_path)
+		.property("meshIndex",&MeshFilter::mesh_Index_);
+
+	// Transform
+	registration::class_<Transform>("Transform")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("position", &Transform::position, &Transform::set_position)
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.property("rotation", &Transform::rotation, &Transform::set_rotation)
+		.property("scale", &Transform::scale, &Transform::set_scale);
+
+	// Light Base Component
+	registration::class_<LightComponent>("LightComponent")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("Light", &LightComponent::GetLight, &LightComponent::SetLight);
+
+	// DirectionalLight
+	registration::class_<DirectionalLight>("DirectionalLight")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// RigidActor
+	registration::class_<RigidActor>("RigidActor")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// Collider
+	registration::class_<Collider>("Collider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("physicsMaterial",&Collider::GetPhysicMaterial,&Collider::SetPhysicMaterial);
+
+	// RigidDynamic
+	registration::class_<RigidDynamic>("RigidDynamic")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// RigidStatic
+	registration::class_<RigidStatic>("RigidStatic")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// BoxCollider
+	registration::class_<BoxCollider>("BoxCollider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// SphereCollider
+	registration::class_<SphereCollider>("SphereCollider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	}
 }
