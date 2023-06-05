@@ -11,6 +11,7 @@
 #include "Runtime/Function/UI/Widgets/InputFields/InputInt.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputInt32.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
+#include "Runtime/Function/UI/Widgets/Layout/Columns.h"
 #include "Runtime/Function/UI/Widgets/Layout/Group.h"
 #include "Runtime/Function/UI/Widgets/Selection/CheckBox.h"
 #include "Runtime/Function/UI/Widgets/Selection/ColorEdit.h"

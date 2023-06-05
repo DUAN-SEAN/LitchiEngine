@@ -7,6 +7,7 @@
 
 #include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
@@ -57,6 +58,7 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(2, "Camera");
 		componentSelectorWidget.choices.emplace(3, "Collider");
 		componentSelectorWidget.choices.emplace(4, "RigidActor");
+		componentSelectorWidget.choices.emplace(5, "DirectionalLight");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", glm::vec2{ 100.f, 0 });
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -67,10 +69,13 @@ LitchiEditor::Inspector::Inspector
 			{
 			case 0: GetTargetActor()->AddComponent<MeshRenderer>(); break;
 			case 1: GetTargetActor()->AddComponent<MeshFilter>(); break;
-			case 3: GetTargetActor()->AddComponent<Camera>();				break;
-			case 4: GetTargetActor()->AddComponent<Collider>();				break;
-			case 5: GetTargetActor()->AddComponent<RigidActor>();				break;
+			case 2: GetTargetActor()->AddComponent<Camera>();				break;
+			case 3: GetTargetActor()->AddComponent<Collider>();				break;
+			case 4: GetTargetActor()->AddComponent<RigidActor>();				break;
+			case 5: GetTargetActor()->AddComponent<DirectionalLight>();				break;
 			}
+
+			Refresh();
 
 			componentSelectorWidget.ValueChangedEvent.Invoke(componentSelectorWidget.currentChoice);
 		};
@@ -90,6 +95,7 @@ LitchiEditor::Inspector::Inspector
 			case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
 			case 3: defineButtonsStates(GetTargetActor()->GetComponent<Collider>());		return;
 			case 4: defineButtonsStates(GetTargetActor()->GetComponent<RigidActor>());		return;
+			case 5: defineButtonsStates(GetTargetActor()->GetComponent<DirectionalLight>());		return;
 			}
 		};
 
@@ -237,7 +243,9 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 	auto& dumy = col.CreateWidget<Dummy>(glm::vec2(0.0f, 5.0f));
 	auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());*/
 
-	auto& propertyRoot = p_root;
+	auto& propertyRoot = p_root.CreateWidget<Columns<2>>();
+	propertyRoot.widths[0] = 150.0f;
+	propertyRoot.widths[1] = 300.0f;
 
 	PropertyField property_field(obj, propertyPathList);
 	if (t.is_arithmetic())
@@ -365,7 +373,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			property_field.SetValue(value);
 		};
 
-		GUIDrawer::DrawString(p_root, propertyName.to_string(), getString, setString);
+		GUIDrawer::DrawString(propertyRoot, propertyName.to_string(), getString, setString);
 		return true;
 	}
 
@@ -457,14 +465,13 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 		/*auto& col = p_root.CreateWidget<Columns<2>>();
 		col.widths[0] = 100.0f;
 		col.widths[1] = 150.0f;
-		auto& text = col.CreateWidget<Text>(propertyName.to_string());*/
-		//auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());
-
-		WidgetContainer* propertyRoot;
-		propertyRoot = &p_root.CreateWidget<TreeNode>(propertyName.to_string(), true, true);
+		auto& text = col.CreateWidget<Text>(propertyName.to_string());
+		auto& propertyRoot = col.CreateWidget<Group>();*/
+		
+		auto& propertyRoot = p_root.CreateWidget<TreeNode>(propertyName.to_string(), true, true);
 		if (!child_props.empty())
 		{
-			DrawInstanceInternalRecursively(*propertyRoot, var, obj, propertyPathList);
+			DrawInstanceInternalRecursively(propertyRoot, var, obj, propertyPathList);
 		}
 		else
 		{

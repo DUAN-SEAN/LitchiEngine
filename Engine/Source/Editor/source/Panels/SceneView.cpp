@@ -96,18 +96,23 @@ void LitchiEditor::SceneView::RenderScene()
 	RenderCamera* render_camera = m_camera;
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
-
-
-	// 测试
-	FTransform lightTransform;
-	Light light(Light::Type::DIRECTIONAL);
+	// 收集场景中的光
 	std::vector<glm::mat4> lightMatrixArr;
-	//lightMatrixArr.push_back(light.GenerateMatrix(lightTransform));
+	ssbo->SendBlocks(lightMatrixArr.data(), 0);
+	scene->Foreach([&](GameObject* game_object) {
+		if (game_object->active()) {
+			game_object->ForeachComponent([&](Component* component) {
 
-	auto directionalLightGO = scene->Find("DirectionalLight");
-	auto directionalLight = directionalLightGO->GetComponent<DirectionalLight>();
-	auto directionalLightTran = directionalLightGO->GetComponent<Transform>();
-	lightMatrixArr.push_back(directionalLight->GetData().GenerateMatrix(directionalLightTran->GetTransform()));
+				auto* lightComp = dynamic_cast<LightComponent*>(component);
+				if (lightComp == nullptr) {
+					return;
+				}
+
+				auto directionalLightTran = game_object->GetComponent<Transform>();
+				lightMatrixArr.push_back(lightComp->GetData().GenerateMatrix(directionalLightTran->GetTransform()));
+				});
+		}
+		});
 	ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
 
 	render_camera->Clear();
