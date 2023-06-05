@@ -54,6 +54,6 @@ namespace LitchiRuntime
 		bool m_arrowClickToOpen = false;
 		bool m_shouldOpen = false;
 		bool m_shouldClose = false;
-		bool m_opened = false;
+		bool m_opened = true;
 	};
 }

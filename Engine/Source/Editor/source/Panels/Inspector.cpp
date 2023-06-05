@@ -22,6 +22,7 @@
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
 #include "Runtime/Function/UI/Widgets/Layout/Dummy.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
+#include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 LitchiEditor::Inspector::Inspector
@@ -451,13 +452,17 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 		auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
 
 		// x 垂直, y 水平
-		auto& col = p_root.CreateWidget<Columns<2>>();
-		col.widths[0] = 75.0f;
-		auto& text = col.CreateWidget<Text>(propertyName.to_string());
-		auto& propertyRoot = col.CreateWidget<Group>();
+		/*auto& col = p_root.CreateWidget<Columns<2>>();
+		col.widths[0] = 100.0f;
+		col.widths[1] = 150.0f;
+		auto& text = col.CreateWidget<Text>(propertyName.to_string());*/
+		//auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());
+
+		WidgetContainer* propertyRoot;
+		propertyRoot = &p_root.CreateWidget<TreeNode>(propertyName.to_string(), true);
 		if (!child_props.empty())
 		{
-			DrawInstanceInternalRecursively(propertyRoot, var, obj, propertyPathList);
+			DrawInstanceInternalRecursively(*propertyRoot, var, obj, propertyPathList);
 		}
 		else
 		{
@@ -527,6 +532,7 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	};
 	auto& columns = header.CreateWidget<Columns<2>>();
 	columns.widths[0] = 200;
+	columns.widths[1] = 200;
 
 	DrawInstance(header, *p_component, p_component);
 }
