@@ -20,7 +20,7 @@ namespace LitchiRuntime
 		* @param p_name
 		* @param p_arrowClickToOpen
 		*/
-		TreeNode(const std::string& p_name = "", bool p_arrowClickToOpen = false);
+		TreeNode(const std::string& p_name = "", bool p_arrowClickToOpen = false,bool defaultOpen = false);
 
 		/**
 		* Open the tree node
@@ -54,6 +54,7 @@ namespace LitchiRuntime
 		bool m_arrowClickToOpen = false;
 		bool m_shouldOpen = false;
 		bool m_shouldClose = false;
-		bool m_opened = true;
+		bool m_opened = false;
+		bool m_defaultOpen = false;
 	};
 }

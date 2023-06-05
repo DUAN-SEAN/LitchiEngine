@@ -218,7 +218,7 @@ void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 		auto name = component->get_type().get_name().to_string();
 		DrawComponent(name, component);
 	}
-		
+
 
 	/*auto& behaviours = p_target.GetBehaviours();
 
@@ -255,7 +255,8 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			};
 
 			GUIDrawer::DrawBoolean(propertyRoot, propertyName.to_string(), getBool, setBool);
-		}else if(t==type::get<int>())
+		}
+		else if (t == type::get<int>())
 		{
 			auto getInt = [var, property_field]
 			{
@@ -298,7 +299,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			{
 				property_field.SetValue(value);
 			};
-			
+
 			GUIDrawer::DrawInputField4Float(propertyRoot, propertyName.to_string(), getFloat, setFloat);
 		}
 		else if (t == type::get<double>())
@@ -312,9 +313,10 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			{
 				property_field.SetValue(value);
 			};
-			
+
 			GUIDrawer::DrawInputField4Double(propertyRoot, propertyName.to_string(), getDouble, setDouble);
-		}else
+		}
+		else
 		{
 			return false;
 		}
@@ -353,7 +355,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 	}
 	else if (t == type::get<std::string>())
 	{
-		auto getString = [var,property_field]
+		auto getString = [var, property_field]
 		{
 			return property_field.GetValue().to_string();
 		};
@@ -459,7 +461,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 		//auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());
 
 		WidgetContainer* propertyRoot;
-		propertyRoot = &p_root.CreateWidget<TreeNode>(propertyName.to_string(), true);
+		propertyRoot = &p_root.CreateWidget<TreeNode>(propertyName.to_string(), true, true);
 		if (!child_props.empty())
 		{
 			DrawInstanceInternalRecursively(*propertyRoot, var, obj, propertyPathList);

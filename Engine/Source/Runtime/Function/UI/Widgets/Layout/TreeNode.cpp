@@ -1,10 +1,11 @@
 
 #include "TreeNode.h"
 
-LitchiRuntime::TreeNode::TreeNode(const std::string & p_name, bool p_arrowClickToOpen) :
+LitchiRuntime::TreeNode::TreeNode(const std::string & p_name, bool p_arrowClickToOpen,bool defaultOpen) :
 	DataWidget(name),
 	name(p_name),
-	m_arrowClickToOpen(p_arrowClickToOpen)
+	m_arrowClickToOpen(p_arrowClickToOpen),
+	m_defaultOpen(defaultOpen)
 {
 	m_autoExecutePlugins = false;
 }
@@ -45,6 +46,7 @@ void LitchiRuntime::TreeNode::_Draw_Impl()
 	if (m_arrowClickToOpen) flags |= ImGuiTreeNodeFlags_OpenOnArrow;
 	if (selected)			flags |= ImGuiTreeNodeFlags_Selected;
 	if (leaf)				flags |= ImGuiTreeNodeFlags_Leaf;
+	if (m_defaultOpen) flags |= ImGuiTreeNodeFlags_DefaultOpen;
 
 	bool opened = ImGui::TreeNodeEx((name + m_widgetID).c_str(), flags);
 
