@@ -61,6 +61,26 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 	return go;
 }
 
+GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath,glm::vec3 position,glm::quat rotation,glm::vec3 scale)
+{
+	GameObject* go = new GameObject(name, scene);
+	auto transform = go->AddComponent<Transform>();
+	transform->SetLocalPosition(position);
+	transform->SetLocalRotation(rotation);
+	transform->SetLocalScale(scale);
+
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = modelPath;
+	mesh_filter->PostResourceLoaded();
+
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	mesh_renderer->material_path = materialPath;
+	mesh_renderer->PostResourceLoaded();
+	go->set_layer(0x01);
+
+	return go;
+}
+
 GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm::quat rotation)
 {
 	GameObject* go = new GameObject(name, scene);
@@ -165,6 +185,8 @@ void LitchiEditor::ApplicationEditor::Init()
 		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
 		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0),glm::angleAxis(60.f,glm::vec3(1,0,0)));
+		GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",
+			glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(100,0,100));
 
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
@@ -172,6 +194,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		hierachy.AddActorByInstance(go2);
 		hierachy.AddActorByInstance(go3);
 		hierachy.AddActorByInstance(go4);
+		hierachy.AddActorByInstance(go5);
 	}
 
 	// ≤‚ ‘¥˙¬Î
