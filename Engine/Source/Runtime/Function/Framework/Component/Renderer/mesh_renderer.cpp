@@ -143,9 +143,9 @@ namespace LitchiRuntime
 
 		// 计算模型矩阵
 		auto transform = game_object()->GetComponent<Transform>();
-		glm::mat4 transMatrix = glm::translate(transform->position());
-		glm::mat4 rotationMatrix = glm::toMat4(transform->rotation());
-		glm::mat4 scaleMatrix = glm::scale(transform->scale()); //缩放;
+		glm::mat4 transMatrix = glm::translate(transform->GetLocalPosition());
+		glm::mat4 rotationMatrix = glm::toMat4(transform->GetLocalRotation());
+		glm::mat4 scaleMatrix = glm::scale(transform->GetLocalScale()); //缩放;
 		glm::mat4 modelMatrix = transMatrix * rotationMatrix * scaleMatrix;// 旋转->缩放->平移 TRS
 
 		// vp矩阵绑定？

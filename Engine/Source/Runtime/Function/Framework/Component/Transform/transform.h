@@ -1,6 +1,5 @@
 ﻿
-#ifndef UNTITLED_TRANSFORM_H
-#define UNTITLED_TRANSFORM_H
+#pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Core/Math/FTransform.h"
@@ -16,10 +15,10 @@ namespace LitchiRuntime
         Transform();
         ~Transform();
 
-        glm::vec3 position() const { return m_transform.GetLocalPosition(); }
-        glm::quat rotation() const { return m_transform.GetLocalRotation(); }
-        glm::vec3 scale() const { return m_transform.GetLocalScale(); }
-        glm::mat4 toWorldMatrix() const
+        glm::vec3 GetLocalPosition() const { return m_transform.GetLocalPosition(); }
+        glm::quat GetLocalRotation() const { return m_transform.GetLocalRotation(); }
+        glm::vec3 GetLocalScale() const { return m_transform.GetLocalScale(); }
+        glm::mat4 GetWorldMatrix() const
         {
 
             glm::mat4 trans = glm::translate(m_transform.GetWorldPosition());
@@ -28,20 +27,16 @@ namespace LitchiRuntime
             return trans * rotation * scale;
         }
 
-        void set_position(glm::vec3 position) { m_transform.SetLocalPosition(position); }
-        void set_rotation(glm::quat rotation) { m_transform.SetLocalRotation(rotation); }
-        void set_scale(glm::vec3 scale) { m_transform.SetLocalScale(scale); }
+        void SetLocalPosition(glm::vec3 position) { m_transform.SetLocalPosition(position); }
+        void SetLocalRotation(glm::quat rotation) { m_transform.SetLocalRotation(rotation); }
+        void SetLocalScale(glm::vec3 scale) { m_transform.SetLocalScale(scale); }
 
         FTransform& GetTransform() { return m_transform; }
 
     private:
-        /*glm::vec3 position_;
-        glm::quat rotation_;
-        glm::vec3 scale_;*/
+
         FTransform m_transform;
 
-
-        RTTR_ENABLE(Component);
+        RTTR_ENABLE(Component)
     };
 }
-#endif //UNTITLED_TRANSFORM_H

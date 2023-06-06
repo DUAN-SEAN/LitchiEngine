@@ -238,17 +238,17 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Serializable", true)
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("position", &Transform::position, &Transform::set_position)
+		.property("localPosition", &Transform::GetLocalPosition, &Transform::SetLocalPosition)
 		(
 			rttr::metadata("Serializable", true)
 			)
-		.property("rotation", &Transform::rotation, &Transform::set_rotation)
-		.property("scale", &Transform::scale, &Transform::set_scale);
+		.property("localRotation", &Transform::GetLocalRotation, &Transform::SetLocalRotation)
+		.property("localScale", &Transform::GetLocalScale, &Transform::SetLocalScale);
 
 	// Light Base Component
 	registration::class_<LightComponent>("LightComponent")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("Light", &LightComponent::GetLight, &LightComponent::SetLight);
+		.property("light", &LightComponent::GetLight, &LightComponent::SetLight);
 
 	// DirectionalLight
 	registration::class_<DirectionalLight>("DirectionalLight")

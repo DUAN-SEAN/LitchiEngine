@@ -47,7 +47,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 {
 	GameObject* go = new GameObject(name, scene);
 	auto transform = go->AddComponent<Transform>();
-	transform->set_position(glm::vec3(0.0, y, z));
+	transform->SetLocalPosition(glm::vec3(0.0, y, z));
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->model_path = modelPath;
@@ -66,8 +66,8 @@ GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm:
 	GameObject* go = new GameObject(name, scene);
 
 	auto transform = go->AddComponent<Transform>();
-	transform->set_position(pos);
-	transform->set_rotation(rotation);
+	transform->SetLocalPosition(pos);
+	transform->SetLocalRotation(rotation);
 
 	auto directionalLight = go->AddComponent<DirectionalLight>();
 	directionalLight->SetColor(glm::vec3(0.3, 0.6, 0.7));
@@ -248,8 +248,8 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
 	auto name = p_target->name();
 	auto transform = p_target->GetComponent<Transform>();
-	auto position = transform->position();
-	auto rotation = transform->rotation();
+	auto position = transform->GetLocalPosition();
+	auto rotation = transform->GetLocalRotation();
 	auto rotationEuler = glm::eulerAngles(rotation);
 	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 

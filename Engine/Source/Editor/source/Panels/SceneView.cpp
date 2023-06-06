@@ -45,10 +45,10 @@ void LitchiEditor::SceneView::Update(float p_deltaTime)
 	auto go= scene->game_object_vec_.front();
 	auto trans = go->GetComponent<Transform>();
 
-	auto rotation = trans->rotation();
+	auto rotation = trans->GetLocalRotation();
 	auto next = glm::quat(glm::vec3(glm::radians(60.0) * p_deltaTime, glm::radians(30.0) * p_deltaTime, 0));
 	rotation = rotation * next;
-	trans->set_rotation(rotation);
+	trans->SetLocalRotation(rotation);
 	// ApplicationEditor::Instance()->SetSelectGameObject(go);
 
 	AViewControllable::Update(p_deltaTime);
