@@ -8,6 +8,7 @@
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
+using namespace LitchiEditor;
 
 using namespace LitchiRuntime;
 
@@ -18,15 +19,15 @@ public:
 		m_target(p_target),
 		m_treeNode(p_treeNode)
 	{
-		/* if (m_target)
+		 if (m_target)
 		 {
 			 auto& focusButton = CreateWidget<MenuItem>("Focus");
 			 focusButton.ClickedEvent += [this]
 			 {
-				 EDITOR_EXEC(MoveToTarget(*m_target));
+				  ApplicationEditor::Instance()->MoveToTarget(m_target);
 			 };
 
-			 auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
+			 /*auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
 			 duplicateButton.ClickedEvent += [this]
 			 {
 				 EDITOR_EXEC(DelayAction(EDITOR_BIND(DuplicateActor, std::ref(*m_target), nullptr, true), 0));
@@ -36,11 +37,11 @@ public:
 			 deleteButton.ClickedEvent += [this]
 			 {
 				 EDITOR_EXEC(DestroyActor(std::ref(*m_target)));
-			 };
+			 };*/
 		 }
 
 		 auto& createActor = CreateWidget<MenuList>("Create...");
-		 OvEditor::Utils::ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));*/
+		 // ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));
 	}
 
 	virtual void Execute() override
@@ -272,5 +273,8 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 
 	// 暂时不用点击和双击事件 回头再加
 	textSelectable.ClickedEvent += std::bind(&ApplicationEditor::SelectActor, ApplicationEditor::Instance(), p_actor);
-	// textSelectable.DoubleClickedEvent += EDITOR_BIND(MoveToTarget, std::ref(p_actor));// 将相机对焦到物体
+	textSelectable.DoubleClickedEvent += [this, p_actor]
+	{
+		ApplicationEditor::Instance()->MoveToTarget(p_actor);
+	};// 将相机对焦到物体
 }

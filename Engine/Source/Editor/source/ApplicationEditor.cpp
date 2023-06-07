@@ -282,6 +282,15 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 	inspector.FocusActor(p_target);
 }
 
+void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)
+{
+	auto name = p_target->name();
+	DEBUG_LOG_INFO("MoveToTarget Target Name:{}", name);
+
+	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
+	sceneView.GetCameraController().MoveToTarget(p_target);
+}
+
 void LitchiEditor::ApplicationEditor::SetupUI()
 {
 	PanelWindowSettings settings;

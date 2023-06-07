@@ -2,6 +2,7 @@
 #include "game_object.h"
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Scene/scene_manager.h"
 
 using namespace rttr;
@@ -25,11 +26,19 @@ namespace LitchiRuntime
 	}
 
 	bool GameObject::SetParent(GameObject* parent) {
+
+		auto& tran = GetComponent<Transform>()->GetTransform();
+		tran.RemoveParent();
+
 		if (parent == nullptr) {
 			DEBUG_LOG_ERROR("parent null");
 			return false;
 		}
+
 		parent->AddChild(this);
+		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
+		tran.SetParent(tranParent);
+
 		return true;
 	}
 

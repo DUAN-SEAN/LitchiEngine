@@ -79,6 +79,7 @@ namespace LitchiEditor
 		* @param p_target
 		*/
 		void SelectActor(GameObject* p_target);
+		void MoveToTarget(GameObject* p_target);
 	private:
 		void SetupUI();
 
