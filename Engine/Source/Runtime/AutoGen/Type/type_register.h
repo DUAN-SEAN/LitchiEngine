@@ -12,8 +12,10 @@
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
-#include "Runtime/Function/Framework/Component/Litght/Light.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
+#include "Runtime/Function/Framework/Component/Light/PointLight.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
@@ -252,6 +254,14 @@ RTTR_REGISTRATION //注册反射
 
 	// DirectionalLight
 	registration::class_<DirectionalLight>("DirectionalLight")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// PointLight
+	registration::class_<PointLight>("PointLight")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	// SpotLight
+	registration::class_<SpotLight>("SpotLight")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	// RigidActor

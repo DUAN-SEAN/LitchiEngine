@@ -7,7 +7,9 @@
 
 #include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Light/PointLight.h"
+#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
@@ -59,6 +61,8 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(3, "Collider");
 		componentSelectorWidget.choices.emplace(4, "RigidActor");
 		componentSelectorWidget.choices.emplace(5, "DirectionalLight");
+		componentSelectorWidget.choices.emplace(6, "PointLight");
+		componentSelectorWidget.choices.emplace(7, "SpotLight");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", glm::vec2{ 100.f, 0 });
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -73,6 +77,8 @@ LitchiEditor::Inspector::Inspector
 			case 3: GetTargetActor()->AddComponent<Collider>();				break;
 			case 4: GetTargetActor()->AddComponent<RigidActor>();				break;
 			case 5: GetTargetActor()->AddComponent<DirectionalLight>();				break;
+			case 6: GetTargetActor()->AddComponent<PointLight>();				break;
+			case 7: GetTargetActor()->AddComponent<SpotLight>();				break;
 			}
 
 			Refresh();
@@ -96,6 +102,8 @@ LitchiEditor::Inspector::Inspector
 			case 3: defineButtonsStates(GetTargetActor()->GetComponent<Collider>());		return;
 			case 4: defineButtonsStates(GetTargetActor()->GetComponent<RigidActor>());		return;
 			case 5: defineButtonsStates(GetTargetActor()->GetComponent<DirectionalLight>());		return;
+			case 6: defineButtonsStates(GetTargetActor()->GetComponent<PointLight>());		return;
+			case 7: defineButtonsStates(GetTargetActor()->GetComponent<SpotLight>());		return;
 			}
 		};
 

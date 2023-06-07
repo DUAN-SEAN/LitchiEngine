@@ -3,7 +3,7 @@
 
 #include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Window/Inputs/EKey.h"
-#include "Runtime/Function/Framework/Component/Litght/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
