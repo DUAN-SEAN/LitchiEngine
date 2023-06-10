@@ -344,12 +344,14 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 		m_xyz = RemoveRoll(m_xyz);
 	}
 
+	// ÍòÏò½Ú(x,y,z)(pitch, yaw, roll)
+	//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
 	m_xyz.y -= mouseOffset.x;
 	m_xyz.x += mouseOffset.y;
-	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
-	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);
+	m_xyz.y = std::max(std::min(m_xyz.y, 180.0f), -180.0f);
+	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f),-90.0f );
 
-	// x , y z
+	// x , y z (pitch, yaw, roll)
 	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_xyz.x), glm::radians(m_xyz.y), glm::radians(0.0)));
 }
 

@@ -518,18 +518,12 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 		// auto propertyObj = prop.get_value(obj);
 		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
 
+		propertyPathList.push_back(name.to_string());
 		// property 特殊绘制
 		if (prop.get_metadata("QuatToEuler"))
 		{
 			// 绘制rotation
-
-			// DEBUG_LOG_INFO("QuatToEuler euler x:{} z:{} y:{} ", localRotation4Euler.x, localRotation4Euler.y, localRotation4Euler.z);
-
-
-			propertyPathList.push_back(name.to_string());
 			PropertyField property_field(obj, propertyPathList);
-			propertyPathList.pop_back();
-
 			auto getVec3 = [prop_value, property_field]
 			{
 				auto localRotation = property_field.GetValue().get_value<glm::quat>();
@@ -537,28 +531,37 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 				auto localRotation4DegreesEuler = glm::degrees(localRotation4Euler);
 				return localRotation4DegreesEuler;
 			};
-
 			auto setVec3 = [property_field](glm::vec3 eulerVec3)
 			{
+				// 万向节(x,y,z)(pitch, yaw, roll)
+				//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
+				eulerVec3.x = std::max(std::min(eulerVec3.x, 90.0f), -90.0f);
+				eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
+				eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
+				// 处理奇点问题
+				if(eulerVec3.x == -90.0f || eulerVec3.x == 90.0f)
+				{
+					eulerVec3.z = 0.0f;
+				}
 				bool result = property_field.SetValue(glm::quat(glm::radians(eulerVec3)));
 				if (!result)
 				{
 					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
 				}
 			};
+
 			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
 
 		}
 		else
 		{
 			// default 绘制
-			propertyPathList.push_back(name.to_string());
 			if (!DrawProperty(p_root, prop_value, name, obj, propertyPathList))
 			{
 				DEBUG_LOG_ERROR("cannot serialize property:{}", name.to_string());
 			}
-			propertyPathList.pop_back();
 		}
+		propertyPathList.pop_back();
 	}
 
 }
