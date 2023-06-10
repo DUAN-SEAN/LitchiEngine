@@ -26,7 +26,7 @@ glm::mat4 LitchiRuntime::Light::GenerateMatrix(FTransform& p_transform) const
 	result[0][1] = position.y;// 1
 	result[0][2] = position.z;// 2
 
-	// lightForward = lightMat[1]
+	// lightForward = lightMat[1] 注意由于是右手坐标系,因此forward朝屏幕外, 看起来是反向的
 	auto forward = p_transform.GetWorldForward();
 	result[1][0] = forward.x;// 4
 	result[1][1] = forward.y;// 5

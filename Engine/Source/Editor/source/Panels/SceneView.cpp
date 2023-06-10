@@ -37,12 +37,16 @@ LitchiEditor::SceneView::SceneView
 	m_gridMaterial.SetBlendable(true);
 	m_gridMaterial.SetBackfaceCulling(false);
 	m_gridMaterial.SetDepthTest(false);
+
+	m_shadowMapFbo.Bind();
+	m_shadowMapFbo.Resize(1024, 1024);
+	m_shadowMapFbo.Unbind();
 }
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
 	Scene* scene = SceneManager::GetScene("Default Scene");
-	auto go= scene->game_object_vec_.front();
+	auto go = scene->game_object_vec_.front();
 	auto trans = go->GetComponent<Transform>();
 
 	/*auto rotation = trans->GetLocalRotation();
@@ -84,18 +88,12 @@ void LitchiEditor::SceneView::_Render_Impl()
 }
 void LitchiEditor::SceneView::RenderScene()
 {
-	// 绑定FBO
-	m_fbo.Bind();
-
-	// 绑定Light的SSBO
-	auto& ssbo= ApplicationEditor::Instance()->lightSSBO;
-	ssbo->Bind(0);
-
-	// 调用管线渲染场景
-	// 获取当前需要渲染的相机 和 场景
-	RenderCamera* render_camera = m_camera;
 	Scene* scene = SceneManager::GetScene("Default Scene");
 
+	// 绑定Light的SSBO
+	auto& ssbo = ApplicationEditor::Instance()->lightSSBO;
+	FTransform* shadowLightTran;
+	ssbo->Bind(0);
 	// 收集场景中的光
 	std::vector<glm::mat4> lightMatrixArr;
 	ssbo->SendBlocks(lightMatrixArr.data(), 0);
@@ -110,13 +108,89 @@ void LitchiEditor::SceneView::RenderScene()
 
 				auto directionalLightTran = game_object->GetComponent<Transform>();
 				lightMatrixArr.push_back(lightComp->GetData().GenerateMatrix(directionalLightTran->GetTransform()));
+
+				if (lightComp->GetLight().type == static_cast<float>(Light::Type::DIRECTIONAL))
+				{
+					shadowLightTran = &directionalLightTran->GetTransform();
+				}
+
 				});
 		}
 		});
 	ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
 
+
+	// 先绘制一遍阴影
+	if (shadowLightTran != nullptr)
+	{
+		glViewport(0, 0, 1024, 1024);
+		m_shadowMapFbo.Bind();
+		glClear(GL_DEPTH_BUFFER_BIT);
+		auto shadowMapShader = ApplicationEditor::Instance()->m_shadowMapShader;
+		shadowMapShader->Bind();
+
+		GLint numActiveUniforms = 0;
+		glGetProgramiv(shadowMapShader->id, GL_ACTIVE_ATTRIBUTES, &numActiveUniforms);
+		auto geo_Pos = glGetAttribLocation(shadowMapShader->id, "geo_Pos");
+		auto geo_TexCoords = glGetAttribLocation(shadowMapShader->id, "geo_TexCoords");
+		auto geo_Normal = glGetAttribLocation(shadowMapShader->id, "geo_Normal");
+		auto geo_Tangent = glGetAttribLocation(shadowMapShader->id, "geo_Tangent");
+		auto geo_Bitangent = glGetAttribLocation(shadowMapShader->id, "geo_Bitangent");
+		GLfloat near_plane = 1.0f, far_plane = 500.0f;
+
+		// 计算光源的Projection
+		glm::mat4 lightProjection = glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, near_plane, far_plane);
+
+		// 计算光源的View
+		auto shadowLightPos = shadowLightTran->GetWorldPosition();
+		auto shadowLightRotation = shadowLightTran->GetWorldRotation();
+		glm::vec3 up = glm::normalize(shadowLightRotation) * glm::vec3(0, 1.0, 0);
+		glm::vec3 forward = glm::normalize(shadowLightRotation) * glm::vec3(0, 0, -1.0);
+
+		/*	DEBUG_LOG_INFO("---------------------------------");
+			DEBUG_LOG_INFO("CalculateViewMatrix eulerRotation.X:{},eulerRotation.Y:{},eulerRotation.Z:{}", eulerRotation.x, eulerRotation.y, eulerRotation.z);
+			DEBUG_LOG_INFO("CalculateViewMatrix forward.X:{},forward.Y:{},forward.Z:{}", forward.x, forward.y, forward.z);*/
+		
+		glm::mat4 lightView = glm::lookAt
+		(
+			glm::vec3(shadowLightPos.x, shadowLightPos.y, shadowLightPos.z),											// Position
+			glm::vec3(shadowLightPos.x + forward.x, shadowLightPos.y + forward.y, shadowLightPos.z + forward.z),			// LookAt (Position + Forward)
+			glm::vec3(up.x, up.y, up.z)																		// Up Vector
+		);
+
+		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+		shadowMapShader->SetUniformMat4("ubo_LightSpaceMatrix", lightSpaceMatrix);
+
+		ApplicationEditor::Instance()->renderer->ApplyStateMask(63);
+		// 遍历所有的物体,执行MeshRenderer的Render函数
+		scene->Foreach([&](GameObject* game_object) {
+			if (game_object->active()) {
+				game_object->ForeachComponent([&](Component* component) {
+					auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
+					if (mesh_renderer == nullptr) {
+						return;
+					}
+					mesh_renderer->RenderShadowMap();
+					});
+			}
+			});
+
+		shadowMapShader->Unbind();
+		m_shadowMapFbo.Unbind();
+
+	}
+
+	auto [winWidth, winHeight] = GetSafeSize();
+	glViewport(0, 0, winWidth, winHeight);
+
+	// 绑定FBO
+	m_fbo.Bind();
+
+	// 获取当前需要渲染的相机 和 场景
+	RenderCamera* render_camera = m_camera;
 	render_camera->Clear();
 	RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
+
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
@@ -131,9 +205,10 @@ void LitchiEditor::SceneView::RenderScene()
 		}
 		});
 
-	ssbo->Unbind();
-
+	// 解绑FBO
 	m_fbo.Unbind();
+
+	ssbo->Unbind();
 }
 
 void LitchiEditor::SceneView::RenderSceneForActorPicking()
@@ -144,7 +219,7 @@ bool IsResizing()
 {
 	auto cursor = ImGui::GetMouseCursor();
 
-	return 
+	return
 		cursor == ImGuiMouseCursor_ResizeEW ||
 		cursor == ImGuiMouseCursor_ResizeNS ||
 		cursor == ImGuiMouseCursor_ResizeNWSE ||
@@ -161,19 +236,19 @@ void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::
 	constexpr float gridSize = 5000.0f;
 
 	// 绘制plane
-	glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z }) * glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
+	glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z })* glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
 	m_gridMaterial.Set("u_Color", p_color);
 
 	// 设置ubo
 	/*
 		mat4    ubo_Model;
-	    mat4    ubo_View;
-	    mat4    ubo_Projection;
-	    vec3    ubo_ViewPos;
-	    float   ubo_Time;
-    */
+		mat4    ubo_View;
+		mat4    ubo_Projection;
+		vec3    ubo_ViewPos;
+		float   ubo_Time;
+	*/
 	ApplicationEditor::Instance()->engineUBO->SetSubData(modelMatrix, 0);
-	
+
 	uint8_t stateMask = m_gridMaterial.GenerateStateMask();
 	LitchiEditor::ApplicationEditor::Instance()->renderer->ApplyStateMask(stateMask);
 

@@ -184,7 +184,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		GameObject* go = CreateDefaultObject(scene, "liubei","../Engine/Models/Cube.fbx","../material/Default.mat", 0, -10);
 		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
-		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0),glm::angleAxis(60.f,glm::vec3(1,0,0)));
+		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,50,-40),glm::angleAxis(60.f,glm::vec3(1,0,0)));
 		GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",
 			glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(100,0,100));
 
@@ -196,9 +196,11 @@ void LitchiEditor::ApplicationEditor::Init()
 		hierachy.AddActorByInstance(go4);
 		hierachy.AddActorByInstance(go5);
 	}
+	
+	m_shadowMapShader = shaderManager->LoadResource("../shader/DepthShader.glsl");
 
 	// ²âÊÔ´úÂë
-	{
+	/*{
 		std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
 		std::string fbxPath2 = "../model/fbx_extra.fbx";
 
@@ -213,7 +215,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 		auto material = materialManager->LoadResource("../material/Default.mat");
 
-	}
+	}*/
 }
 
 void LitchiEditor::ApplicationEditor::Run()

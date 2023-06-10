@@ -40,7 +40,7 @@ void main()
     mat3 TBNi = transpose(vs_out.TBN);
 
     vs_out.FragPos          = vec3(ubo_Model * vec4(geo_Pos, 1.0));
-    vs_out.Normal           = normalize(ubo_Model * geo_Normal);
+    vs_out.Normal           = vec3(normalize(ubo_Model * vec4(geo_Normal,    0.0)));
     vs_out.TexCoords        = geo_TexCoords;
     vs_out.TangentViewPos   = TBNi * ubo_ViewPos;
     vs_out.TangentFragPos   = TBNi * vs_out.FragPos;

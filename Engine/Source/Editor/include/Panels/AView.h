@@ -5,6 +5,8 @@
 #include <detail/type_quat.hpp>
 
 #include "Runtime/Function/Renderer/Framebuffer.h"
+#include "Runtime/Function/Renderer/Framebuffer4Depth.h"
+#include "Runtime/Function/Renderer/Resources/Shader.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -119,5 +121,6 @@ namespace LitchiEditor
         glm::vec3 m_gridColor = glm::vec3 { 0.176f, 0.176f, 0.176f };
 
 		Framebuffer m_fbo;
+		Framebuffer4Depth m_shadowMapFbo;
 	};
 }

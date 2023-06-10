@@ -145,6 +145,7 @@ void LitchiRuntime::Resource::Shader::QueryUniforms()
 			case LitchiRuntime::UniformType::UNIFORM_FLOAT_VEC2:	defaultValue = std::make_any<glm::vec2>(GetUniformVec2(name));		break;
 			case LitchiRuntime::UniformType::UNIFORM_FLOAT_VEC3:	defaultValue = std::make_any<glm::vec3>(GetUniformVec3(name));		break;
 			case LitchiRuntime::UniformType::UNIFORM_FLOAT_VEC4:	defaultValue = std::make_any<glm::vec4>(GetUniformVec4(name));		break;
+			case LitchiRuntime::UniformType::UNIFORM_FLOAT_MAT4:	defaultValue = std::make_any<glm::mat4>(GetUniformMat4(name));		break;
 			case LitchiRuntime::UniformType::UNIFORM_SAMPLER_2D:	defaultValue = std::make_any<LitchiRuntime::Texture*>(nullptr);	break;
 			}
 

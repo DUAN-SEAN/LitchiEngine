@@ -62,6 +62,8 @@ namespace LitchiEditor
 
 		std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
 
+		Resource::Shader* m_shadowMapShader;
+
 		SceneManager* sceneManager;
 
 		std::string projectPath;

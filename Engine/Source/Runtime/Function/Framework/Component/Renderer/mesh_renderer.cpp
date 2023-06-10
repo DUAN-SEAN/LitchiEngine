@@ -153,6 +153,24 @@ namespace LitchiRuntime
 
 	}
 
+	void MeshRenderer::RenderShadowMap()
+	{
+		// 通过MeshFilter获取当前的Mesh
+		auto meshFilter = game_object()->GetComponent<MeshFilter>();
+		auto model = meshFilter->GetModel();
+		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
+
+		// 计算模型矩阵
+		auto transform = game_object()->GetComponent<Transform>();
+		glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
+		
+		ApplicationBase::Instance()->engineUBO->SetSubData(modelMatrix, 0);
+
+		// 调用Draw执行绘制
+		// 内部将设置模型矩阵到UBO中
+		ApplicationBase::Instance()->renderer->Draw(*mesh);
+	}
+
 	void MeshRenderer::PostResourceLoaded()
 	{
 		DEBUG_LOG_INFO("PostResourceLoaded Path {}", material_path);
