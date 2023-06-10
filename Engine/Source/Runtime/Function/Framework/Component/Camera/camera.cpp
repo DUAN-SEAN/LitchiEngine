@@ -48,7 +48,7 @@ namespace LitchiRuntime
 		auto transform = game_object()->GetComponent<Transform>();
 
 		// 更新viewMatrix
-		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(transform->GetLocalPosition(),glm::vec3(0,0,0),glm::vec3(0,1,0));
+		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(transform->GetWorldPosition(),glm::vec3(0,0,0),glm::vec3(0,1,0));
 
 		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetFov(60.0);
 

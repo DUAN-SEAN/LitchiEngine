@@ -271,8 +271,8 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
 	auto name = p_target->name();
 	auto transform = p_target->GetComponent<Transform>();
-	auto position = transform->GetLocalPosition();
-	auto rotation = transform->GetLocalRotation();
+	auto position = transform->GetWorldPosition();
+	auto rotation = transform->GetWorldRotation();
 	auto rotationEuler = glm::eulerAngles(rotation);
 	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 

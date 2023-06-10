@@ -475,7 +475,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 		col.widths[1] = 150.0f;
 		auto& text = col.CreateWidget<Text>(propertyName.to_string());
 		auto& propertyRoot = col.CreateWidget<Group>();*/
-		
+
 		auto& propertyRoot = p_root.CreateWidget<TreeNode>(propertyName.to_string(), true, true);
 		if (!child_props.empty())
 		{
@@ -518,12 +518,47 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 		// auto propertyObj = prop.get_value(obj);
 		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
 
-		propertyPathList.push_back(name.to_string());
-		if (!DrawProperty(p_root, prop_value, name, obj, propertyPathList))
+		// property 特殊绘制
+		if (prop.get_metadata("QuatToEuler"))
 		{
-			DEBUG_LOG_ERROR("cannot serialize property:{}", name.to_string());
+			// 绘制rotation
+
+			// DEBUG_LOG_INFO("QuatToEuler euler x:{} z:{} y:{} ", localRotation4Euler.x, localRotation4Euler.y, localRotation4Euler.z);
+
+
+			propertyPathList.push_back(name.to_string());
+			PropertyField property_field(obj, propertyPathList);
+			propertyPathList.pop_back();
+
+			auto getVec3 = [prop_value, property_field]
+			{
+				auto localRotation = property_field.GetValue().get_value<glm::quat>();
+				auto localRotation4Euler = glm::eulerAngles(localRotation);
+				auto localRotation4DegreesEuler = glm::degrees(localRotation4Euler);
+				return localRotation4DegreesEuler;
+			};
+
+			auto setVec3 = [property_field](glm::vec3 eulerVec3)
+			{
+				bool result = property_field.SetValue(glm::quat(glm::radians(eulerVec3)));
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
+				}
+			};
+			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
+
 		}
-		propertyPathList.pop_back();
+		else
+		{
+			// default 绘制
+			propertyPathList.push_back(name.to_string());
+			if (!DrawProperty(p_root, prop_value, name, obj, propertyPathList))
+			{
+				DEBUG_LOG_ERROR("cannot serialize property:{}", name.to_string());
+			}
+			propertyPathList.pop_back();
+		}
 	}
 
 }

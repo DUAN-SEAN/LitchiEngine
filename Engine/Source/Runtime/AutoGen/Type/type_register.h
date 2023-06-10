@@ -245,6 +245,9 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Serializable", true)
 			)
 		.property("localRotation", &Transform::GetLocalRotation, &Transform::SetLocalRotation)
+		(
+			rttr::metadata("QuatToEuler", true)
+			)
 		.property("localScale", &Transform::GetLocalScale, &Transform::SetLocalScale);
 
 	// Light Base Component

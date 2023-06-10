@@ -122,7 +122,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			if (selectGO != nullptr)
 			{
 				
-				auto targetPos = selectGO->GetComponent<Transform>()->GetLocalPosition();
+				auto targetPos = selectGO->GetComponent<Transform>()->GetWorldPosition();
 
 				float dist = GetActorFocusDist(selectGO);
 
@@ -233,7 +233,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
 {
-	auto goWorldPos = p_target->GetComponent<Transform>()->GetLocalPosition();
+	auto goWorldPos = p_target->GetComponent<Transform>()->GetTransform().GetWorldPosition();
 	m_cameraDestinations.push({ goWorldPos - m_cameraRotation * LitchiRuntime::Math::Forward * GetActorFocusDist(p_target), m_cameraRotation });
 }
 
