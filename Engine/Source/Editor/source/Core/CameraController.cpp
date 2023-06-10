@@ -345,7 +345,7 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 	}
 
 	m_xyz.y -= mouseOffset.x;
-	m_xyz.x += -mouseOffset.y;
+	m_xyz.x += mouseOffset.y;
 	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
 	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);
 
