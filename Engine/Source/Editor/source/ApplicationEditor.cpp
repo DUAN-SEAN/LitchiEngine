@@ -186,7 +186,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
 		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,50,-40),glm::angleAxis(60.f,glm::vec3(1,0,0)));
 		GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",
-			glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(100,0,100));
+			glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(10,0,10));
 
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");

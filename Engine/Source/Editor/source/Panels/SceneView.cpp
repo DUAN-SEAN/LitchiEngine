@@ -136,10 +136,10 @@ void LitchiEditor::SceneView::RenderScene()
 		auto geo_Normal = glGetAttribLocation(shadowMapShader->id, "geo_Normal");
 		auto geo_Tangent = glGetAttribLocation(shadowMapShader->id, "geo_Tangent");
 		auto geo_Bitangent = glGetAttribLocation(shadowMapShader->id, "geo_Bitangent");
-		GLfloat near_plane = 1.0f, far_plane = 500.0f;
+		GLfloat near_plane = 1.0f, far_plane = 300.0f;
 
 		// 计算光源的Projection
-		glm::mat4 lightProjection = glm::ortho(-500.0f, 500.0f, -500.0f, 500.0f, near_plane, far_plane);
+		glm::mat4 lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
 
 		// 计算光源的View
 		auto shadowLightPos = shadowLightTran->GetWorldPosition();

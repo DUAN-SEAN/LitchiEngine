@@ -19,7 +19,7 @@ LitchiRuntime::Framebuffer4Depth::Framebuffer4Depth(uint16_t p_width, uint16_t p
 
 	/* Setup framebuffer */
 	Bind();
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, m_renderTexture, 0);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_renderTexture, 0);
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	Unbind();
