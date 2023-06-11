@@ -3,6 +3,7 @@
 #define UNTITLED_MESH_RENDERER_H
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/Framebuffer4Depth.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 
 namespace LitchiRuntime
@@ -19,7 +20,7 @@ namespace LitchiRuntime
 		Resource::Material* material() { return material_; }
 
 		// void RenderOld(RenderCamera* renderCamera);//渲染
-		void Render(RenderCamera* renderCamera);
+		void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO);
 
 		void RenderShadowMap();
 	public:

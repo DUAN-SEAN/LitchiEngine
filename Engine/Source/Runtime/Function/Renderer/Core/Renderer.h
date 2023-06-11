@@ -4,6 +4,7 @@
 #include <optional>
 
 #include "Runtime/Function/Renderer/Driver.h"
+#include "Runtime/Function/Renderer/Framebuffer4Depth.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 #include "Runtime/Function/Renderer/Resources/Shader.h"
@@ -268,6 +269,7 @@ namespace LitchiRuntime
 		*  @param p_modelMatrix
 		*/
 		void DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix);
+		void DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO);
 
 		/**
 		* Draw the given model the amount of times passed in parameter (Instance rendering if p_instance > 1)

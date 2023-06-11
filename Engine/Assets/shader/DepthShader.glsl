@@ -31,5 +31,5 @@ out vec4 FRAGMENT_COLOR;
 
 void main()
 {
-	FRAGMENT_COLOR = gl_FragCoord;
+	// FRAGMENT_COLOR = gl_FragCoord;
 }

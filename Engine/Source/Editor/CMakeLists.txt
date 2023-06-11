@@ -1,11 +1,12 @@
 set(TARGET_NAME LitchiEditor)
 
+file(GLOB_RECURSE EDITOR_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl)
+file(GLOB_RECURSE EDITOR_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
+
+
 # dest build/****/Assets 和Editor目录平级
 file(COPY "../../Assets/" DESTINATION "../Assets/")
 
-
-file(GLOB_RECURSE EDITOR_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl)
-file(GLOB_RECURSE EDITOR_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 # file(GLOB_RECURSE imgui_src "../../ThridParty/imgui/backends/*.cpp")
 
@@ -54,32 +55,9 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 target_link_libraries(${TARGET_NAME} LitchiRuntime)
 
-# include imgui
-# target_include_directories(${TARGET_NAME} 
-# PUBLIC 
-  # $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/imgui> ${THIRD_PARTY_DIR}/imgui/backends)
-
-#set(POST_BUILD_COMMANDS
+# set(POST_BUILD_COMMANDS
   # COMMAND ${CMAKE_COMMAND} -E make_directory "${BINARY_ROOT_DIR}"
-  # COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/resource" "${BINARY_ROOT_DIR}/resource"
-  # COMMAND ${CMAKE_COMMAND} -E copy_directory "$<TARGET_FILE_DIR:${TARGET_NAME}>/" "${BINARY_ROOT_DIR}"
-  # COMMAND ${CMAKE_COMMAND} -E copy "${ENGINE_ROOT_DIR}/${DEPLOY_CONFIG_DIR}/${TARGET_NAME}.ini" "${BINARY_ROOT_DIR}"
-  # COMMAND ${CMAKE_COMMAND} -E copy "${ENGINE_ROOT_DIR}/${DEVELOP_CONFIG_DIR}/${TARGET_NAME}.ini" "$<TARGET_FILE_DIR:${TARGET_NAME}>/"
-  # COMMAND ${CMAKE_COMMAND} -E remove_directory "${BINARY_ROOT_DIR}/${ENGINE_ASSET_DIR}"
-  # COMMAND ${CMAKE_COMMAND} -E copy_directory "${ENGINE_ROOT_DIR}/${ENGINE_ASSET_DIR}" "${BINARY_ROOT_DIR}/${ENGINE_ASSET_DIR}"
-#)
-
-
-
-# if(ENABLE_PHYSICS_DEBUG_RENDERER)
-  # set(POST_BUILD_COMMANDS ${POST_BUILD_COMMANDS}
-    # COMMAND ${CMAKE_COMMAND} -E remove_directory "${BINARY_ROOT_DIR}/${JOLT_ASSET_DIR}"
-    # COMMAND ${CMAKE_COMMAND} -E copy_directory "${ENGINE_ROOT_DIR}/${JOLT_ASSET_DIR}" "${BINARY_ROOT_DIR}/${JOLT_ASSET_DIR}"
+  # COMMAND ${CMAKE_COMMAND} -E copy_directory "../../Assets/" "${BINARY_ROOT_DIR}/../Assets/"
 # )
-# endif()
 
 # add_custom_command(TARGET ${TARGET_NAME} ${POST_BUILD_COMMANDS})
-
-# #precompile
-# #set global vari used by precompile
-# set(Litchi_EDITOR_HEADS “${EDITOR_HEADERS}” PARENT_SCOPE)

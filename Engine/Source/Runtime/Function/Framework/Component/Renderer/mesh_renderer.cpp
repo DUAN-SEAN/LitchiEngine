@@ -134,7 +134,7 @@ namespace LitchiRuntime
 
 	//}
 
-	void MeshRenderer::Render(RenderCamera* renderCamera)
+	void MeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 	{
 		// 通过MeshFilter获取当前的Mesh
 		auto meshFilter = game_object()->GetComponent<MeshFilter>();
@@ -149,7 +149,7 @@ namespace LitchiRuntime
 
 		// 调用Draw执行绘制
 		// 内部将设置模型矩阵到UBO中
-		ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material_, &modelMatrix);
+		ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material_, &modelMatrix, lightVPMat,shadowMapFBO);
 
 	}
 

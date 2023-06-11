@@ -72,6 +72,58 @@ void LitchiRuntime::Resource::Material::Bind(Texture* p_emptyTexture)
 	}
 }
 
+void LitchiRuntime::Resource::Material::Bind(LitchiRuntime::Texture* p_emptyTexture, Framebuffer4Depth* shadowMapFBO)
+{
+	if (HasShader())
+	{
+		m_shader->Bind();
+
+		int textureSlot = 0;
+
+		for (auto& [name, value] : m_uniformsData)
+		{
+			auto uniformData = m_shader->GetUniformInfo(name);
+
+			if (uniformData)
+			{
+				switch (uniformData->type)
+				{
+				case UniformType::UNIFORM_BOOL:			if (value.type() == typeid(bool))		m_shader->SetUniformInt(name, std::any_cast<bool>(value));			break;
+				case UniformType::UNIFORM_INT:			if (value.type() == typeid(int))		m_shader->SetUniformInt(name, std::any_cast<int>(value));			break;
+				case UniformType::UNIFORM_FLOAT:		if (value.type() == typeid(float))		m_shader->SetUniformFloat(name, std::any_cast<float>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC2:	if (value.type() == typeid(glm::vec2))	m_shader->SetUniformVec2(name, std::any_cast<glm::vec2>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC3:	if (value.type() == typeid(glm::vec3))	m_shader->SetUniformVec3(name, std::any_cast<glm::vec3>(value));		break;
+				case UniformType::UNIFORM_FLOAT_VEC4:	if (value.type() == typeid(glm::vec4))	m_shader->SetUniformVec4(name, std::any_cast<glm::vec4>(value));		break;
+				case UniformType::UNIFORM_SAMPLER_2D:
+				{
+					if (value.type() == typeid(Texture*))
+					{
+						if (auto tex = std::any_cast<Texture*>(value); tex)
+						{
+							tex->Bind(textureSlot);
+							m_shader->SetUniformInt(uniformData->name, textureSlot++);
+						}
+						else if (p_emptyTexture)
+						{
+							p_emptyTexture->Bind(textureSlot);
+							m_shader->SetUniformInt(uniformData->name, textureSlot++);
+						}
+					}
+				}
+				}
+			}
+		}
+
+		if(shadowMapFBO != nullptr)
+		{
+			glActiveTexture(GL_TEXTURE0 + textureSlot);
+			glBindTexture(GL_TEXTURE_2D, shadowMapFBO->GetTextureID());
+			
+			m_shader->SetUniformInt("u_shadowMap", textureSlot++);
+		}
+	}
+}
+
 void LitchiRuntime::Resource::Material::UnBind()
 {
 	if (HasShader())

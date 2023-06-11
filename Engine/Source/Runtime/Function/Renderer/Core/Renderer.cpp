@@ -1,4 +1,4 @@
-
+﻿
 #include <glad/glad.h>
 
 #include "Renderer.h"
@@ -35,7 +35,7 @@ void LitchiRuntime::Renderer::Clear(bool p_colorBuffer, bool p_depthBuffer, bool
 	);
 }
 
-void LitchiRuntime::Renderer::Clear(RenderCamera & p_camera, bool p_colorBuffer, bool p_depthBuffer, bool p_stencilBuffer)
+void LitchiRuntime::Renderer::Clear(RenderCamera& p_camera, bool p_colorBuffer, bool p_depthBuffer, bool p_stencilBuffer)
 {
 	/* Backup the previous OpenGL clear color */
 	GLfloat previousClearColor[4];
@@ -204,9 +204,9 @@ std::string LitchiRuntime::Renderer::GetString(GLenum p_parameter, uint32_t p_in
 
 void LitchiRuntime::Renderer::ClearFrameInfo()
 {
-	m_frameInfo.batchCount		= 0;
-	m_frameInfo.instanceCount	= 0;
-	m_frameInfo.polyCount		= 0;
+	m_frameInfo.batchCount = 0;
+	m_frameInfo.instanceCount = 0;
+	m_frameInfo.polyCount = 0;
 }
 
 void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
@@ -215,13 +215,35 @@ void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_mater
 	{
 		if (p_modelMatrix)
 			ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
-			// m_modelMatrixSender(*p_modelMatrix);
+		// m_modelMatrixSender(*p_modelMatrix);
 
 		uint8_t stateMask = p_material.GenerateStateMask();
 		ApplyStateMask(stateMask);
 
 		/* Draw the mesh */
 		p_material.Bind(m_emptyTexture);
+		Draw(p_mesh, EPrimitiveMode::TRIANGLES, p_material.GetGPUInstances());
+		p_material.UnBind();
+	}
+}
+
+void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+{
+	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
+	{
+		if (p_modelMatrix)
+			ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
+		// m_modelMatrixSender(*p_modelMatrix);
+
+		uint8_t stateMask = p_material.GenerateStateMask();
+		ApplyStateMask(stateMask);
+
+		/* Draw the mesh */
+		p_material.Bind(m_emptyTexture, shadowMapFBO);
+
+		// 设置光源的VP矩阵
+		p_material.GetShader()->SetUniformMat4("ubo_LightSpaceMatrix", *lightVPMat);
+
 		Draw(p_mesh, EPrimitiveMode::TRIANGLES, p_material.GetGPUInstances());
 		p_material.UnBind();
 	}
@@ -236,7 +258,7 @@ void LitchiRuntime::Renderer::Draw(LitchiRuntime::IMesh& p_mesh, LitchiRuntime::
 		m_frameInfo.polyCount += (p_mesh.GetIndexCount() / 3) * p_instances;
 
 		p_mesh.Bind();
-		
+
 		if (p_mesh.GetIndexCount() > 0)
 		{
 			/* With EBO */

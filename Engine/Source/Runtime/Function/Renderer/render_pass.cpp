@@ -28,18 +28,18 @@ namespace LitchiRuntime
 
 		render_camera->Clear();
 
-		// 遍历所有的物体,执行MeshRenderer的Render函数
-		scene->Foreach([&](GameObject* game_object) {
-			if (game_object->active()) {
-				game_object->ForeachComponent([&](Component* component) {
-					auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
-					if (mesh_renderer == nullptr) {
-						return;
-					}
-					mesh_renderer->Render(render_camera);
-					});
-			}
-			});
+		//// 遍历所有的物体,执行MeshRenderer的Render函数
+		//scene->Foreach([&](GameObject* game_object) {
+		//	if (game_object->active()) {
+		//		game_object->ForeachComponent([&](Component* component) {
+		//			auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
+		//			if (mesh_renderer == nullptr) {
+		//				return;
+		//			}
+		//			mesh_renderer->Render(render_camera);
+		//			});
+		//	}
+		//	});
 	}
 
 }

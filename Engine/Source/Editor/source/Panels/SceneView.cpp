@@ -121,6 +121,7 @@ void LitchiEditor::SceneView::RenderScene()
 
 
 	// 先绘制一遍阴影
+	glm::mat4 lightSpaceMatrix;
 	if (shadowLightTran != nullptr)
 	{
 		glViewport(0, 0, 1024, 1024);
@@ -158,7 +159,7 @@ void LitchiEditor::SceneView::RenderScene()
 			glm::vec3(up.x, up.y, up.z)																		// Up Vector
 		);
 
-		glm::mat4 lightSpaceMatrix = lightProjection * lightView;
+		lightSpaceMatrix = lightProjection * lightView;
 		shadowMapShader->SetUniformMat4("ubo_LightSpaceMatrix", lightSpaceMatrix);
 
 		ApplicationEditor::Instance()->renderer->ApplyStateMask(63);
@@ -200,7 +201,7 @@ void LitchiEditor::SceneView::RenderScene()
 				if (mesh_renderer == nullptr) {
 					return;
 				}
-				mesh_renderer->Render(render_camera);
+				mesh_renderer->Render(render_camera,&lightSpaceMatrix, &m_shadowMapFbo);
 				});
 		}
 		});
