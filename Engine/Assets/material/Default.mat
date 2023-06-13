@@ -24,8 +24,8 @@
     },
     {
       "Type": "UniformInfoPath",
-      "name": "diffuseTexture",
-      "path": "../images/urban_128.cpt"
+      "name": "u_DiffuseMap",
+      "path": "../images/TexturesCom_CliffRock3_2x2_1K_roughness.png"
     },
     {
       "Type": "UniformInfoPath",
