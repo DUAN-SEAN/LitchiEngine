@@ -1,36 +1,36 @@
 {
-    "shaderPath": "../shader/Standard.glsl",
-    "settings": {
-        "blendable": true,
-        "backfaceCulling": true,
-        "depthTest": true,
-        "gpuInstances": 1
+  "shaderPath": "../shader/Standard.glsl",
+  "settings": {
+    "blendable": true,
+    "backfaceCulling": true,
+    "depthTest": true,
+    "gpuInstances": 1
+  },
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoFloat",
+      "name": "shineness",
+      "value": 64.0
     },
-    "uniformInfoList": [
-        {
-            "Type": "UniformInfoFloat",
-            "name": "shineness",
-            "value": 64.0
-        },
-        {
-            "Type": "UniformInfoVector4",
-            "name": "diffuseColor",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
-                "w": 1.0
-            }
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "diffuseTexture",
-            "path": ""
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "specularTexture",
-            "path": ""
-        }
-    ]
+    {
+      "Type": "UniformInfoVector4",
+      "name": "diffuseColor",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "diffuseTexture",
+      "path": "../images/urban_128.cpt"
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "specularTexture",
+      "path": ""
+    }
+  ]
 }

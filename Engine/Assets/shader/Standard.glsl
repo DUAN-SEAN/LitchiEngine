@@ -229,7 +229,8 @@ float ShadowCalculation(vec4 fragPosLightSpace)
     // 取得当前片段在光源视角下的深度
     float currentDepth = projCoords.z;
     // 检查当前片段是否在阴影中
-    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+    float bias = 0.05;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
 
     return shadow;
 }
@@ -276,8 +277,10 @@ void main()
                 case 4: lightSum += CalcAmbientSphereLight(ssbo_Lights[i]); break;
             }
         }
-
-        FRAGMENT_COLOR = (1.0f - shadow) * vec4(lightSum, g_DiffuseTexel.a);
+		
+		// Ambient
+		vec3 shadowedColor = (1.0f - shadow) * lightSum;
+        FRAGMENT_COLOR = vec4(shadowedColor, g_DiffuseTexel.a);
     }
     else
     {

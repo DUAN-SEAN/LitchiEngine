@@ -181,12 +181,11 @@ void LitchiEditor::ApplicationEditor::Init()
 	// 初始化默认场景
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
-		GameObject* go = CreateDefaultObject(scene, "liubei","../Engine/Models/Cube.fbx","../material/Default.mat", 0, -10);
-		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 10, -30);
-		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", -10, 0);
-		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,50,-40),glm::angleAxis(60.f,glm::vec3(1,0,0)));
-		GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",
-			glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
+		GameObject* go = CreateDefaultObject(scene, "liubei","../Engine/Models/Cube.fbx","../material/Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
+		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "../Engine/Models/Cone.fbx", "../material/Default.mat", 1, -3);
+		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "../Engine/Models/Sphere.fbx", "../material/DefaultUnlit.mat", 3.f, 1.5f);
+		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,10,0),glm::angleAxis(-160.0f,glm::vec3(1,0,0)));
+		// GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
 
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
@@ -194,7 +193,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		hierachy.AddActorByInstance(go2);
 		hierachy.AddActorByInstance(go3);
 		hierachy.AddActorByInstance(go4);
-		hierachy.AddActorByInstance(go5);
+		// hierachy.AddActorByInstance(go5);
 	}
 	
 	m_shadowMapShader = shaderManager->LoadResource("../shader/DepthShader.glsl");

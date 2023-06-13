@@ -92,7 +92,7 @@ void LitchiEditor::SceneView::RenderScene()
 
 	// 绑定Light的SSBO
 	auto& ssbo = ApplicationEditor::Instance()->lightSSBO;
-	FTransform* shadowLightTran;
+	FTransform* shadowLightTran = nullptr;
 	ssbo->Bind(0);
 	// 收集场景中的光
 	std::vector<glm::mat4> lightMatrixArr;
@@ -127,6 +127,7 @@ void LitchiEditor::SceneView::RenderScene()
 		glViewport(0, 0, 1024, 1024);
 		m_shadowMapFbo.Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
+		glCullFace(GL_FRONT);
 		auto shadowMapShader = ApplicationEditor::Instance()->m_shadowMapShader;
 		shadowMapShader->Bind();
 
@@ -137,10 +138,10 @@ void LitchiEditor::SceneView::RenderScene()
 		auto geo_Normal = glGetAttribLocation(shadowMapShader->id, "geo_Normal");
 		auto geo_Tangent = glGetAttribLocation(shadowMapShader->id, "geo_Tangent");
 		auto geo_Bitangent = glGetAttribLocation(shadowMapShader->id, "geo_Bitangent");
-		GLfloat near_plane = 1.0f, far_plane = 300.0f;
+		GLfloat near_plane = 1.0f, far_plane = 50.0f;
 
 		// 计算光源的Projection
-		glm::mat4 lightProjection = glm::ortho(-50.0f, 50.0f, -50.0f, 50.0f, near_plane, far_plane);
+		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
 		// 计算光源的View
 		auto shadowLightPos = shadowLightTran->GetWorldPosition();
@@ -175,8 +176,8 @@ void LitchiEditor::SceneView::RenderScene()
 					});
 			}
 			});
-
 		shadowMapShader->Unbind();
+		glCullFace(GL_BACK);
 		m_shadowMapFbo.Unbind();
 
 	}
