@@ -58,12 +58,19 @@ namespace LitchiRuntime
 			return scene_map_[sceneName];
 		}
 
+		static Scene* GetCurrentScene()
+		{
+			return s_scene;
+		}
+
 		/// 遍历所有Scene的GameObject
 		/// \param func
 		static void Foreach(std::function<void(GameObject* game_object)> func);
 
 	private:
 		static std::map<std::string, Scene*> scene_map_;
+
+		inline static Scene* s_scene = nullptr;
 	};
 }
 #endif //UNTITLED_TYPE_H

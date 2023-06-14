@@ -29,13 +29,13 @@
 //		* @param p_actor
 //		* @param p_material
 //		*/
-//		void PreparePickingMaterial(OvCore::ECS::Actor& p_actor, Material*& p_material);
+//		void PreparePickingMaterial(LitchiRuntime::GameObject& p_actor, Material*& p_material);
 //
 //		/**
 //		* Calculate the model matrix for a camera attached to the given actor
 //		* @param p_actor
 //		*/
-//		OvMaths::FMatrix4 CalculateCameraModelMatrix(OvCore::ECS::Actor& p_actor);
+//		OvMaths::FMatrix4 CalculateCameraModelMatrix(LitchiRuntime::GameObject& p_actor);
 //
 //		/**
 //		* Render the scene
@@ -93,7 +93,7 @@
 //		* @param p_toStencil
 //		* @param p_isSelected
 //		*/
-//		void RenderActorOutlinePass(OvCore::ECS::Actor& p_actor, bool p_toStencil, bool p_isSelected = false);
+//		void RenderActorOutlinePass(LitchiRuntime::GameObject& p_actor, bool p_toStencil, bool p_isSelected = false);
 //
 //        /**
 //        * Render the camera perspective frustum
@@ -117,7 +117,7 @@
 //		/**
 //		* Render an actor collider
 //		*/
-//		void RenderActorCollider(OvCore::ECS::Actor& p_actor);
+//		void RenderActorCollider(LitchiRuntime::GameObject& p_actor);
 //
 //		/**
 //		* Render light bounds

@@ -1,13 +1,7 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
 #include <string>
-
 
 /* Prevent enum and class name to be replaced by standard macros */
 #undef MessageBox

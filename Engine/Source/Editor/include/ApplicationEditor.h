@@ -66,6 +66,7 @@ namespace LitchiEditor
 
 		SceneManager* sceneManager;
 
+		PanelsManager	m_panelsManager;
 		std::string projectPath;
 		std::string projectName;
 		std::string projectFilePath;
@@ -89,7 +90,6 @@ namespace LitchiEditor
 
 		uint64_t m_elapsedFrames = 0;
 		Canvas			m_canvas;
-		PanelsManager	m_panelsManager;
 		static ApplicationEditor* instance_;
 
 		GameObject* m_selectGO = nullptr;

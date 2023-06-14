@@ -139,7 +139,7 @@
 //	m_actorPickingMaterial.SetBackfaceCulling(false);
 //}
 //
-//void LitchiEditor::EditorRenderer::PreparePickingMaterial(OvCore::ECS::Actor& p_actor, OvCore::Material& p_material)
+//void LitchiEditor::EditorRenderer::PreparePickingMaterial(LitchiRuntime::GameObject& p_actor, OvCore::Material& p_material)
 //{
 //	uint32_t actorID = static_cast<uint32_t>(p_actor.GetID());
 //
@@ -149,7 +149,7 @@
 //	p_material.Set("u_Diffuse", color);
 //}
 //
-//OvMaths::FMatrix4 LitchiEditor::EditorRenderer::CalculateCameraModelMatrix(OvCore::ECS::Actor& p_actor)
+//OvMaths::FMatrix4 LitchiEditor::EditorRenderer::CalculateCameraModelMatrix(LitchiRuntime::GameObject& p_actor)
 //{
 //	auto translation = FMatrix4::Translation(p_actor.transform.GetWorldPosition());
 //	auto rotation = FQuaternion::ToMatrix4(p_actor.transform.GetWorldRotation());
@@ -365,7 +365,7 @@
 //	m_context.renderer->SetStencilAlgorithm(LitchiRuntime::EComparaisonAlgorithm::ALWAYS, 1, 0xFF);
 //}
 //
-//void LitchiEditor::EditorRenderer::RenderActorOutlinePass(OvCore::ECS::Actor& p_actor, bool p_toStencil, bool p_isSelected)
+//void LitchiEditor::EditorRenderer::RenderActorOutlinePass(LitchiRuntime::GameObject& p_actor, bool p_toStencil, bool p_isSelected)
 //{
 //	float outlineWidth = p_isSelected ? 5.0f : 2.5f;
 //

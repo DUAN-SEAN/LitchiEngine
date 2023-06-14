@@ -25,10 +25,10 @@ LitchiEditor::SceneView::SceneView
 	//{
 	//	std::string path = p_data.first;
 
-	//	switch (OvTools::Utils::PathParser::GetFileType(path))
+	//	switch (PathParser::GetFileType(path))
 	//	{
-	//	case OvTools::Utils::PathParser::EFileType::SCENE:	EDITOR_EXEC(LoadSceneFromDisk(path));			break;
-	//	case OvTools::Utils::PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
+	//	case PathParser::EFileType::SCENE:	EDITOR_EXEC(LoadSceneFromDisk(path));			break;
+	//	case PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
 	//	}
 	//};
 
