@@ -1,5 +1,5 @@
 {
-  "shaderPath": "../shader/Standard.glsl",
+  "shaderPath": "Engine/Shaders/Standard.glsl",
   "settings": {
     "blendable": true,
     "backfaceCulling": true,
@@ -25,7 +25,7 @@
     {
       "Type": "UniformInfoPath",
       "name": "u_DiffuseMap",
-      "path": "../images/TexturesCom_CliffRock3_2x2_1K_roughness.png"
+      "path": "Engine/Textures/TexturesCom_CliffRock3_2x2_1K_roughness.png"
     },
     {
       "Type": "UniformInfoPath",

@@ -109,10 +109,9 @@ namespace LitchiRuntime
 	}
 
 	template<typename T>
-	inline void AResourceManager<T>::ProvideAssetPaths(const std::string & p_projectAssetsPath, const std::string & p_engineAssetsPath)
+	inline void AResourceManager<T>::ProvideAssetPaths(const std::string & p_projectAssetsPath)
 	{
 		__PROJECT_ASSETS_PATH	= p_projectAssetsPath;
-		__ENGINE_ASSETS_PATH	= p_engineAssetsPath;
 	}
 
 	template<typename T>
@@ -124,17 +123,7 @@ namespace LitchiRuntime
 	template<typename T>
 	inline std::string AResourceManager<T>::GetRealPath(const std::string& p_path) const
 	{
-		std::string result;
-
-		if (p_path[0] == ':') // The path is an engine path
-		{
-			result = __ENGINE_ASSETS_PATH + std::string(p_path.data() + 1, p_path.data() + p_path.size());
-		}
-		else // The path is a project path
-		{
-			result = __PROJECT_ASSETS_PATH + p_path;
-		}
-
+		std::string result = __PROJECT_ASSETS_PATH + p_path;
 		return result;
 	}
 }

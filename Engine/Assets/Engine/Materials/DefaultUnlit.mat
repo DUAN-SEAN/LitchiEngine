@@ -1,5 +1,5 @@
 {
-    "shaderPath": "../shader/Unlit.glsl",
+    "shaderPath": "Engine/Shaders/Unlit.glsl",
     "settings": {
         "blendable": true,
         "backfaceCulling": true,

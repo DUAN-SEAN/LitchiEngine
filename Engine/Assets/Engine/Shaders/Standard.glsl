@@ -7,6 +7,8 @@ layout (location = 2) in vec3 geo_Normal;
 layout (location = 3) in vec3 geo_Tangent;
 layout (location = 4) in vec3 geo_Bitangent;
 
+uniform mat4 ubo_LightSpaceMatrix;
+
 /* Global information sent by the engine */
 layout (std140) uniform EngineUBO
 {
@@ -26,6 +28,7 @@ out VS_OUT
     mat3        TBN;
     flat vec3   TangentViewPos;
     vec3        TangentFragPos;
+    vec4 ShadowCoord;
 } vs_out;
 
 void main()
@@ -40,12 +43,14 @@ void main()
     mat3 TBNi = transpose(vs_out.TBN);
 
     vs_out.FragPos          = vec3(ubo_Model * vec4(geo_Pos, 1.0));
-    vs_out.Normal           = normalize(mat3(transpose(inverse(ubo_Model))) * geo_Normal);
+    vs_out.Normal           = vec3(normalize(ubo_Model * vec4(geo_Normal,    0.0)));
     vs_out.TexCoords        = geo_TexCoords;
     vs_out.TangentViewPos   = TBNi * ubo_ViewPos;
     vs_out.TangentFragPos   = TBNi * vs_out.FragPos;
 
     gl_Position = ubo_Projection * ubo_View * vec4(vs_out.FragPos, 1.0);
+
+    vs_out.ShadowCoord = ubo_LightSpaceMatrix * vec4(vs_out.FragPos, 1.0);
 }
 
 #shader fragment
@@ -70,6 +75,7 @@ in VS_OUT
     mat3        TBN;
     flat vec3   TangentViewPos;
     vec3        TangentFragPos;
+    vec4 ShadowCoord;
 } fs_in;
 
 /* Light information sent by the engine */
@@ -91,6 +97,8 @@ uniform sampler2D   u_SpecularMap;
 uniform sampler2D   u_NormalMap;
 uniform sampler2D   u_HeightMap;
 uniform sampler2D   u_MaskMap;
+
+uniform sampler2D u_shadowMap;
 
 /* Global variables */
 vec3 g_Normal;
@@ -209,6 +217,24 @@ vec3 CalcAmbientSphereLight(mat4 p_Light)
     return distance(lightPosition, fs_in.FragPos) <= radius ? g_DiffuseTexel.rgb * lightColor * intensity : vec3(0.0);
 }
 
+// 返回有多少处于阴影的量
+float ShadowCalculation(vec4 fragPosLightSpace)
+{
+    // 执行透视除法
+    vec3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    // 变换到[0,1]的范围
+    projCoords = projCoords * 0.5 + 0.5;
+    // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+    float closestDepth = texture(u_shadowMap, projCoords.xy).r; 
+    // 取得当前片段在光源视角下的深度
+    float currentDepth = projCoords.z;
+    // 检查当前片段是否在阴影中
+    float bias = 0.05;
+    float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
+
+    return shadow;
+}
+
 void main()
 {
     g_TexCoords = u_TextureOffset + vec2(mod(fs_in.TexCoords.x * u_TextureTiling.x, 1), mod(fs_in.TexCoords.y * u_TextureTiling.y, 1));
@@ -216,6 +242,9 @@ void main()
     /* Apply parallax mapping */
     if (u_HeightScale > 0)
         g_TexCoords = ParallaxMapping(normalize(fs_in.TangentViewPos - fs_in.TangentFragPos));
+        
+    
+	float shadow = ShadowCalculation(fs_in.ShadowCoord);
 
     /* Apply color mask */
     if (texture(u_MaskMap, g_TexCoords).r != 0.0)
@@ -248,8 +277,10 @@ void main()
                 case 4: lightSum += CalcAmbientSphereLight(ssbo_Lights[i]); break;
             }
         }
-
-        FRAGMENT_COLOR = vec4(lightSum, g_DiffuseTexel.a);
+		
+		// Ambient
+		vec3 shadowedColor = (1.0f - shadow) * lightSum;
+        FRAGMENT_COLOR = vec4(shadowedColor, g_DiffuseTexel.a);
     }
     else
     {

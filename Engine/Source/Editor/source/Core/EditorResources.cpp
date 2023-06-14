@@ -15,10 +15,10 @@ using namespace LitchiRuntime::Loaders;
 
 LitchiEditor::EditorResources::EditorResources(const std::string& p_editorAssetsPath)
 {
-	std::string buttonsFolder	= p_editorAssetsPath + "Textures\\Buttons\\";
-	std::string iconsFolder		= p_editorAssetsPath + "Textures\\Icons\\";
-	std::string modelsFolder	= p_editorAssetsPath + "Models\\";
-	std::string shadersFolder	= p_editorAssetsPath + "Shaders\\";
+	std::string buttonsFolder	= p_editorAssetsPath + "Engine\\Textures\\Buttons\\";
+	std::string iconsFolder		= p_editorAssetsPath + "Engine\\Textures\\Icons\\";
+	std::string modelsFolder	= p_editorAssetsPath + "Engine\\Models\\";
+	std::string shadersFolder	= p_editorAssetsPath + "Engine\\Shaders\\";
 
 	LitchiRuntime::Parsers::EModelParserFlags modelParserFlags = LitchiRuntime::Parsers::EModelParserFlags::NONE;
 

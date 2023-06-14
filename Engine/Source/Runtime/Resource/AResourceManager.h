@@ -87,7 +87,7 @@ namespace LitchiRuntime
 		* @param p_projectAssetsPath
 		* @param p_engineAssetsPath
 		*/
-		static void ProvideAssetPaths(const std::string& p_projectAssetsPath, const std::string& p_engineAssetsPath);
+		static void ProvideAssetPaths(const std::string& p_projectAssetsPath);
 
 		/**
 		* Returns the resource map
@@ -102,7 +102,6 @@ namespace LitchiRuntime
 
 	private:
 		inline static std::string __PROJECT_ASSETS_PATH = "";
-		inline static std::string __ENGINE_ASSETS_PATH = "";
 
 		std::unordered_map<std::string, T*> m_resources;
 	};

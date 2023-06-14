@@ -1,5 +1,5 @@
 {
-    "shaderPath": "../shader/Standard.glsl",
+    "shaderPath": "Engine/Shaders/Standard.glsl",
     "settings": {
         "blendable": false,
         "backfaceCulling": true,
