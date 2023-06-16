@@ -10,6 +10,7 @@
 #include "Runtime/Function/UI/UIManager/UIManager.h"
 #include <Runtime/Function/Scene/scene_manager.h>
 
+#include "Core/EditorActions.h"
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Function/Renderer/Driver.h"
@@ -93,5 +94,6 @@ namespace LitchiEditor
 		static ApplicationEditor* instance_;
 
 		GameObject* m_selectGO = nullptr;
+		EditorActions	m_editorActions;
 	};
 }

@@ -3,10 +3,12 @@
 
 #include <filesystem>
 
+#include "Editor/include/Panels/AssetBrowser.h"
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/Inspector.h"
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
+#include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
@@ -22,12 +24,12 @@
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 
-LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(m_canvas)
+LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(m_canvas), m_editorActions(m_panelsManager)
 {
 	char* projectPath = nullptr;
 	projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
-	editorAssetsPath = filePath + "/../../Assets/";
+	editorAssetsPath = filePath + "\\..\\..\\Assets\\";
 
 	// todo ‘› ±’‚—˘–¥
 	projectAssetsPath = editorAssetsPath;
@@ -152,6 +154,12 @@ void LitchiEditor::ApplicationEditor::Init()
 	materialManager = std::make_unique<MaterialManager>();
 	textureManager = std::make_unique<TextureManager>();
 	shaderManager = std::make_unique<ShaderManager>();
+	
+
+	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
+	LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
+	LitchiRuntime::ServiceLocator::Provide<TextureManager>(*textureManager);
+	LitchiRuntime::ServiceLocator::Provide<ShaderManager>(*shaderManager);
 
 	// EditorResource
 
@@ -171,6 +179,8 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// Light
 	lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
+
+	// 
 
 	// Setup UI
 	SetupUI();
@@ -302,8 +312,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-
-	//m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, engineAssetsPath, projectAssetsPath, projectScriptsPath);
+	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);

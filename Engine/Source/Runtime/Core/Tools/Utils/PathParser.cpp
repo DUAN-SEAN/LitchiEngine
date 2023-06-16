@@ -43,7 +43,7 @@ std::string LitchiRuntime::PathParser::GetContainingFolder(const std::string & p
 
 	std::reverse(result.begin(), result.end());
 
-	if (!result.empty() && result.back() != '\\')
+	if (!result.empty() && result.back() != '\\'&& result.back() != '/')
 		result += '\\';
 
 	return result;
@@ -54,7 +54,7 @@ std::string LitchiRuntime::PathParser::GetElementName(const std::string & p_path
 	std::string result;
 
 	std::string path = p_path;
-	if (!path.empty() && path.back() == '\\')
+	if (!path.empty() && (path.back() == '\\'|| path.back() == '/'))
 		path.pop_back();
 
 	for (auto it = path.rbegin(); it != path.rend() && *it != '\\' && *it != '/'; ++it)
@@ -102,10 +102,10 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 	if (ext == "fbx" || ext == "obj")											return EFileType::MODEL;
 	else if (ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "tga")		return EFileType::TEXTURE;
 	else if (ext == "glsl" || ext == "vs" || ext  == "fs")														return EFileType::SHADER;
-	else if (ext == "ovmat")													return EFileType::MATERIAL;
+	else if (ext == "mat")													return EFileType::MATERIAL;
 	else if (ext == "wav" || ext == "mp3" || ext == "ogg")						return EFileType::SOUND;
-	else if (ext == "ovscene")													return EFileType::SCENE;
-	else if (ext == "lua")														return EFileType::SCRIPT;
+	else if (ext == "scene")													return EFileType::SCENE;
+	else if (ext == "cs")														return EFileType::SCRIPT;
 	else if (ext == "ttf")														return EFileType::FONT;
 
 	return EFileType::UNKNOWN;

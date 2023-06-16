@@ -915,14 +915,10 @@ LitchiEditor::AssetBrowser::AssetBrowser
 	const std::string& p_title,
 	bool p_opened,
 	const LitchiRuntime::PanelWindowSettings& p_windowSettings,
-	const std::string& p_engineAssetFolder,
-	const std::string& p_projectAssetFolder,
-	const std::string& p_projectScriptFolder
+	const std::string& p_projectAssetFolder
 ) :
 	PanelWindow(p_title, p_opened, p_windowSettings),
-	m_engineAssetFolder(p_engineAssetFolder),
-	m_projectAssetFolder(p_projectAssetFolder),
-	m_projectScriptFolder(p_projectScriptFolder)
+	m_projectAssetFolder(p_projectAssetFolder)
 {
 	if (!std::filesystem::exists(m_projectAssetFolder))
 	{
@@ -932,19 +928,6 @@ LitchiEditor::AssetBrowser::AssetBrowser
 		(
 			"Assets folder not found",
 			"The \"Assets/\" folders hasn't been found in your project directory.\nIt has been automatically generated",
-			MessageBox::EMessageType::WARNING,
-			MessageBox::EButtonLayout::OK
-		);
-	}
-
-	if (!std::filesystem::exists(m_projectScriptFolder))
-	{
-		std::filesystem::create_directories(m_projectScriptFolder);
-
-		LitchiRuntime::MessageBox message
-		(
-			"Scripts folder not found",
-			"The \"Scripts/\" folders hasn't been found in your project directory.\nIt has been automatically generated",
 			MessageBox::EMessageType::WARNING,
 			MessageBox::EButtonLayout::OK
 		);
@@ -967,11 +950,7 @@ LitchiEditor::AssetBrowser::AssetBrowser
 void LitchiEditor::AssetBrowser::Fill()
 {
 	m_assetList->CreateWidget<Separator>();
-	ConsiderItem(nullptr, std::filesystem::directory_entry(m_engineAssetFolder), true);
-	m_assetList->CreateWidget<Separator>();
 	ConsiderItem(nullptr, std::filesystem::directory_entry(m_projectAssetFolder), false);
-	m_assetList->CreateWidget<Separator>();
-	ConsiderItem(nullptr, std::filesystem::directory_entry(m_projectScriptFolder), false, false, true);
 }
 
 void LitchiEditor::AssetBrowser::Clear()
@@ -1003,7 +982,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 	bool isDirectory = p_entry.is_directory();
 	std::string itemname = PathParser::GetElementName(p_entry.path().string());
 	std::string path = p_entry.path().string();
-	if (isDirectory && path.back() != '\\') // Add '\\' if is directory and backslash is missing
+	if (isDirectory && path.back() != '\\'&& path.back() != '/') // Add '\\' if is directory and backslash is missing
 		path += '\\';
 	std::string resourceFormatPath = EDITOR_EXEC(GetResourcePath(path, p_isEngineItem));
 	bool protectedItem = !p_root || p_isEngineItem;

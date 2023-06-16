@@ -31,9 +31,7 @@ namespace LitchiEditor
 			const std::string& p_title,
 			bool p_opened,
 			const LitchiRuntime::PanelWindowSettings& p_windowSettings,
-			const std::string& p_engineAssetFolder = "",
-			const std::string& p_projectAssetFolder = "",
-			const std::string& p_projectScriptFolder = ""
+			const std::string& p_projectAssetFolder = ""
 		);
 
 		/**
@@ -59,9 +57,7 @@ namespace LitchiEditor
 		static const std::string __FILENAMES_CHARS;
 
 	private:
-		std::string m_engineAssetFolder;
 		std::string m_projectAssetFolder;
-		std::string m_projectScriptFolder;
 		LitchiRuntime::Group* m_assetList;
 		std::unordered_map<LitchiRuntime::TreeNode*, std::string> m_pathUpdate;
 	};
