@@ -12,10 +12,13 @@
 
 #include "Editor/include/Core/EditorActions.h"
 
+#include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Window/Dialogs/MessageBox.h"
 #include "Runtime/Core/Window/Dialogs/OpenFileDialog.h"
 #include "Runtime/Core/Window/Dialogs/SaveFileDialog.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 
@@ -477,53 +480,50 @@ void LitchiEditor::EditorActions::NextFrame()
 
 glm::vec3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 {
-	/*auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
-	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3::Forward * p_distanceToCamera;*/
-	return glm::vec3(3);
+	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
+	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3(0,0,-1) * p_distanceToCamera;
 }
 
 LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name)
 {
-    /*const auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-	auto* instance = p_name.empty() ? currentScene->CreateActor() : currentScene->CreateActor(p_name);
+    const auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+	auto* instance = new GameObject(p_name.empty()?"Empty Object": p_name, currentScene);
+	auto* transform = instance->AddComponent<Transform>();
 
 	if (p_parent)
-		instance->SetParent(*p_parent);
+		instance->SetParent(p_parent);
 
 	if (m_actorSpawnMode == EActorSpawnMode::FRONT)
-		instance->transform.SetLocalPosition(CalculateActorSpawnPoint(10.0f));
+		transform->SetLocalPosition(CalculateActorSpawnPoint(10.0f));
 
 	if (p_focusOnCreation)
 		SelectActor(instance);
 
+	ApplicationEditor::Instance()->m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(instance);
+
 	DEBUG_LOG_INFO("Actor created");
 
-	return instance;*/
-
-	return nullptr;
+	return instance;
 }
 
 LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name)
 {
-	/*auto& instance = CreateEmptyActor(false, p_parent, p_name);
+	auto instance = CreateEmptyActor(false, p_parent, p_name);
 
-	auto& modelRenderer = instance.AddComponent<OvCore::ECS::Components::CModelRenderer>();
+	auto meshRenderer = instance->AddComponent<MeshRenderer>();
+	auto meshFilter = instance->AddComponent<MeshFilter>();
+	
+	meshFilter->model_path = p_path;
+	meshFilter->mesh_Index_ = 0;
+	meshFilter->PostResourceLoaded();
 
-	const auto model = LitchiEditor::ApplicationEditor::Instance()->modelManager[p_path];
-	if (model)
-		modelRenderer.SetModel(model);
-
-	auto& materialRenderer = instance.AddComponent<OvCore::ECS::Components::CMaterialRenderer>();
-    const auto material = LitchiEditor::ApplicationEditor::Instance()->materialManager[":Materials\\Default.ovmat"];
-	if (material)
-		materialRenderer.FillWithMaterial(*material);
-
+	meshRenderer->material_path = "Engine\\Materials\\Default.mat";
+	meshRenderer->PostResourceLoaded();
+	
 	if (p_focusOnCreation)
 		SelectActor(instance);
 
-	return instance;*/
-
-	return nullptr;
+	return instance;
 }
 
 bool LitchiEditor::EditorActions::DestroyActor(LitchiRuntime::GameObject* p_actor)

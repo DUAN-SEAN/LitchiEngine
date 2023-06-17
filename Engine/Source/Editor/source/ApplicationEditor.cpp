@@ -187,7 +187,6 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// 初始化默认场景
 	sceneManager = new SceneManager();
-	// 初始化默认场景
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
 		GameObject* go = CreateDefaultObject(scene, "liubei","Engine/Models/Cube.fbx","Engine/Materials/Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
@@ -204,6 +203,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		hierachy.AddActorByInstance(go4);
 		// hierachy.AddActorByInstance(go5);
 	}
+	sceneManager->SetCurrentScene(scene);
 	
 	m_shadowMapShader = shaderManager->LoadResource("Engine/Shaders/DepthShader.glsl");
 

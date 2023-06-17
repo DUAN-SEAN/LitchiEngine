@@ -2,6 +2,7 @@
 #include "Editor/include/Panels/Hierarchy.h"
 
 #include "Editor/include/ApplicationEditor.h"
+#include "Editor/include/Menus/ActorCreationMenu.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
 #include "Runtime/Function/UI/Plugins/DDSource.h"
@@ -41,7 +42,7 @@ public:
 		 }
 
 		 auto& createActor = CreateWidget<MenuList>("Create...");
-		 // ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));
+		 ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));
 	}
 
 	virtual void Execute() override
@@ -155,11 +156,11 @@ LitchiEditor::Hierarchy::Hierarchy
 
 	/*EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
 	EDITOR_CONTEXT(sceneManager).SceneUnloadEvent += std::bind(&Hierarchy::Clear, this);
-	OvCore::ECS::Actor::CreatedEvent += std::bind(&Hierarchy::AddActorByInstance, this, std::placeholders::_1);
-	OvCore::ECS::Actor::DestroyedEvent += std::bind(&Hierarchy::DeleteActorByInstance, this, std::placeholders::_1);
+	GameObject::CreatedEvent += std::bind(&Hierarchy::AddActorByInstance, this, std::placeholders::_1);
+	GameObject::DestroyedEvent += std::bind(&Hierarchy::DeleteActorByInstance, this, std::placeholders::_1);
 	EDITOR_EVENT(ActorSelectedEvent) += std::bind(&Hierarchy::SelectActorByInstance, this, std::placeholders::_1);
-	OvCore::ECS::Actor::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
-	OvCore::ECS::Actor::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);*/
+	GameObject::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
+	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);*/
 }
 
 void LitchiEditor::Hierarchy::Clear()

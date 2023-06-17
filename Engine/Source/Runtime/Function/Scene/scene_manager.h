@@ -58,6 +58,11 @@ namespace LitchiRuntime
 			return scene_map_[sceneName];
 		}
 
+		static void SetCurrentScene(Scene* scene)
+		{
+			s_scene = scene;
+		}
+
 		static Scene* GetCurrentScene()
 		{
 			return s_scene;

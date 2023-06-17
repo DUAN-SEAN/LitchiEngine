@@ -61,7 +61,7 @@ namespace LitchiEditor
 		GizmoBehaviour m_gizmoOperations;
 		EGizmoOperation m_currentOperation = EGizmoOperation::TRANSLATE;
 
-		// std::optional<std::reference_wrapper<OvCore::ECS::Actor>> m_highlightedActor;
+		// std::optional<std::reference_wrapper<GameObject>> m_highlightedActor;
 		GameObject* m_highlightedActor;
 		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
 
