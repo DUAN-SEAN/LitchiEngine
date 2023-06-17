@@ -45,7 +45,7 @@ LitchiEditor::SceneView::SceneView
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
-	Scene* scene = SceneManager::GetScene("Default Scene");
+	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
 	auto go = scene->game_object_vec_.front();
 	auto trans = go->GetComponent<Transform>();
 
@@ -88,7 +88,7 @@ void LitchiEditor::SceneView::_Render_Impl()
 }
 void LitchiEditor::SceneView::RenderScene()
 {
-	Scene* scene = SceneManager::GetScene("Default Scene");
+	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();;
 
 	// 绑定Light的SSBO
 	auto& ssbo = ApplicationEditor::Instance()->lightSSBO;

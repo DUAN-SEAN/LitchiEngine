@@ -47,35 +47,69 @@ namespace LitchiRuntime
 	{
 	public:
 
-		static bool LoadScene(Scene* scene);
+		SceneManager(std::string sceneRootFolderPath);
+		~SceneManager();
 
-		static Scene* CreateScene(std::string sceneName);
+		bool LoadScene(std::string path);
 
-		static bool DestroyScene(std::string sceneName);
+		Scene* CreateScene(std::string sceneName);
 
-		static Scene* GetScene(std::string sceneName)
+		bool DestroyScene(std::string sceneName);
+
+		Scene* GetScene(std::string sceneName)
 		{
 			return scene_map_[sceneName];
 		}
 
-		static void SetCurrentScene(Scene* scene)
+		void SetCurrentScene(Scene* scene)
 		{
-			s_scene = scene;
+			m_currScene = scene;
 		}
 
-		static Scene* GetCurrentScene()
+		Scene* GetCurrentScene()
 		{
-			return s_scene;
+			return m_currScene;
+		}
+
+		void SetCurrentSceneSourcePath(const std::string& path)
+		{
+			if(path.empty())
+			{
+				m_currentSceneLoadedFromPath = false;
+				m_currentSceneSourcePath = "";
+				
+			}else
+			{
+
+				m_currentSceneLoadedFromPath = true;
+				m_currentSceneSourcePath = path;
+			}
+		}
+		
+		std::string GetCurrentSceneSourcePath() const
+		{
+			return m_currentSceneSourcePath;
+		}
+
+		bool IsCurrentSceneLoadedFromPath()
+		{
+			return m_currentSceneLoadedFromPath;
 		}
 
 		/// 遍历所有Scene的GameObject
 		/// \param func
-		static void Foreach(std::function<void(GameObject* game_object)> func);
+		void Foreach(std::function<void(GameObject* game_object)> func);
+		void SaveCurrentSceneTo(const std::string& path);
 
 	private:
-		static std::map<std::string, Scene*> scene_map_;
 
-		inline static Scene* s_scene = nullptr;
+		std::string m_sceneRootFolderPath;
+
+		 std::map<std::string, Scene*> scene_map_;
+		Scene* m_currScene = nullptr;
+		bool m_currentSceneLoadedFromPath = false;
+		std::string m_currentSceneSourcePath = "";
+
 	};
 }
 #endif //UNTITLED_TYPE_H

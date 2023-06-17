@@ -21,6 +21,7 @@
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
+#include "Runtime/Resource/asset_manager.h"
 
 LitchiEditor::EditorActions::EditorActions(PanelsManager& p_panelsManager) :
 	m_panelsManager(p_panelsManager)
@@ -36,74 +37,70 @@ LitchiEditor::EditorActions::EditorActions(PanelsManager& p_panelsManager) :
 
 void LitchiEditor::EditorActions::LoadEmptyScene()
 {
-	/*if (GetCurrentEditorMode() != EEditorMode::EDIT)
+	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 		StopPlaying();
 
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager.LoadEmptyLightedScene();
-	DEBUG_LOG_INFO("New scene created");*/
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->CreateScene("Empty Scene");
+	DEBUG_LOG_INFO("New scene created");
 }
 
 void LitchiEditor::EditorActions::SaveCurrentSceneTo(const std::string& p_path)
 {
-	/*tinyxml2::XMLDocument doc;
-	tinyxml2::XMLNode* node = doc.NewElement("root");
-	doc.InsertFirstChild(node);
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager.StoreCurrentSceneSourcePath(p_path);
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene()->OnSerialize(doc, node);
-	doc.SaveFile(p_path.c_str());*/
+	// 获取当前的场景
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->SaveCurrentSceneTo(p_path);
 }
 
 void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, bool p_absolute)
 {
-	/*if (GetCurrentEditorMode() != EEditorMode::EDIT)
+	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 		StopPlaying();
 
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager.LoadScene(p_path, p_absolute);
-	DEBUG_LOG_INFO("Scene loaded from disk: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentSceneSourcePath());
-	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();*/
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path);
+	DEBUG_LOG_INFO("Scene loaded from disk: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
+
+	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 }
 
 bool LitchiEditor::EditorActions::IsCurrentSceneLoadedFromDisk() const
 {
-	// return LitchiEditor::ApplicationEditor::Instance()->sceneManager.IsCurrentSceneLoadedFromDisk();
-	return false;
+	return LitchiEditor::ApplicationEditor::Instance()->sceneManager->IsCurrentSceneLoadedFromPath();
 }
 
 void LitchiEditor::EditorActions::SaveSceneChanges()
 {
-	/*if (IsCurrentSceneLoadedFromDisk())
+	if (IsCurrentSceneLoadedFromDisk())
 	{
-		SaveCurrentSceneTo(LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentSceneSourcePath());
-		DEBUG_LOG_INFO("Current scene saved to: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentSceneSourcePath());
+		SaveCurrentSceneTo(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
+		DEBUG_LOG_INFO("Current scene saved to: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
 	}
 	else
 	{
 		SaveAs();
-	}*/
+	}
 }
 
 void LitchiEditor::EditorActions::SaveAs()
 {
-	/*OvWindowing::Dialogs::SaveFileDialog dialog("New Scene");
+	SaveFileDialog dialog("New Scene");
 	dialog.SetInitialDirectory(LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath + "New Scene");
-	dialog.DefineExtension("Overload Scene", ".ovscene");
+	dialog.DefineExtension("Litchi Scene", ".scene");
 	dialog.Show();
 
 	if (dialog.HasSucceeded())
 	{
 		if (dialog.IsFileExisting())
 		{
-			OvWindowing::Dialogs::MessageBox message("File already exists!", "The file \"" + dialog.GetSelectedFileName() + "\" already exists.\n\nUsing this file as the new home for your scene will erase any content stored in this file.\n\nAre you ok with that?", OvWindowing::Dialogs::MessageBox::EMessageType::WARNING, OvWindowing::Dialogs::MessageBox::EButtonYES_NO, true);
+			MessageBox message("File already exists!", "The file \"" + dialog.GetSelectedFileName() + "\" already exists.\n\nUsing this file as the new home for your scene will erase any content stored in this file.\n\nAre you ok with that?", MessageBox::EMessageType::WARNING, MessageBox::EButtonLayout::YES_NO, true);
 			switch (message.GetUserAction())
 			{
-			case OvWindowing::Dialogs::MessageBox::EUserAction::YES: break;
-			case OvWindowing::Dialogs::MessageBox::EUserAction::NO: return;
+			case MessageBox::EUserAction::YES: break;
+			case MessageBox::EUserAction::NO: return;
 			}
 		}
 
 		SaveCurrentSceneTo(dialog.GetSelectedFilePath());
 		DEBUG_LOG_INFO("Current scene saved to: " + dialog.GetSelectedFilePath());
-	}*/
+	}
 }
 
 void LitchiEditor::EditorActions::RefreshScripts()

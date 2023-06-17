@@ -1,5 +1,8 @@
 #include "scene_manager.h"
+
+#include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Resource/asset_manager.h"
 
 namespace LitchiRuntime
 {
@@ -47,25 +50,48 @@ namespace LitchiRuntime
         return game_object_find;
     }
 
-	std::map<std::string, Scene*> SceneManager::scene_map_;
-
-	bool SceneManager::LoadScene(Scene* scene)
+    SceneManager::SceneManager(std::string sceneRootFolderPath)
     {
+    }
+
+    SceneManager::~SceneManager()
+    {
+    }
+
+    bool SceneManager::LoadScene(std::string path)
+    {
+        std::string completePath = m_sceneRootFolderPath + path;
+        Scene* scene = new Scene("Temp");
+    	AssetManager::LoadAsset(completePath,*scene);
+
     	// 将scene添加到map中
         scene_map_[scene->GetName()] = scene;
 
         // 初始化Scene中所有的GameObject,配置GameObject的层级关系
-
-
+        SetCurrentSceneSourcePath(completePath);
+        SetCurrentScene(scene);
 
         return true;
     }
 
+    void SceneManager::SaveCurrentSceneTo(const std::string& completePath)
+    {
+        AssetManager::SaveAsset<Scene>(*m_currScene, completePath);
+
+        // 设置当前场景的本地路径
+        SetCurrentSceneSourcePath(completePath);
+    }
+
     Scene* SceneManager::CreateScene(std::string sceneName)
     {
-        Scene* scene = new Scene();
+        Scene* scene = new Scene(sceneName);
+
         // 将scene添加到map中
         scene_map_[sceneName] = scene;
+
+        // 初始化Scene中所有的GameObject,配置GameObject的层级关系
+        SetCurrentSceneSourcePath("");
+        SetCurrentScene(scene);
 
         return scene;
     }
@@ -87,5 +113,6 @@ namespace LitchiRuntime
             //current_camera_->CheckCancelRenderToTexture();
         }
     }
+
 
 }

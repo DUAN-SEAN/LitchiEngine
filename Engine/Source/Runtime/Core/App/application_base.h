@@ -13,8 +13,9 @@
 
 namespace LitchiRuntime
 {
+	class SceneManager;
 
-    class ApplicationBase {
+	class ApplicationBase {
     public:
         ApplicationBase() {}
         virtual ~ApplicationBase() {}
@@ -65,6 +66,7 @@ namespace LitchiRuntime
         std::unique_ptr<TextureManager> textureManager;
         std::unique_ptr<ShaderManager> shaderManager;
 
+        SceneManager* sceneManager;
 
         static ApplicationBase* Instance() { return instance_; }
         static ApplicationBase* instance_;

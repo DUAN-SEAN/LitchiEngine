@@ -65,7 +65,6 @@ namespace LitchiEditor
 
 		Resource::Shader* m_shadowMapShader;
 
-		SceneManager* sceneManager;
 
 		PanelsManager	m_panelsManager;
 		std::string projectPath;

@@ -1,12 +1,9 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
+
+#include "Editor/include/Core/EditorActions.h"
+#include "Runtime/Core/Global/ServiceLocator.h"
+#include "Runtime/Function/UI/Widgets/Menu/MenuItem.h"
 
 #include "Editor/include/Panels/MenuBar.h"
-
-#include "Runtime/Function/UI/Widgets/Menu/MenuItem.h"
 
 using namespace LitchiRuntime;
 
@@ -212,6 +209,10 @@ void LitchiEditor::MenuBar::RegisterPanel(const std::string& p_name, LitchiRunti
 void LitchiEditor::MenuBar::CreateFileMenu()
 {
 	auto& fileMenu = CreateWidget<MenuList>("File");
+	fileMenu.CreateWidget<MenuItem>("New Scene", "CTRL + N").ClickedEvent += EDITOR_BIND(LoadEmptyScene);
+	fileMenu.CreateWidget<MenuItem>("Save Scene", "CTRL + S").ClickedEvent += EDITOR_BIND(SaveSceneChanges);
+	fileMenu.CreateWidget<MenuItem>("Save Scene As...", "CTRL + SHIFT + S").ClickedEvent += EDITOR_BIND(SaveAs);
+	fileMenu.CreateWidget<MenuItem>("Exit", "ALT + F4").ClickedEvent += [] { DEBUG_LOG_WARN("NoImpl"); };
 }
 
 void LitchiEditor::MenuBar::CreateBuildMenu()

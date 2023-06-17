@@ -39,7 +39,8 @@ namespace LitchiRuntime
         template<typename AssetType>
         static bool SaveAsset(const AssetType& out_asset, const std::string& asset_url)
         {
-            std::ofstream asset_json_file(GetFullPath(asset_url));
+            // std::ofstream asset_json_file(GetFullPath(asset_url));
+            std::ofstream asset_json_file(asset_url);
             if (!asset_json_file)
             {
                 DEBUG_LOG_ERROR("open file {} failed!", asset_url);
