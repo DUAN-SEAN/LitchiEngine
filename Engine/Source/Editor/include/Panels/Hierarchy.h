@@ -28,7 +28,12 @@ namespace LitchiEditor
 			bool p_opened,
 			const PanelWindowSettings& p_windowSettings
 		);
-		
+
+		/**
+		 * Refresh hierarchy 
+		 */
+		void Refresh();
+
 		/**
 		* Clear hierarchy nodes
 		*/

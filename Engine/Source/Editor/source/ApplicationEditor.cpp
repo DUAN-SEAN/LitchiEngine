@@ -186,7 +186,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	SetupUI();
 
 	// 初始化默认场景
-	sceneManager = new SceneManager(projectAssetsPath +"Scenes");
+	sceneManager = new SceneManager(projectAssetsPath);
 
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
@@ -291,6 +291,8 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 
 	auto& inspector = m_panelsManager.GetPanelAs<Inspector>("Inspector");
 	inspector.FocusActor(p_target);
+
+	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").SelectActorByInstance(p_target);
 }
 
 void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)

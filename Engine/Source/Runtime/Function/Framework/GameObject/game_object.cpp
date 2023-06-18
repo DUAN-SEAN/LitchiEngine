@@ -18,13 +18,6 @@ namespace LitchiRuntime
 		DEBUG_LOG_INFO("GameObject::~GameObject");
 	}
 
-
-	void GameObject::PostLoadFromAsset()
-	{
-		// TODO: 从资产中加载的后期加载
-
-	}
-
 	bool GameObject::SetParent(GameObject* parent) {
 
 		auto& tran = GetComponent<Transform>()->GetTransform();
@@ -40,6 +33,20 @@ namespace LitchiRuntime
 		tran.SetParent(tranParent);
 
 		return true;
+	}
+
+	void GameObject::PostResourceLoaded()
+	{
+		// todo go的父子关系重构
+
+		for (auto comp : component_list_)
+		{
+			// 设置comp的go
+			comp->set_game_object(this);
+
+			// comp执行资源加载后处理
+			comp->PostResourceLoaded();
+		}
 	}
 
 	Scene* GameObject::GetScene()

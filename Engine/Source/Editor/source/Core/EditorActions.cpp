@@ -41,13 +41,15 @@ void LitchiEditor::EditorActions::LoadEmptyScene()
 		StopPlaying();
 
 	LitchiEditor::ApplicationEditor::Instance()->sceneManager->CreateScene("Empty Scene");
+	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
+
 	DEBUG_LOG_INFO("New scene created");
 }
 
 void LitchiEditor::EditorActions::SaveCurrentSceneTo(const std::string& p_path)
 {
 	// 获取当前的场景
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager->SaveCurrentSceneTo(p_path);
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->SaveCurrentScene(p_path);
 }
 
 void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, bool p_absolute)
@@ -56,9 +58,11 @@ void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, b
 		StopPlaying();
 
 	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path);
-	DEBUG_LOG_INFO("Scene loaded from disk: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
 
 	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
+	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
+
+	DEBUG_LOG_INFO("Scene loaded from disk: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
 }
 
 bool LitchiEditor::EditorActions::IsCurrentSceneLoadedFromDisk() const

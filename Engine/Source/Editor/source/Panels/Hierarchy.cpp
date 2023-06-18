@@ -163,6 +163,32 @@ LitchiEditor::Hierarchy::Hierarchy
 	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);*/
 }
 
+void LitchiEditor::Hierarchy::Refresh()
+{
+	// 清理
+	Clear();
+
+	// 先构建所有的叶子
+	auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+	for (auto go : scene->game_object_vec_)
+	{
+		if(go != nullptr)
+		{
+			AddActorByInstance(go);
+		}
+	}
+
+	// 根据父子关系重构树状结构
+	/*for (auto go : scene->game_object_vec_)
+	{
+		if (go != nullptr && go->HasParent())
+		{
+			AttachActorToParent(go);
+		}
+	}*/
+
+}
+
 void LitchiEditor::Hierarchy::Clear()
 {
 	// EDITOR_EXEC(UnselectActor());

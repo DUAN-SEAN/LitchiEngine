@@ -1,44 +1,47 @@
-#ifndef UNTITLED_SCENEMANAGER_H
+ï»¿#ifndef UNTITLED_SCENEMANAGER_H
 #define UNTITLED_SCENEMANAGER_H
 
 #include <map>
 #include <string>
 #include "Runtime/Core/DataStruct/tree.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 
 namespace LitchiRuntime
 {
 	class GameObject;
-	class Scene
+	class Scene :Object
 	{
 	public:
 		Scene();
 		Scene(std::string name);
 		~Scene();
 
-		std::string GetName(){ return name_; }
-		void SetName(std::string name){name_ = name; }
+		std::string GetName() { return name_; }
+		void SetName(std::string name) { name_ = name; }
 
 		void AddGameObject(GameObject* game_object);
 
-		/// ·µ»ØGameObjectÊ÷½á¹¹
+		/// è¿”å›GameObjectæ ‘ç»“æ„
 		/// \return
 		Tree& game_object_tree() { return game_object_tree_; }
 
-		/// ±éÀúGameObject
+		/// éå†GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
 
-		/// È«¾Ö²éÕÒGameObject
+		/// å…¨å±€æŸ¥æ‰¾GameObject
 		/// \param name
 		/// \return
 		GameObject* Find(const char* name);
 
-		std::vector<GameObject*> game_object_vec_; //´æ´¢ËùÓĞµÄGameObject¡£
+		std::vector<GameObject*> game_object_vec_; //å­˜å‚¨æ‰€æœ‰çš„GameObjectã€‚
+
+		void PostResourceLoaded() override;
 
 	private:
-		std::string name_; //³¡¾°Ãû×Ö
+		std::string name_; //åœºæ™¯åå­—
 
-		Tree game_object_tree_; //ÓÃÊ÷´æ´¢ËùÓĞµÄGameObject¡£
+		Tree game_object_tree_; //ç”¨æ ‘å­˜å‚¨æ‰€æœ‰çš„GameObjectã€‚
 
 	};
 
@@ -73,19 +76,20 @@ namespace LitchiRuntime
 
 		void SetCurrentSceneSourcePath(const std::string& path)
 		{
-			if(path.empty())
+			if (path.empty())
 			{
 				m_currentSceneLoadedFromPath = false;
 				m_currentSceneSourcePath = "";
-				
-			}else
+
+			}
+			else
 			{
 
 				m_currentSceneLoadedFromPath = true;
 				m_currentSceneSourcePath = path;
 			}
 		}
-		
+
 		std::string GetCurrentSceneSourcePath() const
 		{
 			return m_currentSceneSourcePath;
@@ -96,16 +100,16 @@ namespace LitchiRuntime
 			return m_currentSceneLoadedFromPath;
 		}
 
-		/// ±éÀúËùÓĞSceneµÄGameObject
+		/// éå†æ‰€æœ‰Sceneçš„GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
-		void SaveCurrentSceneTo(const std::string& path);
+		void SaveCurrentScene(const std::string& path);
 
 	private:
 
 		std::string m_sceneRootFolderPath;
 
-		 std::map<std::string, Scene*> scene_map_;
+		std::map<std::string, Scene*> scene_map_;
 		Scene* m_currScene = nullptr;
 		bool m_currentSceneLoadedFromPath = false;
 		std::string m_currentSceneSourcePath = "";

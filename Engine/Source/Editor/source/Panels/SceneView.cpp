@@ -45,9 +45,9 @@ LitchiEditor::SceneView::SceneView
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
 {
-	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+	/*Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
 	auto go = scene->game_object_vec_.front();
-	auto trans = go->GetComponent<Transform>();
+	auto trans = go->GetComponent<Transform>();*/
 
 	/*auto rotation = trans->GetLocalRotation();
 	auto next = glm::quat(glm::vec3(glm::radians(60.0) * p_deltaTime, glm::radians(30.0) * p_deltaTime, 0));
