@@ -8,10 +8,8 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-	GameObject::GameObject(std::string name, Scene* scene) : Tree::Node(), layer_(0x01) {
+	GameObject::GameObject(std::string name,int64_t id) : Tree::Node(), layer_(0x01),id_(id), parentId_(0){
 		set_name(name);
-		scene->AddGameObject(this);
-		this->SetScene(scene);
 	}
 
 	GameObject::~GameObject() {
@@ -22,12 +20,14 @@ namespace LitchiRuntime
 
 		auto& tran = GetComponent<Transform>()->GetTransform();
 		tran.RemoveParent();
+		parentId_ = 0;
 
 		if (parent == nullptr) {
-			DEBUG_LOG_ERROR("parent null");
-			return false;
+			DEBUG_LOG_INFO("parent null");
+			return true;
 		}
 
+		parentId_ = parent->parentId_;
 		parent->AddChild(this);
 		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
 		tran.SetParent(tranParent);
@@ -37,7 +37,8 @@ namespace LitchiRuntime
 
 	void GameObject::PostResourceLoaded()
 	{
-		// todo go的父子关系重构
+		// 重置parent
+		set_parent(nullptr);
 
 		for (auto comp : component_list_)
 		{

@@ -19,7 +19,12 @@ namespace LitchiRuntime
 		std::string GetName() { return name_; }
 		void SetName(std::string name) { name_ = name; }
 
-		void AddGameObject(GameObject* game_object);
+		/**
+		 * 创建GameObject
+		 * \param name go的名字
+		 * \return go
+		 */
+		GameObject* CreateGameObject(std::string name);
 
 		/// 返回GameObject树结构
 		/// \return
@@ -34,7 +39,20 @@ namespace LitchiRuntime
 		/// \return
 		GameObject* Find(const char* name);
 
+
+		/// 全局查找GameObject
+		/// \param id
+		/// \return
+		GameObject* Find(const int64_t id);
+
+	public:
+
 		std::vector<GameObject*> game_object_vec_; //存储所有的GameObject。
+
+		/**
+		 * \brief 可用的id 用于id分配
+		 */
+		int64_t availableID = 1;
 
 		void PostResourceLoaded() override;
 

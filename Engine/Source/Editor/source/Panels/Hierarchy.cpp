@@ -179,13 +179,13 @@ void LitchiEditor::Hierarchy::Refresh()
 	}
 
 	// 根据父子关系重构树状结构
-	/*for (auto go : scene->game_object_vec_)
+	for (auto go : scene->game_object_vec_)
 	{
 		if (go != nullptr && go->HasParent())
 		{
 			AttachActorToParent(go);
 		}
-	}*/
+	}
 
 }
 

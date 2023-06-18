@@ -488,7 +488,7 @@ glm::vec3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distance
 LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name)
 {
     const auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-	auto* instance = new GameObject(p_name.empty()?"Empty Object": p_name, currentScene);
+	auto* instance = currentScene->CreateGameObject(p_name.empty() ? "Empty Object" : p_name);
 	auto* transform = instance->AddComponent<Transform>();
 
 	if (p_parent)

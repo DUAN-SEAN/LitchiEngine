@@ -10,6 +10,7 @@
 #include <rttr/registration.h>
 
 #include "Runtime/Core/Meta/Reflection/object.h"
+#include "Runtime/Core/Tools/Utils/PathParser.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
@@ -203,11 +204,14 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Polymorphic", true)
 		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("id", &GameObject::id_)
+		.property("parentId", &GameObject::parentId_)
 		.property("name", &GameObject::name_)
 		.property("componentList", &GameObject::component_list_);
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("availableID", &Scene::availableID)
 		.property("gameObjects", &Scene::game_object_vec_);
 
 	// 组件
@@ -226,12 +230,14 @@ RTTR_REGISTRATION //注册反射
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("materialPath",&MeshRenderer::material_path);
+		.property("materialPath",&MeshRenderer::material_path)
+			(rttr::metadata("AssetPath",true), rttr::metadata("AssetType", PathParser::EFileType::MATERIAL));
 
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("modelPath",&MeshFilter::model_path)
+			(rttr::metadata("AssetPath", true), rttr::metadata("AssetType", PathParser::EFileType::MODEL))
 		.property("meshIndex",&MeshFilter::mesh_Index_);
 
 	// Transform

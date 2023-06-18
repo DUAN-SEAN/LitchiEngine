@@ -17,7 +17,7 @@ namespace LitchiRuntime
 	class GameObject :public Tree::Node,Object{
 	public:
 		GameObject() {}
-		GameObject(std::string name, Scene* scene);
+		GameObject(std::string name,int64_t id);
 		~GameObject();
 
 		std::string name() { return name_; }
@@ -122,6 +122,9 @@ namespace LitchiRuntime
 			return false;
 		}
 
+
+		int64_t id_;
+		int64_t parentId_;
 		std::string name_;
 		std::vector<Component*> component_list_;
 

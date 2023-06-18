@@ -23,11 +23,16 @@ namespace LitchiRuntime
 		game_object_vec_.clear();
 	}
 
-	void Scene::AddGameObject(GameObject* game_object)
+	GameObject* Scene::CreateGameObject(std::string name)
 	{
+		auto* game_object = new GameObject(name, availableID++);
+		game_object->SetScene(this);
+
 		// 将go添加到game_object_vec_中
 		game_object_vec_.push_back(game_object);
 		game_object_tree_.root_node()->AddChild(game_object);
+
+		return game_object;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)
@@ -50,12 +55,32 @@ namespace LitchiRuntime
 		return game_object_find;
 	}
 
+	GameObject* Scene::Find(const int64_t id)
+	{
+		GameObject* game_object_find = nullptr;
+		game_object_tree_.Find(game_object_tree_.root_node(), [&id](Tree::Node* node) {
+			GameObject* game_object = dynamic_cast<GameObject*>(node);
+			if (game_object != nullptr && game_object->id_ == id) {
+				return true;
+			}
+			return false;
+			}, reinterpret_cast<Tree::Node**>(&game_object_find));
+		return game_object_find;
+	}
+
 	void Scene::PostResourceLoaded()
 	{
 		for (auto go : game_object_vec_)
 		{
 			game_object_tree_.root_node()->AddChild(go);
+
 			go->PostResourceLoaded();
+		}
+
+		for (auto go : game_object_vec_)
+		{
+			auto* parentGO = Find(go->parentId_);
+			go->SetParent(parentGO);
 		}
 	}
 
@@ -72,11 +97,11 @@ namespace LitchiRuntime
 	{
 		std::string completePath = m_sceneRootFolderPath + path;
 		auto* scene = new Scene("Temp");
-		if(!AssetManager::LoadAsset(completePath, *scene))
+		if (!AssetManager::LoadAsset(completePath, *scene))
 		{
 			return false;
 		}
-		
+
 		scene->PostResourceLoaded();
 
 		// 将scene添加到map中

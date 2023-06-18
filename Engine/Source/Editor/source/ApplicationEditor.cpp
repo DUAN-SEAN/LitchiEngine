@@ -46,7 +46,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string modelPath,std::string materialPath , float y, float z)
 {
-	GameObject* go = new GameObject(name, scene);
+	GameObject* go = scene->CreateGameObject(name);
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(glm::vec3(0.0, y, z));
 
@@ -64,7 +64,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 
 GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath,glm::vec3 position,glm::quat rotation,glm::vec3 scale)
 {
-	GameObject* go = new GameObject(name, scene);
+	GameObject* go = scene->CreateGameObject(name);
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(position);
 	transform->SetLocalRotation(rotation);
@@ -84,7 +84,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 
 GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm::quat rotation)
 {
-	GameObject* go = new GameObject(name, scene);
+	GameObject* go = scene->CreateGameObject(name);
 
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(pos);

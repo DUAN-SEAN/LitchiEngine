@@ -6,6 +6,7 @@
 #include "Editor/include/Panels/Inspector.h"
 
 #include "Runtime/Core/Meta/Reflection/propery_field.h"
+#include "Runtime/Core/Tools/Utils/PathParser.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Light/PointLight.h"
@@ -26,6 +27,7 @@
 #include "Runtime/Function/UI/Widgets/Layout/Dummy.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
+#include "Runtime/Function/UI/Widgets/Texts/TextColored.h"
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 LitchiEditor::Inspector::Inspector
@@ -539,7 +541,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 				eulerVec3.y = std::max(std::min(eulerVec3.y, 90.0f), -90.0f);
 				eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
 				// 处理奇点问题
-				if(eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
+				if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
 				{
 					eulerVec3.z = 0.0f;
 				}
@@ -552,6 +554,26 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 
 			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
 
+		}
+		else if (prop.get_metadata("AssetPath"))
+		{
+			auto assetType = prop.get_metadata("AssetType").get_value<PathParser::EFileType>();
+			PropertyField property_field(obj, propertyPathList);
+			auto path = property_field.GetValue().get_value<std::string>();
+			p_root.CreateWidget<TextColored>(name.to_string(), GUIDrawer::TitleColor);
+			auto& widget = p_root.CreateWidget<Text>(path);
+			widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType,&widget, property_field](auto p_receivedData)
+			{
+				auto& newPath = p_receivedData.first;
+				if(PathParser::GetFileType(newPath) == assetType)
+				{
+					if(property_field.SetValue(newPath))
+					{
+						widget.content = newPath;
+					}
+				}
+
+			};
 		}
 		else
 		{
