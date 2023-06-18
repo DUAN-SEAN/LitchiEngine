@@ -27,7 +27,7 @@ namespace LitchiRuntime
 			return true;
 		}
 
-		parentId_ = parent->parentId_;
+		parentId_ = parent->id_;
 		parent->AddChild(this);
 		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
 		tran.SetParent(tranParent);
