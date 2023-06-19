@@ -14,6 +14,10 @@ namespace LitchiRuntime
     public:
         BoxCollider();
         ~BoxCollider();
+        glm::vec3 GetSize()
+        {
+            return size_;
+        }
 
     protected:
         void CreateShape() override;

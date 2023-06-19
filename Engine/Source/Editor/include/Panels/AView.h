@@ -112,7 +112,7 @@ namespace LitchiEditor
 		void PrepareCamera();
 
 	protected:
-		//EditorRenderer& m_editorRenderer;
+		//EditorRenderer& editorRenderer;
 		RenderCamera* m_camera;
 		glm::vec3 m_cameraPosition;
 		glm::quat m_cameraRotation;

@@ -4,6 +4,7 @@
 #include <filesystem>
 
 #include "Editor/include/Panels/AssetBrowser.h"
+#include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/Inspector.h"
 #include "Editor/include/Panels/MenuBar.h"
@@ -163,6 +164,8 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// EditorResource
 
+	editorRenderer = std::make_unique<EditorRenderer>();
+
 	// UBO
 	engineUBO = std::make_unique<UniformBuffer>
 		(
@@ -180,6 +183,26 @@ void LitchiEditor::ApplicationEditor::Init()
 	// Light
 	lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
 
+	simulatedLightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW); // Used in Asset View
+
+	std::vector<glm::mat4> simulatedLights;
+
+	FTransform simulatedLightTransform;
+	simulatedLightTransform.SetLocalRotation(glm::quat(glm::degrees(glm::vec3{ -45.f, 180.f, 10.f })));
+
+	Light simulatedDirectionalLight(Light::Type::DIRECTIONAL);
+	simulatedDirectionalLight.color = { 1.f, 1.f, 1.f };
+	simulatedDirectionalLight.intensity = 1.f;
+
+	Light simulatedAmbientLight(Light::Type::AMBIENT_SPHERE);
+	simulatedAmbientLight.color = { 0.07f, 0.07f, 0.07f };
+	simulatedAmbientLight.intensity = 1.f;
+	simulatedAmbientLight.constant = 1000.0f;
+
+	simulatedLights.push_back(simulatedDirectionalLight.GenerateMatrix(simulatedLightTransform));
+	simulatedLights.push_back(simulatedAmbientLight.GenerateMatrix(simulatedLightTransform));
+
+	simulatedLightSSBO->SendBlocks<glm::mat4>(simulatedLights.data(), simulatedLights.size() * sizeof(glm::mat4));
 	// 
 
 	// Setup UI
@@ -271,6 +294,16 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 		sceneView.Update(p_deltaTime);
 		sceneView.Render();
 	}
+	auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
+	if (assetView.IsOpened())
+	{
+		simulatedLightSSBO->Bind(0);
+
+		assetView.Update(p_deltaTime);
+		assetView.Render();
+		simulatedLightSSBO->Unbind();
+	}
+
 }
 
 void LitchiEditor::ApplicationEditor::RenderUI()
@@ -323,7 +356,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	//m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	//m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);
-	//m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);
+	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	//m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);

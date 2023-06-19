@@ -262,6 +262,24 @@ namespace LitchiRuntime
 		*/
 		void ClearFrameInfo();
 
+
+		/**
+		* Draw the model using the given material (The material will be applied to every submeshes of the the model)
+		* @param p_model
+		* @param p_material
+		* @param p_modelMatrix
+		* @param p_defaultMaterial (Used if the given material has no shader attached)
+		*/
+		void DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
+
+		/**
+		* Draw the model using the given materials
+		* @param p_model
+		* @param p_modelMatrix
+		* @param p_defaultMaterial (Used when a submesh material has no shader attached)
+		*/
+		void DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
+
 		/**
 		*  Draw Mesh
 		*  @param p_mesh

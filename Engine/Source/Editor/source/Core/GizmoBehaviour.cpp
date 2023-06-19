@@ -86,7 +86,7 @@ glm::vec2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const glm::mat4& p_vi
 
 	//auto start2D = glm::vec2();
 	//{
-	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::FVector4{ start.x, start.y, start.z, 1.0f });
+	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::glm::vec4{ start.x, start.y, start.z, 1.0f });
 	//	auto ndcSpacePos = glm::vec3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
 	//	auto windowSpacePos = ((glm::vec2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
 	//	windowSpacePos.x *= p_viewSize.x;
@@ -96,7 +96,7 @@ glm::vec2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const glm::mat4& p_vi
 
 	//auto end2D = glm::vec2();
 	//{
-	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::FVector4{ end.x, end.y, end.z, 1.0f });
+	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::glm::vec4{ end.x, end.y, end.z, 1.0f });
 	//	auto ndcSpacePos = glm::vec3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
 	//	auto windowSpacePos = ((glm::vec2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
 	//	windowSpacePos.x *= p_viewSize.x;
@@ -146,7 +146,7 @@ void LitchiEditor::GizmoBehaviour::ApplyRotation(const glm::mat4& p_viewMatrix, 
 		rotationCoefficient = SnapValue(rotationCoefficient, OvEditor::Settings::EditorSettings::RotationSnapUnit);
 	}
 
-	auto rotationToApply = OvMaths::FQuaternion(glm::vec3(GetFakeDirection() * rotationCoefficient));
+	auto rotationToApply = glm::quat(glm::vec3(GetFakeDirection() * rotationCoefficient));
 	m_target->transform.SetLocalRotation(originRotation * rotationToApply);*/
 }
 

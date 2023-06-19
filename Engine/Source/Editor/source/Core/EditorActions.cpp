@@ -864,7 +864,7 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 
 			if (auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene())
 				for (auto actor : currentScene->GetActors())
-					if (auto modelRenderer = actor->GetComponent<OvCore::ECS::Components::CModelRenderer>(); modelRenderer && modelRenderer->GetModel() == model)
+					if (auto modelRenderer = actor->GetComponent<MeshFilter>(); modelRenderer && modelRenderer->GetModel() == model)
 						modelRenderer->SetModel(nullptr);
 
 			LitchiRuntime::ServiceLocator::Get<ModelManager>().UnloadResource(p_previousName);
@@ -879,8 +879,8 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 
 			auto& assetView = EDITOR_PANEL(AssetView, "Asset View");
 			auto assetViewRes = assetView.GetResource();
-			if (auto pval = std::get_if<OvCore::Material*>(&assetViewRes); pval && *pval)
-				assetView.SetResource(static_cast<OvCore::Material*>(nullptr));
+			if (auto pval = std::get_if<Resource::Material*>(&assetViewRes); pval && *pval)
+				assetView.SetResource(static_cast<Resource::Material*>(nullptr));
 
 			if (auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene())
 				for (auto actor : currentScene->GetActors())

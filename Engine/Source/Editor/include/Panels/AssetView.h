@@ -45,12 +45,7 @@ namespace LitchiEditor
 		* Return the currently previewed resource
 		*/
 		ViewableResource GetResource() const;
-
-	private:
-		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
-		void RenderModelAsset(Model& model);
-		void RenderTextureAsset(Texture& texture);
-		void RenderMaterialAsset(Resource::Material& material);
+		
 	private:
 		ViewableResource m_resource;
 	};

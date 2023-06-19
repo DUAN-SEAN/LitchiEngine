@@ -11,6 +11,7 @@
 #include <Runtime/Function/Scene/scene_manager.h>
 
 #include "Core/EditorActions.h"
+#include "Core/EditorRenderer.h"
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Function/Renderer/Driver.h"
@@ -62,9 +63,10 @@ namespace LitchiEditor
 
 
 		std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
+		std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
 
 		Resource::Shader* m_shadowMapShader;
-
+		std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;
 		std::string projectPath;

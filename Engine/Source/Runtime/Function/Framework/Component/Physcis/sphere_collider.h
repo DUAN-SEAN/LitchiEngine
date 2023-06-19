@@ -12,6 +12,10 @@ namespace LitchiRuntime
     public:
         SphereCollider();
         ~SphereCollider();
+        float GetRadius()
+        {
+            return radius_;
+        }
     protected:
         void CreateShape() override;
 

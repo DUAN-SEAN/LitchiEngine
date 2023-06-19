@@ -49,10 +49,10 @@ float GetActorFocusDist(GameObject* p_actor)
 			(
 				std::max
 				(
-					pb->GetSize().x * p_actor.transform.GetWorldScale().x,
-					pb->GetSize().y * p_actor.transform.GetWorldScale().y
+					pb->GetSize().x * p_actor.GetComponent<Transform>()->GetWorldScale().x,
+					pb->GetSize().y * p_actor.GetComponent<Transform>()->GetWorldScale().y
 				),
-				pb->GetSize().z * p_actor.transform.GetWorldScale().z
+				pb->GetSize().z * p_actor.GetComponent<Transform>()->GetWorldScale().z
 			) * 1.5f);
 		}
 
@@ -62,10 +62,10 @@ float GetActorFocusDist(GameObject* p_actor)
 			(
 				std::max
 				(
-					ps->GetRadius() * p_actor.transform.GetWorldScale().x,
-					ps->GetRadius() * p_actor.transform.GetWorldScale().y
+					ps->GetRadius() * p_actor.GetComponent<Transform>()->GetWorldScale().x,
+					ps->GetRadius() * p_actor.GetComponent<Transform>()->GetWorldScale().y
 				),
-				ps->GetRadius() * p_actor.transform.GetWorldScale().z
+				ps->GetRadius() * p_actor.GetComponent<Transform>()->GetWorldScale().z
 			) * 1.5f);
 		}
 
@@ -75,20 +75,20 @@ float GetActorFocusDist(GameObject* p_actor)
 			(
 				std::max
 				(
-					pc->GetRadius() * p_actor.transform.GetWorldScale().x,
-					pc->GetHeight() * p_actor.transform.GetWorldScale().y
+					pc->GetRadius() * p_actor.GetComponent<Transform>()->GetWorldScale().x,
+					pc->GetHeight() * p_actor.GetComponent<Transform>()->GetWorldScale().y
 				),
-				pc->GetRadius() * p_actor.transform.GetWorldScale().z
+				pc->GetRadius() * p_actor.GetComponent<Transform>()->GetWorldScale().z
 			) * 1.5f);
 		}
 
-		if (auto modelRenderer = p_actor.GetComponent<OvCore::ECS::Components::CModelRenderer>())
+		if (auto modelRenderer = p_actor.GetComponent<MeshFilter>())
 		{
-			const bool hasCustomBoundingSphere = modelRenderer->GetFrustumBehaviour() == OvCore::ECS::Components::CModelRenderer::EFrustumBehaviour::CULL_CUSTOM;
+			const bool hasCustomBoundingSphere = modelRenderer->GetFrustumBehaviour() == MeshFilter::EFrustumBehaviour::CULL_CUSTOM;
 			const bool hasModel = modelRenderer->GetModel();
 			const auto boundingSphere = hasCustomBoundingSphere ? &modelRenderer->GetCustomBoundingSphere() : hasModel ? &modelRenderer->GetModel()->GetBoundingSphere() : nullptr;
-			const auto& actorPosition = p_actor.transform.GetWorldPosition();
-			const auto& actorScale = p_actor.transform.GetWorldScale();
+			const auto& actorPosition = p_actor.GetComponent<Transform>()->GetWorldPosition();
+			const auto& actorScale = p_actor.GetComponent<Transform>()->GetWorldScale();
 			const auto scaleFactor = std::max(std::max(actorScale.x, actorScale.y), actorScale.z);
 
 			distance = std::max(distance, boundingSphere ? (boundingSphere->radius + glm::vec3::Length(boundingSphere->position)) * scaleFactor * 2.0f : 10.0f);

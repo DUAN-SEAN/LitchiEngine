@@ -63,16 +63,16 @@ void LitchiEditor::AssetView::_Render_Impl()
 	uint8_t glState = baseRenderer.FetchGLState();
 	baseRenderer.ApplyStateMask(glState);
 
-	RenderGrid(m_cameraPosition, m_gridColor);
+	ApplicationEditor::Instance()->editorRenderer->RenderGrid(m_cameraPosition, m_gridColor);
 
 	if (auto pval = std::get_if<Model*>(&m_resource); pval && *pval)
-		RenderModelAsset(**pval);
+		ApplicationEditor::Instance()->editorRenderer->RenderModelAsset(**pval);
 	
 	if (auto pval = std::get_if<Texture*>(&m_resource); pval && *pval)
-		RenderTextureAsset(**pval);
+		ApplicationEditor::Instance()->editorRenderer->RenderTextureAsset(**pval);
 	
 	if (auto pval = std::get_if<Resource::Material*>(&m_resource); pval && *pval)
-		RenderMaterialAsset(**pval);
+		ApplicationEditor::Instance()->editorRenderer->RenderMaterialAsset(**pval);
 
 	baseRenderer.ApplyStateMask(glState);
 
@@ -87,24 +87,4 @@ void LitchiEditor::AssetView::SetResource(ViewableResource p_resource)
 LitchiEditor::AssetView::ViewableResource LitchiEditor::AssetView::GetResource() const
 {
 	return m_resource;
-}
-
-void LitchiEditor::AssetView::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
-{
-
-}
-
-void LitchiEditor::AssetView::RenderModelAsset(Model& model)
-{
-	// LitchiEditor::ApplicationEditor::Instance()->renderer->DrawMesh(model,)
-}
-
-void LitchiEditor::AssetView::RenderTextureAsset(Texture& texture)
-{
-
-}
-
-void LitchiEditor::AssetView::RenderMaterialAsset(Resource::Material& material)
-{
-
 }

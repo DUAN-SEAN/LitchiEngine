@@ -209,6 +209,33 @@ void LitchiRuntime::Renderer::ClearFrameInfo()
 	m_frameInfo.polyCount = 0;
 }
 
+void LitchiRuntime::Renderer::DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial)
+{
+	if (p_modelMatrix)
+		ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
+
+	for (auto mesh : p_model.GetMeshes())
+	{
+		Resource::Material* material = p_material.GetShader() ? &p_material : p_defaultMaterial;
+
+		if (material)
+			DrawMesh(*mesh, *material, nullptr);
+	}
+}
+
+void LitchiRuntime::Renderer::DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial)
+{
+	if (p_modelMatrix)
+		ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
+
+	for (auto mesh : p_model.GetMeshes())
+	{
+		Resource::Material* material = p_materials.size() > mesh->GetMaterialIndex() ? p_materials[mesh->GetMaterialIndex()] : p_defaultMaterial;
+		if (material)
+			DrawMesh(*mesh, *material, nullptr);
+	}
+}
+
 void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
 {
 	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)

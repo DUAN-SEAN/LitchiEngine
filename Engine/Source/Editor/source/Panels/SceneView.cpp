@@ -191,8 +191,8 @@ void LitchiEditor::SceneView::RenderScene()
 	// 获取当前需要渲染的相机 和 场景
 	RenderCamera* render_camera = m_camera;
 	render_camera->Clear();
-	RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
-
+	// RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
+	ApplicationEditor::Instance()->editorRenderer->RenderGrid(m_cameraPosition, m_gridColor);
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
