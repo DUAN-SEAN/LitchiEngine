@@ -640,11 +640,11 @@ public:
 
 		previewAction.ClickedEvent += [this]
 		{
-			/*Resource* resource = LitchiRuntime::ServiceLocator::Get<ResourceLoader>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+			Resource* resource = LitchiRuntime::ServiceLocator::Get<ResourceLoader>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
 			auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
 			assetView.SetResource(resource);
 			assetView.Open();
-			assetView.Focus();*/
+			assetView.Focus();
 		};
 
 		FileContextualMenu::CreateList();
@@ -904,9 +904,9 @@ public:
 				materialManager.AResourceManager::ReloadResource(resourcePath);
 				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
 			}
-		};
+		};*/
 
-		PreviewableContextualMenu::CreateList();*/
+		PreviewableContextualMenu::CreateList();
 	}
 };
 
