@@ -128,7 +128,7 @@ std::optional<std::string> LitchiEditor::EditorActions::SelectBuildFolder()
 	//		return result;
 	//	else
 	//	{
-	//		OvWindowing::Dialogs::MessageBox message("Folder already exists!", "The folder \"" + result + "\" already exists.\n\nPlease select another location and try again", OvWindowing::Dialogs::MessageBox::EMessageType::WARNING, OvWindowing::Dialogs::MessageBox::EButtonOK, true);
+	//		OvWindowing::Dialogs::MessageBox message("Folder already exists!", "The folder \"" + result + "\" already exists.\n\nPlease select another location and try again", OvWindowing::Dialogs::MessageBox::EMessageType::WARNING, OvWindowing::Dialogs::MessageBox::EButtonLayout::OK, true);
 	//		return {};
 	//	}
 	//}
@@ -153,7 +153,7 @@ void LitchiEditor::EditorActions::Build(bool p_autoRun, bool p_tempFolder)
 	//	}
 	//	catch (std::filesystem::filesystem_error error)
 	//	{
-	//		OvWindowing::Dialogs::MessageBox message("Temporary build failed", "The temporary folder is currently being used by another process", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonOK, true);
+	//		OvWindowing::Dialogs::MessageBox message("Temporary build failed", "The temporary folder is currently being used by another process", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonLayout::OK, true);
 	//		return;
 	//	}
 	//}
@@ -201,7 +201,7 @@ void LitchiEditor::EditorActions::BuildAtLocation(const std::string & p_configur
 					if (!std::filesystem::exists(buildPath + "Data\\User\\Assets\\" + (LitchiEditor::ApplicationEditor::Instance()->projectSettings.Get<std::string>("start_scene"))))
 					{
 						OVLOG_ERROR("Failed to find Start Scene at expected path. Verify your Project Setings.");
-						OvWindowing::Dialogs::MessageBox message("Build Failure", "An error occured during the building of your game.\nCheck the console for more information", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonOK, true);
+						OvWindowing::Dialogs::MessageBox message("Build Failure", "An error occured during the building of your game.\nCheck the console for more information", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonLayout::OK, true);
 						std::filesystem::remove_all(buildPath);
 						return;						
 					}
@@ -307,7 +307,7 @@ void LitchiEditor::EditorActions::BuildAtLocation(const std::string & p_configur
 	if (failed)
 	{
 		std::filesystem::remove_all(buildPath);
-		OvWindowing::Dialogs::MessageBox message("Build Failure", "An error occured during the building of your game.\nCheck the console for more information", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonOK, true);
+		OvWindowing::Dialogs::MessageBox message("Build Failure", "An error occured during the building of your game.\nCheck the console for more information", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonLayout::OK, true);
 	}*/
 }
 

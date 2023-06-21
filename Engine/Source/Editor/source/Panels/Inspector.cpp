@@ -131,7 +131,7 @@ LitchiEditor::Inspector::Inspector
   //          const bool isScriptValid = std::filesystem::exists(realScriptPath) && targetActor && !targetActor->GetBehaviour(p_script);
 
   //          addScriptButton.disabled = !isScriptValid;
-  //          addScriptButton.idleBackgroundColor = isScriptValid ? OvUI::Types::Color{ 0.7f, 0.5f, 0.f } : OvUI::Types::Color{ 0.1f, 0.1f, 0.1f };
+  //          addScriptButton.idleBackgroundColor = isScriptValid ? Color{ 0.7f, 0.5f, 0.f } : Color{ 0.1f, 0.1f, 0.1f };
   //      };
 
   //      m_scriptSelectorWidget->ContentChangedEvent += updateAddScriptButton;
@@ -538,7 +538,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 				// 万向节(x,y,z)(pitch, yaw, roll)
 				//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
 				eulerVec3.x = std::max(std::min(eulerVec3.x, 180.0f), -180.0f);
-				eulerVec3.y = std::max(std::min(eulerVec3.y, 90.0f), -90.0f);
+				eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
 				eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
 				// 处理奇点问题
 				if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)

@@ -52,7 +52,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	auto& buildMenu = CreateWidget<MenuList>("Build");
 //	buildMenu.CreateWidget<MenuItem>("Build game").ClickedEvent					+=	EDITOR_BIND(Build, false, false);
 //	buildMenu.CreateWidget<MenuItem>("Build game and run").ClickedEvent			+=	EDITOR_BIND(Build, true, false);
-//	buildMenu.CreateWidget<Visual::Separator>();
+//	buildMenu.CreateWidget<Separator>();
 //	buildMenu.CreateWidget<MenuItem>("Temporary build").ClickedEvent			+=	EDITOR_BIND(Build, true, true);
 //}
 //
@@ -61,7 +61,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	m_windowMenu = &CreateWidget<MenuList>("Window");
 //	m_windowMenu->CreateWidget<MenuItem>("Close all").ClickedEvent	+= std::bind(&MenuBar::OpenEveryWindows, this, false);
 //	m_windowMenu->CreateWidget<MenuItem>("Open all").ClickedEvent		+= std::bind(&MenuBar::OpenEveryWindows, this, true);
-//	m_windowMenu->CreateWidget<Visual::Separator>();
+//	m_windowMenu->CreateWidget<Separator>();
 //
 //	/* When the menu is opened, we update which window is marked as "Opened" or "Closed" */
 //	m_windowMenu->ClickedEvent += std::bind(&MenuBar::UpdateToggleableItems, this);
@@ -86,63 +86,63 @@ LitchiEditor::MenuBar::MenuBar()
 //	settingsMenu.CreateWidget<MenuItem>("Spawn actors at origin", "", true, true).ValueChangedEvent		+= EDITOR_BIND(SetActorSpawnAtOrigin, std::placeholders::_1);
 //	settingsMenu.CreateWidget<MenuItem>("Vertical Synchronization", "", true, true).ValueChangedEvent	+= [this](bool p_value) { EDITOR_CONTEXT(device)->SetVsync(p_value); };
 //	auto& cameraSpeedMenu = settingsMenu.CreateWidget<MenuList>("Camera Speed");
-//	cameraSpeedMenu.CreateWidget<OvUI::Widgets::Sliders::SliderInt>(1, 50, 15, OvUI::Widgets::Sliders::ESliderOrientation::HORIZONTAL, "Scene View").ValueChangedEvent += EDITOR_BIND(SetSceneViewCameraSpeed, std::placeholders::_1);
-//	cameraSpeedMenu.CreateWidget<OvUI::Widgets::Sliders::SliderInt>(1, 50, 15, OvUI::Widgets::Sliders::ESliderOrientation::HORIZONTAL, "Asset View").ValueChangedEvent += EDITOR_BIND(SetAssetViewCameraSpeed, std::placeholders::_1);
+//	cameraSpeedMenu.CreateWidget<Sliders::SliderInt>(1, 50, 15, Sliders::ESliderOrientation::HORIZONTAL, "Scene View").ValueChangedEvent += EDITOR_BIND(SetSceneViewCameraSpeed, std::placeholders::_1);
+//	cameraSpeedMenu.CreateWidget<Sliders::SliderInt>(1, 50, 15, Sliders::ESliderOrientation::HORIZONTAL, "Asset View").ValueChangedEvent += EDITOR_BIND(SetAssetViewCameraSpeed, std::placeholders::_1);
 //	auto& cameraPositionMenu = settingsMenu.CreateWidget<MenuList>("Reset Camera");
 //	cameraPositionMenu.CreateWidget<MenuItem>("Scene View").ClickedEvent += EDITOR_BIND(ResetSceneViewCameraPosition);
 //	cameraPositionMenu.CreateWidget<MenuItem>("Asset View").ClickedEvent += EDITOR_BIND(ResetAssetViewCameraPosition);
 //
 //	auto& viewColors = settingsMenu.CreateWidget<MenuList>("View Colors");
 //	auto& sceneViewBackground = viewColors.CreateWidget<MenuList>("Scene View Background");
-//	auto& sceneViewBackgroundPicker = sceneViewBackground.CreateWidget<Selection::ColorEdit>(false, OvUI::Types::Color{ 0.098f, 0.098f, 0.098f });
+//	auto& sceneViewBackgroundPicker = sceneViewBackground.CreateWidget<ColorEdit>(false, Color{ 0.098f, 0.098f, 0.098f });
 //	sceneViewBackgroundPicker.ColorChangedEvent += [this](const auto & color)
 //	{
-//		EDITOR_PANEL(Panels::SceneView, "Scene View").GetCamera().SetClearColor({ color.r, color.g, color.b });
+//		EDITOR_PANEL(SceneView, "Scene View").GetCamera().SetClearColor({ color.r, color.g, color.b });
 //	};
 //	sceneViewBackground.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &sceneViewBackgroundPicker]
 //	{
-//		EDITOR_PANEL(Panels::SceneView, "Scene View").GetCamera().SetClearColor({ 0.098f, 0.098f, 0.098f });
+//		EDITOR_PANEL(SceneView, "Scene View").GetCamera().SetClearColor({ 0.098f, 0.098f, 0.098f });
 //		sceneViewBackgroundPicker.color = { 0.098f, 0.098f, 0.098f };
 //	};
 //
 //	auto& sceneViewGrid = viewColors.CreateWidget<MenuList>("Scene View Grid");
-//    auto& sceneViewGridPicker = sceneViewGrid.CreateWidget<Selection::ColorEdit>(false, OvUI::Types::Color(0.176f, 0.176f, 0.176f));
+//    auto& sceneViewGridPicker = sceneViewGrid.CreateWidget<ColorEdit>(false, Color(0.176f, 0.176f, 0.176f));
 //	sceneViewGridPicker.ColorChangedEvent += [this](const auto & color)
 //	{
-//		EDITOR_PANEL(Panels::SceneView, "Scene View").SetGridColor({ color.r, color.g, color.b });
+//		EDITOR_PANEL(SceneView, "Scene View").SetGridColor({ color.r, color.g, color.b });
 //	};
 //	sceneViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &sceneViewGridPicker]
 //	{
-//		EDITOR_PANEL(Panels::SceneView, "Scene View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
-//		sceneViewGridPicker.color = OvUI::Types::Color(0.176f, 0.176f, 0.176f);
+//		EDITOR_PANEL(SceneView, "Scene View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
+//		sceneViewGridPicker.color = Color(0.176f, 0.176f, 0.176f);
 //	};
 //
 //	auto& assetViewBackground = viewColors.CreateWidget<MenuList>("Asset View Background");
-//	auto& assetViewBackgroundPicker = assetViewBackground.CreateWidget<Selection::ColorEdit>(false, OvUI::Types::Color{ 0.098f, 0.098f, 0.098f });
+//	auto& assetViewBackgroundPicker = assetViewBackground.CreateWidget<ColorEdit>(false, Color{ 0.098f, 0.098f, 0.098f });
 //	assetViewBackgroundPicker.ColorChangedEvent += [this](const auto & color)
 //	{
-//		EDITOR_PANEL(Panels::AssetView, "Asset View").GetCamera().SetClearColor({ color.r, color.g, color.b });
+//		EDITOR_PANEL(AssetView, "Asset View").GetCamera().SetClearColor({ color.r, color.g, color.b });
 //	};
 //	assetViewBackground.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &assetViewBackgroundPicker]
 //	{
-//		EDITOR_PANEL(Panels::AssetView, "Asset View").GetCamera().SetClearColor({ 0.098f, 0.098f, 0.098f });
+//		EDITOR_PANEL(AssetView, "Asset View").GetCamera().SetClearColor({ 0.098f, 0.098f, 0.098f });
 //		assetViewBackgroundPicker.color = { 0.098f, 0.098f, 0.098f };
 //	};
 //
 //	auto& assetViewGrid = viewColors.CreateWidget<MenuList>("Asset View Grid");
-//	auto& assetViewGridPicker = assetViewGrid.CreateWidget<Selection::ColorEdit>(false, OvUI::Types::Color(0.176f, 0.176f, 0.176f));
+//	auto& assetViewGridPicker = assetViewGrid.CreateWidget<ColorEdit>(false, Color(0.176f, 0.176f, 0.176f));
 //	assetViewGridPicker.ColorChangedEvent += [this](const auto & color)
 //	{
-//		EDITOR_PANEL(Panels::AssetView, "Asset View").SetGridColor({ color.r, color.g, color.b });
+//		EDITOR_PANEL(AssetView, "Asset View").SetGridColor({ color.r, color.g, color.b });
 //	};
 //	assetViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &assetViewGridPicker]
 //	{
-//		EDITOR_PANEL(Panels::AssetView, "Asset View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
-//		assetViewGridPicker.color = OvUI::Types::Color(0.176f, 0.176f, 0.176f);
+//		EDITOR_PANEL(AssetView, "Asset View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
+//		assetViewGridPicker.color = Color(0.176f, 0.176f, 0.176f);
 //	};
 //
 //	auto& sceneViewBillboardScaleMenu = settingsMenu.CreateWidget<MenuList>("3D Icons Scales");
-//	auto& lightBillboardScaleSlider = sceneViewBillboardScaleMenu.CreateWidget<Sliders::SliderInt>(0, 100, static_cast<int>(Settings::EditorSettings::LightBillboardScale * 100.0f), OvUI::Widgets::Sliders::ESliderOrientation::HORIZONTAL, "Lights");
+//	auto& lightBillboardScaleSlider = sceneViewBillboardScaleMenu.CreateWidget<Sliders::SliderInt>(0, 100, static_cast<int>(Settings::EditorSettings::LightBillboardScale * 100.0f), Sliders::ESliderOrientation::HORIZONTAL, "Lights");
 //	lightBillboardScaleSlider.ValueChangedEvent += [this](int p_value) { Settings::EditorSettings::LightBillboardScale = p_value / 100.0f; };
 //	lightBillboardScaleSlider.format = "%d %%";
 //
@@ -171,10 +171,10 @@ LitchiEditor::MenuBar::MenuBar()
 //    helpMenu.CreateWidget<MenuItem>("GitHub").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload"); };
 //    helpMenu.CreateWidget<MenuItem>("Tutorials").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/wiki/Tutorials"); };
 //    helpMenu.CreateWidget<MenuItem>("Scripting API").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/wiki/Scripting-API"); };
-//    helpMenu.CreateWidget<Visual::Separator>();
+//    helpMenu.CreateWidget<Separator>();
 //    helpMenu.CreateWidget<MenuItem>("Bug Report").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/issues/new?assignees=&labels=Bug&template=bug_report.md&title="); };
 //    helpMenu.CreateWidget<MenuItem>("Feature Request").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/issues/new?assignees=&labels=Feature&template=feature_request.md&title="); };
-//    helpMenu.CreateWidget<Visual::Separator>();
+//    helpMenu.CreateWidget<Separator>();
 //    helpMenu.CreateWidget<Texts::Text>("Version: 1.3.0");
 //}
 //

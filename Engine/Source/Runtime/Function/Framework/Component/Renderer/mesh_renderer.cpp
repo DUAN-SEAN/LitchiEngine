@@ -138,8 +138,20 @@ namespace LitchiRuntime
 	{
 		// 通过MeshFilter获取当前的Mesh
 		auto meshFilter = game_object()->GetComponent<MeshFilter>();
+		if(meshFilter==nullptr)
+		{
+			return;
+		}
 		auto model = meshFilter->GetModel();
+		if(model == nullptr)
+		{
+			return;
+		}
 		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
+		if(mesh == nullptr)
+		{
+			return;
+		}
 
 		// 计算模型矩阵
 		auto transform = game_object()->GetComponent<Transform>();
@@ -157,8 +169,20 @@ namespace LitchiRuntime
 	{
 		// 通过MeshFilter获取当前的Mesh
 		auto meshFilter = game_object()->GetComponent<MeshFilter>();
+		if (meshFilter == nullptr)
+		{
+			return;
+		}
 		auto model = meshFilter->GetModel();
+		if (model == nullptr)
+		{
+			return;
+		}
 		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
+		if (mesh == nullptr)
+		{
+			return;
+		}
 
 		// 计算模型矩阵
 		auto transform = game_object()->GetComponent<Transform>();

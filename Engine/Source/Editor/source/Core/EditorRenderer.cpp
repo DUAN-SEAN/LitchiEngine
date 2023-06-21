@@ -523,7 +523,7 @@ void LitchiEditor::EditorRenderer::RenderCameraOrthographicFrustum(std::pair<uin
 
 void LitchiEditor::EditorRenderer::RenderCameraFrustum(Camera& p_camera)
 {
-  /*  auto& gameView = EDITOR_PANEL(Panels::GameView, "Game View");
+  /*  auto& gameView = EDITOR_PANEL(GameView, "Game View");
     auto gameViewSize = gameView.GetSafeSize();
 
     if (gameViewSize.first == 0 || gameViewSize.second == 0)

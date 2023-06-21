@@ -7,6 +7,7 @@
 #include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/Inspector.h"
+#include "Editor/include/Panels/MaterialEditor.h"
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
@@ -358,7 +359,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
-	//m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
+	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
 	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
 
