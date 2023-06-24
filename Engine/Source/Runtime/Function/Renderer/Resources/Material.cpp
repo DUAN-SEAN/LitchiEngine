@@ -39,7 +39,6 @@ void LitchiRuntime::Resource::Material::Bind(Texture* p_emptyTexture)
 		for (auto& [name, value] : m_uniformsData)
 		{
 			auto uniformData = m_shader->GetUniformInfo(name);
-
 			if (uniformData)
 			{
 				switch (uniformData->type)
@@ -114,11 +113,12 @@ void LitchiRuntime::Resource::Material::Bind(LitchiRuntime::Texture* p_emptyText
 			}
 		}
 
-		if(shadowMapFBO != nullptr)
+		// 如果有阴影贴图, 则向shader绑定额外的阴影贴图资源
+		if (shadowMapFBO != nullptr)
 		{
 			glActiveTexture(GL_TEXTURE0 + textureSlot);
 			glBindTexture(GL_TEXTURE_2D, shadowMapFBO->GetTextureID());
-			
+
 			m_shader->SetUniformInt("u_shadowMap", textureSlot++);
 		}
 	}
@@ -248,7 +248,7 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 	}
 
 	// 设置shader
-	m_shader = ApplicationBase::Instance()->shaderManager->LoadResource(materialRes->shaderPath);
+	m_shader = ApplicationBase::Instance()->shaderManager->GetResource(materialRes->shaderPath);
 	SetShader(m_shader);
 
 	// 设置setting
@@ -268,59 +268,166 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 			continue;
 
 		}
-		else
+
+		switch (uniformInfo->GetUniformType())
 		{
-			switch (uniformInfo->GetUniformType())
-			{
-			case UniformInfoType::Bool:
-			{
-				auto uniformInfoBool = static_cast<UniformInfoBool*>(uniformInfo);
-				uniformData->second = std::make_any<bool>(uniformInfoBool->value);
-				break;
-			}
-			case UniformInfoType::Float:
-			{
-				auto uniformInfoFloat = static_cast<UniformInfoFloat*>(uniformInfo);
-				uniformData->second = std::make_any<float>(uniformInfoFloat->value);
-				break;
-			}
-			case UniformInfoType::Vector2:
-			{
-				auto uniformInfoVector2 = static_cast<UniformInfoVector2*>(uniformInfo);
-				uniformData->second = std::make_any<glm::vec2>(uniformInfoVector2->vector);
-				break;
-			}
-			case UniformInfoType::Vector3:
-			{
-				auto uniformInfoVector3 = static_cast<UniformInfoVector3*>(uniformInfo);
-				uniformData->second = std::make_any<glm::vec3>(uniformInfoVector3->vector);
-				break;
-			}
-			case UniformInfoType::Vector4:
-			{
-				auto uniformInfoVector4 = static_cast<UniformInfoVector4*>(uniformInfo);
-				uniformData->second = std::make_any<glm::vec4>(uniformInfoVector4->vector);
-				break;
-			}
-			case UniformInfoType::Path:
-			{
-				auto uniformInfoPath = static_cast<UniformInfoPath*>(uniformInfo);
-
-				// 读取路径下的贴图
-				auto texture = ApplicationBase::Instance()->textureManager->LoadResource(uniformInfoPath->path);
-				uniformData->second = std::make_any<Texture*>(texture);
-
-				break;
-			}
-			default:
-			{
-				DEBUG_LOG_ERROR("Material::PostResourceLoaded UniformInfoType Not Availiable Type:{}", uniformInfo->GetUniformType());
-
-				break;
-			}
-
-			}
-
+		case UniformInfoType::Bool:
+		{
+			auto uniformInfoBool = static_cast<UniformInfoBool*>(uniformInfo);
+			uniformData->second = std::make_any<bool>(uniformInfoBool->value);
+			break;
+		}
+		case UniformInfoType::Float:
+		{
+			auto uniformInfoFloat = static_cast<UniformInfoFloat*>(uniformInfo);
+			uniformData->second = std::make_any<float>(uniformInfoFloat->value);
+			break;
+		}
+		case UniformInfoType::Int:
+		{
+			auto uniformInfoInt = static_cast<UniformInfoInt*>(uniformInfo);
+			uniformData->second = std::make_any<int>(uniformInfoInt->value);
+			break;
+		}
+		case UniformInfoType::Vector2:
+		{
+			auto uniformInfoVector2 = static_cast<UniformInfoVector2*>(uniformInfo);
+			uniformData->second = std::make_any<glm::vec2>(uniformInfoVector2->vector);
+			break;
+		}
+		case UniformInfoType::Vector3:
+		{
+			auto uniformInfoVector3 = static_cast<UniformInfoVector3*>(uniformInfo);
+			uniformData->second = std::make_any<glm::vec3>(uniformInfoVector3->vector);
+			break;
+		}
+		case UniformInfoType::Vector4:
+		{
+			auto uniformInfoVector4 = static_cast<UniformInfoVector4*>(uniformInfo);
+			uniformData->second = std::make_any<glm::vec4>(uniformInfoVector4->vector);
+			break;
+		}
+		case UniformInfoType::Path:
+		{
+			auto uniformInfoPath = static_cast<UniformInfoPath*>(uniformInfo);
+			auto texture = ApplicationBase::Instance()->textureManager->GetResource(uniformInfoPath->path);
+			uniformData->second = std::make_any<Texture*>(texture);
+			break;
+		}
+		default:
+			DEBUG_LOG_ERROR("Material::PostResourceLoaded UniformInfoType Not Availiable Type:{}", uniformInfo->GetUniformType());
+			break;
 		}
 	}
+}
+
+void LitchiRuntime::Resource::Material::RebuildResourceFromMemory()
+{
+	if (materialRes == nullptr)
+	{
+		materialRes = new MaterialRes();
+	}
+
+	materialRes->settings.backfaceCulling = m_backfaceCulling;
+	materialRes->settings.blendable = m_blendable;
+	materialRes->settings.depthTest = m_depthTest;
+	materialRes->settings.gpuInstances = m_gpuInstances;
+	// other setting
+
+	if (m_shader != nullptr)
+	{
+		materialRes->shaderPath = m_shader->path;
+		// 清理已存在的uniformData
+		for (auto value : materialRes->uniformInfoList)
+		{
+			delete value;
+		}
+		materialRes->uniformInfoList.clear();
+
+		for (auto& [name, value] : m_uniformsData)
+		{
+			auto uniformData = m_shader->GetUniformInfo(name);
+
+			if (uniformData)
+			{
+				switch (uniformData->type)
+				{
+				case UniformType::UNIFORM_BOOL:
+					if (value.type() == typeid(bool))
+					{
+						auto uniformBool = new UniformInfoBool();
+						uniformBool->name = uniformData->name;
+						uniformBool->value = std::any_cast<bool>(value);
+						materialRes->uniformInfoList.push_back(uniformBool);
+					}
+					break;
+				case UniformType::UNIFORM_INT:
+					if (value.type() == typeid(int))
+					{
+						auto uniformInt = new UniformInfoInt();
+						uniformInt->name = uniformData->name;
+						uniformInt->value = std::any_cast<int>(value);
+						materialRes->uniformInfoList.push_back(uniformInt);
+
+					}
+					break;
+				case UniformType::UNIFORM_FLOAT:
+					if (value.type() == typeid(float))
+					{
+						auto uniformFloat = new UniformInfoFloat();
+						uniformFloat->name = uniformData->name;
+						uniformFloat->value = std::any_cast<float>(value);
+						materialRes->uniformInfoList.push_back(uniformFloat);
+					}
+					break;
+				case UniformType::UNIFORM_FLOAT_VEC2:
+					if (value.type() == typeid(glm::vec2))
+					{
+						auto uniformVec2 = new UniformInfoVector2();
+						uniformVec2->name = uniformData->name;
+						uniformVec2->vector = std::any_cast<glm::vec2>(value);
+						materialRes->uniformInfoList.push_back(uniformVec2);
+					}
+					break;
+				case UniformType::UNIFORM_FLOAT_VEC3:
+					if (value.type() == typeid(glm::vec3))
+					{
+						auto uniformVec3 = new UniformInfoVector3();
+						uniformVec3->name = uniformData->name;
+						uniformVec3->vector = std::any_cast<glm::vec3>(value);
+						materialRes->uniformInfoList.push_back(uniformVec3);
+					}
+					break;
+				case UniformType::UNIFORM_FLOAT_VEC4:
+					if (value.type() == typeid(glm::vec4))
+					{
+						auto uniformVec4 = new UniformInfoVector4();
+						uniformVec4->name = uniformData->name;
+						uniformVec4->vector = std::any_cast<glm::vec4>(value);
+						materialRes->uniformInfoList.push_back(uniformVec4);
+					}
+					break;
+				case UniformType::UNIFORM_SAMPLER_2D:
+					if (value.type() == typeid(Texture*))
+					{
+						auto uniformPath = new UniformInfoPath();
+						uniformPath->name = uniformData->name;
+						uniformPath->path = "";
+						if (auto tex = std::any_cast<Texture*>(value); tex)
+						{
+							uniformPath->path = tex->path;
+						}
+						materialRes->uniformInfoList.push_back(uniformPath);
+					}
+					break;
+				default:
+					DEBUG_LOG_ERROR("RebuildResourceFromMemory Not Found UniformType type:{}", uniformData->type);
+					break;
+				}
+			}
+		}
+
+	}
+
+
 }

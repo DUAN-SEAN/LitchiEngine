@@ -214,9 +214,9 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
-		GameObject* go = CreateDefaultObject(scene, "liubei","Engine/Models/Cube.fbx","Engine/Materials/Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
-		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "Engine/Models/Cone.fbx", "Engine/Materials/Default.mat", 1, -3);
-		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "Engine/Models/Sphere.fbx", "Engine/Materials/DefaultUnlit.mat", 3.f, 1.5f);
+		GameObject* go = CreateDefaultObject(scene, "liubei","Engine\\Models\\Cube.fbx","Engine\\Materials\\Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
+		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "Engine\\Models\\Cone.fbx", "Engine\\Materials\\Default.mat", 1, -3);
+		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "Engine\\Models\\Sphere.fbx", "Engine\\Materials\\DefaultUnlit.mat", 3.f, 1.5f);
 		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,10,0),glm::angleAxis(-160.0f,glm::vec3(1,0,0)));
 		// GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
 
@@ -230,7 +230,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	}
 	sceneManager->SetCurrentScene(scene);
 	
-	m_shadowMapShader = shaderManager->LoadResource("Engine/Shaders/DepthShader.glsl");
+	m_shadowMapShader = shaderManager->LoadResource("Engine\\Shaders\\DepthShader.glsl");
 
 	// ²âÊÔ´úÂë
 	/*{

@@ -24,7 +24,7 @@ LitchiRuntime::Resource::Material* LitchiRuntime::Loaders::MaterialLoader::Creat
 
 void LitchiRuntime::Loaders::MaterialLoader::Reload(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)
 {
-	if (SerializerManager::DeserializeFromJson(p_path, p_material))
+	if (AssetManager::LoadAsset(p_path, *p_material.materialRes))
 	{
 		p_material.PostResourceLoaded();
 		
@@ -33,16 +33,11 @@ void LitchiRuntime::Loaders::MaterialLoader::Reload(LitchiRuntime::Resource::Mat
 
 void LitchiRuntime::Loaders::MaterialLoader::Save(LitchiRuntime::Resource::Material& p_material, const std::string& p_path)
 {
-	/*tinyxml2::XMLDocument doc;
-	tinyxml2::XMLNode* node = doc.NewElement("root");
-	doc.InsertFirstChild(node);
-
-	p_material.OnSerialize(doc, node);
-
-	if (doc.SaveFile(p_path.c_str()) == tinyxml2::XML_SUCCESS)
-		OVLOG_INFO("[MATERIAL] \"" + p_path + "\": Saved");
-	else
-		OVLOG_ERROR("[MATERIAL] \"" + p_path + "\": Failed to save");*/
+	p_material.RebuildResourceFromMemory();
+	if(!AssetManager::SaveAsset(*p_material.materialRes, p_path))
+	{
+		DEBUG_LOG_ERROR("Save Fail path:{}",p_path);
+	}
 }
 
 bool LitchiRuntime::Loaders::MaterialLoader::Destroy(LitchiRuntime::Resource::Material*& p_material)

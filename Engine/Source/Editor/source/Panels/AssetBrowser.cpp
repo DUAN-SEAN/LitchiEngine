@@ -23,6 +23,7 @@
 #include <Runtime/Function/UI/Plugins/DDSource.h>
 
 #include "Editor/include/Panels/AssetView.h"
+#include "Editor/include/Panels/MaterialEditor.h"
 #include "Runtime/Core/Tools/Utils/String.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
@@ -874,7 +875,7 @@ public:
 
 	virtual void CreateList() override
 	{
-		/*auto& editAction = CreateWidget<MenuItem>("Edit");
+		auto& editAction = CreateWidget<MenuItem>("Edit");
 
 		editAction.ClickedEvent += [this]
 		{
@@ -905,7 +906,7 @@ public:
 				materialManager.AResourceManager::ReloadResource(resourcePath);
 				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
 			}
-		};*/
+		};
 
 		PreviewableContextualMenu::CreateList();
 	}

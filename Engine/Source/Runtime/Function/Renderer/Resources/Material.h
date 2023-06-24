@@ -23,6 +23,7 @@ namespace LitchiRuntime::Resource
 		Vector3,
 		Vector4,
 		Path,
+		Int,
 	};
 
 	class UniformInfoBase
@@ -45,6 +46,18 @@ namespace LitchiRuntime::Resource
 			return UniformInfoType::Bool;
 		}
 		float value;
+		RTTR_ENABLE(UniformInfoBase)
+	};
+
+
+	class UniformInfoInt :public UniformInfoBase
+	{
+	public:
+		UniformInfoType GetUniformType() override
+		{
+			return UniformInfoType::Int;
+		}
+		int value;
 		RTTR_ENABLE(UniformInfoBase)
 	};
 
@@ -273,6 +286,8 @@ namespace LitchiRuntime::Resource
 		void PostResourceModify() override;
 
 		void PostResourceLoaded() override;
+
+		void RebuildResourceFromMemory();
 
 		MaterialRes* materialRes;
 

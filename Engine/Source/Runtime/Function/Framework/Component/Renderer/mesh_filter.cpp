@@ -30,7 +30,7 @@ namespace LitchiRuntime
         }
 
         // 通过路径加载模型资源
-        model_ = ApplicationBase::Instance()->modelManager->LoadResource(model_path);
+        model_ = ApplicationBase::Instance()->modelManager->GetResource(model_path);
     }
 
     void MeshFilter::PostResourceModify()
@@ -42,6 +42,6 @@ namespace LitchiRuntime
         }
 
         // 通过路径加载模型资源
-        model_ = ApplicationBase::Instance()->modelManager->LoadResource(model_path);
+        model_ = ApplicationBase::Instance()->modelManager->GetResource(model_path);
     }
 }

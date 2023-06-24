@@ -204,7 +204,7 @@ namespace LitchiRuntime
 			return;
 		}
 
-		material_ = ApplicationBase::Instance()->materialManager->LoadResource(material_path);
+		material_ = ApplicationBase::Instance()->materialManager->GetResource(material_path);
 		if(material_ != nullptr)
 		{
 			material_->PostResourceLoaded();
@@ -219,10 +219,10 @@ namespace LitchiRuntime
 			return;
 		}
 
-		material_ = ApplicationBase::Instance()->materialManager->LoadResource(material_path);
+		material_ = ApplicationBase::Instance()->materialManager->GetResource(material_path);
 		if (material_ != nullptr)
 		{
-			material_->PostResourceLoaded();
+			material_->PostResourceModify();
 		}
 	}
 }

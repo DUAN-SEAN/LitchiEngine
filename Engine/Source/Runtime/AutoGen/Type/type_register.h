@@ -117,6 +117,13 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("value", &Resource::UniformInfoBool::value);
 
+	registration::class_<Resource::UniformInfoInt>("UniformInfoInt")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &Resource::UniformInfoInt::value);
+
 	registration::class_<Resource::UniformInfoFloat>("UniformInfoFloat")
 		(
 			rttr::metadata("Serializable", true)
