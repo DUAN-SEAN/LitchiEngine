@@ -81,5 +81,8 @@ namespace LitchiRuntime
 		std::unique_ptr<IndexBuffer>			m_indexBuffer;
 
 		BoundingSphere m_boundingSphere;
+
+		// todo 新增Vertex, 缓存顶点信息
+		// todo 新增Index, 缓存索引信息
 	};
 }

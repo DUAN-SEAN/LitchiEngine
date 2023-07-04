@@ -11,7 +11,7 @@ LitchiRuntime::Parsers::AssimpParser LitchiRuntime::Loaders::ModelLoader::__ASSI
 LitchiRuntime::Model* LitchiRuntime::Loaders::ModelLoader::Create(const std::string& p_filepath, Parsers::EModelParserFlags p_parserFlags)
 {
 	Model* result = new Model(p_filepath);
-
+	
 	if (__ASSIMP.LoadModel(p_filepath, result->m_meshes, result->m_materialNames, p_parserFlags))
 	{
 		result->ComputeBoundingSphere();

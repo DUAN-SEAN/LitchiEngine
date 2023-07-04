@@ -11,32 +11,32 @@
             "Type": "UniformInfoVector4",
             "name": "u_Diffuse",
             "vector": {
-                "x": 0.7,
-                "y": 0.2,
-                "z": 0.9,
-                "w": 0.8
-            }
-        },
-		{
-            "Type": "UniformInfoVector2",
-            "name": "u_TextureTiling",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0
-            }
-        },
-		{
-            "Type": "UniformInfoVector2",
-            "name": "u_TextureOffset",
-            "vector": {
-                "x": 0.0,
-                "y": 0.0
+                "x": 0.7099999785423279,
+                "y": 0.5289999842643738,
+                "z": 0.9729999899864197,
+                "w": 0.6078431606292725
             }
         },
         {
             "Type": "UniformInfoPath",
             "name": "u_DiffuseMap",
             "path": ""
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureOffset",
+            "vector": {
+                "x": 0.7799999713897705,
+                "y": 0.0
+            }
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureTiling",
+            "vector": {
+                "x": 1.0,
+                "y": 1.8600000143051148
+            }
         }
     ]
 }

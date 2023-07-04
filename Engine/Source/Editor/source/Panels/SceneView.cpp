@@ -39,7 +39,7 @@ LitchiEditor::SceneView::SceneView
 	m_gridMaterial.SetDepthTest(false);
 
 	m_shadowMapFbo.Bind();
-	m_shadowMapFbo.Resize(1024, 1024);
+	m_shadowMapFbo.Resize(2048, 2048);
 	m_shadowMapFbo.Unbind();
 }
 
@@ -124,7 +124,7 @@ void LitchiEditor::SceneView::RenderScene()
 	glm::mat4 lightSpaceMatrix;
 	if (shadowLightTran != nullptr)
 	{
-		glViewport(0, 0, 1024, 1024);
+		glViewport(0, 0, 2048, 2048);
 		m_shadowMapFbo.Bind();
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glCullFace(GL_FRONT);
@@ -138,7 +138,7 @@ void LitchiEditor::SceneView::RenderScene()
 		auto geo_Normal = glGetAttribLocation(shadowMapShader->id, "geo_Normal");
 		auto geo_Tangent = glGetAttribLocation(shadowMapShader->id, "geo_Tangent");
 		auto geo_Bitangent = glGetAttribLocation(shadowMapShader->id, "geo_Bitangent");
-		GLfloat near_plane = 1.0f, far_plane = 50.0f;
+		GLfloat near_plane = 0.0f, far_plane = 50.0f;
 
 		// 计算光源的Projection
 		glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
