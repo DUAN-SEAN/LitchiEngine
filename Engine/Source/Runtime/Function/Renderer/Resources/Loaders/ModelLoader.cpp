@@ -12,7 +12,7 @@ LitchiRuntime::Model* LitchiRuntime::Loaders::ModelLoader::Create(const std::str
 {
 	Model* result = new Model(p_filepath);
 	
-	if (__ASSIMP.LoadModel(p_filepath, result->m_meshes, result->m_materialNames, p_parserFlags))
+	if (__ASSIMP.LoadModel(p_filepath, result, p_parserFlags))
 	{
 		result->ComputeBoundingSphere();
 		return result;

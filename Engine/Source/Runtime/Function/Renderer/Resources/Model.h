@@ -6,6 +6,11 @@
 #include <string>
 
 #include "Mesh.h"
+#include "SkinnedData.h"
+
+#include "Runtime/Core/Log/debug.h"
+
+#define NUM_BONES_PER_VERTEX 4
 
 namespace LitchiRuntime
 {
@@ -17,6 +22,28 @@ namespace LitchiRuntime
 	class Model
 	{
 		friend class Loaders::ModelLoader;
+	public:
+		struct BoneData {
+			uint32_t boneIndex[NUM_BONES_PER_VERTEX];
+			float weights[NUM_BONES_PER_VERTEX];
+			void Add(uint32_t boneID, float weight) {
+				for (size_t i = 0; i < NUM_BONES_PER_VERTEX; i++) {
+					if (weights[i] == 0.0f) {
+						boneIndex[i] = boneID;
+						weights[i] = weight;
+						return;
+					}
+				}
+				//insert error program
+				DEBUG_LOG_ERROR("bone index out of size");
+			}
+		};
+		struct BoneInfo {
+			bool isSkinned = false;
+			glm::mat4x4 boneOffset;
+			glm::mat4x4 defaultOffset;
+			int parentIndex;
+		};
 
 	public:
 		/**
@@ -43,10 +70,16 @@ namespace LitchiRuntime
 	public:
 		const std::string path;
 
-	private:
 		std::vector<Mesh*> m_meshes;
 		std::vector<std::string> m_materialNames;
 
 		BoundingSphere m_boundingSphere;
+
+
+		//Bone/Animation Information
+		std::vector<BoneInfo> boneInfo;
+		std::unordered_map<std::string, uint32_t> boneMapping;
+		std::unordered_map<std::string, AnimationClip> animations;
+	private:
 	};
 }

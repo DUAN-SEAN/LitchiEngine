@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Runtime/Function/Renderer/Resources/Mesh.h"
+#include <Runtime/Function/Renderer/Resources/Model.h>
 
 namespace LitchiRuntime::Parsers
 {
@@ -23,8 +24,7 @@ namespace LitchiRuntime::Parsers
 		virtual bool LoadModel
 		(
 			const std::string& p_fileName,
-			std::vector<Mesh*>& p_meshes,
-			std::vector<std::string>& p_materials,
+			Model* model,
 			EModelParserFlags p_parserFlags
 		) = 0;
 	};

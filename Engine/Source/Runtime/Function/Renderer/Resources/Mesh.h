@@ -25,7 +25,7 @@ namespace LitchiRuntime
 		* @param p_indices
 		* @param p_materialIndex
 		*/
-		Mesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex);
+		Mesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex,const bool isSkinned = false);
 
 		/**
 		* Bind the mesh (Actually bind its VAO)
@@ -67,6 +67,10 @@ namespace LitchiRuntime
 			return m_indexBuffer.get();
 		}
 
+		std::vector<Vertex> vertices;
+
+		std::vector<uint32_t> indices;
+
 	private:
 		void CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices);
 		void ComputeBoundingSphere(const std::vector<Vertex>& p_vertices);
@@ -81,6 +85,8 @@ namespace LitchiRuntime
 		std::unique_ptr<IndexBuffer>			m_indexBuffer;
 
 		BoundingSphere m_boundingSphere;
+
+		bool m_isSkinned;
 
 		// todo 新增Vertex, 缓存顶点信息
 		// todo 新增Index, 缓存索引信息

@@ -1,15 +1,13 @@
 
-#include <assimp/Importer.hpp>
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <assimp/matrix4x4.h>
-
 #include "AssimpParser.h"
 
 #include "Runtime/Core/Log/debug.h"
 
-bool LitchiRuntime::Parsers::AssimpParser::LoadModel(const std::string& p_fileName, std::vector<Mesh*>& p_meshes, std::vector<std::string>& p_materials, EModelParserFlags p_parserFlags)
+bool LitchiRuntime::Parsers::AssimpParser::LoadModel(
+	const std::string& p_fileName,
+	Model* p_model,
+	EModelParserFlags p_parserFlags
+)
 {
 	Assimp::Importer import;
 	const aiScene* scene = import.ReadFile(p_fileName, static_cast<unsigned int>(p_parserFlags));
@@ -20,20 +18,78 @@ bool LitchiRuntime::Parsers::AssimpParser::LoadModel(const std::string& p_fileNa
 	}
 	if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		return false;
-
-	ProcessMaterials(scene, p_materials);
+	ReadNodeHierarchy(p_model, scene->mRootNode, -1);
+	ProcessMaterials(p_model, scene);
 
 	aiMatrix4x4 identity;
 
-	ProcessNode(&identity, scene->mRootNode, scene, p_meshes);
+	ProcessNode(p_model, &identity, scene->mRootNode, scene);
+
+	// 加载动画
+	LoadAnimations(p_model, scene);
 
 	// 释放场景
-	aiReleaseImport(scene);
+	// aiReleaseImport(scene);
 
 	return true;
 }
 
-void LitchiRuntime::Parsers::AssimpParser::ProcessMaterials(const aiScene* p_scene, std::vector<std::string>& p_materials)
+void LitchiRuntime::Parsers::AssimpParser::ReadNodeHierarchy(Model* model, const aiNode* node, uint32_t parentIndex)
+{
+	Model::BoneInfo boneInfo;
+
+	uint32_t boneIndex = model->boneInfo.size();
+	model->boneMapping[node->mName.C_Str()] = boneIndex;
+
+	boneInfo.boneOffset = glm::mat4(1.0f);
+	boneInfo.parentIndex = parentIndex;
+	boneInfo.defaultOffset = {
+		node->mTransformation.a1, node->mTransformation.b1, node->mTransformation.c1, node->mTransformation.d1,
+		node->mTransformation.a2, node->mTransformation.b2, node->mTransformation.c2, node->mTransformation.d2,
+		node->mTransformation.a3, node->mTransformation.b3, node->mTransformation.c3, node->mTransformation.d3,
+		node->mTransformation.a4, node->mTransformation.b4, node->mTransformation.c4, node->mTransformation.d4
+	};
+	model->boneInfo.push_back(boneInfo);
+
+	for (size_t i = 0; i < node->mNumChildren; i++)
+		ReadNodeHierarchy(model, node->mChildren[i], boneIndex);
+}
+
+void LitchiRuntime::Parsers::AssimpParser::LoadBones(Model* model, const aiMesh* mesh, std::vector<Model::BoneData>& boneData)
+{
+	for (size_t i = 0; i < mesh->mNumBones; i++) {
+		uint32_t boneIndex = 0;
+		std::string boneName(mesh->mBones[i]->mName.C_Str());
+
+		if (model->boneMapping.find(boneName) == model->boneMapping.end()) {
+			//insert error program
+			DEBUG_LOG_ERROR("cannot find node");
+		}
+		else
+			boneIndex = model->boneMapping[boneName];
+
+		model->boneMapping[boneName] = boneIndex;
+
+		if (!model->boneInfo[boneIndex].isSkinned) {
+			aiMatrix4x4 offsetMatrix = mesh->mBones[i]->mOffsetMatrix;
+			model->boneInfo[boneIndex].boneOffset = {
+				offsetMatrix.a1, offsetMatrix.b1, offsetMatrix.c1, offsetMatrix.d1,
+				offsetMatrix.a2, offsetMatrix.b2, offsetMatrix.c2, offsetMatrix.d2,
+				offsetMatrix.a3, offsetMatrix.b3, offsetMatrix.c3, offsetMatrix.d3,
+				offsetMatrix.a4, offsetMatrix.b4, offsetMatrix.c4, offsetMatrix.d4
+			};
+			model->boneInfo[boneIndex].isSkinned = true;
+		}
+
+		for (size_t j = 0; j < mesh->mBones[i]->mNumWeights; j++) {
+			uint32_t vertexID = mesh->mBones[i]->mWeights[j].mVertexId;
+			float weight = mesh->mBones[i]->mWeights[j].mWeight;
+			boneData[vertexID].Add(boneIndex, weight);
+		}
+	}
+}
+
+void LitchiRuntime::Parsers::AssimpParser::ProcessMaterials(Model* model, const struct aiScene* p_scene)
 {
 	for (uint32_t i = 0; i < p_scene->mNumMaterials; ++i)
 	{
@@ -42,63 +98,82 @@ void LitchiRuntime::Parsers::AssimpParser::ProcessMaterials(const aiScene* p_sce
 		{
 			aiString name;
 			aiGetMaterialString(material, AI_MATKEY_NAME, &name);
-			p_materials.push_back(name.C_Str());
+			model->m_materialNames.push_back(name.C_Str());
 		}
 	}
 }
 
-void LitchiRuntime::Parsers::AssimpParser::ProcessNode(void* p_transform, aiNode* p_node, const aiScene* p_scene, std::vector<Mesh*>& p_meshes)
+void LitchiRuntime::Parsers::AssimpParser::ProcessNode(Model* model, void* p_transform, struct aiNode* p_node, const struct aiScene* p_scene)
 {
 	aiMatrix4x4 nodeTransformation = *reinterpret_cast<aiMatrix4x4*>(p_transform) * p_node->mTransformation;
 
 	// Process all the node's meshes (if any)
 	for (uint32_t i = 0; i < p_node->mNumMeshes; ++i)
 	{
-		std::vector<Vertex> vertices;
-		std::vector<uint32_t> indices;
-		aiMesh* mesh = p_scene->mMeshes[p_node->mMeshes[i]];
-		ProcessMesh(&nodeTransformation, mesh, p_scene, vertices, indices);
-		p_meshes.push_back(new Mesh(vertices, indices, mesh->mMaterialIndex)); // The model will handle mesh destruction
+		aiMesh* aiMesh = p_scene->mMeshes[p_node->mMeshes[i]];
+		model->m_meshes.push_back(ProcessMesh(model, &nodeTransformation, aiMesh, p_scene, aiMesh->mMaterialIndex)); // The model will handle mesh destruction
 	}
 
 	// Then do the same for each of its children
 	for (uint32_t i = 0; i < p_node->mNumChildren; ++i)
 	{
-		ProcessNode(&nodeTransformation, p_node->mChildren[i], p_scene, p_meshes);
+		ProcessNode(model, &nodeTransformation, p_node->mChildren[i], p_scene);
 	}
 }
 
-void LitchiRuntime::Parsers::AssimpParser::ProcessMesh(void* p_transform, aiMesh* p_mesh, const aiScene* p_scene, std::vector<Vertex>& p_outVertices, std::vector<uint32_t>& p_outIndices)
+LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* model, void* p_transform, struct aiMesh* p_mesh, const struct aiScene* p_scene, unsigned materialIndex)
 {
+	std::vector<Vertex> vertices;
+	std::vector<uint32_t> indices;
 	aiMatrix4x4 meshTransformation = *reinterpret_cast<aiMatrix4x4*>(p_transform);
+
+	std::vector<Model::BoneData> vertexBoneData(p_mesh->mNumVertices);
+	LoadBones(model, p_mesh, vertexBoneData);
 
 	for (uint32_t i = 0; i < p_mesh->mNumVertices; ++i)
 	{
-		aiVector3D position = meshTransformation * p_mesh->mVertices[i];
+		/*aiVector3D position = meshTransformation * p_mesh->mVertices[i];
 		aiVector3D normal = meshTransformation * (p_mesh->mNormals ? p_mesh->mNormals[i] : aiVector3D(0.0f, 0.0f, 0.0f));
 		aiVector3D texCoords = p_mesh->mTextureCoords[0] ? p_mesh->mTextureCoords[0][i] : aiVector3D(0.0f, 0.0f, 0.0f);
 		aiVector3D tangent = p_mesh->mTangents ? meshTransformation * p_mesh->mTangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
-		aiVector3D bitangent = p_mesh->mBitangents ? meshTransformation * p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
+		aiVector3D bitangent = p_mesh->mBitangents ? meshTransformation * p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);*/
 
-		p_outVertices.push_back
-		(
-			{
-				position.x,
-				position.y,
-				position.z,
-				texCoords.x,
-				texCoords.y,
-				normal.x,
-				normal.y,
-				normal.z,
-				tangent.x,
-				tangent.y,
-				tangent.z,
-				bitangent.x,
-				bitangent.y,
-				bitangent.z
-			}
-		);
+		aiVector3D position = p_mesh->mVertices[i];
+		aiVector3D normal = (p_mesh->mNormals ? p_mesh->mNormals[i] : aiVector3D(0.0f, 0.0f, 0.0f));
+		aiVector3D texCoords = p_mesh->mTextureCoords[0] ? p_mesh->mTextureCoords[0][i] : aiVector3D(0.0f, 0.0f, 0.0f);
+		aiVector3D tangent = p_mesh->mTangents ?  p_mesh->mTangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
+		aiVector3D bitangent = p_mesh->mBitangents ?p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
+
+		Vertex vertex = {
+					position.x,
+					position.y,
+					position.z,
+					texCoords.x,
+					texCoords.y,
+					normal.x,
+					normal.y,
+					normal.z,
+					tangent.x,
+					tangent.y,
+					tangent.z,
+					bitangent.x,
+					bitangent.y,
+					bitangent.z
+		};
+		if (vertexBoneData.size() <= i)
+		{
+		}
+		else
+		{
+			vertex.boneWeights[0] = vertexBoneData[i].weights[0];
+			vertex.boneWeights[1] = vertexBoneData[i].weights[1];
+			vertex.boneWeights[2] = vertexBoneData[i].weights[2];
+
+			for (size_t j = 0; j < NUM_BONES_PER_VERTEX; j++)
+				vertex.boneIndices[j] = vertexBoneData[i].boneIndex[j];
+		}
+		vertices.push_back(vertex);
+
 	}
 
 	for (uint32_t faceID = 0; faceID < p_mesh->mNumFaces; ++faceID)
@@ -106,103 +181,58 @@ void LitchiRuntime::Parsers::AssimpParser::ProcessMesh(void* p_transform, aiMesh
 		auto& face = p_mesh->mFaces[faceID];
 
 		for (size_t indexID = 0; indexID < 3; ++indexID)
-			p_outIndices.push_back(face.mIndices[indexID]);
+			indices.push_back(face.mIndices[indexID]);
 	}
+
+	return new Mesh(vertices, indices, materialIndex);
 }
 
-// 数据结构定义
-
-// 关节信息
-struct Bone {
-	std::string name;// 关节名
-	uint32_t idx_parent;// 父Bone Id
-	uint32_t n_anim_keys;// 关节的动画帧列表
-	uint32_t last_anim_key;// 最后一个关键帧
-	glm::mat4 offset;// T-Pose矩阵 顶点到关节的变换矩阵
-};
-
-// 动画帧信息
-struct AnimationClip
+void LitchiRuntime::Parsers::AssimpParser::LoadAnimations(Model* model, const aiScene* scene)
 {
-	// 骨骼列表 （父子关系）
+	for (size_t i = 0; i < scene->mNumAnimations; i++) {
+		AnimationClip animation;
+		std::vector<BoneAnimation> boneAnims(model->boneInfo.size());
+		aiAnimation* anim = scene->mAnimations[i];
 
-	// 骨骼的T-Pose矩阵
+		float ticksPerSecond = anim->mTicksPerSecond != 0 ? anim->mTicksPerSecond : 25.0f;
+		float timeInTicks = 1.0f / ticksPerSecond;
 
+		for (size_t j = 0; j < anim->mNumChannels; j++) {
+			BoneAnimation boneAnim;
+			aiNodeAnim* nodeAnim = anim->mChannels[j];
 
-
-	// 每一帧的骨骼的变换矩阵
-};
-
-
-class Animator
-{
-public:
-	// 获取当前帧
-	AnimationClip GetCurrentClip();
-};
-
-bool IsBoneOnlyNode(aiNode* node)
-{
-	if (node->mNumMeshes > 0)
-	{
-		return false;
-	}
-
-	bool haveWeFoundIt = true;
-	for (int index; index < node->mNumChildren; index++)
-	{
-		if(!IsBoneOnlyNode(node->mChildren[index]))
-		{
-			haveWeFoundIt = false;
+			for (size_t k = 0; k < nodeAnim->mNumPositionKeys; k++) {
+				VectorKey keyframe;
+				keyframe.timePos = nodeAnim->mPositionKeys[k].mTime * timeInTicks;
+				keyframe.value.x = nodeAnim->mPositionKeys[k].mValue.x;
+				keyframe.value.y = nodeAnim->mPositionKeys[k].mValue.y;
+				keyframe.value.z = nodeAnim->mPositionKeys[k].mValue.z;
+				boneAnim.translation.push_back(keyframe);
+			}
+			for (size_t k = 0; k < nodeAnim->mNumScalingKeys; k++) {
+				VectorKey keyframe;
+				keyframe.timePos = nodeAnim->mScalingKeys[k].mTime * timeInTicks;
+				keyframe.value.x = nodeAnim->mScalingKeys[k].mValue.x;
+				keyframe.value.y = nodeAnim->mScalingKeys[k].mValue.y;
+				keyframe.value.z = nodeAnim->mScalingKeys[k].mValue.z;
+				boneAnim.scale.push_back(keyframe);
+			}
+			for (size_t k = 0; k < nodeAnim->mNumRotationKeys; k++) {
+				QuatKey keyframe;
+				keyframe.timePos = nodeAnim->mRotationKeys[k].mTime * timeInTicks;
+				keyframe.value.x = nodeAnim->mRotationKeys[k].mValue.x;
+				keyframe.value.y = nodeAnim->mRotationKeys[k].mValue.y;
+				keyframe.value.z = nodeAnim->mRotationKeys[k].mValue.z;
+				keyframe.value.w = nodeAnim->mRotationKeys[k].mValue.w;
+				boneAnim.rotationQuat.push_back(keyframe);
+			}
+			boneAnims[model->boneMapping[nodeAnim->mNodeName.C_Str()]] = boneAnim;
 		}
+		animation.boneAnimations = boneAnims;
+
+		std::string animName(anim->mName.C_Str());
+		animName = animName.substr(animName.find_last_of('|') + 1, animName.length() - 1);
+
+		model->animations[animName] = animation;
 	}
-	return haveWeFoundIt;
 }
-
-
-aiNode* FindRootNode(const aiScene* scene)
-{
-	// 递归遍历所有的node, 找到某个node的所有子node都没有mesh的根node
-	aiNode* rootNode = scene->mRootNode;
-	for (int index = 0; index < rootNode->mNumChildren; index++)
-	{
-		aiNode* firstLevelNode = rootNode->mChildren[index];
-		if (IsBoneOnlyNode(firstLevelNode))
-		{
-			return firstLevelNode;
-		}
-	}
-
-	return nullptr;
-}
-
-void BuildBoneTree(const aiNode* rootBone, unsigned int parentNodeIndex)
-{
-	// 递归遍历rootBone的所有子node
-
-	// Bone0 <- Bone1 <- Bone2 每个Bone都关联其parent Bone (<-)
-
-}
-
-// 加载骨骼
-void LoadBones(const aiScene* scene)
-{
-	// 找到骨骼的根 boneRoot
-	auto rootBone = FindRootNode(scene);
-
-	// 没有骨骼就返回
-	if(!rootBone)
-	{
-		return;
-	}
-
-	// 构建骨骼树
-	BuildBoneTree(rootBone, 0);
-}
-
-// 加载动画
-void LoadAnimation(const aiScene* scene,std::vector<AnimationClip>& animationClipList)
-{
-	
-}
-
