@@ -17,13 +17,13 @@ namespace LitchiRuntime
 		* @param p_data
 		* @parma p_elements
 		*/
-		VertexBuffer(T* p_data, size_t p_elements);
+		VertexBuffer(T* p_data, size_t p_elements, size_t elementSize = sizeof(T));
 
 		/**
 		* Create the EBO using a vector
 		* @param p_data
 		*/
-		VertexBuffer(std::vector<T>& p_data);
+		VertexBuffer(std::vector<T>& p_data,size_t elementSize = sizeof(T));
 
 		/**
 		* Destructor

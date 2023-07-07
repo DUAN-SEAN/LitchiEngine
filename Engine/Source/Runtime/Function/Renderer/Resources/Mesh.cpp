@@ -79,7 +79,7 @@ void LitchiRuntime::Mesh::CreateBuffers(const std::vector<Vertex>& p_vertices, c
 		m_vertexBuffer = std::make_unique<VertexBuffer<float>>(vertexData);
 		m_indexBuffer = std::make_unique<IndexBuffer>(const_cast<uint32_t*>(p_indices.data()), p_indices.size());
 
-		uint64_t vertexSize = sizeof(Vertex);
+		uint64_t vertexSize = sizeof(Vertex) - sizeof(float)*7;
 
 		m_vertexArray.BindAttribute(0, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, 0);
 		m_vertexArray.BindAttribute(1, *m_vertexBuffer, EType::FLOAT, 2, vertexSize, sizeof(float) * 3);

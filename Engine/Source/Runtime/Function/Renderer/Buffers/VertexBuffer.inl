@@ -6,15 +6,15 @@
 namespace LitchiRuntime
 {
 	template <class T>
-	inline VertexBuffer<T>::VertexBuffer(T* p_data, size_t p_elements)
+	inline VertexBuffer<T>::VertexBuffer(T* p_data, size_t p_elements, size_t elementSize)
 	{
 		glGenBuffers(1, &m_bufferID);
 		glBindBuffer(GL_ARRAY_BUFFER, m_bufferID);
-		glBufferData(GL_ARRAY_BUFFER, p_elements * sizeof(T), p_data, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, p_elements * elementSize, p_data, GL_STATIC_DRAW);
 	}
 
 	template<class T>
-	inline VertexBuffer<T>::VertexBuffer(std::vector<T>& p_data) : VertexBuffer(p_data.data(), p_data.size())
+	inline VertexBuffer<T>::VertexBuffer(std::vector<T>& p_data, size_t elementSize) : VertexBuffer(p_data.data(), p_data.size(), elementSize)
 	{
 	}
 

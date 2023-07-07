@@ -132,17 +132,17 @@ LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* mo
 
 	for (uint32_t i = 0; i < p_mesh->mNumVertices; ++i)
 	{
-		/*aiVector3D position = meshTransformation * p_mesh->mVertices[i];
+		aiVector3D position = meshTransformation * p_mesh->mVertices[i];
 		aiVector3D normal = meshTransformation * (p_mesh->mNormals ? p_mesh->mNormals[i] : aiVector3D(0.0f, 0.0f, 0.0f));
 		aiVector3D texCoords = p_mesh->mTextureCoords[0] ? p_mesh->mTextureCoords[0][i] : aiVector3D(0.0f, 0.0f, 0.0f);
 		aiVector3D tangent = p_mesh->mTangents ? meshTransformation * p_mesh->mTangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
-		aiVector3D bitangent = p_mesh->mBitangents ? meshTransformation * p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);*/
+		aiVector3D bitangent = p_mesh->mBitangents ? meshTransformation * p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
 
-		aiVector3D position = p_mesh->mVertices[i];
+	/*	aiVector3D position = p_mesh->mVertices[i];
 		aiVector3D normal = (p_mesh->mNormals ? p_mesh->mNormals[i] : aiVector3D(0.0f, 0.0f, 0.0f));
 		aiVector3D texCoords = p_mesh->mTextureCoords[0] ? p_mesh->mTextureCoords[0][i] : aiVector3D(0.0f, 0.0f, 0.0f);
 		aiVector3D tangent = p_mesh->mTangents ?  p_mesh->mTangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
-		aiVector3D bitangent = p_mesh->mBitangents ?p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);
+		aiVector3D bitangent = p_mesh->mBitangents ?p_mesh->mBitangents[i] : aiVector3D(0.0f, 0.0f, 0.0f);*/
 
 		Vertex vertex = {
 					position.x,

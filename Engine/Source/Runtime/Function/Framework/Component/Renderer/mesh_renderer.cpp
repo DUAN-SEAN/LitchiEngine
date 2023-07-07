@@ -147,6 +147,12 @@ namespace LitchiRuntime
 		{
 			return;
 		}
+
+		if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
+		{
+			return;
+		}
+
 		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
 		if(mesh == nullptr)
 		{
@@ -178,6 +184,12 @@ namespace LitchiRuntime
 		{
 			return;
 		}
+
+		if(model->GetMeshes().size() <= meshFilter->GetMeshIndex())
+		{
+			return;
+		}
+
 		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
 		if (mesh == nullptr)
 		{
