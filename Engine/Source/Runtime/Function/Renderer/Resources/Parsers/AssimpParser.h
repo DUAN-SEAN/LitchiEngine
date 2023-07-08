@@ -34,8 +34,8 @@ namespace LitchiRuntime::Parsers
 
 		void LoadBones(Model* model,const aiMesh* mesh, std::vector<Model::BoneData>& bones);
 		void ProcessMaterials(Model* model,const struct aiScene* p_scene);
-		void ProcessNode(Model* model,void* p_transform, struct aiNode* p_node, const struct aiScene* p_scene);
-		Mesh* ProcessMesh(Model* model,void* p_transform, struct aiMesh* p_mesh, const struct aiScene* p_scene, unsigned materialIndex);
+		void ProcessNode(Model* model,void* p_transform, struct aiNode* p_node, const struct aiScene* p_scene,bool isSkinned);
+		Mesh* ProcessMesh(Model* model,void* p_transform, bool isSkinned, struct aiMesh* p_mesh, const struct aiScene* p_scene, unsigned materialIndex);
 		void LoadAnimations(Model* model,const aiScene* scene);
 	};
 }

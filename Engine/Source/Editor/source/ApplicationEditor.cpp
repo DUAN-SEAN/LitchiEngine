@@ -23,6 +23,8 @@
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
 #include "stb_image.h"
+#include "Runtime/Function/Framework/Component/Animation/animator.h"
+#include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 
@@ -61,6 +63,34 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 	mesh_renderer->PostResourceLoaded();
 	go->set_layer(0x01);
 	
+	return go;
+}
+
+GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
+{
+	GameObject* go = scene->CreateGameObject(name);
+	auto transform = go->AddComponent<Transform>();
+	transform->SetLocalPosition(glm::vec3(0.0, y, z));
+
+	auto animator = go->AddComponent<Animator>();
+
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = modelPath;
+	mesh_filter->PostResourceLoaded();
+
+	auto mesh_renderer = go->AddComponent<SkinnedMeshRenderer>();
+	mesh_renderer->material_path = materialPath;
+	mesh_renderer->PostResourceLoaded();
+	go->set_layer(0x01);
+
+	// 初始化animator
+	auto* model = mesh_filter->GetModel();
+	std::unordered_map<std::string, AnimationClip> animations;
+	model->GetAnimations(animations);
+	auto firstClipName = animations.begin()->first;
+	animator->SetAnimationClipMap(animations);
+	animator->Play(firstClipName);
+
 	return go;
 }
 
@@ -219,7 +249,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
 		GameObject* go = CreateDefaultObject(scene, "liubei","Engine\\Models\\Cube.fbx","Engine\\Materials\\Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
-		GameObject* go2 = CreateDefaultObject(scene, "diaochan", "Engine\\Models\\Cone.fbx", "Engine\\Materials\\Default.mat", 1, -3);
+		GameObject* go2 = CreateDefaultObject4Skinned(scene, "diaochan", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx", "Engine\\Materials\\Default4Skinned.mat", 1, -3);
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "Engine\\Models\\Sphere.fbx", "Engine\\Materials\\DefaultUnlit.mat", 3.f, 1.5f);
 		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,10,0),glm::angleAxis(-160.0f,glm::vec3(1,0,0)));
 		// GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
@@ -235,24 +265,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	sceneManager->SetCurrentScene(scene);
 	
 	m_shadowMapShader = shaderManager->LoadResource("Engine\\Shaders\\DepthShader.glsl");
-
-	// 测试代码
-	/*{
-		std::string fbxPath = data_path_ + "model/fbx_extra.fbx";
-		std::string fbxPath2 = "../model/fbx_extra.fbx";
-
-		auto sceneJson = SerializerManager::SerializeToJson(*scene);
-
-		auto scene2 = sceneManager->CreateScene("Default Scene 2");
-		SerializerManager::DeserializeFromJson(sceneJson, *scene2);
-		DEBUG_LOG_INFO(sceneJson);
-
-		auto model2 = modelManager->LoadResource(fbxPath2);
-		auto model = Loaders::ModelLoader::Create(fbxPath);
-
-		auto material = materialManager->LoadResource("../material/Default.mat");
-
-	}*/
+	m_shadowMapShader4Skinned = shaderManager->LoadResource("Engine\\Shaders\\DepthShader4Skinned.glsl");
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -264,6 +277,8 @@ void LitchiEditor::ApplicationEditor::Run()
 
 		// PreUpdate
 		device->PollEvents();
+
+		Update();
 
 		// Update
 		// 检测是否删除物体
@@ -283,6 +298,14 @@ void LitchiEditor::ApplicationEditor::Run()
 
 void LitchiEditor::ApplicationEditor::Update()
 {
+	// todo 目前游戏世界的Tick不完整, 先不处理
+	this->sceneManager->Foreach([](GameObject* game_object) {
+		if (game_object->active()) {
+			game_object->ForeachComponent([](Component* component) {
+				component->Update();
+				});
+		}
+		});
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const

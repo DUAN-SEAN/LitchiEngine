@@ -29,10 +29,10 @@ void LitchiRuntime::Loaders::ModelLoader::Reload(Model& p_model, const std::stri
 
 	if (newModel)
 	{
-		p_model.m_meshes = newModel->m_meshes;
-		p_model.m_materialNames = newModel->m_materialNames;
-        p_model.m_boundingSphere = newModel->m_boundingSphere;
-		newModel->m_meshes.clear();
+		p_model.mesheArr = newModel->mesheArr;
+		p_model.materialNameArr = newModel->materialNameArr;
+        p_model.boundingSphere = newModel->boundingSphere;
+		newModel->mesheArr.clear();
 		delete newModel;
 	}
 }

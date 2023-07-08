@@ -77,6 +77,13 @@ namespace LitchiRuntime::Resource
 		void SetUniformMat4(const std::string& p_name, const glm::mat4& p_mat4);
 
 		/**
+		* Send a mat4 to the GPU via a shader uniform
+		* @param p_name
+		* @param p_mat4
+		*/
+		void SetUniformMat4(const std::string& p_name, const glm::mat4& p_mat4,const int count);
+
+		/**
 		* Returns the int uniform value identified by the given name
 		* @param p_name
 		*/

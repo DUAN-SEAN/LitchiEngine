@@ -11,6 +11,7 @@
 
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
+#include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
@@ -27,6 +28,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/rigid_static.h"
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
+#include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/scene_manager.h"
@@ -234,11 +236,19 @@ RTTR_REGISTRATION //注册反射
 	registration::class_<Camera>("Camera")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
+	// Camera
+	registration::class_<Animator>("Animator")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("materialPath",&MeshRenderer::material_path)
 			(rttr::metadata("AssetPath",true), rttr::metadata("AssetType", PathParser::EFileType::MATERIAL));
+
+	// SkinnedMeshRenderer
+	registration::class_<SkinnedMeshRenderer>("SkinnedMeshRenderer")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")

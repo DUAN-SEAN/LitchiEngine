@@ -49,13 +49,13 @@ LitchiEditor::EditorRenderer::EditorRenderer()
 void LitchiEditor::EditorRenderer::InitMaterials()
 {
 	/* Default Material */
-	m_defaultMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Standard.glsl"));
+	m_defaultMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Standard.glsl"));
 	m_defaultMaterial.Set("u_Diffuse", glm::vec4(1.f, 1.f, 1.f, 1.f));
 	m_defaultMaterial.Set("u_Shininess", 100.0f);
 	m_defaultMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 
 	/* Empty Material */
-	m_emptyMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Unlit.glsl"));
+	m_emptyMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Unlit.glsl"));
 	m_emptyMaterial.Set("u_Diffuse", glm::vec4(1.f, 0.f, 1.f, 1.0f));
 	m_emptyMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 
@@ -66,7 +66,7 @@ void LitchiEditor::EditorRenderer::InitMaterials()
 	m_gridMaterial.SetDepthTest(false);
 
 	/* Camera Material */
-	m_cameraMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Lambert.glsl"));
+	m_cameraMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Lambert.glsl"));
 	m_cameraMaterial.Set("u_Diffuse", glm::vec4(0.0f, 0.3f, 0.7f, 1.0f));
 	m_cameraMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 
@@ -78,21 +78,21 @@ void LitchiEditor::EditorRenderer::InitMaterials()
 	m_lightMaterial.SetDepthTest(false);
 
 	/* Stencil Fill Material */
-	m_stencilFillMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Unlit.glsl"));
+	m_stencilFillMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Unlit.glsl"));
 	m_stencilFillMaterial.SetBackfaceCulling(true);
 	m_stencilFillMaterial.SetDepthTest(false);
 	m_stencilFillMaterial.SetColorWriting(false);
 	m_stencilFillMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 
 	/* Texture Material */
-	m_textureMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Unlit.glsl"));
+	m_textureMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Unlit.glsl"));
 	m_textureMaterial.Set("u_Diffuse", glm::vec4(1.f, 1.f, 1.f, 1.f));
 	m_textureMaterial.SetBackfaceCulling(false);
 	m_textureMaterial.SetBlendable(true);
 	m_textureMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 
 	/* Outline Material */
-	m_outlineMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Unlit.glsl"));
+	m_outlineMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Unlit.glsl"));
 	m_outlineMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 	m_outlineMaterial.SetDepthTest(false);
 
@@ -114,7 +114,7 @@ void LitchiEditor::EditorRenderer::InitMaterials()
 	m_gizmoPickingMaterial.Set("u_IsPickable", true);
 
 	/* Picking Material */
-	m_actorPickingMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Shaders\\Unlit.glsl"));
+	m_actorPickingMaterial.SetShader(ApplicationEditor::Instance()->shaderManager->GetResource("Engine\\Shaders\\Unlit.glsl"));
 	m_actorPickingMaterial.Set("u_Diffuse", glm::vec4(1.f, 1.f, 1.f, 1.0f));
 	m_actorPickingMaterial.Set<LitchiRuntime::Texture*>("u_DiffuseMap", nullptr);
 	m_actorPickingMaterial.SetFrontfaceCulling(false);

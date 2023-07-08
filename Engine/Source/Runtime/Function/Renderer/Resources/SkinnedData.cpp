@@ -122,11 +122,13 @@ void SkinnedData::GetFinalTransform(const std::string& clipName, float timePos, 
 	std::vector<glm::mat4x4> toRootTransforms(numBones);
 	toRootTransforms[0] = toParentTransforms[0];
 
+	// 计算所有骨骼到root的变换矩阵
 	for (uint32_t i = 1; i < numBones; i++) {
 		int parentIndex = boneHierarchy[i];
 		toRootTransforms[i] = toRootTransforms[parentIndex] * toParentTransforms[i];
 	}
 
+	// 
 	for (uint32_t i = 0; i < numBones; i++) {
 		finalTransforms[i] = toRootTransforms[i] * boneOffsets[i];
 	}

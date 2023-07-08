@@ -66,6 +66,7 @@ namespace LitchiEditor
 		std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
 
 		Resource::Shader* m_shadowMapShader;
+		Resource::Shader* m_shadowMapShader4Skinned;
 		std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;

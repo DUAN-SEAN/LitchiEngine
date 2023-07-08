@@ -1,91 +1,91 @@
 {
-    "shaderPath": "Engine/Shaders/Standard.glsl",
-    "settings": {
-        "blendable": true,
-        "backfaceCulling": true,
-        "depthTest": true,
-        "gpuInstances": 1
+  "shaderPath": "Engine\\Shaders\\Standard.glsl",
+  "settings": {
+    "blendable": true,
+    "backfaceCulling": true,
+    "depthTest": true,
+    "gpuInstances": 1
+  },
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoVector4",
+      "name": "u_Diffuse",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
     },
-    "uniformInfoList": [
-        {
-            "Type": "UniformInfoVector4",
-            "name": "u_Diffuse",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
-                "w": 1.0
-            }
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "u_DiffuseMap",
-            "path": "Engine\\Textures\\rp_sophia_animated_003_dif.jpg"
-        },
-        {
-            "Type": "UniformInfoBool",
-            "name": "u_EnableNormalMapping",
-            "value": 0.0
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "",
-            "path": ""
-        },
-        {
-            "Type": "UniformInfoFloat",
-            "name": "u_HeightScale",
-            "value": 0.0
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "",
-            "path": ""
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "",
-            "path": ""
-        },
-        {
-            "Type": "UniformInfoFloat",
-            "name": "u_Shininess",
-            "value": 100.0
-        },
-        {
-            "Type": "UniformInfoVector3",
-            "name": "u_Specular",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0
-            }
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "",
-            "path": ""
-        },
-        {
-            "Type": "UniformInfoVector2",
-            "name": "u_TextureOffset",
-            "vector": {
-                "x": 0.0,
-                "y": 0.0
-            }
-        },
-        {
-            "Type": "UniformInfoVector2",
-            "name": "u_TextureTiling",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0
-            }
-        },
-        {
-            "Type": "UniformInfoPath",
-            "name": "",
-            "path": ""
-        }
-    ]
+    {
+      "Type": "UniformInfoPath",
+      "name": "u_DiffuseMap",
+      "path": "Engine\\Textures\\rp_sophia_animated_003_dif.jpg"
+    },
+    {
+      "Type": "UniformInfoBool",
+      "name": "u_EnableNormalMapping",
+      "value": 0.0
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "",
+      "path": ""
+    },
+    {
+      "Type": "UniformInfoFloat",
+      "name": "u_HeightScale",
+      "value": 0.0
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "",
+      "path": ""
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "",
+      "path": ""
+    },
+    {
+      "Type": "UniformInfoFloat",
+      "name": "u_Shininess",
+      "value": 100.0
+    },
+    {
+      "Type": "UniformInfoVector3",
+      "name": "u_Specular",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "",
+      "path": ""
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_TextureOffset",
+      "vector": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_TextureTiling",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoPath",
+      "name": "",
+      "path": ""
+    }
+  ]
 }

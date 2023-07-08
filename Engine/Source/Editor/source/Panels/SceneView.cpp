@@ -5,6 +5,7 @@
 #include "Runtime/Core/Window/Inputs/EKey.h"
 #include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 #include "Runtime/Function/Renderer/render_system.h"
@@ -129,15 +130,9 @@ void LitchiEditor::SceneView::RenderScene()
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glCullFace(GL_FRONT);
 		auto shadowMapShader = ApplicationEditor::Instance()->m_shadowMapShader;
-		shadowMapShader->Bind();
-
-		GLint numActiveUniforms = 0;
-		glGetProgramiv(shadowMapShader->id, GL_ACTIVE_ATTRIBUTES, &numActiveUniforms);
-		auto geo_Pos = glGetAttribLocation(shadowMapShader->id, "geo_Pos");
-		auto geo_TexCoords = glGetAttribLocation(shadowMapShader->id, "geo_TexCoords");
-		auto geo_Normal = glGetAttribLocation(shadowMapShader->id, "geo_Normal");
-		auto geo_Tangent = glGetAttribLocation(shadowMapShader->id, "geo_Tangent");
-		auto geo_Bitangent = glGetAttribLocation(shadowMapShader->id, "geo_Bitangent");
+		auto shadowMapShader4Skinned = ApplicationEditor::Instance()->m_shadowMapShader4Skinned;
+	
+		
 		GLfloat near_plane = 0.0f, far_plane = 50.0f;
 
 		// 计算光源的Projection
@@ -161,22 +156,39 @@ void LitchiEditor::SceneView::RenderScene()
 		);
 
 		lightSpaceMatrix = lightProjection * lightView;
+		shadowMapShader->Bind();
 		shadowMapShader->SetUniformMat4("ubo_LightSpaceMatrix", lightSpaceMatrix);
+		shadowMapShader->Unbind();
+		shadowMapShader4Skinned->Bind();
+		shadowMapShader4Skinned->SetUniformMat4("ubo_LightSpaceMatrix", lightSpaceMatrix);
+		shadowMapShader4Skinned->Unbind();
+
 
 		ApplicationEditor::Instance()->renderer->ApplyStateMask(63);
 		// 遍历所有的物体,执行MeshRenderer的Render函数
 		scene->Foreach([&](GameObject* game_object) {
 			if (game_object->active()) {
 				game_object->ForeachComponent([&](Component* component) {
-					auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
-					if (mesh_renderer == nullptr) {
-						return;
-					}
-					mesh_renderer->RenderShadowMap();
+						auto* skinned_mesh_renderer = dynamic_cast<SkinnedMeshRenderer*>(component);
+						if (skinned_mesh_renderer != nullptr) {
+							shadowMapShader4Skinned->Bind();
+							skinned_mesh_renderer->RenderShadowMap();
+							shadowMapShader4Skinned->Unbind();
+							return;
+						}
+
+						auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
+						if (mesh_renderer != nullptr) {
+							shadowMapShader->Bind();
+							mesh_renderer->RenderShadowMap();
+							shadowMapShader->Unbind();
+							return;
+						}
 					});
+
+
 			}
 			});
-		shadowMapShader->Unbind();
 		glCullFace(GL_BACK);
 		m_shadowMapFbo.Unbind();
 

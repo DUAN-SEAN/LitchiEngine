@@ -20,9 +20,9 @@ namespace LitchiRuntime
 		Resource::Material* material() { return material_; }
 
 		// void RenderOld(RenderCamera* renderCamera);//渲染
-		void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO);
+		virtual void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
 
-		void RenderShadowMap();
+		virtual void RenderShadowMap();
 	public:
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;

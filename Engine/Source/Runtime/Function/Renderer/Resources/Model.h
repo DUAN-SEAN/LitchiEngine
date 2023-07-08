@@ -61,6 +61,25 @@ namespace LitchiRuntime
 		*/
 		const LitchiRuntime::BoundingSphere& GetBoundingSphere() const;
 
+		void GetBoneMapping(std::unordered_map<std::string, uint32_t>& boneMapping) {
+			boneMapping = this->boneMap;
+		}
+		void GetBoneOffsets(std::vector<glm::mat4>& boneOffsets) {
+			for (size_t i = 0; i < boneInfoArr.size(); i++)
+				boneOffsets.push_back(boneInfoArr[i].boneOffset);
+		}
+		void GetNodeOffsets(std::vector<glm::mat4>& nodeOffsets) {
+			for (size_t i = 0; i < boneInfoArr.size(); i++)
+				nodeOffsets.push_back(boneInfoArr[i].defaultOffset);
+		}
+		void GetBoneHierarchy(std::vector<int>& boneHierarchy) {
+			for (size_t i = 0; i < boneInfoArr.size(); i++)
+				boneHierarchy.push_back(boneInfoArr[i].parentIndex);
+		}
+		void GetAnimations(std::unordered_map<std::string, AnimationClip>& animations) {
+			animations.insert(this->animationClipMap.begin(), this->animationClipMap.end());
+		}
+
 	private:
 		Model(const std::string& p_path);
 		~Model();
@@ -70,16 +89,16 @@ namespace LitchiRuntime
 	public:
 		const std::string path;
 
-		std::vector<Mesh*> m_meshes;
-		std::vector<std::string> m_materialNames;
+		std::vector<Mesh*> mesheArr;
+		std::vector<std::string> materialNameArr;
 
-		BoundingSphere m_boundingSphere;
+		BoundingSphere boundingSphere;
 
 
 		//Bone/Animation Information
-		std::vector<BoneInfo> boneInfo;
-		std::unordered_map<std::string, uint32_t> boneMapping;
-		std::unordered_map<std::string, AnimationClip> animations;
+		std::vector<BoneInfo> boneInfoArr;
+		std::unordered_map<std::string, uint32_t> boneMap;
+		std::unordered_map<std::string, AnimationClip> animationClipMap;
 	private:
 	};
 }
