@@ -21,6 +21,6 @@ namespace LitchiRuntime
 		Bind();
 		p_vertexBuffer.Bind();
 		glEnableVertexAttribArray(p_attribute);
-		glVertexAttribLPointer(static_cast<GLuint>(p_attribute), static_cast<GLint>(p_count), static_cast<GLenum>(p_type), static_cast<GLsizei>(p_stride), reinterpret_cast<const GLvoid*>(p_offset));
+		glVertexAttribIPointer(static_cast<GLuint>(p_attribute), static_cast<GLint>(p_count), static_cast<GLenum>(p_type), static_cast<GLsizei>(p_stride), reinterpret_cast<const GLvoid*>(p_offset));
 	}
 }

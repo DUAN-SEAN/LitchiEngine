@@ -48,7 +48,7 @@ const LitchiRuntime::BoundingSphere& LitchiRuntime::Mesh::GetBoundingSphere() co
 void LitchiRuntime::Mesh::CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices)
 {
 	std::vector<Vertex> vertexData;
-	for (const auto& vertex : p_vertices)
+	for (auto& vertex : p_vertices)
 	{
 		vertexData.push_back(vertex);
 	}
@@ -67,7 +67,7 @@ void LitchiRuntime::Mesh::CreateBuffers(const std::vector<Vertex>& p_vertices, c
 
 	if (m_isSkinned)
 	{
-		m_vertexArray.BindAttribute(5, *m_vertexBuffer, EType::INT, 4, vertexSize, offsetof(Vertex, boneIndices));
+		m_vertexArray.BindAttributeInteger(5, *m_vertexBuffer, EType::INT, 4, vertexSize, offsetof(Vertex, boneIndices));
 		m_vertexArray.BindAttribute(6, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, boneWeights));
 	}
 
