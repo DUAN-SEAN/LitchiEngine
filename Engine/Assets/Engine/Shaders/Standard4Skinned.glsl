@@ -54,9 +54,9 @@ void main()
 
     vs_out.TBN = mat3
     (
-        normalize(vec3(ubo_Model * vec4(TangentL,   0.0))),
-        normalize(vec3(ubo_Model * vec4(BitangentL, 0.0))),
-        normalize(vec3(ubo_Model * vec4(NormalL,    0.0)))
+        normalize(vec3(ubo_Model * TangentL)),
+        normalize(vec3(ubo_Model * BitangentL)),
+        normalize(vec3(ubo_Model * NormalL))
     );
 
     mat3 TBNi = transpose(vs_out.TBN);

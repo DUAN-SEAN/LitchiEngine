@@ -40,8 +40,8 @@ namespace LitchiRuntime
 		};
 		struct BoneInfo {
 			bool isSkinned = false;
-			glm::mat4x4 boneOffset;
-			glm::mat4x4 defaultOffset;
+			glm::mat4x4 boneOffset;// 骨骼空间到模型空间的转变矩阵 逆Bind Pose矩阵
+			glm::mat4x4 defaultOffset;// 到父骨骼的变换矩阵
 			int parentIndex;
 		};
 

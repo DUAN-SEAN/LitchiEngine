@@ -34,18 +34,27 @@ void SkinnedMeshRenderer::Update()
 	std::vector<glm::mat4> defaultTransform;
 	model->GetBoneHierarchy(boneHierarchy);
 	model->GetBoneOffsets(boneOffsets);
+	model->GetNodeOffsets(defaultTransform);
+
 
 	// 获取当前帧信息
 	auto timePos = animator->GetCurrentTimePos();
 	auto animationClip = animator->GetCurrentClip();
-	
+
+	// 重置node的默认变换
+	animationClip->boneAnimations.resize(defaultTransform.size());
+	for (size_t i = 0; i < defaultTransform.size(); i++)
+		animationClip->boneAnimations[i].defaultTransform = defaultTransform[i];
+
 	CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets, m_finalTransformCacheArr);
 }
 
 void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 {
 	// 提交FinalTransform到GPU
-	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
+	material()->GetShader()->Bind();
+	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
+	material()->GetShader()->Unbind();
 
 	MeshRenderer::Render(renderCamera, lightVPMat, shadowMapFBO);
 }
@@ -53,7 +62,9 @@ void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* li
 void SkinnedMeshRenderer::RenderShadowMap()
 {
 	// 提交FinalTransform到GPU
-	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr", *m_finalTransformCacheArr.data(),m_finalTransformCacheArr.size());
+	material()->GetShader()->Bind();
+	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(),m_finalTransformCacheArr.size());
+	material()->GetShader()->Unbind();
 
 	MeshRenderer::RenderShadowMap();
 }
