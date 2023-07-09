@@ -172,6 +172,11 @@ void LitchiEditor::SceneView::RenderScene()
 						auto* skinned_mesh_renderer = dynamic_cast<SkinnedMeshRenderer*>(component);
 						if (skinned_mesh_renderer != nullptr) {
 							shadowMapShader4Skinned->Bind();
+							
+							// 提交FinalTransform到GPU
+							auto& finalTransformCacheArr = skinned_mesh_renderer->GetCurrentFinalTransformCacheArr();
+							shadowMapShader4Skinned->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *finalTransformCacheArr.data(), finalTransformCacheArr.size());
+
 							skinned_mesh_renderer->RenderShadowMap();
 							shadowMapShader4Skinned->Unbind();
 							return;

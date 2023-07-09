@@ -27,7 +27,14 @@
 #include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
-
+struct data
+{
+	union
+	{
+		float float_value;
+		unsigned char byte_value[4];
+	};
+};
 LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(m_canvas), m_editorActions(m_panelsManager)
 {
 	char* projectPath = nullptr;

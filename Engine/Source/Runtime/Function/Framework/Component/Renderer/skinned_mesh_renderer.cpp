@@ -61,11 +61,6 @@ void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* li
 
 void SkinnedMeshRenderer::RenderShadowMap()
 {
-	// Ìá½»FinalTransformµ½GPU
-	material()->GetShader()->Bind();
-	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(),m_finalTransformCacheArr.size());
-	material()->GetShader()->Unbind();
-
 	MeshRenderer::RenderShadowMap();
 }
 
