@@ -15,7 +15,7 @@ namespace LitchiRuntime
 		float bitangent[3];
 
 		// 顶点的骨骼信息, 权重和骨骼索引
+		int32_t boneIndices[4];
 		float boneWeights[3];
-		uint32_t boneIndices[4];
 	};
 }

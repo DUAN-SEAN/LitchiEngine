@@ -57,7 +57,7 @@ namespace LitchiRuntime
 		*/
 		const BoundingSphere& GetBoundingSphere() const;
 
-		VertexBuffer<float>* GetVertexBuffer() const
+		VertexBuffer<Vertex>* GetVertexBuffer() const
 		{
 			return m_vertexBuffer.get();
 		}
@@ -81,7 +81,7 @@ namespace LitchiRuntime
 		const uint32_t m_materialIndex;
 
 		VertexArray							m_vertexArray;
-		std::unique_ptr<VertexBuffer<float>>	m_vertexBuffer;
+		std::unique_ptr<VertexBuffer<Vertex>>	m_vertexBuffer;
 		std::unique_ptr<IndexBuffer>			m_indexBuffer;
 
 		BoundingSphere m_boundingSphere;

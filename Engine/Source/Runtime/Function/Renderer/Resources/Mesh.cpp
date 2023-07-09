@@ -47,62 +47,30 @@ const LitchiRuntime::BoundingSphere& LitchiRuntime::Mesh::GetBoundingSphere() co
 
 void LitchiRuntime::Mesh::CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices)
 {
-	std::vector<float> vertexData;
-
-	std::vector<unsigned int> rawIndices;
-
+	std::vector<Vertex> vertexData;
 	for (const auto& vertex : p_vertices)
 	{
-		vertexData.push_back(vertex.position[0]);
-		vertexData.push_back(vertex.position[1]);
-		vertexData.push_back(vertex.position[2]);
-
-		vertexData.push_back(vertex.texCoords[0]);
-		vertexData.push_back(vertex.texCoords[1]);
-
-		vertexData.push_back(vertex.normals[0]);
-		vertexData.push_back(vertex.normals[1]);
-		vertexData.push_back(vertex.normals[2]);
-
-		vertexData.push_back(vertex.tangent[0]);
-		vertexData.push_back(vertex.tangent[1]);
-		vertexData.push_back(vertex.tangent[2]);
-
-		vertexData.push_back(vertex.bitangent[0]);
-		vertexData.push_back(vertex.bitangent[1]);
-		vertexData.push_back(vertex.bitangent[2]);
-
-		if (m_isSkinned)
-		{
-			vertexData.push_back(vertex.boneIndices[0]);
-			vertexData.push_back(vertex.boneIndices[1]);
-			vertexData.push_back(vertex.boneIndices[2]);
-			vertexData.push_back(vertex.boneIndices[3]);
-
-			vertexData.push_back(vertex.boneWeights[0]);
-			vertexData.push_back(vertex.boneWeights[1]);
-			vertexData.push_back(vertex.boneWeights[2]);
-		}
+		vertexData.push_back(vertex);
 	}
-
-	// todo 大小不对，需要修改
-	m_vertexBuffer = std::make_unique<VertexBuffer<float>>(vertexData);
+	m_vertexBuffer = std::make_unique<VertexBuffer<Vertex>>(vertexData);
 	m_indexBuffer = std::make_unique<IndexBuffer>(const_cast<uint32_t*>(p_indices.data()), p_indices.size());
 
-	int noSkinnedOffset = m_isSkinned == true ? 0 : 7;
-	uint64_t vertexSize = sizeof(Vertex) - sizeof(float) * noSkinnedOffset;
+	/*int noSkinnedOffset = m_isSkinned == true ? 0 : 7;
+	uint64_t vertexSize = sizeof(Vertex) - sizeof(float) * noSkinnedOffset;*/
+	uint64_t vertexSize = sizeof(Vertex);
 
-	m_vertexArray.BindAttribute(0, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, 0);
-	m_vertexArray.BindAttribute(1, *m_vertexBuffer, EType::FLOAT, 2, vertexSize, sizeof(float) * 3);
-	m_vertexArray.BindAttribute(2, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, sizeof(float) * 5);
-	m_vertexArray.BindAttribute(3, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, sizeof(float) * 8);
-	m_vertexArray.BindAttribute(4, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, sizeof(float) * 11);
+	m_vertexArray.BindAttribute(0, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, position));
+	m_vertexArray.BindAttribute(1, *m_vertexBuffer, EType::FLOAT, 2, vertexSize, offsetof(Vertex, texCoords));
+	m_vertexArray.BindAttribute(2, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, normals));
+	m_vertexArray.BindAttribute(3, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, tangent));
+	m_vertexArray.BindAttribute(4, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, bitangent));
 
-	if(m_isSkinned)
+	if (m_isSkinned)
 	{
-		m_vertexArray.BindAttribute(5, *m_vertexBuffer, EType::INT, 4, vertexSize, sizeof(float) * 14);
-		m_vertexArray.BindAttribute(6, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, sizeof(float) * 18);
+		m_vertexArray.BindAttribute(5, *m_vertexBuffer, EType::INT, 4, vertexSize, offsetof(Vertex, boneIndices));
+		m_vertexArray.BindAttribute(6, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, boneWeights));
 	}
+
 }
 
 void LitchiRuntime::Mesh::ComputeBoundingSphere(const std::vector<Vertex>& p_vertices)
