@@ -37,6 +37,12 @@ if(NOT TARGET stb)
     set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)
 endif()
 
+# # openGL
+# if(NOT TARGET freetype)
+    # add_subdirectory(freetype)
+    # set_target_properties(freetype PROPERTIES FOLDER ${third_party_folder}/freetype)
+# endif()
+
 # # assimp fbx解析库
 # if(NOT TARGET assimp)
     # set_target_properties(stb PROPERTIES FOLDER ${third_party_folder}/stb)

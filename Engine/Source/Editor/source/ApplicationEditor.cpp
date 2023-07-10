@@ -177,7 +177,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// ≥ı ºªØInputManager
 	inputManager = std::make_unique<InputManager>(*window);
-	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::ALTERNATIVE_DARK);
+	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
 		/*uiManager->LoadFont("Ruda_Big", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 16);
 		uiManager->LoadFont("Ruda_Small", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 12);
