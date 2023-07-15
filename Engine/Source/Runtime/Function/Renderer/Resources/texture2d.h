@@ -33,12 +33,12 @@ namespace LitchiRuntime
 	public:
 
 		~Texture2D();
-		void UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data, unsigned int data_size);
-		void UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data, unsigned int data_size);
+		void UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data);
+		void UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type, unsigned char* data);
 
 		static Texture2D* LoadFromFile(std::string& image_file_path);//加载一个图片文件
 	
-		static Texture2D* Create(unsigned short width, unsigned short height, unsigned int server_format, unsigned int client_format, unsigned int data_type, unsigned char* data, unsigned int data_size);
+		static Texture2D* Create(unsigned short width, unsigned short height, unsigned int server_format, unsigned int client_format, unsigned int data_type, unsigned char* data);
 
 	public:
 		//cpt文件头

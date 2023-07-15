@@ -64,8 +64,7 @@ namespace LitchiRuntime
 
 
 
-	void Texture2D::UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
-		unsigned char* data, unsigned int data_size) {
+	void Texture2D::UpdateSubImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,		unsigned char* data) {
 		if (width <= 0 || height <= 0) {
 			return;
 		}
@@ -75,8 +74,7 @@ namespace LitchiRuntime
 		
 	}
 
-	void Texture2D::UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,
-		unsigned char* data, unsigned int data_size) {
+	void Texture2D::UpdateImage(int x, int y, int width, int height, unsigned int client_format, unsigned int data_type,unsigned char* data) {
 		if (width <= 0 || height <= 0) {
 			return;
 		}
@@ -86,7 +84,7 @@ namespace LitchiRuntime
 	}
 
 	Texture2D* Texture2D::Create(unsigned short width, unsigned short height, unsigned int server_format, unsigned int client_format,
-		unsigned int data_type, unsigned char* data, unsigned int data_size) {
+		unsigned int data_type, unsigned char* data) {
 		Texture2D* texture2d = new Texture2D();
 		texture2d->gl_texture_format_ = server_format;
 		texture2d->width_ = width;

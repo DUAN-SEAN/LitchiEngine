@@ -49,6 +49,7 @@ LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(
 	TextureManager::ProvideAssetPaths(projectAssetsPath);
 	ShaderManager::ProvideAssetPaths(projectAssetsPath);
 	MaterialManager::ProvideAssetPaths(projectAssetsPath);
+	FontManager::ProvideAssetPaths(projectAssetsPath);
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -183,13 +184,13 @@ void LitchiEditor::ApplicationEditor::Init()
 		uiManager->LoadFont("Ruda_Small", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 12);
 		uiManager->LoadFont("Ruda_Medium", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 14);
 		uiManager->UseFont("Ruda_Medium");*/
-		uiManager->SetEditorLayoutSaveFilename(std::string(getenv("APPDATA")) + "\\OverloadTech\\OvEditor\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(std::string(getenv("APPDATA")) + "\\LitchiEngine\\Editor\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 
-	if (!std::filesystem::exists(std::string(getenv("APPDATA")) + "\\OverloadTech\\OvEditor\\layout.ini"))
+	if (!std::filesystem::exists(std::string(getenv("APPDATA")) + "\\LitchiEngine\\Editor\\layout.ini"))
 		uiManager->ResetLayout("Config\\layout.ini");
 
 	// 初始化ResourceManager
@@ -197,12 +198,14 @@ void LitchiEditor::ApplicationEditor::Init()
 	materialManager = std::make_unique<MaterialManager>();
 	textureManager = std::make_unique<TextureManager>();
 	shaderManager = std::make_unique<ShaderManager>();
+	fontManager = std::make_unique<FontManager>();
 	
 
 	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
 	LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
 	LitchiRuntime::ServiceLocator::Provide<TextureManager>(*textureManager);
 	LitchiRuntime::ServiceLocator::Provide<ShaderManager>(*shaderManager);
+	LitchiRuntime::ServiceLocator::Provide<FontManager>(*fontManager);
 
 	// EditorResource
 
@@ -249,6 +252,9 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// Setup UI
 	SetupUI();
+
+	auto* font= fontManager->GetResource("Engine\\Fonts\\Ruda-Bold.ttf");
+	auto charVec = font->LoadStr("Hello World");
 
 	// 初始化默认场景
 	sceneManager = new SceneManager(projectAssetsPath);

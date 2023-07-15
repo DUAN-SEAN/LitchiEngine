@@ -6,6 +6,7 @@
 #include <string>
 
 #include "Runtime/Function/Renderer/Core/Renderer.h"
+#include "Runtime/Resource/FontManager.h"
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
@@ -65,6 +66,7 @@ namespace LitchiRuntime
         std::unique_ptr<MaterialManager> materialManager;
         std::unique_ptr<TextureManager> textureManager;
         std::unique_ptr<ShaderManager> shaderManager;
+        std::unique_ptr<FontManager> fontManager;
 
         SceneManager* sceneManager;
 
