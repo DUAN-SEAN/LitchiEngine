@@ -7,6 +7,7 @@
 
 #include "Runtime/Core/Meta/Reflection/propery_field.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
+#include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Light/PointLight.h"
@@ -17,6 +18,8 @@
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/rigid_actor.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Framework/Component/UI/ui_image.h"
+#include "Runtime/Function/Framework/Component/UI/ui_text.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/UI/Helpers/GUIDrawer.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
@@ -65,6 +68,9 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(5, "DirectionalLight");
 		componentSelectorWidget.choices.emplace(6, "PointLight");
 		componentSelectorWidget.choices.emplace(7, "SpotLight");
+		componentSelectorWidget.choices.emplace(8, "Animator");
+		componentSelectorWidget.choices.emplace(9, "UIText");
+		componentSelectorWidget.choices.emplace(10, "UIImage");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", glm::vec2{ 100.f, 0 });
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -81,6 +87,9 @@ LitchiEditor::Inspector::Inspector
 			case 5: GetTargetActor()->AddComponent<DirectionalLight>();				break;
 			case 6: GetTargetActor()->AddComponent<PointLight>();				break;
 			case 7: GetTargetActor()->AddComponent<SpotLight>();				break;
+			case 8: GetTargetActor()->AddComponent<Animator>();				break;
+			case 9: GetTargetActor()->AddComponent<UIText>();				break;
+			case 10: GetTargetActor()->AddComponent<UIImage>();				break;
 			}
 
 			Refresh();
@@ -106,6 +115,9 @@ LitchiEditor::Inspector::Inspector
 			case 5: defineButtonsStates(GetTargetActor()->GetComponent<DirectionalLight>());		return;
 			case 6: defineButtonsStates(GetTargetActor()->GetComponent<PointLight>());		return;
 			case 7: defineButtonsStates(GetTargetActor()->GetComponent<SpotLight>());		return;
+			case 8: defineButtonsStates(GetTargetActor()->GetComponent<Animator>());		return;
+			case 9: defineButtonsStates(GetTargetActor()->GetComponent<UIText>());		return;
+			case 10: defineButtonsStates(GetTargetActor()->GetComponent<UIImage>());		return;
 			}
 		};
 
