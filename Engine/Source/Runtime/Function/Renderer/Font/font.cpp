@@ -1,8 +1,10 @@
 ﻿
 #include "font.h"
 
+#include <glad/glad.h>
 #include <fstream>
-#include "Runtime/Function/Renderer/Resources/texture2d.h"
+
+#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "spdlog/spdlog.h"
 
 using namespace LitchiRuntime;

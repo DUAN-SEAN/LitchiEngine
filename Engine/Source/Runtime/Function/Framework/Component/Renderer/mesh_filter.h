@@ -29,7 +29,9 @@ namespace LitchiRuntime
     public:
         ////Mesh文件头
         //
-        Model* GetModel() { return model_; };//Mesh对象
+        Model* GetModel() { return model_; }
+        Mesh* GetExtraMesh() { return extra_mesh_; }
+        void CreateMesh(const std::vector<Vertex>& vector, const std::vector<uint32_t>& index_vector);
 
         int GetMeshIndex(){ return mesh_Index_; }
 
@@ -47,7 +49,8 @@ namespace LitchiRuntime
 
         RTTR_ENABLE(Component)
     private:
-        Model* model_;//Mesh对象
+        Model* model_ = nullptr;//Mesh对象
+        Mesh* extra_mesh_ = nullptr;
     };
 }
 #endif //UNTITLED_MESH_FILTER_H

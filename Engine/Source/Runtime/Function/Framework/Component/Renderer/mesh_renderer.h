@@ -10,7 +10,6 @@ namespace LitchiRuntime
 {
 	class RenderCamera;
 	class MeshFilter;
-	class Texture2D;
 	class MeshRenderer :public Component {
 	public:
 		MeshRenderer();

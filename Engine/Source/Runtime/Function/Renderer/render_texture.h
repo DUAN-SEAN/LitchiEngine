@@ -5,7 +5,7 @@
 namespace LitchiRuntime
 {
 
-	class Texture2D;
+	class Texture;
 	class RenderTexture {
 	public:
 		RenderTexture();
@@ -42,18 +42,18 @@ namespace LitchiRuntime
 		void set_in_use(bool in_use) {
 			in_use_ = in_use;
 		}
-		Texture2D* color_texture_2d() {
+		Texture* color_texture_2d() {
 			return color_texture_2d_;
 		}
-		Texture2D* depth_texture_2d() {
+		Texture* depth_texture_2d() {
 			return depth_texture_2d_;
 		}
 	private:
 		unsigned short width_;
 		unsigned short height_;
 		unsigned int frame_buffer_object_handle_;//关联的FBO Handle
-		Texture2D* color_texture_2d_;//FBO颜色附着点关联的颜色纹理
-		Texture2D* depth_texture_2d_;//FBO深度附着点关联的深度纹理
+		Texture* color_texture_2d_;//FBO颜色附着点关联的颜色纹理
+		Texture* depth_texture_2d_;//FBO深度附着点关联的深度纹理
 		bool in_use_;//正在被使用
 	};
 

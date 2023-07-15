@@ -4,7 +4,8 @@
 #include "gpu_resource_mapper.h"
 #include "render_texture.h"
 
-#include "Resources/texture2d.h"
+#include "Resources/Texture.h"
+#include "Resources/Loaders/TextureLoader.h"
 #include "Runtime/Core/Log/debug.h"
 
 namespace LitchiRuntime
@@ -20,18 +21,18 @@ namespace LitchiRuntime
 		}
 		//删除Texture2D
 		if (color_texture_2d_ != nullptr) {
-			delete color_texture_2d_;
+			Loaders::TextureLoader::Destroy(color_texture_2d_);
 		}
 		if (depth_texture_2d_ != nullptr) {
-			delete depth_texture_2d_;
+			Loaders::TextureLoader::Destroy(depth_texture_2d_);
 		}
 	}
 
 	void RenderTexture::Init(unsigned short width, unsigned short height) {
 		width_ = width;
 		height_ = height;
-		color_texture_2d_ = Texture2D::Create(width_, height_, GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5, nullptr);
-		depth_texture_2d_ = Texture2D::Create(width_, height_, GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, nullptr);
+		color_texture_2d_ = Loaders::TextureLoader::CreateFromMemory (nullptr,width_, height_, ETextureFilteringMode::LINEAR_MIPMAP_LINEAR, ETextureFilteringMode::LINEAR, false,GL_RGB, GL_RGB, GL_UNSIGNED_SHORT_5_6_5);
+		depth_texture_2d_ = Loaders::TextureLoader::CreateFromMemory(nullptr,width_, height_, ETextureFilteringMode::LINEAR_MIPMAP_LINEAR,ETextureFilteringMode::LINEAR,false,GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT);
 		//创建FBO任务
 		frame_buffer_object_handle_ = GPUResourceMapper::GenerateFBOHandle();
 
@@ -55,11 +56,11 @@ namespace LitchiRuntime
 		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
 
 		//将颜色纹理绑定到FBO颜色附着点
-		GLuint color_texture = GPUResourceMapper::GetTexture(color_texture_2d_->texture_handle());
+		GLuint color_texture = GPUResourceMapper::GetTexture(color_texture_2d_->id);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_texture, 0); __CHECK_GL_ERROR__
 
 		//将深度纹理绑定到FBO深度附着点
-		GLuint depth_texture = GPUResourceMapper::GetTexture(depth_texture_2d_->texture_handle());
+		GLuint depth_texture = GPUResourceMapper::GetTexture(depth_texture_2d_->id);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_texture, 0); __CHECK_GL_ERROR__
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0); __CHECK_GL_ERROR__

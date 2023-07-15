@@ -36,8 +36,9 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::Create(const std:
 
 		stbi_image_free(dataBuffer);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		return new LitchiRuntime::Texture(p_filepath, textureID, textureWidth, textureHeight, bitsPerPixel, p_firstFilter, p_secondFilter, p_generateMipmap);
+		auto* texture = new LitchiRuntime::Texture(p_filepath, textureID, textureWidth, textureHeight, bitsPerPixel, p_firstFilter, p_secondFilter, p_generateMipmap);
+		texture->gl_texture_format_ = GL_RGBA8;
+		return texture;
 	}
 	else
 	{
@@ -66,8 +67,9 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateColor(uint3
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(p_secondFilter));
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	return new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	auto* texture = new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	texture->gl_texture_format_ = GL_RGBA8;
+	return texture;
 }
 
 LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)
@@ -89,8 +91,34 @@ LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(p_secondFilter));
 
 	glBindTexture(GL_TEXTURE_2D, 0);
+	auto* texture = new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	texture->gl_texture_format_ = GL_RGBA8;
+	return texture;
+}
 
-	return new LitchiRuntime::Texture("", textureID, 1, 1, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+LitchiRuntime::Texture* LitchiRuntime::Loaders::TextureLoader::CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap, unsigned int p_server_format, unsigned int p_client_format, unsigned int p_data_type)
+{
+	GLuint textureID;
+	glGenTextures(1, &textureID);
+	glBindTexture(GL_TEXTURE_2D, textureID);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, p_server_format, p_width, p_height, 0, p_client_format, p_data_type, p_data);
+
+	if (p_generateMipmap)
+	{
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(p_firstFilter));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(p_secondFilter));
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	auto* texture = new LitchiRuntime::Texture("", textureID, p_width, p_height, 32, p_firstFilter, p_secondFilter, p_generateMipmap);
+	texture->gl_texture_format_ = p_server_format;
+	return texture;
 }
 
 void LitchiRuntime::Loaders::TextureLoader::Reload(LitchiRuntime::Texture& p_texture, const std::string& p_filePath, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap)

@@ -142,32 +142,40 @@ namespace LitchiRuntime
 		{
 			return;
 		}
-		auto model = meshFilter->GetModel();
-		if(model == nullptr)
-		{
-			return;
-		}
-
-		if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
-		{
-			return;
-		}
-
-		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
-		if(mesh == nullptr)
-		{
-			return;
-		}
 
 		// 计算模型矩阵
 		auto transform = game_object()->GetComponent<Transform>();
 		glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
 
-		// vp矩阵绑定？
+		auto* extraMesh =meshFilter->GetExtraMesh();
+		if(extraMesh != nullptr)
+		{
+			ApplicationBase::Instance()->renderer->DrawMesh(*extraMesh, *material_, &modelMatrix, lightVPMat, shadowMapFBO);
+		}else
+		{
+			auto model = meshFilter->GetModel();
+			if (model == nullptr)
+			{
+				return;
+			}
 
-		// 调用Draw执行绘制
-		// 内部将设置模型矩阵到UBO中
-		ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material_, &modelMatrix, lightVPMat,shadowMapFBO);
+			if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
+			{
+				return;
+			}
+
+			auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
+			if (mesh == nullptr)
+			{
+				return;
+			}
+
+			// vp矩阵绑定？
+
+			// 调用Draw执行绘制
+			// 内部将设置模型矩阵到UBO中
+			ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material_, &modelMatrix, lightVPMat, shadowMapFBO);
+		}
 
 	}
 

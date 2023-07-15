@@ -276,7 +276,8 @@ void LitchiEditor::ApplicationEditor::Init()
 		// hierachy.AddActorByInstance(go5);
 	}
 	sceneManager->SetCurrentScene(scene);
-	
+
+	// ´´½¨¹âÕÕÌùÍ¼shader
 	m_shadowMapShader = shaderManager->LoadResource("Engine\\Shaders\\DepthShader.glsl");
 	m_shadowMapShader4Skinned = shaderManager->LoadResource("Engine\\Shaders\\DepthShader4Skinned.glsl");
 }

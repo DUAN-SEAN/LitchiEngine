@@ -2,6 +2,8 @@
 #include "FontLoader.h"
 
 #include <fstream>
+
+#include "TextureLoader.h"
 #include "freetype/ftbitmap.h"
 #include "Runtime/Function/Renderer/Font/font.h"
 #include "Runtime/Function/Renderer/Resources/texture2d.h"
@@ -53,7 +55,7 @@ Font* Loaders::FontLoader::Create(const std::string& p_filepath, unsigned short 
     //创建空白的、仅Alpha通道纹理，用于生成文字。
     unsigned char* pixels = (unsigned char*)malloc(font->font_texture_size_ * font->font_texture_size_);
     memset(pixels, 0, font->font_texture_size_ * font->font_texture_size_);
-    font->font_texture_ = Texture2D::Create(font->font_texture_size_, font->font_texture_size_, GL_RED, GL_RED, GL_UNSIGNED_BYTE, pixels);
+    font->font_texture_ = TextureLoader::CreateFromMemory(pixels,font->font_texture_size_, font->font_texture_size_, ETextureFilteringMode::LINEAR_MIPMAP_LINEAR,ETextureFilteringMode::LINEAR,false,GL_RED, GL_RED, GL_UNSIGNED_BYTE);
     free(pixels);
 
     return font;

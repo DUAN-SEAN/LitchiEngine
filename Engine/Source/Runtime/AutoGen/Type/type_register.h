@@ -29,6 +29,8 @@
 #include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
+#include "Runtime/Function/Framework/Component/UI/ui_image.h"
+#include "Runtime/Function/Framework/Component/UI/ui_text.h"
 #include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/scene_manager.h"
@@ -313,6 +315,13 @@ RTTR_REGISTRATION //注册反射
 
 	// SphereCollider
 	registration::class_<SphereCollider>("SphereCollider")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+	registration::class_<UIText>("UIText")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+
+	registration::class_<UIImage>("UIImage")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	}

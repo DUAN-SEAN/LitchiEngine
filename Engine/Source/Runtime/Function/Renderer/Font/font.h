@@ -7,10 +7,10 @@
 
 namespace LitchiRuntime
 {
-    class Texture2D;
+    class Texture;
     class Font {
     public:
-        Texture2D* font_texture() { return font_texture_; }
+        Texture* font_texture() { return font_texture_; }
 
         /// freetype为字符生成bitmap
         /// \param c
@@ -41,7 +41,7 @@ namespace LitchiRuntime
         char* font_file_buffer_ = nullptr;//ttf字体文件加载到内存
         FT_Library ft_library_;
         FT_Face ft_face_;
-        Texture2D* font_texture_;
+        Texture* font_texture_;
         unsigned short font_texture_size_ = 1024;
         unsigned short font_texture_fill_x = 0;//
         unsigned short font_texture_fill_y = 0;

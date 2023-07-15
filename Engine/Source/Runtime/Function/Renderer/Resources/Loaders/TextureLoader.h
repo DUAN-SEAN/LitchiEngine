@@ -54,6 +54,20 @@ namespace LitchiRuntime::Loaders
 		static Texture* CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap);
 
 		/**
+		* Create a texture from memory
+		* @param p_data
+		* @param p_width
+		* @param p_height
+		* @param p_firstFilder
+		* @param p_secondFilter
+		* @param p_generateMipmap
+		* @param p_server_format
+		* @param p_client_format
+		* @param p_data_type
+		*/
+		static Texture* CreateFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height, ETextureFilteringMode p_firstFilter, ETextureFilteringMode p_secondFilter, bool p_generateMipmap, unsigned int p_server_format, unsigned int p_client_format, unsigned int p_data_type);
+
+		/**
 		* Reload a texture from file
 		* @param p_texture
 		* @param p_filePath
