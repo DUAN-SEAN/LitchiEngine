@@ -18,7 +18,6 @@ LitchiEditor::SceneView::SceneView
 	const PanelWindowSettings& p_windowSettings
 ) : AViewControllable(p_title, p_opened, p_windowSettings, true)
 {
-	m_camera = new RenderCamera();
 	m_camera->SetClearColor(glm::vec3{ 0.098f, 0.098f, 0.098f });
 	m_camera->SetFar(5000.0f);
 
@@ -42,6 +41,18 @@ LitchiEditor::SceneView::SceneView
 	m_shadowMapFbo.Bind();
 	m_shadowMapFbo.Resize(2048, 2048);
 	m_shadowMapFbo.Unbind();
+
+
+	// 初始化UI相机
+	m_camera4UI = new RenderCamera();
+	m_camera4UI->SetProjectionMode(ProjectionMode::ORTHOGRAPHIC);
+	m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
+	m_cameraRotation4UI = glm::quat(1,0,0,0);
+	auto [winWidth, winHeight] = GetSafeSize();
+	m_camera4UI->SetSize(winWidth / 2.0f);
+	m_camera4UI->SetNear(-100);
+	m_camera4UI->SetFar(100);
+	m_camera4UI->CacheMatrices(winWidth, winHeight, m_cameraPosition4UI, m_cameraRotation4UI);
 }
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)
@@ -86,6 +97,9 @@ void LitchiEditor::SceneView::_Render_Impl()
 
 	// 绘制场景
 	RenderScene();
+
+	// 绘制UI
+	RenderUI();
 }
 void LitchiEditor::SceneView::RenderScene()
 {
@@ -228,6 +242,11 @@ void LitchiEditor::SceneView::RenderScene()
 	m_fbo.Unbind();
 
 	ssbo->Unbind();
+}
+
+void LitchiEditor::SceneView::RenderUI()
+{
+
 }
 
 void LitchiEditor::SceneView::RenderSceneForActorPicking()

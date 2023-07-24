@@ -46,6 +46,11 @@ namespace LitchiEditor
 		void RenderScene();
 
 		/**
+		* Render UI
+		*/
+		void RenderUI();
+
+		/**
 		* Render the scene for actor picking (Using unlit colors)
 		*/
 		void RenderSceneForActorPicking();
@@ -67,5 +72,12 @@ namespace LitchiEditor
 
 
 		Resource::Material m_gridMaterial;
+
+		/**
+		 * \brief 相机控制器
+		 */
+		RenderCamera* m_camera4UI;
+		glm::vec3 m_cameraPosition4UI;
+		glm::quat m_cameraRotation4UI;
 	};
 }
