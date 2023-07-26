@@ -45,6 +45,7 @@ LitchiEditor::SceneView::SceneView
 
 	// 初始化UI相机
 	m_camera4UI = new RenderCamera();
+	m_camera4UI->set_clear_flag(GL_DEPTH_BUFFER_BIT);// 不清理颜色, 只清理深度信息
 	m_camera4UI->SetProjectionMode(ProjectionMode::ORTHOGRAPHIC);
 	m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
 	m_cameraRotation4UI = glm::quat(1,0,0,0);
@@ -113,7 +114,7 @@ void LitchiEditor::SceneView::RenderScene()
 	std::vector<glm::mat4> lightMatrixArr;
 	ssbo->SendBlocks(lightMatrixArr.data(), 0);
 	scene->Foreach([&](GameObject* game_object) {
-		if (game_object->active()) {
+		if (game_object->active() && game_object->layer() != 0x02) {
 			game_object->ForeachComponent([&](Component* component) {
 
 				auto* lightComp = dynamic_cast<LightComponent*>(component);
@@ -181,7 +182,7 @@ void LitchiEditor::SceneView::RenderScene()
 		ApplicationEditor::Instance()->renderer->ApplyStateMask(63);
 		// 遍历所有的物体,执行MeshRenderer的Render函数
 		scene->Foreach([&](GameObject* game_object) {
-			if (game_object->active()) {
+			if (game_object->active() && game_object->layer() != 0x02) {
 				game_object->ForeachComponent([&](Component* component) {
 						auto* skinned_mesh_renderer = dynamic_cast<SkinnedMeshRenderer*>(component);
 						if (skinned_mesh_renderer != nullptr) {
@@ -246,7 +247,30 @@ void LitchiEditor::SceneView::RenderScene()
 
 void LitchiEditor::SceneView::RenderUI()
 {
+	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();;
 
+	// 绑定FBO
+	m_fbo.Bind();
+
+	RenderCamera* render_camera = m_camera4UI;
+	render_camera->Clear();
+
+	// 遍历所有物体, 绘制UI
+	// 遍历所有的物体,执行MeshRenderer的Render函数
+	scene->Foreach([&](GameObject* game_object) {
+		if (game_object->active() && game_object->layer() == 0x02) {
+			game_object->ForeachComponent([&](Component* component) {
+				auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
+				if (mesh_renderer == nullptr) {
+					return;
+				}
+				mesh_renderer->Render(render_camera, nullptr, &m_shadowMapFbo);
+				});
+		}
+		});
+
+	// 解绑FBO
+	m_fbo.Unbind();
 }
 
 void LitchiEditor::SceneView::RenderSceneForActorPicking()

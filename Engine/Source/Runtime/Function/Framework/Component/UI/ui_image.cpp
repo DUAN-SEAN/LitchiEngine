@@ -26,10 +26,10 @@ void UIImage::Update() {
     MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
     if(mesh_filter== nullptr){
 
-        Vertex v00{ {0.f, 0.0f, 0.0f},{0.f, 0.f},{1.0f,1.0f,1.0f},{},{} };
-        Vertex v10{ {(float)texture2D_->width, 0.0f, 0.0f},{1.f, 0.f},{1.0f,1.0f,1.0f},{},{} };
-        Vertex v11{ {(float)texture2D_->width,  (float)texture2D_->height, 0.0f},{1.f, 1.f},{1.0f,1.0f,1.0f},{},{} };
-        Vertex v01{ {0.f,  (float)texture2D_->height, 0.0f},{0.f, 1.f},{1.0f,1.0f,1.0f},{},{} };
+        Vertex v00{ {0.f, 0.0f, 0.0f},{0.f, 0.f},{1.0f,1.0f,1.0f},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
+        Vertex v10{ {(float)texture2D_->width, 0.0f, 0.0f},{1.f, 0.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
+        Vertex v11{ {(float)texture2D_->width,  (float)texture2D_->height, 0.0f},{1.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
+        Vertex v01{ {0.f,  (float)texture2D_->height, 0.0f},{0.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
 
         //创建 MeshFilter
         /*std::vector<Vertex> vertex_vector={
@@ -46,7 +46,7 @@ void UIImage::Update() {
                 0,2,3
         };
         mesh_filter=game_object()->AddComponent<MeshFilter>();
-        mesh_filter->CreateMesh(vertex_vector,index_vector);
+        mesh_filter->CreateUIMesh(vertex_vector,index_vector);
         
         //创建 Material
         auto material = ApplicationBase::Instance()->materialManager->GetResource("Engine\\Materials\\UIImage.mat");

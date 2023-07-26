@@ -14,7 +14,7 @@
 namespace LitchiRuntime
 {
 	/**
-	* Standard mesh of OvRendering
+	* Standard mesh of Model
 	*/
 	class Mesh : public IMesh
 	{
@@ -25,7 +25,7 @@ namespace LitchiRuntime
 		* @param p_indices
 		* @param p_materialIndex
 		*/
-		Mesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex,const bool isSkinned = false);
+		Mesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex, const bool isSkinned = false);
 
 		/**
 		* Bind the mesh (Actually bind its VAO)
@@ -91,4 +91,49 @@ namespace LitchiRuntime
 		// todo 新增Vertex, 缓存顶点信息
 		// todo 新增Index, 缓存索引信息
 	};
+
+	class UIMesh :public IMesh
+	{
+	public:
+		UIMesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex);
+
+		/**
+		* Bind the mesh (Actually bind its VAO)
+		*/
+		virtual void Bind() override;
+
+		/**
+		* Unbind the mesh (Actually unbind its VAO)
+		*/
+		virtual void Unbind() override;
+
+		/**
+		* Returns the number of vertices
+		*/
+		virtual uint32_t GetVertexCount() override;
+
+		/**
+		* Returns the number of indices
+		*/
+		virtual uint32_t GetIndexCount() override;
+
+		std::vector<Vertex> vertices;
+
+		std::vector<uint32_t> indices;
+
+	private:
+
+		void CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices);
+	private:
+		const uint32_t m_vertexCount;
+		const uint32_t m_indicesCount;
+		const uint32_t m_materialIndex;
+
+		VertexArray							m_vertexArray;
+		std::unique_ptr<VertexBuffer<Vertex>>	m_vertexBuffer;
+		std::unique_ptr<IndexBuffer>			m_indexBuffer;
+
+		BoundingSphere m_boundingSphere;
+	};
+
 }

@@ -35,7 +35,7 @@ struct data
 		unsigned char byte_value[4];
 	};
 };
-LitchiEditor::ApplicationEditor::ApplicationEditor():m_canvas(),m_panelsManager(m_canvas), m_editorActions(m_panelsManager)
+LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager)
 {
 	char* projectPath = nullptr;
 	projectPath = _getcwd(nullptr, 1);
@@ -56,7 +56,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
 
-GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string modelPath,std::string materialPath , float y, float z)
+GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	auto transform = go->AddComponent<Transform>();
@@ -70,7 +70,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name,std::string model
 	mesh_renderer->material_path = materialPath;
 	mesh_renderer->PostResourceLoaded();
 	go->set_layer(0x01);
-	
+
 	return go;
 }
 
@@ -102,7 +102,7 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 	return go;
 }
 
-GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath,glm::vec3 position,glm::quat rotation,glm::vec3 scale)
+GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	auto transform = go->AddComponent<Transform>();
@@ -122,7 +122,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	return go;
 }
 
-GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm::quat rotation)
+GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation)
 {
 	GameObject* go = scene->CreateGameObject(name);
 
@@ -133,6 +133,57 @@ GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos,glm:
 	auto directionalLight = go->AddComponent<DirectionalLight>();
 	directionalLight->SetColor(glm::vec3(0.3, 0.6, 0.7));
 	directionalLight->SetIntensity(3.0f);
+
+	return go;
+}
+
+GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Texture* image)
+{
+	GameObject* go = scene->CreateGameObject(name);
+
+	auto transform = go->AddComponent<Transform>();
+	transform->SetLocalPosition(pos);
+	transform->SetLocalRotation(rotation);
+	transform->SetLocalScale(glm::vec3(1));
+
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = nullptr;
+	mesh_filter->PostResourceLoaded();
+
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
+	mesh_renderer->PostResourceLoaded();
+	go->set_layer(0x02); // UI 层级为2
+
+	auto uiImage = go->AddComponent<UIImage>();
+	uiImage->set_texture(image);
+
+	return go;
+}
+
+GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Font* font)
+{
+	GameObject* go = scene->CreateGameObject(name);
+
+	auto transform = go->AddComponent<Transform>();
+	transform->SetLocalPosition(pos);
+	transform->SetLocalRotation(rotation);
+	transform->SetLocalScale(glm::vec3(1));
+
+	auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = nullptr;
+	mesh_filter->PostResourceLoaded();
+
+	auto mesh_renderer = go->AddComponent<MeshRenderer>();
+	mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
+	mesh_renderer->PostResourceLoaded();
+	go->set_layer(0x02); // UI 层级为2
+
+	// 创建UIText
+	auto uiText = go->AddComponent<UIText>();
+	uiText->set_font(font);
+	uiText->set_text("Hello World");
+	uiText->set_color(glm::vec4(1));
 
 	return go;
 }
@@ -158,7 +209,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	// 初始化Window
 	window = std::make_unique<Window>(*device, windowSettings);
 	{
-		auto iconPath = editorAssetsPath+ "Icon.png";
+		auto iconPath = editorAssetsPath + "Icon.png";
 		int iconWidth = 30;
 		int iconHeight = 30;
 		int iconChannel = 3;
@@ -199,7 +250,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	textureManager = std::make_unique<TextureManager>();
 	shaderManager = std::make_unique<ShaderManager>();
 	fontManager = std::make_unique<FontManager>();
-	
+
 
 	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
 	LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
@@ -253,7 +304,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	// Setup UI
 	SetupUI();
 
-	auto* font= fontManager->GetResource("Engine\\Fonts\\Ruda-Bold.ttf");
+	auto* font = fontManager->GetResource("Engine\\Fonts\\Ruda-Bold.ttf");
 	auto charVec = font->LoadStr("Hello World");
 
 	// 初始化默认场景
@@ -261,19 +312,25 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	auto scene = sceneManager->CreateScene("Default Scene");
 	{
-		GameObject* go = CreateDefaultObject(scene, "liubei","Engine\\Models\\Cube.fbx","Engine\\Materials\\Default.mat", glm::vec3(0.0f,-1.0f,0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
-	     GameObject* go2 = CreateDefaultObject4Skinned(scene, "diaochan", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx", "Engine\\Materials\\Default4Skinned.mat", 1, -3);
+		GameObject* go = CreateDefaultObject(scene, "liubei", "Engine\\Models\\Cube.fbx", "Engine\\Materials\\Default.mat", glm::vec3(0.0f, -1.0f, 0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
+		GameObject* go2 = CreateDefaultObject4Skinned(scene, "diaochan", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx", "Engine\\Materials\\Default4Skinned.mat", 1, -3);
 		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "Engine\\Models\\Sphere.fbx", "Engine\\Materials\\DefaultUnlit.mat", 3.f, 1.5f);
-		GameObject* go4 = CreateLightObject(scene, "DirectionalLight",glm::vec3(0,10,0),glm::angleAxis(-160.0f,glm::vec3(1,0,0)));
+		GameObject* go4 = CreateLightObject(scene, "DirectionalLight", glm::vec3(0, 10, 0), glm::angleAxis(-160.0f, glm::vec3(1, 0, 0)));
 		// GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
 
+
+		// 创建UI物体, UILayer = 2;
+		Texture* image5 = this->textureManager->LoadResource("Engine\\Textures\\rp_sophia_animated_003_dif.jpg");
+		GameObject* go5 = CreateUIImageObject(scene, "UIImage01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), image5);
+		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 100.0f, 0), glm::quat(1, 0, 0, 0), font);
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		hierachy.AddActorByInstance(go);
 		hierachy.AddActorByInstance(go2);
 		hierachy.AddActorByInstance(go3);
 		hierachy.AddActorByInstance(go4);
-		// hierachy.AddActorByInstance(go5);
+		hierachy.AddActorByInstance(go5);
+		hierachy.AddActorByInstance(go6);
 	}
 	sceneManager->SetCurrentScene(scene);
 

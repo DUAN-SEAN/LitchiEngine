@@ -20,7 +20,7 @@ namespace LitchiRuntime
 
     }
 
-    void MeshFilter::CreateMesh(const std::vector<Vertex>& vector, const std::vector<uint32_t>& index_vector)
+    void MeshFilter::CreateUIMesh(const std::vector<Vertex>& vector, const std::vector<uint32_t>& index_vector)
     {
         if(extra_mesh_!=nullptr)
         {
@@ -28,10 +28,8 @@ namespace LitchiRuntime
             extra_mesh_ = nullptr;
         }
 
-        Mesh* mesh = new Mesh(vector, index_vector,0,false);
-        extra_mesh_ = mesh;
+        extra_mesh_ = new UIMesh(vector, index_vector,0);
     }
-
 
     void MeshFilter::PostResourceLoaded()
     {

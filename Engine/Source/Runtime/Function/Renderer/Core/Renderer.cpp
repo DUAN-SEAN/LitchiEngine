@@ -269,7 +269,10 @@ void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_mater
 		p_material.Bind(m_emptyTexture, shadowMapFBO);
 
 		// 设置光源的VP矩阵
-		p_material.GetShader()->SetUniformMat4("ubo_LightSpaceMatrix", *lightVPMat);
+		if(lightVPMat !=nullptr)
+		{
+			p_material.GetShader()->SetUniformMat4("ubo_LightSpaceMatrix", *lightVPMat);
+		}
 
 		Draw(p_mesh, EPrimitiveMode::TRIANGLES, p_material.GetGPUInstances());
 		p_material.UnBind();

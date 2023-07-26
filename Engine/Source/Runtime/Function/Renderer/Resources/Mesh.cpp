@@ -108,3 +108,52 @@ void LitchiRuntime::Mesh::ComputeBoundingSphere(const std::vector<Vertex>& p_ver
 		}
 	}
 }
+
+
+LitchiRuntime::UIMesh::UIMesh(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices, uint32_t p_materialIndex):
+	m_vertexCount(static_cast<uint32_t>(p_vertices.size())),
+	m_indicesCount(static_cast<uint32_t>(p_indices.size())),
+	m_materialIndex(p_materialIndex)
+{
+	vertices = p_vertices;
+	indices = p_indices;
+	CreateBuffers(vertices, indices);
+}
+
+void LitchiRuntime::UIMesh::Bind()
+{
+	m_vertexArray.Bind();
+}
+
+void LitchiRuntime::UIMesh::Unbind()
+{
+	m_vertexArray.Unbind();
+}
+
+uint32_t LitchiRuntime::UIMesh::GetVertexCount()
+{
+	return m_vertexCount;
+}
+
+uint32_t LitchiRuntime::UIMesh::GetIndexCount()
+{
+	return m_indicesCount;
+}
+
+void LitchiRuntime::UIMesh::CreateBuffers(const std::vector<Vertex>& p_vertices, const std::vector<uint32_t>& p_indices)
+{
+	std::vector<Vertex> vertexData;
+	for (auto& vertex : p_vertices)
+	{
+		vertexData.push_back(vertex);
+	}
+	m_vertexBuffer = std::make_unique<VertexBuffer<Vertex>>(vertexData);
+	m_indexBuffer = std::make_unique<IndexBuffer>(const_cast<uint32_t*>(p_indices.data()), p_indices.size());
+
+	// 设置顶点数据 
+	uint64_t vertexSize = sizeof(Vertex);
+	m_vertexArray.BindAttribute(0, *m_vertexBuffer, EType::FLOAT, 3, vertexSize, offsetof(Vertex, position));
+	m_vertexArray.BindAttribute(1, *m_vertexBuffer, EType::FLOAT, 4, vertexSize, offsetof(Vertex, color));
+	m_vertexArray.BindAttribute(2, *m_vertexBuffer, EType::FLOAT, 2, vertexSize, offsetof(Vertex, texCoords));
+}
+
