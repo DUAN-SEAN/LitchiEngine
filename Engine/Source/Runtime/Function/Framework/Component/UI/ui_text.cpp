@@ -63,10 +63,10 @@ void UIText::Update() {
             unsigned short height=(character->right_bottom_y_-character->left_top_y_)* m_font->font_texture()->height;
             //因为FreeType生成的bitmap是上下颠倒的，所以这里UV坐标也要做对应翻转，将左上角作为零点。
 
-            Vertex v00{ {(float)x,0.0f,0.0f},{character->left_top_x_,     character->right_bottom_y_},{},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
-            Vertex v10{ {(float)(x + width,0.0f, 0.0f),0.0f,0.0f},{character->right_bottom_x_, character->right_bottom_y_},{},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
-            Vertex v11{ {(float)(x + width),(float)height,0.0f},{character->right_bottom_x_, character->left_top_y_},{},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
-            Vertex v01{ {(float)x,(float)height,0.0f},{character->left_top_x_,     character->left_top_y_},{},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
+            Vertex v00{ {(float)x,0.0f,0.0f},{character->left_top_x_,     character->right_bottom_y_},{},{},{},{},{},{m_color.x,m_color.y,m_color.z,m_color.w} };
+            Vertex v10{ {(float)(x + width),0.0f,0.0f},{character->right_bottom_x_, character->right_bottom_y_},{},{},{},{},{},{m_color.x,m_color.y,m_color.z,m_color.w} };
+            Vertex v11{ {(float)(x + width),(float)height,0.0f},{character->right_bottom_x_, character->left_top_y_},{},{},{},{},{},{m_color.x,m_color.y,m_color.z,m_color.w} };
+            Vertex v01{ {(float)x,(float)height,0.0f},{character->left_top_x_,     character->left_top_y_},{},{},{},{},{},{m_color.x,m_color.y,m_color.z,m_color.w} };
 
             vertex_vector.insert(vertex_vector.end() ,{ v00,v10,v11,v01 });
 

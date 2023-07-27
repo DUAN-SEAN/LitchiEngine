@@ -182,7 +182,7 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	// ´´½¨UIText
 	auto uiText = go->AddComponent<UIText>();
 	uiText->set_font(font);
-	uiText->set_text("Hello World");
+	uiText->set_text("EF");
 	uiText->set_color(glm::vec4(1));
 
 	return go;
