@@ -146,13 +146,13 @@ GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, g
 	transform->SetLocalRotation(rotation);
 	transform->SetLocalScale(glm::vec3(1));
 
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = nullptr;
+	/*auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = "";
 	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
 	mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
-	mesh_renderer->PostResourceLoaded();
+	mesh_renderer->PostResourceLoaded();*/
 	go->set_layer(0x02); // UI 层级为2
 
 	auto uiImage = go->AddComponent<UIImage>();
@@ -170,13 +170,13 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	transform->SetLocalRotation(rotation);
 	transform->SetLocalScale(glm::vec3(1));
 
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = nullptr;
+	/*auto mesh_filter = go->AddComponent<MeshFilter>();
+	mesh_filter->model_path = "";
 	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
 	mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
-	mesh_renderer->PostResourceLoaded();
+	mesh_renderer->PostResourceLoaded();*/
 	go->set_layer(0x02); // UI 层级为2
 
 	// 创建UIText
@@ -235,14 +235,15 @@ void LitchiEditor::ApplicationEditor::Init()
 		uiManager->LoadFont("Ruda_Small", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 12);
 		uiManager->LoadFont("Ruda_Medium", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 14);
 		uiManager->UseFont("Ruda_Medium");*/
-		uiManager->SetEditorLayoutSaveFilename(std::string(getenv("APPDATA")) + "\\LitchiEngine\\Editor\\layout.ini");
+		// uiManager->SetEditorLayoutSaveFilename(std::string(getenv("APPDATA")) + "\\LitchiEngine\\Editor\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(this->projectAssetsPath + "Config\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 
-	if (!std::filesystem::exists(std::string(getenv("APPDATA")) + "\\LitchiEngine\\Editor\\layout.ini"))
-		uiManager->ResetLayout("Config\\layout.ini");
+	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
+		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
 	// 初始化ResourceManager
 	modelManager = std::make_unique<ModelManager>();
@@ -320,9 +321,9 @@ void LitchiEditor::ApplicationEditor::Init()
 
 
 		// 创建UI物体, UILayer = 2;
-		Texture* image5 = this->textureManager->LoadResource("Engine\\Textures\\rp_sophia_animated_003_dif.jpg");
+		Texture* image5 = this->textureManager->LoadResource("Engine\\Textures\\liuyifei.png");
 		GameObject* go5 = CreateUIImageObject(scene, "UIImage01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), image5);
-		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 100.0f, 0), glm::quat(1, 0, 0, 0), font);
+		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), font);
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		hierachy.AddActorByInstance(go);

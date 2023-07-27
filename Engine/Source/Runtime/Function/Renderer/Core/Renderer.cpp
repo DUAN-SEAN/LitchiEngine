@@ -236,7 +236,7 @@ void LitchiRuntime::Renderer::DrawModelWithMaterials(Model& p_model, std::vector
 	}
 }
 
-void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
+void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
 {
 	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
 	{
@@ -254,7 +254,7 @@ void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_mater
 	}
 }
 
-void LitchiRuntime::Renderer::DrawMesh(Mesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 {
 	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
 	{

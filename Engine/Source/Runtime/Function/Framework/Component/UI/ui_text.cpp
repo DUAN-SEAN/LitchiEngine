@@ -36,16 +36,14 @@ void UIText::Update() {
     if(mesh_filter== nullptr){
         //挂上 MeshFilter 组件
         mesh_filter=game_object()->AddComponent<MeshFilter>();
-
-        //创建 Material
-        auto material= ApplicationBase::Instance()->materialManager->GetResource("Engine\\Materials\\UIText.mat");
-           
+        
         //挂上 MeshRenderer 组件
         auto mesh_renderer=game_object()->AddComponent<MeshRenderer>();
-        mesh_renderer->SetMaterial(material);
+        mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
+        mesh_renderer->PostResourceLoaded();
 
         //使用文字贴图
-        material->Set("u_diffuse_texture", m_font->font_texture());
+        mesh_renderer->material()->Set("u_DiffuseMap", m_font->font_texture());
     }
 
     if(m_dirty){

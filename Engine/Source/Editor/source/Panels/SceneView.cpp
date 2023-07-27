@@ -45,7 +45,7 @@ LitchiEditor::SceneView::SceneView
 
 	// 初始化UI相机
 	m_camera4UI = new RenderCamera();
-	m_camera4UI->set_clear_flag(GL_DEPTH_BUFFER_BIT);// 不清理颜色, 只清理深度信息
+	m_camera4UI->set_clear_flag(GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);// 不清理颜色, 只清理深度信息
 	m_camera4UI->SetProjectionMode(ProjectionMode::ORTHOGRAPHIC);
 	m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
 	m_cameraRotation4UI = glm::quat(1,0,0,0);
@@ -228,7 +228,7 @@ void LitchiEditor::SceneView::RenderScene()
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
-		if (game_object->active()) {
+		if (game_object->active() && game_object->layer() == 0x02) {
 			game_object->ForeachComponent([&](Component* component) {
 				auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
 				if (mesh_renderer == nullptr) {
@@ -247,7 +247,22 @@ void LitchiEditor::SceneView::RenderScene()
 
 void LitchiEditor::SceneView::RenderUI()
 {
-	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();;
+	m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
+	m_cameraRotation4UI = glm::quat(1, 0, 0, 0);
+	auto [winWidth, winHeight] = GetSafeSize();
+	m_camera4UI->SetSize(winWidth / 2.0f);
+	m_camera4UI->SetNear(-100);
+	m_camera4UI->SetFar(100);
+	m_camera4UI->CacheMatrices(winWidth, winHeight, m_cameraPosition4UI, m_cameraRotation4UI);
+
+	// 绑定相机参数
+	auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
+	size_t offset = sizeof(glm::mat4); // We skip the model matrix (Which is a special case, modified every draw calls)
+	engineUBO.SetSubData(m_camera4UI->GetViewMatrix(), std::ref(offset));
+	engineUBO.SetSubData(m_camera4UI->GetProjectionMatrix(), std::ref(offset));
+	engineUBO.SetSubData(m_cameraPosition4UI, std::ref(offset));
+
+	Scene* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
 
 	// 绑定FBO
 	m_fbo.Bind();

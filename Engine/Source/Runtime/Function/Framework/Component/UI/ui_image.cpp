@@ -47,15 +47,17 @@ void UIImage::Update() {
         };
         mesh_filter=game_object()->AddComponent<MeshFilter>();
         mesh_filter->CreateUIMesh(vertex_vector,index_vector);
-        
-        //创建 Material
-        auto material = ApplicationBase::Instance()->materialManager->GetResource("Engine\\Materials\\UIImage.mat");
-        //使用贴图
-        material->Set("u_diffuse_texture", texture2D_);
 
         //挂上 MeshRenderer 组件
         auto mesh_renderer = game_object()->AddComponent<MeshRenderer>();
-        mesh_renderer->SetMaterial(material);
+        mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
+        mesh_renderer->PostResourceLoaded();
+
+        //创建 Material
+        auto material = mesh_renderer->material();
+        //使用贴图
+        material->Set("u_DiffuseMap", texture2D_);
+
     }
 }
 
