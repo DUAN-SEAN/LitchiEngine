@@ -3,7 +3,6 @@
 
 #include "glm.hpp"
 #include "gtc/quaternion.hpp"
-#include "Runtime/Function/Renderer/shader.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 #include "Runtime/Function/Renderer/Resources/Model.h"
 #include "Runtime/Function/Renderer/Resources/Texture.h"

@@ -10,8 +10,6 @@
 #include "rttr/registration"
 #include "Runtime/Function/Renderer/Framebuffer4Depth.h"
 
-#include "Runtime/Function/Renderer/shader.h"
-
 namespace LitchiRuntime::Resource
 {
 	enum UniformInfoType

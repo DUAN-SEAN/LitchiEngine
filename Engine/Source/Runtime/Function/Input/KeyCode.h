@@ -1,6 +1,4 @@
-﻿
-#ifndef UNTITLED_KEYCODE_H
-#define UNTITLED_KEYCODE_H
+﻿#pragma once
 
 namespace LitchiRuntime
 {
@@ -150,4 +148,3 @@ namespace LitchiRuntime
         KEY_CODE_LAST = KEY_CODE_MENU
     }KeyCode;
 }
-#endif //UNTITLED_KEYCODE_H
