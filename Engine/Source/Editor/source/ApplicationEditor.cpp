@@ -327,12 +327,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), font);
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
-		hierachy.AddActorByInstance(go);
-		hierachy.AddActorByInstance(go2);
-		hierachy.AddActorByInstance(go3);
-		hierachy.AddActorByInstance(go4);
-		hierachy.AddActorByInstance(go5);
-		hierachy.AddActorByInstance(go6);
+		m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
 	}
 	sceneManager->SetCurrentScene(scene);
 

@@ -1,5 +1,5 @@
-﻿#ifndef UNTITLED_SCENEMANAGER_H
-#define UNTITLED_SCENEMANAGER_H
+﻿
+#pragma once
 
 #include <map>
 #include <string>
@@ -134,4 +134,3 @@ namespace LitchiRuntime
 
 	};
 }
-#endif //UNTITLED_TYPE_H

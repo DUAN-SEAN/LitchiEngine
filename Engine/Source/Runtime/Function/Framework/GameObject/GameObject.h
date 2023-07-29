@@ -19,8 +19,8 @@ namespace LitchiRuntime
 		GameObject(std::string name,int64_t id);
 		~GameObject();
 
-		std::string GetName() { return name; }
-		void SetName(std::string name) { name = name; }
+		std::string GetName() { return m_name; }
+		void SetName(std::string name) { m_name = name; }
 
 		unsigned char GetLayer() { return m_layer; }
 		void SetLayer(unsigned char layer) { m_layer = layer; }
@@ -33,7 +33,7 @@ namespace LitchiRuntime
 		/// \return
 		bool SetParent(GameObject* parent);
 
-		bool HasParent() { return GetParentObject() != nullptr; }
+		bool HasParent();
 
 		GameObject* GetParentObject() { return (GameObject*)GetParent(); }
 
@@ -75,7 +75,7 @@ namespace LitchiRuntime
 			type t = type::get<T>();
 			std::string component_type_name = t.get_name().to_string();
 			
-			componentList.push_back(component);
+			m_componentList.push_back(component);
 			
 		}
 
@@ -89,7 +89,7 @@ namespace LitchiRuntime
 			std::string component_type_name = t.get_name().to_string();
 			std::vector<Component*> component_vec;
 
-			for (auto iter = componentList.begin(); iter != componentList.end(); iter++)
+			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
 			{
 				if ((*iter)->get_type().get_name() == component_type_name)
 				{
@@ -99,7 +99,7 @@ namespace LitchiRuntime
 			return nullptr;
 		}
 
-		 std::vector<Component*>& GetComponents() { return componentList; }
+		 std::vector<Component*>& GetComponents() { return m_componentList; }
 
 		/// 遍历组件
 		/// \param func
@@ -109,11 +109,11 @@ namespace LitchiRuntime
 			//获取类名
 			type t = component->get_type();
 			std::string component_type_name = t.get_name().to_string();
-			for (auto iter = componentList.begin(); iter != componentList.end(); iter++)
+			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
 			{
 				if (*iter == component)
 				{
-					componentList.erase(iter);
+					m_componentList.erase(iter);
 					return true;
 				}
 			}
@@ -122,10 +122,10 @@ namespace LitchiRuntime
 		}
 
 
-		int64_t id;
-		int64_t parentId;
-		std::string name;
-		std::vector<Component*> componentList;
+		int64_t m_id;
+		int64_t m_parentId;
+		std::string m_name;
+		std::vector<Component*> m_componentList;
 
 		RTTR_ENABLE()
 	private:

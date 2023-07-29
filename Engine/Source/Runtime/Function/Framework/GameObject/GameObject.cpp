@@ -9,7 +9,7 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-	GameObject::GameObject(std::string name,int64_t id) : Tree::Node(), m_layer(0x01),id(id), parentId(0){
+	GameObject::GameObject(std::string name,int64_t id) : Tree::Node(), m_layer(0x01),m_id(id), m_parentId(0){
 		SetName(name);
 	}
 
@@ -21,14 +21,14 @@ namespace LitchiRuntime
 
 		auto& tran = GetComponent<Transform>()->GetTransform();
 		tran.RemoveParent();
-		parentId = 0;
+		m_parentId = 0;
 
 		if (parent == nullptr) {
 			DEBUG_LOG_INFO("parent null");
 			return true;
 		}
 
-		parentId = parent->id;
+		m_parentId = parent->m_id;
 		parent->AddChild(this);
 		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
 		tran.SetParent(tranParent);
@@ -36,12 +36,19 @@ namespace LitchiRuntime
 		return true;
 	}
 
+	bool GameObject::HasParent()
+	{
+		auto* parent = GetParent();
+		auto* root = m_scene->game_object_tree().root_node();
+		return parent != nullptr && parent != root;
+	}
+
 	void GameObject::PostResourceLoaded()
 	{
 		// 重置parent
 		set_parent(nullptr);
 
-		for (auto comp : componentList)
+		for (auto comp : m_componentList)
 		{
 			// 设置comp的go
 			comp->SetGameObject(this);
@@ -64,7 +71,7 @@ namespace LitchiRuntime
 	/// 遍历组件
 	/// \param func
 	void GameObject::ForeachComponent(std::function<void(Component*)> func) {
-		for (auto& v : componentList) {
+		for (auto& v : m_componentList) {
 			
 			func(v);
 		}

@@ -206,11 +206,11 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Polymorphic", true)
 		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("id", &GameObject::id)
-		.property("parentId", &GameObject::parentId)
-		.property("name", &GameObject::name)
+		.property("id", &GameObject::m_id)
+		.property("parentId", &GameObject::m_parentId)
+		.property("name", &GameObject::m_name)
 		.property("layer", &GameObject::GetLayer,&GameObject::SetLayer)
-		.property("componentList", &GameObject::componentList);
+		.property("componentList", &GameObject::m_componentList);
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)

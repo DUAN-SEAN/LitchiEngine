@@ -60,7 +60,7 @@ namespace LitchiRuntime
 		GameObject* game_object_find = nullptr;
 		game_object_tree_.Find(game_object_tree_.root_node(), [&id](Tree::Node* node) {
 			GameObject* game_object = dynamic_cast<GameObject*>(node);
-			if (game_object != nullptr && game_object->id == id) {
+			if (game_object != nullptr && game_object->m_id == id) {
 				return true;
 			}
 			return false;
@@ -79,7 +79,7 @@ namespace LitchiRuntime
 
 		for (auto go : game_object_vec_)
 		{
-			auto* parentGO = Find(go->parentId);
+			auto* parentGO = Find(go->m_parentId);
 			go->SetParent(parentGO);
 		}
 	}

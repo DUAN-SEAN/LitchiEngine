@@ -123,7 +123,7 @@ void LitchiEditor::EditorRenderer::InitMaterials()
 
 void LitchiEditor::EditorRenderer::PreparePickingMaterial(LitchiRuntime::GameObject& p_actor, Resource::Material& p_material)
 {
-	uint32_t actorID = static_cast<uint32_t>(p_actor.id);
+	uint32_t actorID = static_cast<uint32_t>(p_actor.m_id);
 
 	auto bytes = reinterpret_cast<uint8_t*>(&actorID);
 	auto color = glm::vec4{ bytes[0] / 255.0f, bytes[1] / 255.0f, bytes[2] / 255.0f, 1.0f };
