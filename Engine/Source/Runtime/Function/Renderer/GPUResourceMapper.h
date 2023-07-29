@@ -1,6 +1,5 @@
 ﻿
-#ifndef UNTITLED_GPU_RESOURCE_MAPPER_H
-#define UNTITLED_GPU_RESOURCE_MAPPER_H
+#pragma once
 
 #include <unordered_map>
 #include <glad/glad.h>
@@ -140,5 +139,3 @@ private:
 };
 
 }
-
-#endif //UNTITLED_GPU_RESOURCE_MAPPER_H

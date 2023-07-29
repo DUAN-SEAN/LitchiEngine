@@ -2,7 +2,7 @@
 #include "Editor/include/Panels/AViewControllable.h"
 
 #include <string>
-#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
 
 LitchiEditor::AViewControllable::AViewControllable
 (

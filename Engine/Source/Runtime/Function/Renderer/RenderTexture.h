@@ -1,6 +1,6 @@
 ﻿
-#ifndef RENDER_TEXTURE_H
-#define RENDER_TEXTURE_H
+#pragma once
+
 
 namespace LitchiRuntime
 {
@@ -58,6 +58,3 @@ namespace LitchiRuntime
 	};
 
 }
-
-
-#endif //RENDER_TEXTURE_H

@@ -1,5 +1,5 @@
 ﻿
-#include "gpu_resource_mapper.h"
+#include "GPUResourceMapper.h"
 
 namespace LitchiRuntime
 {

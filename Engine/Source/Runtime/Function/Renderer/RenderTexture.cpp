@@ -1,8 +1,8 @@
 ﻿
 #include <glad/glad.h>
 
-#include "gpu_resource_mapper.h"
-#include "render_texture.h"
+#include "GPUResourceMapper.h"
+#include "RenderTexture.h"
 
 #include "Resources/Texture.h"
 #include "Resources/Loaders/TextureLoader.h"

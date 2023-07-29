@@ -7,8 +7,8 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-#include "Runtime/Function/Renderer/render_camera.h"
-#include "Runtime/Function/Renderer/render_system.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
+#include "Runtime/Function/Renderer/RenderSystem.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 
 LitchiEditor::SceneView::SceneView

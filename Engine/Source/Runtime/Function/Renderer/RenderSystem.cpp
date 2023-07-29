@@ -1,6 +1,6 @@
 ﻿
-#include "render_System.h"
-#include "render_pipeline.h"
+#include "RenderSystem.h"
+#include "RenderPipeline.h"
 
 namespace LitchiRuntime
 {

@@ -1,5 +1,5 @@
 
-#include "render_camera.h"
+#include "RenderCamera.h"
 
 #include <glad/glad.h>
 
@@ -9,8 +9,8 @@
 
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
-#include "Runtime/Function/Renderer/gpu_resource_mapper.h"
-#include "Runtime/Function/Renderer/render_texture.h"
+#include "Runtime/Function/Renderer/GPUResourceMapper.h"
+#include "Runtime/Function/Renderer/RenderTexture.h"
 
 namespace LitchiRuntime
 {

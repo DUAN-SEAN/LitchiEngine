@@ -1,12 +1,12 @@
 ﻿
 #include <glad/glad.h>
-#include "render_pipeline.h"
+#include "RenderPipeline.h"
 
-#include "gpu_resource_mapper.h"
-#include "render_camera.h"
-#include "render_pass.h"
-#include "render_System.h"
-#include "render_texture.h"
+#include "GPUResourceMapper.h"
+#include "RenderCamera.h"
+#include "RenderPass.h"
+#include "RenderSystem.h"
+#include "RenderTexture.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
 

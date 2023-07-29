@@ -10,8 +10,8 @@
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
-#include "Runtime/Function/Renderer/gpu_resource_mapper.h"
-#include "Runtime/Function/Renderer/render_camera.h"
+#include "Runtime/Function/Renderer/GPUResourceMapper.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 namespace LitchiRuntime
