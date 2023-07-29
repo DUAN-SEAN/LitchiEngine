@@ -1,9 +1,11 @@
 ﻿
-#include "rigid_static.h"
+#include "RigidStatic.h"
+
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
 #include "collider.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {

@@ -1,6 +1,4 @@
-﻿
-#ifndef UNTITLED_APPLICATION_BASE_H
-#define UNTITLED_APPLICATION_BASE_H
+﻿#pragma once
 
 #include <direct.h>
 #include <string>
@@ -21,12 +19,12 @@ namespace LitchiRuntime
         ApplicationBase() {}
         virtual ~ApplicationBase() {}
 
-        void set_title(std::string title) { title_ = title; }
+        void SetTitle(std::string title) { m_title = title; }
 
-        const std::string& data_path() { return data_path_; }
+        const std::string& GetDataPath() { return m_dataPath; }
         void SetDataPath(std::string data_path)
         {
-            data_path_ = data_path;
+            m_dataPath = data_path;
             // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
         }
 
@@ -70,13 +68,11 @@ namespace LitchiRuntime
 
         SceneManager* sceneManager;
 
-        static ApplicationBase* Instance() { return instance_; }
-        static ApplicationBase* instance_;
+        static ApplicationBase* Instance() { return s_instance; }
+        static ApplicationBase* s_instance;
     protected:
-        std::string title_;//标题栏显示
+        std::string m_title;//标题栏显示
 
-        std::string data_path_;//资源目录
+        std::string m_dataPath;//资源目录
     };
 }
-
-#endif //UNTITLED_APPLICATION_BASE_H

@@ -1,5 +1,6 @@
 ﻿
-#include "sphere_collider.h"
+#include "SphereCollider.h"
+
 #include "rttr/registration"
 #include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime

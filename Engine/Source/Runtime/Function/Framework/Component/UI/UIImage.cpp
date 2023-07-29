@@ -1,11 +1,12 @@
 ﻿
-#include "ui_image.h"
+#include "UIImage.h"
+
 #include <vector>
 
-#include "Runtime/Core/App/application_base.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 using namespace rttr;
 using namespace LitchiRuntime;

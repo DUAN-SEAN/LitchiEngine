@@ -1,6 +1,6 @@
 ﻿
 #include "camera.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/render_system.h"
 #include "Runtime/Function/Renderer/render_camera.h"

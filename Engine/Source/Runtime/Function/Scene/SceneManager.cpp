@@ -1,7 +1,7 @@
-﻿#include "scene_manager.h"
+﻿#include "SceneManager.h"
 
 #include "Runtime/Core/Meta/Serializer/serializer.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Resource/asset_manager.h"
 
 namespace LitchiRuntime

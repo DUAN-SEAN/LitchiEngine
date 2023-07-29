@@ -8,7 +8,7 @@
 #include "Editor/include/Core/CameraController.h"
 
 #include "Editor/include/ApplicationEditor.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/render_camera.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 

@@ -1,14 +1,15 @@
 ﻿
-#include "ui_text.h"
+#include "UIText.h"
+
 #include <vector>
 #include <rttr/registration>
 
-#include "Runtime/Core/App/application_base.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
+#include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 #include "Runtime/Function/Renderer/Font/font.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 using namespace rttr;
 using namespace LitchiRuntime;

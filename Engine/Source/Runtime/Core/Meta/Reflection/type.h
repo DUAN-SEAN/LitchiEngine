@@ -1,11 +1,10 @@
 ﻿
-#ifndef UNTITLED_TYPEMANAGER_H
-#define UNTITLED_TYPEMANAGER_H
+#pragma once
 
 #include "rttr/registration"
 #include "rttr/type"
 
-#include "Runtime/AutoGen/Type/type_register.h"
+#include "Runtime/AutoGen/Type/TypeRegister.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -69,10 +68,8 @@ namespace LitchiRuntime
 		}
 
 	private:
-		static TypeManager* instance_;
+		static TypeManager* s_instance;
 
-		std::vector<std::string> type_list_;
+		std::vector<std::string> m_typeList;
 	};
 }
-
-#endif //UNTITLED_TYPEMANAGER_H

@@ -1,17 +1,18 @@
 ﻿
+#include "MeshRenderer.h"
+
 #include <glad/glad.h>
-#include "mesh_renderer.h"
 #include <rttr/registration>
 #include <gtx/transform2.hpp>
-#include "mesh_filter.h"
+
+#include "MeshFilter.h"
 #include "gtx/quaternion.hpp"
-#include "Runtime/Core/App/application_base.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/gpu_resource_mapper.h"
 #include "Runtime/Function/Renderer/render_camera.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 namespace LitchiRuntime
 {

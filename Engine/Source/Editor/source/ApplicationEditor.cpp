@@ -13,10 +13,9 @@
 #include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Core/Time/time.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ModelLoader.h"
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
@@ -24,7 +23,9 @@
 #include "Runtime/Resource/TextureManager.h"
 #include "stb_image.h"
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
-#include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/UI/UIImage.h"
+#include <Runtime/Function/Framework/Component/UI/UIText.h>
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data

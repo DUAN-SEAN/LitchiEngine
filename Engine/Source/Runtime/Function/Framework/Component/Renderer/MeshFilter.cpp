@@ -1,8 +1,9 @@
 ﻿
-#include "mesh_filter.h"
+#include "MeshFilter.h"
+
 #include <fstream>
 #include "Runtime/Core/App/application.h"
-#include "Runtime/Core/App/application_base.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Resource/ModelManager.h"
 
 using std::ifstream;

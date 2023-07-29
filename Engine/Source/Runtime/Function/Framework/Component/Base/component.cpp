@@ -1,6 +1,6 @@
 ﻿
 #include "component.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 namespace LitchiRuntime
 {
 	Component::Component() {

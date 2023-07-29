@@ -1,8 +1,9 @@
 ﻿
-#include "rigid_actor.h"
+#include "RigidActor.h"
+
 #include "rttr/registration"
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Core/Log/debug.h"
 #include "collider.h"
 

@@ -1,11 +1,14 @@
 ﻿
 #include "collider.h"
 
+#include "RigidActor.h"
+#include "RigidDynamic.h"
+#include "RigidStatic.h"
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
-#include "rigid_dynamic.h"
-#include "rigid_static.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Physics/physics.h"
+
 namespace LitchiRuntime
 {
     Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_rigidActor(nullptr), m_isTrigger(false) {

@@ -1,13 +1,11 @@
-﻿
-#ifndef UNTITLED_PHYSICS_H
-#define UNTITLED_PHYSICS_H
+﻿#pragma once
 
 #include <list>
 #include "glm.hpp"
 #include "PxPhysicsAPI.h"
-#include "simulation_event_callback.h"
-#include "physic_error_call_back.h"
-#include "raycast_hit.h"
+#include "SimulationEventCallback.h"
+#include "PhysicErrorCallBack.h"
+#include "RaycastHit.h"
 
 using namespace physx;
 
@@ -62,5 +60,3 @@ namespace LitchiRuntime
         static bool                     enable_ccd_;//连续检测。
     };
 }
-
-#endif //UNTITLED_PHYSICS_H

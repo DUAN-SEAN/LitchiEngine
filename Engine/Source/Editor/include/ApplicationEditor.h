@@ -3,17 +3,17 @@
 
 #include <memory>
 
-#include "Runtime/Core/App/application_base.h"
 #include "Runtime/Core/Window/Window.h"
 #include "Runtime/Core/Window/Context/Device.h"
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/UI/UIManager/UIManager.h"
-#include <Runtime/Function/Scene/scene_manager.h>
+#include <Runtime/Function/Scene/SceneManager.h>
 
 #include "Core/EditorActions.h"
 #include "Core/EditorRenderer.h"
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/Driver.h"
 #include "Runtime/Function/Renderer/Core/Renderer.h"
 #include "Runtime/Function/Renderer/Core/ShapeDrawer.h"

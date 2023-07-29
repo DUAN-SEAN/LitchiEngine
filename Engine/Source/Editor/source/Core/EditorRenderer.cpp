@@ -5,10 +5,10 @@
 
 #include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Core/GizmoBehaviour.h"
-#include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
+#include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
-#include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
 const glm::vec3 DEBUG_BOUNDS_COLOR		= { 1.0f, 0.0f, 0.0f };

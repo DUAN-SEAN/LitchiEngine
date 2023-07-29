@@ -1,9 +1,8 @@
 
-#include "skinned_mesh_renderer.h"
-
-#include "mesh_filter.h"
+#include "SkinnedMeshRenderer.h"
+#include "MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 using namespace LitchiRuntime;
 

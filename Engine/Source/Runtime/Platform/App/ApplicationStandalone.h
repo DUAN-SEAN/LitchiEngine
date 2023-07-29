@@ -1,9 +1,8 @@
-﻿
-#ifndef UNTITLED_APPLICATION_STANDALONE_H
-#define UNTITLED_APPLICATION_STANDALONE_H
+﻿#pragma once
 
 #include <string>
-#include "Runtime/Core/App/application_base.h"
+
+#include "Runtime/Core/App/ApplicationBase.h"
 
 class GLFWwindow;
 namespace LitchiRuntime
@@ -31,4 +30,3 @@ namespace LitchiRuntime
     };
 
 }
-#endif //UNTITLED_APPLICATION_STANDALONE_H

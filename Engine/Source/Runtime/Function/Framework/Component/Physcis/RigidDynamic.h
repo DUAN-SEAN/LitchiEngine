@@ -1,6 +1,7 @@
 ﻿#pragma once
 
-#include "rigid_actor.h"
+#include "RigidActor.h"
+
 namespace LitchiRuntime
 {
     class Collider;

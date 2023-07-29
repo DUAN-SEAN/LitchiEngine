@@ -1,9 +1,10 @@
 ﻿
-#include "game_object.h"
+#include "GameObject.h"
+
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
-#include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 
 using namespace rttr;
 namespace LitchiRuntime

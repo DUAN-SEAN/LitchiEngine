@@ -1,10 +1,7 @@
-﻿//
-// Created by captain on 2021/6/20.
-//
-
+﻿
 #include "input.h"
 #include <iostream>
-#include "key_code.h"
+#include "KeyCode.h"
 namespace LitchiRuntime
 {
     std::unordered_map<unsigned short, unsigned short> Input::key_event_map_;

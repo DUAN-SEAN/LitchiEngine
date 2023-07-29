@@ -1,6 +1,6 @@
 ﻿
 #include <glad/glad.h>
-#include "application_standalone.h"
+#include "ApplicationStandalone.h"
 #include <memory>
 #include "rttr/registration"
 
@@ -170,7 +170,7 @@ namespace LitchiRuntime
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-		glfw_window_ = glfwCreateWindow(960, 640, title_.c_str(), NULL, NULL);
+		glfw_window_ = glfwCreateWindow(960, 640, m_title.c_str(), NULL, NULL);
 		if (!glfw_window_)
 		{
 			DEBUG_LOG_ERROR("glfwCreateWindow error!");

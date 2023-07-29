@@ -1,6 +1,5 @@
 ﻿
-#ifndef UNTITLED_INPUT_H
-#define UNTITLED_INPUT_H
+#pragma once
 
 #include <unordered_map>
 #include "glm.hpp"
@@ -64,5 +63,3 @@ namespace LitchiRuntime
         static short mouse_scroll_;//鼠标滚轮值
     };
 }
-
-#endif //UNTITLED_INPUT_H

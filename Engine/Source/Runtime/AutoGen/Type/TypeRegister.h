@@ -1,6 +1,6 @@
-﻿
-#ifndef UNTITLED_TYPE_REGISTER_H
-#define UNTITLED_TYPE_REGISTER_H
+﻿#pragma once
+
+
 //
 //#include "Runtime/AutoGen/Type/type_register_componet.h"
 //#include "Runtime/AutoGen/Type/type_register_camera.h"
@@ -18,22 +18,22 @@
 #include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Function/Framework/Component/Light/SpotLight.h"
 #include "Runtime/Function/Framework/Component/Light/PointLight.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
-#include "Runtime/Function/Framework/Component/Physcis/rigid_actor.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidActor.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
-#include "Runtime/Function/Framework/Component/Physcis/rigid_dynamic.h"
-#include "Runtime/Function/Framework/Component/Physcis/rigid_static.h"
-#include "Runtime/Function/Framework/Component/Physcis/box_collider.h"
-#include "Runtime/Function/Framework/Component/Physcis/sphere_collider.h"
-#include "Runtime/Function/Framework/Component/Renderer/skinned_mesh_renderer.h"
-#include "Runtime/Function/Framework/Component/UI/ui_image.h"
-#include "Runtime/Function/Framework/Component/UI/ui_text.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
+#include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/UI/UIImage.h"
+#include "Runtime/Function/Framework/Component/UI/UIText.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
-#include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Resource/config_manager.h"
 
 using namespace rttr;
@@ -318,5 +318,3 @@ RTTR_REGISTRATION //注册反射
 
 	}
 }
-
-#endif

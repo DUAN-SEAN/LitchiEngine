@@ -1,9 +1,7 @@
-﻿
-#ifndef INTEGRATE_PHYSX_RAYCAST_HIT_H
-#define INTEGRATE_PHYSX_RAYCAST_HIT_H
+﻿#pragma once
 
 #include "glm.hpp"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 namespace LitchiRuntime
 {
     /// 射线检测结果
@@ -24,5 +22,3 @@ namespace LitchiRuntime
         GameObject* game_object_;//击中的物体
     };
 }
-
-#endif //INTEGRATE_PHYSX_RAYCAST_HIT_H

@@ -1,6 +1,5 @@
 ﻿
-#ifndef UNTITLED_APPLICATION_H
-#define UNTITLED_APPLICATION_H
+#pragma once
 
 #include <string>
 
@@ -15,8 +14,6 @@ namespace LitchiRuntime
 
         static void Run();
     private:
-        static ApplicationBase* instance_;
+        static ApplicationBase* s_instance;
     };
 }
-
-#endif //UNTITLED_APPLICATION_H

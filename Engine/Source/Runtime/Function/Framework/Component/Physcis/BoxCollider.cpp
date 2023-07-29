@@ -1,5 +1,6 @@
 ﻿
-#include "box_collider.h"
+#include "BoxCollider.h"
+
 #include "rttr/registration"
 #include "Runtime/Function/Physics/physics.h"
 

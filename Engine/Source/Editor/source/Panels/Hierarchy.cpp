@@ -3,7 +3,7 @@
 
 #include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Menus/ActorCreationMenu.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
 #include "Runtime/Function/UI/Plugins/DDSource.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"

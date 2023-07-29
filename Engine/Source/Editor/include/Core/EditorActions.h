@@ -5,7 +5,7 @@
 
 #include "PanelsManager.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 #define EDITOR_EXEC(action)					LitchiRuntime::ServiceLocator::Get<LitchiEditor::EditorActions>().action
 #define EDITOR_BIND(method, ...)			std::bind(&LitchiEditor::EditorActions::method, &LitchiRuntime::ServiceLocator::Get<LitchiEditor::EditorActions>(), ##__VA_ARGS__)

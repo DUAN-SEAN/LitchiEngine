@@ -3,9 +3,9 @@
 #include "render_system.h"
 #include "render_camera.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
-#include "Runtime/Function/Scene/scene_manager.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Scene/SceneManager.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 namespace LitchiRuntime
 {

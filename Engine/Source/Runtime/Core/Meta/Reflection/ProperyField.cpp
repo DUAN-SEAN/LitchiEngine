@@ -1,4 +1,5 @@
-﻿#include "propery_field.h"
+﻿#include "ProperyField.h"
+
 #include "object.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 LitchiRuntime::PropertyField::PropertyField(Object* root, const std::vector<std::string>& propertyNameList)

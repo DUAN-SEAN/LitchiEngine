@@ -4,10 +4,10 @@
 #include "Runtime/Core/DataStruct/Frustum.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_filter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 #include "Runtime/Function/Renderer/Resources/Model.h"
-#include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 
 namespace LitchiEditor { enum class EGizmoOperation; }
 namespace LitchiEditor { class AView; }

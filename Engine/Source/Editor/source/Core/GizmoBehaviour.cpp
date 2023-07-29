@@ -4,7 +4,7 @@
 
 #include "Runtime/Core/Window/Inputs/EKey.h"
 #include "Runtime/Core/Window/Inputs/EKeyState.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 float SnapValue(float p_value, float p_step)
 {

@@ -1,27 +1,28 @@
 ﻿
+#include "ApplicationBase.h"
+
 #include <memory>
 #include <iostream>
 
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Renderer/mesh_renderer.h"
-#include "Runtime/Function/Framework/GameObject/game_object.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Input/input.h"
-#include "application_base.h"
 
 #include "Runtime/Core/Meta/Reflection/type.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Physics/physics.h"
 
-#include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Renderer/render_system.h"
 
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {
-    ApplicationBase* ApplicationBase::instance_;
+    ApplicationBase* ApplicationBase::s_instance;
     void ApplicationBase::Init() {
-        instance_ = this;
+        s_instance = this;
 
         Debug::Init();
 

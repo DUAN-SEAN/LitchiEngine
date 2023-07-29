@@ -5,7 +5,7 @@
 
 #include "AViewControllable.h"
 #include "Editor/include/Core/GizmoBehaviour.h"
-#include "Runtime/Function/Scene/scene_manager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include <optional>
 

@@ -3,7 +3,7 @@
 #include "Material.h"
 
 #include "Loaders/ShaderLoader.h"
-#include "Runtime/Core/App/application_base.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/Buffers/UniformBuffer.h"
 
 void LitchiRuntime::Resource::Material::SetShader(LitchiRuntime::Resource::Shader* p_shader)
