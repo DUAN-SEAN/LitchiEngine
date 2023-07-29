@@ -10,6 +10,14 @@ namespace LitchiRuntime
         UIImage();
         ~UIImage() override;
 
+        std::string GetTexturePath()
+        {
+	        if(m_texture2D != nullptr)
+	        {
+                return m_texture2D->path;
+	        }
+            return "";
+        }
         Texture* GetTexture() { return m_texture2D; }
         void SetTexture(Texture* texture2D) {
             m_texture2D = texture2D;

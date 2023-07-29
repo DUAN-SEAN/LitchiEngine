@@ -29,6 +29,11 @@ namespace LitchiRuntime
 		 */
 		AnimationClip* GetCurrentClip() const;
 
+		std::string GetCurrentClipName()
+		{
+			return m_clipName;
+		}
+
 		float GetCurrentTimePos()
 		{
 			return m_timePos;

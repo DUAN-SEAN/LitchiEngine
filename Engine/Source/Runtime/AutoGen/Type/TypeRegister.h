@@ -233,6 +233,7 @@ RTTR_REGISTRATION //注册反射
 	// Camera
 	registration::class_<Animator>("Animator")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		// .property("CurrentClipName", &Animator::GetCurrentClipName)
 
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
@@ -310,11 +311,17 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 	registration::class_<UIText>("UIText")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		// .property("FontPath", &UIText::GetFontPath)
+		.property("Text", &UIText::GetText, &UIText::SetText)
+		.property("Color", &UIText::GetColor, &UIText::SetColor);
 
 
 	registration::class_<UIImage>("UIImage")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		// .property("ImagePath", &UIImage::GetTexturePath)
+		/*.property("Width", &UIImage::GetWidth)
+		.property("Height", &UIImage::GetHeight);*/
 
 	}
 }
