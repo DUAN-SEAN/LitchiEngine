@@ -4,7 +4,7 @@
 #include "MaterialLoader.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
-#include "Runtime/Resource/asset_manager.h"
+#include "Runtime/Resource/AssetManager.h"
 
 LitchiRuntime::Resource::Material* LitchiRuntime::Loaders::MaterialLoader::Create(const std::string & p_path)
 {

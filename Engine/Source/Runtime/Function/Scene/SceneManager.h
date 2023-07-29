@@ -16,8 +16,8 @@ namespace LitchiRuntime
 		Scene(std::string name);
 		~Scene();
 
-		std::string GetName() { return name_; }
-		void SetName(std::string name) { name_ = name; }
+		std::string GetName() { return m_name; }
+		void SetName(std::string name) { m_name = name; }
 
 		/**
 		 * 创建GameObject
@@ -28,7 +28,7 @@ namespace LitchiRuntime
 
 		/// 返回GameObject树结构
 		/// \return
-		Tree& game_object_tree() { return game_object_tree_; }
+		Tree& game_object_tree() { return m_gameObjectTree; }
 
 		/// 遍历GameObject
 		/// \param func
@@ -47,19 +47,19 @@ namespace LitchiRuntime
 
 	public:
 
-		std::vector<GameObject*> game_object_vec_; //存储所有的GameObject。
+		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。
 
 		/**
 		 * \brief 可用的id 用于id分配
 		 */
-		int64_t availableID = 1;
+		int64_t m_availableID = 1;
 
 		void PostResourceLoaded() override;
 
 	private:
-		std::string name_; //场景名字
+		std::string m_name; //场景名字
 
-		Tree game_object_tree_; //用树存储所有的GameObject。
+		Tree m_gameObjectTree; //用树存储所有的GameObject。
 
 	};
 
@@ -79,7 +79,7 @@ namespace LitchiRuntime
 
 		Scene* GetScene(std::string sceneName)
 		{
-			return scene_map_[sceneName];
+			return m_sceneMap[sceneName];
 		}
 
 		void SetCurrentScene(Scene* scene)
@@ -127,7 +127,7 @@ namespace LitchiRuntime
 
 		std::string m_sceneRootFolderPath;
 
-		std::map<std::string, Scene*> scene_map_;
+		std::map<std::string, Scene*> m_sceneMap;
 		Scene* m_currScene = nullptr;
 		bool m_currentSceneLoadedFromPath = false;
 		std::string m_currentSceneSourcePath = "";

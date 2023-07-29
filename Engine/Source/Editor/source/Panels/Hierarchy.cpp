@@ -170,7 +170,7 @@ void LitchiEditor::Hierarchy::Refresh()
 
 	// 先构建所有的叶子
 	auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-	for (auto go : scene->game_object_vec_)
+	for (auto go : scene->m_gameObjectList)
 	{
 		if(go != nullptr)
 		{
@@ -179,7 +179,7 @@ void LitchiEditor::Hierarchy::Refresh()
 	}
 
 	// 根据父子关系重构树状结构
-	for (auto go : scene->game_object_vec_)
+	for (auto go : scene->m_gameObjectList)
 	{
 		if (go != nullptr && go->HasParent())
 		{

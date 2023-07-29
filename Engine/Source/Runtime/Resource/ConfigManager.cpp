@@ -1,7 +1,7 @@
 
-#include "config_manager.h"
-#include "Runtime/Core/App/application.h"
-#include "Runtime/Resource/asset_manager.h"
+#include "ConfigManager.h"
+
+#include "AssetManager.h"
 #include "Runtime/Core/Log/debug.h"
 
 namespace LitchiRuntime

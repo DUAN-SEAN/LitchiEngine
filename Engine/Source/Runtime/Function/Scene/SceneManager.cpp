@@ -2,42 +2,42 @@
 
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-#include "Runtime/Resource/asset_manager.h"
+#include "Runtime/Resource/AssetManager.h"
 
 namespace LitchiRuntime
 {
-	Scene::Scene() :name_("default")
+	Scene::Scene() :m_name("default")
 	{
 	}
 	Scene::Scene(std::string name)
 	{
-		name_ = name;
+		m_name = name;
 	}
 	Scene::~Scene()
 	{
 		// 析构所有的GO
-		for (auto iter = game_object_vec_.begin(); iter != game_object_vec_.end(); iter++) {
+		for (auto iter = m_gameObjectList.begin(); iter != m_gameObjectList.end(); iter++) {
 			GameObject* game_object = *iter;
 			delete game_object;
 		}
-		game_object_vec_.clear();
+		m_gameObjectList.clear();
 	}
 
 	GameObject* Scene::CreateGameObject(std::string name)
 	{
-		auto* game_object = new GameObject(name, availableID++);
+		auto* game_object = new GameObject(name, m_availableID++);
 		game_object->SetScene(this);
 
 		// 将go添加到game_object_vec_中
-		game_object_vec_.push_back(game_object);
-		game_object_tree_.GetRootNode()->AddChildNode(game_object);
+		m_gameObjectList.push_back(game_object);
+		m_gameObjectTree.GetRootNode()->AddChildNode(game_object);
 
 		return game_object;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		game_object_tree_.Post(game_object_tree_.GetRootNode(), [&func](Tree::Node* node) {
+		m_gameObjectTree.Post(m_gameObjectTree.GetRootNode(), [&func](Tree::Node* node) {
 			auto n = node;
 			GameObject* game_object = dynamic_cast<GameObject*>(n);
 			func(game_object);
@@ -45,7 +45,7 @@ namespace LitchiRuntime
 	}
 	GameObject* Scene::Find(const char* name) {
 		GameObject* game_object_find = nullptr;
-		game_object_tree_.Find(game_object_tree_.GetRootNode(), [&name](Tree::Node* node) {
+		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&name](Tree::Node* node) {
 			GameObject* game_object = dynamic_cast<GameObject*>(node);
 			if (game_object->GetName() == name) {
 				return true;
@@ -58,7 +58,7 @@ namespace LitchiRuntime
 	GameObject* Scene::Find(const int64_t id)
 	{
 		GameObject* game_object_find = nullptr;
-		game_object_tree_.Find(game_object_tree_.GetRootNode(), [&id](Tree::Node* node) {
+		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&id](Tree::Node* node) {
 			GameObject* game_object = dynamic_cast<GameObject*>(node);
 			if (game_object != nullptr && game_object->m_id == id) {
 				return true;
@@ -70,14 +70,14 @@ namespace LitchiRuntime
 
 	void Scene::PostResourceLoaded()
 	{
-		for (auto go : game_object_vec_)
+		for (auto go : m_gameObjectList)
 		{
-			game_object_tree_.GetRootNode()->AddChildNode(go);
+			m_gameObjectTree.GetRootNode()->AddChildNode(go);
 
 			go->PostResourceLoaded();
 		}
 
-		for (auto go : game_object_vec_)
+		for (auto go : m_gameObjectList)
 		{
 			auto* parentGO = Find(go->m_parentId);
 			go->SetParent(parentGO);
@@ -105,7 +105,7 @@ namespace LitchiRuntime
 		scene->PostResourceLoaded();
 
 		// 将scene添加到map中
-		scene_map_[scene->GetName()] = scene;
+		m_sceneMap[scene->GetName()] = scene;
 
 		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
 		SetCurrentSceneSourcePath(completePath);
@@ -127,7 +127,7 @@ namespace LitchiRuntime
 		Scene* scene = new Scene(sceneName);
 
 		// 将scene添加到map中
-		scene_map_[sceneName] = scene;
+		m_sceneMap[sceneName] = scene;
 
 		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
 		SetCurrentSceneSourcePath("");
@@ -138,8 +138,8 @@ namespace LitchiRuntime
 
 	bool SceneManager::DestroyScene(std::string sceneName)
 	{
-		auto scene = scene_map_[sceneName];
-		scene_map_.erase(sceneName);
+		auto scene = m_sceneMap[sceneName];
+		m_sceneMap.erase(sceneName);
 		delete scene;
 
 		return true;
@@ -147,7 +147,7 @@ namespace LitchiRuntime
 
 	void SceneManager::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		for (auto iter = scene_map_.begin(); iter != scene_map_.end(); iter++) {
+		for (auto iter = m_sceneMap.begin(); iter != m_sceneMap.end(); iter++) {
 			Scene* scene = iter->second;
 			scene->Foreach(func);
 			//current_camera_->CheckCancelRenderToTexture();

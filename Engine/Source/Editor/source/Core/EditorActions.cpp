@@ -21,7 +21,7 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
-#include "Runtime/Resource/asset_manager.h"
+#include "Runtime/Resource/AssetManager.h"
 
 LitchiEditor::EditorActions::EditorActions(PanelsManager& p_panelsManager) :
 	m_panelsManager(p_panelsManager)

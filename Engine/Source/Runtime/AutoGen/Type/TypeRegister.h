@@ -34,7 +34,7 @@
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/SceneManager.h"
-#include "Runtime/Resource/config_manager.h"
+#include "Runtime/Resource/ConfigManager.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -214,8 +214,8 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("availableID", &Scene::availableID)
-		.property("gameObjects", &Scene::game_object_vec_);
+		.property("availableID", &Scene::m_availableID)
+		.property("gameObjects", &Scene::m_gameObjectList);
 
 	// 组件
 	// Componet
