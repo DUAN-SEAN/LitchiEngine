@@ -14,14 +14,14 @@ namespace LitchiRuntime
         UIText();
         ~UIText();
 
-        void set_font(Font* font) { m_font = font; }
-        Font* font() { return m_font; }
+        void SetFont(Font* font) { m_font = font; }
+        Font* GetFont() { return m_font; }
 
-        void set_text(std::string text);
-        std::string text() { return m_text; }
+        void SetText(std::string text);
+        std::string GetText() { return m_text; }
 
-        void set_color(glm::vec4 color) { m_color = color; }
-        glm::vec4 color() { return m_color; }
+        void SetColor(glm::vec4 color) { m_color = color; }
+        glm::vec4 GetColor() { return m_color; }
     public:
         void Update() override;
         /// 渲染之前

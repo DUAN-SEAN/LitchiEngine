@@ -10,15 +10,15 @@ namespace LitchiRuntime
         UIImage();
         ~UIImage() override;
 
-        Texture* texture2D() { return texture2D_; }
-        void set_texture(Texture* texture2D) {
-            texture2D_ = texture2D;
-            width_ = texture2D->width;
-            height_ = texture2D->height;
+        Texture* GetTexture() { return m_texture2D; }
+        void SetTexture(Texture* texture2D) {
+            m_texture2D = texture2D;
+            m_width = texture2D->width;
+            m_height = texture2D->height;
         }
 
-        int width() { return width_; }
-        int height() { return height_; }
+        int GetWidth() { return m_width; }
+        int GetHeight() { return m_height; }
 
     public:
         void Update() override;
@@ -27,9 +27,9 @@ namespace LitchiRuntime
 
         void OnPostRender() override;
     private:
-        Texture* texture2D_;//Texture
-        int width_;
-        int height_;
+        Texture* m_texture2D;//Texture
+        int m_width;
+        int m_height;
 
     public:
         RTTR_ENABLE(Component)

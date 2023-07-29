@@ -1,8 +1,8 @@
 ﻿
-#ifndef UNTITLED_RIGID_STATIC_H
-#define UNTITLED_RIGID_STATIC_H
+#pragma once
 
 #include "rigid_actor.h"
+
 namespace LitchiRuntime
 {
     class Collider;
@@ -22,5 +22,3 @@ namespace LitchiRuntime
         RTTR_ENABLE(RigidActor)
     };
 }
-
-#endif //UNTITLED_RIGID_STATIC_H

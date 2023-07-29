@@ -12,7 +12,7 @@ namespace LitchiRuntime
 {
 
     MeshFilter::MeshFilter()
-        :model_(nullptr),mesh_Index_(0) {
+        :m_model(nullptr),meshIndex(0) {
 
     }
 
@@ -22,36 +22,36 @@ namespace LitchiRuntime
 
     void MeshFilter::CreateUIMesh(const std::vector<Vertex>& vector, const std::vector<uint32_t>& index_vector)
     {
-        if(extra_mesh_!=nullptr)
+        if(m_ExtraMesh!=nullptr)
         {
-            delete extra_mesh_;
-            extra_mesh_ = nullptr;
+            delete m_ExtraMesh;
+            m_ExtraMesh = nullptr;
         }
 
-        extra_mesh_ = new UIMesh(vector, index_vector,0);
+        m_ExtraMesh = new UIMesh(vector, index_vector,0);
     }
 
     void MeshFilter::PostResourceLoaded()
     {
         // 资源加载后
-        if(model_path.empty())
+        if(modelPath.empty())
         {
             return;
         }
 
         // 通过路径加载模型资源
-        model_ = ApplicationBase::Instance()->modelManager->GetResource(model_path);
+        m_model = ApplicationBase::Instance()->modelManager->GetResource(modelPath);
     }
 
     void MeshFilter::PostResourceModify()
     {
         // 资源加载后
-        if (model_path.empty())
+        if (modelPath.empty())
         {
             return;
         }
 
         // 通过路径加载模型资源
-        model_ = ApplicationBase::Instance()->modelManager->GetResource(model_path);
+        m_model = ApplicationBase::Instance()->modelManager->GetResource(modelPath);
     }
 }

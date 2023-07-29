@@ -1,6 +1,4 @@
-﻿
-#ifndef UNTITLED_RIGID_DYNAMIC_H
-#define UNTITLED_RIGID_DYNAMIC_H
+﻿#pragma once
 
 #include "rigid_actor.h"
 namespace LitchiRuntime
@@ -13,9 +11,9 @@ namespace LitchiRuntime
 
         void UpdateCCDState();
 
-        bool enable_ccd() { return enable_ccd_; }
-        void set_enable_ccd(bool enable_ccd) {
-            enable_ccd_ = enable_ccd;
+        bool GetEnableCCD() { return m_enableCCD; }
+        void SetEnableCCD(bool enable_ccd) {
+            m_enableCCD = enable_ccd;
             UpdateCCDState();
         }
 
@@ -28,10 +26,8 @@ namespace LitchiRuntime
         void FixedUpdate() override;
 
     private:
-        bool enable_ccd_;
+        bool m_enableCCD;
 
         RTTR_ENABLE(RigidActor)
     };
 }
-
-#endif //UNTITLED_RIGID_DYNAMIC_H

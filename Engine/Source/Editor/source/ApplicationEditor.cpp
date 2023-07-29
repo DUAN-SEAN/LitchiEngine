@@ -63,13 +63,13 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	transform->SetLocalPosition(glm::vec3(0.0, y, z));
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = modelPath;
+	mesh_filter->modelPath = modelPath;
 	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = materialPath;
+	mesh_renderer->materialPath = materialPath;
 	mesh_renderer->PostResourceLoaded();
-	go->set_layer(0x01);
+	go->SetLayer(0x01);
 
 	return go;
 }
@@ -83,13 +83,13 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 	auto animator = go->AddComponent<Animator>();
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = modelPath;
+	mesh_filter->modelPath = modelPath;
 	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<SkinnedMeshRenderer>();
-	mesh_renderer->material_path = materialPath;
+	mesh_renderer->materialPath = materialPath;
 	mesh_renderer->PostResourceLoaded();
-	go->set_layer(0x01);
+	go->SetLayer(0x01);
 
 	// 初始化animator
 	auto* model = mesh_filter->GetModel();
@@ -111,13 +111,13 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	transform->SetLocalScale(scale);
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = modelPath;
+	mesh_filter->modelPath = modelPath;
 	mesh_filter->PostResourceLoaded();
 
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = materialPath;
+	mesh_renderer->materialPath = materialPath;
 	mesh_renderer->PostResourceLoaded();
-	go->set_layer(0x01);
+	go->SetLayer(0x01);
 
 	return go;
 }
@@ -153,10 +153,10 @@ GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, g
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
 	mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
 	mesh_renderer->PostResourceLoaded();*/
-	go->set_layer(0x02); // UI 层级为2
+	go->SetLayer(0x02); // UI 层级为2
 
 	auto uiImage = go->AddComponent<UIImage>();
-	uiImage->set_texture(image);
+	uiImage->SetTexture(image);
 
 	return go;
 }
@@ -177,13 +177,13 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	auto mesh_renderer = go->AddComponent<MeshRenderer>();
 	mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
 	mesh_renderer->PostResourceLoaded();*/
-	go->set_layer(0x02); // UI 层级为2
+	go->SetLayer(0x02); // UI 层级为2
 
 	// 创建UIText
 	auto uiText = go->AddComponent<UIText>();
-	uiText->set_font(font);
-	uiText->set_text("EF");
-	uiText->set_color(glm::vec4(1));
+	uiText->SetFont(font);
+	uiText->SetText("EF");
+	uiText->SetColor(glm::vec4(1));
 
 	return go;
 }
@@ -372,7 +372,7 @@ void LitchiEditor::ApplicationEditor::Update()
 {
 	// todo 目前游戏世界的Tick不完整, 先不处理
 	this->sceneManager->Foreach([](GameObject* game_object) {
-		if (game_object->active()) {
+		if (game_object->GetActive()) {
 			game_object->ForeachComponent([](Component* component) {
 				component->Update();
 				});
@@ -413,7 +413,7 @@ void LitchiEditor::ApplicationEditor::RenderUI()
 
 void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
-	auto name = p_target->name();
+	auto name = p_target->GetName();
 	auto transform = p_target->GetComponent<Transform>();
 	auto position = transform->GetWorldPosition();
 	auto rotation = transform->GetWorldRotation();
@@ -430,7 +430,7 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 
 void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)
 {
-	auto name = p_target->name();
+	auto name = p_target->GetName();
 	DEBUG_LOG_INFO("MoveToTarget Target Name:{}", name);
 
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");

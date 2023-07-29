@@ -29,22 +29,22 @@ namespace LitchiRuntime
         /// \param clear_flag
         void set_clear_flag(unsigned int clear_flag);
         */
-        unsigned char depth() { return depth_; }
+        unsigned char GetDepth() { return m_depth; }
 
         /// 设置 depth，触发相机排序
         /// \param depth 相机深度，多相机按从后往前排序，按depth从小往大遍历，depth越大的越上层。
-        void set_depth(unsigned char depth);
+        void SetDepth(unsigned char depth);
 
-        unsigned char culling_mask() { return culling_mask_; }
-        void set_culling_mask(unsigned char culling_mask) { culling_mask_ = culling_mask; }
+        unsigned char GetCullingMask() { return m_culling_mask; }
+        void SetCullingMask(unsigned char culling_mask) { m_culling_mask = culling_mask; }
     public:
         void Update() override;
 
     private:
 
-        unsigned char depth_;//排序深度
+        unsigned char m_depth;//排序深度
 
-        unsigned char culling_mask_;//控制渲染哪些Layer的物体
+        unsigned char m_culling_mask;//控制渲染哪些Layer的物体
     };
 }
 

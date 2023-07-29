@@ -1,6 +1,5 @@
 ﻿
-#ifndef INTEGRATE_PHYSX_COLLIDER_H
-#define INTEGRATE_PHYSX_COLLIDER_H
+#pragma once
 
 #include "rttr/registration"
 #include "PxPhysicsAPI.h"
@@ -14,21 +13,21 @@ namespace LitchiRuntime
     class PhysicMaterialRes {
     public:
         PhysicMaterialRes() {}
-        PhysicMaterialRes(float static_friction, float dynamic_friction, float restitution) : static_friction_(static_friction), dynamic_friction_(dynamic_friction), restitution_(restitution) {}
+        PhysicMaterialRes(float static_friction, float dynamic_friction, float restitution) : m_staticFriction(static_friction), m_dynamicFriction(dynamic_friction), m_restitution(restitution) {}
 
-        float static_friction()  { return static_friction_; }
-        void set_static_friction(float static_friction) { static_friction_ = static_friction; }
+        float GetStaticFriction()  { return m_staticFriction; }
+        void SetStaticFriction(float static_friction) { m_staticFriction = static_friction; }
 
-        float dynamic_friction()  { return dynamic_friction_; }
-        void set_dynamic_friction(float dynamic_friction) { dynamic_friction_ = dynamic_friction; }
+        float GetDynamicFriction()  { return m_dynamicFriction; }
+        void SetDynamicFriction(float dynamic_friction) { m_dynamicFriction = dynamic_friction; }
 
-        float restitution()  { return restitution_; }
-        void set_restitution(float restitution) { restitution_ = restitution; }
+        float GetRestitution()  { return m_restitution; }
+        void SetRestitution(float restitution) { m_restitution = restitution; }
 
     private:
-        float static_friction_;
-        float dynamic_friction_;
-        float restitution_;
+        float m_staticFriction;
+        float m_dynamicFriction;
+        float m_restitution;
     };
 
     class RigidActor;
@@ -37,14 +36,14 @@ namespace LitchiRuntime
         Collider();
         ~Collider();
 
-        PxShape* px_shape() { return px_shape_; }
+        PxShape* px_shape() { return m_pxShape; }
 
-        bool Istrigger() { return is_trigger_; }
+        bool Istrigger() { return m_isTrigger; }
         void SetIsTrigger(bool is_trigger) {
-            if (is_trigger_ == is_trigger) {
+            if (m_isTrigger == is_trigger) {
                 return;
             }
-            is_trigger_ = is_trigger;
+            m_isTrigger = is_trigger;
             UnRegisterToRigidActor();
             CreateShape();
             UpdateTriggerState();
@@ -54,12 +53,12 @@ namespace LitchiRuntime
     public:
         void SetPhysicMaterial(PhysicMaterialRes physic_material_res)
         {
-            physic_material_ = physic_material_res;
+            m_physicMaterial = physic_material_res;
         }
 
         PhysicMaterialRes GetPhysicMaterial()
         {
-        	return physic_material_;
+        	return m_physicMaterial;
 		}
 
     public:
@@ -81,19 +80,16 @@ namespace LitchiRuntime
         RigidActor* GetRigidActor();
 
     protected:
-        PxShape* px_shape_;
-        PxMaterial* px_material_;
-        bool is_trigger_;//是触发器，触发器只检测碰撞，而不进行物理模拟。
+        PxShape* m_pxShape;
+        PxMaterial* m_pxMaterial;
+        bool m_isTrigger;//是触发器，触发器只检测碰撞，而不进行物理模拟。
 
     private:
-        RigidActor* rigid_actor_;
+        RigidActor* m_rigidActor;
 
     private:
-        PhysicMaterialRes physic_material_;
+        PhysicMaterialRes m_physicMaterial;
    
         RTTR_ENABLE(Component);
     };
 }
-
-
-#endif //INTEGRATE_PHYSX_COLLIDER_H

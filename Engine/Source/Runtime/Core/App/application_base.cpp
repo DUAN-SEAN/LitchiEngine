@@ -72,7 +72,7 @@ namespace LitchiRuntime
         UpdateScreenSize();
 
         this->sceneManager->Foreach([](GameObject* game_object) {
-            if (game_object->active()) {
+            if (game_object->GetActive()) {
                 game_object->ForeachComponent([](Component* component) {
                     component->Update();
                     });
@@ -95,7 +95,7 @@ namespace LitchiRuntime
         
 
         this->sceneManager->Foreach([](GameObject* game_object) {
-            if (game_object->active()) {
+            if (game_object->GetActive()) {
                 game_object->ForeachComponent([](Component* component) {
                     component->FixedUpdate();
                     });

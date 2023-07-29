@@ -1,6 +1,5 @@
 ﻿
-#ifndef INTEGRATE_PHYSX_SPHERE_COLLIDER_H
-#define INTEGRATE_PHYSX_SPHERE_COLLIDER_H
+#pragma once
 
 #include "rttr/registration"
 #include "collider.h"
@@ -14,17 +13,15 @@ namespace LitchiRuntime
         ~SphereCollider();
         float GetRadius()
         {
-            return radius_;
+            return m_radius;
         }
     protected:
         void CreateShape() override;
 
     private:
         //~zh 球体碰撞器半径
-        float radius_;
+        float m_radius;
 
         RTTR_ENABLE(Collider);
     };
 }
-
-#endif //INTEGRATE_PHYSX_SPHERE_COLLIDER_H

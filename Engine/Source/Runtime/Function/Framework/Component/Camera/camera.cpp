@@ -8,7 +8,7 @@
 namespace LitchiRuntime
 {
 
-	Camera::Camera() :depth_(0), culling_mask_(0x01) {
+	Camera::Camera() :m_depth(0), m_culling_mask(0x01) {
 		
 	}
 	
@@ -35,17 +35,17 @@ namespace LitchiRuntime
 		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->set_clear_flag(clear_flag);
 	}*/
 
-	void Camera::set_depth(unsigned char depth) {
-		if (depth_ == depth) {
+	void Camera::SetDepth(unsigned char depth) {
+		if (m_depth == depth) {
 			return;
 		}
-		depth_ = depth;
+		m_depth = depth;
 		// Sort();
 	}
 
 	void Camera::Update()
 	{
-		auto transform = game_object()->GetComponent<Transform>();
+		auto transform = GetGameObject()->GetComponent<Transform>();
 
 		// 更新viewMatrix
 		RenderSystem::Instance()->GetRenderContext()->main_render_camera_->SetAndUpdateView(transform->GetWorldPosition(),glm::vec3(0,0,0),glm::vec3(0,1,0));

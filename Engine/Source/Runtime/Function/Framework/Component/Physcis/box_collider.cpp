@@ -8,7 +8,7 @@ namespace LitchiRuntime
 {
 
 
-    BoxCollider::BoxCollider() :Collider(), size_(1, 1, 1)
+    BoxCollider::BoxCollider() :Collider(), m_size(1, 1, 1)
     {
 
     }
@@ -18,8 +18,8 @@ namespace LitchiRuntime
     }
 
     void BoxCollider::CreateShape() {
-        if (px_shape_ == nullptr) {
-            px_shape_ = Physics::CreateBoxShape(size_, px_material_);
+        if (m_pxShape == nullptr) {
+            m_pxShape = Physics::CreateBoxShape(m_size, m_pxMaterial);
         }
     }
 }

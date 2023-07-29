@@ -13,15 +13,15 @@ namespace LitchiRuntime
         public:
             virtual ~Node() {}
 
-            Node* parent() { return parent_; }
+            Node* GetParent() { return parent_; }
             void set_parent(Node* parent) { parent_ = parent; }
 
             std::list<Node*>& children() { return children_; }
 
             void AddChild(Node* child) {
                 //先从之前的父节点移除
-                if (child->parent() != nullptr) {
-                    child->parent()->RemoveChild(child);
+                if (child->GetParent() != nullptr) {
+                    child->GetParent()->RemoveChild(child);
                 }
                 children_.push_back(child);
                 child->set_parent(this);

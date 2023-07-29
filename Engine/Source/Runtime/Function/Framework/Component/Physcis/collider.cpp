@@ -8,7 +8,7 @@
 #include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {
-    Collider::Collider() : px_shape_(nullptr), px_material_(nullptr), rigid_actor_(nullptr), is_trigger_(false) {
+    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_rigidActor(nullptr), m_isTrigger(false) {
 
     }
 
@@ -36,13 +36,13 @@ namespace LitchiRuntime
     }
 
     void Collider::UpdateTriggerState() {
-        if (px_shape_ == nullptr) {
+        if (m_pxShape == nullptr) {
             return;
         }
         //~zh 设置附加数据为1，表示当前Shape是Trigger
         //~en set shape's user data 1, it is a trigger.
-        px_shape_->setSimulationFilterData(PxFilterData(is_trigger_ ? 1 : 0, 0, 0, 0));
-        px_shape_->userData = game_object();
+        m_pxShape->setSimulationFilterData(PxFilterData(m_isTrigger ? 1 : 0, 0, 0, 0));
+        m_pxShape->userData = GetGameObject();
     }
 
     void Collider::RegisterToRigidActor() {
@@ -50,7 +50,7 @@ namespace LitchiRuntime
             DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
             return;
         }
-        rigid_actor_->AttachColliderShape(this);
+        m_rigidActor->AttachColliderShape(this);
     }
 
     void Collider::UnRegisterToRigidActor() {
@@ -58,21 +58,21 @@ namespace LitchiRuntime
             DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
             return;
         }
-        rigid_actor_->DeAttachColliderShape(this);
-        px_shape_ = nullptr;
+        m_rigidActor->DeAttachColliderShape(this);
+        m_pxShape = nullptr;
     }
 
     RigidActor* Collider::GetRigidActor() {
-        if (rigid_actor_ != nullptr) {
-            return rigid_actor_;
+        if (m_rigidActor != nullptr) {
+            return m_rigidActor;
         }
-        rigid_actor_ = game_object()->GetComponent<RigidDynamic>();
-        if (rigid_actor_ != nullptr) {
-            return rigid_actor_;
+        m_rigidActor = GetGameObject()->GetComponent<RigidDynamic>();
+        if (m_rigidActor != nullptr) {
+            return m_rigidActor;
         }
-        rigid_actor_ = game_object()->GetComponent<RigidStatic>();
-        if (rigid_actor_ != nullptr) {
-            return rigid_actor_;
+        m_rigidActor = GetGameObject()->GetComponent<RigidStatic>();
+        if (m_rigidActor != nullptr) {
+            return m_rigidActor;
         }
         return nullptr;
     }

@@ -1,6 +1,4 @@
-﻿
-#ifndef INTEGRATE_PHYSX_RIGID_ACTOR_H
-#define INTEGRATE_PHYSX_RIGID_ACTOR_H
+﻿#pragma once
 
 #include "PxPhysicsAPI.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
@@ -21,10 +19,8 @@ namespace LitchiRuntime
         void Awake() override;
 
     protected:
-        PxRigidActor* px_rigid_actor_;
+        PxRigidActor* m_pxRigidActor;
 
         RTTR_ENABLE(Component)
     };
 }
-
-#endif //INTEGRATE_PHYSX_RIGID_ACTOR_H

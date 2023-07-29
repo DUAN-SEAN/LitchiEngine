@@ -68,15 +68,6 @@ RTTR_REGISTRATION //注册反射
 		.property("w", &glm::quat::w);
 
 
-
-	registration::class_<VertexRes>("VertexRes")
-		.constructor()
-		.property("pos", &VertexRes::pos_)
-		.property("color", &VertexRes::color_)
-		.property("uv", &VertexRes::uv_);
-
-
-
 	registration::class_<Object>("Object")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
@@ -93,9 +84,9 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<PhysicMaterialRes>("PhysicMaterialRes")
 		.constructor<>()
-		.property("dynamicFriction",  &PhysicMaterialRes::dynamic_friction, &PhysicMaterialRes::set_dynamic_friction)
-		.property("restitution", &PhysicMaterialRes::restitution,&PhysicMaterialRes::set_restitution)
-		.property("staticFriction", &PhysicMaterialRes::static_friction,&PhysicMaterialRes::set_static_friction);
+		.property("dynamicFriction",  &PhysicMaterialRes::GetDynamicFriction, &PhysicMaterialRes::SetDynamicFriction)
+		.property("restitution", &PhysicMaterialRes::GetRestitution,&PhysicMaterialRes::SetRestitution)
+		.property("staticFriction", &PhysicMaterialRes::GetStaticFriction,&PhysicMaterialRes::SetStaticFriction);
 
 	registration::class_<ConfigRes>("ConfigRes")
 		.constructor<>()
@@ -215,11 +206,11 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Polymorphic", true)
 		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("id", &GameObject::id_)
-		.property("parentId", &GameObject::parentId_)
-		.property("name", &GameObject::name_)
-		.property("layer", &GameObject::layer,&GameObject::set_layer)
-		.property("componentList", &GameObject::component_list_);
+		.property("id", &GameObject::id)
+		.property("parentId", &GameObject::parentId)
+		.property("name", &GameObject::name)
+		.property("layer", &GameObject::GetLayer,&GameObject::SetLayer)
+		.property("componentList", &GameObject::componentList);
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
@@ -246,7 +237,7 @@ RTTR_REGISTRATION //注册反射
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("materialPath",&MeshRenderer::material_path)
+		.property("materialPath",&MeshRenderer::materialPath)
 			(rttr::metadata("AssetPath",true), rttr::metadata("AssetType", PathParser::EFileType::MATERIAL));
 
 	// SkinnedMeshRenderer
@@ -256,9 +247,9 @@ RTTR_REGISTRATION //注册反射
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("modelPath",&MeshFilter::model_path)
+		.property("modelPath",&MeshFilter::modelPath)
 			(rttr::metadata("AssetPath", true), rttr::metadata("AssetType", PathParser::EFileType::MODEL))
-		.property("meshIndex",&MeshFilter::mesh_Index_);
+		.property("meshIndex",&MeshFilter::meshIndex);
 
 	// Transform
 	registration::class_<Transform>("Transform")

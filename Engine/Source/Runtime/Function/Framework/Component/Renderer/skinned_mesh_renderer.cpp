@@ -18,8 +18,8 @@ LitchiRuntime::SkinnedMeshRenderer::~SkinnedMeshRenderer()
 void SkinnedMeshRenderer::Update()
 {
 	// 通过MeshFilter获取当前的Mesh
-	auto meshFilter = game_object()->GetComponent<MeshFilter>();
-	auto animator = game_object()->GetComponent<Animator>();
+	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+	auto animator = GetGameObject()->GetComponent<Animator>();
 	if (meshFilter == nullptr || animator == nullptr)
 	{
 		return;
@@ -52,9 +52,9 @@ void SkinnedMeshRenderer::Update()
 void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 {
 	// 提交FinalTransform到GPU
-	material()->GetShader()->Bind();
-	material()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
-	material()->GetShader()->Unbind();
+	GetMaterial()->GetShader()->Bind();
+	GetMaterial()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
+	GetMaterial()->GetShader()->Unbind();
 
 	MeshRenderer::Render(renderCamera, lightVPMat, shadowMapFBO);
 }

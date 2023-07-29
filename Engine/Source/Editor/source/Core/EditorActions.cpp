@@ -514,11 +514,11 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 	auto meshRenderer = instance->AddComponent<MeshRenderer>();
 	auto meshFilter = instance->AddComponent<MeshFilter>();
 	
-	meshFilter->model_path = p_path;
-	meshFilter->mesh_Index_ = 0;
+	meshFilter->modelPath = p_path;
+	meshFilter->meshIndex = 0;
 	meshFilter->PostResourceLoaded();
 
-	meshRenderer->material_path = "Engine\\Materials\\Default.mat";
+	meshRenderer->materialPath = "Engine\\Materials\\Default.mat";
 	meshRenderer->PostResourceLoaded();
 	
 	if (p_focusOnCreation)

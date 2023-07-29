@@ -1,6 +1,5 @@
 ﻿
-#ifndef INTEGRATE_PHYSX_BOX_COLLIDER_H
-#define INTEGRATE_PHYSX_BOX_COLLIDER_H
+#pragma once
 
 #include "rttr/registration"
 #include "glm.hpp"
@@ -16,7 +15,7 @@ namespace LitchiRuntime
         ~BoxCollider();
         glm::vec3 GetSize()
         {
-            return size_;
+            return m_size;
         }
 
     protected:
@@ -24,11 +23,8 @@ namespace LitchiRuntime
 
     private:
         //~zh 碰撞器尺寸
-        glm::vec3 size_;
+        glm::vec3 m_size;
 
         RTTR_ENABLE(Collider);
     };
 }
-
-
-#endif //INTEGRATE_PHYSX_BOX_COLLIDER_H

@@ -20,8 +20,8 @@ namespace LitchiRuntime
         Component();
         virtual ~Component();
 
-        GameObject* game_object() { return game_object_; }
-        void set_game_object(GameObject* game_object) { game_object_ = game_object; }
+        GameObject* GetGameObject() { return m_gameObject; }
+        void SetGameObject(GameObject* game_object) { m_gameObject = game_object; }
 
     private:
 
@@ -50,7 +50,7 @@ namespace LitchiRuntime
         virtual void PostResourceModify() override;
 
     private:
-        GameObject* game_object_;
+        GameObject* m_gameObject;
 
         RTTR_ENABLE(Object);
     };

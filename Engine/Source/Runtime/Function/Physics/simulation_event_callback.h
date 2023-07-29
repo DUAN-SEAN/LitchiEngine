@@ -60,7 +60,7 @@ namespace LitchiRuntime
                     GameObject* gameObject = static_cast<GameObject*>(shape->userData);
                     //                DEBUG_LOG_INFO("Shape is a trigger,gameObject:{}", gameObject->name());
                     GameObject* another_game_object = static_cast<GameObject*>(another_shape->userData);
-                    if (another_game_object->active() == false) {
+                    if (another_game_object->GetActive() == false) {
                         continue;
                     }
 

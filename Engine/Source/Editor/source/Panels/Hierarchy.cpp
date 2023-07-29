@@ -235,7 +235,7 @@ void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 
 		if (p_actor->HasParent())
 		{
-			auto parentWidget = m_widgetActorLink.at(p_actor->GetParent());
+			auto parentWidget = m_widgetActorLink.at(p_actor->GetParentObject());
 			parentWidget->leaf = false;
 			parentWidget->ConsiderWidget(*widget);
 		}
@@ -246,9 +246,9 @@ void LitchiEditor::Hierarchy::DetachFromParent(GameObject* p_actor)
 {
 	if (auto actorWidget = m_widgetActorLink.find(p_actor); actorWidget != m_widgetActorLink.end())
 	{
-		if (p_actor->HasParent() && p_actor->GetParent()->GetChildren().size() == 1)
+		if (p_actor->HasParent() && p_actor->GetParentObject()->GetChildren().size() == 1)
 		{
-			if (auto parentWidget = m_widgetActorLink.find(p_actor->GetParent()); parentWidget != m_widgetActorLink.end())
+			if (auto parentWidget = m_widgetActorLink.find(p_actor->GetParentObject()); parentWidget != m_widgetActorLink.end())
 			{
 				parentWidget->second->leaf = true;
 			}
@@ -278,7 +278,7 @@ void LitchiEditor::Hierarchy::DeleteActorByInstance(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 {
-	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->name(), true);
+	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->GetName(), true);
 	textSelectable.leaf = true;
 	textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
 	textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(p_actor, &textSelectable));
@@ -294,7 +294,7 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 	auto& dispatcher = textSelectable.AddPlugin<DataDispatcher<std::string>>();
 
 	GameObject* targetPtr = p_actor;
-	dispatcher.RegisterGatherer([targetPtr] { return targetPtr->name(); });
+	dispatcher.RegisterGatherer([targetPtr] { return targetPtr->GetName(); });
 
 	m_widgetActorLink[targetPtr] = &textSelectable;
 

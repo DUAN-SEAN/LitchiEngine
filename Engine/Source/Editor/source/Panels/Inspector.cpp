@@ -47,13 +47,13 @@ LitchiEditor::Inspector::Inspector
 	auto& headerColumns = m_inspectorHeader->CreateWidget<Columns<2>>();
 
 	/* Name field */
-	auto nameGatherer = [this] { return m_targetActor ? m_targetActor->name() : "%undef%"; };
-	auto nameProvider = [this](const std::string& p_newName) { if (m_targetActor) m_targetActor->set_name(p_newName); };
+	auto nameGatherer = [this] { return m_targetActor ? m_targetActor->GetName() : "%undef%"; };
+	auto nameProvider = [this](const std::string& p_newName) { if (m_targetActor) m_targetActor->SetName(p_newName); };
 	GUIDrawer::DrawString(headerColumns, "Name", nameGatherer, nameProvider);
 
 	/* Active field */
-	auto activeGatherer = [this] { return m_targetActor ? m_targetActor->active() : false; };
-	auto activeProvider = [this](bool p_active) { if (m_targetActor) m_targetActor->set_active(p_active); };
+	auto activeGatherer = [this] { return m_targetActor ? m_targetActor->GetActive() : false; };
+	auto activeProvider = [this](bool p_active) { if (m_targetActor) m_targetActor->SetActive(p_active); };
 	GUIDrawer::DrawBoolean(headerColumns, "Active", activeGatherer, activeProvider);
 
 	/* Component select + button */
@@ -616,7 +616,7 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	header.closable = !dynamic_cast<Transform*>(p_component);
 	header.CloseEvent += [this, &header, p_component]
 	{
-		if (p_component->game_object()->RemoveComponent(p_component))
+		if (p_component->GetGameObject()->RemoveComponent(p_component))
 			m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
 	};
 	auto& columns = header.CreateWidget<Columns<2>>();

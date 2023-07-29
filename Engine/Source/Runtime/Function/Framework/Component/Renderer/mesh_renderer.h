@@ -1,6 +1,5 @@
 ﻿
-#ifndef UNTITLED_MESH_RENDERER_H
-#define UNTITLED_MESH_RENDERER_H
+#pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Renderer/Framebuffer4Depth.h"
@@ -16,7 +15,7 @@ namespace LitchiRuntime
 		~MeshRenderer();
 
 		void SetMaterial(Resource::Material* material);//设置Material
-		Resource::Material* material() { return material_; }
+		Resource::Material* GetMaterial() { return material; }
 
 		// void RenderOld(RenderCamera* renderCamera);//渲染
 		virtual void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
@@ -33,14 +32,11 @@ namespace LitchiRuntime
 		unsigned int vertex_array_object_ = 0;//顶点数组对象
 
 	public:
-		LitchiRuntime::Resource::Material* material_;
+		LitchiRuntime::Resource::Material* material;
 
 		/**
 		 * \brief 材质名称
 		 */
-		std::string material_path;
+		std::string materialPath;
 	};
 }
-
-
-#endif //UNTITLED_MESH_RENDERER_H

@@ -123,7 +123,7 @@ void LitchiEditor::EditorRenderer::InitMaterials()
 
 void LitchiEditor::EditorRenderer::PreparePickingMaterial(LitchiRuntime::GameObject& p_actor, Resource::Material& p_material)
 {
-	uint32_t actorID = static_cast<uint32_t>(p_actor.id_);
+	uint32_t actorID = static_cast<uint32_t>(p_actor.id);
 
 	auto bytes = reinterpret_cast<uint8_t*>(&actorID);
 	auto color = glm::vec4{ bytes[0] / 255.0f, bytes[1] / 255.0f, bytes[2] / 255.0f, 1.0f };
@@ -634,9 +634,9 @@ void LitchiEditor::EditorRenderer::RenderLightBounds(LightComponent& p_light)
 
 	auto& data = p_light.GetData();
 
-	glm::quat rotation = p_light.game_object()->GetComponent<Transform>()->GetWorldRotation();
-	glm::vec3 center = p_light.game_object()->GetComponent<Transform>()->GetWorldPosition();
-	float radius = data.GetEffectRange(p_light.game_object()->GetComponent<Transform>()->GetTransform());
+	glm::quat rotation = p_light.GetGameObject()->GetComponent<Transform>()->GetWorldRotation();
+	glm::vec3 center = p_light.GetGameObject()->GetComponent<Transform>()->GetWorldPosition();
+	float radius = data.GetEffectRange(p_light.GetGameObject()->GetComponent<Transform>()->GetTransform());
 
 	if (!std::isinf(radius))
 	{

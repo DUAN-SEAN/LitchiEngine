@@ -114,7 +114,7 @@ void LitchiEditor::SceneView::RenderScene()
 	std::vector<glm::mat4> lightMatrixArr;
 	ssbo->SendBlocks(lightMatrixArr.data(), 0);
 	scene->Foreach([&](GameObject* game_object) {
-		if (game_object->active() && game_object->layer() != 0x02) {
+		if (game_object->GetActive() && game_object->GetLayer() != 0x02) {
 			game_object->ForeachComponent([&](Component* component) {
 
 				auto* lightComp = dynamic_cast<LightComponent*>(component);
@@ -182,7 +182,7 @@ void LitchiEditor::SceneView::RenderScene()
 		ApplicationEditor::Instance()->renderer->ApplyStateMask(63);
 		// 遍历所有的物体,执行MeshRenderer的Render函数
 		scene->Foreach([&](GameObject* game_object) {
-			if (game_object->active() && game_object->layer() != 0x02) {
+			if (game_object->GetActive() && game_object->GetLayer() != 0x02) {
 				game_object->ForeachComponent([&](Component* component) {
 						auto* skinned_mesh_renderer = dynamic_cast<SkinnedMeshRenderer*>(component);
 						if (skinned_mesh_renderer != nullptr) {
@@ -228,7 +228,7 @@ void LitchiEditor::SceneView::RenderScene()
 
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
-		if (game_object->active() && game_object->layer() != 0x02) {
+		if (game_object->GetActive() && game_object->GetLayer() != 0x02) {
 			game_object->ForeachComponent([&](Component* component) {
 				auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
 				if (mesh_renderer == nullptr) {
@@ -273,7 +273,7 @@ void LitchiEditor::SceneView::RenderUI()
 	// 遍历所有物体, 绘制UI
 	// 遍历所有的物体,执行MeshRenderer的Render函数
 	scene->Foreach([&](GameObject* game_object) {
-		if (game_object->active() && game_object->layer() == 0x02) {
+		if (game_object->GetActive() && game_object->GetLayer() == 0x02) {
 			game_object->ForeachComponent([&](Component* component) {
 				auto* mesh_renderer = dynamic_cast<MeshRenderer*>(component);
 				if (mesh_renderer == nullptr) {

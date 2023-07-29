@@ -17,7 +17,7 @@ UIText::UIText():m_color({1,1,1,1}) {
 
 }
 
-void UIText::set_text(std::string text) {
+void UIText::SetText(std::string text) {
     if(m_text==text){
         return;
     }
@@ -32,18 +32,18 @@ void UIText::Update() {
         return;
     }
 
-    MeshFilter* mesh_filter=game_object()->GetComponent<MeshFilter>();
+    MeshFilter* mesh_filter=GetGameObject()->GetComponent<MeshFilter>();
     if(mesh_filter== nullptr){
         //挂上 MeshFilter 组件
-        mesh_filter=game_object()->AddComponent<MeshFilter>();
+        mesh_filter=GetGameObject()->AddComponent<MeshFilter>();
         
         //挂上 MeshRenderer 组件
-        auto mesh_renderer=game_object()->AddComponent<MeshRenderer>();
-        mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
+        auto mesh_renderer=GetGameObject()->AddComponent<MeshRenderer>();
+        mesh_renderer->materialPath = "Engine\\Materials\\UIText.mat";
         mesh_renderer->PostResourceLoaded();
 
         //使用文字贴图
-        mesh_renderer->material()->Set("u_DiffuseMap", m_font->font_texture());
+        mesh_renderer->GetMaterial()->Set("u_DiffuseMap", m_font->font_texture());
     }
 
     if(m_dirty){

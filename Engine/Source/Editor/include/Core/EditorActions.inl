@@ -12,7 +12,7 @@ namespace LitchiEditor
 
 		T* component = instance->AddComponent<T>();
 
-        instance->set_name("Test");
+        instance->SetName("Test");
 
 		if (p_focusOnCreation)
 			SelectActor(instance);
