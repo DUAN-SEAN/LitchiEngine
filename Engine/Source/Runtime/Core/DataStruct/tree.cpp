@@ -3,14 +3,14 @@
 namespace LitchiRuntime
 {
     Tree::Tree() {
-        root_node_ = new Node();
+        m_rootNode = new Node();
     }
 
     void Tree::Post(Node* node, std::function<void(Node*)> func) {
-        for (auto child : node->children()) {
+        for (auto child : node->GetChildrenList()) {
             Post(child, func);
         }
-        if (node != root_node_) {
+        if (node != m_rootNode) {
             func(node);
         }
     }
@@ -18,7 +18,7 @@ namespace LitchiRuntime
     Tree::~Tree() = default;
 
     void Tree::Find(Node* node_parent, std::function<bool(Node*)> function_check, Node** node_result = nullptr) {
-        for (auto child : node_parent->children()) {
+        for (auto child : node_parent->GetChildrenList()) {
             Find(child, function_check, node_result);
             if (*node_result != nullptr) {
                 break;

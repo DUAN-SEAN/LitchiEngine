@@ -29,7 +29,7 @@ namespace LitchiRuntime
 		}
 
 		m_parentId = parent->m_id;
-		parent->AddChild(this);
+		parent->AddChildNode(this);
 		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
 		tran.SetParent(tranParent);
 
@@ -38,15 +38,15 @@ namespace LitchiRuntime
 
 	bool GameObject::HasParent()
 	{
-		auto* parent = GetParent();
-		auto* root = m_scene->game_object_tree().root_node();
+		auto* parent = GetParentNode();
+		auto* root = m_scene->game_object_tree().GetRootNode();
 		return parent != nullptr && parent != root;
 	}
 
 	void GameObject::PostResourceLoaded()
 	{
 		// 重置parent
-		set_parent(nullptr);
+		SetParentNode(nullptr);
 
 		for (auto comp : m_componentList)
 		{

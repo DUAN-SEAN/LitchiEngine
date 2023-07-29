@@ -235,7 +235,7 @@ void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 
 		if (p_actor->HasParent())
 		{
-			auto parentWidget = m_widgetActorLink.at(p_actor->GetParentObject());
+			auto parentWidget = m_widgetActorLink.at(p_actor->GetParent());
 			parentWidget->leaf = false;
 			parentWidget->ConsiderWidget(*widget);
 		}
@@ -246,9 +246,9 @@ void LitchiEditor::Hierarchy::DetachFromParent(GameObject* p_actor)
 {
 	if (auto actorWidget = m_widgetActorLink.find(p_actor); actorWidget != m_widgetActorLink.end())
 	{
-		if (p_actor->HasParent() && p_actor->GetParentObject()->GetChildren().size() == 1)
+		if (p_actor->HasParent() && p_actor->GetParent()->GetChildren().size() == 1)
 		{
-			if (auto parentWidget = m_widgetActorLink.find(p_actor->GetParentObject()); parentWidget != m_widgetActorLink.end())
+			if (auto parentWidget = m_widgetActorLink.find(p_actor->GetParent()); parentWidget != m_widgetActorLink.end())
 			{
 				parentWidget->second->leaf = true;
 			}

@@ -30,14 +30,14 @@ namespace LitchiRuntime
 
 		// 将go添加到game_object_vec_中
 		game_object_vec_.push_back(game_object);
-		game_object_tree_.root_node()->AddChild(game_object);
+		game_object_tree_.GetRootNode()->AddChildNode(game_object);
 
 		return game_object;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		game_object_tree_.Post(game_object_tree_.root_node(), [&func](Tree::Node* node) {
+		game_object_tree_.Post(game_object_tree_.GetRootNode(), [&func](Tree::Node* node) {
 			auto n = node;
 			GameObject* game_object = dynamic_cast<GameObject*>(n);
 			func(game_object);
@@ -45,7 +45,7 @@ namespace LitchiRuntime
 	}
 	GameObject* Scene::Find(const char* name) {
 		GameObject* game_object_find = nullptr;
-		game_object_tree_.Find(game_object_tree_.root_node(), [&name](Tree::Node* node) {
+		game_object_tree_.Find(game_object_tree_.GetRootNode(), [&name](Tree::Node* node) {
 			GameObject* game_object = dynamic_cast<GameObject*>(node);
 			if (game_object->GetName() == name) {
 				return true;
@@ -58,7 +58,7 @@ namespace LitchiRuntime
 	GameObject* Scene::Find(const int64_t id)
 	{
 		GameObject* game_object_find = nullptr;
-		game_object_tree_.Find(game_object_tree_.root_node(), [&id](Tree::Node* node) {
+		game_object_tree_.Find(game_object_tree_.GetRootNode(), [&id](Tree::Node* node) {
 			GameObject* game_object = dynamic_cast<GameObject*>(node);
 			if (game_object != nullptr && game_object->m_id == id) {
 				return true;
@@ -72,7 +72,7 @@ namespace LitchiRuntime
 	{
 		for (auto go : game_object_vec_)
 		{
-			game_object_tree_.root_node()->AddChild(go);
+			game_object_tree_.GetRootNode()->AddChildNode(go);
 
 			go->PostResourceLoaded();
 		}

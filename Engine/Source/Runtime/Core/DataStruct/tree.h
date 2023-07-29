@@ -1,6 +1,4 @@
-﻿
-#ifndef UNTITLED_TREE_H
-#define UNTITLED_TREE_H
+﻿#pragma once
 
 #include <list>
 #include <functional>
@@ -13,44 +11,42 @@ namespace LitchiRuntime
         public:
             virtual ~Node() {}
 
-            Node* GetParent() { return parent_; }
-            void set_parent(Node* parent) { parent_ = parent; }
+            Node* GetParentNode() { return m_parent; }
+            void SetParentNode(Node* parent) { m_parent = parent; }
 
-            std::list<Node*>& children() { return children_; }
+            std::list<Node*>& GetChildrenList() { return m_childrenList; }
 
-            void AddChild(Node* child) {
+            void AddChildNode(Node* child) {
                 //先从之前的父节点移除
-                if (child->GetParent() != nullptr) {
-                    child->GetParent()->RemoveChild(child);
+                if (child->GetParentNode() != nullptr) {
+                    child->GetParentNode()->RemoveChildNode(child);
                 }
-                children_.push_back(child);
-                child->set_parent(this);
+                m_childrenList.push_back(child);
+                child->SetParentNode(this);
             }
 
-            void RemoveChild(Node* child) {
-                children_.remove(child);
+            void RemoveChildNode(Node* child) {
+                m_childrenList.remove(child);
             }
 
-            bool Empty() {
-                return children_.size() > 0;
+            bool IsEmpty() {
+                return m_childrenList.size() > 0;
             }
         private:
-            Node* parent_ = nullptr;//父节点
-            std::list<Node*> children_;//子节点
+            Node* m_parent = nullptr;//父节点
+            std::list<Node*> m_childrenList;//子节点
         };
 
     public:
         Tree();
         ~Tree();
 
-        Node* root_node() { return root_node_; }
+        Node* GetRootNode() { return m_rootNode; }
 
         void Post(Node* node, std::function<void(Node*)> func);
 
         void Find(Node* node_parent, std::function<bool(Node*)> function_check, Node** node_result);
     private:
-        Node* root_node_;
+        Node* m_rootNode;
     };
 }
-
-#endif //UNTITLED_TREE_H

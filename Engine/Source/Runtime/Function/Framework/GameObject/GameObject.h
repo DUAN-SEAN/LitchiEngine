@@ -33,14 +33,18 @@ namespace LitchiRuntime
 		/// \return
 		bool SetParent(GameObject* parent);
 
+		/**
+		 * \brief 是否有父亲
+		 * \return 
+		 */
 		bool HasParent();
 
-		GameObject* GetParentObject() { return (GameObject*)GetParent(); }
+		GameObject* GetParent() { return (GameObject*)GetParentNode(); }
 
 		std::list<GameObject*>& GetChildren()
 		{
 			std::list<GameObject*> dadList;
-			for (auto a : children()) {
+			for (auto a : GetChildrenList()) {
 				dadList.push_back((GameObject*)a);       //依次加到父类List里
 			}
 
