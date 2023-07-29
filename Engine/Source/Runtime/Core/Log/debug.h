@@ -1,6 +1,6 @@
 ﻿
-#ifndef UNTITLED_DEBUG_H
-#define UNTITLED_DEBUG_H
+#pragma once
+
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include "spdlog/spdlog.h"
@@ -23,5 +23,3 @@ namespace LitchiRuntime
         static void Init();
     };
 }
-
-#endif //UNTITLED_DEBUG_H

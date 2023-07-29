@@ -2,11 +2,11 @@
 #include "FontLoader.h"
 
 #include <fstream>
+#include <glad/glad.h>
 
 #include "TextureLoader.h"
 #include "freetype/ftbitmap.h"
 #include "Runtime/Function/Renderer/Font/font.h"
-#include "Runtime/Function/Renderer/Resources/texture2d.h"
 #include "spdlog/spdlog.h"
 
 using std::ifstream;

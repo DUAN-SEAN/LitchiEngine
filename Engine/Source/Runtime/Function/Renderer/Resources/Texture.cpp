@@ -1,7 +1,7 @@
 
 #include "Texture.h"
 
-#include "texture2d.h"
+#include <glad/glad.h>
 #include "Runtime/Core/Log/debug.h"
 
 void LitchiRuntime::Texture::Bind(uint32_t p_slot) const
