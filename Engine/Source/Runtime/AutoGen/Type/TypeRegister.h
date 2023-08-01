@@ -29,6 +29,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -323,5 +324,9 @@ RTTR_REGISTRATION //注册反射
 		/*.property("Width", &UIImage::GetWidth)
 		.property("Height", &UIImage::GetHeight);*/
 
+
+	registration::class_<ScriptComponent>("ScriptComponent")
+		.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 	}
 }

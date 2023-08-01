@@ -11,6 +11,14 @@
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 
+template<typename T>
+using Ref = std::shared_ptr<T>;
+template<typename T, typename ... Args>
+constexpr Ref<T> CreateRef(Args&& ... args)
+{
+	return std::make_shared<T>(std::forward<Args>(args)...);
+}
+
 extern "C" {
 	typedef struct _MonoClass MonoClass;
 	typedef struct _MonoObject MonoObject;

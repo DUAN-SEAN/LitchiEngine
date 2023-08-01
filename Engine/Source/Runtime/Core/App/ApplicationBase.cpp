@@ -16,6 +16,7 @@
 
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Renderer/RenderSystem.h"
+#include "Runtime/Function/Scripting/ScriptEngine.h"
 
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
@@ -49,6 +50,8 @@ namespace LitchiRuntime
 
         //初始化物理引擎
         Physics::Init();
+
+        ScriptEngine::Init();
 
         // 初始化场景 如果没有场景则构建默认场景
     }
