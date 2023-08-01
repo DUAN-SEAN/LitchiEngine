@@ -30,3 +30,6 @@ add_subdirectory(Source/Runtime)
 
 # 添加引擎编辑器构建子目录
 add_subdirectory(Source/Editor)
+
+# 添加引擎脚本构建子目录
+add_subdirectory(Source/ScriptCore)
