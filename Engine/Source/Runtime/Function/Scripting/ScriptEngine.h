@@ -48,7 +48,9 @@ namespace LitchiRuntime
 		MonoClassField* ClassField;
 	};
 
-	// ScriptField + data storage
+	/**
+	 * \brief 脚本字段的实例, 并且包含了数据
+	 */
 	struct ScriptFieldInstance
 	{
 		ScriptField Field;
@@ -80,6 +82,9 @@ namespace LitchiRuntime
 
 	using ScriptFieldMap = std::unordered_map<std::string, ScriptFieldInstance>;
 
+	/**
+	 * \brief 脚本类句柄 主要用于定义脚本组件(ScriptComponent)
+	 */
 	class ScriptClass
 	{
 	public:
@@ -88,20 +93,34 @@ namespace LitchiRuntime
 
 		MonoObject* Instantiate();
 		MonoMethod* GetMethod(const std::string& name, int parameterCount);
+		/**
+		 * \brief 调用方法
+		 * \param instance 脚本运行时对象 
+		 * \param method 方法句柄
+		 * \param params 参数列表
+		 * \return 
+		 */
 		MonoObject* InvokeMethod(MonoObject* instance, MonoMethod* method, void** params = nullptr);
 
-		const std::map<std::string, ScriptField>& GetFields() const { return m_Fields; }
+		/**
+		 * \brief 获取所有方法
+		 * \return 方法列表
+		 */
+		const std::map<std::string, ScriptField>& GetFields() const { return m_fields; }
 	private:
-		std::string m_ClassNamespace;
-		std::string m_ClassName;
+		std::string m_classNamespace;
+		std::string m_className;
 
-		std::map<std::string, ScriptField> m_Fields;
+		std::map<std::string, ScriptField> m_fields;
 
-		MonoClass* m_MonoClass = nullptr;
+		MonoClass* m_monoClass = nullptr;
 
 		friend class ScriptEngine;
 	};
 
+	/**
+	 * \brief 脚本实例
+	 */
 	class ScriptInstance
 	{
 	public:
@@ -156,9 +175,24 @@ namespace LitchiRuntime
 		static void Init();
 		static void Shutdown();
 
+		static bool LoadCoreAssembly(const std::filesystem::path& filepath);
+		static bool LoadAppAssembly(const std::filesystem::path& filepath);
+
+		static void ReloadAssembly();
+
+		static void OnRuntimeStart(Scene* scene);
+		static void OnRuntimeStop();
+
+		static MonoImage* GetCoreAssemblyImage();
+
 	private:
 		static void InitMono();
 		static void ShutdownMono();
+
+		static MonoObject* InstantiateClass(MonoClass* monoClass);
+		static void LoadAssemblyClasses();
+
+		friend class ScriptClass;
 	};
 
 	namespace Utils {
