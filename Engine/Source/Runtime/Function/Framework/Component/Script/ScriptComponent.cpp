@@ -1,5 +1,6 @@
 ﻿#include "ScriptComponent.h"
 
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 
 namespace LitchiRuntime
@@ -11,7 +12,7 @@ namespace LitchiRuntime
 		auto& className = m_className;
 
 		// 通过class名创建脚本组件
-		uint64_t unmanagedId = ScriptEngine::CreateScriptComponent(className);
+		uint64_t unmanagedId = ScriptEngine::CreateScriptComponent(GetGameObject()->GetUnmanagedId(),className);
 		if(unmanagedId == 0)
 		{
 			DEBUG_LOG_ERROR("CreateScriptComponent Fail className:{}", className);
@@ -31,8 +32,6 @@ namespace LitchiRuntime
 	{
 		// 通知脚本引擎 执行回调Awake
 		auto& unmanagedId = m_unmanagedId;
-
-		ScriptEngine::
 	}
 
 	void LitchiRuntime::ScriptComponent::Update()

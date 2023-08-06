@@ -1,6 +1,8 @@
 ﻿
 #include "component.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Scripting/ScriptEngine.h"
+
 namespace LitchiRuntime
 {
 	Component::Component() {
@@ -41,6 +43,13 @@ namespace LitchiRuntime
 	}
 
 	void Component::OnTriggerStay(GameObject* game_object) {
+	}
+
+	void Component::PostResourceLoaded()
+	{
+		const auto typeName = get_type().get_name().to_string();
+		const auto gameObjectUnmanagedId = m_gameObject->GetUnmanagedId();
+		m_unmanagedId = ScriptEngine::CreateComponent(gameObjectUnmanagedId, typeName);
 	}
 
 	void Component::PostResourceModify()

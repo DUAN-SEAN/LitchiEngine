@@ -13,7 +13,7 @@
 namespace LitchiRuntime
 {
 	class Scene;
-	class GameObject :public Tree::Node,Object{
+	class GameObject :public Tree::Node,public ScriptObject{
 	public:
 		GameObject() {}
 		GameObject(std::string name,int64_t id);

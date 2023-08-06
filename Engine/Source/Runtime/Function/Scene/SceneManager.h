@@ -4,12 +4,12 @@
 #include <map>
 #include <string>
 #include "Runtime/Core/DataStruct/tree.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "Runtime/Function/Scripting/ScriptObject.h"
 
 namespace LitchiRuntime
 {
 	class GameObject;
-	class Scene :Object
+	class Scene :public ScriptObject
 	{
 	public:
 		Scene();

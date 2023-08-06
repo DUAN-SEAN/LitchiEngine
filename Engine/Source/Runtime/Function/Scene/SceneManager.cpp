@@ -2,6 +2,7 @@
 
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Scripting/ScriptEngine.h"
 #include "Runtime/Resource/AssetManager.h"
 
 namespace LitchiRuntime
@@ -70,6 +71,9 @@ namespace LitchiRuntime
 
 	void Scene::PostResourceLoaded()
 	{
+		// 创建非托管对象
+		m_unmanagedId = ScriptEngine::CreateScene();
+
 		for (auto go : m_gameObjectList)
 		{
 			m_gameObjectTree.GetRootNode()->AddChildNode(go);

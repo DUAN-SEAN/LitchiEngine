@@ -4,6 +4,32 @@ using System.Runtime.CompilerServices;
 // ReSharper disable once CheckNamespace
 namespace LitchiEngine
 {
+    /// <summary>
+    /// 脚本对象基类
+    /// </summary>
+    public abstract class ScriptObject
+    {
+        /// <summary>
+        /// 设置非托管对象的Id
+        /// </summary>
+        /// <param name="unmanagedId"></param>
+        internal void SetUnmanagedIdFromEngine(ulong unmanagedId)
+        {
+            m_umanagedId = unmanagedId;
+        }
+
+        /// <summary>
+        /// 非托管层定义的id
+        /// </summary>
+        protected internal ulong UnmanagedId => m_umanagedId;
+        private ulong m_umanagedId;
+    }
+
+    #region Scene & GameObject
+    
+    /// <summary>
+    /// 场景管理器
+    /// </summary>
     public static class SceneManager
     {
         /// <summary>
@@ -31,6 +57,9 @@ namespace LitchiEngine
         public static Scene m_currScene;
     }
 
+    /// <summary>
+    /// 场景实例
+    /// </summary>
     public class Scene : ScriptObject
     {
         public GameObject FindGameObject(string name)
@@ -47,83 +76,88 @@ namespace LitchiEngine
         }
     }
 
-    public class ScriptObject
-    {
-        /// <summary>
-        /// 非托管层定义的id
-        /// </summary>
-        protected UInt64 m_umanagedId;
-    }
-
+    /// <summary>
+    /// 游戏对象
+    /// </summary>
     public class GameObject : ScriptObject
     {
-        public string Name
+        /// <summary>
+        /// 添加组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T AddComponent<T>() where T : Component
         {
-            get
-            {
-                // 通过InternalCall获取
-                return "";
-            }
+            return GetOrCreateComponent<T>();
         }
 
-        public T AddComponent<T>() where T : ScriptComponent, new()
+        /// <summary>
+        /// 获取组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetComponent<T>() where T : Component
         {
-            // 内部调用到C++层创建对象
-            if (typeof(T).BaseType == typeof(Component))
-            {
+            return GetOrCreateComponent<T>();
+        }
 
+        /// <summary>
+        /// 获取或则创建Component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        private T GetOrCreateComponent<T>() where T : Component
+        {
+            var componentType = typeof(T);
+
+            // 内部调用到C++层创建对象
+            if (componentType.BaseType == typeof(Component))
+            {
+                return InternalCalls.Internal_GetOrCreateComponent(Scene.UnmanagedId, UnmanagedId, componentType.Name) as T;
+            }
+            else if (typeof(T).BaseType == typeof(ScriptComponent))
+            {
+                return InternalCalls.Internal_GetOrCreateScriptComponent(Scene.UnmanagedId, UnmanagedId, $"{componentType.Namespace}.{componentType.Name}") as T;
             }
             else
             {
-
+                return null;
             }
-
-            return new T();
         }
 
+        /// <summary>
+        /// 设置Scene非托管对象的Id
+        /// </summary>
+        /// <param name="unmanagedId"></param>
+        internal void SetSceneUnmanagedIdFromEngine(ulong unmanagedId)
+        {
+            m_sceneUnmanageId = unmanagedId;
+        }
 
-        #region Internal Calls
+        /// <summary>
+        /// GameObject的名字
+        /// </summary>
+        public string Name => InternalCalls.Internal_GetGameObjectName(UnmanagedId);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ScriptObject Internal_Create1(Type type);
+        /// <summary>
+        /// 当前场景
+        /// </summary>
+        public Scene Scene => InternalCalls.Internal_GetScriptInstance(m_sceneUnmanageId) as Scene;
+        private ulong m_sceneUnmanageId;
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ScriptObject Internal_Create2(string typeName);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ManagedInstanceCreated(ScriptObject managedInstance);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_Destroy(IntPtr obj, float timeLeft);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern string Internal_GetTypeName(IntPtr obj);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ScriptObject Internal_FindObject(ref Guid id, Type type);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern ScriptObject Internal_TryFindObject(ref Guid id, Type type);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern IntPtr Internal_GetUnmanagedInterface(IntPtr obj, Type type);
-
-        #endregion
     }
 
-    #region 组件
+    #endregion
+
+    #region Component
 
     /// <summary>
     /// 脚本基类
     /// </summary>
     public abstract class Component : ScriptObject
     {
+        #region 生命周期函数
+
         /// <summary>
         /// 脚本实例化时
         /// </summary>
@@ -138,24 +172,23 @@ namespace LitchiEngine
         /// 脚本刷新
         /// </summary>
         protected abstract void OnUpdate();
-    }
 
-    public class Transform : Component
-    {
-        protected override void OnAwake()
+        #endregion
+
+        /// <summary>
+        /// 设置GameObject非托管对象的Id
+        /// </summary>
+        /// <param name="unmanagedId"></param>
+        internal void SetGameObjectUnmanagedIdFromEngine(ulong unmanagedId)
         {
-            throw new NotImplementedException();
+            m_gameObjectUnmanageId = unmanagedId;
         }
 
-        protected override void OnStart()
-        {
-            throw new NotImplementedException();
-        }
-
-        protected override void OnUpdate()
-        {
-            throw new NotImplementedException();
-        }
+        /// <summary>
+        /// 获取当前游戏对象
+        /// </summary>
+        public GameObject Scene => InternalCalls.Internal_GetScriptInstance(m_gameObjectUnmanageId) as GameObject;
+        private ulong m_gameObjectUnmanageId;
     }
 
     /// <summary>
@@ -164,6 +197,24 @@ namespace LitchiEngine
     public abstract class ScriptComponent : Component
     {
 
+    }
+
+    /// <summary>
+    /// Transform组件的托管对象
+    /// </summary>
+    public class Transform : Component
+    {
+        protected sealed override void OnAwake()
+        {
+        }
+
+        protected sealed override void OnStart()
+        {
+        }
+
+        protected sealed override void OnUpdate()
+        {
+        }
     }
 
     /// <summary>
@@ -189,33 +240,46 @@ namespace LitchiEngine
 
     #endregion
 
-    public static class InternalCalls
+    /// <summary>
+    /// 内部调用
+    /// </summary>
+    internal static class InternalCalls
     {
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static bool Entity_HasComponent(ulong entityID, Type componentType);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static ulong Entity_FindEntityByName(string name);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static object GetScriptInstance(ulong entityID);
+        #region Common
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void TransformComponent_GetTranslation(ulong entityID, out Vector3 translation);
+        internal extern static ScriptObject Internal_GetScriptInstance(ulong scriptObjectUnmanagedId);
+
+        #endregion
+
+        #region Scene
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void TransformComponent_SetTranslation(ulong entityID, ref Vector3 translation);
+        internal extern static Scene Internal_GetCurrentScene();
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void Rigidbody2DComponent_ApplyLinearImpulse(ulong entityID, ref Vector2 impulse, ref Vector2 point, bool wake);
-        [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void Rigidbody2DComponent_GetLinearVelocity(ulong entityID, out Vector2 linearVelocity);
-        //[MethodImplAttribute(MethodImplOptions.InternalCall)]
-        //internal extern static Rigidbody2DComponent.BodyType Rigidbody2DComponent_GetType(ulong entityID);
-        //[MethodImplAttribute(MethodImplOptions.InternalCall)]
-        //internal extern static void Rigidbody2DComponent_SetType(ulong entityID, Rigidbody2DComponent.BodyType type);
+        internal extern static Scene Internal_CreateEmptyScene();
+
+        #endregion
+
+        #region GameObject
 
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static void Rigidbody2DComponent_ApplyLinearImpulseToCenter(ulong entityID, ref Vector2 impulse, bool wake);
+        internal extern static GameObject Internal_GetOrCreateGameObject(ulong sceneUnmanagedId, string gameObjectName);
+
         [MethodImplAttribute(MethodImplOptions.InternalCall)]
-        internal extern static bool Input_IsKeyDown(KeyCode keycode);
+        internal extern static string Internal_GetGameObjectName(ulong gameObjectUnmanagedId);
+
+        #endregion
+
+        #region Component
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static Component Internal_GetOrCreateComponent(ulong sceneUnmanagedId, ulong gameObjectUnmanagedId, string componentName);
+
+        [MethodImplAttribute(MethodImplOptions.InternalCall)]
+        internal extern static ScriptComponent Internal_GetOrCreateScriptComponent(ulong sceneUnmanagedId, ulong gameObjectUnmanagedId, string className);
+
+        #endregion
     }
 }

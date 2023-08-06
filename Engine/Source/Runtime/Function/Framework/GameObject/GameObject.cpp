@@ -5,6 +5,7 @@
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Scene/SceneManager.h"
+#include "Runtime/Function/Scripting/ScriptEngine.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -45,6 +46,9 @@ namespace LitchiRuntime
 
 	void GameObject::PostResourceLoaded()
 	{
+		// 创建非托管对象
+		m_unmanagedId = ScriptEngine::CreateGameObject(m_scene->GetUnmanagedId());
+
 		// 重置parent
 		SetParentNode(nullptr);
 

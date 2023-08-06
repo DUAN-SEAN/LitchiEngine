@@ -1,12 +1,12 @@
 ﻿#include "ScriptEngine.h"
 
+#include <string>
+
 #include "mono/jit/jit.h"
 #include "mono/metadata/assembly.h"
 #include "mono/metadata/object.h"
 #include "mono/metadata/mono-debug.h"
 #include "mono/metadata/threads.h"
-
-#include <string>
 
 #include "ScriptRegister.h"
 #include "Runtime/Core/Tools/FileSystem/Buffer.h"
@@ -143,7 +143,15 @@ namespace LitchiRuntime
 		/**
 		 * \brief ScriptObject的MonoClass定义
 		 */
-		ScriptClass EngineObjectClass;
+		ScriptClass EngineClass4ScriptObject;
+		/**
+		 * \brief Scene的MonoClass定义
+		 */
+		ScriptClass EngineClass4Scene;
+		/**
+		 * \brief GameObject的MonoClass定义
+		 */
+		ScriptClass EngineClass4GameObject;
 		/**
 		 * \brief ScriptObject的所有子类映射
 		 */
@@ -160,10 +168,6 @@ namespace LitchiRuntime
 		 * \brief 是否开启DEBUG
 		 */
 		bool EnableDebugging = false;
-		/**
-		 * \brief 当前的Scene
-		 */
-		Scene* SceneContext = nullptr;
 
 		// Scope<filewatch::FileWatch<std::string>> AppAssemblyFileWatcher;
 		bool AssemblyReloadPending = false;
@@ -210,7 +214,15 @@ namespace LitchiRuntime
 	MonoObject* ScriptClass::InvokeMethod(MonoObject* instance, MonoMethod* method, void** params)
 	{
 		MonoObject* exception = nullptr;
-		return mono_runtime_invoke(method, instance, params, &exception);
+		auto result = mono_runtime_invoke(method, instance, params, &exception);
+		if(exception != nullptr)
+		{
+			mono_unhandled_exception(exception);
+			DEBUG_LOG_ERROR("InvokeMethod Fail Exception");
+
+			return nullptr;
+		}
+		return result;
 	}
 
 #endif
@@ -218,7 +230,7 @@ namespace LitchiRuntime
 #if 1 ScriptInstance
 
 	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass, uint64_t unmanagedId)
-		: m_scriptClass(scriptClass)
+		: m_scriptClass(scriptClass),m_unmanagedId(unmanagedId)
 	{
 		m_managedObject = scriptClass->Instantiate();
 
@@ -247,6 +259,25 @@ namespace LitchiRuntime
 			void* param = &ts;
 			m_scriptClass->InvokeMethod(m_managedObject, m_onUpdateMethod, &param);
 		}
+	}
+
+	void ScriptInstance::Invoke(std::string methodName, void* param, int paramCount)
+	{
+		// 获取方法
+		auto method  = m_scriptClass->GetMethod(methodName, paramCount);
+		if(method == nullptr)
+		{
+			DEBUG_LOG_ERROR("Method Not Found, methodName:{}", methodName);
+			return;
+		}
+
+		// 调用 resultObject could maybe none
+		auto resultObject =  m_scriptClass->InvokeMethod(m_managedObject, method, &param);
+	}
+
+	uint64_t ScriptInstance::GetUnmanagedId()
+	{
+		return m_unmanagedId;
 	}
 
 	bool ScriptInstance::GetFieldValueInternal(const std::string& name, void* buffer)
@@ -317,7 +348,9 @@ namespace LitchiRuntime
 		// 注册脚本
 		ScriptRegister::RegisterComponents();
 
-		s_data->EngineObjectClass = ScriptClass("LitchiEngine", "ScriptObject", true);
+		s_data->EngineClass4ScriptObject = ScriptClass("LitchiEngine", "ScriptObject", true);
+		s_data->EngineClass4Scene = ScriptClass("LitchiEngine", "Scene", true);
+		s_data->EngineClass4GameObject = ScriptClass("LitchiEngine", "GameObject", true);
 
 		// 测试代码
 		MonoClass* monoClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "SceneManager");
@@ -376,7 +409,9 @@ namespace LitchiRuntime
 		ScriptRegister::RegisterComponents();
 
 		// Retrieve and instantiate class
-		s_data->EngineObjectClass = ScriptClass("LitchiEngine", "Object", true);
+		s_data->EngineClass4ScriptObject = ScriptClass("LitchiEngine", "Object", true);
+		s_data->EngineClass4Scene = ScriptClass("LitchiEngine", "Scene", true);
+		s_data->EngineClass4GameObject = ScriptClass("LitchiEngine", "GameObject", true);
 	}
 
 	void ScriptEngine::InitMono(std::string monoDllPath)
@@ -428,22 +463,77 @@ namespace LitchiRuntime
 		return s_data->ScriptObjectInstanceDict.at(unmanagedId)->GetManagedObject();
 	}
 
-	uint64_t ScriptEngine::CreateScriptComponent(const std::string& string)
+	uint64_t ScriptEngine::CreateScene()
 	{
-		auto id = ++s_data->m_unmanagedIdFactory;
-
 		// 通过脚本名获取脚本类型定义
-		auto scriptClass = s_data->ScriptObjectClassDict[string];
-		if(scriptClass == nullptr)
+		auto scriptClass = s_data->EngineClass4Scene;
+
+		auto scriptInstance = ScriptEngine::CreateScriptInstance(CreateRef<ScriptClass>(scriptClass));
+		if (scriptInstance == nullptr)
 		{
 			return 0;
 		}
 
-		// 通过脚本类型定义和id构建脚本实例
-		Ref<ScriptInstance> scriptInstance = CreateRef<ScriptInstance>(scriptClass, id);
+		uint64_t id = scriptInstance->GetUnmanagedId();
+		return id;
+	}
 
-		// 添加实例映射
-		s_data->ScriptObjectInstanceDict[id] = scriptInstance;
+	uint64_t ScriptEngine::CreateGameObject(uint64_t sceneUnmanagedId)
+	{
+		// 通过脚本名获取脚本类型定义
+		auto scriptClass = s_data->EngineClass4ScriptObject;
+		
+
+		auto scriptInstance = ScriptEngine::CreateScriptInstance(CreateRef<ScriptClass>(scriptClass));
+		if (scriptInstance == nullptr)
+		{
+			return 0;
+		}
+
+		uint64_t id = scriptInstance->GetUnmanagedId();
+		scriptInstance->Invoke("SetSceneUnmanagedIdFromEngine", &sceneUnmanagedId, 1);
+
+		return id;
+	}
+
+	uint64_t ScriptEngine::CreateComponent(uint64_t gameObjectUnmanagedId, const std::string& componentTypeName)
+	{
+		auto fullName = fmt::format("{}.{}", "LitchiEngine", componentTypeName);
+		auto scriptClass = s_data->ScriptObjectClassDict[fullName];
+		if (scriptClass == nullptr)
+		{
+			return 0;
+		}
+
+		auto scriptInstance = ScriptEngine::CreateScriptInstance(scriptClass);
+		if (scriptInstance == nullptr)
+		{
+			return 0;
+		}
+
+		uint64_t id = scriptInstance->GetUnmanagedId();
+		scriptInstance->Invoke("SetGameObjectUnmanagedIdFromEngine", &gameObjectUnmanagedId, 1);
+
+		return id;
+	}
+
+	uint64_t ScriptEngine::CreateScriptComponent(uint64_t gameObjectUnmanagedId, const std::string& scriptName)
+	{
+		// 通过脚本名获取脚本类型定义
+		auto scriptClass = s_data->ScriptObjectClassDict[scriptName];
+		if (scriptClass == nullptr)
+		{
+			return 0;
+		}
+
+		auto scriptInstance = ScriptEngine::CreateScriptInstance(scriptClass);
+		if(scriptInstance == nullptr)
+		{
+			return 0;
+		}
+
+		uint64_t id = scriptInstance->GetUnmanagedId();
+		scriptInstance->Invoke("SetGameObjectUnmanagedIdFromEngine", &gameObjectUnmanagedId, 1);
 
 		return id;
 	}
@@ -576,5 +666,19 @@ namespace LitchiRuntime
 		//mono_field_get_value()
 	}
 
+
+	Ref<ScriptInstance> ScriptEngine::CreateScriptInstance(Ref<ScriptClass> scriptClass)
+	{
+		auto id = ++s_data->m_unmanagedIdFactory;
+
+		// 通过脚本类型定义和id构建脚本实例
+		Ref<ScriptInstance> scriptInstance = CreateRef<ScriptInstance>(scriptClass, id);
+		scriptInstance->Invoke("SetUnmanagedIdFromEngine", &id, 1);
+
+		// 添加实例映射
+		s_data->ScriptObjectInstanceDict[id] = scriptInstance;
+
+		return scriptInstance;
+	}
 #endif
 }

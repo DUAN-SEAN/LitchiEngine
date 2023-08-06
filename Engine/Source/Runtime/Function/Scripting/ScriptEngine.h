@@ -7,8 +7,7 @@
 #include <string>
 #include <map>
 #include <unordered_map>
-
-#include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include <stdint.h>
 
 template<typename T>
 using Ref = std::shared_ptr<T>;
@@ -33,10 +32,10 @@ namespace LitchiRuntime
 	enum class ScriptFieldType
 	{
 		None = 0,
-			Float, Double,
-			Bool, Char, Byte, Short, Int, Long,
-			UByte, UShort, UInt, ULong,
-			Vector2, Vector3, Vector4
+		Float, Double,
+		Bool, Char, Byte, Short, Int, Long,
+		UByte, UShort, UInt, ULong,
+		Vector2, Vector3, Vector4
 	};
 
 	struct ScriptField
@@ -94,10 +93,10 @@ namespace LitchiRuntime
 		MonoMethod* GetMethod(const std::string& name, int parameterCount);
 		/**
 		 * \brief 调用方法
-		 * \param instance 脚本运行时对象 
+		 * \param instance 脚本运行时对象
 		 * \param method 方法句柄
 		 * \param params 参数列表
-		 * \return 
+		 * \return
 		 */
 		MonoObject* InvokeMethod(MonoObject* instance, MonoMethod* method, void** params = nullptr);
 
@@ -128,7 +127,11 @@ namespace LitchiRuntime
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float ts);
 
+
+		void Invoke(std::string methodName, void* param, int paramCount = 1);
+
 		Ref<ScriptClass> GetScriptClass() { return m_scriptClass; }
+		uint64_t GetUnmanagedId();
 
 		template<typename T>
 		T GetFieldValue(const std::string& name)
@@ -156,6 +159,7 @@ namespace LitchiRuntime
 		bool SetFieldValueInternal(const std::string& name, const void* value);
 	private:
 		Ref<ScriptClass> m_scriptClass;
+		uint64_t m_unmanagedId;
 
 		MonoObject* m_managedObject = nullptr;
 		MonoMethod* m_constructor = nullptr;
@@ -167,7 +171,7 @@ namespace LitchiRuntime
 		friend class ScriptEngine;
 		friend struct ScriptFieldInstance;
 	};
-	
+
 	class ScriptEngine
 	{
 	public:
@@ -182,18 +186,19 @@ namespace LitchiRuntime
 
 		static void ReloadAssembly();
 
-		static void OnRuntimeStart(Scene* scene);
-		static void OnRuntimeStop();
-
 		static MonoImage* GetCoreAssemblyImage();
 
 		/**
 		 * \brief 获取托管对象实例
 		 * \param unmanagedId 非托管id
-		 * \return 
+		 * \return
 		 */
 		static MonoObject* GetManagedInstance(uint64_t unmanagedId);
-		static uint64_t CreateScriptComponent(const std::string& string);
+
+		static uint64_t  CreateScene();
+		static uint64_t  CreateGameObject(uint64_t sceneUnmanagedId);
+		static uint64_t CreateComponent(uint64_t gameObjectUnmanagedId, const std::string& componentTypeName);
+		static uint64_t CreateScriptComponent(uint64_t gameObjectUnmanagedId, const std::string& scriptName);
 
 	private:
 		static void InitMono(std::string monoDllPath);
@@ -201,6 +206,8 @@ namespace LitchiRuntime
 
 		static MonoObject* InstantiateClass(MonoClass* monoClass);
 		static void LoadAssemblyClasses();
+
+		static Ref<ScriptInstance> CreateScriptInstance(Ref<ScriptClass> scriptClass);
 
 		friend class ScriptClass;
 	};
