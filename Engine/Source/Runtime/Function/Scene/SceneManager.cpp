@@ -132,6 +132,7 @@ namespace LitchiRuntime
 	Scene* SceneManager::CreateScene(std::string sceneName)
 	{
 		Scene* scene = new Scene(sceneName);
+		scene->PostResourceLoaded();
 
 		// 将scene添加到map中
 		m_sceneMap[sceneName] = scene;

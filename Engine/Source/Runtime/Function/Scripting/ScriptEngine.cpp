@@ -481,7 +481,7 @@ namespace LitchiRuntime
 	uint64_t ScriptEngine::CreateGameObject(uint64_t sceneUnmanagedId)
 	{
 		// 通过脚本名获取脚本类型定义
-		auto scriptClass = s_data->EngineClass4ScriptObject;
+		auto scriptClass = s_data->EngineClass4GameObject;
 		
 
 		auto scriptInstance = ScriptEngine::CreateScriptInstance(CreateRef<ScriptClass>(scriptClass));

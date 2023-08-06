@@ -60,8 +60,11 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
+
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(glm::vec3(0.0, y, z));
+	transform->PostResourceLoaded();
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->modelPath = modelPath;
@@ -78,8 +81,11 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
+
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(glm::vec3(0.0, y, z));
+	transform->PostResourceLoaded();
 
 	auto animator = go->AddComponent<Animator>();
 
@@ -106,10 +112,13 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
+
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(position);
 	transform->SetLocalRotation(rotation);
 	transform->SetLocalScale(scale);
+	transform->PostResourceLoaded();
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->modelPath = modelPath;
@@ -126,10 +135,12 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(pos);
 	transform->SetLocalRotation(rotation);
+	transform->PostResourceLoaded();
 
 	auto directionalLight = go->AddComponent<DirectionalLight>();
 	directionalLight->SetColor(glm::vec3(0.3, 0.6, 0.7));
@@ -141,11 +152,13 @@ GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm
 GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Texture* image)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(pos);
 	transform->SetLocalRotation(rotation);
 	transform->SetLocalScale(glm::vec3(1));
+	transform->PostResourceLoaded();
 
 	/*auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->model_path = "";
@@ -165,11 +178,13 @@ GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, g
 GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Font* font)
 {
 	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
 	transform->SetLocalPosition(pos);
 	transform->SetLocalRotation(rotation);
 	transform->SetLocalScale(glm::vec3(1));
+	transform->PostResourceLoaded();
 
 	/*auto mesh_filter = go->AddComponent<MeshFilter>();
 	mesh_filter->model_path = "";

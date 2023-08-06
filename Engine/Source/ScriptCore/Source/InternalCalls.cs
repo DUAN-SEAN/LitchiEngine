@@ -15,6 +15,7 @@ namespace LitchiEngine
         /// <param name="unmanagedId"></param>
         internal void SetUnmanagedIdFromEngine(ulong unmanagedId)
         {
+            Console.WriteLine($"SetUnmanagedIdFromEngine:{unmanagedId}");
             m_umanagedId = unmanagedId;
         }
 
@@ -131,6 +132,7 @@ namespace LitchiEngine
         /// <param name="unmanagedId"></param>
         internal void SetSceneUnmanagedIdFromEngine(ulong unmanagedId)
         {
+            Console.WriteLine($"SetSceneUnmanagedIdFromEngine:{unmanagedId}");
             m_sceneUnmanageId = unmanagedId;
         }
 
@@ -181,6 +183,7 @@ namespace LitchiEngine
         /// <param name="unmanagedId"></param>
         internal void SetGameObjectUnmanagedIdFromEngine(ulong unmanagedId)
         {
+            Console.WriteLine($"SetGameObjectUnmanagedIdFromEngine:{unmanagedId}");
             m_gameObjectUnmanageId = unmanagedId;
         }
 
