@@ -1,15 +1,49 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 
+// ReSharper disable once CheckNamespace
 namespace LitchiEngine
 {
+    public static class SceneManager
+    {
+        /// <summary>
+        /// 从引擎加载的场景
+        /// </summary>
+        /// <param name="scene"></param>
+        public static void LoadSceneFromEngine(Scene scene)
+        {
+            if (scene != null)
+            {
+                Console.WriteLine("LoadSceneFromEngine Complete!");
+            }
+            else
+            {
+
+                Console.WriteLine("LoadSceneFromEngine Fail!");
+            }
+            Scene.OnLoadScene(scene);
+
+            m_currScene = scene;
+
+        }
+
+
+        public static Scene m_currScene;
+    }
+
     public class Scene : ScriptObject
     {
-        public static Scene LoadScene()
+        public GameObject FindGameObject(string name)
+        {
+            return null;
+        }
+
+        public static void OnLoadScene(Scene scene)
         {
             // 从C++层加载场景
 
-            return null;
+            // 缓存GO?
+
         }
     }
 

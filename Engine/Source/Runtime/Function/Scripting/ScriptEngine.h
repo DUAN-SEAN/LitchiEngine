@@ -175,7 +175,7 @@ namespace LitchiRuntime
 		/**
 		 * \brief Entry Init
 		 */
-		static void Init();
+		static void Init(std::string dataPath);
 		static void Shutdown();
 
 		static bool LoadCoreAssembly(const std::filesystem::path& filepath);
@@ -196,7 +196,7 @@ namespace LitchiRuntime
 		static MonoObject* GetManagedInstance(uint64_t unmanagedId);
 
 	private:
-		static void InitMono();
+		static void InitMono(std::string monoDllPath);
 		static void ShutdownMono();
 
 		static MonoObject* InstantiateClass(MonoClass* monoClass);

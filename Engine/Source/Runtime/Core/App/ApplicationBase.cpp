@@ -51,7 +51,7 @@ namespace LitchiRuntime
         //初始化物理引擎
         Physics::Init();
 
-        ScriptEngine::Init();
+        ScriptEngine::Init(m_dataPath);
 
         // 初始化场景 如果没有场景则构建默认场景
     }

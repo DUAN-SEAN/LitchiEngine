@@ -272,12 +272,13 @@ namespace LitchiRuntime
 
 #if 1 ScriptEngine
 
-	void ScriptEngine::Init()
+	void ScriptEngine::Init(std::string dataPath)
 	{
 		s_data = new ScriptEngineData();
 
 		// 初始化mono
-		InitMono();
+		std::string monoDllPath = dataPath + "Assets/Mono";
+		InitMono(monoDllPath);
 
 		// 加载引擎核心程序集 路径写死
 		std::string scriptCoreDllPath = "../../ScriptCore/Debug/LitchiScriptCore.dll";
@@ -306,6 +307,15 @@ namespace LitchiRuntime
 		ScriptRegister::RegisterComponents();
 
 		s_data->EngineObjectClass = ScriptClass("LitchiEngine", "ScriptObject", true);
+
+		MonoClass* monoClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "SceneManager");
+		MonoMethod* monoMethod  = mono_class_get_method_from_name(monoClass, "LoadSceneFromEngine", 1);
+		auto sceneClass = s_data->ScriptObjectClassDict["LitchiEngine.Scene"];
+		auto scene = sceneClass->Instantiate();
+
+		void* param = &scene;
+		MonoObject* exception = nullptr;
+		mono_runtime_invoke(monoMethod, nullptr, &param, &exception);
 	}
 
 	void ScriptEngine::Shutdown()
@@ -357,10 +367,11 @@ namespace LitchiRuntime
 		s_data->EngineObjectClass = ScriptClass("LitchiEngine", "Object", true);
 	}
 
-	void ScriptEngine::InitMono()
+	void ScriptEngine::InitMono(std::string monoDllPath)
 	{
 		// 设置mono所需的运行时程序集目录, 如果不设置将使用默认的位置
-		mono_set_assemblies_path("mono/lib");
+		//mono_set_assemblies_path("mono/lib");
+		// mono_set_assemblies_path(monoDllPath.c_str());
 
 		MonoDomain* rootDomain = mono_jit_init("LitchiMonoRuntime");
 
