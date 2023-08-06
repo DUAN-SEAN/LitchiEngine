@@ -3,15 +3,25 @@ using System.Runtime.CompilerServices;
 
 namespace LitchiEngine
 {
-    public class Object
+    public class Scene : ScriptObject
+    {
+        public static Scene LoadScene()
+        {
+            // 从C++层加载场景
+
+            return null;
+        }
+    }
+
+    public class ScriptObject
     {
         /// <summary>
-		/// 非托管层定义的id
-		/// </summary>
+        /// 非托管层定义的id
+        /// </summary>
         protected UInt64 m_umanagedId;
     }
 
-    public class GameObject : Object
+    public class GameObject : ScriptObject
     {
         public string Name
         {
@@ -22,9 +32,17 @@ namespace LitchiEngine
             }
         }
 
-        public T AddComponent<T>() where T:ScriptComponent ,new()
+        public T AddComponent<T>() where T : ScriptComponent, new()
         {
             // 内部调用到C++层创建对象
+            if (typeof(T).BaseType == typeof(Component))
+            {
+
+            }
+            else
+            {
+
+            }
 
             return new T();
         }
@@ -33,13 +51,13 @@ namespace LitchiEngine
         #region Internal Calls
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object Internal_Create1(Type type);
+        internal static extern ScriptObject Internal_Create1(Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object Internal_Create2(string typeName);
+        internal static extern ScriptObject Internal_Create2(string typeName);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern void Internal_ManagedInstanceCreated(Object managedInstance);
+        internal static extern void Internal_ManagedInstanceCreated(ScriptObject managedInstance);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ManagedInstanceDeleted(IntPtr nativeInstance);
@@ -51,10 +69,10 @@ namespace LitchiEngine
         internal static extern string Internal_GetTypeName(IntPtr obj);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object Internal_FindObject(ref Guid id, Type type);
+        internal static extern ScriptObject Internal_FindObject(ref Guid id, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal static extern Object Internal_TryFindObject(ref Guid id, Type type);
+        internal static extern ScriptObject Internal_TryFindObject(ref Guid id, Type type);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal static extern void Internal_ChangeID(IntPtr obj, ref Guid id);
@@ -65,13 +83,27 @@ namespace LitchiEngine
         #endregion
     }
 
-    /// <summary>
-    /// 脚本组件
-    /// </summary>
-    public abstract class ScriptComponent : Object
+    #region 组件
+
+    public abstract class Component : ScriptObject
     {
 
     }
+
+    public class Transform : Component
+    {
+
+    }
+
+    /// <summary>
+    /// 脚本组件
+    /// </summary>
+    public abstract class ScriptComponent : Component
+    {
+
+    }
+
+    #endregion
 
     public static class InternalCalls
     {

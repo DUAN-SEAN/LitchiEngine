@@ -8,6 +8,8 @@
 namespace LitchiRuntime
 {
 
+#define LitchiEngine_ADD_INTERNAL_CALL(Name) mono_add_internal_call("LitchiEngine.InternalCalls::" #Name, Name)
+
 	void ScriptRegister::RegisterFunctions()
 	{
 		// ×¢²á·½·¨

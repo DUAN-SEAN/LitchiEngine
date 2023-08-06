@@ -8,7 +8,7 @@
 #include <map>
 #include <unordered_map>
 
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "ScriptObject.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 template<typename T>
@@ -26,6 +26,7 @@ extern "C" {
 	typedef struct _MonoAssembly MonoAssembly;
 	typedef struct _MonoImage MonoImage;
 	typedef struct _MonoClassField MonoClassField;
+	typedef struct _MonoReflectionType MonoReflectionType;
 }
 
 namespace LitchiRuntime
@@ -36,8 +37,7 @@ namespace LitchiRuntime
 			Float, Double,
 			Bool, Char, Byte, Short, Int, Long,
 			UByte, UShort, UInt, ULong,
-			Vector2, Vector3, Vector4,
-			Entity
+			Vector2, Vector3, Vector4
 	};
 
 	struct ScriptField
@@ -83,7 +83,7 @@ namespace LitchiRuntime
 	using ScriptFieldMap = std::unordered_map<std::string, ScriptFieldInstance>;
 
 	/**
-	 * \brief 脚本类句柄 主要用于定义脚本组件(ScriptComponent)
+	 * \brief 脚本类句柄 主要用于定义脚本组件(ScriptObject)
 	 */
 	class ScriptClass
 	{
@@ -124,12 +124,12 @@ namespace LitchiRuntime
 	class ScriptInstance
 	{
 	public:
-		ScriptInstance(Ref<ScriptClass> scriptClass, GameObject object);
+		ScriptInstance(Ref<ScriptClass> scriptClass, ScriptObject* object);
 
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float ts);
 
-		Ref<ScriptClass> GetScriptClass() { return m_ScriptClass; }
+		Ref<ScriptClass> GetScriptClass() { return m_scriptClass; }
 
 		template<typename T>
 		T GetFieldValue(const std::string& name)
@@ -151,17 +151,17 @@ namespace LitchiRuntime
 			SetFieldValueInternal(name, &value);
 		}
 
-		MonoObject* GetManagedObject() { return m_Instance; }
+		MonoObject* GetManagedObject() { return m_instance; }
 	private:
 		bool GetFieldValueInternal(const std::string& name, void* buffer);
 		bool SetFieldValueInternal(const std::string& name, const void* value);
 	private:
-		Ref<ScriptClass> m_ScriptClass;
+		Ref<ScriptClass> m_scriptClass;
 
-		MonoObject* m_Instance = nullptr;
-		MonoMethod* m_Constructor = nullptr;
-		MonoMethod* m_OnCreateMethod = nullptr;
-		MonoMethod* m_OnUpdateMethod = nullptr;
+		MonoObject* m_instance = nullptr;
+		MonoMethod* m_constructor = nullptr;
+		MonoMethod* m_onCreateMethod = nullptr;
+		MonoMethod* m_onUpdateMethod = nullptr;
 
 		inline static char s_FieldValueBuffer[16];
 
@@ -172,6 +172,9 @@ namespace LitchiRuntime
 	class ScriptEngine
 	{
 	public:
+		/**
+		 * \brief Entry Init
+		 */
 		static void Init();
 		static void Shutdown();
 
@@ -184,6 +187,13 @@ namespace LitchiRuntime
 		static void OnRuntimeStop();
 
 		static MonoImage* GetCoreAssemblyImage();
+
+		/**
+		 * \brief 获取托管对象实例
+		 * \param unmanagedId 非托管id
+		 * \return 
+		 */
+		static MonoObject* GetManagedInstance(uint64_t unmanagedId);
 
 	private:
 		static void InitMono();
@@ -217,7 +227,6 @@ namespace LitchiRuntime
 			case ScriptFieldType::Vector2: return "Vector2";
 			case ScriptFieldType::Vector3: return "Vector3";
 			case ScriptFieldType::Vector4: return "Vector4";
-			case ScriptFieldType::Entity:  return "Entity";
 			}
 			DEBUG_LOG_ERROR("Unknown ScriptFieldType");
 			return "None";
@@ -241,7 +250,6 @@ namespace LitchiRuntime
 			if (fieldType == "Vector2") return ScriptFieldType::Vector2;
 			if (fieldType == "Vector3") return ScriptFieldType::Vector3;
 			if (fieldType == "Vector4") return ScriptFieldType::Vector4;
-			if (fieldType == "Entity")  return ScriptFieldType::Entity;
 
 			DEBUG_LOG_ERROR("Unknown ScriptFieldType");
 			return ScriptFieldType::None;

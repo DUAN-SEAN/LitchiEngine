@@ -111,6 +111,9 @@ namespace LitchiRuntime
 		SetCurrentSceneSourcePath(completePath);
 		SetCurrentScene(scene);
 
+
+		// todo 将Scene注册到ScriptEngine中
+
 		return true;
 	}
 
