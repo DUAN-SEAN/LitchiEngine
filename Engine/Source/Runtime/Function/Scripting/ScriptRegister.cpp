@@ -1,4 +1,4 @@
-#include "ScriptRegister.h"
+ï»¿#include "ScriptRegister.h"
 
 #include "ScriptEngine.h"
 
@@ -8,18 +8,28 @@
 namespace LitchiRuntime
 {
 
-#define LitchiEngine_ADD_INTERNAL_CALL(Name) mono_add_internal_call("LitchiEngine.InternalCalls::" #Name, Name)
+#if 1 å¤–éƒ¨ç»‘å®šä»£ç 
+
+	#define LitchiEngine_ADD_INTERNAL_CALL(Name) mono_add_internal_call("LitchiEngine.InternalCalls::" #Name, Name)
+
+	static MonoObject* GetScriptInstance(uint64_t unmanagedId)
+	{
+		return ScriptEngine::GetManagedInstance(unmanagedId);
+	}
 
 	void ScriptRegister::RegisterFunctions()
 	{
-		// ×¢²á·½·¨
+		// æ³¨å†Œæ–¹æ³•
+		LitchiEngine_ADD_INTERNAL_CALL(GetScriptInstance);
 	}
+
+#endif
 
 	void ScriptRegister::RegisterComponents()
 	{
-		// C++µÄGameObjectºÍComponentsÔÚC#²ãµÄÓ³Éä
+		// C++çš„GameObjectå’ŒComponentsåœ¨C#å±‚çš„æ˜ å°„
 
-		// ´ÓrttrµÄ·´ÉäĞÅÏ¢ÖĞÄÃµ½ÀàĞÍ
+		// ä»rttrçš„åå°„ä¿¡æ¯ä¸­æ‹¿åˆ°ç±»å‹
 
 		std::string managedTypename = fmt::format("LitchiEngine.{}", "Transform");
 		MonoType* managedType = mono_reflection_type_from_name(managedTypename.data(), ScriptEngine::GetCoreAssemblyImage());

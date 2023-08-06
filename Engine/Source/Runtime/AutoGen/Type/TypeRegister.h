@@ -73,6 +73,15 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
 
+	registration::class_<ScriptObject>("ScriptObject")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
+
+	registration::class_<ScriptComponent>("ScriptComponent")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName);
+
+
 	/*registration::class_<TextureRes>("TextureRes")
 		.constructor<>()
 		.property("name",&TextureRes::texture_name_)

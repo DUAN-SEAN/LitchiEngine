@@ -279,30 +279,29 @@ namespace LitchiRuntime
 		// 初始化mono
 		InitMono();
 
-		// 注册方法
-		ScriptRegister::RegisterFunctions();
-
 		// 加载引擎核心程序集 路径写死
 		std::string scriptCoreDllPath = "../../ScriptCore/Debug/LitchiScriptCore.dll";
 		bool status = LoadCoreAssembly(scriptCoreDllPath);
-		if(!status)
+		if (!status)
 		{
 			DEBUG_LOG_ERROR("[ScriptEngine] Could not load LitchiScriptCore assembly.");
 			return;
 		}
 
-		// 加载项目的程序集
-		std::filesystem::path scriptModulePath;
-		status = LoadAppAssembly(scriptModulePath);
-		if (!status)
-		{
-			DEBUG_LOG_ERROR("[ScriptEngine] Could not load app assembly.");
-			return;
-		}
+		//// 加载项目的程序集
+		//std::filesystem::path scriptModulePath;
+		//status = LoadAppAssembly(scriptModulePath);
+		//if (!status)
+		//{
+		//	DEBUG_LOG_ERROR("[ScriptEngine] Could not load app assembly.");
+		//	return;
+		//}
 
 		// 加载程序集的类型
 		LoadAssemblyClasses();
 
+		// 注册方法
+		ScriptRegister::RegisterFunctions();
 		// 注册脚本
 		ScriptRegister::RegisterComponents();
 
@@ -316,7 +315,7 @@ namespace LitchiRuntime
 	bool ScriptEngine::LoadCoreAssembly(const std::filesystem::path& filepath)
 	{
 		// Create an App Domain
-		s_data->AppDomain = mono_domain_create_appdomain("HazelScriptRuntime", nullptr);
+		s_data->AppDomain = mono_domain_create_appdomain("LitchiScriptRuntime", nullptr);
 		mono_domain_set(s_data->AppDomain, true);
 
 		s_data->CoreAssemblyFilepath = filepath;
@@ -404,18 +403,16 @@ namespace LitchiRuntime
 	{
 		s_data->ScriptObjectClassDict.clear();
 
-		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
+		MonoClass* engineObjectClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "ScriptObject");
+		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_data->CoreAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
-		MonoClass* engineObjectClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "Object");
-
-		// 收集所有Object的子类
 		for (int32_t i = 0; i < numTypes; i++)
 		{
 			uint32_t cols[MONO_TYPEDEF_SIZE];
 			mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
-			const char* nameSpace = mono_metadata_string_heap(s_data->AppAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
-			const char* className = mono_metadata_string_heap(s_data->AppAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+			const char* nameSpace = mono_metadata_string_heap(s_data->CoreAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+			const char* className = mono_metadata_string_heap(s_data->CoreAssemblyImage, cols[MONO_TYPEDEF_NAME]);
 			std::string fullName;
 			if (strlen(nameSpace) != 0)
 				fullName = fmt::format("{}.{}", nameSpace, className);
@@ -423,14 +420,15 @@ namespace LitchiRuntime
 				fullName = className;
 
 			// 获取并检查程序集中的类型是否是LitchiEngine的子类
-			MonoClass* monoClass = mono_class_from_name(s_data->AppAssemblyImage, nameSpace, className);
+			MonoClass* monoClass = mono_class_from_name(s_data->CoreAssemblyImage, nameSpace, className);
 			if (monoClass == engineObjectClass)
 				continue;
 			bool isEngineObject = mono_class_is_subclass_of(monoClass, engineObjectClass, false);
 			if (!isEngineObject)
 				continue;
 
-			Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, className);
+			// 将Class添加到静态字典中
+			Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, className, true);
 			s_data->ScriptObjectClassDict[fullName] = scriptClass;
 
 
@@ -457,10 +455,61 @@ namespace LitchiRuntime
 
 		}
 
-		auto& entityClasses = s_data->ScriptObjectClassDict;
+		//// 收集所有Object的子类
+		//typeDefinitionsTable = mono_image_get_table_info(s_data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
+		//numTypes = mono_table_info_get_rows(typeDefinitionsTable);
+		//for (int32_t i = 0; i < numTypes; i++)
+		//{
+		//	uint32_t cols[MONO_TYPEDEF_SIZE];
+		//	mono_metadata_decode_row(typeDefinitionsTable, i, cols, MONO_TYPEDEF_SIZE);
 
+		//	const char* nameSpace = mono_metadata_string_heap(s_data->AppAssemblyImage, cols[MONO_TYPEDEF_NAMESPACE]);
+		//	const char* className = mono_metadata_string_heap(s_data->AppAssemblyImage, cols[MONO_TYPEDEF_NAME]);
+		//	std::string fullName;
+		//	if (strlen(nameSpace) != 0)
+		//		fullName = fmt::format("{}.{}", nameSpace, className);
+		//	else
+		//		fullName = className;
+
+		//	// 获取并检查程序集中的类型是否是LitchiEngine的子类
+		//	MonoClass* monoClass = mono_class_from_name(s_data->AppAssemblyImage, nameSpace, className);
+		//	if (monoClass == engineObjectClass)
+		//		continue;
+		//	bool isEngineObject = mono_class_is_subclass_of(monoClass, engineObjectClass, false);
+		//	if (!isEngineObject)
+		//		continue;
+
+		//	// 将Class添加到静态字典中
+		//	Ref<ScriptClass> scriptClass = CreateRef<ScriptClass>(nameSpace, className);
+		//	s_data->ScriptObjectClassDict[fullName] = scriptClass;
+
+
+		//	// This routine is an iterator routine for retrieving the fields in a class.
+		//	// You must pass a gpointer that points to zero and is treated as an opaque handle
+		//	// to iterate over all of the elements. When no more values are available, the return value is NULL.
+
+		//	int fieldCount = mono_class_num_fields(monoClass);
+		//	//  DEBUG_LOG_INFO("{} has {} fields:", className, fieldCount);
+		//	void* iterator = nullptr;
+		//	while (MonoClassField* field = mono_class_get_fields(monoClass, &iterator))
+		//	{
+		//		const char* fieldName = mono_field_get_name(field);
+		//		uint32_t flags = mono_field_get_flags(field);
+		//		// if (flags & FIELD_ATTRIBUTE_PUBLIC) // todo
+		//		{
+		//			MonoType* type = mono_field_get_type(field);
+		//			ScriptFieldType fieldType = Utils::MonoTypeToScriptFieldType(type);
+		//			// DEBUG_LOG_INFO("  {} ({})", fieldName, Utils::ScriptFieldTypeToString(fieldType));
+
+		//			scriptClass->m_fields[fieldName] = { fieldType, fieldName, field };
+		//		}
+		//	}
+
+		//}
+
+		// 打印
+		// auto& entityClasses = s_data->ScriptObjectClassDict;
 		//mono_field_get_value()
-
 	}
 
 #endif

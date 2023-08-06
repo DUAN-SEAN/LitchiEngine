@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
@@ -6,7 +6,7 @@
 namespace LitchiRuntime
 {
 	/**
-	 * \brief ½Å±¾×é¼ş»ùÀà
+	 * \brief è„šæœ¬ç»„ä»¶åŸºç±»
 	 */
 	class ScriptComponent :public Component
 	{
@@ -22,17 +22,24 @@ namespace LitchiRuntime
 			return m_className;
 		}
 
+		void PostResourceLoaded() override;
+		void PostResourceModify() override;
+
+		void Awake() override;
+
+		void Update() override;
+
 	public:
 		RTTR_ENABLE(Component);
 
 	private:
 		/**
-		 * \brief ½Å±¾ÀàĞÍ
+		 * \brief è„šæœ¬ç±»å‹
 		 */
 		std::string m_className;
 
 		/**
-		 * \brief ½Å±¾Êı¾İ, JsonÊµÏÖ
+		 * \brief è„šæœ¬æ•°æ®, Jsonå®ç°
 		 */
 		std::string m_data;
 	};

@@ -3,19 +3,17 @@
 // 严格来讲层级数据结构，比如tree，孩子结点一般都只被父节点拥有，当父节点被销毁后，所有的孩子结点也都应该被销毁。
 // 这样，从父节点到子节点的链接可以用std::unique_ptr来表示，而反过来从子节点到父节点的指针可以用原始指针来实现，因为子节点的生命周期不会比父节点的更长，所以不会出现子节点去解引用一个父节点的悬浮指针的情况。
 //
-
-#ifndef UNTITLED_COMPONENT_H
-#define UNTITLED_COMPONENT_H
+#pragma once
 
 #include "Runtime/Core/Log/debug.h"
 #include "rttr/registration"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "Runtime/Function/Scripting/ScriptObject.h"
 
 using namespace rttr;
 namespace LitchiRuntime
 {
     class GameObject;
-    class Component :public Object{
+    class Component :public ScriptObject{
     public:
         Component();
         virtual ~Component();
@@ -52,9 +50,6 @@ namespace LitchiRuntime
     private:
         GameObject* m_gameObject;
 
-        RTTR_ENABLE(Object);
+        RTTR_ENABLE(ScriptObject)
     };
 }
-
-
-#endif //UNTITLED_COMPONENT_H
