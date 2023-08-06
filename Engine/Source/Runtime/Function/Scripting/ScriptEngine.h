@@ -8,7 +8,6 @@
 #include <map>
 #include <unordered_map>
 
-#include "ScriptObject.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 template<typename T>
@@ -124,7 +123,7 @@ namespace LitchiRuntime
 	class ScriptInstance
 	{
 	public:
-		ScriptInstance(Ref<ScriptClass> scriptClass, ScriptObject* object);
+		ScriptInstance(Ref<ScriptClass> scriptClass, uint64_t unmanagedId);
 
 		void InvokeOnCreate();
 		void InvokeOnUpdate(float ts);
@@ -151,14 +150,14 @@ namespace LitchiRuntime
 			SetFieldValueInternal(name, &value);
 		}
 
-		MonoObject* GetManagedObject() { return m_instance; }
+		MonoObject* GetManagedObject() { return m_managedObject; }
 	private:
 		bool GetFieldValueInternal(const std::string& name, void* buffer);
 		bool SetFieldValueInternal(const std::string& name, const void* value);
 	private:
 		Ref<ScriptClass> m_scriptClass;
 
-		MonoObject* m_instance = nullptr;
+		MonoObject* m_managedObject = nullptr;
 		MonoMethod* m_constructor = nullptr;
 		MonoMethod* m_onCreateMethod = nullptr;
 		MonoMethod* m_onUpdateMethod = nullptr;
@@ -194,6 +193,7 @@ namespace LitchiRuntime
 		 * \return 
 		 */
 		static MonoObject* GetManagedInstance(uint64_t unmanagedId);
+		static uint64_t CreateScriptComponent(const std::string& string);
 
 	private:
 		static void InitMono(std::string monoDllPath);

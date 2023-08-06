@@ -112,10 +112,10 @@ namespace LitchiRuntime
 		 * \brief 根Domain
 		 */
 		MonoDomain* RootDomain = nullptr;
-		/**
-		 * \brief 应用Domain
-		 */
-		MonoDomain* AppDomain = nullptr;
+		///**
+		// * \brief 应用Domain
+		// */
+		//MonoDomain* AppDomain = nullptr;
 		/**
 		 * \brief 核心的程序集
 		 */
@@ -167,6 +167,11 @@ namespace LitchiRuntime
 
 		// Scope<filewatch::FileWatch<std::string>> AppAssemblyFileWatcher;
 		bool AssemblyReloadPending = false;
+
+		/**
+		 * \brief Id分配工厂
+		 */
+		uint64_t m_unmanagedIdFactory;
 	};
 	static ScriptEngineData* s_data = nullptr;
 
@@ -212,27 +217,27 @@ namespace LitchiRuntime
 
 #if 1 ScriptInstance
 
-	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass, ScriptObject* object)
+	ScriptInstance::ScriptInstance(Ref<ScriptClass> scriptClass, uint64_t unmanagedId)
 		: m_scriptClass(scriptClass)
 	{
-		m_instance = scriptClass->Instantiate();
+		m_managedObject = scriptClass->Instantiate();
 
-		m_constructor = scriptClass->GetMethod(".ctor", 1);
-		m_onCreateMethod = scriptClass->GetMethod("OnCreate", 0);
-		m_onUpdateMethod = scriptClass->GetMethod("OnUpdate", 1);
+		//m_constructor = scriptClass->GetMethod(".ctor", 1);
+		//m_onCreateMethod = scriptClass->GetMethod("OnCreate", 0);
+		//m_onUpdateMethod = scriptClass->GetMethod("OnUpdate", 1);
 
-		// Call Entity constructor
-		{
-			uint64_t entityID = object->GetUnmanagedId();
-			void* param = &entityID;
-			m_scriptClass->InvokeMethod(m_instance, m_constructor, &param);
-		}
+		//// Call Entity constructor
+		//{
+		//	uint64_t entityID = unmanagedId;
+		//	void* param = &entityID;
+		//	m_scriptClass->InvokeMethod(m_instance, m_constructor, &param);
+		//}
 	}
 
 	void ScriptInstance::InvokeOnCreate()
 	{
 		if (m_onCreateMethod)
-			m_scriptClass->InvokeMethod(m_instance, m_onCreateMethod);
+			m_scriptClass->InvokeMethod(m_managedObject, m_onCreateMethod);
 	}
 
 	void ScriptInstance::InvokeOnUpdate(float ts)
@@ -240,7 +245,7 @@ namespace LitchiRuntime
 		if (m_onUpdateMethod)
 		{
 			void* param = &ts;
-			m_scriptClass->InvokeMethod(m_instance, m_onUpdateMethod, &param);
+			m_scriptClass->InvokeMethod(m_managedObject, m_onUpdateMethod, &param);
 		}
 	}
 
@@ -252,7 +257,7 @@ namespace LitchiRuntime
 			return false;
 
 		const ScriptField& field = it->second;
-		mono_field_get_value(m_instance, field.ClassField, buffer);
+		mono_field_get_value(m_managedObject, field.ClassField, buffer);
 		return true;
 	}
 
@@ -264,7 +269,7 @@ namespace LitchiRuntime
 			return false;
 
 		const ScriptField& field = it->second;
-		mono_field_set_value(m_instance, field.ClassField, (void*)value);
+		mono_field_set_value(m_managedObject, field.ClassField, (void*)value);
 		return true;
 	}
 
@@ -276,12 +281,18 @@ namespace LitchiRuntime
 	{
 		s_data = new ScriptEngineData();
 
+#if true DEBUG
+		s_data->EnableDebugging = true;
+#endif
+
+
 		// 初始化mono
 		std::string monoDllPath = dataPath + "Assets/Mono";
 		InitMono(monoDllPath);
 
 		// 加载引擎核心程序集 路径写死
-		std::string scriptCoreDllPath = "../../ScriptCore/Debug/LitchiScriptCore.dll";
+		std::string scriptCoreDllPath = dataPath + "ScriptCore/Debug/LitchiScriptCore.dll";
+		// std::string scriptCoreDllPath = dataPath + "ScriptCore/Debug/Hazel-ScriptCore.dll";
 		bool status = LoadCoreAssembly(scriptCoreDllPath);
 		if (!status)
 		{
@@ -308,8 +319,9 @@ namespace LitchiRuntime
 
 		s_data->EngineObjectClass = ScriptClass("LitchiEngine", "ScriptObject", true);
 
+		// 测试代码
 		MonoClass* monoClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "SceneManager");
-		MonoMethod* monoMethod  = mono_class_get_method_from_name(monoClass, "LoadSceneFromEngine", 1);
+		MonoMethod* monoMethod = mono_class_get_method_from_name(monoClass, "LoadSceneFromEngine", 1);
 		auto sceneClass = s_data->ScriptObjectClassDict["LitchiEngine.Scene"];
 		auto scene = sceneClass->Instantiate();
 
@@ -325,8 +337,8 @@ namespace LitchiRuntime
 	bool ScriptEngine::LoadCoreAssembly(const std::filesystem::path& filepath)
 	{
 		// Create an App Domain
-		s_data->AppDomain = mono_domain_create_appdomain("LitchiScriptRuntime", nullptr);
-		mono_domain_set(s_data->AppDomain, true);
+		/*s_data->AppDomain = mono_domain_create_appdomain("LitchiScriptRuntime", nullptr);
+		mono_domain_set(s_data->AppDomain, true);*/
 
 		s_data->CoreAssemblyFilepath = filepath;
 		s_data->CoreAssembly = Utils::LoadMonoAssembly(filepath, s_data->EnableDebugging);
@@ -355,7 +367,7 @@ namespace LitchiRuntime
 	{
 		mono_domain_set(mono_get_root_domain(), false);
 
-		mono_domain_unload(s_data->AppDomain);
+		// mono_domain_unload(s_data->AppDomain);
 
 		LoadCoreAssembly(s_data->CoreAssemblyFilepath);
 		LoadAppAssembly(s_data->AppAssemblyFilepath);
@@ -371,12 +383,25 @@ namespace LitchiRuntime
 	{
 		// 设置mono所需的运行时程序集目录, 如果不设置将使用默认的位置
 		//mono_set_assemblies_path("mono/lib");
-		// mono_set_assemblies_path(monoDllPath.c_str());
+		mono_set_assemblies_path(monoDllPath.c_str());
+
+		if (s_data->EnableDebugging)
+		{
+			const char* argv[2] = {
+				"--debugger-agent=transport=dt_socket,address=127.0.0.1:2550,server=y,suspend=n,loglevel=3,logfile=MonoDebugger.log",
+				"--soft-breakpoints"
+			};
+
+			mono_jit_parse_options(2, (char**)argv);
+			mono_debug_init(MONO_DEBUG_FORMAT_MONO);
+		}
 
 		MonoDomain* rootDomain = mono_jit_init("LitchiMonoRuntime");
 
 		// 保存rootDomain
 		s_data->RootDomain = rootDomain;
+		if (s_data->EnableDebugging)
+			mono_debug_domain_create(s_data->RootDomain);
 
 		// 标记线程为domain的使用线程
 		mono_thread_set_main(mono_thread_current());
@@ -386,8 +411,8 @@ namespace LitchiRuntime
 	{
 		mono_domain_set(mono_get_root_domain(), false);
 
-		mono_domain_unload(s_data->AppDomain);
-		s_data->AppDomain = nullptr;
+		/*mono_domain_unload(s_data->AppDomain);
+		s_data->AppDomain = nullptr;*/
 
 		mono_jit_cleanup(s_data->RootDomain);
 		s_data->RootDomain = nullptr;
@@ -403,9 +428,29 @@ namespace LitchiRuntime
 		return s_data->ScriptObjectInstanceDict.at(unmanagedId)->GetManagedObject();
 	}
 
+	uint64_t ScriptEngine::CreateScriptComponent(const std::string& string)
+	{
+		auto id = ++s_data->m_unmanagedIdFactory;
+
+		// 通过脚本名获取脚本类型定义
+		auto scriptClass = s_data->ScriptObjectClassDict[string];
+		if(scriptClass == nullptr)
+		{
+			return 0;
+		}
+
+		// 通过脚本类型定义和id构建脚本实例
+		Ref<ScriptInstance> scriptInstance = CreateRef<ScriptInstance>(scriptClass, id);
+
+		// 添加实例映射
+		s_data->ScriptObjectInstanceDict[id] = scriptInstance;
+
+		return id;
+	}
+
 	MonoObject* ScriptEngine::InstantiateClass(MonoClass* monoClass)
 	{
-		MonoObject* instance = mono_object_new(s_data->AppDomain, monoClass);
+		MonoObject* instance = mono_object_new(s_data->RootDomain, monoClass);
 		mono_runtime_object_init(instance);
 		return instance;
 	}
@@ -414,7 +459,15 @@ namespace LitchiRuntime
 	{
 		s_data->ScriptObjectClassDict.clear();
 
+		// 找到引擎的脚本基类Class
 		MonoClass* engineObjectClass = mono_class_from_name(s_data->CoreAssemblyImage, "LitchiEngine", "ScriptObject");
+		if(engineObjectClass == nullptr)
+		{
+			DEBUG_LOG_ERROR("engineObjectClass Not Found");
+			return;
+		}
+
+		// 加载CoreAssembly 收集所有ScriptObject的子类
 		const MonoTableInfo* typeDefinitionsTable = mono_image_get_table_info(s_data->CoreAssemblyImage, MONO_TABLE_TYPEDEF);
 		int32_t numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 		for (int32_t i = 0; i < numTypes; i++)
@@ -466,7 +519,7 @@ namespace LitchiRuntime
 
 		}
 
-		//// 收集所有Object的子类
+		// 加载AppAssembly 收集所有ScriptObject的子类
 		//typeDefinitionsTable = mono_image_get_table_info(s_data->AppAssemblyImage, MONO_TABLE_TYPEDEF);
 		//numTypes = mono_table_info_get_rows(typeDefinitionsTable);
 		//for (int32_t i = 0; i < numTypes; i++)

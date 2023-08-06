@@ -119,22 +119,72 @@ namespace LitchiEngine
 
     #region 组件
 
+    /// <summary>
+    /// 脚本基类
+    /// </summary>
     public abstract class Component : ScriptObject
     {
+        /// <summary>
+        /// 脚本实例化时
+        /// </summary>
+        protected abstract void OnAwake();
 
+        /// <summary>
+        /// 脚本启动时
+        /// </summary>
+        protected abstract void OnStart();
+
+        /// <summary>
+        /// 脚本刷新
+        /// </summary>
+        protected abstract void OnUpdate();
     }
 
     public class Transform : Component
+    {
+        protected override void OnAwake()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnStart()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void OnUpdate()
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    /// <summary>
+    /// 脚本组件基类
+    /// </summary>
+    public abstract class ScriptComponent : Component
     {
 
     }
 
     /// <summary>
-    /// 脚本组件
+    /// 测试脚本组件
     /// </summary>
-    public abstract class ScriptComponent : Component
+    public class TestScriptComponent : ScriptComponent
     {
+        protected override void OnAwake()
+        {
+            Console.WriteLine("TestScriptComponent::OnAwake");
+        }
 
+        protected override void OnStart()
+        {
+            Console.WriteLine("TestScriptComponent::OnStart");
+        }
+
+        protected override void OnUpdate()
+        {
+            Console.WriteLine("TestScriptComponent::OnUpdate");
+        }
     }
 
     #endregion
