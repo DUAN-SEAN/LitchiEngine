@@ -129,7 +129,7 @@ namespace LitchiRuntime
 
 
 		void Invoke(std::string methodName, void* param, int paramCount = 1);
-
+		void InvokeBaseClass(Ref<ScriptClass> baseScriptClass, std::string methodName, void* param, int paramCount = 1);
 		Ref<ScriptClass> GetScriptClass() { return m_scriptClass; }
 		uint64_t GetUnmanagedId();
 

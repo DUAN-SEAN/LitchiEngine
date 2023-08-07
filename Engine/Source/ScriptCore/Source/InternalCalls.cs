@@ -13,7 +13,7 @@ namespace LitchiEngine
         /// 设置非托管对象的Id
         /// </summary>
         /// <param name="unmanagedId"></param>
-        internal void SetUnmanagedIdFromEngine(ulong unmanagedId)
+        public void SetUnmanagedIdFromEngine(ulong unmanagedId)
         {
             Console.WriteLine($"SetUnmanagedIdFromEngine:{unmanagedId}");
             m_umanagedId = unmanagedId;
