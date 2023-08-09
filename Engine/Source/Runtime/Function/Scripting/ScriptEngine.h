@@ -199,6 +199,7 @@ namespace LitchiRuntime
 		static uint64_t  CreateGameObject(uint64_t sceneUnmanagedId);
 		static uint64_t CreateComponent(uint64_t gameObjectUnmanagedId, const std::string& componentTypeName);
 		static uint64_t CreateScriptComponent(uint64_t gameObjectUnmanagedId, const std::string& scriptName);
+		static void InvokeMethod(uint64_t unmanagedId, std::string methodName, void* param);
 
 	private:
 		static void InitMono(std::string monoDllPath);

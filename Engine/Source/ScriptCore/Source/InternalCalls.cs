@@ -173,7 +173,7 @@ namespace LitchiEngine
         /// <summary>
         /// 脚本刷新
         /// </summary>
-        protected abstract void OnUpdate();
+        protected abstract void OnUpdate(float deltaTime);
 
         #endregion
 
@@ -215,7 +215,7 @@ namespace LitchiEngine
         {
         }
 
-        protected sealed override void OnUpdate()
+        protected sealed override void OnUpdate(float deltaTime)
         {
         }
     }
@@ -235,7 +235,7 @@ namespace LitchiEngine
             Console.WriteLine("TestScriptComponent::OnStart");
         }
 
-        protected override void OnUpdate()
+        protected override void OnUpdate(float deltaTime)
         {
             Console.WriteLine("TestScriptComponent::OnUpdate");
         }

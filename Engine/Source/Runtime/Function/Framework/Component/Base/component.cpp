@@ -54,6 +54,6 @@ namespace LitchiRuntime
 
 	void Component::PostResourceModify()
 	{
-
+		PostResourceLoaded();
 	}
 }

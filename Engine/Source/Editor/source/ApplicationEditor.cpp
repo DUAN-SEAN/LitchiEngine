@@ -204,6 +204,18 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	return go;
 }
 
+GameObject* CreateScriptObject(Scene* scene,std::string name,std::string scriptName)
+{
+	GameObject* go = scene->CreateGameObject(name);
+	go->PostResourceLoaded();
+
+	auto scriptComponent = go->AddComponent<ScriptComponent>();
+	scriptComponent->SetClassName(scriptName);
+	scriptComponent->PostResourceLoaded();
+
+	return go;
+}
+
 void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
@@ -340,6 +352,7 @@ void LitchiEditor::ApplicationEditor::Init()
 		Texture* image5 = this->textureManager->LoadResource("Engine\\Textures\\liuyifei.png");
 		GameObject* go5 = CreateUIImageObject(scene, "UIImage01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), image5);
 		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), font);
+		GameObject* go7 = CreateScriptObject(scene, "UIText01", "LitchiEngine.TestScriptComponent");
 
 		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
 		m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();

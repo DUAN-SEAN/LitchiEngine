@@ -558,6 +558,12 @@ namespace LitchiRuntime
 		return id;
 	}
 
+	void ScriptEngine::InvokeMethod(uint64_t unmanagedId, std::string methodName, void* param)
+	{
+		auto instance = s_data->ScriptObjectInstanceDict[unmanagedId];
+		instance->Invoke(methodName, param, 1);
+	}
+
 	MonoObject* ScriptEngine::InstantiateClass(MonoClass* monoClass)
 	{
 		MonoObject* instance = mono_object_new(s_data->RootDomain, monoClass);

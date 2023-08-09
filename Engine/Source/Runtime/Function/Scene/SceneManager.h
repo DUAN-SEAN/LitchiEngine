@@ -45,6 +45,12 @@ namespace LitchiRuntime
 		/// \return
 		GameObject* Find(const int64_t id);
 
+
+		/// 全局查找GameObject
+		/// \param unmanagedId 非托管唯一Id
+		/// \return
+		GameObject* FindByUnmanagedId(const int64_t unmanagedId);
+
 	public:
 
 		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。

@@ -1,5 +1,6 @@
 ﻿#include "ScriptComponent.h"
 
+#include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 
@@ -38,5 +39,8 @@ namespace LitchiRuntime
 	{
 		// 通知脚本引擎 执行回调Update
 		auto& unmanagedId = m_unmanagedId;
+
+		float deltaTime = Time::delta_time();
+		ScriptEngine::InvokeMethod(unmanagedId, "OnUpdate",&deltaTime);
 	}
 }

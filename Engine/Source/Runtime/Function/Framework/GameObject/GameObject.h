@@ -103,7 +103,30 @@ namespace LitchiRuntime
 			return nullptr;
 		}
 
-		 std::vector<Component*>& GetComponents() { return m_componentList; }
+		/**
+		 * \brief 获取组件
+		 * \tparam T 组件类型
+		 * \param unmanagedId 组件的非托管id 
+		 * \return 
+		 */
+		template <class T = Component>
+		T* GetComponent(const uint64_t unmanagedId) {
+			//获取类名
+			type t = type::get<T>();
+			std::string component_type_name = t.get_name().to_string();
+			std::vector<Component*> component_vec;
+
+			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
+			{
+				if ((*iter)->get_type().get_name() == component_type_name && (*iter)->GetUnmanagedId() == unmanagedId)
+				{
+					return dynamic_cast<T*>(*iter);
+				}
+			}
+			return nullptr;
+		}
+
+		std::vector<Component*>& GetComponents() { return m_componentList; }
 
 		/// 遍历组件
 		/// \param func

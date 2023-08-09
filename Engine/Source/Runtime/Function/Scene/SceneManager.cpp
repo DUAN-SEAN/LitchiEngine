@@ -69,6 +69,20 @@ namespace LitchiRuntime
 		return game_object_find;
 	}
 
+	GameObject* Scene::FindByUnmanagedId(const int64_t unmanagedId)
+	{
+		GameObject* game_object_find = nullptr;
+		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&unmanagedId](Tree::Node* node) {
+			GameObject* game_object = dynamic_cast<GameObject*>(node);
+			if (game_object != nullptr && game_object->GetUnmanagedId() == unmanagedId) {
+				return true;
+			}
+			return false;
+			}, reinterpret_cast<Tree::Node**>(&game_object_find));
+
+		return game_object_find;
+	}
+
 	void Scene::PostResourceLoaded()
 	{
 		// 创建非托管对象
