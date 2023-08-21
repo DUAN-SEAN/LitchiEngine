@@ -31,4 +31,27 @@ namespace LitchiRuntime
 	private:
 	};
 
+	class ShadowRenderPass :public RenderPass
+	{
+	public:
+		 
+	};
+
+	/**
+	 * \brief 执行前向渲染的pass
+	 */
+	class ForwardRenderPass :public RenderPass
+	{
+	public:
+		virtual void Render(RenderContext* render_context) override;
+
+		// 输入是 相机、物体和阴影数据
+		// 输出是 帧缓冲
+	};
+
+	class UIRenderPass :public RenderPass
+	{
+
+	};
+
 }
