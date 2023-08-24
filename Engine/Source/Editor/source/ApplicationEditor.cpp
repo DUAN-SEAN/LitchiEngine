@@ -27,6 +27,9 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
+#include <Runtime/Function/Renderer/window_system.h>
+#include <Runtime/Function/Renderer/Interface/vulkan/vulkan_rhi.h>
+
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data
 {
@@ -219,6 +222,15 @@ GameObject* CreateScriptObject(Scene* scene,std::string name,std::string scriptN
 void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
+
+	std::shared_ptr<WindowSystem> windowSystem = std::make_shared<WindowSystem>();
+	WindowCreateInfo window_create_info;
+	windowSystem->initialize(window_create_info);
+
+	std::shared_ptr<VulkanRHI> vulkanRHI = std::make_shared<VulkanRHI>();
+	RHIInitInfo initInfo;
+	initInfo.window_system = windowSystem;
+	vulkanRHI->initialize(initInfo);
 
 	DeviceSettings deviceSettings;
 	deviceSettings.contextMajorVersion = 4;

@@ -625,6 +625,7 @@ namespace LitchiRuntime
         if (m_enable_validation_Layers && !checkValidationLayerSupport())
         {
             DEBUG_LOG_ERROR("validation layers requested, but not available!");
+            m_enable_validation_Layers = false;
         }
 
         m_vulkan_api_version = VK_API_VERSION_1_0;
@@ -632,9 +633,9 @@ namespace LitchiRuntime
         // app info
         VkApplicationInfo appInfo {};
         appInfo.sType              = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-        appInfo.pApplicationName   = "piccolo_renderer";
+        appInfo.pApplicationName   = "litchi_renderer";
         appInfo.applicationVersion = VK_MAKE_VERSION(1, 0, 0);
-        appInfo.pEngineName        = "Piccolo";
+        appInfo.pEngineName        = "Litchi";
         appInfo.engineVersion      = VK_MAKE_VERSION(1, 0, 0);
         appInfo.apiVersion         = m_vulkan_api_version;
 

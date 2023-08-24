@@ -1681,7 +1681,7 @@ namespace LitchiRuntime
     typedef uint32_t RHISampleMask;
 }
 
-namespace Piccolo
+namespace LitchiRuntime
 {
     enum class PICCOLO_IMAGE_TYPE : uint8_t
     {
@@ -1821,15 +1821,15 @@ namespace Piccolo
         std::shared_ptr<TextureData> m_occlusion_texture;
         std::shared_ptr<TextureData> m_emissive_texture;
     };
-} // namespace Piccolo
+} // namespace LitchiRuntime
 
 template<>
-struct std::hash<Piccolo::MeshSourceDesc>
+struct std::hash<LitchiRuntime::MeshSourceDesc>
 {
-    size_t operator()(const Piccolo::MeshSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
+    size_t operator()(const LitchiRuntime::MeshSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
 };
 template<>
-struct std::hash<Piccolo::MaterialSourceDesc>
+struct std::hash<LitchiRuntime::MaterialSourceDesc>
 {
-    size_t operator()(const Piccolo::MaterialSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
+    size_t operator()(const LitchiRuntime::MaterialSourceDesc& rhs) const noexcept { return rhs.getHashValue(); }
 };
