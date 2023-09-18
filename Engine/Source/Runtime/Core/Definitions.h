@@ -129,8 +129,8 @@ struct sp_info
 #define SP_ASSERT(expression)                       \
 if (!(##expression))                                \
 {                                                   \
-    Spartan::Log::SetLogToFile(true);               \
-    SP_LOG_ERROR("Assertion failed: " #expression); \
+   /* Spartan::Log::SetLogToFile(true);               \
+    SP_LOG_ERROR("Assertion failed: " #expression); */\
     SP_DEBUG_BREAK();                               \
 }
 #endif
