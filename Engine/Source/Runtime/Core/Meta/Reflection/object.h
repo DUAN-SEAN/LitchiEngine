@@ -2,6 +2,7 @@
 #pragma once
 
 #include "rttr/registration"
+#include "Runtime/Core/Definitions.h"
 
 namespace LitchiRuntime
 {

@@ -1,0 +1,46 @@
+
+//= INCLUDES =======================
+#include "Runtime/Core/pch.h"
+#include "RHI_CommandList.h"
+#include "RHI_Device.h"
+#include "RHI_Fence.h"
+#include "RHI_Semaphore.h"
+#include "RHI_DescriptorSetLayout.h"
+#include "RHI_Shader.h"
+#include "RHI_Pipeline.h"
+#include "RHI_CommandPool.h"
+//#include "../Rendering/Renderer.h"
+//==================================
+
+//= NAMESPACES =====
+using namespace std;
+//==================
+
+namespace Spartan
+{
+    void RHI_CommandList::WaitForExecution()
+    {
+        SP_ASSERT_MSG(m_state == RHI_CommandListState::Submitted, "The command list hasn't been submitted, can't wait for it.");
+
+        // Wait for execution to finish
+        if (IsExecuting())
+        {
+            SP_ASSERT_MSG(m_proccessed_fence->Wait(), "Timed out while waiting for the fence");
+        }
+
+        // Reset fence
+        if (m_proccessed_fence->GetStateCpu() == RHI_Sync_State::Submitted)
+        {
+            m_proccessed_fence->Reset();
+        }
+
+        m_state = RHI_CommandListState::Idle;
+    }
+
+    bool RHI_CommandList::IsExecuting()
+    {
+        return
+            m_state == RHI_CommandListState::Submitted && // It has been submitted
+            !m_proccessed_fence->IsSignaled();            // And the fence is not signaled yet
+    }
+}
