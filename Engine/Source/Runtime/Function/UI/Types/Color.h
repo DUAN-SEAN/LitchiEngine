@@ -9,6 +9,8 @@ namespace LitchiRuntime
 	*/
 	struct Color
 	{
+		Color() = default;
+		Color(const Color& color) = default;
 		Color(float p_r = 1.0f, float p_g = 1.0f, float p_b = 1.0f, float p_a = 1.0f);
 
 		float r;
