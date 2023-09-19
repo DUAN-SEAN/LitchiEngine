@@ -20,12 +20,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =====================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Device.h"
 #include "../RHI_IndexBuffer.h"
 #include "../RHI_CommandList.h"
-#include "../Rendering/Renderer.h"
+//#include "../Rendering/Renderer.h"
 //================================
 
 //= NAMESPACES =====

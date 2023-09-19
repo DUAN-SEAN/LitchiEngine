@@ -8,7 +8,7 @@
 
 namespace Spartan
 {
-    class SP_CLASS RHI_DepthStencilState : public LitchiRuntime::Object
+    class SP_CLASS RHI_DepthStencilState : public RHI_Object
     {
     public:
         RHI_DepthStencilState(

@@ -3,12 +3,12 @@
 
 //= INCLUDES =================
 #include "RHI_Descriptor.h"   
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 //============================
 
 namespace Spartan
 {
-    class SP_CLASS RHI_DescriptorSet : public LitchiRuntime::Object
+    class SP_CLASS RHI_DescriptorSet : public RHI_Object
     {
     public:
         RHI_DescriptorSet() = default;

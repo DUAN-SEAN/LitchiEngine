@@ -384,8 +384,8 @@ static const char* vkresult_to_string(const VkResult result)
 #define SP_VK_ASSERT_MSG(vk_result, text_message)          \
     if (vk_result != VK_SUCCESS)                           \
     {                                                      \
-        Log::SetLogToFile(true);                           \
-        SP_LOG_ERROR("%s", vkresult_to_string(vk_result)); \
+       /* Log::SetLogToFile(true);                           \
+        SP_LOG_ERROR("%s", vkresult_to_string(vk_result)); \*/\
         SP_ASSERT(false && text_message);                  \
     }
 #endif

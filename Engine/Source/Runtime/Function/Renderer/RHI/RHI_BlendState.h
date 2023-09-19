@@ -3,12 +3,12 @@
 
 //= INCLUDES =================
 #include "RHI_Definitions.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 //============================
 
 namespace Spartan
 {
-    class SP_CLASS RHI_BlendState : public LitchiRuntime::Object
+    class SP_CLASS RHI_BlendState : public RHI_Object
     {
     public:
         RHI_BlendState(

@@ -2,12 +2,12 @@
 #pragma once
 
 //= INCLUDES =================
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 //============================
 
 namespace Spartan
 {
-    class RHI_IndexBuffer : public LitchiRuntime::Object
+    class RHI_IndexBuffer : public RHI_Object
     {
     public:
         RHI_IndexBuffer() = default;

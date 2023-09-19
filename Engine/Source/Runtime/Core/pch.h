@@ -39,11 +39,13 @@
 //#include "Event.h"
 //#include "Settings.h"
 //#include "Timer.h"
-//#include "FileSystem.h"
+#include "Runtime/Core/Tools/FileSystem/FileSystem.h"
 //#include "Stopwatch.h"
 //
 //// Logging
 //#include "../Logging/Log.h"
+
+#include "Runtime/Core/Log/debug.h"
 
 // Math
 #include "Math/Vector2.h"

@@ -20,11 +20,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =====================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "../RHI_Device.h"
 #include "../RHI_Semaphore.h"
 #include "../RHI_Implementation.h"
-#include "../Rendering/Renderer.h"
+//#include "../Rendering/Renderer.h"
 //================================
 
 namespace Spartan

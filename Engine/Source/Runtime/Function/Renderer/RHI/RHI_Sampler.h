@@ -4,12 +4,12 @@
 //= INCLUDES =================
 #include <memory>
 #include "RHI_Definitions.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 //============================
 
 namespace Spartan
 {
-    class RHI_Sampler : public LitchiRuntime::Object
+    class RHI_Sampler : public RHI_Object
     {
     public:
         RHI_Sampler(

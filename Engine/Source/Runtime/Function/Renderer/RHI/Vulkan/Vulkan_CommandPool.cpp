@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =====================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Device.h"
 #include "../RHI_CommandPool.h"
@@ -32,7 +32,7 @@ using namespace std;
 
 namespace Spartan
 {
-    RHI_CommandPool::RHI_CommandPool(const char* name, const uint64_t swap_chain_id, const RHI_Queue_Type queue_type) : SP_Object()
+    RHI_CommandPool::RHI_CommandPool(const char* name, const uint64_t swap_chain_id, const RHI_Queue_Type queue_type) : RHI_Object()
     {
         m_object_name   = name;
         m_swap_chain_id = swap_chain_id;

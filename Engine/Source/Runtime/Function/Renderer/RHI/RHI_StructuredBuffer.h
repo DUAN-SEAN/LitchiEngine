@@ -2,11 +2,13 @@
 #pragma once
 
 //= INCLUDES =================
+#include "RHI_Object.h"
+
 //============================
 
 namespace Spartan
 {
-    class RHI_StructuredBuffer : public LitchiRuntime::Object
+    class RHI_StructuredBuffer : public RHI_Object
     {
     public:
         RHI_StructuredBuffer(const uint32_t stride, const uint32_t element_count, const char* name);

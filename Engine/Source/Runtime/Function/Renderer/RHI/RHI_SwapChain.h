@@ -14,7 +14,7 @@ namespace Spartan
     static const RHI_Format format_sdr    = RHI_Format::R8G8B8A8_Unorm;
     static const RHI_Format format_hdr    = RHI_Format::R10G10B10A2_Unorm;
 
-    class SP_CLASS RHI_SwapChain : public LitchiRuntime::Object
+    class SP_CLASS RHI_SwapChain : public RHI_Object
     {
     public:
         RHI_SwapChain() = default;

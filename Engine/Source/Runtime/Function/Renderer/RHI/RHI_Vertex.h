@@ -105,9 +105,57 @@ namespace Spartan
         float tan[3] = { 0, 0, 0 };
     };
 
+    struct RHI_Vertex_PosTexNorTanBone
+    {
+        RHI_Vertex_PosTexNorTanBone() = default;
+        RHI_Vertex_PosTexNorTanBone(
+            const Math::Vector3& pos,
+            const Math::Vector2& tex,
+            const Math::Vector3& nor = Math::Vector3::Zero,
+            const Math::Vector3& tan = Math::Vector3::Zero,
+            const Math::Vector4& boneIndex = Math::Vector4::Zero,
+            const Math::Vector3& boneWeight = Math::Vector3::Zero)
+        {
+            this->pos[0] = pos.x;
+            this->pos[1] = pos.y;
+            this->pos[2] = pos.z;
+
+            this->tex[0] = tex.x;
+            this->tex[1] = tex.y;
+
+            this->nor[0] = nor.x;
+            this->nor[1] = nor.y;
+            this->nor[2] = nor.z;
+
+            this->tan[0] = tan.x;
+            this->tan[1] = tan.y;
+            this->tan[2] = tan.z;
+
+
+            this->boneIndices[0] = boneIndex.x;
+            this->boneIndices[1] = boneIndex.y;
+            this->boneIndices[2] = boneIndex.z;
+            this->boneIndices[3] = boneIndex.w;
+
+
+            this->boneWeights[0] = boneWeight.x;
+            this->boneWeights[1] = boneWeight.y;
+            this->boneWeights[2] = boneWeight.z;
+        }
+
+        float pos[3] = { 0, 0, 0 };
+        float tex[2] = { 0, 0 };
+        float nor[3] = { 0, 0, 0 };
+        float tan[3] = { 0, 0, 0 };
+        
+        int32_t boneIndices[4] = { 0, 0, 0 ,0};
+        float boneWeights[3] = { 0, 0, 0 };
+    };
+
     SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_Pos);
     SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_PosTex);
     SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_PosCol);
     SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_Pos2dTexCol8);
     SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_PosTexNorTan);
+    SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(RHI_Vertex_PosTexNorTanBone);
 }

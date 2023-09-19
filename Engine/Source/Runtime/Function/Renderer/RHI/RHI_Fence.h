@@ -3,12 +3,11 @@
 
 //= INCLUDES =================
 #include "RHI_Definitions.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace Spartan
 {
-    class SP_CLASS RHI_Fence : public LitchiRuntime::Object
+    class SP_CLASS RHI_Fence : public RHI_Object
     {
     public:
         RHI_Fence(const char* name = nullptr);

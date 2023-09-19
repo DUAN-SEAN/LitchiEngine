@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =====================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "Window.h"
 #include "../RHI_Device.h"
 #include "../RHI_SwapChain.h"
@@ -96,7 +96,7 @@ namespace Spartan
             }
 
             // At this point we call back to VK_PRESENT_MODE_FIFO_KHR, which as per spec is always present
-            SP_LOG_WARNING("Requested present mode is not supported. Falling back to VK_PRESENT_MODE_FIFO_KHR");
+            DEBUG_LOG_WARN("Requested present mode is not supported. Falling back to VK_PRESENT_MODE_FIFO_KHR");
             return VK_PRESENT_MODE_FIFO_KHR;
         }
 
@@ -378,7 +378,7 @@ namespace Spartan
         Create();
         AcquireNextImage();
 
-        SP_LOG_INFO("Resolution has been set to %dx%d", width, height);
+        DEBUG_LOG_INFO("Resolution has been set to %dx%d", width, height);
     }
 
     void RHI_SwapChain::ResizeToWindowSize()
@@ -481,7 +481,7 @@ namespace Spartan
         {
             m_format = new_format;
             Resize(m_width, m_height, true);
-            SP_LOG_INFO("HDR has been %s", enabled ? "enabled" : "disabled");
+            DEBUG_LOG_INFO("HDR has been %s", enabled ? "enabled" : "disabled");
         }
     }
 
@@ -494,7 +494,7 @@ namespace Spartan
             m_present_mode = enabled ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate;
             Resize(m_width, m_height, true);
             Timer::OnVsyncToggled(enabled);
-            SP_LOG_INFO("VSync has been %s", enabled ? "enabled" : "disabled");
+            DEBUG_LOG_INFO("VSync has been %s", enabled ? "enabled" : "disabled");
         }
     }
 

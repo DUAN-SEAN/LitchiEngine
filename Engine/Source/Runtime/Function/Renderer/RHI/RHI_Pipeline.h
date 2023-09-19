@@ -4,12 +4,14 @@
 //= INCLUDES =================
 #include <memory>
 #include "RHI_PipelineState.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace Spartan
 {
-    class SP_CLASS RHI_Pipeline : public LitchiRuntime::Object
+	/**
+	 * \brief 管线对象
+	 */
+	class SP_CLASS RHI_Pipeline : public RHI_Object
     {
     public:
         RHI_Pipeline() = default;

@@ -4,7 +4,7 @@
 //= INCLUDES =================
 #include <vector>
 #include "RHI_Descriptor.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 //============================
 
 // A descriptor set layout is created by individual descriptors.
@@ -17,7 +17,7 @@
  
 namespace Spartan
 {
-    class SP_CLASS RHI_DescriptorSetLayout : public LitchiRuntime::Object
+    class SP_CLASS RHI_DescriptorSetLayout : public RHI_Object
     {
     public:
         RHI_DescriptorSetLayout() = default;

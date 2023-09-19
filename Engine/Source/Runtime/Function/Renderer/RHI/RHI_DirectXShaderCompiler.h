@@ -23,7 +23,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 //= INCLUDES =======
 SP_WARNINGS_OFF
-#include <dxc/dxcapi.h>
+#include <dxcapi.h>
 SP_WARNINGS_ON
 //==================
 
@@ -230,21 +230,21 @@ namespace Spartan
             {
                 if (line.find("error") != std::string::npos)
                 {
-                    SP_LOG_ERROR(line);
+                    DEBUG_LOG_ERROR(line);
                 }
                 else if (line.find("warning") != std::string::npos)
                 {
-                    SP_LOG_WARNING(line);
+                    DEBUG_LOG_WARN(line);
                 }
-                else if (!FileSystem::IsEmptyOrWhitespace(line))
+                else if (!LitchiRuntime::FileSystem::IsEmptyOrWhitespace(line))
                 {
-                    SP_LOG_INFO(line);
+                    DEBUG_LOG_INFO(line);
                 }
             }
         }
         else
         {
-            SP_LOG_ERROR("Failed to get error buffer");
+            DEBUG_LOG_ERROR("Failed to get error buffer");
         }
 
         // Release error buffer
@@ -279,7 +279,7 @@ namespace Spartan
             {
                 if (FAILED(m_utils->CreateBlobFromPinned(source.c_str(), static_cast<uint32_t>(source.size()), CP_UTF8, &blob_encoding)))
                 {
-                    SP_LOG_ERROR("Failed to load shader source.");
+                    DEBUG_LOG_ERROR("Failed to load shader source.");
                     return nullptr;
                 }
 
@@ -293,7 +293,7 @@ namespace Spartan
             arguments_wstring.reserve(arguments.size());
             for (const std::string& str : arguments)
             {
-                arguments_wstring.emplace_back(FileSystem::StringToWstring(str));
+                arguments_wstring.emplace_back(LitchiRuntime::FileSystem::StringToWstring(str));
             }
 
             // Convert arguments to LPCWSTR

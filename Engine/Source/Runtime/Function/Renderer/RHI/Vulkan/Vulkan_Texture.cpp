@@ -20,12 +20,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =====================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Device.h"
 #include "../RHI_Texture2D.h"
 #include "../RHI_CommandList.h"
-#include "../Profiling/Profiler.h"
+//#include "../Profiling/Profiler.h"
 //================================
 
 //= NAMESPACES ===============
@@ -225,7 +225,7 @@ namespace Spartan
         {
             if (!texture->HasData())
             {
-                SP_LOG_WARNING("No data to stage");
+                DEBUG_LOG_WARN("No data to stage");
                 return true;
             }
 

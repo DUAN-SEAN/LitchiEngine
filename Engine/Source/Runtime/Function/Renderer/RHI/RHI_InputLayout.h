@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 #include "RHI_Definitions.h"
+#include "RHI_Object.h"
 #include "RHI_Vertex.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace Spartan
@@ -29,7 +29,7 @@ namespace Spartan
         uint32_t offset;
     };
 
-    class SP_CLASS RHI_InputLayout : public LitchiRuntime::Object
+    class SP_CLASS RHI_InputLayout : public RHI_Object
     {
     public:
         RHI_InputLayout() = default;

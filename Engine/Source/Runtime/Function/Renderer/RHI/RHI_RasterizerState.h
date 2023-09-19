@@ -4,12 +4,11 @@
 //= INCLUDES =================
 #include <memory>
 #include "RHI_Definitions.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace Spartan
 {
-    class SP_CLASS RHI_RasterizerState : public LitchiRuntime::Object
+    class SP_CLASS RHI_RasterizerState : public RHI_Object
     {
     public:
         RHI_RasterizerState() = default;

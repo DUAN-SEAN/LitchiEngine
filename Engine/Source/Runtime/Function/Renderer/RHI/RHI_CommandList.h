@@ -9,7 +9,7 @@
 #include "RHI_Definitions.h"
 #include "RHI_PipelineState.h"
 #include "RHI_Descriptor.h"
-#include "Runtime/Core/Meta/Reflection/object.h"
+#include "RHI_Object.h"
 #include "Runtime/Function/Renderer/Renderer_Definitions.h"
 //============================================
 
@@ -26,7 +26,7 @@ namespace Spartan
         Submitted
     };
 
-    class SP_CLASS RHI_CommandList : public LitchiRuntime::Object
+    class SP_CLASS RHI_CommandList : public RHI_Object
     {
     public:
         RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool_resource, const char* name);

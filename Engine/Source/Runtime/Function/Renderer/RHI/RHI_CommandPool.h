@@ -5,13 +5,11 @@
 #include "RHI_Definitions.h"
 #include "RHI_CommandList.h"
 #include <array>
-
-#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace Spartan
 {
-    class RHI_CommandPool : public LitchiRuntime::Object
+    class RHI_CommandPool : public RHI_Object
     {
     public:
         RHI_CommandPool(const char* name, const uint64_t swap_chain_id, const RHI_Queue_Type queue_type);

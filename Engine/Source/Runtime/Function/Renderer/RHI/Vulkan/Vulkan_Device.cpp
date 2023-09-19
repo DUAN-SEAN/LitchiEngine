@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES ==========================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "../RHI_Device.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Semaphore.h"
@@ -32,7 +32,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../RHI_DescriptorSetLayout.h"
 #include "../RHI_Pipeline.h"
 #include "../RHI_Texture.h"
-#include "../../Profiling/Profiler.h"
+//#include "../../Profiling/Profiler.h"
 SP_WARNINGS_OFF
 #define VMA_IMPLEMENTATION
 #include "vk_mem_alloc.h"
@@ -115,7 +115,7 @@ namespace Spartan
                 }
                 else
                 {
-                    SP_LOG_ERROR("Device extension \"%s\" is not supported", extension);
+                    DEBUG_LOG_ERROR("Device extension \"%s\" is not supported", extension);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Spartan
                 }
                 else
                 {
-                    SP_LOG_ERROR("Instance extension \"%s\" is not supported", extension);
+                    DEBUG_LOG_ERROR("Instance extension \"%s\" is not supported", extension);
                 }
             }
 
@@ -175,7 +175,7 @@ namespace Spartan
         {
             #define get_func(var, def)\
             var = reinterpret_cast<PFN_##def>(vkGetInstanceProcAddr(static_cast<VkInstance>(RHI_Context::instance), #def));\
-            if (!var) SP_LOG_ERROR("Failed to get function pointer for %s", #def);\
+            if (!var) DEBUG_LOG_ERROR("Failed to get function pointer for %s", #def);\
 
             /* VK_EXT_debug_utils */
             {
@@ -217,15 +217,15 @@ namespace Spartan
 
             if (/*(msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) ||*/ (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT))
             {
-                Log::Write(msg.c_str(), LogType::Info);
+                DEBUG_LOG_INFO(msg.c_str());
             }
             else if (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
             {
-                Log::Write(msg.c_str(), LogType::Warning);
+                DEBUG_LOG_WARN(msg.c_str());
             }
             else if (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
             {
-                Log::Write(msg.c_str(), LogType::Error);
+                DEBUG_LOG_ERROR(msg.c_str());
             }
 
             return VK_FALSE;
@@ -502,14 +502,14 @@ namespace Spartan
     {
         SP_ASSERT_MSG(RHI_Context::api_type == RHI_Api_Type::Vulkan, "RHI context not initialized");
 
-        #ifdef DEBUG
+        // #ifdef DEBUG
             // Add validation related extensions
             RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
             RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT);
             // Add debugging related extensions
             RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_report");
             RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_utils");
-        #endif
+        // #endif
 
         // Create instance
         VkApplicationInfo app_info = {};
@@ -561,7 +561,7 @@ namespace Spartan
                     // Detect and log version
                     string driver_version_str = to_string(VK_API_VERSION_MAJOR(driver_version)) + "." + to_string(VK_API_VERSION_MINOR(driver_version)) + "." + to_string(VK_API_VERSION_PATCH(driver_version));
                     string sdk_version_str    = to_string(VK_API_VERSION_MAJOR(sdk_version)) + "." + to_string(VK_API_VERSION_MINOR(sdk_version)) + "." + to_string(VK_API_VERSION_PATCH(sdk_version));
-                    SP_LOG_WARNING("Falling back to Vulkan %s. Please update your graphics drivers to support Vulkan %s.", driver_version_str.c_str(), sdk_version_str.c_str());
+                    DEBUG_LOG_WARN("Falling back to Vulkan %s. Please update your graphics drivers to support Vulkan %s.", driver_version_str.c_str(), sdk_version_str.c_str());
                 }
 
                 //  Save API version
@@ -596,7 +596,7 @@ namespace Spartan
                 }
                 else
                 {
-                    SP_LOG_ERROR("Validation layer was requested, but not available.");
+                    DEBUG_LOG_ERROR("Validation layer was requested, but not available.");
                 }
             }
 
@@ -666,7 +666,7 @@ namespace Spartan
                 // Disable profiler if timestamps are not supported
                 if (RHI_Context::gpu_profiling && !properties_device.properties.limits.timestampComputeAndGraphics)
                 {
-                    SP_LOG_ERROR("Device doesn't support timestamps, disabling gpu profiling...");
+                    DEBUG_LOG_ERROR("Device doesn't support timestamps, disabling gpu profiling...");
                     RHI_Context::gpu_profiling = false;
                 }
             }
@@ -815,9 +815,9 @@ namespace Spartan
             string version_patch = to_string(VK_VERSION_PATCH(app_info.apiVersion));
             string version       = version_major + "." + version_minor + "." + version_patch;
 
-            SP_LOG_INFO("Vulkan %s", version.c_str());
+            DEBUG_LOG_INFO("Vulkan %s", version.c_str());
 
-            Settings::RegisterThirdPartyLib("Vulkan", version_major + "." + version_minor + "." + version_patch, "https://vulkan.lunarg.com/");
+            // Settings::RegisterThirdPartyLib("Vulkan", version_major + "." + version_minor + "." + version_patch, "https://vulkan.lunarg.com/");
         }
     }
 
@@ -968,7 +968,7 @@ namespace Spartan
             }
             else
             {
-                SP_LOG_ERROR("Graphics queue not suported.");
+                DEBUG_LOG_ERROR("Graphics queue not suported.");
                 return false;
             }
 
@@ -979,7 +979,7 @@ namespace Spartan
             }
             else
             {
-                SP_LOG_ERROR("Compute queue not supported.");
+                DEBUG_LOG_ERROR("Compute queue not supported.");
                 return false;
             }
 
@@ -990,7 +990,7 @@ namespace Spartan
             }
             else
             {
-                SP_LOG_ERROR("Copy queue not supported.");
+                DEBUG_LOG_ERROR("Copy queue not supported.");
                 return false;
             }
 
@@ -1212,10 +1212,10 @@ namespace Spartan
             "Failed to create descriptor pool");
 
         descriptors::descriptor_pool_max_sets = capacity;
-        SP_LOG_INFO("Capacity has been set to %d sets", capacity);
+        DEBUG_LOG_INFO("Capacity has been set to %d sets", capacity);
         
-        Profiler::m_descriptor_set_count    = 0;
-        Profiler::m_descriptor_set_capacity = capacity;
+       /* Profiler::m_descriptor_set_count    = 0;
+        Profiler::m_descriptor_set_capacity = capacity;*/
     }
 
     void RHI_Device::AllocateDescriptorSet(void*& resource, RHI_DescriptorSetLayout* descriptor_set_layout, const vector<RHI_Descriptor>& descriptors_)
@@ -1275,7 +1275,7 @@ namespace Spartan
 
         // track allocations
         descriptors::allocated_descriptor_sets++;
-        Profiler::m_descriptor_set_count++;
+        // Profiler::m_descriptor_set_count++;
     }
 
     void* RHI_Device::GetDescriptorSet(const RHI_Device_Resource resource_type)
@@ -1373,7 +1373,7 @@ namespace Spartan
         {
             // Create a new pipeline
             it = descriptors::pipelines.emplace(make_pair(hash, make_shared<RHI_Pipeline>(pso, descriptor_set_layout))).first;
-            SP_LOG_INFO("A new pipeline has been created.");
+            DEBUG_LOG_INFO("A new pipeline has been created.");
         }
 
         pipeline = it->second.get();
