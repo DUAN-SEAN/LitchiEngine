@@ -127,16 +127,40 @@ namespace Spartan
         // Viewport
         const auto& GetViewport() const { return m_viewport; }
 
-        // GPU resources
+#if 1 GPU resources
+
+        /**
+         * \brief Get RHI Res Handle
+         * \return Return Handle
+         */
         void*& GetRhiResource()                             { return m_rhi_resource; }
+        /**
+         * \brief Get Shader Buffer
+         * \return 
+         */
         void* GetRhiSrv()                             const { return m_rhi_srv; }
-        void* GetRhiUav()                             const { return m_rhi_uav; }
+        /**
+         * \brief Get Un order Buffer View
+         * \return
+         */
+    	void* GetRhiUav()                             const { return m_rhi_uav; }
         void* GetRhiSrvMip(const uint32_t i)          const { return m_rhi_srv_mips[i]; }
         void* GetRhiUavMip(const uint32_t i)          const { return m_rhi_uav_mips[i]; }
+        /**
+         * \brief Get Depth or Stencil Buffer View
+         * \param i index
+         * \return 
+         */
         void* GetRhiDsv(const uint32_t i = 0)         const { return i < m_rhi_dsv.size()           ? m_rhi_dsv[i]           : nullptr; }
         void* GetRhiDsvReadOnly(const uint32_t i = 0) const { return i < m_rhi_dsv_read_only.size() ? m_rhi_dsv_read_only[i] : nullptr; }
+        /**
+         * \brief Get Render Target Buffer View
+         * \param i 
+         * \return 
+         */
         void* GetRhiRtv(const uint32_t i = 0)         const { return i < m_rhi_rtv.size()           ? m_rhi_rtv[i]           : nullptr; }
         void RHI_DestroyResource(const bool destroy_main, const bool destroy_per_view);
+#endif
 
     protected:
         bool RHI_CreateResource();

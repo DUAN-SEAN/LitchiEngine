@@ -1417,7 +1417,7 @@ namespace Spartan
         buffer_create_info.sType              = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
         buffer_create_info.size               = size;
         buffer_create_info.usage              = usage;
-        buffer_create_info.sharingMode        = VK_SHARING_MODE_EXCLUSIVE;
+        buffer_create_info.sharingMode        = VK_SHARING_MODE_EXCLUSIVE; // ∂¿’º
 
         // Allocation info
         VmaAllocationCreateInfo allocation_create_info = {};
