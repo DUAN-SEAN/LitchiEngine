@@ -3,6 +3,7 @@
 
 //= INCLUDES =================
 #include "RHI_Definitions.h"
+#include "RHI_Object.h"
 //============================
 
 namespace Spartan

@@ -1,23 +1,3 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES ==========================
 #include "Runtime/Core/pch.h"
@@ -35,8 +15,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../RHI_Semaphore.h"
 #include "../RHI_Fence.h"
 #include "../RHI_SwapChain.h"
-#include "../Rendering/Renderer.h"
-#include "../../Profiling/Profiler.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 //=====================================
 
 //= NAMESPACES ===============
@@ -138,7 +117,7 @@ namespace Spartan
                 break;
 
             default:
-                SP_LOG_ERROR("Unexpected image layout");
+                DEBUG_LOG_ERROR("Unexpected image layout");
                 break;
             }
 
@@ -252,7 +231,7 @@ namespace Spartan
         }
     }
 
-    RHI_CommandList::RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool, const char* name) : SP_Object()
+    RHI_CommandList::RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool, const char* name) : RHI_Object()
     {
         m_queue_type  = queue_type;
         m_object_name = name;
@@ -416,7 +395,7 @@ namespace Spartan
             vkCmdBindPipeline(static_cast<VkCommandBuffer>(m_rhi_resource), pipeline_bind_point, vk_pipeline);
 
             // Profile
-            Profiler::m_rhi_bindings_pipeline++;
+            // Profiler::m_rhi_bindings_pipeline++;
 
             m_pipeline_dirty = false;
 
@@ -636,7 +615,7 @@ namespace Spartan
 
         if (!texture || !texture->GetRhiSrv())
         {
-            SP_LOG_ERROR("Texture is null.");
+            DEBUG_LOG_ERROR("Texture is null.");
             return;
         }
 
@@ -691,10 +670,10 @@ namespace Spartan
             0                                             // firstInstance
         );
 
-        if (Profiler::m_granularity == ProfilerGranularity::Full)
+       /* if (Profiler::m_granularity == ProfilerGranularity::Full)
         {
             Profiler::m_rhi_draw++;
-        }
+        }*/
     }
 
     void RHI_CommandList::DrawIndexed(const uint32_t index_count, const uint32_t index_offset, const uint32_t vertex_offset)
@@ -714,11 +693,11 @@ namespace Spartan
             0                                             // firstInstance
         );
 
-        // Profile
-        if (Profiler::m_granularity == ProfilerGranularity::Full)
-        {
-            Profiler::m_rhi_draw++;
-        }
+        //// Profile
+        //if (Profiler::m_granularity == ProfilerGranularity::Full)
+        //{
+        //    Profiler::m_rhi_draw++;
+        //}
     }
 
     void RHI_CommandList::Dispatch(uint32_t x, uint32_t y, uint32_t z /*= 1*/, bool async /*= false*/)
@@ -731,7 +710,7 @@ namespace Spartan
         // Dispatch
         vkCmdDispatch(static_cast<VkCommandBuffer>(m_rhi_resource), x, y, z);
 
-        Profiler::m_rhi_dispatch++;
+        // Profiler::m_rhi_dispatch++;
     }
 
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
@@ -1025,7 +1004,7 @@ namespace Spartan
 
         m_vertex_buffer_id = buffer->GetObjectId();
 
-        Profiler::m_rhi_bindings_buffer_vertex++;
+        // Profiler::m_rhi_bindings_buffer_vertex++;
     }
 
     void RHI_CommandList::SetBufferIndex(const RHI_IndexBuffer* buffer)
@@ -1044,7 +1023,7 @@ namespace Spartan
 
         m_index_buffer_id = buffer->GetObjectId();
 
-        Profiler::m_rhi_bindings_buffer_index++;
+        // Profiler::m_rhi_bindings_buffer_index++;
     }
 
     void RHI_CommandList::SetConstantBuffer(const uint32_t slot, RHI_ConstantBuffer* constant_buffer) const
@@ -1053,7 +1032,7 @@ namespace Spartan
 
         if (!m_descriptor_layout_current)
         {
-            SP_LOG_WARNING("Descriptor layout not set, try setting constant buffer \"%s\" within a render pass", constant_buffer->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting constant buffer \"%s\" within a render pass", constant_buffer->GetObjectName().c_str());
             return;
         }
 
@@ -1097,7 +1076,7 @@ namespace Spartan
 
         if (!m_descriptor_layout_current)
         {
-            SP_LOG_WARNING("Descriptor layout not set, try setting sampler \"%s\" within a render pass", sampler->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting sampler \"%s\" within a render pass", sampler->GetObjectName().c_str());
             return;
         }
 
@@ -1116,7 +1095,7 @@ namespace Spartan
 
         if (!m_descriptor_layout_current)
         {
-            SP_LOG_WARNING("Descriptor layout not set, try setting texture \"%s\" within a render pass", texture->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting texture \"%s\" within a render pass", texture->GetObjectName().c_str());
             return;
         }
 
@@ -1200,7 +1179,7 @@ namespace Spartan
 
         if (!m_descriptor_layout_current)
         {
-            SP_LOG_WARNING("Descriptor layout not set, try setting structured buffer \"%s\" within a render pass", structured_buffer->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting structured buffer \"%s\" within a render pass", structured_buffer->GetObjectName().c_str());
             return;
         }
 
@@ -1249,7 +1228,7 @@ namespace Spartan
     {
         if (timestamp_index + 1 >= m_timestamps.size())
         {
-            SP_LOG_ERROR("Pass index out of timestamp array range");
+            DEBUG_LOG_ERROR("Pass index out of timestamp array range");
             return 0.0f;
         }
 
@@ -1274,8 +1253,8 @@ namespace Spartan
         // Allowed profiler ?
         if (RHI_Context::gpu_profiling && gpu_timing)
         {
-            Profiler::TimeBlockStart(name, TimeBlockType::Cpu, this);
-            Profiler::TimeBlockStart(name, TimeBlockType::Gpu, this);
+            // Profiler::TimeBlockStart(name, TimeBlockType::Cpu, this);
+            // Profiler::TimeBlockStart(name, TimeBlockType::Gpu, this);
         }
 
         // Allowed to markers ?
@@ -1300,8 +1279,8 @@ namespace Spartan
         // Allowed profiler ?
         if (RHI_Context::gpu_profiling)
         {
-            Profiler::TimeBlockEnd(); // cpu
-            Profiler::TimeBlockEnd(); // gpu
+            // Profiler::TimeBlockEnd(); // cpu
+            // Profiler::TimeBlockEnd(); // gpu
         }
 
         m_timeblock_active = nullptr;
@@ -1311,7 +1290,7 @@ namespace Spartan
     {
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        Renderer::SetGlobalShaderResources(this);
+        // Renderer::SetGlobalShaderResources(this); todo:change
 
         // bind descriptor sets - If the descriptor set is null, it means we don't need to bind anything.
         if (RHI_DescriptorSet* descriptor_set = m_descriptor_layout_current->GetDescriptorSet())
@@ -1345,7 +1324,7 @@ namespace Spartan
                 dynamic_offsets.data()                                                   // pDynamicOffsets
             );
 
-            Profiler::m_rhi_bindings_descriptor_set++;
+            // Profiler::m_rhi_bindings_descriptor_set++;
         }
     }
 
@@ -1414,7 +1393,7 @@ namespace Spartan
             &image_barrier                                // pImageMemoryBarriers
         );
 
-        Profiler::m_rhi_pipeline_barriers++;
+        // Profiler::m_rhi_pipeline_barriers++;
     }
 
     void RHI_CommandList::InsertMemoryBarrierImage(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new)
@@ -1460,6 +1439,6 @@ namespace Spartan
             &image_barrier
         );
 
-        Profiler::m_rhi_pipeline_barriers++;
+        // Profiler::m_rhi_pipeline_barriers++;
     }
 }

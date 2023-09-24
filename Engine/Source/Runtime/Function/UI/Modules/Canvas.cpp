@@ -7,6 +7,7 @@ void LitchiRuntime::Canvas::Draw()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
+		//ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 
 		if (m_isDockspace)

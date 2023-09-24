@@ -1,33 +1,14 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES =====================
 #include "Runtime/Core/pch.h"
-#include "Window.h"
+#include "Runtime/Core/Display/Window.h"
 #include "../RHI_Device.h"
 #include "../RHI_SwapChain.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Semaphore.h"
 #include "../RHI_CommandPool.h"
-#include "../Display/Display.h"
+#include "Runtime/Core/Display/Display.h"
+#include "Runtime/Core/Display/Event.h"
 SP_WARNINGS_OFF
 #include <SDL_vulkan.h>
 SP_WARNINGS_ON
@@ -493,7 +474,7 @@ namespace Spartan
         {
             m_present_mode = enabled ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate;
             Resize(m_width, m_height, true);
-            Timer::OnVsyncToggled(enabled);
+            //Timer::OnVsyncToggled(enabled);// TODO:change
             DEBUG_LOG_INFO("VSync has been %s", enabled ? "enabled" : "disabled");
         }
     }
