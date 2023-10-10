@@ -392,7 +392,7 @@ static const char* vkresult_to_string(const VkResult result)
 
 // RHI_Context
 #include "RHI_Definitions.h"
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_Context
     {

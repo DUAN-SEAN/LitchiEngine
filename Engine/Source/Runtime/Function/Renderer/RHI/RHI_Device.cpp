@@ -7,10 +7,10 @@
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // Device properties
     float RHI_Device::m_timestamp_period                       = 0;

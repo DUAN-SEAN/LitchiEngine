@@ -12,7 +12,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_VertexBuffer::~RHI_VertexBuffer()
     {

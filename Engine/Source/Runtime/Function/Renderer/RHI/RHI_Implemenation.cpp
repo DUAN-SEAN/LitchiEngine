@@ -8,7 +8,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // API specific
 #   if defined(API_GRAPHICS_D3D12)

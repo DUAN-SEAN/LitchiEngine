@@ -7,7 +7,7 @@
 //#include "../Rendering/Renderer.h"
 //================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     static void create_semaphore(VkDevice device, const bool is_timeline, void*& resource)
     {

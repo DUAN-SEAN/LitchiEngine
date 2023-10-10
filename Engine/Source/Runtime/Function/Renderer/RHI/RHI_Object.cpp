@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace Spartan
+namespace LitchiRuntime
 {
     uint64_t g_id = 0;
 

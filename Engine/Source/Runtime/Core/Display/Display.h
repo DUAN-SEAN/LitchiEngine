@@ -7,7 +7,7 @@
 #include "DisplayMode.h"
 //======================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS Display
     {

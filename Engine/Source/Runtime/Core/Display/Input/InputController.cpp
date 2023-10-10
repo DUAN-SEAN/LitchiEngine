@@ -7,18 +7,18 @@
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // Controller
     static void* m_controller                     = nullptr;
     static bool m_is_controller_connected         = false;
     static std::string m_controller_name          = "";
     static uint32_t m_controller_index            = 0;
-    static Math::Vector2 m_controller_thumb_left  = Math::Vector2::Zero;
-    static Math::Vector2 m_controller_thumb_right = Math::Vector2::Zero;
+    static Vector2 m_controller_thumb_left  = Vector2::Zero;
+    static Vector2 m_controller_thumb_right = Vector2::Zero;
     static float m_controller_trigger_left        = 0.0f;
     static float m_controller_trigger_right       = 0.0f;
 

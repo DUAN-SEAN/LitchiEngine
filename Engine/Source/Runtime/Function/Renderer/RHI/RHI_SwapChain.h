@@ -9,7 +9,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     static const uint8_t max_buffer_count = 3;
     static const RHI_Format format_sdr    = RHI_Format::R8G8B8A8_Unorm;

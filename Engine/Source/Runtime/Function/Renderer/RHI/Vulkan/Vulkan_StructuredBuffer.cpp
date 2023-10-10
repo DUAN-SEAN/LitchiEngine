@@ -11,7 +11,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_StructuredBuffer::RHI_StructuredBuffer(const uint32_t stride, const uint32_t element_count, const char* name)
     {

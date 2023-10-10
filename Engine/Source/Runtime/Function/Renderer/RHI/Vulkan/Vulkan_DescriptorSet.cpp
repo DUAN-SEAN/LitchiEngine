@@ -15,7 +15,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     void RHI_DescriptorSet::Update(const vector<RHI_Descriptor>& descriptors)
     {

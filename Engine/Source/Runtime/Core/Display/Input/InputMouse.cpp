@@ -10,16 +10,16 @@ SP_WARNINGS_ON
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // Mouse
-    static Math::Vector2 m_mouse_position         = Math::Vector2::Zero;
-    static Math::Vector2 m_mouse_delta            = Math::Vector2::Zero;
-    static Math::Vector2 m_mouse_wheel_delta      = Math::Vector2::Zero;
-    static Math::Vector2 m_editor_viewport_offset = Math::Vector2::Zero;
+    static Vector2 m_mouse_position         = Vector2::Zero;
+    static Vector2 m_mouse_delta            = Vector2::Zero;
+    static Vector2 m_mouse_wheel_delta      = Vector2::Zero;
+    static Vector2 m_editor_viewport_offset = Vector2::Zero;
     static bool m_mouse_is_in_viewport            = true;
 
     void Input::PostTick()
@@ -107,7 +107,7 @@ namespace Spartan
         return m_mouse_position;
     }
 
-    void Input::SetMousePosition(const Math::Vector2& position)
+    void Input::SetMousePosition(const Vector2& position)
     {
         if (SDL_WarpMouseGlobal(static_cast<int>(position.x), static_cast<int>(position.y)) != 0)
         {
@@ -118,17 +118,17 @@ namespace Spartan
         m_mouse_position = position;
     }
 
-    const Spartan::Math::Vector2& Input::GetMouseDelta()
+    const Spartan::Vector2& Input::GetMouseDelta()
     {
         return m_mouse_delta;
     }
 
-    const Spartan::Math::Vector2& Input::GetMouseWheelDelta()
+    const Spartan::Vector2& Input::GetMouseWheelDelta()
     {
         return m_mouse_wheel_delta;
     }
 
-    void Input::SetEditorViewportOffset(const Math::Vector2& offset)
+    void Input::SetEditorViewportOffset(const Vector2& offset)
     {
         m_editor_viewport_offset = offset;
     }

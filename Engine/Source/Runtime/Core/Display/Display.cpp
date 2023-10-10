@@ -17,7 +17,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {

@@ -6,7 +6,7 @@
 #include "RHI_Implementation.h"
 //=============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_Sampler::RHI_Sampler(
         const RHI_Filter filter_min                         /* = RHI_Filter::Nearest */,

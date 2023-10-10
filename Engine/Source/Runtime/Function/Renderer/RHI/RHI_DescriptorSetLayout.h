@@ -15,7 +15,7 @@
 // These descriptors are used to created a descriptor set.
 // The descriptor set is what is actually bound before any draw/dispatch calls.
  
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_DescriptorSetLayout : public RHI_Object
     {

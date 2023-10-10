@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "Runtime/Core/Log/debug.h"
 //=============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     enum class ResourceType
     {

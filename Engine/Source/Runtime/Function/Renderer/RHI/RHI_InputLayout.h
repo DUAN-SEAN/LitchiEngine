@@ -9,7 +9,7 @@
 #include "RHI_Vertex.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     struct VertexAttribute 
     {

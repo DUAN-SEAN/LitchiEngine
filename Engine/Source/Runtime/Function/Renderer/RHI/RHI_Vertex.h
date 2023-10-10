@@ -5,11 +5,11 @@
 #include "Runtime/Core/pch.h"
 //==========================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     struct RHI_Vertex_Pos
     {
-        RHI_Vertex_Pos(const Math::Vector3& position)
+        RHI_Vertex_Pos(const Vector3& position)
         {
             this->pos[0] = position.x;
             this->pos[1] = position.y;
@@ -31,7 +31,7 @@ namespace Spartan
             tex[1] = tex_y;
         }
 
-        RHI_Vertex_PosTex(const Math::Vector3& pos, const Math::Vector2& tex)
+        RHI_Vertex_PosTex(const Vector3& pos, const Vector2& tex)
         {
             this->pos[0] = pos.x;
             this->pos[1] = pos.y;
@@ -49,7 +49,7 @@ namespace Spartan
     {
         RHI_Vertex_PosCol() = default;
 
-        RHI_Vertex_PosCol(const Math::Vector3& pos, const Math::Vector4& col)
+        RHI_Vertex_PosCol(const Vector3& pos, const Vector4& col)
         {
             this->pos[0] = pos.x;
             this->pos[1] = pos.y;
@@ -78,10 +78,10 @@ namespace Spartan
     {
         RHI_Vertex_PosTexNorTan() = default;
         RHI_Vertex_PosTexNorTan(
-            const Math::Vector3& pos,
-            const Math::Vector2& tex,
-            const Math::Vector3& nor = Math::Vector3::Zero,
-            const Math::Vector3& tan = Math::Vector3::Zero)
+            const Vector3& pos,
+            const Vector2& tex,
+            const Vector3& nor = Vector3::Zero,
+            const Vector3& tan = Vector3::Zero)
         {
             this->pos[0] = pos.x;
             this->pos[1] = pos.y;
@@ -109,12 +109,12 @@ namespace Spartan
     {
         RHI_Vertex_PosTexNorTanBone() = default;
         RHI_Vertex_PosTexNorTanBone(
-            const Math::Vector3& pos,
-            const Math::Vector2& tex,
-            const Math::Vector3& nor = Math::Vector3::Zero,
-            const Math::Vector3& tan = Math::Vector3::Zero,
-            const Math::Vector4& boneIndex = Math::Vector4::Zero,
-            const Math::Vector3& boneWeight = Math::Vector3::Zero)
+            const Vector3& pos,
+            const Vector2& tex,
+            const Vector3& nor = Vector3::Zero,
+            const Vector3& tan = Vector3::Zero,
+            const Vector4& boneIndex = Vector4::Zero,
+            const Vector3& boneWeight = Vector3::Zero)
         {
             this->pos[0] = pos.x;
             this->pos[1] = pos.y;

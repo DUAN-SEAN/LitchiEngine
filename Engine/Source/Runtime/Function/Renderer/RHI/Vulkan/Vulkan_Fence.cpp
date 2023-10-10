@@ -6,7 +6,7 @@
 #include "../RHI_Device.h"
 //================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_Fence::RHI_Fence(const char* name /*= nullptr*/)
     {

@@ -106,7 +106,7 @@ namespace LitchiRuntime
 
 
 
-namespace Spartan::Math
+namespace LitchiRuntime
 {
     enum class Intersection
     {
@@ -116,7 +116,7 @@ namespace Spartan::Math
     };
 }
 
-namespace Spartan::Math::Helper
+namespace LitchiRuntime::Math::Helper
 {
     constexpr float EPSILON = std::numeric_limits<float>::epsilon();
     constexpr float INFINITY_ = std::numeric_limits<float>::infinity();

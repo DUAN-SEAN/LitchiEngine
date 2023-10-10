@@ -8,7 +8,7 @@
 #include "RHI_Descriptor.h"
 //=================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
 	enum class RHI_Device_Resource
 	{
@@ -96,7 +96,7 @@ namespace Spartan
 		static uint32_t PropertyGetMaxPushConstantSize() { return m_max_push_constant_size; }
 
 		// Markers
-		static void MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Math::Vector4& color);
+		static void MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Vector4& color);
 		static void MarkerEnd(RHI_CommandList* cmd_list);
 
 		// Misc

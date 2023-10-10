@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =========================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "ResourceCache.h"
 #include "../World/World.h"
 #include "../IO/FileStream.h"
@@ -33,10 +33,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 //= NAMESPACES ================
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //=============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {

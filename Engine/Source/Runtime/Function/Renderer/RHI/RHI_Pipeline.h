@@ -6,7 +6,7 @@
 #include "RHI_PipelineState.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
 	/**
 	 * \brief 管线对象

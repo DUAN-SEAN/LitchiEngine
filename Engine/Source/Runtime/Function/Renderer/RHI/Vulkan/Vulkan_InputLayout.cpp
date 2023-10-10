@@ -9,7 +9,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_InputLayout::~RHI_InputLayout()
     {

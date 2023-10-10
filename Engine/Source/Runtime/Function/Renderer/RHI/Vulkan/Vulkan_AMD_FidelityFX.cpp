@@ -34,10 +34,10 @@
 ////=============================================
 //
 ////= NAMESPACES ===============
-//using namespace Spartan::Math;
+//using namespace LitchiRuntime::Math;
 ////============================
 //
-//namespace Spartan
+//namespace LitchiRuntime
 //{
 //    namespace
 //    {
@@ -227,7 +227,7 @@
 //        *y = fsr2_dispatch_description.jitterOffset.y;
 //    }
 //
-//    void RHI_AMD_FidelityFX::FSR2_Resize(const Math::Vector2& resolution_render, const Math::Vector2& resolution_output)
+//    void RHI_AMD_FidelityFX::FSR2_Resize(const Vector2& resolution_render, const Vector2& resolution_output)
 //    {
 //        // destroy context
 //        if (fsr2_context_created)

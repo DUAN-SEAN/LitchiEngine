@@ -10,10 +10,10 @@
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {

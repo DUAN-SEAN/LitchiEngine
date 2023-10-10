@@ -23,12 +23,12 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     { 
         static std::string m_title;
-        static Math::Vector2 m_position = Math::Vector2::Zero;
+        static Vector2 m_position = Vector2::Zero;
         static uint32_t width           = 640;
         static uint32_t height          = 480;
         static float dpi_scale          = 1.0f;

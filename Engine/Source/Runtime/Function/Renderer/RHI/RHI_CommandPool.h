@@ -7,7 +7,7 @@
 #include <array>
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_CommandPool : public RHI_Object
     {

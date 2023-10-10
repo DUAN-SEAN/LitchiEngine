@@ -3,7 +3,7 @@
 
 #include <cstdint>
 
-namespace Spartan
+namespace LitchiRuntime
 {
     struct DisplayMode
     {

@@ -7,7 +7,7 @@
 #include "Runtime/Core/Definitions.h"
 //======================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS Window
     {

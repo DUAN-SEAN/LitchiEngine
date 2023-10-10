@@ -13,7 +13,7 @@
 #include "Runtime/Function/Renderer/Renderer_Definitions.h"
 //============================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // forward declarations
     namespace Math { class Rectangle; }
@@ -73,7 +73,7 @@ namespace Spartan
         void SetViewport(const RHI_Viewport& viewport) const;
         
         // Scissor
-        void SetScissorRectangle(const Math::Rectangle& scissor_rectangle) const;
+        void SetScissorRectangle(const Rectangle& scissor_rectangle) const;
         
         // Vertex buffer
         void SetBufferVertex(const RHI_VertexBuffer* buffer);

@@ -1,23 +1,3 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES =======
 #include "../pch.h"
@@ -27,7 +7,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace std;
 //==================
 
-namespace Spartan::Math
+namespace LitchiRuntime
 {
     Frustum::Frustum(const Matrix& view, const Matrix& projection, float screen_depth)
     {
@@ -90,12 +70,12 @@ namespace Spartan::Math
 
         if (!ignore_near_plane)
         {
-            radius = Helper::Max3(extent.x, extent.y, extent.z);
+            radius = Math::Helper::Max3(extent.x, extent.y, extent.z);
         }
         else
         {
             constexpr float z = numeric_limits<float>::infinity(); // reverse-z only (but I must read form Renderer)
-            radius = Helper::Max3(extent.x, extent.y, z);
+            radius = Math::Helper::Max3(extent.x, extent.y, z);
         }
 
         // Check sphere first as it's cheaper
@@ -154,7 +134,7 @@ namespace Spartan::Math
                 return Intersection::Outside;
 
             // else if the distance is between +- radius, then we intersect
-            if (static_cast<float>(Helper::Abs(distance)) < radius)
+            if (static_cast<float>(Math::Helper::Abs(distance)) < radius)
                 return Intersection::Intersects;
         }
 

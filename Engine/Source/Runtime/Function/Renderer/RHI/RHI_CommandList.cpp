@@ -16,7 +16,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     void RHI_CommandList::WaitForExecution()
     {

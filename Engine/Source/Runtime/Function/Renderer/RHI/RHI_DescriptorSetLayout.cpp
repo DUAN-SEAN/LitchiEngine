@@ -13,7 +13,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_DescriptorSetLayout::RHI_DescriptorSetLayout(const vector<RHI_Descriptor>& descriptors, const string& name)
     {

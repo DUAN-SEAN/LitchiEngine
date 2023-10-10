@@ -7,7 +7,7 @@
 #include "../Event.h"
 //==========================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     enum class KeyCode
     {
@@ -90,18 +90,18 @@ namespace Spartan
         static bool GetMouseCursorVisible();
         static void SetMouseIsInViewport(const bool is_in_viewport);
         static bool GetMouseIsInViewport();
-        static const Math::Vector2& GetMousePosition();
-        static void SetMousePosition(const Math::Vector2& position);
-        static const Math::Vector2& GetMouseDelta();
-        static const Math::Vector2& GetMouseWheelDelta();
-        static void SetEditorViewportOffset(const Math::Vector2& offset);
-        static const Math::Vector2 GetMousePositionRelativeToWindow();
-        static const Math::Vector2 GetMousePositionRelativeToEditorViewport();
+        static const Vector2& GetMousePosition();
+        static void SetMousePosition(const Vector2& position);
+        static const Vector2& GetMouseDelta();
+        static const Vector2& GetMouseWheelDelta();
+        static void SetEditorViewportOffset(const Vector2& offset);
+        static const Vector2 GetMousePositionRelativeToWindow();
+        static const Vector2 GetMousePositionRelativeToEditorViewport();
 
         // Controller
         static bool IsControllerConnected();
-        static const Math::Vector2& GetControllerThumbStickLeft();
-        static const Math::Vector2& GetControllerThumbStickRight();
+        static const Vector2& GetControllerThumbStickLeft();
+        static const Vector2& GetControllerThumbStickRight();
         static float GetControllerTriggerLeft();
         static float GetControllerTriggerRight();
 

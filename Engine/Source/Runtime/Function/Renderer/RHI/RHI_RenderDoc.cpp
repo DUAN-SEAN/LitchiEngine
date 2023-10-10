@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES ===========================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "RHI_RenderDoc.h"
 #include "RHI_Implementation.h"
 #include "../Core/Window.h"
@@ -37,7 +37,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     static RENDERDOC_API_1_5_0* rdc_api = nullptr;
     static void* rdc_module             = nullptr;

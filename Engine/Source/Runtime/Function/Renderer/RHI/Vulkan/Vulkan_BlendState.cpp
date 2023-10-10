@@ -8,7 +8,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_BlendState::RHI_BlendState
     (

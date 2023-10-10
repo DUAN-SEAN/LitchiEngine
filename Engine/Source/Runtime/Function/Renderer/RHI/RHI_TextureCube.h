@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "RHI_Texture.h"
 //======================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_TextureCube : public RHI_Texture
     {

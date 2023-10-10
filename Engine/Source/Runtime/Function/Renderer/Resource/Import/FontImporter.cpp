@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =========================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "FontImporter.h"
 #include "../../RHI/RHI_Texture2D.h"
 #include "../../Rendering/Font/Font.h"
@@ -31,10 +31,10 @@ SP_WARNINGS_ON
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {

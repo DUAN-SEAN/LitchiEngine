@@ -8,7 +8,7 @@
 
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_ConstantBuffer : public RHI_Object
     {

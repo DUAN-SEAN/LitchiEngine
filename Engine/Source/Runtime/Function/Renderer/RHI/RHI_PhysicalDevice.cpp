@@ -8,7 +8,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     string PhysicalDevice::decode_driver_version(const uint32_t version)
     {

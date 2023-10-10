@@ -6,7 +6,7 @@
 #include "Runtime/Core/Math/Vector2.h"
 //==========================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class Camera;
 
@@ -21,7 +21,7 @@ namespace Spartan
 
         // FSR 2
         static void FSR2_ResetHistory();
-        static void FSR2_Resize(const Math::Vector2& resolution_render, const Math::Vector2& resolution_output);
+        static void FSR2_Resize(const Vector2& resolution_render, const Vector2& resolution_output);
         static void FSR2_GenerateJitterSample(float* x, float* y);
         static void FSR2_Dispatch(
             RHI_CommandList* cmd_list,

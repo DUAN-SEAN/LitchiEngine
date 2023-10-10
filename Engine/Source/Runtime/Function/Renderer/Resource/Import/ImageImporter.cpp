@@ -20,7 +20,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
 //= INCLUDES =========================
-#include "pch.h"
+#include "Runtime/Core/pch.h"
 #include "ImageImporter.h"
 #define FREEIMAGE_LIB
 #include <FreeImage.h>
@@ -33,7 +33,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     static bool get_is_srgb(FIBITMAP* bitmap)
     {

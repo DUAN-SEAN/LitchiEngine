@@ -10,7 +10,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_CommandPool::RHI_CommandPool(const char* name, const uint64_t swap_chain_id, const RHI_Queue_Type queue_type) : RHI_Object()
     {

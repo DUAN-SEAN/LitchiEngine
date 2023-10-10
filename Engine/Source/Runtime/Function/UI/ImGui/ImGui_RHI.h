@@ -10,7 +10,7 @@
 #include "Runtime/Function/Renderer/RHI/RHI_Semaphore.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
 #include "Runtime/Function/Renderer/RHI/RHI_SwapChain.h"
-#include "Rendering/Renderer.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_BlendState.h"
 #include "Runtime/Function/Renderer/RHI/RHI_CommandPool.h"
 #include "Runtime/Function/Renderer/RHI/RHI_CommandList.h"
@@ -21,14 +21,14 @@
 #include "Runtime/Function/Renderer/RHI/RHI_RasterizerState.h"
 #include "Runtime/Function/Renderer/RHI/RHI_DepthStencilState.h"
 #include "../../Widgets/TextureViewer.h"
-#include "Rendering/Renderer_ConstantBuffers.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer_ConstantBuffers.h"
 #include "Runtime/Core/Display/Event.h"
 //=============================================
 
 namespace ImGui::RHI
 {
     //= NAMESPACES =========
-    using namespace Spartan;
+    using namespace LitchiRuntime;
     using namespace Math;
     using namespace std;
     //======================
@@ -314,7 +314,7 @@ namespace ImGui::RHI
                     {
                         // set scissor rectangle
                         {
-                            Math::Rectangle scissor_rect;
+                            Rectangle scissor_rect;
                             scissor_rect.left   = pcmd->ClipRect.x - draw_data->DisplayPos.x;
                             scissor_rect.top    = pcmd->ClipRect.y - draw_data->DisplayPos.y;
                             scissor_rect.right  = pcmd->ClipRect.z - draw_data->DisplayPos.x;

@@ -6,7 +6,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_BlendState : public RHI_Object
     {

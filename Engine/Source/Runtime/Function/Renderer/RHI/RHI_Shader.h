@@ -11,7 +11,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     enum class RHI_ShaderCompilationState
     {

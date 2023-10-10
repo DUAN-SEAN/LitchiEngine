@@ -20,10 +20,10 @@
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {
@@ -965,7 +965,7 @@ namespace Spartan
         );
     }
 
-    void RHI_CommandList::SetScissorRectangle(const Math::Rectangle& scissor_rectangle) const
+    void RHI_CommandList::SetScissorRectangle(const Rectangle& scissor_rectangle) const
     {
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 

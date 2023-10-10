@@ -6,7 +6,7 @@
 
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_StructuredBuffer : public RHI_Object
     {

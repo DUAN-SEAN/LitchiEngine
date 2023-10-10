@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../Resource/IResource.h"
 //================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     enum RHI_Texture_Flags : uint32_t
     {

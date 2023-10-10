@@ -12,7 +12,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_IndexBuffer::~RHI_IndexBuffer()
     {

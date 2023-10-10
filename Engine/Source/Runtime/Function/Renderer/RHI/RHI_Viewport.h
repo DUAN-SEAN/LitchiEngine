@@ -5,7 +5,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_Viewport : public RHI_Object
     {

@@ -5,7 +5,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_IndexBuffer : public RHI_Object
     {

@@ -3,7 +3,7 @@
 
 #include "Runtime/Core/Meta/Reflection/object.h"
 
-namespace Spartan
+namespace LitchiRuntime
 {
 	// Globals
 	extern uint64_t g_id;

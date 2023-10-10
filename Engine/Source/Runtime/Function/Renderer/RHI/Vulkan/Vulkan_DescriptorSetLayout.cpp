@@ -10,7 +10,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_DescriptorSetLayout::~RHI_DescriptorSetLayout()
     {

@@ -33,7 +33,7 @@ Note: This is a blocking event system
 #define SP_SUBSCRIBE_TO_EVENT(event_enum, function)    Spartan::Event::Subscribe(event_enum, function);
 //========================================================================================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     enum class EventType
     {

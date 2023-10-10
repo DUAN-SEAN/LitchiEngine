@@ -29,7 +29,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 struct aiNode;
 struct aiMesh;
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class Entity;
     class Mesh;

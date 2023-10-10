@@ -6,7 +6,7 @@
 #include <array>
 //==========================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_PipelineState
     {

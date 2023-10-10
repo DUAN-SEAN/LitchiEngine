@@ -8,7 +8,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_RasterizerState::RHI_RasterizerState
     (

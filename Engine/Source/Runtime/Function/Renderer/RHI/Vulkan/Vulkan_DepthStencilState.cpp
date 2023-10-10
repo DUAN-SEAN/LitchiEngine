@@ -8,7 +8,7 @@
 using namespace std;
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     RHI_DepthStencilState::RHI_DepthStencilState(
         const bool depth_test                                     /*= true*/,

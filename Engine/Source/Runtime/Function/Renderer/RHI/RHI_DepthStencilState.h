@@ -6,7 +6,7 @@
 #include "RHI_Definitions.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class SP_CLASS RHI_DepthStencilState : public RHI_Object
     {

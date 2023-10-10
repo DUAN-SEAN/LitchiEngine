@@ -7,7 +7,7 @@
 #include <cfloat>
 //================================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     void RHI_Sampler::CreateResource()
     {

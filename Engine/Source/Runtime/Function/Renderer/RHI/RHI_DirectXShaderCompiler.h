@@ -27,7 +27,7 @@ SP_WARNINGS_OFF
 SP_WARNINGS_ON
 //==================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     /*
     Version: dxcompiler.dll: 1.7 - 1.7.0.4069 (1598cd8bd)

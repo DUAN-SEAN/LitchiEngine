@@ -6,7 +6,7 @@
 #include "RHI_Object.h"
 //=============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_VertexBuffer : public RHI_Object
     {

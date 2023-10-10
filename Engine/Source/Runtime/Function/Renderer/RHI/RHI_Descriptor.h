@@ -5,7 +5,7 @@
 #include "RHI_Definitions.h"
 //==========================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_Descriptor
     {

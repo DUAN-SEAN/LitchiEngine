@@ -7,7 +7,7 @@
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
 // These need to be included on Windows or SDL will throw a bunch of linking errors.
@@ -16,7 +16,7 @@ using namespace Spartan::Math;
 #pragma comment(lib, "version.lib")
 #endif
 
-namespace Spartan
+namespace LitchiRuntime
 {
     // Keys
     std::array<bool, 107> Input::m_keys;

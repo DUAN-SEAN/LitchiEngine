@@ -21,10 +21,10 @@ SP_WARNINGS_ON
 
 //= NAMESPACES ===============
 using namespace std;
-using namespace Spartan::Math;
+using namespace LitchiRuntime::Math;
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     namespace
     {
@@ -1632,7 +1632,7 @@ namespace Spartan
 
     // markers
 
-    void RHI_Device::MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Math::Vector4& color)
+    void RHI_Device::MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Vector4& color)
     {
         SP_ASSERT(RHI_Context::gpu_markers);
         SP_ASSERT(functions::marker_begin != nullptr);

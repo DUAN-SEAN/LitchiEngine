@@ -7,7 +7,7 @@
 #include "RHI_Object.h"
 //============================
 
-namespace Spartan
+namespace LitchiRuntime
 {
     class RHI_Sampler : public RHI_Object
     {
