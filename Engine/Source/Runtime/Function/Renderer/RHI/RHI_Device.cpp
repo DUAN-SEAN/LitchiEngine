@@ -45,7 +45,7 @@ namespace LitchiRuntime
             return adapter1.GetMemory() > adapter2.GetMemory() && adapter1.GetType() == adapter2.GetType();
         });
 
-        // SP_LOG_INFO("%s (%d MB)", physical_device.GetName().c_str(), physical_device.GetMemory());
+        // DEBUG_LOG_INFO("%s (%d MB)", physical_device.GetName().c_str(), physical_device.GetMemory());
     }
 
     PhysicalDevice* RHI_Device::GetPrimaryPhysicalDevice()
@@ -62,7 +62,7 @@ namespace LitchiRuntime
 
         if (const PhysicalDevice* physical_device = GetPrimaryPhysicalDevice())
         {
-            // SP_LOG_INFO("%s (%d MB)", physical_device->GetName().c_str(), physical_device->GetMemory());
+            // DEBUG_LOG_INFO("%s (%d MB)", physical_device->GetName().c_str(), physical_device->GetMemory());
         }
     }
  

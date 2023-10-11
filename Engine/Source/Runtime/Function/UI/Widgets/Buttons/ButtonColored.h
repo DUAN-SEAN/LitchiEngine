@@ -22,7 +22,7 @@ namespace LitchiRuntime
 		* @param p_size
 		* @param p_enableAlpha
 		*/
-		ButtonColored(const std::string& p_label = "", const Color& p_color = {}, const glm::vec2& p_size =glm::vec2(0.f, 0.f), bool p_enableAlpha = true);
+		ButtonColored(const std::string& p_label = "", const Color& p_color = {1.0f,1.0f ,1.0f ,1.0f }, const glm::vec2& p_size = glm::vec2(0.f, 0.f), bool p_enableAlpha = true);
 
 	protected:
 		void _Draw_Impl() override;

@@ -2,7 +2,7 @@
 #pragma once
 
 //= INCLUDES ======================
-#include "../Display/DisplayMode.h"
+#include "Runtime/Core/Display/DisplayMode.h"
 #include "RHI_PhysicalDevice.h"
 #include <memory>
 #include "RHI_Descriptor.h"

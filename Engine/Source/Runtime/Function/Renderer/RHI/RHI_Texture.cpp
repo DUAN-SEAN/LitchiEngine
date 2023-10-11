@@ -521,7 +521,7 @@ namespace LitchiRuntime
             // Wait in case this texture loading in another thread.
             while (!IsReadyForUse())
             {
-                SP_LOG_INFO("Waiting for texture \"%s\" to finish loading...", m_object_name.c_str());
+                DEBUG_LOG_INFO("Waiting for texture \"%s\" to finish loading...", m_object_name.c_str());
                 this_thread::sleep_for(chrono::milliseconds(16));
             }
 

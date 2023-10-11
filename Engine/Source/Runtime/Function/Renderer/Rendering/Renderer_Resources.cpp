@@ -112,7 +112,7 @@ namespace LitchiRuntime
         {
             // Progressively negative values when upsampling for increased texture fidelity
             mip_bias = log2(GetResolutionRender().x / GetResolutionOutput().x) - 1.0f;
-            SP_LOG_INFO("Mip bias set to %f", mip_bias);
+            DEBUG_LOG_INFO("Mip bias set to %f", mip_bias);
         }
         
         #define sampler(x) m_samplers[static_cast<uint8_t>(x)]

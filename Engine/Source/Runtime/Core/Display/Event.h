@@ -18,19 +18,19 @@ Note: This is a blocking event system
 */
 
 //= MACROS ===============================================================================================
-#define SP_EVENT_HANDLER_EXPRESSION(expression)        [this](Spartan::sp_variant var)  { expression }
-#define SP_EVENT_HANDLER_EXPRESSION_STATIC(expression) [](Spartan::sp_variant var)      { expression }
+#define SP_EVENT_HANDLER_EXPRESSION(expression)        [this](LitchiRuntime::sp_variant var)  { expression }
+#define SP_EVENT_HANDLER_EXPRESSION_STATIC(expression) [](LitchiRuntime::sp_variant var)      { expression }
 
-#define SP_EVENT_HANDLER(function)                     [this](Spartan::sp_variant var)  { function(); }
-#define SP_EVENT_HANDLER_STATIC(function)              [](Spartan::sp_variant var)      { function(); }
+#define SP_EVENT_HANDLER(function)                     [this](LitchiRuntime::sp_variant var)  { function(); }
+#define SP_EVENT_HANDLER_STATIC(function)              [](LitchiRuntime::sp_variant var)      { function(); }
                                                                                      
-#define SP_EVENT_HANDLER_VARIANT(function)             [this](Spartan::sp_variant var)  { function(var); }
-#define SP_EVENT_HANDLER_VARIANT_STATIC(function)      [](Spartan::sp_variant var)      { function(var); }
+#define SP_EVENT_HANDLER_VARIANT(function)             [this](LitchiRuntime::sp_variant var)  { function(var); }
+#define SP_EVENT_HANDLER_VARIANT_STATIC(function)      [](LitchiRuntime::sp_variant var)      { function(var); }
                                                        
-#define SP_FIRE_EVENT(event_enum)                      Spartan::Event::Fire(event_enum)
-#define SP_FIRE_EVENT_DATA(event_enum, data)           Spartan::Event::Fire(event_enum, data)
+#define SP_FIRE_EVENT(event_enum)                      LitchiRuntime::Event::Fire(event_enum)
+#define SP_FIRE_EVENT_DATA(event_enum, data)           LitchiRuntime::Event::Fire(event_enum, data)
                                                        
-#define SP_SUBSCRIBE_TO_EVENT(event_enum, function)    Spartan::Event::Subscribe(event_enum, function);
+#define SP_SUBSCRIBE_TO_EVENT(event_enum, function)    LitchiRuntime::Event::Subscribe(event_enum, function);
 //========================================================================================================
 
 namespace LitchiRuntime

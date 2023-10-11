@@ -19,7 +19,7 @@
 // Read online: https://github.com/ocornut/imgui/tree/master/docs
 
 #pragma once
-#include "imgui.h" // IMGUI_IMPL_API
+#include "../Source/imgui.h" // IMGUI_IMPL_API
 
 typedef union SDL_Event SDL_Event;
 
@@ -28,6 +28,6 @@ IMGUI_IMPL_API void ImGui_ImplSDL2_Shutdown();
 IMGUI_IMPL_API void ImGui_ImplSDL2_NewFrame();
 IMGUI_IMPL_API bool ImGui_ImplSDL2_ProcessEvent(const SDL_Event* event);
 
-//#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
-//static inline void ImGui_ImplSDL2_NewFrame(SDL_Window*) { ImGui_ImplSDL2_NewFrame(); } // 1.84: removed unnecessary parameter
-//#endif
+#ifndef IMGUI_DISABLE_OBSOLETE_FUNCTIONS
+static inline void ImGui_ImplSDL2_NewFrame(SDL_Window*) { ImGui_ImplSDL2_NewFrame(); } // 1.84: removed unnecessary parameter
+#endif

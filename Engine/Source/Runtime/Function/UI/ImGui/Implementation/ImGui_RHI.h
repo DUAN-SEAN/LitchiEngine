@@ -4,9 +4,10 @@
 //= INCLUDES ==================================
 #include <array>
 #include "ImGui_RHI.h"
+#include "Runtime/Core/Display/Event.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Device.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
-#include "imgui.h"
+#include "../Source/imgui.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Semaphore.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
 #include "Runtime/Function/Renderer/RHI/RHI_SwapChain.h"
@@ -22,14 +23,15 @@
 #include "Runtime/Function/Renderer/RHI/RHI_DepthStencilState.h"
 #include "../../Widgets/TextureViewer.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer_ConstantBuffers.h"
-#include "Runtime/Core/Display/Event.h"
+#include "Runtime/Function/Renderer/Resource/ResourceCache.h"
+
 //=============================================
 
 namespace ImGui::RHI
 {
     //= NAMESPACES =========
     using namespace LitchiRuntime;
-    using namespace Math;
+    using namespace LitchiRuntime::Math;
     using namespace std;
     //======================
 
@@ -215,7 +217,7 @@ namespace ImGui::RHI
 
                 if (vertex_count != 0)
                 {
-                    SP_LOG_INFO("Vertex buffer has been re-allocated to fit %d vertices", vertex_count_new);
+                    DEBUG_LOG_INFO("Vertex buffer has been re-allocated to fit %d vertices", vertex_count_new);
                 }
             }
 
@@ -228,7 +230,7 @@ namespace ImGui::RHI
 
                 if (index_count != 0)
                 {
-                    SP_LOG_INFO("Index buffer has been re-allocated to fit %d indices", index_count_new);
+                    DEBUG_LOG_INFO("Index buffer has been re-allocated to fit %d indices", index_count_new);
                 }
             }
 
@@ -282,7 +284,7 @@ namespace ImGui::RHI
                     if (RHI_Texture* texture = static_cast<RHI_Texture*>(pcmd->TextureId))
                     {
                         // transition will happen only if needed
-                        texture->SetLayout(Spartan::RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+                        texture->SetLayout(LitchiRuntime::RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
                     }
                 }
             }
@@ -314,7 +316,7 @@ namespace ImGui::RHI
                     {
                         // set scissor rectangle
                         {
-                            Rectangle scissor_rect;
+                            Math::Rectangle scissor_rect;
                             scissor_rect.left   = pcmd->ClipRect.x - draw_data->DisplayPos.x;
                             scissor_rect.top    = pcmd->ClipRect.y - draw_data->DisplayPos.y;
                             scissor_rect.right  = pcmd->ClipRect.z - draw_data->DisplayPos.x;
@@ -450,7 +452,7 @@ namespace ImGui::RHI
     static void window_present(ImGuiViewport* viewport, void*)
     {
         WindowData* window = static_cast<WindowData*>(viewport->RendererUserData);
-        SP_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == Spartan::RHI_CommandListState::Submitted);
+        SP_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == LitchiRuntime::RHI_CommandListState::Submitted);
         window->swapchain->Present();
     }
 

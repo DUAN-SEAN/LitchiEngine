@@ -36,7 +36,7 @@ namespace LitchiRuntime
             // If this is not the first allocation, inform the user.
             if (vertex_count != 0)
             {
-                SP_LOG_INFO("Line buffer can hold %d vertices but %d are needed, resizing the buffer to fit %d vertices.", vertex_count, index + 2, new_vertex_count);
+                DEBUG_LOG_INFO("Line buffer can hold %d vertices but %d are needed, resizing the buffer to fit %d vertices.", vertex_count, index + 2, new_vertex_count);
             }
 
             m_lines_index_depth_off = numeric_limits<uint32_t>::max(); // max because it's incremented below.

@@ -76,9 +76,10 @@
 //  2017-08-25: Inputs: MousePos set to -FLT_MAX,-FLT_MAX when mouse is unavailable/missing (instead of -1,-1).
 //  2016-10-15: Misc: Added a void* user_data parameter to Clipboard function handlers.
 
+#include "../Source/imgui.h"
 #include "imgui_impl_sdl2.h"
 
-// SPARTAN_TWEAK
+// LitchiRuntime_TWEAK
 #include "Runtime/Core/Display/Window.h"
 
 // Clang warnings with -Weverything
@@ -91,6 +92,7 @@
 // (the multi-viewports feature requires SDL features supported from SDL 2.0.4+. SDL 2.0.5+ is highly recommended)
 #include <SDL.h>
 #include <SDL_syswm.h>
+
 
 #if defined(__APPLE__)
 #include <TargetConditionals.h>
@@ -429,7 +431,7 @@ IMGUI_IMPL_API bool ImGui_ImplSDL2_Init()
         io.BackendFlags |= ImGuiBackendFlags_PlatformHasViewports;  // We can create multi-viewports on the Platform side (optional)
 
     // SPARTAN_TWEAK
-    bd->Window    = static_cast<SDL_Window*>(Spartan::Window::GetHandleSDL());
+    bd->Window    = static_cast<SDL_Window*>(LitchiRuntime::Window::GetHandleSDL());
     bd->UseVulkan = true; // we are using SDL_Vulkan_CreateSurface so the window needs the SDL_WINDOW_VULKAN flag
 
     // SDL on Linux/OSX doesn't report events for unfocused windows (see https://github.com/ocornut/imgui/issues/4960)
@@ -461,7 +463,7 @@ IMGUI_IMPL_API bool ImGui_ImplSDL2_Init()
     // Our mouse update function expect PlatformHandle to be filled for the main viewport
     ImGuiViewport* main_viewport     = ImGui::GetMainViewport();
     main_viewport->PlatformHandle    = (void*)bd->Window;               // SPARTAN_TWEAK
-    main_viewport->PlatformHandleRaw = Spartan::Window::GetHandleRaw(); // SPARTAN_TWEAK
+    main_viewport->PlatformHandleRaw = LitchiRuntime::Window::GetHandleRaw(); // SPARTAN_TWEAK
 
     // From 2.0.5: Set SDL hint to receive mouse click events on window focus, otherwise SDL doesn't emit the event.
     // Without this, when clicking to gain focus, our widgets wouldn't activate even though they showed as hovered.

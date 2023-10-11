@@ -1,7 +1,7 @@
 
 #include "PanelWindow.h"
 
-#include "Runtime/Function/UI/ImGui/imgui_internal.h"
+#include "Runtime/Function/UI/ImGui/Source/imgui_internal.h"
 #include "Runtime/Function/UI/Internal/Converter.h"
 
 LitchiRuntime::PanelWindow::PanelWindow(const std::string& p_name, bool p_opened, const PanelWindowSettings& p_floatingPanelSettings) :

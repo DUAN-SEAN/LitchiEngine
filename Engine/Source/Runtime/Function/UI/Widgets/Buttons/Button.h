@@ -31,10 +31,10 @@ namespace LitchiRuntime
 		glm::vec2 size;
 		bool disabled = false;
 
-		Color idleBackgroundColor;
-		Color hoveredBackgroundColor;
-		Color clickedBackgroundColor;
+		Color idleBackgroundColor{1.0f,1.0f ,1.0f ,1.0f };
+		Color hoveredBackgroundColor{ 1.0f,1.0f ,1.0f ,1.0f };
+		Color clickedBackgroundColor{ 1.0f,1.0f ,1.0f ,1.0f };
 
-		Color textColor;
+		Color textColor{ 1.0f,1.0f ,1.0f ,1.0f };
 	};
 }

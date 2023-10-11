@@ -10,7 +10,7 @@
 #include "RHI_PipelineState.h"
 #include "RHI_Descriptor.h"
 #include "RHI_Object.h"
-#include "Runtime/Function/Renderer/Renderer_Definitions.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
 //============================================
 
 namespace LitchiRuntime

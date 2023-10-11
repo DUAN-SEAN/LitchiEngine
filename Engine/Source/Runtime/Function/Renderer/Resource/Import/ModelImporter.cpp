@@ -423,7 +423,7 @@ namespace LitchiRuntime
             {
                 while (ProgressTracker::GetProgress(ProgressType::ModelImporter).GetFraction() != 1.0f)
                 {
-                    SP_LOG_INFO("Waiting for node processing threads to finish before creating GPU buffers...");
+                    DEBUG_LOG_INFO("Waiting for node processing threads to finish before creating GPU buffers...");
                     this_thread::sleep_for(std::chrono::milliseconds(16));
                 }
 

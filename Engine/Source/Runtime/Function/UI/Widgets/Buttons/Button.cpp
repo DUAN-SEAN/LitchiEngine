@@ -2,8 +2,8 @@
 #include "Button.h"
 
 #include "glm.hpp"
-#include "Runtime/Function/UI/ImGui/imgui.h"
-#include "Runtime/Function/UI/ImGui/imgui_internal.h"
+#include "Runtime/Function/UI/ImGui/Source/imgui.h"
+#include "Runtime/Function/UI/ImGui/Source/imgui_internal.h"
 #include "Runtime/Function/UI/Internal/Converter.h"
 
 LitchiRuntime::Button::Button(const std::string& p_label, const glm::vec2& p_size, bool p_disabled) :
@@ -31,7 +31,7 @@ void LitchiRuntime::Button::_Draw_Impl()
 	style.Colors[ImGuiCol_ButtonActive]		= Converter::ToImVec4(clickedBackgroundColor);
 	style.Colors[ImGuiCol_Text]				= Converter::ToImVec4(textColor);
 
-	if (ImGui::ButtonEx((label + m_widgetID).c_str(), Converter::ToImVec2(size), disabled ? ImGuiButtonFlags_Disabled : 0))
+	if (ImGui::ButtonEx((label + m_widgetID).c_str(), Converter::ToImVec2(size), disabled ? ImGuiButtonFlags_::ImGuiButtonFlags_None : 0))
 		ClickedEvent.Invoke();
 
 	style.Colors[ImGuiCol_Button]			= defaultIdleColor;

@@ -300,7 +300,7 @@ namespace LitchiRuntime
         {
             RHI_Device::QueueWaitAll();
             RHI_Device::DeletionQueueParse();
-            SP_LOG_INFO("Parsed deletion queue");
+            DEBUG_LOG_INFO("Parsed deletion queue");
         }
 
         // reset buffer offsets
@@ -468,7 +468,7 @@ namespace LitchiRuntime
         Display::RegisterDisplayMode(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Display::GetRefreshRate(), Display::GetIndex());
 
         // Log
-        SP_LOG_INFO("Render resolution has been set to %dx%d", width, height);
+        DEBUG_LOG_INFO("Render resolution has been set to %dx%d", width, height);
     }
 
     const Vector2& Renderer::GetResolutionOutput()
@@ -503,7 +503,7 @@ namespace LitchiRuntime
         }
 
         // Log
-        SP_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
+        DEBUG_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
     }
 
     void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list)
@@ -765,7 +765,7 @@ namespace LitchiRuntime
             {
                 if (value == 1.0f && !Display::GetHdr())
                 {
-                    SP_LOG_INFO("This display doesn't support HDR");
+                    DEBUG_LOG_INFO("This display doesn't support HDR");
                     return;
                 }
             }
@@ -789,7 +789,7 @@ namespace LitchiRuntime
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Upsampling)] = static_cast<float>(Renderer_Upsampling::FSR2);
                         RHI_AMD_FidelityFX::FSR2_ResetHistory();
-                        SP_LOG_INFO("Enabled FSR 2.0 since it's used for TAA.");
+                        DEBUG_LOG_INFO("Enabled FSR 2.0 since it's used for TAA.");
                     }
                 }
                 else
@@ -798,7 +798,7 @@ namespace LitchiRuntime
                     if (fsr_enabled)
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Upsampling)] = static_cast<float>(Renderer_Upsampling::Linear);
-                        SP_LOG_INFO("Disabed FSR 2.0 since it's used for TAA.");
+                        DEBUG_LOG_INFO("Disabed FSR 2.0 since it's used for TAA.");
                     }
                 }
             }
@@ -813,7 +813,7 @@ namespace LitchiRuntime
                     if (taa_enabled)
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Antialiasing)] = static_cast<float>(Renderer_Antialiasing::Disabled);
-                        SP_LOG_INFO("Disabled TAA since it's done by FSR 2.0.");
+                        DEBUG_LOG_INFO("Disabled TAA since it's done by FSR 2.0.");
                     }
                 }
                 else if (value == static_cast<float>(Renderer_Upsampling::FSR2))
@@ -823,7 +823,7 @@ namespace LitchiRuntime
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Antialiasing)] = static_cast<float>(Renderer_Antialiasing::Taa);
                         RHI_AMD_FidelityFX::FSR2_ResetHistory();
-                        SP_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
+                        DEBUG_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
                     }
                 }
             }
@@ -889,7 +889,7 @@ namespace LitchiRuntime
 
             while (flush_requested)
             {
-                SP_LOG_INFO("External thread is waiting for the renderer thread to flush...");
+                DEBUG_LOG_INFO("External thread is waiting for the renderer thread to flush...");
                 this_thread::sleep_for(chrono::milliseconds(16));
             }
 
@@ -899,7 +899,7 @@ namespace LitchiRuntime
         // Flushing
         if (!is_rendering_allowed)
         {
-            SP_LOG_INFO("Renderer thread is flushing...");
+            DEBUG_LOG_INFO("Renderer thread is flushing...");
             RHI_Device::QueueWaitAll();
         }
 
