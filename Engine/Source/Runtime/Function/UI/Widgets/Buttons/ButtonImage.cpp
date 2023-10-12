@@ -1,7 +1,7 @@
 
 #include "ButtonImage.h"
 
-#include "Runtime/Function/UI/ImGui/Source/imgui_internal.h"
+#include "Runtime/Function/UI/ImGui/imgui_internal.h"
 #include "Runtime/Function/UI/Internal/Converter.h"
 
 LitchiRuntime::ButtonImage::ButtonImage(uint32_t p_textureID, const glm::vec2 & p_size) :

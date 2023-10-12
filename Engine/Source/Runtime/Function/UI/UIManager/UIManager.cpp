@@ -1,6 +1,8 @@
 
 #include "UIManager.h"
 
+#include "Runtime/Function/UI/ImGui/imgui_impl_vulkan.h"
+
 LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, const std::string& p_glslVersion)
 {
 	ImGui::CreateContext();
@@ -10,8 +12,10 @@ LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, co
 
 	ApplyStyle(p_style);
 	
-	ImGui_ImplGlfw_InitForOpenGL(p_glfwWindow, true);// todo: vulkan 修改为 implsdl
-	ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());// todo: vulkan 修改为vulkan版本
+	// ImGui_ImplGlfw_InitForOpenGL(p_glfwWindow, true);// todo: vulkan 修改为 implsdl
+	// ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());// todo: vulkan 修改为vulkan版本
+	ImGui_ImplGlfw_InitForVulkan(p_glfwWindow, true);// todo: vulkan 修改为 implsdl
+	ImGui_ImplVulkan_Init(&init_info, ((VulkanRenderPass*)m_framebuffer.render_pass)->getResource());
 }
 
 LitchiRuntime::UIManager::~UIManager()

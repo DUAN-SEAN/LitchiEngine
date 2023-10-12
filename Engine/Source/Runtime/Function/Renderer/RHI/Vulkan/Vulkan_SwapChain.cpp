@@ -1,17 +1,16 @@
 
 //= INCLUDES =====================
 #include "Runtime/Core/pch.h"
-#include "Runtime/Core/Display/Window.h"
+#include "Runtime/Core/Window/Window.h"
 #include "../RHI_Device.h"
 #include "../RHI_SwapChain.h"
 #include "../RHI_Implementation.h"
 #include "../RHI_Semaphore.h"
 #include "../RHI_CommandPool.h"
-#include "Runtime/Core/Display/Display.h"
-#include "Runtime/Core/Display/Event.h"
-SP_WARNINGS_OFF
-#include <SDL_vulkan.h>
-SP_WARNINGS_ON
+#include "GLFW/glfw3.h"
+//SP_WARNINGS_OFF
+//#include <SDL_vulkan.h>
+//SP_WARNINGS_ON
 //================================
 
 //= NAMESPACES ===============
@@ -162,15 +161,15 @@ namespace LitchiRuntime
         m_buffer_count = buffer_count;
         m_width        = width;
         m_height       = height;
-        m_sdl_window   = sdl_window;
+        m_glfw_window   = sdl_window;
         m_object_name  = name;
         m_present_mode = present_mode;
 
         Create();
         AcquireNextImage();
 
-        SP_SUBSCRIBE_TO_EVENT(EventType::WindowResized, SP_EVENT_HANDLER(ResizeToWindowSize));
-        SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreen, SP_EVENT_HANDLER(ResizeToWindowSize));
+       /* SP_SUBSCRIBE_TO_EVENT(EventType::WindowResized, SP_EVENT_HANDLER(ResizeToWindowSize));
+        SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreen, SP_EVENT_HANDLER(ResizeToWindowSize));*/
     }
 
     RHI_SwapChain::~RHI_SwapChain()
@@ -180,14 +179,18 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::Create()
     {
-        SP_ASSERT(m_sdl_window != nullptr);
+        SP_ASSERT(m_glfw_window != nullptr);
 
         // Create surface
         VkSurfaceKHR surface = nullptr;
         {
-            SP_ASSERT_MSG(
-                SDL_Vulkan_CreateSurface(static_cast<SDL_Window*>(m_sdl_window), RHI_Context::instance, &surface),
-                "Failed to created window surface");
+           /* SP_ASSERT_MSG(
+                SDL_Vulkan_CreateSurface(static_cast<SDL_Window*>(m_glfw_window), RHI_Context::instance, &surface),
+                "Failed to created window surface");*/
+            if (glfwCreateWindowSurface(RHI_Context::instance,  static_cast<GLFWwindow*>(m_glfw_window), nullptr, &surface) != VK_SUCCESS)
+            {
+                DEBUG_LOG_ERROR("glfwCreateWindowSurface failed!");
+            }
 
             VkBool32 present_support = false;
             SP_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceSupportKHR(
@@ -364,7 +367,9 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::ResizeToWindowSize()
     {
-        Resize(Window::GetWidth(), Window::GetHeight());
+        // todo swapChainÐèÒªWindow¾ä±ú
+        // auto = Window::GetSize();
+        Resize(Window::(), Window::GetHeight());
     }
 
     void RHI_SwapChain::AcquireNextImage()
@@ -401,7 +406,7 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::Present()
     {
-        SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_sdl_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
+        SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
         SP_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
         SP_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
         SP_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Src,                            "Invalid layout");
@@ -451,10 +456,10 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::SetHdr(const bool enabled)
     {
-        if (enabled)
+       /* if (enabled)
         {
             SP_ASSERT_MSG(Display::GetHdr(), "This display doesn't support HDR");
-        }
+        }*/
 
         RHI_Format new_format = enabled ? format_hdr : format_sdr;
 
