@@ -38,6 +38,8 @@ namespace LitchiRuntime
     class RHI_Shader;
     class RHI_Semaphore;
     class RHI_Fence;
+    class RHI_Framebuffer;
+    class RHI_RenderPass;
     struct RHI_Texture_Mip;
     struct RHI_Texture_Slice;
     struct RHI_Vertex_Undefined;

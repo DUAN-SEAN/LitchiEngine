@@ -2,7 +2,6 @@
 #pragma once
 
 //= INCLUDES ======================
-#include "Runtime/Core/Display/DisplayMode.h"
 #include "RHI_PhysicalDevice.h"
 #include <memory>
 #include "RHI_Descriptor.h"
@@ -53,6 +52,12 @@ namespace LitchiRuntime
 		static void DeletionQueueAdd(const RHI_Resource_Type resource_type, void* resource);
 		static void DeletionQueueParse();
 		static bool DeletionQueueNeedsToParse();
+
+		static RHI_RenderPass* RenderPassCreate();
+
+		static RHI_Framebuffer* FrameBufferCreate(RHI_RenderPass renderPass,uint32_t attachmentCount,const void* attachmentImageViews,uint32_t width,uint32_t height,uint32_t layers);
+
+
 
 #if 1 Memory
 
