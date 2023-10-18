@@ -18,7 +18,7 @@ namespace LitchiRuntime
 		* @param p_enableAlpha
 		* @param p_defaultColor
 		*/
-		ColorEdit(bool p_enableAlpha = false, const LitchiRuntime::Color& p_defaultColor = {});
+		ColorEdit(bool p_enableAlpha = false, const LitchiRuntime::Color& p_defaultColor = {1.0f,1.0f ,1.0f ,1.0f });
 
 	protected:
 		void _Draw_Impl() override;

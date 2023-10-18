@@ -33,12 +33,14 @@ void LitchiRuntime::TreeNode::_Draw_Impl()
 
 	if (m_shouldOpen)
 	{
-		ImGui::SetNextTreeNodeOpen(true);
+		// ImGui::SetNextTreeNodeOpen(true);
+		ImGui::TreePush("");
 		m_shouldOpen = false;
 	}
 	else if (m_shouldClose)
 	{
-		ImGui::SetNextTreeNodeOpen(false);
+		// ImGui::SetNextTreeNodeOpen(false);
+		ImGui::TreePop();
 		m_shouldClose = false;
 	}
 

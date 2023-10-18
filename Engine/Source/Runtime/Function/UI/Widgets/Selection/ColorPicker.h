@@ -18,7 +18,7 @@ namespace LitchiRuntime
 		* @param p_enableAlpha
 		* @param p_defaultColor
 		*/
-		ColorPicker(bool p_enableAlpha = false, const Color& p_defaultColor = {});
+		ColorPicker(bool p_enableAlpha = false, const Color& p_defaultColor = { 1.0f,1.0f ,1.0f ,1.0f });
 
 	protected:
 		void _Draw_Impl() override;

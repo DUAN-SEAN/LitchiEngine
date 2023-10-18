@@ -79,12 +79,12 @@ namespace LitchiRuntime
         inline bool IsNormalized() const
         {
             static const float THRESH_VECTOR_NORMALIZED = 0.01f;
-            return (Helper::Abs(1.f - LengthSquared()) < THRESH_VECTOR_NORMALIZED);
+            return (Math::Helper::Abs(1.f - LengthSquared()) < THRESH_VECTOR_NORMALIZED);
         }
 
         inline float Max()
         {
-            return Helper::Max3(x, y, z);
+            return Math::Helper::Max3(x, y, z);
         }
 
         // Returns the dot product
@@ -106,7 +106,7 @@ namespace LitchiRuntime
         [[nodiscard]] Vector3 Cross(const Vector3& v2) const { return Cross(*this, v2); }
 
         // Returns the length
-        [[nodiscard]] float Length() const        { return Helper::Sqrt(x * x + y * y + z * z); }
+        [[nodiscard]] float Length() const        { return Math::Helper::Sqrt(x * x + y * y + z * z); }
         // Returns the squared length             
         [[nodiscard]] float LengthSquared() const { return x * x + y * y + z * z; }
 
@@ -117,7 +117,7 @@ namespace LitchiRuntime
 
             if (sqrmag > max_length * max_length)
             {
-                const float mag = Helper::Sqrt(sqrmag);
+                const float mag = Math::Helper::Sqrt(sqrmag);
 
                 // these intermediate variables force the intermediate result to be
                 // of float precision. without this, the intermediate result can be of higher
@@ -135,9 +135,9 @@ namespace LitchiRuntime
 
         inline void FindBestAxisVectors(Vector3& Axis1, Vector3& Axis2) const
         {
-            const float NX = Helper::Abs(x);
-            const float NY = Helper::Abs(y);
-            const float NZ = Helper::Abs(z);
+            const float NX = Math::Helper::Abs(x);
+            const float NY = Math::Helper::Abs(y);
+            const float NZ = Math::Helper::Abs(z);
 
             // Find best basis vectors.
             if (NZ > NX && NZ > NY)	Axis1 = Vector3(1, 0, 0);
@@ -163,7 +163,7 @@ namespace LitchiRuntime
         }
 
         // Return absolute vector
-        [[nodiscard]] Vector3 Abs() const { return Vector3(Helper::Abs(x), Helper::Abs(y), Helper::Abs(z)); }
+        [[nodiscard]] Vector3 Abs() const { return Vector3(Math::Helper::Abs(x), Math::Helper::Abs(y), Math::Helper::Abs(z)); }
 
         // Linear interpolation with another vector.
         Vector3 Lerp(const Vector3& v, float t)                                    const { return *this * (1.0f - t) + v * t; }

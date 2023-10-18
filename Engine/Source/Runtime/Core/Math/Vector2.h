@@ -111,7 +111,7 @@ namespace LitchiRuntime
         //===================================================================================
 
         // Returns the length
-        [[nodiscard]] float Length() const { return Helper::Sqrt(x * x + y * y); }
+        [[nodiscard]] float Length() const { return Math::Helper::Sqrt(x * x + y * y); }
         // Returns the squared length
         [[nodiscard]] float LengthSquared() const { return x * x + y * y; }
 

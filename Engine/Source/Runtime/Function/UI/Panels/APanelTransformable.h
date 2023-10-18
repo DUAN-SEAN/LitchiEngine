@@ -3,7 +3,6 @@
 
 #include <vector>
 #include <memory>
-#include <glm.hpp>
 
 #include "Runtime/Function/UI/Settings/Alignment.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"

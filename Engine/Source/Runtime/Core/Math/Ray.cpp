@@ -111,7 +111,7 @@ namespace LitchiRuntime
     float Ray::HitDistance(const Plane& plane, Vector3* intersection_point /*= nullptr*/) const
     {
         float d = plane.normal.Dot(m_direction);
-        if (Helper::Abs(d) >= Helper::EPSILON)
+        if (Math::Helper::Abs(d) >= Math::Helper::EPSILON)
         {
             float t = -(plane.normal.Dot(m_origin) + plane.d) / d;
             if (t >= 0.0f)
@@ -124,12 +124,12 @@ namespace LitchiRuntime
             }
             else
             {
-                return Helper::INFINITY_;
+                return Math::Helper::INFINITY_;
             }
         }
         else
         {
-            return Helper::INFINITY_;
+            return Math::Helper::INFINITY_;
         }
     }
 
@@ -145,7 +145,7 @@ namespace LitchiRuntime
         Vector3 p(m_direction.Cross(edge2));
         float det = edge1.Dot(p);
 
-        if (det >= Helper::EPSILON)
+        if (det >= Math::Helper::EPSILON)
         {
             // Calculate u & v parameters and test
             Vector3 t(m_origin - v1);
@@ -173,7 +173,7 @@ namespace LitchiRuntime
             }
         }
 
-        return Helper::INFINITY_;
+        return Math::Helper::INFINITY_;
     }
 
     float Ray::HitDistance(const Sphere& sphere) const
@@ -193,7 +193,7 @@ namespace LitchiRuntime
     
         // No solution
         if (d < 0.0f)
-            return Helper::INFINITY_;
+            return Math::Helper::INFINITY_;
 
         // Get the nearer solution
         float dSqrt = sqrtf(d);
@@ -230,7 +230,7 @@ namespace LitchiRuntime
         float d2121 = p21.Dot(p21);
         
         float d = d2121 * d4343 - d4321 * d4321;
-        if (Helper::Abs(d) < Helper::EPSILON)
+        if (Math::Helper::Abs(d) < Math::Helper::EPSILON)
             return m_origin;
 
         float n = d1343 * d4321 - d1321 * d4343;
