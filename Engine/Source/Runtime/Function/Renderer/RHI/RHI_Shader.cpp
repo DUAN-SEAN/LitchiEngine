@@ -53,11 +53,11 @@ namespace LitchiRuntime
             {
                 if (defines_str.empty())
                 {
-                    SP_LOG_ERROR("Failed to compile shader \"%s\".", object_name.c_str());
+                    DEBUG_LOG_ERROR("Failed to compile shader \"%s\".", object_name.c_str());
                 }
                 else
                 {
-                    SP_LOG_ERROR("Failed to compile shader \"%s\" with definitions \"%s\".", object_name.c_str(), defines_str.c_str());
+                    DEBUG_LOG_ERROR("Failed to compile shader \"%s\" with definitions \"%s\".", object_name.c_str(), defines_str.c_str());
                 }
             }
         }
@@ -79,7 +79,7 @@ namespace LitchiRuntime
 
         if (!FileSystem::IsFile(file_path))
         {
-            SP_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
+            DEBUG_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
             return;
         }
 
@@ -212,7 +212,7 @@ namespace LitchiRuntime
     {
         if (index >= m_sources.size())
         {
-            SP_LOG_ERROR("No source with index %d exists.", index);
+            DEBUG_LOG_ERROR("No source with index %d exists.", index);
             return;
         }
 

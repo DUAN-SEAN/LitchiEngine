@@ -369,7 +369,7 @@ namespace LitchiRuntime
     {
         // todo swapChainÐèÒªWindow¾ä±ú
         // auto = Window::GetSize();
-        Resize(Window::(), Window::GetHeight());
+        // Resize(Window::(), Window::GetHeight());
     }
 
     void RHI_SwapChain::AcquireNextImage()
@@ -406,7 +406,7 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::Present()
     {
-        SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
+        // SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
         SP_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
         SP_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
         SP_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Src,                            "Invalid layout");

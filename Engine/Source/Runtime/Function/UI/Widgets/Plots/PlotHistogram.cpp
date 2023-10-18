@@ -18,5 +18,6 @@ LitchiRuntime::PlotHistogram::PlotHistogram
 
 void LitchiRuntime::PlotHistogram::_Draw_Impl()
 {
-	ImGui::PlotHistogram((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Converter::ToImVec2(size), sizeof(float), forceHover);
+	// todo: ¡Ÿ ±◊¢ Õ
+	// ImGui::PlotHistogram((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Converter::ToImVec2(size), sizeof(float), forceHover);
 }

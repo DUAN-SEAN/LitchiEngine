@@ -153,7 +153,7 @@ namespace LitchiRuntime
         auto file = make_unique<FileStream>(file_path, FileStream_Write);
         if (!file->IsOpen())
         {
-            SP_LOG_ERROR("Failed to open file.");
+            DEBUG_LOG_ERROR("Failed to open file.");
             return;
         }
 

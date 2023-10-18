@@ -130,7 +130,7 @@ struct sp_info
 if (!(##expression))                                \
 {                                                   \
    /* LitchiRuntime::Log::SetLogToFile(true);               \
-    SP_LOG_ERROR("Assertion failed: " #expression); */\
+    DEBUG_LOG_ERROR("Assertion failed: " #expression); */\
     SP_DEBUG_BREAK();                               \
 }
 #endif

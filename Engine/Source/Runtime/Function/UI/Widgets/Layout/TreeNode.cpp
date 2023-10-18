@@ -31,18 +31,18 @@ void LitchiRuntime::TreeNode::_Draw_Impl()
 {
 	bool prevOpened = m_opened;
 
-	if (m_shouldOpen)
-	{
-		// ImGui::SetNextTreeNodeOpen(true);
-		ImGui::TreePush("");
-		m_shouldOpen = false;
-	}
-	else if (m_shouldClose)
-	{
-		// ImGui::SetNextTreeNodeOpen(false);
-		ImGui::TreePop();
-		m_shouldClose = false;
-	}
+	//if (m_shouldOpen)
+	//{
+	//	// ImGui::SetNextTreeNodeOpen(true);
+	//	ImGui::TreePush("");
+	//	m_shouldOpen = false;
+	//}
+	//else if (m_shouldClose)
+	//{
+	//	// ImGui::SetNextTreeNodeOpen(false);
+	//	ImGui::TreePop();
+	//	m_shouldClose = false;
+	//}
 
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_None;
 	if (m_arrowClickToOpen) flags |= ImGuiTreeNodeFlags_OpenOnArrow;

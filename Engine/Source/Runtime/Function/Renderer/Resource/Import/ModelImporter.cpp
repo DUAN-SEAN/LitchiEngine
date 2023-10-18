@@ -336,7 +336,7 @@ namespace LitchiRuntime
 
         if (!FileSystem::IsFile(file_path))
         {
-            SP_LOG_ERROR("Provided file path doesn't point to an existing file");
+            DEBUG_LOG_ERROR("Provided file path doesn't point to an existing file");
             return false;
         }
 
@@ -455,7 +455,7 @@ namespace LitchiRuntime
         else
         {
             ProgressTracker::GetProgress(ProgressType::ModelImporter).JobDone();
-            SP_LOG_ERROR("%s", importer.GetErrorString());
+            DEBUG_LOG_ERROR("%s", importer.GetErrorString());
         }
 
         importer.FreeScene();

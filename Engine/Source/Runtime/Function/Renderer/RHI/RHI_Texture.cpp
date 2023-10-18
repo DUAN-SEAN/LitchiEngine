@@ -172,7 +172,7 @@ namespace LitchiRuntime
 
                 if (CMP_CompressTexture(&options, source, destination, nullptr) != CMP_OK)
                 {
-                    SP_LOG_ERROR("Failed to compress texture");
+                    DEBUG_LOG_ERROR("Failed to compress texture");
                 }
 
                 delete[] source.m_pMipLevelTable;
@@ -289,7 +289,7 @@ namespace LitchiRuntime
                 auto file = make_unique<FileStream>(file_path, FileStream_Read);
                 if (!file->IsOpen())
                 {
-                    SP_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+                    DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
                     return false;
                 }
 
@@ -347,7 +347,7 @@ namespace LitchiRuntime
                 {
                     if (!ImageImporter::Load(file_paths[slice_index], slice_index, this))
                     {
-                        SP_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+                        DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
                         return false;
                     }
                 }

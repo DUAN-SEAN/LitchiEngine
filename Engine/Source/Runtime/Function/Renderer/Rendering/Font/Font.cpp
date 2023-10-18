@@ -46,7 +46,7 @@ namespace LitchiRuntime
         // Load
         if (!FontImporter::LoadFromFile(this, file_path))
         {
-            SP_LOG_ERROR("Failed to load font \"%s\"", file_path.c_str());
+            DEBUG_LOG_ERROR("Failed to load font \"%s\"", file_path.c_str());
             return false;
         }
 

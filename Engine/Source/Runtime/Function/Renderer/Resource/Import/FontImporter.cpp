@@ -77,109 +77,109 @@ namespace LitchiRuntime
             switch (error_code)
             {
                 // Generic errors
-                case FT_Err_Cannot_Open_Resource:           SP_LOG_ERROR("FreeType: Cannot open resource."); break;
-                case FT_Err_Unknown_File_Format:            SP_LOG_ERROR("FreeType: Unknown file format."); break;
-                case FT_Err_Invalid_File_Format:            SP_LOG_ERROR("FreeType: Broken file."); break;
-                case FT_Err_Invalid_Version:                SP_LOG_ERROR("FreeType: Invalid FreeType version."); break;
-                case FT_Err_Lower_Module_Version:           SP_LOG_ERROR("FreeType: Module version is too low."); break;
-                case FT_Err_Invalid_Argument:               SP_LOG_ERROR("FreeType: Invalid argument."); break;
-                case FT_Err_Unimplemented_Feature:          SP_LOG_ERROR("FreeType: Unimplemented feature."); break;
-                case FT_Err_Invalid_Table:                  SP_LOG_ERROR("FreeType: Invalid table."); break;
-                case FT_Err_Invalid_Offset:                 SP_LOG_ERROR("FreeType: Invalid offset."); break;
-                case FT_Err_Array_Too_Large:                SP_LOG_ERROR("FreeType: Array allocation size too large."); break;
-                case FT_Err_Missing_Module:                 SP_LOG_ERROR("FreeType: Missing module."); break;
-                case FT_Err_Missing_Property:               SP_LOG_ERROR("FreeType: Missing property."); break;
+                case FT_Err_Cannot_Open_Resource:           DEBUG_LOG_ERROR("FreeType: Cannot open resource."); break;
+                case FT_Err_Unknown_File_Format:            DEBUG_LOG_ERROR("FreeType: Unknown file format."); break;
+                case FT_Err_Invalid_File_Format:            DEBUG_LOG_ERROR("FreeType: Broken file."); break;
+                case FT_Err_Invalid_Version:                DEBUG_LOG_ERROR("FreeType: Invalid FreeType version."); break;
+                case FT_Err_Lower_Module_Version:           DEBUG_LOG_ERROR("FreeType: Module version is too low."); break;
+                case FT_Err_Invalid_Argument:               DEBUG_LOG_ERROR("FreeType: Invalid argument."); break;
+                case FT_Err_Unimplemented_Feature:          DEBUG_LOG_ERROR("FreeType: Unimplemented feature."); break;
+                case FT_Err_Invalid_Table:                  DEBUG_LOG_ERROR("FreeType: Invalid table."); break;
+                case FT_Err_Invalid_Offset:                 DEBUG_LOG_ERROR("FreeType: Invalid offset."); break;
+                case FT_Err_Array_Too_Large:                DEBUG_LOG_ERROR("FreeType: Array allocation size too large."); break;
+                case FT_Err_Missing_Module:                 DEBUG_LOG_ERROR("FreeType: Missing module."); break;
+                case FT_Err_Missing_Property:               DEBUG_LOG_ERROR("FreeType: Missing property."); break;
                 // Glyph/character errors
-                case FT_Err_Invalid_Glyph_Index:            SP_LOG_ERROR("FreeType: Invalid glyph index."); break;
-                case FT_Err_Invalid_Character_Code:         SP_LOG_ERROR("FreeType: Invalid character code."); break;
-                case FT_Err_Invalid_Glyph_Format:           SP_LOG_ERROR("FreeType: Unsupported glyph format."); break;
-                case FT_Err_Cannot_Render_Glyph:            SP_LOG_ERROR("FreeType: Cannot render this glyph format."); break;
-                case FT_Err_Invalid_Outline:                SP_LOG_ERROR("FreeType: Invalid outline."); break;
-                case FT_Err_Invalid_Composite:              SP_LOG_ERROR("FreeType: Invalid composite glyph."); break;
-                case FT_Err_Too_Many_Hints:                 SP_LOG_ERROR("FreeType: Too many hints."); break;
-                case FT_Err_Invalid_Pixel_Size:             SP_LOG_ERROR("FreeType: Invalid pixel size."); break;
+                case FT_Err_Invalid_Glyph_Index:            DEBUG_LOG_ERROR("FreeType: Invalid glyph index."); break;
+                case FT_Err_Invalid_Character_Code:         DEBUG_LOG_ERROR("FreeType: Invalid character code."); break;
+                case FT_Err_Invalid_Glyph_Format:           DEBUG_LOG_ERROR("FreeType: Unsupported glyph format."); break;
+                case FT_Err_Cannot_Render_Glyph:            DEBUG_LOG_ERROR("FreeType: Cannot render this glyph format."); break;
+                case FT_Err_Invalid_Outline:                DEBUG_LOG_ERROR("FreeType: Invalid outline."); break;
+                case FT_Err_Invalid_Composite:              DEBUG_LOG_ERROR("FreeType: Invalid composite glyph."); break;
+                case FT_Err_Too_Many_Hints:                 DEBUG_LOG_ERROR("FreeType: Too many hints."); break;
+                case FT_Err_Invalid_Pixel_Size:             DEBUG_LOG_ERROR("FreeType: Invalid pixel size."); break;
                 // Handle errors
-                case FT_Err_Invalid_Handle:                 SP_LOG_ERROR("FreeType: Invalid object handle."); break;
-                case FT_Err_Invalid_Library_Handle:         SP_LOG_ERROR("FreeType: Invalid library handle."); break;
-                case FT_Err_Invalid_Driver_Handle:          SP_LOG_ERROR("FreeType: Invalid module handle."); break;
-                case FT_Err_Invalid_Face_Handle:            SP_LOG_ERROR("FreeType: Invalid face handle."); break;
-                case FT_Err_Invalid_Size_Handle:            SP_LOG_ERROR("FreeType: Invalid size handle."); break;
-                case FT_Err_Invalid_Slot_Handle:            SP_LOG_ERROR("FreeType: Invalid glyph slot handle."); break;
-                case FT_Err_Invalid_CharMap_Handle:         SP_LOG_ERROR("FreeType: Invalid charmap handle."); break;
-                case FT_Err_Invalid_Cache_Handle:           SP_LOG_ERROR("FreeType: Invalid cache manager handle."); break;
-                case FT_Err_Invalid_Stream_Handle:          SP_LOG_ERROR("FreeType: Invalid stream handle."); break;
+                case FT_Err_Invalid_Handle:                 DEBUG_LOG_ERROR("FreeType: Invalid object handle."); break;
+                case FT_Err_Invalid_Library_Handle:         DEBUG_LOG_ERROR("FreeType: Invalid library handle."); break;
+                case FT_Err_Invalid_Driver_Handle:          DEBUG_LOG_ERROR("FreeType: Invalid module handle."); break;
+                case FT_Err_Invalid_Face_Handle:            DEBUG_LOG_ERROR("FreeType: Invalid face handle."); break;
+                case FT_Err_Invalid_Size_Handle:            DEBUG_LOG_ERROR("FreeType: Invalid size handle."); break;
+                case FT_Err_Invalid_Slot_Handle:            DEBUG_LOG_ERROR("FreeType: Invalid glyph slot handle."); break;
+                case FT_Err_Invalid_CharMap_Handle:         DEBUG_LOG_ERROR("FreeType: Invalid charmap handle."); break;
+                case FT_Err_Invalid_Cache_Handle:           DEBUG_LOG_ERROR("FreeType: Invalid cache manager handle."); break;
+                case FT_Err_Invalid_Stream_Handle:          DEBUG_LOG_ERROR("FreeType: Invalid stream handle."); break;
                 // Driver errors
-                case FT_Err_Too_Many_Drivers:               SP_LOG_ERROR("FreeType: Too many modules."); break;
-                case FT_Err_Too_Many_Extensions:            SP_LOG_ERROR("FreeType: Too many extensions."); break;
+                case FT_Err_Too_Many_Drivers:               DEBUG_LOG_ERROR("FreeType: Too many modules."); break;
+                case FT_Err_Too_Many_Extensions:            DEBUG_LOG_ERROR("FreeType: Too many extensions."); break;
                 // Memory errors
-                case FT_Err_Out_Of_Memory:                  SP_LOG_ERROR("FreeType: Out of memory."); break;
-                case FT_Err_Unlisted_Object:                SP_LOG_ERROR("FreeType: Unlisted object."); break;
+                case FT_Err_Out_Of_Memory:                  DEBUG_LOG_ERROR("FreeType: Out of memory."); break;
+                case FT_Err_Unlisted_Object:                DEBUG_LOG_ERROR("FreeType: Unlisted object."); break;
                 // Stream errors
-                case FT_Err_Cannot_Open_Stream:             SP_LOG_ERROR("FreeType: Cannot open stream."); break;
-                case FT_Err_Invalid_Stream_Seek:            SP_LOG_ERROR("FreeType: Invalid stream seek."); break;
-                case FT_Err_Invalid_Stream_Skip:            SP_LOG_ERROR("FreeType: Invalid stream skip."); break;
-                case FT_Err_Invalid_Stream_Read:            SP_LOG_ERROR("FreeType: Invalid stream read."); break;
-                case FT_Err_Invalid_Stream_Operation:       SP_LOG_ERROR("FreeType: Invalid stream operation."); break;
-                case FT_Err_Invalid_Frame_Operation:        SP_LOG_ERROR("FreeType: Invalid frame operation."); break;
-                case FT_Err_Nested_Frame_Access:            SP_LOG_ERROR("FreeType: Nested frame access."); break;
-                case FT_Err_Invalid_Frame_Read:             SP_LOG_ERROR("FreeType: Invalid frame read."); break;
+                case FT_Err_Cannot_Open_Stream:             DEBUG_LOG_ERROR("FreeType: Cannot open stream."); break;
+                case FT_Err_Invalid_Stream_Seek:            DEBUG_LOG_ERROR("FreeType: Invalid stream seek."); break;
+                case FT_Err_Invalid_Stream_Skip:            DEBUG_LOG_ERROR("FreeType: Invalid stream skip."); break;
+                case FT_Err_Invalid_Stream_Read:            DEBUG_LOG_ERROR("FreeType: Invalid stream read."); break;
+                case FT_Err_Invalid_Stream_Operation:       DEBUG_LOG_ERROR("FreeType: Invalid stream operation."); break;
+                case FT_Err_Invalid_Frame_Operation:        DEBUG_LOG_ERROR("FreeType: Invalid frame operation."); break;
+                case FT_Err_Nested_Frame_Access:            DEBUG_LOG_ERROR("FreeType: Nested frame access."); break;
+                case FT_Err_Invalid_Frame_Read:             DEBUG_LOG_ERROR("FreeType: Invalid frame read."); break;
                 // Raster errors
-                case FT_Err_Raster_Uninitialized:            SP_LOG_ERROR("FreeType: Raster uninitialized."); break;
-                case FT_Err_Raster_Corrupted:                SP_LOG_ERROR("FreeType: Raster corrupted."); break;
-                case FT_Err_Raster_Overflow:                 SP_LOG_ERROR("FreeType: Raster overflow."); break;
-                case FT_Err_Raster_Negative_Height:          SP_LOG_ERROR("FreeType: Negative height while rastering."); break;
+                case FT_Err_Raster_Uninitialized:            DEBUG_LOG_ERROR("FreeType: Raster uninitialized."); break;
+                case FT_Err_Raster_Corrupted:                DEBUG_LOG_ERROR("FreeType: Raster corrupted."); break;
+                case FT_Err_Raster_Overflow:                 DEBUG_LOG_ERROR("FreeType: Raster overflow."); break;
+                case FT_Err_Raster_Negative_Height:          DEBUG_LOG_ERROR("FreeType: Negative height while rastering."); break;
                 // Cache errors
-                case FT_Err_Too_Many_Caches:                SP_LOG_ERROR("FreeType: Too many registered caches."); break;
+                case FT_Err_Too_Many_Caches:                DEBUG_LOG_ERROR("FreeType: Too many registered caches."); break;
                 // TrueType and SFNT errors 
-                case FT_Err_Invalid_Opcode:                 SP_LOG_ERROR("FreeType: Invalid opcode."); break;
-                case FT_Err_Too_Few_Arguments:              SP_LOG_ERROR("FreeType: Too few arguments."); break;
-                case FT_Err_Stack_Overflow:                 SP_LOG_ERROR("FreeType: Stack overflow."); break;
-                case FT_Err_Code_Overflow:                  SP_LOG_ERROR("FreeType: Code overflow."); break;
-                case FT_Err_Bad_Argument:                   SP_LOG_ERROR("FreeType: Bad argument."); break;
-                case FT_Err_Divide_By_Zero:                 SP_LOG_ERROR("FreeType: Division by zero."); break;
-                case FT_Err_Invalid_Reference:              SP_LOG_ERROR("FreeType: Invalid reference."); break;
-                case FT_Err_Debug_OpCode:                   SP_LOG_ERROR("FreeType: Found debug opcode."); break;
-                case FT_Err_ENDF_In_Exec_Stream:            SP_LOG_ERROR("FreeType: Found ENDF opcode in execution stream."); break;
-                case FT_Err_Nested_DEFS:                    SP_LOG_ERROR("FreeType: Nested DEFS."); break;
-                case FT_Err_Invalid_CodeRange:              SP_LOG_ERROR("FreeType: Invalid code range."); break;
-                case FT_Err_Execution_Too_Long:             SP_LOG_ERROR("FreeType: Execution context too long."); break;
-                case FT_Err_Too_Many_Function_Defs:         SP_LOG_ERROR("FreeType: Too many function definitions."); break;
-                case FT_Err_Too_Many_Instruction_Defs:      SP_LOG_ERROR("FreeType: Too many instruction definitions."); break;
-                case FT_Err_Table_Missing:                  SP_LOG_ERROR("FreeType: SFNT font table missing."); break;
-                case FT_Err_Horiz_Header_Missing:           SP_LOG_ERROR("FreeType: Horizontal header (hhea) table missing."); break;
-                case FT_Err_Locations_Missing:              SP_LOG_ERROR("FreeType: Locations (loca) table missing."); break;
-                case FT_Err_Name_Table_Missing:             SP_LOG_ERROR("FreeType: Name table missing."); break;
-                case FT_Err_CMap_Table_Missing:             SP_LOG_ERROR("FreeType: Character map (cmap) table missing."); break;
-                case FT_Err_Hmtx_Table_Missing:             SP_LOG_ERROR("FreeType: Horizontal metrics (hmtx) table missing."); break;
-                case FT_Err_Post_Table_Missing:             SP_LOG_ERROR("FreeType: PostScript (post) table missing."); break;
-                case FT_Err_Invalid_Horiz_Metrics:          SP_LOG_ERROR("FreeType: Invalid horizontal metrics."); break;
-                case FT_Err_Invalid_CharMap_Format:         SP_LOG_ERROR("FreeType: Invalid character map (cma) format."); break;
-                case FT_Err_Invalid_PPem:                   SP_LOG_ERROR("FreeType: Invalid ppem value."); break;
-                case FT_Err_Invalid_Vert_Metrics:           SP_LOG_ERROR("FreeType: Invalid vertical metrics."); break;
-                case FT_Err_Could_Not_Find_Context:         SP_LOG_ERROR("FreeType: Could not find context."); break;
-                case FT_Err_Invalid_Post_Table_Format:      SP_LOG_ERROR("FreeType: Invalid PostScript (post) table format."); break;
-                case FT_Err_Invalid_Post_Table:             SP_LOG_ERROR("FreeType: Invalid PostScript (post) table."); break;
-                case FT_Err_DEF_In_Glyf_Bytecode:           SP_LOG_ERROR("FreeType: Found FDEF or IDEF opcode in glyf bytecode."); break;
+                case FT_Err_Invalid_Opcode:                 DEBUG_LOG_ERROR("FreeType: Invalid opcode."); break;
+                case FT_Err_Too_Few_Arguments:              DEBUG_LOG_ERROR("FreeType: Too few arguments."); break;
+                case FT_Err_Stack_Overflow:                 DEBUG_LOG_ERROR("FreeType: Stack overflow."); break;
+                case FT_Err_Code_Overflow:                  DEBUG_LOG_ERROR("FreeType: Code overflow."); break;
+                case FT_Err_Bad_Argument:                   DEBUG_LOG_ERROR("FreeType: Bad argument."); break;
+                case FT_Err_Divide_By_Zero:                 DEBUG_LOG_ERROR("FreeType: Division by zero."); break;
+                case FT_Err_Invalid_Reference:              DEBUG_LOG_ERROR("FreeType: Invalid reference."); break;
+                case FT_Err_Debug_OpCode:                   DEBUG_LOG_ERROR("FreeType: Found debug opcode."); break;
+                case FT_Err_ENDF_In_Exec_Stream:            DEBUG_LOG_ERROR("FreeType: Found ENDF opcode in execution stream."); break;
+                case FT_Err_Nested_DEFS:                    DEBUG_LOG_ERROR("FreeType: Nested DEFS."); break;
+                case FT_Err_Invalid_CodeRange:              DEBUG_LOG_ERROR("FreeType: Invalid code range."); break;
+                case FT_Err_Execution_Too_Long:             DEBUG_LOG_ERROR("FreeType: Execution context too long."); break;
+                case FT_Err_Too_Many_Function_Defs:         DEBUG_LOG_ERROR("FreeType: Too many function definitions."); break;
+                case FT_Err_Too_Many_Instruction_Defs:      DEBUG_LOG_ERROR("FreeType: Too many instruction definitions."); break;
+                case FT_Err_Table_Missing:                  DEBUG_LOG_ERROR("FreeType: SFNT font table missing."); break;
+                case FT_Err_Horiz_Header_Missing:           DEBUG_LOG_ERROR("FreeType: Horizontal header (hhea) table missing."); break;
+                case FT_Err_Locations_Missing:              DEBUG_LOG_ERROR("FreeType: Locations (loca) table missing."); break;
+                case FT_Err_Name_Table_Missing:             DEBUG_LOG_ERROR("FreeType: Name table missing."); break;
+                case FT_Err_CMap_Table_Missing:             DEBUG_LOG_ERROR("FreeType: Character map (cmap) table missing."); break;
+                case FT_Err_Hmtx_Table_Missing:             DEBUG_LOG_ERROR("FreeType: Horizontal metrics (hmtx) table missing."); break;
+                case FT_Err_Post_Table_Missing:             DEBUG_LOG_ERROR("FreeType: PostScript (post) table missing."); break;
+                case FT_Err_Invalid_Horiz_Metrics:          DEBUG_LOG_ERROR("FreeType: Invalid horizontal metrics."); break;
+                case FT_Err_Invalid_CharMap_Format:         DEBUG_LOG_ERROR("FreeType: Invalid character map (cma) format."); break;
+                case FT_Err_Invalid_PPem:                   DEBUG_LOG_ERROR("FreeType: Invalid ppem value."); break;
+                case FT_Err_Invalid_Vert_Metrics:           DEBUG_LOG_ERROR("FreeType: Invalid vertical metrics."); break;
+                case FT_Err_Could_Not_Find_Context:         DEBUG_LOG_ERROR("FreeType: Could not find context."); break;
+                case FT_Err_Invalid_Post_Table_Format:      DEBUG_LOG_ERROR("FreeType: Invalid PostScript (post) table format."); break;
+                case FT_Err_Invalid_Post_Table:             DEBUG_LOG_ERROR("FreeType: Invalid PostScript (post) table."); break;
+                case FT_Err_DEF_In_Glyf_Bytecode:           DEBUG_LOG_ERROR("FreeType: Found FDEF or IDEF opcode in glyf bytecode."); break;
                 // CFF, CID, and Type 1 errors 
-                case FT_Err_Syntax_Error:                   SP_LOG_ERROR("FreeType: Opcode syntax error."); break;
-                case FT_Err_Stack_Underflow:                SP_LOG_ERROR("FreeType: Argument stack underflow."); break;
-                case FT_Err_Ignore:                         SP_LOG_ERROR("FreeType: Ignore."); break;
-                case FT_Err_No_Unicode_Glyph_Name:          SP_LOG_ERROR("FreeType: No Unicode glyph name found."); break;
-                case FT_Err_Glyph_Too_Big:                  SP_LOG_ERROR("FreeType: Glyph too big for hinting."); break;
+                case FT_Err_Syntax_Error:                   DEBUG_LOG_ERROR("FreeType: Opcode syntax error."); break;
+                case FT_Err_Stack_Underflow:                DEBUG_LOG_ERROR("FreeType: Argument stack underflow."); break;
+                case FT_Err_Ignore:                         DEBUG_LOG_ERROR("FreeType: Ignore."); break;
+                case FT_Err_No_Unicode_Glyph_Name:          DEBUG_LOG_ERROR("FreeType: No Unicode glyph name found."); break;
+                case FT_Err_Glyph_Too_Big:                  DEBUG_LOG_ERROR("FreeType: Glyph too big for hinting."); break;
                 // BDF errors
-                case FT_Err_Missing_Startfont_Field:        SP_LOG_ERROR("FreeType: 'STARTFONT' field missing."); break;
-                case FT_Err_Missing_Font_Field:             SP_LOG_ERROR("FreeType: 'FONT' field missing."); break;
-                case FT_Err_Missing_Size_Field:             SP_LOG_ERROR("FreeType: 'SIZE' field missing."); break;
-                case FT_Err_Missing_Fontboundingbox_Field:  SP_LOG_ERROR("FreeType: 'FONTBOUNDINGBOX' field missing."); break;
-                case FT_Err_Missing_Chars_Field:            SP_LOG_ERROR("FreeType: 'CHARS' field missing."); break;
-                case FT_Err_Missing_Startchar_Field:        SP_LOG_ERROR("FreeType: 'STARTCHAR' field missing."); break;
-                case FT_Err_Missing_Encoding_Field:         SP_LOG_ERROR("FreeType: 'ENCODING' field missing."); break;
-                case FT_Err_Missing_Bbx_Field:              SP_LOG_ERROR("FreeType: 'BBX' field missing."); break;
-                case FT_Err_Bbx_Too_Big:                    SP_LOG_ERROR("FreeType: 'BBX' too big."); break;
-                case FT_Err_Corrupted_Font_Header:          SP_LOG_ERROR("FreeType: Font header corrupted or missing fields."); break;
-                case FT_Err_Corrupted_Font_Glyphs:          SP_LOG_ERROR("FreeType: Font glyphs corrupted or missing fields."); break;
+                case FT_Err_Missing_Startfont_Field:        DEBUG_LOG_ERROR("FreeType: 'STARTFONT' field missing."); break;
+                case FT_Err_Missing_Font_Field:             DEBUG_LOG_ERROR("FreeType: 'FONT' field missing."); break;
+                case FT_Err_Missing_Size_Field:             DEBUG_LOG_ERROR("FreeType: 'SIZE' field missing."); break;
+                case FT_Err_Missing_Fontboundingbox_Field:  DEBUG_LOG_ERROR("FreeType: 'FONTBOUNDINGBOX' field missing."); break;
+                case FT_Err_Missing_Chars_Field:            DEBUG_LOG_ERROR("FreeType: 'CHARS' field missing."); break;
+                case FT_Err_Missing_Startchar_Field:        DEBUG_LOG_ERROR("FreeType: 'STARTCHAR' field missing."); break;
+                case FT_Err_Missing_Encoding_Field:         DEBUG_LOG_ERROR("FreeType: 'ENCODING' field missing."); break;
+                case FT_Err_Missing_Bbx_Field:              DEBUG_LOG_ERROR("FreeType: 'BBX' field missing."); break;
+                case FT_Err_Bbx_Too_Big:                    DEBUG_LOG_ERROR("FreeType: 'BBX' too big."); break;
+                case FT_Err_Corrupted_Font_Header:          DEBUG_LOG_ERROR("FreeType: Font header corrupted or missing fields."); break;
+                case FT_Err_Corrupted_Font_Glyphs:          DEBUG_LOG_ERROR("FreeType: Font glyphs corrupted or missing fields."); break;
                 // None
-                default: SP_LOG_ERROR("FreeType: Unknown error code."); break;
+                default: DEBUG_LOG_ERROR("FreeType: Unknown error code."); break;
             }
 
             return false;
@@ -293,7 +293,7 @@ namespace LitchiRuntime
                 }
                 else
                 {
-                    SP_LOG_ERROR("Can't apply outline as the glyph doesn't have an outline format");
+                    DEBUG_LOG_ERROR("Can't apply outline as the glyph doesn't have an outline format");
                     bitmap_temp = &ft_font->glyph->bitmap;
                 }
             }
@@ -342,7 +342,7 @@ namespace LitchiRuntime
                     } break;
 
                     default:
-                        SP_LOG_ERROR("Font uses unsupported pixel format");
+                        DEBUG_LOG_ERROR("Font uses unsupported pixel format");
                         break;
                     }
                 }
@@ -396,7 +396,7 @@ namespace LitchiRuntime
         FT_Int minor;
         FT_Int rev;
         FT_Library_Version(library, &major, &minor, &rev);
-        Settings::RegisterThirdPartyLib("FreeType", to_string(major) + "." + to_string(minor) + "." + to_string(rev), "https://freetype.org/");
+        // Settings::RegisterThirdPartyLib("FreeType", to_string(major) + "." + to_string(minor) + "." + to_string(rev), "https://freetype.org/");
     }
 
     void FontImporter::Shutdown()

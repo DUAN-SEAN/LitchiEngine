@@ -18,5 +18,6 @@ LitchiRuntime::PlotLines::PlotLines
 
 void LitchiRuntime::PlotLines::_Draw_Impl()
 {
-	ImGui::PlotLines((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Converter::ToImVec2(size), sizeof(float), forceHover);
+	// todo: ¡Ÿ ±◊¢ Õ
+	// ImGui::PlotLines((label + m_widgetID).c_str(), data.data(), static_cast<int>(data.size()), 0, overlay.c_str(), minScale, maxScale, Converter::ToImVec2(size), sizeof(float), forceHover);
 }

@@ -214,7 +214,7 @@ namespace LitchiRuntime
 
         if (!bitmap)
         {
-            SP_LOG_ERROR("Failed");
+            DEBUG_LOG_ERROR("Failed");
             return previous_bitmap;
         }
 
@@ -271,7 +271,7 @@ namespace LitchiRuntime
             {
                 if (!SwapRedBlue32(bitmap))
                 {
-                    SP_LOG_ERROR("Failed to swap red with blue channel");
+                    DEBUG_LOG_ERROR("Failed to swap red with blue channel");
                 }
             }
         }
@@ -315,7 +315,7 @@ namespace LitchiRuntime
             const auto text     = (message != nullptr) ? message : "Unknown error";
             const auto format   = (fif != FIF_UNKNOWN) ? FreeImage_GetFormatFromFIF(fif) : "Unknown";
             
-            SP_LOG_ERROR("%s, Format: %s", text, format);
+            DEBUG_LOG_ERROR("%s, Format: %s", text, format);
         };
         FreeImage_SetOutputMessage(free_image_error_handler);
 
@@ -334,7 +334,7 @@ namespace LitchiRuntime
 
         if (!FileSystem::Exists(file_path))
         {
-            SP_LOG_ERROR("Path \"%s\" is invalid.", file_path.c_str());
+            DEBUG_LOG_ERROR("Path \"%s\" is invalid.", file_path.c_str());
             return false;
         }
 
@@ -352,7 +352,7 @@ namespace LitchiRuntime
             // If the format is still unknown, give up
             if (!FreeImage_FIFSupportsReading(format)) 
             {
-                SP_LOG_ERROR("Unsupported format");
+                DEBUG_LOG_ERROR("Unsupported format");
                 return false;
             }
         }
@@ -361,7 +361,7 @@ namespace LitchiRuntime
         FIBITMAP* bitmap = FreeImage_Load(format, file_path.c_str());
         if (!bitmap)
         {
-            SP_LOG_ERROR("Failed to load \"%s\"", file_path.c_str());
+            DEBUG_LOG_ERROR("Failed to load \"%s\"", file_path.c_str());
             return false;
         }
 
@@ -374,7 +374,7 @@ namespace LitchiRuntime
         bitmap = apply_bitmap_corrections(bitmap);
         if (!bitmap)
         {
-            SP_LOG_ERROR("Failed to apply bitmap corrections");
+            DEBUG_LOG_ERROR("Failed to apply bitmap corrections");
             return false;
         }
 

@@ -61,7 +61,7 @@
 //        {
 //            if (type == FFX_MESSAGE_TYPE_ERROR)
 //            {
-//                SP_LOG_ERROR("AMD FidelityFX: %ls", message);
+//                DEBUG_LOG_ERROR("AMD FidelityFX: %ls", message);
 //            }
 //            else if (type == FFX_MESSAGE_TYPE_WARNING)
 //            {

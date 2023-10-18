@@ -62,14 +62,14 @@ namespace LitchiRuntime
             // Validate resource file path
             if (!resource->HasFilePathNative() && !FileSystem::IsDirectory(resource->GetResourceFilePathNative()))
             {
-                SP_LOG_ERROR("A resource must have a valid file path in order to be cached");
+                DEBUG_LOG_ERROR("A resource must have a valid file path in order to be cached");
                 return nullptr;
             }
 
             // Validate resource file path
             if (!FileSystem::IsEngineFile(resource->GetResourceFilePathNative()))
             {
-                SP_LOG_ERROR("A resource must have a native file format in order to be cached, provide format was %s", FileSystem::GetExtensionFromFilePath(resource->GetResourceFilePathNative()).c_str());
+                DEBUG_LOG_ERROR("A resource must have a native file format in order to be cached, provide format was %s", FileSystem::GetExtensionFromFilePath(resource->GetResourceFilePathNative()).c_str());
                 return nullptr;
             }
 
@@ -92,7 +92,7 @@ namespace LitchiRuntime
         {
             if (!FileSystem::Exists(file_path))
             {
-                SP_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
+                DEBUG_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
                 return nullptr;
             }
 
@@ -115,7 +115,7 @@ namespace LitchiRuntime
             // Load
             if (!resource || !resource->LoadFromFile(file_path))
             {
-                SP_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+                DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
                 return nullptr;
             }
 

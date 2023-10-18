@@ -241,7 +241,7 @@ namespace LitchiRuntime
             DEBUG_LOG_INFO("Launching RenderDoc...");
             if (rdc_api->LaunchReplayUI(true, "") == 0)
             {
-                SP_LOG_ERROR("Failed to launch RenderDoc");
+                DEBUG_LOG_ERROR("Failed to launch RenderDoc");
             }
         }
     }

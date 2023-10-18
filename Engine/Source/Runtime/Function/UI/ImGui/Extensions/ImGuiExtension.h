@@ -301,7 +301,7 @@ namespace ImGuiSp
                     setter(tex);
                 }
             }
-            catch (const std::bad_variant_access& e) { SP_LOG_ERROR("%s", e.what()); }
+            catch (const std::bad_variant_access& e) { DEBUG_LOG_ERROR("%s", e.what()); }
         }
     }
 
