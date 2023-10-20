@@ -5,7 +5,7 @@
 #include <memory>
 #include <atomic>
 #include "Runtime/Core/Tools/FileSystem/FileSystem.h"
-#include "Runtime/Function/Renderer/RHI/RHI_Object.h"
+#include "Runtime/Function/Renderer/RHI/Object.h"
 #include "Runtime/Core/Log/debug.h"
 //=============================
 
@@ -27,7 +27,7 @@ namespace LitchiRuntime
         Unknown,
     };
 
-    class SP_CLASS IResource : public RHI_Object
+    class SP_CLASS IResource : public Object
     {
     public:
         IResource(ResourceType type);

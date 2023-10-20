@@ -62,7 +62,7 @@ namespace LitchiRuntime
         }
     }
 
-    RHI_Shader::RHI_Shader() : RHI_Object()
+    RHI_Shader::RHI_Shader() : Object()
     {
 
     }

@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_RasterizerState : public RHI_Object
+    class SP_CLASS RHI_RasterizerState : public Object
     {
     public:
         RHI_RasterizerState() = default;

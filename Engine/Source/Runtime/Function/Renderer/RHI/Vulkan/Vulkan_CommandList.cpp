@@ -231,7 +231,7 @@ namespace LitchiRuntime
         }
     }
 
-    RHI_CommandList::RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool, const char* name) : RHI_Object()
+    RHI_CommandList::RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool, const char* name) : Object()
     {
         m_queue_type  = queue_type;
         m_object_name = name;

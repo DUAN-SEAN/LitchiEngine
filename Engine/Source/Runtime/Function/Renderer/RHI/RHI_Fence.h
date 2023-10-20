@@ -3,12 +3,12 @@
 
 //= INCLUDES =================
 #include "RHI_Definitions.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Fence : public RHI_Object
+    class SP_CLASS RHI_Fence : public Object
     {
     public:
         RHI_Fence(const char* name = nullptr);

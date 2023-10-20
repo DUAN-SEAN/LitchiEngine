@@ -2,12 +2,12 @@
 #pragma once
 
 //= INCLUDES =================
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
 {
-    class RHI_IndexBuffer : public RHI_Object
+    class RHI_IndexBuffer : public Object
     {
     public:
         RHI_IndexBuffer() = default;

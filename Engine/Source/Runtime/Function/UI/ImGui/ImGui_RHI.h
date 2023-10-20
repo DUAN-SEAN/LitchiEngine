@@ -22,7 +22,7 @@
 #include "Runtime/Function/Renderer/Rendering/Renderer_ConstantBuffers.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
-#include "../../Widgets/TextureViewer.h"
+//#include "../../Widgets/TextureViewer.h"
 #include "ImGui_RHI.h"
 //=============================================
 
@@ -174,7 +174,7 @@ namespace ImGui::RHI
             initialize_platform_interface();
         }
 
-        SP_SUBSCRIBE_TO_EVENT(EventType::RendererOnShutdown, SP_EVENT_HANDLER_STATIC(destroy_rhi_resources));
+        // SP_SUBSCRIBE_TO_EVENT(EventType::RendererOnShutdown, SP_EVENT_HANDLER_STATIC(destroy_rhi_resources));
     }
 
     static void shutdown()
@@ -315,7 +315,7 @@ namespace ImGui::RHI
                     {
                         // set scissor rectangle
                         {
-                            Math::Rectangle scissor_rect;
+                            Rectangle scissor_rect;
                             scissor_rect.left   = pcmd->ClipRect.x - draw_data->DisplayPos.x;
                             scissor_rect.top    = pcmd->ClipRect.y - draw_data->DisplayPos.y;
                             scissor_rect.right  = pcmd->ClipRect.z - draw_data->DisplayPos.x;
@@ -328,16 +328,16 @@ namespace ImGui::RHI
                         {
                             // set texture and update texture viewer parameters
                             {
-                                bool m_channel_r           = false;
-                                bool m_channel_g           = false;
-                                bool m_channel_b           = false;
-                                bool m_channel_a           = false;
-                                bool m_gamma_correct       = false;
-                                bool m_pack                = false;
-                                bool m_boost               = false;
-                                bool m_abs                 = false;
-                                bool m_point_sampling      = false;
-                                float mip_level            = 0;
+                                bool m_channel_r           = true;
+                                bool m_channel_g           = true;
+                                bool m_channel_b           = true;
+                                bool m_channel_a           = true;
+                                bool m_gamma_correct       = true;
+                                bool m_pack                = true;
+                                bool m_boost               = true;
+                                bool m_abs                 = true;
+                                bool m_point_sampling      = true;
+                                float mip_level            = 1;// 0
                                 bool is_texture_visualised = false;
 
                                 if (RHI_Texture* texture = static_cast<RHI_Texture*>(pcmd->TextureId))
@@ -347,21 +347,21 @@ namespace ImGui::RHI
                                     {
                                         cmd_list->SetTexture(Renderer_BindingsSrv::tex, texture);
 
-                                        // update texture viewer parameters
-                                        is_texture_visualised = TextureViewer::GetVisualisedTextureId() == texture->GetObjectId();
-                                        mip_level = static_cast<float>(is_texture_visualised ? TextureViewer::GetMipLevel() : 0);
-                                        if (is_texture_visualised)
-                                        {
-                                            m_channel_r      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_R;
-                                            m_channel_g      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_G;
-                                            m_channel_b      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_B;
-                                            m_channel_a      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_A;
-                                            m_gamma_correct  = TextureViewer::GetVisualisationFlags() & Visualise_GammaCorrect;
-                                            m_pack           = TextureViewer::GetVisualisationFlags() & Visualise_Pack;
-                                            m_boost          = TextureViewer::GetVisualisationFlags() & Visualise_Boost;
-                                            m_abs            = TextureViewer::GetVisualisationFlags() & Visualise_Abs;
-                                            m_point_sampling = TextureViewer::GetVisualisationFlags() & Visualise_Sample_Point;
-                                        }
+                                        //// update texture viewer parameters
+                                        //is_texture_visualised = TextureViewer::GetVisualisedTextureId() == texture->GetObjectId();
+                                        //mip_level = static_cast<float>(is_texture_visualised ? TextureViewer::GetMipLevel() : 0);
+                                        //if (is_texture_visualised)
+                                        //{
+                                        //    m_channel_r      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_R;
+                                        //    m_channel_g      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_G;
+                                        //    m_channel_b      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_B;
+                                        //    m_channel_a      = TextureViewer::GetVisualisationFlags() & Visualise_Channel_A;
+                                        //    m_gamma_correct  = TextureViewer::GetVisualisationFlags() & Visualise_GammaCorrect;
+                                        //    m_pack           = TextureViewer::GetVisualisationFlags() & Visualise_Pack;
+                                        //    m_boost          = TextureViewer::GetVisualisationFlags() & Visualise_Boost;
+                                        //    m_abs            = TextureViewer::GetVisualisationFlags() & Visualise_Abs;
+                                        //    m_point_sampling = TextureViewer::GetVisualisationFlags() & Visualise_Sample_Point;
+                                        //}
                                     }
                                 }
 

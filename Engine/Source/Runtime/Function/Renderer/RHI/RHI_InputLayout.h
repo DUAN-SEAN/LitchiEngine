@@ -5,7 +5,7 @@
 #include <memory>
 #include <vector>
 #include "RHI_Definitions.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 #include "RHI_Vertex.h"
 //============================
 
@@ -29,7 +29,7 @@ namespace LitchiRuntime
         uint32_t offset;
     };
 
-    class SP_CLASS RHI_InputLayout : public RHI_Object
+    class SP_CLASS RHI_InputLayout : public Object
     {
     public:
         RHI_InputLayout() = default;

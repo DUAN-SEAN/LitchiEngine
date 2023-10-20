@@ -69,7 +69,7 @@ namespace LitchiRuntime
 
         if (file_path.empty() || FileSystem::IsDirectory(file_path))
         {
-            SP_LOG_WARNING("Invalid file path");
+            DEBUG_LOG_WARN("Invalid file path");
             return false;
         }
 

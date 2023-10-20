@@ -90,16 +90,16 @@ namespace LitchiRuntime
         //================================================================================
 
         //= HIERARCHY ======================================================================================
-        void SetParent(std::shared_ptr<Transform> new_parent);
+        void SetParent(Transform* new_parent);
         Transform* GetChildByIndex(uint32_t index);
         Transform* GetChildByName(const std::string& name);
-        void AcquireChildren();
+        // void AcquireChildren();
         void RemoveChild(Transform* child);
         void AddChild(Transform* child);
         bool IsDescendantOf(Transform* transform) const;
         void GetDescendants(std::vector<Transform*>* descendants);
-        Entity* GetDescendantPtrByName(const std::string& name);
-        std::weak_ptr<Entity> GetDescendantPtrWeakByName(const std::string& name);
+        GameObject* GetDescendantPtrByName(const std::string& name);
+        // std::weak_ptr<GameObject> GetDescendantPtrWeakByName(const std::string& name);
         bool IsRoot()                          const { return m_parent == nullptr; }
         bool HasParent()                       const { return m_parent != nullptr; }
         bool HasChildren()                     const { return GetChildrenCount() > 0 ? true : false; }

@@ -3,12 +3,12 @@
 
 //= INCLUDES ==================
 #include <vector>
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //=============================
 
 namespace LitchiRuntime
 {
-    class RHI_VertexBuffer : public RHI_Object
+    class RHI_VertexBuffer : public Object
     {
     public:
         RHI_VertexBuffer() = default;

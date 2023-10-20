@@ -8,7 +8,7 @@
 #include <vector>
 #include "RHI_Vertex.h"
 #include "RHI_Descriptor.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
@@ -21,7 +21,7 @@ namespace LitchiRuntime
         Failed
     };
 
-    class SP_CLASS RHI_Shader : public RHI_Object
+    class SP_CLASS RHI_Shader : public Object
     {
     public:
         RHI_Shader();

@@ -2,13 +2,13 @@
 #pragma once
 
 //= INCLUDES =================
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 
 //============================
 
 namespace LitchiRuntime
 {
-    class RHI_StructuredBuffer : public RHI_Object
+    class RHI_StructuredBuffer : public Object
     {
     public:
         RHI_StructuredBuffer(const uint32_t stride, const uint32_t element_count, const char* name);

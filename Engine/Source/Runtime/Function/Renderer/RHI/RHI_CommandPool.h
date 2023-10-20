@@ -9,7 +9,7 @@
 
 namespace LitchiRuntime
 {
-    class RHI_CommandPool : public RHI_Object
+    class RHI_CommandPool : public Object
     {
     public:
         RHI_CommandPool(const char* name, const uint64_t swap_chain_id, const RHI_Queue_Type queue_type);

@@ -4,12 +4,12 @@
 //= INCLUDES =================
 #include <memory>
 #include "RHI_Definitions.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
 {
-    class RHI_Sampler : public RHI_Object
+    class RHI_Sampler : public Object
     {
     public:
         RHI_Sampler(

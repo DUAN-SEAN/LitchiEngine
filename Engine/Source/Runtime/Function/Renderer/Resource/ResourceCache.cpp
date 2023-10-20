@@ -113,7 +113,7 @@ namespace LitchiRuntime
         {
             if (resource->GetResourceType() == type || type == ResourceType::Unknown)
             {
-                if (RHI_Object* object = dynamic_cast<RHI_Object*>(resource.get()))
+                if (Object* object = dynamic_cast<Object*>(resource.get()))
                 {
                     size += object->GetObjectSizeCpu();
                 }
@@ -132,7 +132,7 @@ namespace LitchiRuntime
         {
             if (resource->GetResourceType() == type || type == ResourceType::Unknown)
             {
-                if (RHI_Object* object = dynamic_cast<RHI_Object*>(resource.get()))
+                if (Object* object = dynamic_cast<Object*>(resource.get()))
                 {
                     size += object->GetObjectSizeGpu();
                 }

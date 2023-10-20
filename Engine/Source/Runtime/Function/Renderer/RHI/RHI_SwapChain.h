@@ -6,7 +6,7 @@
 #include <vector>
 #include <array>
 #include "RHI_Definitions.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
@@ -15,7 +15,7 @@ namespace LitchiRuntime
     static const RHI_Format format_sdr    = RHI_Format::R8G8B8A8_Unorm;
     static const RHI_Format format_hdr    = RHI_Format::R10G10B10A2_Unorm;
 
-    class SP_CLASS RHI_SwapChain : public RHI_Object
+    class SP_CLASS RHI_SwapChain : public Object
     {
     public:
         RHI_SwapChain() = default;

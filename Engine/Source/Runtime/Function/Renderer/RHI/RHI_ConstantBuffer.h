@@ -4,13 +4,13 @@
 //= INCLUDES =================
 #include <memory>
 
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 
 //============================
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_ConstantBuffer : public RHI_Object
+    class SP_CLASS RHI_ConstantBuffer : public Object
     {
     public:
         RHI_ConstantBuffer() = default;

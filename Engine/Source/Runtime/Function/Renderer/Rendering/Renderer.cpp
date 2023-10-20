@@ -443,7 +443,7 @@ namespace LitchiRuntime
         // Early exit if the resolution is invalid
         if (!RHI_Device::IsValidResolution(width, height))
         {
-            SP_LOG_WARNING("%dx%d is an invalid resolution", width, height);
+            DEBUG_LOG_WARN("%dx%d is an invalid resolution", width, height);
             return;
         }
 
@@ -481,7 +481,7 @@ namespace LitchiRuntime
         // Return if resolution is invalid
         if (!RHI_Device::IsValidResolution(width, height))
         {
-            SP_LOG_WARNING("%dx%d is an invalid resolution", width, height);
+            DEBUG_LOG_WARN("%dx%d is an invalid resolution", width, height);
             return;
         }
 

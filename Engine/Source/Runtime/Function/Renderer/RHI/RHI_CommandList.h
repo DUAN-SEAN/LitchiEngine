@@ -9,15 +9,14 @@
 #include "RHI_Definitions.h"
 #include "RHI_PipelineState.h"
 #include "RHI_Descriptor.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
 //============================================
 
 namespace LitchiRuntime
 {
     // forward declarations
-    namespace Math { class Rectangle; }
-
+    class Rectangle;
     enum class RHI_CommandListState : uint8_t
     {
         Idle,
@@ -26,7 +25,7 @@ namespace LitchiRuntime
         Submitted
     };
 
-    class SP_CLASS RHI_CommandList : public RHI_Object
+    class SP_CLASS RHI_CommandList : public Object
     {
     public:
         RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool_resource, const char* name);

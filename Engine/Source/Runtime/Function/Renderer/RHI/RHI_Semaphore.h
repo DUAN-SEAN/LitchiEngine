@@ -3,12 +3,12 @@
 
 //= INCLUDES =================
 #include "RHI_Definitions.h"
-#include "RHI_Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 //============================
 
 namespace LitchiRuntime
 {
-    class RHI_Semaphore : public RHI_Object
+    class RHI_Semaphore : public Object
     {
     public:
         RHI_Semaphore(bool is_timeline = false, const char* name = nullptr);
