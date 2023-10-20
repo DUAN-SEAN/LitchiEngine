@@ -9,7 +9,7 @@
 #include "Runtime/Core/Math/Vector4.h"
 #include "Runtime/Core/Math/Plane.h"
 #include <unordered_map>
-#include "Event.h"
+//#include "Event.h"
 #include "Mesh.h"
 #include "Renderer_ConstantBuffers.h"
 #include "Font/Font.h"
@@ -140,7 +140,7 @@ namespace LitchiRuntime
         static void Pass_ForwardBasePass(RHI_CommandList* cmd_list, const bool is_transparent_pass);
 
         // Event handlers
-        static void OnWorldResolved(sp_variant data);
+        // static void OnWorldResolved(sp_variant data);
         static void OnClear();
         static void OnFullScreenToggled();
 

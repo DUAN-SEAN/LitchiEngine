@@ -1,23 +1,3 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES ===================================
 #include "Runtime/Core/pch.h"
@@ -590,27 +570,27 @@ namespace LitchiRuntime
         cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
     }
 
-    void Renderer::OnWorldResolved(sp_variant data)
-    {
-        // note: m_renderables is a vector of shared pointers.
-        // this ensures that if any entities are deallocated by the world.
-        // we'll still have some valid pointers until the are overridden by m_renderables_world.
+    //void Renderer::OnWorldResolved(sp_variant data)
+    //{
+    //    // note: m_renderables is a vector of shared pointers.
+    //    // this ensures that if any entities are deallocated by the world.
+    //    // we'll still have some valid pointers until the are overridden by m_renderables_world.
 
-        vector<shared_ptr<Entity>> entities = get<vector<shared_ptr<Entity>>>(data);
+    //    vector<shared_ptr<Entity>> entities = get<vector<shared_ptr<Entity>>>(data);
 
-        lock_guard lock(mutex_entity_addition);
-        m_entities_to_add.clear();
+    //    lock_guard lock(mutex_entity_addition);
+    //    m_entities_to_add.clear();
 
-        for (shared_ptr<Entity> entity : entities)
-        {
-            SP_ASSERT_MSG(entity != nullptr, "Entity is null");
+    //    for (shared_ptr<Entity> entity : entities)
+    //    {
+    //        SP_ASSERT_MSG(entity != nullptr, "Entity is null");
 
-            if (entity->IsActiveRecursively())
-            {
-                m_entities_to_add.emplace_back(entity);
-            }
-        }
-    }
+    //        if (entity->IsActiveRecursively())
+    //        {
+    //            m_entities_to_add.emplace_back(entity);
+    //        }
+    //    }
+    //}
 
     void Renderer::OnClear()
     {

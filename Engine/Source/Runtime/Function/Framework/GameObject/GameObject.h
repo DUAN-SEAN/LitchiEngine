@@ -39,17 +39,10 @@ namespace LitchiRuntime
 		 */
 		bool HasParent();
 
-		GameObject* GetParent() { return (GameObject*)GetParent(); }
+		GameObject* GetParent();
 
-		std::list<GameObject*>& GetChildren()
-		{
-			std::list<GameObject*> dadList;
-			for (auto a : GetChildrenList()) {
-				dadList.push_back((GameObject*)a);       //依次加到父类List里
-			}
-
-			return dadList;
-		}
+		std::list<GameObject*>& GetChildren();
+	
 
 		virtual void PostResourceLoaded() override;
 

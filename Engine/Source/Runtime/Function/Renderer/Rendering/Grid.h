@@ -6,8 +6,8 @@
 #include <memory>
 #include "../RHI/RHI_Definitions.h"
 #include "Runtime/Core/Math/Matrix.h"
-#include "../Core/Definitions.h"
-#include "../World/Components/Transform.h"
+#include "Runtime/Core/Definitions.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 //========================================
 
 namespace LitchiRuntime
@@ -18,7 +18,7 @@ namespace LitchiRuntime
         Grid();
         ~Grid() = default;
         
-        const Matrix& ComputeWorldMatrix(std::shared_ptr<Transform> camera);
+        const Matrix& ComputeWorldMatrix(Transform* camera);
         const auto& GetVertexBuffer()   const { return m_vertex_buffer; }
         const uint32_t GetVertexCount() const { return m_vertex_count; }
 

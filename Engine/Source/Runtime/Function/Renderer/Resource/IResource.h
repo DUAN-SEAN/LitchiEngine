@@ -5,7 +5,7 @@
 #include <memory>
 #include <atomic>
 #include "Runtime/Core/Tools/FileSystem/FileSystem.h"
-#include "Runtime/Function/Renderer/RHI/Object.h"
+#include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Core/Log/debug.h"
 //=============================
 

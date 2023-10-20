@@ -19,7 +19,7 @@ namespace LitchiRuntime
 
     void RigidStatic::Awake() {
         Transform* transform = GetGameObject()->GetComponent<Transform>();
-        PxRigidStatic* px_rigid_static_ = Physics::CreateRigidStatic(transform->GetWorldPosition(), GetGameObject()->GetName().c_str());
+        PxRigidStatic* px_rigid_static_ = Physics::CreateRigidStatic(glm::vec3(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z), GetGameObject()->GetName().c_str());
         m_pxRigidActor = dynamic_cast<PxRigidActor*>(px_rigid_static_);
         RigidActor::Awake();
     }

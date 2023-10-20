@@ -27,7 +27,7 @@ namespace LitchiRuntime
 
     void RigidDynamic::Awake() {
         Transform* transform = GetGameObject()->GetComponent<Transform>();
-        PxRigidDynamic* px_rigid_dynamic = Physics::CreateRigidDynamic(transform->GetWorldPosition(), GetGameObject()->GetName().c_str());
+        PxRigidDynamic* px_rigid_dynamic = Physics::CreateRigidDynamic(glm::vec3(transform->GetPosition().x, transform->GetPosition().y, transform->GetPosition().z), GetGameObject()->GetName().c_str());
         m_pxRigidActor = dynamic_cast<PxRigidActor*>(px_rigid_dynamic);
         RigidActor::Awake();
     }
@@ -44,6 +44,6 @@ namespace LitchiRuntime
         //PxRigidBody受Physx物理模拟驱动，位置被改变。获取最新的位置，去更新Transform。
         PxTransform px_transform = m_pxRigidActor->getGlobalPose();
         Transform* transform = GetGameObject()->GetComponent<Transform>();
-        transform->SetLocalPosition(glm::vec3(px_transform.p.x, px_transform.p.y, px_transform.p.z));
+        transform->SetPositionLocal(Vector3(px_transform.p.x, px_transform.p.y, px_transform.p.z));
     }
 }

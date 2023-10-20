@@ -4,6 +4,7 @@
 //= INCLUDES =================
 #include <memory>
 #include "RHI_PipelineState.h"
+#include "Runtime/Core/Meta/Reflection/Object.h"
 //============================
 
 namespace LitchiRuntime
