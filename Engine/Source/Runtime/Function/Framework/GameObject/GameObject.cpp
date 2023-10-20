@@ -10,7 +10,7 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-	GameObject::GameObject(std::string name,int64_t id) : Tree::Node(), m_layer(0x01),m_id(id), m_parentId(0){
+	GameObject::GameObject(std::string name,int64_t id) : m_layer(0x01),m_id(id), m_parentId(0){
 		SetName(name);
 	}
 
@@ -19,38 +19,37 @@ namespace LitchiRuntime
 	}
 
 	bool GameObject::SetParent(GameObject* parent) {
-
-		auto& tran = GetComponent<Transform>()->GetTransform();
-		tran.RemoveParent();
-		m_parentId = 0;
-
-		if (parent == nullptr) {
-			DEBUG_LOG_INFO("parent null");
-			return true;
-		}
-
-		m_parentId = parent->m_id;
-		parent->AddChildNode(this);
-		auto& tranParent = parent->GetComponent<Transform>()->GetTransform();
-		tran.SetParent(tranParent);
+		
+		GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
 
 		return true;
 	}
 
 	bool GameObject::HasParent()
 	{
-		auto* parent = GetParentNode();
-		auto* root = m_scene->game_object_tree().GetRootNode();
-		return parent != nullptr && parent != root;
+		return GetComponent<Transform>()->HasParent();
+	}
+	GameObject* GameObject::GetParent()
+	{
+		return GetComponent<Transform>()->GetParent()->GetGameObject();
 	}
 
+	std::list<GameObject*>& GameObject::GetChildren()
+	{
+		std::list<GameObject*> dadList;
+		for (auto a : GetComponent<Transform>()->GetChildren()) {
+			dadList.push_back(a->GetGameObject());       //依次加到父类List里
+		}
+
+		return dadList;
+	}
 	void GameObject::PostResourceLoaded()
 	{
 		// 创建非托管对象
 		m_unmanagedId = ScriptEngine::CreateGameObject(m_scene->GetUnmanagedId());
 
 		// 重置parent
-		SetParentNode(nullptr);
+		SetParent(nullptr);
 
 		for (auto comp : m_componentList)
 		{

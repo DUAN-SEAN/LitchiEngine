@@ -13,7 +13,7 @@
 namespace LitchiRuntime
 {
 	class Scene;
-	class GameObject :public Tree::Node,public ScriptObject{
+	class GameObject :public ScriptObject{
 	public:
 		GameObject() {}
 		GameObject(std::string name,int64_t id);
@@ -39,7 +39,7 @@ namespace LitchiRuntime
 		 */
 		bool HasParent();
 
-		GameObject* GetParent() { return (GameObject*)GetParentNode(); }
+		GameObject* GetParent() { return (GameObject*)GetParent(); }
 
 		std::list<GameObject*>& GetChildren()
 		{
