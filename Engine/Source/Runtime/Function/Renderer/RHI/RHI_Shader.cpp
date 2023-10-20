@@ -3,7 +3,6 @@
 #include "Runtime/Core/pch.h"
 #include "RHI_Shader.h"
 #include "RHI_InputLayout.h"
-#include "../Core/ThreadPool.h"
 //=============================
 
 //= NAMESPACES =====
@@ -105,19 +104,19 @@ namespace LitchiRuntime
             }
             else
             {
-                ThreadPool::AddTask([this, shader_type]()
-                {
-                    // time compilation
-                    const Stopwatch timer;
+                //ThreadPool::AddTask([this, shader_type]()
+                //{
+                //    // time compilation
+                //    const Stopwatch timer;
 
-                    // compile
-                    m_compilation_state = RHI_ShaderCompilationState::Compiling;
-                    m_rhi_resource      = RHI_Compile();
-                    m_compilation_state = m_rhi_resource ? RHI_ShaderCompilationState::Succeeded : RHI_ShaderCompilationState::Failed;
+                //    // compile
+                //    m_compilation_state = RHI_ShaderCompilationState::Compiling;
+                //    m_rhi_resource      = RHI_Compile();
+                //    m_compilation_state = m_rhi_resource ? RHI_ShaderCompilationState::Succeeded : RHI_ShaderCompilationState::Failed;
 
-                    // log compilation result
-                    log_compilation_result(shader_type, m_defines, m_compilation_state, m_object_name, timer);
-                });
+                //    // log compilation result
+                //    log_compilation_result(shader_type, m_defines, m_compilation_state, m_object_name, timer);
+                //});
             }
         }
     }

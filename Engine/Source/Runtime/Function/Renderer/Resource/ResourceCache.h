@@ -4,7 +4,6 @@
 //= INCLUDES ===============
 #include <algorithm>
 #include "IResource.h"
-#include "ProgressTracker.h"
 //==========================
 
 namespace LitchiRuntime
@@ -166,7 +165,7 @@ namespace LitchiRuntime
         static bool IsCached(const std::string& resource_name, const ResourceType resource_type);
 
         // Event handlers
-        static void SaveResourcesToFiles();
-        static void LoadResourcesFromFiles();
+      /*  static void SaveResourcesToFiles();
+        static void LoadResourcesFromFiles();*/
     };
 }

@@ -40,7 +40,7 @@
 //#include "Settings.h"
 //#include "Timer.h"
 #include "Runtime/Core/Tools/FileSystem/FileSystem.h"
-//#include "Stopwatch.h"
+#include "Runtime/Core/Tools/Utils/Stopwatch.h"
 //
 //// Logging
 //#include "../Logging/Log.h"

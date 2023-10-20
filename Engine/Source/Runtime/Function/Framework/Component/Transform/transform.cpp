@@ -3,8 +3,8 @@
 
 namespace LitchiRuntime
 {
-	Transform::Transform() :Component(),
-		m_transform{}
+	Transform::Transform() :Component()
+		// , m_transform{}
 	{
 	}
 

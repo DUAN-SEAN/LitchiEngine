@@ -3,7 +3,7 @@
 
 //= INCLUDES ==================================
 #include <array>
-#include "Runtime/Core/Event.h"
+//#include "Runtime/Core/Event.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Device.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 #include "imgui.h"
@@ -21,6 +21,7 @@
 #include "Runtime/Function/Renderer/RHI/RHI_DepthStencilState.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer_ConstantBuffers.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
+#include "Runtime/Function/Renderer/Resource/ResourceCache.h"
 #include "../../Widgets/TextureViewer.h"
 #include "ImGui_RHI.h"
 //=============================================
