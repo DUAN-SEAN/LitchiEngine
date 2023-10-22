@@ -19,6 +19,7 @@
 namespace LitchiRuntime
 {
     //= FWD DECLARATIONS =
+    class Window;
     class GameObject;
     class Camera;
     class Light;
@@ -173,5 +174,8 @@ namespace LitchiRuntime
         static RHI_CommandPool* m_cmd_pool;
         static std::shared_ptr<Camera> m_camera;
         static const uint32_t m_frames_in_flight = 5;
+
+        // window
+        static std::unique_ptr<Window> m_window;
     };
 }

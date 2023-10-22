@@ -12,6 +12,7 @@
 
 namespace LitchiRuntime
 {
+	class Window;
 	class SceneManager;
 
 	class ApplicationBase {
@@ -57,7 +58,7 @@ namespace LitchiRuntime
         virtual void Exit();
 
 
-        std::unique_ptr<Renderer>					renderer;
+        // std::unique_ptr<Renderer>					renderer;
 
         std::unique_ptr<UniformBuffer>	engineUBO;
         std::unique_ptr<ModelManager> modelManager;
@@ -65,6 +66,7 @@ namespace LitchiRuntime
         std::unique_ptr<TextureManager> textureManager;
         std::unique_ptr<ShaderManager> shaderManager;
         std::unique_ptr<FontManager> fontManager;
+        std::unique_ptr<Window> window;
 
         SceneManager* sceneManager;
 

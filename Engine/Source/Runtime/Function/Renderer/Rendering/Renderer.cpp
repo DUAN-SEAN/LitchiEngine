@@ -14,6 +14,8 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Core/Window/Window.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -112,7 +114,7 @@ namespace LitchiRuntime
         render_thread_id             = this_thread::get_id();
         m_brdf_specular_lut_rendered = false;
 
-        Display::DetectDisplayModes();
+        // Display::DetectDisplayModes();
 
         // RHI initialization
         {
@@ -128,8 +130,9 @@ namespace LitchiRuntime
 
         // resolution
         {
-            uint32_t width  = Window::GetWidth();
-            uint32_t height = Window::GetHeight();
+            auto& size = ApplicationBase::Instance()->window->GetSize();
+            uint32_t width  = size.first;
+            uint32_t height = size.second;
 
             // The resolution of the actual rendering
             SetResolutionRender(width, height, false);
@@ -146,7 +149,7 @@ namespace LitchiRuntime
         // swap chain
         swap_chain = make_shared<RHI_SwapChain>
         (
-            Window::GetHandleSDL(),
+            ApplicationBase::Instance()->window->GetGlfwWindow(),
             static_cast<uint32_t>(m_resolution_output.x),
             static_cast<uint32_t>(m_resolution_output.y),
             // Present mode: For v-sync, we could Mailbox for lower latency, but Fifo is always supported, so we'll assume that
@@ -209,13 +212,14 @@ namespace LitchiRuntime
 
         // events
         {
-            // subscribe
-            SP_SUBSCRIBE_TO_EVENT(EventType::WorldResolved,                   SP_EVENT_HANDLER_VARIANT_STATIC(OnWorldResolved));
-            SP_SUBSCRIBE_TO_EVENT(EventType::WorldClear,                      SP_EVENT_HANDLER_STATIC(OnClear));
-            SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreenWindowedToggled, SP_EVENT_HANDLER_STATIC(OnFullScreenToggled));
+            // todo
+            //// subscribe
+            //SP_SUBSCRIBE_TO_EVENT(EventType::WorldResolved,                   SP_EVENT_HANDLER_VARIANT_STATIC(OnWorldResolved));
+            //SP_SUBSCRIBE_TO_EVENT(EventType::WorldClear,                      SP_EVENT_HANDLER_STATIC(OnClear));
+            //SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreenWindowedToggled, SP_EVENT_HANDLER_STATIC(OnFullScreenToggled));
 
-            // fire
-            SP_FIRE_EVENT(EventType::RendererOnInitialized);
+            //// fire
+            //SP_FIRE_EVENT(EventType::RendererOnInitialized);
         }
     }
 
@@ -250,15 +254,16 @@ namespace LitchiRuntime
     void Renderer::Tick()
     {
         // don't produce frames if the window is minimized
-        if (Window::IsMinimised())
+        // if (Window::IsMinimised())
+        if (ApplicationBase::Instance()->window->IsMinimized())
             return;
 
         // after the first frame has completed, we know the renderer is working
         // we stop logging to a file and we start logging to the on-screen console
         if (frame_num == 1)
         {
-            Log::SetLogToFile(false);
-            SP_FIRE_EVENT(EventType::RendererOnFirstFrameCompleted);
+            // Log::SetLogToFile(false);
+            // SP_FIRE_EVENT(EventType::RendererOnFirstFrameCompleted); //TODO 第一帧后界面显示
         }
 
         // happens when core resources are created/destroyed

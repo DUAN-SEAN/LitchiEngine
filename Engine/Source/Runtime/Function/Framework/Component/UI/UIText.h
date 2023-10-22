@@ -4,7 +4,7 @@
 #include <string>
 #include <glm.hpp>
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Renderer/Font/font.h"
+#include "Runtime/Function/Renderer/Rendering/Font/font.h"
 
 namespace LitchiRuntime
 {
@@ -19,7 +19,7 @@ namespace LitchiRuntime
 		{
 			if (m_font != nullptr)
 			{
-				return m_font->path;
+				return m_font->GetResourceFilePath();
 			}
 			return "";
 		}
