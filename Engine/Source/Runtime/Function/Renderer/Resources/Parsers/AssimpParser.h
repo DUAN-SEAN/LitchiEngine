@@ -11,7 +11,7 @@
 
 #include "EModelParserFlags.h"
 #include "IModelParser.h"
-#include "Runtime/Function/Renderer/Resources/Mesh.h"
+#include "Runtime/Function/Renderer/Rendering//Mesh.h"
 #include <Runtime/Function/Renderer/Resources/Model.h>
 
 #pragma once

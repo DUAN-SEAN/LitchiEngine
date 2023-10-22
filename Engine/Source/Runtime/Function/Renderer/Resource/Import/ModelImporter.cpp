@@ -6,7 +6,14 @@
 #include "../../RHI/RHI_Texture.h"
 #include "../../Rendering/Animation.h"
 #include "../../Rendering/Mesh.h"
+#include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
+#include "Runtime/Function/Framework/Component/Light/PointLight.h"
+#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/Light/Light.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/UI/ImGui/Extensions/ImGuiExtension.h"
 SP_WARNINGS_OFF
 #include "assimp/scene.h"
@@ -199,7 +206,7 @@ namespace LitchiRuntime
         Mesh* mesh,
         const string& file_path,
         const bool is_gltf,
-        shared_ptr<Material> material,
+        Material* material,
         const aiMaterial* material_assimp,
         const MaterialTexture texture_type,
         const aiTextureType texture_type_assimp_pbr,
@@ -257,11 +264,11 @@ namespace LitchiRuntime
         return true;
     }
 
-    static shared_ptr<Material> load_material(Mesh* mesh, const string& file_path, const bool is_gltf, const aiMaterial* material_assimp)
+    static Material* load_material(Mesh* mesh, const string& file_path, const bool is_gltf, const aiMaterial* material_assimp)
     {
         SP_ASSERT(material_assimp != nullptr);
 
-        shared_ptr<Material> material = make_shared<Material>();
+        Material* material = new Material();
 
         // NAME
         aiString name;
@@ -428,7 +435,7 @@ namespace LitchiRuntime
 
             // make the root entity active since it's now thread-safe
             mesh->GetRootEntity()->SetActive(true);
-            World::Resolve();
+            // World::Resolve(); // todo
         }
         else
         {
@@ -445,7 +452,7 @@ namespace LitchiRuntime
     void ModelImporter::ParseNode(const aiNode* node, GameObject* parent_entity)
     {
         // Create an entity that will match this node.
-        GameObject* entity = World::CreateEntity();
+        GameObject* entity = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->CreateGameObject("Default");
 
         // Set root entity to mesh
         bool is_root_node = parent_entity == nullptr;
@@ -510,7 +517,7 @@ namespace LitchiRuntime
             if (assimp_node->mNumMeshes > 1)
             {
                 // Create entity
-                entity = World::CreateEntity().get();
+                entity = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->CreateGameObject("Node");
 
                 // Set parent
                 entity->GetComponent<Transform>()->SetParent(node_entity->GetComponent<Transform>());
@@ -537,32 +544,36 @@ namespace LitchiRuntime
                 const aiLight* light_assimp = scene->mLights[i];
 
                 // add a light component
-                Light* light = new_entity->AddComponent<Light>();
+                Light light;
 
                 // disable shadows (to avoid tanking the framerate)
                 light->SetShadowsEnabled(false);
                 light->SetShadowsTransparentEnabled(false);
 
-                // local transform
-                light->GetComponent<Transform>()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
-                light->GetComponent<Transform>()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
-
                 // color
                 light->SetColor(convert_color(light_assimp->mColorDiffuse));
 
                 // type
+                LightComponent* lightComp = nullptr;
                 if (light_assimp->mType == aiLightSource_DIRECTIONAL)
                 {
                     light->SetLightType(LightType::Directional);
+                    lightComp = new_entity->AddComponent<DirectionalLight>();
                 }
                 else if (light_assimp->mType == aiLightSource_POINT)
                 {
                     light->SetLightType(LightType::Point);
+                    lightComp = new_entity->AddComponent<PointLight>();
                 }
                 else if (light_assimp->mType == aiLightSource_SPOT)
                 {
                     light->SetLightType(LightType::Spot);
+                    lightComp = new_entity->AddComponent<SpotLight>();
                 }
+
+                // local transform
+                light->GetComponent<Transform>()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
+                light->GetComponent<Transform>()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
 
                 // intensity
                 light->SetIntensity(LightIntensity::bulb_150_watt);
@@ -645,7 +656,7 @@ namespace LitchiRuntime
         mesh->AddVertices(vertices, &vertex_offset);
 
         // add a renderable component to this entity
-        shared_ptr<Renderable> renderable = entity_parent->AddComponent<Renderable>();
+        MeshFilter* renderable = entity_parent->AddComponent<MeshFilter>();
 
         // set the geometry
         renderable->SetGeometry(
@@ -664,7 +675,7 @@ namespace LitchiRuntime
             const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
 
             // convert it and add it to the model
-            shared_ptr<Material> material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
+            Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
 
             mesh->AddMaterial(material, entity_parent);
         }
