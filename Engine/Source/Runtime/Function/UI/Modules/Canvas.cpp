@@ -1,11 +1,13 @@
 
 #include "Canvas.h"
 
+#include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
+
 void LitchiRuntime::Canvas::Draw()
 {
 	if (!m_panels.empty())
 	{
-		ImGui_ImplOpenGL3_NewFrame();
+		// ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		//ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
@@ -35,6 +37,7 @@ void LitchiRuntime::Canvas::Draw()
 			panel.get().Draw();
 
 		ImGui::Render();
+		ImGui::RHI::render(ImGui::GetDrawData());
 	}
 }
 

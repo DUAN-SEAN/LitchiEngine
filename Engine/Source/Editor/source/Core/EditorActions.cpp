@@ -479,7 +479,7 @@ void LitchiEditor::EditorActions::NextFrame()
 		SetEditorMode(EEditorMode::FRAME_BY_FRAME);
 }
 
-glm::vec3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
+LitchiRuntime::Vector3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 {
 	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
 	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3(0,0,-1) * p_distanceToCamera;
@@ -495,7 +495,7 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_
 		instance->SetParent(p_parent);
 
 	if (m_actorSpawnMode == EActorSpawnMode::FRONT)
-		transform->SetLocalPosition(CalculateActorSpawnPoint(10.0f));
+		transform->SetPositionLocal(CalculateActorSpawnPoint(10.0f));
 
 	if (p_focusOnCreation)
 		SelectActor(instance);

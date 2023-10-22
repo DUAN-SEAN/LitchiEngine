@@ -1,7 +1,7 @@
 
 #include "UIManager.h"
 
-#include "Runtime/Function/UI/ImGui/imgui_impl_vulkan.h"
+#include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
 
 LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, const std::string& p_glslVersion)
 {
@@ -12,16 +12,18 @@ LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, co
 
 	ApplyStyle(p_style);
 	
-	// ImGui_ImplGlfw_InitForOpenGL(p_glfwWindow, true);// todo: vulkan 修改为 implsdl
-	// ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());// todo: vulkan 修改为vulkan版本
-	ImGui_ImplGlfw_InitForVulkan(p_glfwWindow, true);// todo: vulkan 修改为 implsdl
-	ImGui_ImplVulkan_Init(&init_info, ((VulkanRenderPass*)m_framebuffer.render_pass)->getResource());
+	// ImGui_ImplGlfw_InitForOpenGL(p_glfwWindow, true);
+	// ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());
+
+	ImGui_ImplGlfw_InitForVulkan(p_glfwWindow, true);
+	ImGui::RHI::Initialize();
 }
 
 LitchiRuntime::UIManager::~UIManager()
 {
-	ImGui_ImplOpenGL3_Shutdown();// todo: vulkan 修改为vulkan版本
-	ImGui_ImplGlfw_Shutdown();// todo: vulkan 修改为sdl版本
+	//ImGui_ImplOpenGL3_Shutdown();
+	ImGui::RHI::shutdown();
+	ImGui_ImplGlfw_Shutdown();
 	ImGui::DestroyContext();
 }
 
@@ -280,8 +282,16 @@ void LitchiRuntime::UIManager::Render()
 	if (m_currentCanvas)
 	{
 		m_currentCanvas->Draw();
-		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		// ImGui::RHI::render(ImGui::GetDrawData());
+		// ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		ImGui::RHI::render(ImGui::GetDrawData());
+
+
+		//// Child windows
+		//if (render_editor && ImGui::GetIO().ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		//{
+		//	ImGui::UpdatePlatformWindows();
+		//	ImGui::RenderPlatformWindowsDefault();
+		//}
 	}
 }
 

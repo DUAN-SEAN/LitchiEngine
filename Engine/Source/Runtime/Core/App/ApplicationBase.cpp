@@ -15,7 +15,6 @@
 #include "Runtime/Function/Physics/physics.h"
 
 #include "Runtime/Function/Scene/SceneManager.h"
-#include "Runtime/Function/Renderer/RenderSystem.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 
 //#include "Runtime/Function/Physics/physics.h"
@@ -39,7 +38,8 @@ namespace LitchiRuntime
 
         UpdateScreenSize();
 
-        RenderSystem::Initialize(new RenderSystem(),true,true);
+        // RenderSystem::Initialize(new RenderSystem(),true,true);
+        Renderer::Initialize();
 
         TypeManager::Initialize(new TypeManager());
 
@@ -90,8 +90,8 @@ namespace LitchiRuntime
 
     void ApplicationBase::Render() {
 
-        RenderSystem::Instance()->Render();
-        
+        // RenderSystem::Instance()->Render();
+        Renderer::Tick();
     }
 
     void ApplicationBase::FixedUpdate() {
