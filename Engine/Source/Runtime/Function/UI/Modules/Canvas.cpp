@@ -37,7 +37,6 @@ void LitchiRuntime::Canvas::Draw()
 			panel.get().Draw();
 
 		ImGui::Render();
-		ImGui::RHI::render(ImGui::GetDrawData());
 	}
 }
 

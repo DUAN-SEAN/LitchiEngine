@@ -25,11 +25,7 @@ namespace LitchiRuntime
 		 * \return go
 		 */
 		GameObject* CreateGameObject(std::string name);
-
-		/// 返回GameObject树结构
-		/// \return
-		Tree& game_object_tree() { return m_gameObjectTree; }
-
+		
 		/// 遍历GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
@@ -51,6 +47,8 @@ namespace LitchiRuntime
 		/// \return
 		GameObject* FindByUnmanagedId(const int64_t unmanagedId);
 
+		std::vector<GameObject*> GetRootGameObjectList();
+
 	public:
 
 		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。
@@ -64,9 +62,7 @@ namespace LitchiRuntime
 
 	private:
 		std::string m_name; //场景名字
-
-		Tree m_gameObjectTree; //用树存储所有的GameObject。
-
+		
 	};
 
 

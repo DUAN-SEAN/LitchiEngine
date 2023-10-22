@@ -31,56 +31,65 @@ namespace LitchiRuntime
 
 		// 将go添加到game_object_vec_中
 		m_gameObjectList.push_back(game_object);
-		m_gameObjectTree.GetRootNode()->AddChildNode(game_object);
 
 		return game_object;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		m_gameObjectTree.Post(m_gameObjectTree.GetRootNode(), [&func](Tree::Node* node) {
-			auto n = node;
-			GameObject* game_object = dynamic_cast<GameObject*>(n);
-			func(game_object);
-			});
+		for (auto go : m_gameObjectList)
+		{
+			func(go);
+		}
 	}
+
 	GameObject* Scene::Find(const char* name) {
-		GameObject* game_object_find = nullptr;
-		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&name](Tree::Node* node) {
-			GameObject* game_object = dynamic_cast<GameObject*>(node);
-			if (game_object->GetName() == name) {
-				return true;
+		for (auto go : m_gameObjectList)
+		{
+			if (go->GetName() == name) {
+				return go;
 			}
-			return false;
-			}, reinterpret_cast<Tree::Node**>(&game_object_find));
-		return game_object_find;
+		}
+
+		return nullptr;
 	}
 
 	GameObject* Scene::Find(const int64_t id)
 	{
-		GameObject* game_object_find = nullptr;
-		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&id](Tree::Node* node) {
-			GameObject* game_object = dynamic_cast<GameObject*>(node);
-			if (game_object != nullptr && game_object->m_id == id) {
-				return true;
+		for (auto go : m_gameObjectList)
+		{
+			if (go->m_id == id) {
+				return go;
 			}
-			return false;
-			}, reinterpret_cast<Tree::Node**>(&game_object_find));
-		return game_object_find;
+		}
+
+		return nullptr;
 	}
 
 	GameObject* Scene::FindByUnmanagedId(const int64_t unmanagedId)
 	{
-		GameObject* game_object_find = nullptr;
-		m_gameObjectTree.Find(m_gameObjectTree.GetRootNode(), [&unmanagedId](Tree::Node* node) {
-			GameObject* game_object = dynamic_cast<GameObject*>(node);
-			if (game_object != nullptr && game_object->GetUnmanagedId() == unmanagedId) {
-				return true;
+		for (auto go : m_gameObjectList)
+		{
+			if (go->GetUnmanagedId() == unmanagedId) {
+				return go;
 			}
-			return false;
-			}, reinterpret_cast<Tree::Node**>(&game_object_find));
+		}
 
-		return game_object_find;
+		return nullptr;
+	}
+
+	std::vector<GameObject*> Scene::GetRootGameObjectList()
+	{
+		std::vector<GameObject*> root_entities;
+		for (auto go : m_gameObjectList)
+		{
+			if (go->GetComponent<Transform>()->IsRoot())
+			{
+				root_entities.emplace_back(go);
+			}
+		}
+
+		return root_entities;
 	}
 
 	void Scene::PostResourceLoaded()
@@ -90,8 +99,6 @@ namespace LitchiRuntime
 
 		for (auto go : m_gameObjectList)
 		{
-			m_gameObjectTree.GetRootNode()->AddChildNode(go);
-
 			go->PostResourceLoaded();
 		}
 
