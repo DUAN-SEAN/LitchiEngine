@@ -10,15 +10,10 @@
 #include "../RHI/RHI_Implementation.h"
 #include "../RHI/RHI_AMD_FidelityFX.h"
 #include "../RHI/RHI_StructuredBuffer.h"
-#include "../World/Entity.h"
-#include "../World/Components/Light.h"
-#include "../World/Components/Camera.h"
-#include "../World/Components/Environment.h"
-#include "../World/Components/AudioSource.h"
-#include "../World/Components/ReflectionProbe.h"
-#include "../Core/Window.h"
-#include "../Input/Input.h"
-#include "../Display/Display.h"
+#include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -28,7 +23,7 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-    unordered_map<Renderer_Entity, vector<shared_ptr<Entity>>> Renderer::m_renderables;
+    unordered_map<Renderer_Entity, vector<GameObject*>> Renderer::m_renderables;
     Cb_Frame Renderer::m_cb_frame_cpu;
     Pcb_Pass Renderer::m_cb_pass_cpu;
     Cb_Light Renderer::m_cb_light_cpu;
@@ -75,7 +70,7 @@ namespace LitchiRuntime
         array<float, 34> m_options;
         thread::id render_thread_id;
         mutex mutex_entity_addition;
-        vector<shared_ptr<Entity>> m_entities_to_add;
+        vector<GameObject*> m_entities_to_add;
         uint64_t frame_num                       = 0;
         Vector2 jitter_offset              = Vector2::Zero;
         const uint32_t resolution_shadow_min     = 128;
@@ -83,22 +78,22 @@ namespace LitchiRuntime
         float far_plane                          = 1.0f;
         uint32_t buffers_frames_since_last_reset = 0;
 
-        void sort_renderables(Camera* camera, vector<shared_ptr<Entity>>* renderables, const bool are_transparent)
+        void sort_renderables(Camera* camera, vector<GameObject*>* renderables, const bool are_transparent)
         {
             if (!camera || renderables->size() <= 2)
                 return;
 
-            auto comparison_op = [camera](shared_ptr<Entity> entity)
+            auto comparison_op = [camera](GameObject* entity)
             {
-                auto renderable = entity->GetComponent<Renderable>();
+                auto renderable = entity->GetComponent<MeshFilter>();
                 if (!renderable)
                     return 0.0f;
 
-                return (renderable->GetAabb().GetCenter() - camera->GetTransform()->GetPosition()).LengthSquared();
+                return (renderable->GetAabb().GetCenter() - camera->GetGameObject()->GetComponent<Transform>()->GetPosition()).LengthSquared();
             };
 
             // sort by depth
-            sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](shared_ptr<Entity> a, shared_ptr<Entity> b)
+            sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
             {
                 if (are_transparent)
                 {
@@ -917,7 +912,7 @@ namespace LitchiRuntime
         return m_camera;
     }
 
-    unordered_map<Renderer_Entity, vector<shared_ptr<Entity>>>& Renderer::GetEntities()
+    unordered_map<Renderer_Entity, vector<GameObject*>>& Renderer::GetEntities()
     {
         return m_renderables;
     }

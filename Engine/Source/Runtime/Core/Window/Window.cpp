@@ -246,6 +246,16 @@ std::string LitchiRuntime::Window::GetTitle() const
 	return m_title;
 }
 
+uint32_t LitchiRuntime::Window::GetWidth()
+{
+	return GetSize().first;
+}
+
+uint32_t LitchiRuntime::Window::GetHeight()
+{
+	return GetSize().second;
+}
+
 std::pair<uint16_t, uint16_t> LitchiRuntime::Window::GetSize() const
 {
 	int width, height;

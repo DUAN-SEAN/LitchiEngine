@@ -4,10 +4,8 @@
 #include "Material.h"
 #include "Renderer.h"
 #include "../Resource/ResourceCache.h"
-#include "../IO/XmlDocument.h"
 #include "../RHI/RHI_Texture2D.h"
 #include "../RHI/RHI_TextureCube.h"
-#include "../World/World.h"
 //====================================
 
 //= NAMESPACES ===============

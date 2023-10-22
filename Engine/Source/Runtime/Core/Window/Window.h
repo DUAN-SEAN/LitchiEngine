@@ -234,6 +234,9 @@ namespace LitchiRuntime
 		*/
 		std::string GetTitle() const;
 
+		uint32_t GetWidth();
+		uint32_t GetHeight();
+
 		/**
 		* Return the current size of the window
 		*/

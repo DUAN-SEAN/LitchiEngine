@@ -74,8 +74,8 @@ namespace LitchiRuntime
         static uint32_t GetDefaultFlags();
         float ComputeNormalizedScale();
         void Optimize();
-        void AddMaterial(std::shared_ptr<Material>& material, GameObject* entity) const;
-        void AddTexture(std::shared_ptr<Material>& material, MaterialTexture texture_type, const std::string& file_path, bool is_gltf);
+        void AddMaterial(Material* material, GameObject* entity) const;
+        void AddTexture(Material* material, MaterialTexture texture_type, const std::string& file_path, bool is_gltf);
 
     private:
         // Geometry

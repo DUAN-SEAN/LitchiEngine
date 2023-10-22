@@ -23,11 +23,11 @@ namespace LitchiRuntime
     class Camera;
     class Light;
     class Environment;
-    namespace Math
-    {
+    //namespace Math
+    //{
         class BoundingBox;
         class Frustum;
-    }
+    //}
     //====================
 
     class SP_CLASS Renderer
@@ -94,7 +94,7 @@ namespace LitchiRuntime
         //= RESOURCES ===========================================================================================
         static RHI_Texture* GetFrameTexture();
         static std::shared_ptr<Camera> GetCamera();
-        static std::unordered_map<Renderer_Entity, std::vector<std::shared_ptr<Entity>>>& GetEntities();
+        static std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetEntities();
 
         // Get all
         static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
@@ -157,7 +157,7 @@ namespace LitchiRuntime
         static void DestroyResources();
 
         // misc
-        static std::unordered_map<Renderer_Entity, std::vector<std::shared_ptr<Entity>>> m_renderables;
+        static std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
         static Cb_Frame m_cb_frame_cpu;
         static Pcb_Pass m_cb_pass_cpu;
         static Cb_Light m_cb_light_cpu;

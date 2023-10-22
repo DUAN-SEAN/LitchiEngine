@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "Runtime/Core/DataStruct/BoundingSphere.h"
+#include "Runtime/Function/Renderer/Rendering/Mesh.h"
 
 
 const LitchiRuntime::BoundingSphere& LitchiRuntime::Model::GetBoundingSphere() const
@@ -23,7 +24,7 @@ LitchiRuntime::Model::~Model()
 
 void LitchiRuntime::Model::ComputeBoundingSphere()
 {
-	if (mesheArr.size() == 1)
+	/*if (mesheArr.size() == 1)
 	{
 		boundingSphere = mesheArr[0]->GetBoundingSphere();
 	}
@@ -57,7 +58,7 @@ void LitchiRuntime::Model::ComputeBoundingSphere()
 			boundingSphere.position = glm::vec3{ minX + maxX, minY + maxY, minZ + maxZ } / 2.0f;
 			boundingSphere.radius = glm::distance(boundingSphere.position, glm::vec3{ minX, minY, minZ });
 		}
-	}
+	}*/
 }
 
 const std::vector<LitchiRuntime::Mesh*>& LitchiRuntime::Model::GetMeshes() const

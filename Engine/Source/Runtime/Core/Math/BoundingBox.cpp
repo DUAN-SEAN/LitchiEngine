@@ -2,7 +2,7 @@
 //= INCLUDES =================
 #include "Runtime/Core/pch.h"
 #include "Vector3.h"
-//#include "../RHI/RHI_Vertex.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Vertex.h"
 //============================
 
 namespace LitchiRuntime

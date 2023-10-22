@@ -20,46 +20,47 @@ UIImage::~UIImage() {
 }
 
 void UIImage::Update() {
-    Component::Update();
-    if(m_texture2D== nullptr){
-        return;
-    }
-    MeshFilter* mesh_filter=GetGameObject()->GetComponent<MeshFilter>();
-    if(mesh_filter== nullptr){
+    // todo:
+    //Component::Update();
+    //if(m_texture2D== nullptr){
+    //    return;
+    //}
+    //MeshFilter* mesh_filter=GetGameObject()->GetComponent<MeshFilter>();
+    //if(mesh_filter== nullptr){
 
-        Vertex v00{ {0.f, 0.0f, 0.0f},{0.f, 0.f},{1.0f,1.0f,1.0f},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
-        Vertex v10{ {(float)m_texture2D->width, 0.0f, 0.0f},{1.f, 0.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
-        Vertex v11{ {(float)m_texture2D->width,  (float)m_texture2D->height, 0.0f},{1.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
-        Vertex v01{ {0.f,  (float)m_texture2D->height, 0.0f},{0.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
+    //    Vertex v00{ {0.f, 0.0f, 0.0f},{0.f, 0.f},{1.0f,1.0f,1.0f},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
+    //    Vertex v10{ {(float)m_texture2D->width, 0.0f, 0.0f},{1.f, 0.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
+    //    Vertex v11{ {(float)m_texture2D->width,  (float)m_texture2D->height, 0.0f},{1.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
+    //    Vertex v01{ {0.f,  (float)m_texture2D->height, 0.0f},{0.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
 
-        //创建 MeshFilter
-        /*std::vector<Vertex> vertex_vector={
-                { {0.f, 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
-                { {texture2D_->width(), 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
-                { {texture2D_->width(),  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
-                { {0.f,  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
-        };*/
-    	std::vector<Vertex> vertex_vector={
-            v00,v10,v11,v01
-        };
-        std::vector<unsigned int> index_vector={
-                0,1,2,
-                0,2,3
-        };
-        mesh_filter=GetGameObject()->AddComponent<MeshFilter>();
-        mesh_filter->CreateUIMesh(vertex_vector,index_vector);
+    //    //创建 MeshFilter
+    //    /*std::vector<Vertex> vertex_vector={
+    //            { {0.f, 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
+    //            { {texture2D_->width(), 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
+    //            { {texture2D_->width(),  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
+    //            { {0.f,  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
+    //    };*/
+    //	std::vector<Vertex> vertex_vector={
+    //        v00,v10,v11,v01
+    //    };
+    //    std::vector<unsigned int> index_vector={
+    //            0,1,2,
+    //            0,2,3
+    //    };
+    //    mesh_filter=GetGameObject()->AddComponent<MeshFilter>();
+    //    mesh_filter->CreateUIMesh(vertex_vector,index_vector);
 
-        //挂上 MeshRenderer 组件
-        auto mesh_renderer = GetGameObject()->AddComponent<MeshRenderer>();
-        mesh_renderer->materialPath = "Engine\\Materials\\UIImage.mat";
-        mesh_renderer->PostResourceLoaded();
+    //    //挂上 MeshRenderer 组件
+    //    auto mesh_renderer = GetGameObject()->AddComponent<MeshRenderer>();
+    //    mesh_renderer->materialPath = "Engine\\Materials\\UIImage.mat";
+    //    mesh_renderer->PostResourceLoaded();
 
-        //创建 Material
-        auto material = mesh_renderer->GetMaterial();
-        //使用贴图
-        material->Set("u_DiffuseMap", m_texture2D);
+    //    //创建 Material
+    //    auto material = mesh_renderer->GetMaterial();
+    //    //使用贴图
+    //    material->Set("u_DiffuseMap", m_texture2D);
 
-    }
+    //}
 }
 
 void UIImage::OnPreRender() {

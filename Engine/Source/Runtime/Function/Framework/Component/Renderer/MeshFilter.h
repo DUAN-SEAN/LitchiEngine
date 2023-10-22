@@ -3,8 +3,11 @@
 
 #include <string>
 #include <glm.hpp>
+
+#include "Runtime/Core/Math/BoundingBox.h"
+#include "Runtime/Core/Math/Matrix.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Renderer/Resources/Model.h"
+#include "Runtime/Function/Renderer/Rendering/Mesh.h"
 
 using std::string;
 
@@ -15,14 +18,7 @@ namespace LitchiRuntime
         MeshFilter();
         ~MeshFilter();
     public:
-        ////Mesh文件头
-        //
-        Model* GetModel() { return m_model; }
-        IMesh* GetExtraMesh() { return m_ExtraMesh; }
-        void CreateUIMesh(const std::vector<Vertex>& vector, const std::vector<uint32_t>& index_vector);
-
-        int GetMeshIndex(){ return meshIndex; }
-
+       
     public:
 
         void PostResourceLoaded() override;
@@ -36,8 +32,39 @@ namespace LitchiRuntime
         int meshIndex;
 
         RTTR_ENABLE(Component)
+
+
+    public:
+        // Geometry/Mesh
+        void SetGeometry(
+            Mesh* mesh,
+            const BoundingBox aabb = BoundingBox::Undefined,
+            uint32_t index_offset = 0, uint32_t index_count = 0,
+            uint32_t vertex_offset = 0, uint32_t vertex_count = 0
+        );
+        void GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const;
+
+        // Properties
+        uint32_t GetIndexOffset()                 const { return m_geometry_index_offset; }
+        uint32_t GetIndexCount()                  const { return m_geometry_index_count; }
+        uint32_t GetVertexOffset()                const { return m_geometry_vertex_offset; }
+        uint32_t GetVertexCount()                 const { return m_geometry_vertex_count; }
+        Mesh* GetMesh()                           const { return m_mesh; }
+        const BoundingBox& GetBoundingBox() const { return m_bounding_box; }
+        const BoundingBox& GetAabb();
+
     private:
-        Model* m_model = nullptr;//Mesh对象
-        IMesh* m_ExtraMesh = nullptr;
+
+        // geometry/mesh
+        uint32_t m_geometry_index_offset = 0;
+        uint32_t m_geometry_index_count = 0;
+        uint32_t m_geometry_vertex_offset = 0;
+        uint32_t m_geometry_vertex_count = 0;
+        Mesh* m_mesh = nullptr;
+        BoundingBox m_bounding_box;
+        BoundingBox m_bounding_box_transformed;
+
+        // misc
+        Matrix m_last_transform = Matrix::Identity;
     };
 }
