@@ -38,7 +38,7 @@ namespace LitchiRuntime
         }
     }
 
-    /*BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count)
+    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count)
     {
         m_min = Vector3::Infinity;
         m_max = Vector3::InfinityNeg;
@@ -53,7 +53,7 @@ namespace LitchiRuntime
             m_min.y = Math::Helper::Min(m_min.y, vertices[i].pos[1]);
             m_min.z = Math::Helper::Min(m_min.z, vertices[i].pos[2]);
         }
-    }*/
+    }
 
     Intersection BoundingBox::IsInside(const Vector3& point) const
     {

@@ -26,8 +26,8 @@ namespace LitchiRuntime
             // Construct from points
             BoundingBox(const Vector3* vertices, const uint32_t point_count);
 
-            //// Construct from vertices
-            //BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
+            // Construct from vertices
+            BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
 
             ~BoundingBox() = default;
 

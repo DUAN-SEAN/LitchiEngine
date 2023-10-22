@@ -66,15 +66,15 @@ namespace LitchiRuntime
         RHI_VertexBuffer* GetVertexBuffer() { return m_vertex_buffer.get(); }
 
         // Root entity
-        Entity* GetRootEntity() { return m_root_entity.lock().get(); }
-        void SetRootEntity(std::shared_ptr<Entity>& entity) { m_root_entity = entity; }
+        GameObject* GetRootEntity() { return m_root_entity; }
+        void SetRootEntity(GameObject* entity) { m_root_entity = entity; }
 
         // Misc
         uint32_t GetFlags() const { return m_flags; }
         static uint32_t GetDefaultFlags();
         float ComputeNormalizedScale();
         void Optimize();
-        void AddMaterial(std::shared_ptr<Material>& material, Entity* entity) const;
+        void AddMaterial(std::shared_ptr<Material>& material, GameObject* entity) const;
         void AddTexture(std::shared_ptr<Material>& material, MaterialTexture texture_type, const std::string& file_path, bool is_gltf);
 
     private:
@@ -94,6 +94,6 @@ namespace LitchiRuntime
         std::mutex m_mutex_vertices;
 
         // Misc
-        std::weak_ptr<Entity> m_root_entity;
+        GameObject* m_root_entity;
     };
 }

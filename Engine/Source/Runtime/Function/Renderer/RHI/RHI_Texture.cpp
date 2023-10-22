@@ -186,68 +186,69 @@ namespace LitchiRuntime
 
     bool RHI_Texture::SaveToFile(const string& file_path)
     {
-        // if a file already exists, get the byte count
-        m_object_size_cpu = 0;
-        {
-            if (FileSystem::Exists(file_path))
-            {
-                auto file = make_unique<FileStream>(file_path, FileStream_Read);
-                if (file->IsOpen())
-                {
-                    file->Read(&m_object_size_cpu);
-                }
-            }
-        }
+        // todo: 暂时不支持引擎格式
+        //// if a file already exists, get the byte count
+        //m_object_size_cpu = 0;
+        //{
+        //    if (FileSystem::Exists(file_path))
+        //    {
+        //        auto file = make_unique<FileStream>(file_path, FileStream_Read);
+        //        if (file->IsOpen())
+        //        {
+        //            file->Read(&m_object_size_cpu);
+        //        }
+        //    }
+        //}
 
-        bool append = true;
-        auto file = make_unique<FileStream>(file_path, FileStream_Write | FileStream_Append);
-        if (!file->IsOpen())
-            return false;
+        //bool append = true;
+        //auto file = make_unique<FileStream>(file_path, FileStream_Write | FileStream_Append);
+        //if (!file->IsOpen())
+        //    return false;
 
-        // if the existing file has texture data but we don't, don't overwrite them
-        bool dont_overwrite_data = m_object_size_cpu != 0 && !HasData();
-        if (dont_overwrite_data)
-        {
-            file->Skip
-            (
-                sizeof(m_object_size_cpu) + // byte count
-                sizeof(m_array_length)    + // array length
-                sizeof(m_mip_count)       + // mip count
-                m_object_size_cpu           // bytes
-            );
-        }
-        else
-        {
-            ComputeMemoryUsage();
+        //// if the existing file has texture data but we don't, don't overwrite them
+        //bool dont_overwrite_data = m_object_size_cpu != 0 && !HasData();
+        //if (dont_overwrite_data)
+        //{
+        //    file->Skip
+        //    (
+        //        sizeof(m_object_size_cpu) + // byte count
+        //        sizeof(m_array_length)    + // array length
+        //        sizeof(m_mip_count)       + // mip count
+        //        m_object_size_cpu           // bytes
+        //    );
+        //}
+        //else
+        //{
+        //    ComputeMemoryUsage();
 
-            // write mip info
-            file->Write(m_object_size_cpu);
-            file->Write(m_array_length);
-            file->Write(m_mip_count);
+        //    // write mip info
+        //    file->Write(m_object_size_cpu);
+        //    file->Write(m_array_length);
+        //    file->Write(m_mip_count);
 
-            // write mip data
-            for (RHI_Texture_Slice& slice : m_data)
-            {
-                for (RHI_Texture_Mip& mip : slice.mips)
-                {
-                    file->Write(mip.bytes);
-                }
-            }
+        //    // write mip data
+        //    for (RHI_Texture_Slice& slice : m_data)
+        //    {
+        //        for (RHI_Texture_Mip& mip : slice.mips)
+        //        {
+        //            file->Write(mip.bytes);
+        //        }
+        //    }
 
-            // the bytes have been saved, so we can now free some memory
-            m_data.clear();
-            m_data.shrink_to_fit();
-        }
+        //    // the bytes have been saved, so we can now free some memory
+        //    m_data.clear();
+        //    m_data.shrink_to_fit();
+        //}
 
-        // write properties
-        file->Write(m_width);
-        file->Write(m_height);
-        file->Write(m_channel_count);
-        file->Write(m_bits_per_channel);
-        file->Write(static_cast<uint32_t>(m_format));
-        file->Write(m_flags);
-        file->Write(GetObjectId());
-        file->Write(GetResourceFilePath());
+        //// write properties
+        //file->Write(m_width);
+        //file->Write(m_height);
+        //file->Write(m_channel_count);
+        //file->Write(m_bits_per_channel);
+        //file->Write(static_cast<uint32_t>(m_format));
+        //file->Write(m_flags);
+        //file->Write(GetObjectId());
+        //file->Write(GetResourceFilePath());
 
         return true;
     }
@@ -262,46 +263,47 @@ namespace LitchiRuntime
         // load from drive
         bool is_native_format  = FileSystem::IsEngineTextureFile(file_path);
         bool is_foreign_format = FileSystem::IsSupportedImageFile(file_path);
+        // todo: 暂时不支持引擎格式
         {
-            if (is_native_format)
-            {
-                auto file = make_unique<FileStream>(file_path, FileStream_Read);
-                if (!file->IsOpen())
-                {
-                    DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
-                    return false;
-                }
+            //if (is_native_format)
+            //{
+            //    auto file = make_unique<FileStream>(file_path, FileStream_Read);
+            //    if (!file->IsOpen())
+            //    {
+            //        DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+            //        return false;
+            //    }
 
-                m_data.clear();
-                m_data.shrink_to_fit();
+            //    m_data.clear();
+            //    m_data.shrink_to_fit();
 
-                // read mip info
-                file->Read(&m_object_size_cpu);
-                file->Read(&m_array_length);
-                file->Read(&m_mip_count);
+            //    // read mip info
+            //    file->Read(&m_object_size_cpu);
+            //    file->Read(&m_array_length);
+            //    file->Read(&m_mip_count);
 
-                // read mip data
-                m_data.resize(m_array_length);
-                for (RHI_Texture_Slice& slice : m_data)
-                {
-                    slice.mips.resize(m_mip_count);
-                    for (RHI_Texture_Mip& mip : slice.mips)
-                    {
-                        file->Read(&mip.bytes);
-                    }
-                }
+            //    // read mip data
+            //    m_data.resize(m_array_length);
+            //    for (RHI_Texture_Slice& slice : m_data)
+            //    {
+            //        slice.mips.resize(m_mip_count);
+            //        for (RHI_Texture_Mip& mip : slice.mips)
+            //        {
+            //            file->Read(&mip.bytes);
+            //        }
+            //    }
 
-                // read properties
-                file->Read(&m_width);
-                file->Read(&m_height);
-                file->Read(&m_channel_count);
-                file->Read(&m_bits_per_channel);
-                file->Read(reinterpret_cast<uint32_t*>(&m_format));
-                file->Read(&m_flags);
-                SetObjectId(file->ReadAs<uint64_t>());
-                SetResourceFilePath(file->ReadAs<string>());
-            }
-            else if (is_foreign_format) // foreign format (most known image formats)
+            //    // read properties
+            //    file->Read(&m_width);
+            //    file->Read(&m_height);
+            //    file->Read(&m_channel_count);
+            //    file->Read(&m_bits_per_channel);
+            //    file->Read(reinterpret_cast<uint32_t*>(&m_format));
+            //    file->Read(&m_flags);
+            //    SetObjectId(file->ReadAs<uint64_t>());
+            //    SetResourceFilePath(file->ReadAs<string>());
+            //}
+            //else if (is_foreign_format) // foreign format (most known image formats)
             {
                 vector<string> file_paths = { file_path };
 

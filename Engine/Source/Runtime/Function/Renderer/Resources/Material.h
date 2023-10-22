@@ -8,7 +8,7 @@
 #include "Texture.h"
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "rttr/registration"
-#include "Runtime/Function/Renderer/Framebuffer4Depth.h"
+// #include "Runtime/Function/Renderer/Framebuffer4Depth.h"
 
 namespace LitchiRuntime::Resource
 {
@@ -162,7 +162,7 @@ namespace LitchiRuntime::Resource
 		* @parma p_emptyTexture (The texture to use if a texture uniform is nullptr)
 		*/
 		void Bind(LitchiRuntime::Texture* p_emptyTexture);
-		void Bind(LitchiRuntime::Texture* p_emptyTexture, Framebuffer4Depth* shadowMapFBO);
+		// void Bind(LitchiRuntime::Texture* p_emptyTexture, Framebuffer4Depth* shadowMapFBO);
 
 		/**
 		* Unbind the material

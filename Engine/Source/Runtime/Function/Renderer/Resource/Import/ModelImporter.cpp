@@ -1,35 +1,13 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES =================================
 #include "Runtime/Core/pch.h"
 #include "ModelImporter.h"
-#include "../../Core/ProgressTracker.h"
+#include "Runtime/Core/Tools/Utils//ProgressTracker.h"
 #include "../../RHI/RHI_Texture.h"
 #include "../../Rendering/Animation.h"
 #include "../../Rendering/Mesh.h"
-#include "../../World/World.h"
-#include "../../World/Entity.h"
-#include "../../World/Components/Transform.h"
-#include "../World/Components/Light.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/UI/ImGui/Extensions/ImGuiExtension.h"
 SP_WARNINGS_OFF
 #include "assimp/scene.h"
 #include "assimp/ProgressHandler.hpp"
@@ -93,7 +71,7 @@ namespace LitchiRuntime
         return Quaternion(ai_quaternion.x, ai_quaternion.y, ai_quaternion.z, ai_quaternion.w);
     }
 
-    static void set_entity_transform(const aiNode* node, Entity* entity)
+    static void set_entity_transform(const aiNode* node, GameObject* entity)
     {
         SP_ASSERT_MSG(node != nullptr && entity != nullptr, "Invalid parameter(s)");
 
@@ -101,9 +79,9 @@ namespace LitchiRuntime
         const Matrix matrix_engine = convert_matrix(node->mTransformation);
 
         // Apply position, rotation and scale
-        entity->GetTransform()->SetPositionLocal(matrix_engine.GetTranslation());
-        entity->GetTransform()->SetRotationLocal(matrix_engine.GetRotation());
-        entity->GetTransform()->SetScaleLocal(matrix_engine.GetScale());
+        entity->GetComponent<Transform>()->SetPositionLocal(matrix_engine.GetTranslation());
+        entity->GetComponent<Transform>()->SetRotationLocal(matrix_engine.GetRotation());
+        entity->GetComponent<Transform>()->SetScaleLocal(matrix_engine.GetScale());
     }
 
     constexpr void compute_node_count(const aiNode* node, uint32_t* count)
@@ -327,7 +305,7 @@ namespace LitchiRuntime
         const int major = aiGetVersionMajor();
         const int minor = aiGetVersionMinor();
         const int rev   = aiGetVersionRevision();
-        Settings::RegisterThirdPartyLib("Assimp", to_string(major) + "." + to_string(minor) + "." + to_string(rev), "https://github.com/assimp/assimp");
+        // Settings::RegisterThirdPartyLib("Assimp", to_string(major) + "." + to_string(minor) + "." + to_string(rev), "https://github.com/assimp/assimp");
     }
 
     bool ModelImporter::Load(Mesh* mesh_in, const string& file_path)
@@ -442,7 +420,7 @@ namespace LitchiRuntime
                 if (mesh->GetFlags() & static_cast<uint32_t>(MeshFlags::ImportNormalizeScale))
                 {
                     float normalized_scale = mesh->ComputeNormalizedScale();
-                    mesh->GetRootEntity()->GetTransform()->SetScale(normalized_scale);
+                    mesh->GetRootEntity()->GetComponent<Transform>()->SetScale(normalized_scale);
                 }
 
                 mesh->CreateGpuBuffers();
@@ -464,10 +442,10 @@ namespace LitchiRuntime
         return scene != nullptr;
     }
 
-    void ModelImporter::ParseNode(const aiNode* node, shared_ptr<Entity> parent_entity)
+    void ModelImporter::ParseNode(const aiNode* node, GameObject* parent_entity)
     {
         // Create an entity that will match this node.
-        shared_ptr<Entity> entity = World::CreateEntity();
+        GameObject* entity = World::CreateEntity();
 
         // Set root entity to mesh
         bool is_root_node = parent_entity == nullptr;
@@ -487,22 +465,22 @@ namespace LitchiRuntime
         ProgressTracker::GetProgress(ProgressType::ModelImporter).SetText("Creating entity for " + entity->GetObjectName());
 
         // Set the transform of parent_node as the parent of the new_entity's transform
-        shared_ptr<Transform> parent_trans = parent_entity ? parent_entity->GetTransform() : nullptr;
-        entity->GetTransform()->SetParent(parent_trans);
+        Transform* parent_trans = parent_entity ? parent_entity->GetComponent<Transform>() : nullptr;
+        entity->GetComponent<Transform>()->SetParent(parent_trans);
 
         // Apply node transformation
-        set_entity_transform(node, entity.get());
+        set_entity_transform(node, entity);
 
         // Mesh components
         if (node->mNumMeshes > 0)
         {
-            ParseNodeMeshes(node, entity.get());
+            ParseNodeMeshes(node, entity);
         }
 
         // Light component
         if (mesh->GetFlags() & static_cast<uint32_t>(MeshFlags::ImportLights))
         {
-            ParseNodeLight(node, entity.get());
+            ParseNodeLight(node, entity);
         }
 
         // Children nodes
@@ -515,7 +493,7 @@ namespace LitchiRuntime
         ProgressTracker::GetProgress(ProgressType::ModelImporter).JobDone();
     }
 
-    void ModelImporter::ParseNodeMeshes(const aiNode* assimp_node, Entity* node_entity)
+    void ModelImporter::ParseNodeMeshes(const aiNode* assimp_node, GameObject* node_entity)
     {
         // An aiNode can have any number of meshes (albeit typically, it's one).
         // If it has more than one meshes, then we create children entities to store them.
@@ -524,7 +502,7 @@ namespace LitchiRuntime
 
         for (uint32_t i = 0; i < assimp_node->mNumMeshes; i++)
         {
-            Entity* entity    = node_entity;
+            GameObject* entity    = node_entity;
             aiMesh* node_mesh = scene->mMeshes[assimp_node->mMeshes[i]];
             string node_name  = assimp_node->mName.C_Str();
 
@@ -535,7 +513,7 @@ namespace LitchiRuntime
                 entity = World::CreateEntity().get();
 
                 // Set parent
-                entity->GetTransform()->SetParent(node_entity->GetTransform());
+                entity->GetComponent<Transform>()->SetParent(node_entity->GetComponent<Transform>());
 
                 // Set name
                 node_name += "_" + to_string(i + 1); // set name
@@ -549,7 +527,7 @@ namespace LitchiRuntime
         }
     }
 
-    void ModelImporter::ParseNodeLight(const aiNode* node, Entity* new_entity)
+    void ModelImporter::ParseNodeLight(const aiNode* node, GameObject* new_entity)
     {
         for (uint32_t i = 0; i < scene->mNumLights; i++)
         {
@@ -559,15 +537,15 @@ namespace LitchiRuntime
                 const aiLight* light_assimp = scene->mLights[i];
 
                 // add a light component
-                shared_ptr<Light> light = new_entity->AddComponent<Light>();
+                Light* light = new_entity->AddComponent<Light>();
 
                 // disable shadows (to avoid tanking the framerate)
                 light->SetShadowsEnabled(false);
                 light->SetShadowsTransparentEnabled(false);
 
                 // local transform
-                light->GetTransform()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
-                light->GetTransform()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
+                light->GetComponent<Transform>()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
+                light->GetComponent<Transform>()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
 
                 // color
                 light->SetColor(convert_color(light_assimp->mColorDiffuse));
@@ -592,7 +570,7 @@ namespace LitchiRuntime
         }
     }
 
-    void ModelImporter::ParseMesh(aiMesh* assimp_mesh, Entity* entity_parent)
+    void ModelImporter::ParseMesh(aiMesh* assimp_mesh, GameObject* entity_parent)
     {
         SP_ASSERT(assimp_mesh != nullptr);
         SP_ASSERT(entity_parent != nullptr);

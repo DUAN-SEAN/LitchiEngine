@@ -10,7 +10,6 @@
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
-#include "Runtime/Function/Renderer/GPUResourceMapper.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 
@@ -24,54 +23,54 @@ namespace LitchiRuntime
 
 	}
 
-	void MeshRenderer::SetMaterial(Resource::Material* material) {
+	void MeshRenderer::SetMaterial(Material* material) {
 		material = material;
 	}
 
-	void MeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
-	{
-		// 通过MeshFilter获取当前的Mesh
-		auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-		if(meshFilter==nullptr)
-		{
-			return;
-		}
+	//void MeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+	//{
+	//	// 通过MeshFilter获取当前的Mesh
+	//	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+	//	if(meshFilter==nullptr)
+	//	{
+	//		return;
+	//	}
 
-		// 计算模型矩阵
-		auto transform = GetGameObject()->GetComponent<Transform>();
-		glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
+	//	// 计算模型矩阵
+	//	auto transform = GetGameObject()->GetComponent<Transform>();
+	//	glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
 
-		auto* extraMesh =meshFilter->GetExtraMesh();
-		if(extraMesh != nullptr)
-		{
-			ApplicationBase::Instance()->renderer->DrawMesh(*extraMesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
-		}else
-		{
-			auto model = meshFilter->GetModel();
-			if (model == nullptr)
-			{
-				return;
-			}
+	//	auto* extraMesh =meshFilter->GetExtraMesh();
+	//	if(extraMesh != nullptr)
+	//	{
+	//		ApplicationBase::Instance()->renderer->DrawMesh(*extraMesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
+	//	}else
+	//	{
+	//		auto model = meshFilter->GetModel();
+	//		if (model == nullptr)
+	//		{
+	//			return;
+	//		}
 
-			if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
-			{
-				return;
-			}
+	//		if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
+	//		{
+	//			return;
+	//		}
 
-			auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
-			if (mesh == nullptr)
-			{
-				return;
-			}
+	//		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
+	//		if (mesh == nullptr)
+	//		{
+	//			return;
+	//		}
 
-			// vp矩阵绑定？
+	//		// vp矩阵绑定？
 
-			// 调用Draw执行绘制
-			// 内部将设置模型矩阵到UBO中
-			ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
-		}
+	//		// 调用Draw执行绘制
+	//		// 内部将设置模型矩阵到UBO中
+	//		ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
+	//	}
 
-	}
+	//}
 
 	void MeshRenderer::RenderShadowMap()
 	{

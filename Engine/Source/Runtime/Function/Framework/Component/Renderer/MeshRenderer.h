@@ -2,8 +2,7 @@
 #pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Renderer/Framebuffer4Depth.h"
-#include "Runtime/Function/Renderer/Resources/Material.h"
+#include "Runtime/Function/Renderer/Rendering//Material.h"
 
 namespace LitchiRuntime
 {
@@ -14,11 +13,11 @@ namespace LitchiRuntime
 		MeshRenderer();
 		~MeshRenderer();
 
-		void SetMaterial(Resource::Material* material);//设置Material
-		Resource::Material* GetMaterial() { return material; }
+		void SetMaterial(Material* material);//设置Material
+		Material* GetMaterial() { return material; }
 
 		// void RenderOld(RenderCamera* renderCamera);//渲染
-		virtual void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
+		// virtual void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
 
 		virtual void RenderShadowMap();
 	public:
@@ -32,7 +31,7 @@ namespace LitchiRuntime
 		unsigned int vertex_array_object_ = 0;//顶点数组对象
 
 	public:
-		LitchiRuntime::Resource::Material* material;
+		LitchiRuntime::Material* material;
 
 		/**
 		 * \brief 材质名称

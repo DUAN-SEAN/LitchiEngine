@@ -19,7 +19,7 @@
 namespace LitchiRuntime
 {
     //= FWD DECLARATIONS =
-    class Entity;
+    class GameObject;
     class Camera;
     class Light;
     class Environment;

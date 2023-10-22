@@ -11,7 +11,7 @@ struct aiMesh;
 
 namespace LitchiRuntime
 {
-    class Entity;
+    class GameObject;
     class Mesh;
 
     class SP_CLASS ModelImporter
@@ -21,11 +21,11 @@ namespace LitchiRuntime
         static bool Load(Mesh* mesh, const std::string& file_path);
 
     private:
-        static void ParseNode(const aiNode* node, std::shared_ptr<Entity> parent_entity = nullptr);
-        static void ParseNodeMeshes(const aiNode* node, Entity* new_entity);
-        static void ParseNodeLight(const aiNode* node, Entity* new_entity);
+        static void ParseNode(const aiNode* node, GameObject* parent_entity = nullptr);
+        static void ParseNodeMeshes(const aiNode* node, GameObject* new_entity);
+        static void ParseNodeLight(const aiNode* node, GameObject* new_entity);
         static void ParseAnimations();
-        static void ParseMesh(aiMesh* mesh, Entity* entity_parent);
+        static void ParseMesh(aiMesh* mesh, GameObject* entity_parent);
         static void ParseNodes(const aiMesh* mesh);
     };
 }

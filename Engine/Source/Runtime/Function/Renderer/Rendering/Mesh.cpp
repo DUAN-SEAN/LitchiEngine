@@ -1,23 +1,4 @@
-/*
-Copyright(c) 2016-2023 Panos Karabelas
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is furnished
-to do so, subject to the following conditions :
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
-FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE AUTHORS OR
-COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
-CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
 
 //= INCLUDES ================================
 #include "Runtime/Core/pch.h"
@@ -26,11 +7,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "../RHI/RHI_VertexBuffer.h"
 #include "../RHI/RHI_IndexBuffer.h"
 #include "../RHI/RHI_Texture2D.h"
-#include "../World/Components/Renderable.h"
-#include "../World/Entity.h"
 #include "../Resource/ResourceCache.h"
-#include "../IO/FileStream.h"
 #include "../Resource/Import/ModelImporter.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 SP_WARNINGS_OFF
 #include "meshoptimizer/meshoptimizer.h"
 SP_WARNINGS_ON
@@ -73,25 +53,25 @@ namespace LitchiRuntime
             return false;
         }
 
-        // load engine format
-        if (FileSystem::GetExtensionFromFilePath(file_path) == EXTENSION_MODEL)
-        {
-            // deserialize
-            auto file = make_unique<FileStream>(file_path, FileStream_Read);
-            if (!file->IsOpen())
-                return false;
+        //// load engine format todo:
+        //if (FileSystem::GetExtensionFromFilePath(file_path) == EXTENSION_MODEL)
+        //{
+        //    // deserialize
+        //    auto file = make_unique<FileStream>(file_path, FileStream_Read);
+        //    if (!file->IsOpen())
+        //        return false;
 
-            SetResourceFilePath(file->ReadAs<string>());
-            file->Read(&m_indices);
-            file->Read(&m_vertices);
+        //    SetResourceFilePath(file->ReadAs<string>());
+        //    file->Read(&m_indices);
+        //    file->Read(&m_vertices);
 
-            //Optimize();
-            ComputeAabb();
-            ComputeNormalizedScale();
-            CreateGpuBuffers();
-        }
-        // load foreign format
-        else
+        //    //Optimize();
+        //    ComputeAabb();
+        //    ComputeNormalizedScale();
+        //    CreateGpuBuffers();
+        //}
+        //// load foreign format
+        //else
         {
             SetResourceFilePath(file_path);
 
@@ -119,7 +99,8 @@ namespace LitchiRuntime
 
     bool Mesh::SaveToFile(const string& file_path)
     {
-        auto file = make_unique<FileStream>(file_path, FileStream_Write);
+        // todo:
+        /*auto file = make_unique<FileStream>(file_path, FileStream_Write);
         if (!file->IsOpen())
             return false;
 
@@ -127,7 +108,7 @@ namespace LitchiRuntime
         file->Write(m_indices);
         file->Write(m_vertices);
 
-        file->Close();
+        file->Close();*/
 
         return true;
     }
@@ -270,7 +251,7 @@ namespace LitchiRuntime
         m_vertex_buffer->Create(m_vertices);
     }
 
-    void Mesh::AddMaterial(shared_ptr<Material>& material, Entity* entity) const
+    void Mesh::AddMaterial(Material* material, GameObject* entity) const
     {
         SP_ASSERT(material != nullptr);
         SP_ASSERT(entity != nullptr);
@@ -280,10 +261,10 @@ namespace LitchiRuntime
         material->SetResourceFilePath(spartan_asset_path);
 
         // Create a Renderable and pass the material to it
-        entity->AddComponent<Renderable>()->SetMaterial(material);
+        entity->AddComponent<MeshRenderer>()->SetMaterial(material);
     }
 
-    void Mesh::AddTexture(shared_ptr<Material>& material, const MaterialTexture texture_type, const string& file_path, bool is_gltf)
+    void Mesh::AddTexture(Material* material, const MaterialTexture texture_type, const string& file_path, bool is_gltf)
     {
         SP_ASSERT(material != nullptr);
         SP_ASSERT(!file_path.empty());
