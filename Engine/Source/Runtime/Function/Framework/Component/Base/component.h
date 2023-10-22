@@ -18,7 +18,7 @@ namespace LitchiRuntime
         Component();
         virtual ~Component();
 
-        GameObject* GetGameObject() { return m_gameObject; }
+        GameObject* GetGameObject() const  { return m_gameObject; }
         void SetGameObject(GameObject* game_object) { m_gameObject = game_object; }
 
     private:

@@ -3,6 +3,7 @@
 
 #include <unordered_map>
 #include "glm.hpp"
+#include <Runtime/Core/Math/Vector2.h>
 
 namespace LitchiRuntime
 {
@@ -57,6 +58,20 @@ namespace LitchiRuntime
         /// 记录鼠标滚轮事件
         /// \param mouse_scroll
         static void RecordScroll(short mouse_scroll) { mouse_scroll_ += mouse_scroll; }
+
+        static void SetMouseCursorVisible(const bool visible);
+        static bool GetMouseCursorVisible();
+        static void SetMouseIsInViewport(const bool is_in_viewport);
+        static bool GetMouseIsInViewport();
+        static const Vector2& GetMousePosition();
+        static void SetMousePosition(const Vector2& position);
+        static const Vector2& GetMouseDelta();
+        static const Vector2& GetMouseWheelDelta();
+        static void SetEditorViewportOffset(const Vector2& offset);
+        static const Vector2 GetMousePositionRelativeToWindow();
+        static const Vector2 GetMousePositionRelativeToEditorViewport();
+
+
     private:
         static std::unordered_map<unsigned short, unsigned short> key_event_map_;//按键状态 奇数按下 偶数弹起 0表示没有记录
         static glm::vec2 mouse_position_;//鼠标位置

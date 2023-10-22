@@ -80,7 +80,7 @@ namespace LitchiRuntime
 		/// \tparam T 组件类型
 		/// \return 组件实例
 		template <class T = Component>
-		T* GetComponent() {
+		T* GetComponent() const {
 			//获取类名
 			type t = type::get<T>();
 			std::string component_type_name = t.get_name().to_string();

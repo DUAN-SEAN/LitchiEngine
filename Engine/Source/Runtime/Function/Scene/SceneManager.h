@@ -48,6 +48,12 @@ namespace LitchiRuntime
 		GameObject* FindByUnmanagedId(const int64_t unmanagedId);
 
 		std::vector<GameObject*> GetRootGameObjectList();
+		std::vector<GameObject*>& GetAllGameObjectList()
+		{
+			return m_gameObjectList;
+		}
+
+
 
 	public:
 

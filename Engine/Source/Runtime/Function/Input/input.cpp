@@ -2,8 +2,17 @@
 #include "input.h"
 #include <iostream>
 #include "KeyCode.h"
+#include "Runtime/Core/Log/debug.h"
+
 namespace LitchiRuntime
 {
+	// Mouse
+    static Vector2 m_mouse_position = Vector2::Zero;
+    static Vector2 m_mouse_delta = Vector2::Zero;
+    static Vector2 m_mouse_wheel_delta = Vector2::Zero;
+    static Vector2 m_editor_viewport_offset = Vector2::Zero;
+    static bool m_mouse_is_in_viewport = true;
+
     std::unordered_map<unsigned short, unsigned short> Input::key_event_map_;
     glm::vec2 Input::mouse_position_ = { 0,0 };
     short Input::mouse_scroll_ = 0;
@@ -53,5 +62,48 @@ namespace LitchiRuntime
         }
 
         mouse_scroll_ = 0;
+    }
+
+
+    void Input::SetMouseIsInViewport(const bool is_in_viewport)
+    {
+        m_mouse_is_in_viewport = is_in_viewport;
+    }
+
+    bool Input::GetMouseIsInViewport()
+    {
+        return m_mouse_is_in_viewport;
+    }
+
+    const Vector2& Input::GetMousePosition()
+    {
+        return m_mouse_position;
+    }
+
+    void Input::SetMousePosition(const Vector2& position)
+    {
+        // todo: 
+        /*if (SDL_WarpMouseGlobal(static_cast<int>(position.x), static_cast<int>(position.y)) != 0)
+        {
+            DEBUG_LOG_ERROR("Failed to set mouse position.");
+            return;
+        }*/
+
+        m_mouse_position = position;
+    }
+
+    const Vector2& Input::GetMouseDelta()
+    {
+        return m_mouse_delta;
+    }
+
+    const Vector2& Input::GetMouseWheelDelta()
+    {
+        return m_mouse_wheel_delta;
+    }
+
+    void Input::SetEditorViewportOffset(const Vector2& offset)
+    {
+        m_editor_viewport_offset = offset;
     }
 }

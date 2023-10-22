@@ -15,7 +15,7 @@ namespace LitchiRuntime
         class SP_CLASS RayHit
         {
         public:
-            RayHit(const std::shared_ptr<GameObject>& entity, const Vector3& position, float distance, bool is_inside)
+            RayHit(GameObject* entity, const Vector3& position, float distance, bool is_inside)
                 :m_entity{entity}
                 , m_position{position}
             {
@@ -23,7 +23,7 @@ namespace LitchiRuntime
                 m_inside   = is_inside;
             };
 
-            std::shared_ptr<GameObject> m_entity;
+            GameObject* m_entity;
             Vector3 m_position;
             float m_distance;
             bool m_inside;
