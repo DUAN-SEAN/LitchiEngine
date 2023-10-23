@@ -7,9 +7,7 @@
 #include "../../Rendering/Animation.h"
 #include "../../Rendering/Mesh.h"
 #include "Runtime/Core/App/ApplicationBase.h"
-#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
-#include "Runtime/Function/Framework/Component/Light/PointLight.h"
-#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
@@ -544,7 +542,7 @@ namespace LitchiRuntime
                 const aiLight* light_assimp = scene->mLights[i];
 
                 // add a light component
-                Light light;
+                Light* light = new_entity->AddComponent<Light>();
 
                 // disable shadows (to avoid tanking the framerate)
                 light->SetShadowsEnabled(false);
@@ -554,26 +552,22 @@ namespace LitchiRuntime
                 light->SetColor(convert_color(light_assimp->mColorDiffuse));
 
                 // type
-                LightComponent* lightComp = nullptr;
                 if (light_assimp->mType == aiLightSource_DIRECTIONAL)
                 {
                     light->SetLightType(LightType::Directional);
-                    lightComp = new_entity->AddComponent<DirectionalLight>();
                 }
                 else if (light_assimp->mType == aiLightSource_POINT)
                 {
                     light->SetLightType(LightType::Point);
-                    lightComp = new_entity->AddComponent<PointLight>();
                 }
                 else if (light_assimp->mType == aiLightSource_SPOT)
                 {
                     light->SetLightType(LightType::Spot);
-                    lightComp = new_entity->AddComponent<SpotLight>();
                 }
 
                 // local transform
-                light->GetComponent<Transform>()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
-                light->GetComponent<Transform>()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
+                new_entity->GetComponent<Transform>()->SetPositionLocal(convert_vector3(light_assimp->mPosition));
+                new_entity->GetComponent<Transform>()->SetRotationLocal(Quaternion::FromLookRotation(convert_vector3(light_assimp->mDirection)));
 
                 // intensity
                 light->SetIntensity(LightIntensity::bulb_150_watt);

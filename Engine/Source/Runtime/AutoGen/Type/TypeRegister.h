@@ -15,9 +15,6 @@
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
-#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
-#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
-#include "Runtime/Function/Framework/Component/Light/PointLight.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
@@ -106,82 +103,6 @@ RTTR_REGISTRATION //注册反射
 
 
 	/* Material Resource  */
-	// UniformInfoBase
-	registration::class_<Resource::UniformInfoBase>("UniformInfoBase")
-		(
-			rttr::metadata("Serializable", true),
-			rttr::metadata("Polymorphic", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("name", &Resource::UniformInfoBase::name);
-
-	registration::class_<Resource::UniformInfoBool>("UniformInfoBool")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("value", &Resource::UniformInfoBool::value);
-
-	registration::class_<Resource::UniformInfoInt>("UniformInfoInt")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("value", &Resource::UniformInfoInt::value);
-
-	registration::class_<Resource::UniformInfoFloat>("UniformInfoFloat")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("value", &Resource::UniformInfoFloat::value);
-
-	registration::class_<Resource::UniformInfoVector2>("UniformInfoVector2")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("vector", &Resource::UniformInfoVector2::vector);
-
-	registration::class_<Resource::UniformInfoVector3>("UniformInfoVector3")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("vector", &Resource::UniformInfoVector3::vector);
-
-	registration::class_<Resource::UniformInfoVector4>("UniformInfoVector4")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("vector", &Resource::UniformInfoVector4::vector);
-
-	registration::class_<Resource::UniformInfoPath>("UniformInfoPath")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("path", &Resource::UniformInfoPath::path);
-
-	registration::class_<Resource::MaterialResSetting>("MaterialResSetting")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()
-		.property("blendable", &Resource::MaterialResSetting::blendable)
-		.property("backfaceCulling", &Resource::MaterialResSetting::backfaceCulling)
-		.property("depthTest", &Resource::MaterialResSetting::depthTest)
-		.property("gpuInstances", &Resource::MaterialResSetting::gpuInstances);
-
-	registration::class_<Resource::MaterialRes>("MaterialRes")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()
-		.property("shaderPath", &Resource::MaterialRes::shaderPath)
-		.property("settings", &Resource::MaterialRes::settings)
-		.property("uniformInfoList", &Resource::MaterialRes::uniformInfoList);
 
 	// 内存中的material句柄, 需要在Asset中显示, 需要被反射
 	registration::class_<Resource::Material>("Material")
@@ -279,22 +200,10 @@ RTTR_REGISTRATION //注册反射
 		.property("localScale", &Transform::GetLocalScale, &Transform::SetLocalScale);
 
 	// Light Base Component
-	registration::class_<LightComponent>("LightComponent")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("light", &LightComponent::GetLight, &LightComponent::SetLight);
-
-	// DirectionalLight
-	registration::class_<DirectionalLight>("DirectionalLight")
+	registration::class_<Light>("LightComponent")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// PointLight
-	registration::class_<PointLight>("PointLight")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	// SpotLight
-	registration::class_<SpotLight>("SpotLight")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
+		// .property("light", &Light::GetLight, &Light::SetLight);
+	
 	// RigidActor
 	registration::class_<RigidActor>("RigidActor")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);

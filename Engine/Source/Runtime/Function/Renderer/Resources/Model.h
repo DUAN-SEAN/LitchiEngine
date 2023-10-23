@@ -9,6 +9,7 @@
 #include "SkinnedData.h"
 
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Renderer/Rendering/Mesh.h"
 
 #define NUM_BONES_PER_VERTEX 4
 

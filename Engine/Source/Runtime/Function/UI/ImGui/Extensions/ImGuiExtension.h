@@ -5,20 +5,12 @@
 #include <string>
 #include <variant>
 #include <chrono>
-#include "Window.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI//RHI_Texture2D.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Rendering/Mesh.h"
+#include "Runtime/Function/Renderer/Resource/ResourceCache.h"
 #include "Runtime/Function/UI/ImGui/imgui_internal.h"
-#include "World/World.h"
-#include "World/Components/Camera.h"
-#include "Resource/ResourceCache.h"
-#include "Core/ThreadPool.h"
-#include "Input/Input.h"
-#include "Display/Display.h"
-#include "../Editor.h"
-#include "../WidgetsDeferred/IconLoader.h"
 
 //========================================
 //
