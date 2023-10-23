@@ -16,52 +16,53 @@ LitchiRuntime::SkinnedMeshRenderer::~SkinnedMeshRenderer()
 
 void SkinnedMeshRenderer::Update()
 {
-	// 通过MeshFilter获取当前的Mesh
-	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-	auto animator = GetGameObject()->GetComponent<Animator>();
-	if (meshFilter == nullptr || animator == nullptr)
-	{
-		return;
-	}
+	// TODO
+	//// 通过MeshFilter获取当前的Mesh
+	//auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+	//auto animator = GetGameObject()->GetComponent<Animator>();
+	//if (meshFilter == nullptr || animator == nullptr)
+	//{
+	//	return;
+	//}
 
-	// 获取模型
-	auto model = meshFilter->GetModel();
+	//// 获取模型
+	//auto model = meshFilter->GetModel();
 
-	// 获取模型上的骨骼信息
-	std::vector<int> boneHierarchy;
-	std::vector<glm::mat4> boneOffsets;
-	std::vector<glm::mat4> defaultTransform;
-	model->GetBoneHierarchy(boneHierarchy);
-	model->GetBoneOffsets(boneOffsets);
-	model->GetNodeOffsets(defaultTransform);
+	//// 获取模型上的骨骼信息
+	//std::vector<int> boneHierarchy;
+	//std::vector<glm::mat4> boneOffsets;
+	//std::vector<glm::mat4> defaultTransform;
+	//model->GetBoneHierarchy(boneHierarchy);
+	//model->GetBoneOffsets(boneOffsets);
+	//model->GetNodeOffsets(defaultTransform);
 
 
-	// 获取当前帧信息
-	auto timePos = animator->GetCurrentTimePos();
-	auto animationClip = animator->GetCurrentClip();
+	//// 获取当前帧信息
+	//auto timePos = animator->GetCurrentTimePos();
+	//auto animationClip = animator->GetCurrentClip();
 
-	// 重置node的默认变换
-	animationClip->boneAnimations.resize(defaultTransform.size());
-	for (size_t i = 0; i < defaultTransform.size(); i++)
-		animationClip->boneAnimations[i].defaultTransform = defaultTransform[i];
+	//// 重置node的默认变换
+	//animationClip->boneAnimations.resize(defaultTransform.size());
+	//for (size_t i = 0; i < defaultTransform.size(); i++)
+	//	animationClip->boneAnimations[i].defaultTransform = defaultTransform[i];
 
-	CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets, m_finalTransformCacheArr);
+	//CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets, m_finalTransformCacheArr);
 }
 
-void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
-{
-	// 提交FinalTransform到GPU
-	GetMaterial()->GetShader()->Bind();
-	GetMaterial()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
-	GetMaterial()->GetShader()->Unbind();
-
-	MeshRenderer::Render(renderCamera, lightVPMat, shadowMapFBO);
-}
-
-void SkinnedMeshRenderer::RenderShadowMap()
-{
-	MeshRenderer::RenderShadowMap();
-}
+//void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+//{
+//	// 提交FinalTransform到GPU
+//	GetMaterial()->GetShader()->Bind();
+//	GetMaterial()->GetShader()->SetUniformMat4("ubo_boneFinalMatrixArr[0]", *m_finalTransformCacheArr.data(), m_finalTransformCacheArr.size());
+//	GetMaterial()->GetShader()->Unbind();
+//
+//	MeshRenderer::Render(renderCamera, lightVPMat, shadowMapFBO);
+//}
+//
+//void SkinnedMeshRenderer::RenderShadowMap()
+//{
+//	MeshRenderer::RenderShadowMap();
+//}
 
 /**
  * \brief 计算骨骼在当前帧的最终变换

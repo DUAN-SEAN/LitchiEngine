@@ -5,11 +5,15 @@
 #include <string>
 #include <variant>
 #include <chrono>
+
+#include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Core/Window/Window.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI//RHI_Texture2D.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Rendering/Mesh.h"
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
+#include "Runtime/Function/UI/Base/IconLoader.h"
 #include "Runtime/Function/UI/ImGui/imgui_internal.h"
 
 //========================================
@@ -245,8 +249,8 @@ namespace ImGuiSp
     // Image slot
     static void image_slot(const std::shared_ptr<LitchiRuntime::RHI_Texture>& texture_in, const std::function<void(const std::shared_ptr<LitchiRuntime::RHI_Texture>&)>& setter)
     {
-        const ImVec2 slot_size  = ImVec2(80 * LitchiRuntime::Window::GetDpiScale());
-        const float button_size = 15.0f * LitchiRuntime::Window::GetDpiScale();
+        const ImVec2 slot_size  = ImVec2(80 * LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale());
+        const float button_size = 15.0f * LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale();
 
         // Image
         ImGui::BeginGroup();
@@ -321,7 +325,7 @@ namespace ImGuiSp
         {
             ImVec2 position_cursor       = imgui_io.MousePos;
             float position_left          = static_cast<float>(screen_edge_padding);
-            float position_right         = static_cast<float>(LitchiRuntime::Display::GetWidth() - screen_edge_padding);
+            float position_right         = static_cast<float>(LitchiRuntime::ApplicationBase::Instance()->window->GetWidth() - screen_edge_padding);
             bool is_on_right_screen_edge = position_cursor.x >= position_right;
             bool is_on_left_screen_edge  = position_cursor.x <= position_left;
 
@@ -389,11 +393,13 @@ namespace ImGuiSp
 
     static void vector3(const char* label, LitchiRuntime::Vector3& vector)
     {
-        const float label_indetation = 15.0f * LitchiRuntime::Window::GetDpiScale();
+        const float label_indetation = 15.0f *
+            LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale();
 
         const auto show_float = [](LitchiRuntime::Vector3 axis, float* value)
         {
-            const float label_float_spacing = 15.0f * LitchiRuntime::Window::GetDpiScale();
+            const float label_float_spacing = 15.0f *
+                LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale();
             const float step                = 0.01f;
 
             // Label
@@ -432,7 +438,8 @@ namespace ImGuiSp
     inline ButtonPress window_yes_no(const char* title, const char* text)
     {
         // Set position
-        ImVec2 position     = ImVec2(LitchiRuntime::Display::GetWidth() * 0.5f, LitchiRuntime::Display::GetHeight() * 0.5f);
+        ImVec2 position     = ImVec2(
+            LitchiRuntime::ApplicationBase::Instance()->window->GetWidth() * 0.5f, LitchiRuntime::ApplicationBase::Instance()->window->GetHeight() * 0.5f);
         ImVec2 pivot_center = ImVec2(0.5f, 0.5f);
         ImGui::SetNextWindowPos(position, ImGuiCond_Always, pivot_center);
 

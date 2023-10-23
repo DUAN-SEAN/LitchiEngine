@@ -146,7 +146,8 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 
 	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data->id : (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0), glm::vec2{ 75, 75 });
 
-	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
+	// TODO:
+	/*widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
 	{
 		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::TEXTURE)
 		{
@@ -170,7 +171,9 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 		widget.textureID.id = (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0);
 		if (p_updateNotifier)
 			p_updateNotifier->Invoke();
-	};
+	};*/
+
+	
 
 	return widget;
 }

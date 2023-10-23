@@ -307,6 +307,11 @@ GLFWwindow* LitchiRuntime::Window::GetGlfwWindow() const
 	return m_glfwWindow;
 }
 
+float LitchiRuntime::Window::GetDpiScale()
+{
+	return 1.0f;
+}
+
 void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSettings)
 {
 	GLFWmonitor* selectedMonitor = nullptr;

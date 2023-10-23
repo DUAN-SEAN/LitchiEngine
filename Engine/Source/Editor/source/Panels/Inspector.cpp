@@ -617,7 +617,9 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	header.CloseEvent += [this, &header, p_component]
 	{
 		if (p_component->GetGameObject()->RemoveComponent(p_component))
+		{
 			m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
+		}
 	};
 	auto& columns = header.CreateWidget<Columns<2>>();
 	columns.widths[0] = 200;

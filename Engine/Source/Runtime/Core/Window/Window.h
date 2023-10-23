@@ -285,6 +285,8 @@ namespace LitchiRuntime
 		*/
 		GLFWwindow* GetGlfwWindow() const;
 
+		float GetDpiScale() { return 1.0f; }
+
 	private:
 		void CreateGlfwWindow(const WindowSettings& p_windowSettings);
 

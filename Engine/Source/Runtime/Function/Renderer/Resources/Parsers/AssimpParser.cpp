@@ -126,7 +126,7 @@ void LitchiRuntime::Parsers::AssimpParser::ProcessNode(Model* model, void* p_tra
 
 LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* model, void* p_transform, bool isSkinned, struct aiMesh* p_mesh, const struct aiScene* p_scene, unsigned materialIndex)
 {
-	std::vector<Vertex> vertices;
+	std::vector<RHI_Vertex_PosTexNorTan> vertices;
 	std::vector<uint32_t> indices;
 	aiMatrix4x4 meshTransformation = *reinterpret_cast<aiMatrix4x4*>(p_transform);
 
@@ -154,25 +154,14 @@ LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* mo
 			bitangent = meshTransformation * bitangent;
 		}
 
-		Vertex vertex = {
-					position.x,
-					position.y,
-					position.z,
-					texCoords.x,
-					texCoords.y,
-					normal.x,
-					normal.y,
-					normal.z,
-					tangent.x,
-					tangent.y,
-					tangent.z,
-					bitangent.x,
-					bitangent.y,
-					bitangent.z
-		};
+		Vector3 pos(position.x, position.y, position.z);
+		Vector2 tex(texCoords.x, texCoords.y);
+		Vector3 nor(normal.x, normal.y, normal.z);
+		Vector3 tan(tangent.x, tangent.y, tangent.z);
+		RHI_Vertex_PosTexNorTan vertex(pos, tex, nor, tan);
 
-		// 如果是蒙皮模型, 则存储顶点权重和骨骼索引信息
-		if (isSkinned)
+		// 如果是蒙皮模型, 则存储顶点权重和骨骼索引信息 todo:
+		/*if (isSkinned)
 		{
 			vertex.boneWeights[0] = vertexBoneData[i].weights[0];
 			vertex.boneWeights[1] = vertexBoneData[i].weights[1];
@@ -180,9 +169,8 @@ LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* mo
 
 			for (size_t j = 0; j < NUM_BONES_PER_VERTEX; j++)
 				vertex.boneIndices[j] = static_cast<int32_t>(vertexBoneData[i].boneIndex[j]);
-		}
+		}*/
 		vertices.push_back(vertex);
-
 	}
 
 	for (uint32_t faceID = 0; faceID < p_mesh->mNumFaces; ++faceID)
@@ -193,7 +181,11 @@ LitchiRuntime::Mesh* LitchiRuntime::Parsers::AssimpParser::ProcessMesh(Model* mo
 			indices.push_back(face.mIndices[indexID]);
 	}
 
-	return new Mesh(vertices, indices, materialIndex, isSkinned);
+	auto mesh = new Mesh();
+	mesh->AddVertices(vertices);
+	mesh->AddIndices(indices);
+	return mesh;
+	// return new Mesh(vertices, indices, materialIndex, isSkinned);
 }
 
 void LitchiRuntime::Parsers::AssimpParser::LoadAnimations(Model* model, const aiScene* scene)

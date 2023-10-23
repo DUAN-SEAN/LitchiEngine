@@ -134,6 +134,8 @@ namespace LitchiRuntime
 				if (*iter == component)
 				{
 					m_componentList.erase(iter);
+					// todo: delete iter
+					delete *iter;
 					return true;
 				}
 			}

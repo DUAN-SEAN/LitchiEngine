@@ -1,6 +1,8 @@
 
 #include "Converter.h"
 
+#include "Runtime/Function/Renderer/Rendering/Color.h"
+
 ImVec4 LitchiRuntime::Converter::ToImVec4(const Color & p_value)
 {
 	return ImVec4(p_value.r, p_value.g, p_value.b, p_value.a);

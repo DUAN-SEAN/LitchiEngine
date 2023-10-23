@@ -109,5 +109,16 @@ namespace LitchiRuntime
         static const Color light_kerosene_lamp;
         static const Color light_light_bulb;
         static const Color light_photo_flash;
+
+
+        static const Color Red;
+        static const Color Green;
+        static const Color Blue;
+        static const Color White;
+        static const Color Black;
+        static const Color Grey;
+        static const Color Yellow;
+        static const Color Cyan;
+        static const Color Magenta;
     };
 }

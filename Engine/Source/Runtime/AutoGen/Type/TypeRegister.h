@@ -58,7 +58,33 @@ RTTR_REGISTRATION //注册反射
 		.property("z", &glm::vec4::z)
 		.property("w", &glm::vec4::w);
 
-	registration::class_<glm::quat>("Quaternion")
+	registration::class_<glm::quat>("Quat")
+		.constructor()
+		.property("x", &glm::quat::x)
+		.property("y", &glm::quat::y)
+		.property("z", &glm::quat::z)
+		.property("w", &glm::quat::w);
+
+	// 内存结构
+	registration::class_<Vector2>("Vector2")
+		.constructor()
+		.property("x", &glm::vec2::x)
+		.property("y", &glm::vec2::y);
+
+	registration::class_<Vector3>("Vector3")
+		.constructor()
+		.property("x", &glm::vec3::x)
+		.property("y", &glm::vec3::y)
+		.property("z", &glm::vec3::z);
+
+	registration::class_<Vector4>("Vector4")
+		.constructor()
+		.property("x", &glm::vec4::x)
+		.property("y", &glm::vec4::y)
+		.property("z", &glm::vec4::z)
+		.property("w", &glm::vec4::w);
+
+	registration::class_<Quaternion>("Quaternion")
 		.constructor()
 		.property("x", &glm::quat::x)
 		.property("y", &glm::quat::y)
@@ -104,30 +130,30 @@ RTTR_REGISTRATION //注册反射
 
 	/* Material Resource  */
 
-	// 内存中的material句柄, 需要在Asset中显示, 需要被反射
-	registration::class_<Resource::Material>("Material")
-		(
-			rttr::metadata("Serializable", true),
-			rttr::metadata("Polymorphic", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("materialPath", &Resource::Material::path)
-		.property("materialRes", &Resource::Material::materialRes);
+	//// 内存中的material句柄, 需要在Asset中显示, 需要被反射
+	//registration::class_<Resource::Material>("Material")
+	//	(
+	//		rttr::metadata("Serializable", true),
+	//		rttr::metadata("Polymorphic", true)
+	//		)
+	//	.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+	//	.property("materialPath", &Resource::Material::path)
+	//	.property("materialRes", &Resource::Material::materialRes);
 
-	// 内存中的material句柄, 需要在Asset中显示, 需要被反射
-	registration::class_<LitchiRuntime::Light>("Light")
-		(
-			rttr::metadata("Serializable", true)
-			)
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("lightType", &Light::type)
-		.property("color", &Light::color)
-		.property("intensity", &Light::intensity)
-		.property("constant", &Light::constant)
-		.property("linear", &Light::linear)
-		.property("quadratic", &Light::quadratic)
-		.property("cutoff", &Light::cutoff)
-		.property("outerCutoff", &Light::outerCutoff);
+	//// 内存中的material句柄, 需要在Asset中显示, 需要被反射
+	//registration::class_<LitchiRuntime::Light>("Light")
+	//	(
+	//		rttr::metadata("Serializable", true)
+	//		)
+	//	.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+	//	.property("lightType", &Light::type)
+	//	.property("color", &Light::color)
+	//	.property("intensity", &Light::intensity)
+	//	.property("constant", &Light::constant)
+	//	.property("linear", &Light::linear)
+	//	.property("quadratic", &Light::quadratic)
+	//	.property("cutoff", &Light::cutoff)
+	//	.property("outerCutoff", &Light::outerCutoff);
 
 
 	// 场景管理
@@ -189,15 +215,15 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Serializable", true)
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("localPosition", &Transform::GetLocalPosition, &Transform::SetLocalPosition)
+		.property("localPosition", &Transform::GetPositionLocal, &Transform::SetPositionLocal)
 		(
 			rttr::metadata("Serializable", true)
 			)
-		.property("localRotation", &Transform::GetLocalRotation, &Transform::SetLocalRotation)
+		.property("localRotation", &Transform::GetRotationLocal, &Transform::SetRotationLocal)
 		(
 			rttr::metadata("QuatToEuler", true)
 			)
-		.property("localScale", &Transform::GetLocalScale, &Transform::SetLocalScale);
+		.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
 	// Light Base Component
 	registration::class_<Light>("LightComponent")

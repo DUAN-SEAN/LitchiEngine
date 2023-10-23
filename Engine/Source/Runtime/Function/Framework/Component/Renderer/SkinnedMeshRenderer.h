@@ -14,8 +14,8 @@ namespace LitchiRuntime
 		~SkinnedMeshRenderer();
 
 		void Update() override;
-		void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) override;
-		void RenderShadowMap() override;
+		/*void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) override;
+		void RenderShadowMap() override;*/
 
 		std::vector<glm::mat4x4>& GetCurrentFinalTransformCacheArr()
 		{

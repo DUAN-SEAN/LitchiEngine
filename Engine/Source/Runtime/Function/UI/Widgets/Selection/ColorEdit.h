@@ -2,7 +2,7 @@
 #pragma once
 
 #include "Runtime/Core/Tools/Eventing/Event.h"
-#include "Runtime/Function/UI/Types/Color.h"
+#include "Runtime/Function/Renderer/Rendering/Color.h"
 #include "Runtime/Function/UI/Widgets/DataWidget.h"
 
 namespace LitchiRuntime
