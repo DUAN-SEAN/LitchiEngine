@@ -272,7 +272,7 @@ namespace LitchiRuntime
             auto& lights = GetEntities()[Renderer_Entity::Light];
             for (const auto& entity : lights)
             {
-                if (shared_ptr<Camera> camera = GetCamera())
+                if (auto camera = GetCamera())
                 {
                     GameObject* entity_selected = camera->GetSelectedEntity();
                     if (entity_selected && entity_selected->GetObjectId() == entity->GetObjectId())

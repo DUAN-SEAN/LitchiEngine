@@ -15,8 +15,10 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Core/Time/time.h"
 #include "Runtime/Core/Window/Window.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Input/Input.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -226,11 +228,13 @@ namespace LitchiRuntime
 
     void Renderer::Shutdown()
     {
-        // console doesn't render anymore, log to file
-        Log::SetLogToFile(true);
+        // todo:
+        //// console doesn't render anymore, log to file
+        // Log::SetLogToFile(true);
 
-        // Fire event
-        SP_FIRE_EVENT(EventType::RendererOnShutdown);
+        // todo:
+        //// Fire event
+        //SP_FIRE_EVENT(EventType::RendererOnShutdown);
 
         // Manually invoke the deconstructors so that ParseDeletionQueue(), releases their RHI resources.
         {
@@ -255,7 +259,7 @@ namespace LitchiRuntime
     void Renderer::Tick()
     {
         // don't produce frames if the window is minimized
-        // if (Window::IsMinimised())
+        // if (ApplicationBase::Instance()->window->IsMinimised())
         if (ApplicationBase::Instance()->window->IsMinimized())
             return;
 
@@ -358,14 +362,14 @@ namespace LitchiRuntime
                 m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * m_camera->GetProjectionMatrix();
                 m_cb_frame_cpu.camera_near                = m_camera->GetNearPlane();
                 m_cb_frame_cpu.camera_far                 = m_camera->GetFarPlane();
-                m_cb_frame_cpu.camera_position            = m_camera->GetTransform()->GetPosition();
-                m_cb_frame_cpu.camera_direction           = m_camera->GetTransform()->GetForward();
+                m_cb_frame_cpu.camera_position            = m_camera->GetGameObject()->GetComponent<Transform>()->GetPosition();
+                m_cb_frame_cpu.camera_direction           = m_camera->GetGameObject()->GetComponent<Transform>()->GetForward();
             }
             m_cb_frame_cpu.resolution_output   = m_resolution_output;
             m_cb_frame_cpu.resolution_render   = m_resolution_render;
             m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
             m_cb_frame_cpu.taa_jitter_current  = jitter_offset;
-            m_cb_frame_cpu.delta_time          = static_cast<float>(Timer::GetDeltaTimeSmoothedSec());
+            m_cb_frame_cpu.delta_time          = static_cast<float>(Time::delta_time());
             m_cb_frame_cpu.gamma               = GetOption<float>(Renderer_Option::Gamma);
             m_cb_frame_cpu.frame               = static_cast<uint32_t>(frame_num);
 
@@ -379,7 +383,7 @@ namespace LitchiRuntime
         Pass_Frame(cmd_current);
 
         // blit to back buffer when in full screen
-        if (Window::IsFullScreen())
+        if (ApplicationBase::Instance()->window->IsFullscreen())
         {
             cmd_current->BeginMarker("copy_to_back_buffer");
             cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
@@ -445,11 +449,12 @@ namespace LitchiRuntime
             CreateSamplers(true);
         }
 
-        // Register this resolution as a display mode so it shows up in the editor's render options (it won't happen if already registered)
-        Display::RegisterDisplayMode(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Display::GetRefreshRate(), Display::GetIndex());
+        // todo:
+        //// Register this resolution as a display mode so it shows up in the editor's render options (it won't happen if already registered)
+        //Display::RegisterDisplayMode(static_cast<uint32_t>(width), static_cast<uint32_t>(height), Display::GetRefreshRate(), Display::GetIndex());
 
         // Log
-        DEBUG_LOG_INFO("Render resolution has been set to %dx%d", width, height);
+        DEBUG_LOG_INFO("Render resolution has been set to {}x{}", width, height);
     }
 
     const Vector2& Renderer::GetResolutionOutput()
@@ -500,7 +505,7 @@ namespace LitchiRuntime
         cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
     }
 
-    void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light)
+    void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list,const Light* light)
     {
         for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
         {
@@ -571,6 +576,7 @@ namespace LitchiRuntime
         cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
     }
 
+    // todo: 
     //void Renderer::OnWorldResolved(sp_variant data)
     //{
     //    // note: m_renderables is a vector of shared pointers.
@@ -607,10 +613,10 @@ namespace LitchiRuntime
         static uint32_t width_previous_output    = 0;
         static uint32_t height_previous_output   = 0;
 
-        if (Window::IsFullScreen())
+        if (ApplicationBase::Instance()->window->IsFullscreen())
         {
-            uint32_t width  = Window::GetWidth();
-            uint32_t height = Window::GetHeight();
+            uint32_t width  = ApplicationBase::Instance()->window->GetWidth();
+            uint32_t height = ApplicationBase::Instance()->window->GetHeight();
 
             width_previous_viewport  = m_viewport.width;
             height_previous_viewport = m_viewport.height;
@@ -626,7 +632,7 @@ namespace LitchiRuntime
             SetResolutionOutput(width_previous_output, height_previous_output);
         }
 
-        Input::SetMouseCursorVisible(!Window::IsFullScreen());
+        Input::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
     }
 
     void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
@@ -716,8 +722,9 @@ namespace LitchiRuntime
 
     void Renderer::SetEnvironment(Environment* environment)
     {
-        lock_guard lock(mutex_environment_texture);
-        environment_texture = environment->GetTexture();
+        // todo:
+        /*lock_guard lock(mutex_environment_texture);
+        environment_texture = environment->GetTexture();*/
     }
 
     void Renderer::SetOption(Renderer_Option option, float value)
@@ -740,17 +747,18 @@ namespace LitchiRuntime
         if (m_options[static_cast<uint32_t>(option)] == value)
             return;
 
-        // Reject changes (if needed)
-        {
-            if (option == Renderer_Option::Hdr)
-            {
-                if (value == 1.0f && !Display::GetHdr())
-                {
-                    DEBUG_LOG_INFO("This display doesn't support HDR");
-                    return;
-                }
-            }
-        }
+        // todo:
+        //// Reject changes (if needed)
+        //{
+        //    if (option == Renderer_Option::Hdr)
+        //    {
+        //        if (value == 1.0f && !Display::GetHdr())
+        //        {
+        //            DEBUG_LOG_INFO("This display doesn't support HDR");
+        //            return;
+        //        }
+        //    }
+        //}
 
         // Set new value
         m_options[static_cast<uint32_t>(option)] = value;
@@ -852,12 +860,12 @@ namespace LitchiRuntime
         if (!is_rendering_allowed)
             return;
 
-        SP_ASSERT_MSG(!Window::IsMinimised(), "Don't call present if the window is minimized");
+        SP_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
         SP_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
 
         swap_chain->Present();
 
-        SP_FIRE_EVENT(EventType::RendererPostPresent);
+        // SP_FIRE_EVENT(EventType::RendererPostPresent);
     }
 
     void Renderer::Flush()

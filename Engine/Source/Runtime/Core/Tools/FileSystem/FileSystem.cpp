@@ -1,7 +1,7 @@
 
 #include "FileSystem.h"
 #include "Runtime/Core/pch.h"
-#include <SDL_misc.h>
+#include "GLFW/glfw3.h"
 
 using namespace std;
 namespace LitchiRuntime {
@@ -602,7 +602,8 @@ namespace LitchiRuntime {
 
     void FileSystem::OpenUrl(const string& url)
     {
-        SDL_OpenURL(url.c_str());
+        // todo: glfw
+        // (url.c_str());
     }
 
     bool FileSystem::Delete(const string& path)
