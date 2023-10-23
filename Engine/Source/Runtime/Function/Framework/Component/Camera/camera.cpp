@@ -281,7 +281,8 @@ namespace LitchiRuntime
             {
                 m_mouse_last_position = Input::GetMousePosition();
 
-                if (!Window::IsFullscreen()) // change the mouse state only in editor mode
+                if(!ApplicationBase::Instance()->window->IsFullscreen())
+                // if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
                 {
                     Input::SetMouseCursorVisible(false);
                 }
@@ -292,7 +293,8 @@ namespace LitchiRuntime
             {
                 Input::SetMousePosition(m_mouse_last_position);
 
-                if (!Window::IsFullscreen()) // change the mouse state only in editor mode
+                // if (!Window::IsFullscreen()) // change the mouse state only in editor mode
+                if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
                 {
                     Input::SetMouseCursorVisible(true);
                 }
@@ -301,106 +303,106 @@ namespace LitchiRuntime
             }
         }
 
-        if (m_is_controlled_by_keyboard_mouse)
-        {
-            // Mouse look
-            {
-                // Wrap around left and right screen edges (to allow for infinite scrolling)
-                {
-                    uint32_t edge_padding = 5;
-                    Vector2 mouse_position = Input::GetMousePosition();
-                    if (mouse_position.x >= Display::GetWidth() - edge_padding)
-                    {
-                        mouse_position.x = static_cast<float>(edge_padding + 1);
-                        Input::SetMousePosition(mouse_position);
-                    }
-                    else if (mouse_position.x <= edge_padding)
-                    {
-                        mouse_position.x = static_cast<float>(Display::GetWidth() - edge_padding - 1);
-                        Input::SetMousePosition(mouse_position);
-                    }
-                }
+        //if (m_is_controlled_by_keyboard_mouse)
+        //{
+        //    // Mouse look
+        //    {
+        //        // Wrap around left and right screen edges (to allow for infinite scrolling)
+        //        {
+        //            uint32_t edge_padding = 5;
+        //            Vector2 mouse_position = Input::GetMousePosition();
+        //            if (mouse_position.x >= Display::GetWidth() - edge_padding)
+        //            {
+        //                mouse_position.x = static_cast<float>(edge_padding + 1);
+        //                Input::SetMousePosition(mouse_position);
+        //            }
+        //            else if (mouse_position.x <= edge_padding)
+        //            {
+        //                mouse_position.x = static_cast<float>(Display::GetWidth() - edge_padding - 1);
+        //                Input::SetMousePosition(mouse_position);
+        //            }
+        //        }
 
-                // Get camera rotation.
-                m_first_person_rotation.x = GetGameObject()->GetComponent<Transform>()->GetRotation().Yaw();
-                m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();
+        //        // Get camera rotation.
+        //        m_first_person_rotation.x = GetGameObject()->GetComponent<Transform>()->GetRotation().Yaw();
+        //        m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();
 
-                // Get mouse delta.
-                const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
+        //        // Get mouse delta.
+        //        const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
 
-                // Lerp to it.
-                m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
+        //        // Lerp to it.
+        //        m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
 
-                // Accumulate rotation.
-                m_first_person_rotation += m_mouse_smoothed;
+        //        // Accumulate rotation.
+        //        m_first_person_rotation += m_mouse_smoothed;
 
-                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
+        //        // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+        //        m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
 
-                // Compute rotation.
-                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-                const Quaternion rotation = xQuaternion * yQuaternion;
+        //        // Compute rotation.
+        //        const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+        //        const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+        //        const Quaternion rotation = xQuaternion * yQuaternion;
 
-                // Rotate
-                GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-            }
+        //        // Rotate
+        //        GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
+        //    }
 
-            // Keyboard movement direction
-            {
-                // Compute direction
-                if (Input::GetKey(KeyCode::KEY_CODE_W)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
-                if (Input::GetKey(KeyCode::KEY_CODE_S)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
-                if (Input::GetKey(KeyCode::KEY_CODE_D)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
-                if (Input::GetKey(KeyCode::KEY_CODE_A)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
-                if (Input::GetKey(KeyCode::KEY_CODE_Q)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
-                if (Input::GetKey(KeyCode::KEY_CODE_E)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
-                movement_direction.Normalize();
-            }
+        //    // Keyboard movement direction
+        //    {
+        //        // Compute direction
+        //        if (Input::GetKey(KeyCode::KEY_CODE_W)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
+        //        if (Input::GetKey(KeyCode::KEY_CODE_S)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
+        //        if (Input::GetKey(KeyCode::KEY_CODE_D)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
+        //        if (Input::GetKey(KeyCode::KEY_CODE_A)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
+        //        if (Input::GetKey(KeyCode::KEY_CODE_Q)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
+        //        if (Input::GetKey(KeyCode::KEY_CODE_E)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
+        //        movement_direction.Normalize();
+        //    }
 
-            // Wheel delta (used to adjust movement speed)
-            {
-                // Accumulate
-                m_movement_scroll_accumulator += Input::GetMouseWheelDelta().y * 0.1f;
+        //    // Wheel delta (used to adjust movement speed)
+        //    {
+        //        // Accumulate
+        //        m_movement_scroll_accumulator += Input::GetMouseWheelDelta().y * 0.1f;
 
-                // Clamp
-                float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
-                float max = movement_acceleration * 2.0f;  // An empirically chosen max.
-                m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
-            }
-        }
+        //        // Clamp
+        //        float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
+        //        float max = movement_acceleration * 2.0f;  // An empirically chosen max.
+        //        m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
+        //    }
+        //}
 
-        // Controller movement
-        if (Input::IsControllerConnected())
-        {
-            // Look
-            {
-                // Get camera rotation
-                m_first_person_rotation.x += Input::GetControllerThumbStickRight().x;
-                m_first_person_rotation.y += Input::GetControllerThumbStickRight().y;
+        //// Controller movement
+        //if (Input::IsControllerConnected())
+        //{
+        //    // Look
+        //    {
+        //        // Get camera rotation
+        //        m_first_person_rotation.x += Input::GetControllerThumbStickRight().x;
+        //        m_first_person_rotation.y += Input::GetControllerThumbStickRight().y;
 
-                // Get mouse delta.
-                const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
+        //        // Get mouse delta.
+        //        const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
 
-                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
+        //        // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+        //        m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
 
-                // Compute rotation.
-                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-                const Quaternion rotation = xQuaternion * yQuaternion;
+        //        // Compute rotation.
+        //        const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+        //        const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+        //        const Quaternion rotation = xQuaternion * yQuaternion;
 
-                // Rotate
-                GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-            }
+        //        // Rotate
+        //        GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
+        //    }
 
-            // Controller movement direction
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -Input::GetControllerThumbStickLeft().y;
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * Input::GetControllerThumbStickLeft().x;
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * Input::GetControllerTriggerLeft();
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * Input::GetControllerTriggerRight();
-            movement_direction.Normalize();
-        }
+        //    // Controller movement direction
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -Input::GetControllerThumbStickLeft().y;
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * Input::GetControllerThumbStickLeft().x;
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * Input::GetControllerTriggerLeft();
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * Input::GetControllerTriggerRight();
+        //    movement_direction.Normalize();
+        //}
 
         // Translation
         {

@@ -8,6 +8,7 @@
 #include "../World/Entity.h"
 #include "../World/Components/Renderable.h"
 #include "../RHI/RHI_Vertex.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
 //=========================================
 
 //= NAMESPACES ===============

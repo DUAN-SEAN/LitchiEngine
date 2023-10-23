@@ -25,7 +25,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #define FREEIMAGE_LIB
 #include <FreeImage.h>
 #include <Utilities.h>
-#include "../../Core/ThreadPool.h"
+// #include "../../Core/ThreadPool.h"
 #include "../../RHI/RHI_Texture2D.h"
 //====================================
 
@@ -319,8 +319,8 @@ namespace LitchiRuntime
         };
         FreeImage_SetOutputMessage(free_image_error_handler);
 
-        // Get version
-        Settings::RegisterThirdPartyLib("FreeImage", FreeImage_GetVersion(), "https://freeimage.sourceforge.io/");
+        //// Get version
+        //Settings::RegisterThirdPartyLib("FreeImage", FreeImage_GetVersion(), "https://freeimage.sourceforge.io/");
     }
 
     void ImageImporter::Shutdown()

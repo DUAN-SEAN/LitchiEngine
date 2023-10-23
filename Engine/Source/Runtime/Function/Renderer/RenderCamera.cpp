@@ -9,8 +9,6 @@
 
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
-#include "Runtime/Function/Renderer/GPUResourceMapper.h"
-#include "Runtime/Function/Renderer/RenderTexture.h"
 
 namespace LitchiRuntime
 {
@@ -42,45 +40,45 @@ namespace LitchiRuntime
 
 	void RenderCamera::CheckRenderToTexture() {
 
-		if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
-			return;
-		}
-		if (target_render_texture_->in_use()) {
-			return;
-		}
-		if (target_render_texture_->frame_buffer_object_handle() == 0) {//还没有初始化，没有生成FBO。
-			return;
-		}
+		//if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
+		//	return;
+		//}
+		//if (target_render_texture_->in_use()) {
+		//	return;
+		//}
+		//if (target_render_texture_->frame_buffer_object_handle() == 0) {//还没有初始化，没有生成FBO。
+		//	return;
+		//}
 
-		glViewport(0, 0, target_render_texture_->width(), target_render_texture_->height());
+		//glViewport(0, 0, target_render_texture_->width(), target_render_texture_->height());
 
-		GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(target_render_texture_->frame_buffer_object_handle());
-		glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
-			//检测帧缓冲区完整性，如果完整的话就开始进行绘制
-			GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
-			if (status != GL_FRAMEBUFFER_COMPLETE) {
-				DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);
-				return;
-			}
-		target_render_texture_->set_in_use(true);
+		//GLuint frame_buffer_object_id = GPUResourceMapper::GetFBO(target_render_texture_->frame_buffer_object_handle());
+		//glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer_object_id); __CHECK_GL_ERROR__
+		//	//检测帧缓冲区完整性，如果完整的话就开始进行绘制
+		//	GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); __CHECK_GL_ERROR__
+		//	if (status != GL_FRAMEBUFFER_COMPLETE) {
+		//		DEBUG_LOG_ERROR("BindFBO FBO Error,Status:{} !", status);
+		//		return;
+		//	}
+		//target_render_texture_->set_in_use(true);
 	}
 
 	void RenderCamera::CheckCancelRenderToTexture() {
-		if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
-			return;
-		}
-		if (target_render_texture_->in_use() == false) {
-			return;
-		}
-		if (target_render_texture_->frame_buffer_object_handle() == 0) {//还没有初始化，没有生成FBO。
-			return;
-		}
-		//更新ViewPort的尺寸
-		glViewport(0, 0, Screen::width(), Screen::height());
+		//if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
+		//	return;
+		//}
+		//if (target_render_texture_->in_use() == false) {
+		//	return;
+		//}
+		//if (target_render_texture_->frame_buffer_object_handle() == 0) {//还没有初始化，没有生成FBO。
+		//	return;
+		//}
+		////更新ViewPort的尺寸
+		//glViewport(0, 0, Screen::width(), Screen::height());
 
-		glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE); __CHECK_GL_ERROR__
+		//glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE); __CHECK_GL_ERROR__
 
-			target_render_texture_->set_in_use(false);
+		//	target_render_texture_->set_in_use(false);
 	}
 
 	void RenderCamera::set_target_render_texture(RenderTexture* render_texture) {
@@ -91,16 +89,16 @@ namespace LitchiRuntime
 	}
 
 	void RenderCamera::clear_target_render_texture() {
-		if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
-			return;
-		}
-		if (target_render_texture_->in_use() == false) {
-			return;
-		}
+		//if (target_render_texture_ == nullptr) {//没有设置目标RenderTexture
+		//	return;
+		//}
+		//if (target_render_texture_->in_use() == false) {
+		//	return;
+		//}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE); __CHECK_GL_ERROR__
+		//glBindFramebuffer(GL_FRAMEBUFFER, GL_NONE); __CHECK_GL_ERROR__
 
-			target_render_texture_->set_in_use(false);
+		//	target_render_texture_->set_in_use(false);
 	}
 
 
@@ -124,7 +122,8 @@ namespace LitchiRuntime
 
 	void LitchiRuntime::RenderCamera::CacheFrustum(const glm::mat4& p_view, const glm::mat4& p_projection)
 	{
-		m_frustum.CalculateFrustum(p_projection * p_view);
+		// todo
+		// m_frustum.CalculateFrustum(p_projection * p_view);
 	}
 
 	float LitchiRuntime::RenderCamera::GetFov() const
