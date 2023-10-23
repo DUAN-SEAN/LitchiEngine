@@ -2,13 +2,11 @@
 //= INCLUDES ==============================
 #include "Runtime/Core/pch.h"
 #include "Renderer.h"
-#include "../World/Components/Camera.h"
-#include "../World/Components/Transform.h"
-#include "../World/Components/Light.h"
-#include "../World/Entity.h"
-#include "../World/Components/Renderable.h"
 #include "../RHI/RHI_Vertex.h"
+#include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 //=========================================
 
 //= NAMESPACES ===============
@@ -71,7 +69,7 @@ namespace LitchiRuntime
 
     void Renderer::DrawRectangle(const Rectangle& rectangle, const Vector4& color /*= DebugColor*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
     {
-        const float cam_z = GetCamera()->GetTransform()->GetPosition().z + GetCamera()->GetNearPlane() + 5.0f;
+        const float cam_z = GetCamera()->GetGameObject()->GetComponent<Transform>()->GetPosition().z + GetCamera()->GetNearPlane() + 5.0f;
 
         DrawLine(Vector3(rectangle.left,  rectangle.top,    cam_z), Vector3(rectangle.right, rectangle.top,    cam_z), color, color, duration, depth);
         DrawLine(Vector3(rectangle.right, rectangle.top,    cam_z), Vector3(rectangle.right, rectangle.bottom, cam_z), color, color, duration, depth);
@@ -276,21 +274,21 @@ namespace LitchiRuntime
             {
                 if (shared_ptr<Camera> camera = GetCamera())
                 {
-                    shared_ptr<Entity> entity_selected = camera->GetSelectedEntity();
+                    GameObject* entity_selected = camera->GetSelectedEntity();
                     if (entity_selected && entity_selected->GetObjectId() == entity->GetObjectId())
                     {
-                        shared_ptr<Light> light = entity->GetComponent<Light>();
+                        Light* light = entity->GetComponent<Light>();
 
                         if (light->GetLightType() == LightType::Directional)
                         {
-                            Vector3 extent    = light->GetTransform()->GetForward() * 1000.0f;
-                            Vector3 pos_start = light->GetTransform()->GetPosition() - extent;
-                            Vector3 pos_end   = light->GetTransform()->GetPosition() + extent;
+                            Vector3 extent    = entity->GetComponent<Transform>()->GetForward() * 1000.0f;
+                            Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition() - extent;
+                            Vector3 pos_end   = entity->GetComponent<Transform>()->GetPosition() + extent;
                             DrawLine(pos_start, pos_end);
                         }
                         else if (light->GetLightType() == LightType::Point)
                         {
-                            Vector3 center = light->GetTransform()->GetPosition();
+                            Vector3 center = entity->GetComponent<Transform>()->GetPosition();
                             float radius = light->GetRange();
                             uint32_t segment_count = 64;
 
@@ -304,13 +302,13 @@ namespace LitchiRuntime
                             // opposite = adjacent * tan(angle)
                             float opposite = light->GetRange() * Math::Helper::Tan(light->GetAngle());
 
-                            Vector3 pos_end_center = light->GetTransform()->GetForward() * light->GetRange();
-                            Vector3 pos_end_up     = pos_end_center + light->GetTransform()->GetUp() * opposite;
-                            Vector3 pos_end_right  = pos_end_center + light->GetTransform()->GetRight() * opposite;
-                            Vector3 pos_end_down   = pos_end_center + light->GetTransform()->GetDown() * opposite;
-                            Vector3 pos_end_left   = pos_end_center + light->GetTransform()->GetLeft() * opposite;
+                            Vector3 pos_end_center = entity->GetComponent<Transform>()->GetForward() * light->GetRange();
+                            Vector3 pos_end_up     = pos_end_center + entity->GetComponent<Transform>()->GetUp() * opposite;
+                            Vector3 pos_end_right  = pos_end_center + entity->GetComponent<Transform>()->GetRight() * opposite;
+                            Vector3 pos_end_down   = pos_end_center + entity->GetComponent<Transform>()->GetDown() * opposite;
+                            Vector3 pos_end_left   = pos_end_center + entity->GetComponent<Transform>()->GetLeft() * opposite;
 
-                            Vector3 pos_start = light->GetTransform()->GetPosition();
+                            Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition();
                             DrawLine(pos_start, pos_start + pos_end_center);
                             DrawLine(pos_start, pos_start + pos_end_up);
                             DrawLine(pos_start, pos_start + pos_end_right);
@@ -327,7 +325,7 @@ namespace LitchiRuntime
         {
             for (const auto& entity : GetEntities()[Renderer_Entity::Geometry])
             {
-                if (auto renderable = entity->GetComponent<Renderable>())
+                if (auto renderable = entity->GetComponent<MeshFilter>())
                 {
                     DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
                 }
@@ -335,7 +333,7 @@ namespace LitchiRuntime
         
             for (const auto& entity : GetEntities()[Renderer_Entity::GeometryTransparent])
             {
-                if (auto renderable = entity->GetComponent<Renderable>())
+                if (auto renderable = entity->GetComponent<MeshFilter>())
                 {
                     DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
                 }

@@ -16,6 +16,7 @@
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Core/Window/Window.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -39,7 +40,7 @@ namespace LitchiRuntime
     uint32_t Renderer::m_lines_index_depth_on;
     bool Renderer::m_brdf_specular_lut_rendered;
     RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
-    shared_ptr<Camera> Renderer::m_camera = nullptr;
+    Camera* Renderer::m_camera = nullptr;
 
     namespace
     {
@@ -499,7 +500,7 @@ namespace LitchiRuntime
         cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
     }
 
-    void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, shared_ptr<Light> light)
+    void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light)
     {
         for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
         {
@@ -508,15 +509,15 @@ namespace LitchiRuntime
 
         m_cb_light_cpu.intensity_range_angle_bias = Vector4
         (
-            light->GetIntensityWatt(m_camera.get()),
+            light->GetIntensityWatt(m_camera),
             light->GetRange(), light->GetAngle(),
             light->GetBias()
         );
 
         m_cb_light_cpu.color       = light->GetColor();
         m_cb_light_cpu.normal_bias = light->GetNormalBias();
-        m_cb_light_cpu.position    = light->GetTransform()->GetPosition();
-        m_cb_light_cpu.direction   = light->GetTransform()->GetForward();
+        m_cb_light_cpu.position    = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+        m_cb_light_cpu.direction   = light->GetGameObject()->GetComponent<Transform>()->GetForward();
         m_cb_light_cpu.options     = 0;
         m_cb_light_cpu.options     |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
         m_cb_light_cpu.options     |= light->GetLightType() == LightType::Point       ? (1 << 1) : 0;
@@ -637,9 +638,9 @@ namespace LitchiRuntime
             m_renderables.clear();
             m_camera = nullptr;
 
-            for (shared_ptr<Entity> entity : m_entities_to_add)
+            for (auto entity : m_entities_to_add)
             {
-                if (shared_ptr<Renderable> renderable = entity->GetComponent<Renderable>())
+                if (auto renderable = entity->GetComponent<MeshRenderer>())
                 {
                     bool is_transparent = false;
                     bool is_visible     = true;
@@ -656,31 +657,31 @@ namespace LitchiRuntime
                     }
                 }
 
-                if (shared_ptr<Light> light = entity->GetComponent<Light>())
+                if (auto light = entity->GetComponent<Light>())
                 {
                     m_renderables[Renderer_Entity::Light].emplace_back(entity);
                 }
 
-                if (shared_ptr<Camera> camera = entity->GetComponent<Camera>())
+                if (auto camera = entity->GetComponent<Camera>())
                 {
                     m_renderables[Renderer_Entity::Camera].emplace_back(entity);
                     m_camera = camera;
                 }
 
-                if (shared_ptr<ReflectionProbe> reflection_probe = entity->GetComponent<ReflectionProbe>())
+               /* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())
                 {
                     m_renderables[Renderer_Entity::ReflectionProbe].emplace_back(entity);
                 }
 
-                if (shared_ptr<AudioSource> audio_source = entity->GetComponent<AudioSource>())
+                if (auto audio_source = entity->GetComponent<AudioSource>())
                 {
                     m_renderables[Renderer_Entity::AudioSource].emplace_back(entity);
-                }
+                }*/
             }
 
             // sort them by distance
-            sort_renderables(m_camera.get(), &m_renderables[Renderer_Entity::Geometry], false);
-            sort_renderables(m_camera.get(), &m_renderables[Renderer_Entity::GeometryTransparent], true);
+            sort_renderables(m_camera, &m_renderables[Renderer_Entity::Geometry], false);
+            sort_renderables(m_camera, &m_renderables[Renderer_Entity::GeometryTransparent], true);
 
             m_entities_to_add.clear();
         }
@@ -912,7 +913,7 @@ namespace LitchiRuntime
         return frame_num;
     }
 
-    shared_ptr<Camera> Renderer::GetCamera()
+    Camera* Renderer::GetCamera()
     {
         return m_camera;
     }

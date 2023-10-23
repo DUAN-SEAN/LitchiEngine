@@ -3,12 +3,9 @@
 #include <direct.h>
 #include <string>
 
-#include "Runtime/Function/Renderer/Core/Renderer.h"
-#include "Runtime/Resource/FontManager.h"
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
-#include "Runtime/Resource/TextureManager.h"
 
 namespace LitchiRuntime
 {

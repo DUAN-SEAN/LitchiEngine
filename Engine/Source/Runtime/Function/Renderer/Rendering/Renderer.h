@@ -94,7 +94,7 @@ namespace LitchiRuntime
 
         //= RESOURCES ===========================================================================================
         static RHI_Texture* GetFrameTexture();
-        static std::shared_ptr<Camera> GetCamera();
+        static Camera* GetCamera();
         static std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetEntities();
 
         // Get all
@@ -119,7 +119,7 @@ namespace LitchiRuntime
         // Constant buffers
         static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list);
         static void PushPassConstants(RHI_CommandList* cmd_list);
-        static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const std::shared_ptr<Light> light);
+        static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light);
         static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 
         // Resource creation
@@ -172,7 +172,7 @@ namespace LitchiRuntime
         static uint32_t m_lines_index_depth_off;
         static uint32_t m_lines_index_depth_on;
         static RHI_CommandPool* m_cmd_pool;
-        static std::shared_ptr<Camera> m_camera;
+        static Camera* m_camera;
         static const uint32_t m_frames_in_flight = 5;
 
         // window
