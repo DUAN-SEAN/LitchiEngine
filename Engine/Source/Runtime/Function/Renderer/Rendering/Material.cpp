@@ -33,52 +33,53 @@ namespace LitchiRuntime
 
     bool Material::LoadFromFile(const string& file_path)
     {
-        auto xml = make_unique<XmlDocument>();
-        if (!xml->Load(file_path))
-            return false;
+        // todo:
+        //auto xml = make_unique<XmlDocument>();
+        //if (!xml->Load(file_path))
+        //    return false;
 
-        SetResourceFilePath(file_path);
+        //SetResourceFilePath(file_path);
 
-        xml->GetAttribute("Material", "color_r",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorR)]);
-        xml->GetAttribute("Material", "color_g",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorG)]);
-        xml->GetAttribute("Material", "color_b",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorB)]);
-        xml->GetAttribute("Material", "color_a",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorA)]);
-        xml->GetAttribute("Material", "roughness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::RoughnessMultiplier)]);
-        xml->GetAttribute("Material", "metalness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::MetalnessMultiplier)]);
-        xml->GetAttribute("Material", "normal_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::NormalMultiplier)]);
-        xml->GetAttribute("Material", "height_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::HeightMultiplier)]);
-        xml->GetAttribute("Material", "clearcoat_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat)]);
-        xml->GetAttribute("Material", "clearcoat_roughness_multiplier",  &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat_Roughness)]);
-        xml->GetAttribute("Material", "anisotropic_multiplier",          &m_properties[static_cast<uint32_t>(MaterialProperty::Anisotropic)]);
-        xml->GetAttribute("Material", "anisotropic_rotation_multiplier", &m_properties[static_cast<uint32_t>(MaterialProperty::AnisotropicRotation)]);
-        xml->GetAttribute("Material", "sheen_multiplier",                &m_properties[static_cast<uint32_t>(MaterialProperty::Sheen)]);
-        xml->GetAttribute("Material", "sheen_tint_multiplier",           &m_properties[static_cast<uint32_t>(MaterialProperty::SheenTint)]);
-        xml->GetAttribute("Material", "uv_tiling_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingX)]);
-        xml->GetAttribute("Material", "uv_tiling_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingY)]);
-        xml->GetAttribute("Material", "uv_offset_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetX)]);
-        xml->GetAttribute("Material", "uv_offset_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetY)]);
-        xml->GetAttribute("Material", "can_be_edited",                   &m_properties[static_cast<uint32_t>(MaterialProperty::CanBeEdited)]);
+        //xml->GetAttribute("Material", "color_r",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorR)]);
+        //xml->GetAttribute("Material", "color_g",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorG)]);
+        //xml->GetAttribute("Material", "color_b",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorB)]);
+        //xml->GetAttribute("Material", "color_a",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorA)]);
+        //xml->GetAttribute("Material", "roughness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::RoughnessMultiplier)]);
+        //xml->GetAttribute("Material", "metalness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::MetalnessMultiplier)]);
+        //xml->GetAttribute("Material", "normal_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::NormalMultiplier)]);
+        //xml->GetAttribute("Material", "height_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::HeightMultiplier)]);
+        //xml->GetAttribute("Material", "clearcoat_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat)]);
+        //xml->GetAttribute("Material", "clearcoat_roughness_multiplier",  &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat_Roughness)]);
+        //xml->GetAttribute("Material", "anisotropic_multiplier",          &m_properties[static_cast<uint32_t>(MaterialProperty::Anisotropic)]);
+        //xml->GetAttribute("Material", "anisotropic_rotation_multiplier", &m_properties[static_cast<uint32_t>(MaterialProperty::AnisotropicRotation)]);
+        //xml->GetAttribute("Material", "sheen_multiplier",                &m_properties[static_cast<uint32_t>(MaterialProperty::Sheen)]);
+        //xml->GetAttribute("Material", "sheen_tint_multiplier",           &m_properties[static_cast<uint32_t>(MaterialProperty::SheenTint)]);
+        //xml->GetAttribute("Material", "uv_tiling_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingX)]);
+        //xml->GetAttribute("Material", "uv_tiling_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingY)]);
+        //xml->GetAttribute("Material", "uv_offset_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetX)]);
+        //xml->GetAttribute("Material", "uv_offset_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetY)]);
+        //xml->GetAttribute("Material", "can_be_edited",                   &m_properties[static_cast<uint32_t>(MaterialProperty::CanBeEdited)]);
 
-        const uint32_t texture_count = xml->GetAttributeAs<uint32_t>("textures", "count");
-        for (uint32_t i = 0; i < texture_count; i++)
-        {
-            auto node_name                 = "texture_" + to_string(i);
-            const MaterialTexture tex_type = static_cast<MaterialTexture>(xml->GetAttributeAs<uint32_t>(node_name, "texture_type"));
-            auto tex_name                  = xml->GetAttributeAs<string>(node_name, "texture_name");
-            auto tex_path                  = xml->GetAttributeAs<string>(node_name, "texture_path");
+        //const uint32_t texture_count = xml->GetAttributeAs<uint32_t>("textures", "count");
+        //for (uint32_t i = 0; i < texture_count; i++)
+        //{
+        //    auto node_name                 = "texture_" + to_string(i);
+        //    const MaterialTexture tex_type = static_cast<MaterialTexture>(xml->GetAttributeAs<uint32_t>(node_name, "texture_type"));
+        //    auto tex_name                  = xml->GetAttributeAs<string>(node_name, "texture_name");
+        //    auto tex_path                  = xml->GetAttributeAs<string>(node_name, "texture_path");
 
-            // If the texture happens to be loaded, get a reference to it
-            auto texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
-            // If there is not texture (it's not loaded yet), load it
-            if (!texture)
-            {
-                texture = ResourceCache::Load<RHI_Texture2D>(tex_path);
-            }
+        //    // If the texture happens to be loaded, get a reference to it
+        //    auto texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
+        //    // If there is not texture (it's not loaded yet), load it
+        //    if (!texture)
+        //    {
+        //        texture = ResourceCache::Load<RHI_Texture2D>(tex_path);
+        //    }
 
-            SetTexture(tex_type, texture);
-        }
+        //    SetTexture(tex_type, texture);
+        //}
 
-        m_object_size_cpu = sizeof(*this);
+        //m_object_size_cpu = sizeof(*this);
 
         return true;
     }
@@ -87,7 +88,8 @@ namespace LitchiRuntime
     {
         SetResourceFilePath(file_path);
 
-        auto xml = make_unique<XmlDocument>();
+        // todo:
+       /* auto xml = make_unique<XmlDocument>();
         xml->AddNode("Material");
         xml->AddAttribute("Material", "color_r",                         GetProperty(MaterialProperty::ColorR));
         xml->AddAttribute("Material", "color_g",                         GetProperty(MaterialProperty::ColorG));
@@ -121,7 +123,8 @@ namespace LitchiRuntime
             xml->AddAttribute(tex_node, "texture_path", texture ? texture->GetResourceFilePathNative() : "");
         }
 
-        return xml->Save(GetResourceFilePathNative());
+        return xml->Save(GetResourceFilePathNative());*/
+        return  false;
     }
 
     void Material::SetTexture(const MaterialTexture texture_type, RHI_Texture* texture)
@@ -237,7 +240,8 @@ namespace LitchiRuntime
             float current_alpha = m_properties[static_cast<uint32_t>(property_type)];
             if ((current_alpha != 1.0f && value == 1.0f) || (current_alpha == 1.0f && value != 1.0f))
             {
-                World::Resolve();
+                // todo:
+                // World::Resolve();
             }
 
             // Transparent objects are typically see-through (low roughness) so use the alpha as the roughness multiplier.

@@ -200,11 +200,11 @@ namespace LitchiRuntime
             }*/
 
             // 用win32构建 todo: 如果跨平台需要修改
-            VkWin32SurfaceCreateInfoKHR createInfo = {};
+         /*   VkWin32SurfaceCreateInfoKHR createInfo = {};
             createInfo.sType = VK_STRUCTURE_TYPE_WIN32_KEYED_MUTEX_ACQUIRE_RELEASE_INFO_KHR;
             createInfo.hwnd = glfwGetWin32Window(static_cast<GLFWwindow*>(m_glfw_window));
-            createInfo.hinstance = GetModuleHandle(nullptr);
-            if (vkCreateWin32SurfaceKHR(RHI_Context::instance, &createInfo, nullptr, &surface) != VK_SUCCESS)
+            createInfo.hinstance = GetModuleHandle(nullptr);*/
+            if (glfwCreateWindowSurface(RHI_Context::instance, static_cast<GLFWwindow*>(m_glfw_window), nullptr, &surface) != VK_SUCCESS)
             {
                 DEBUG_LOG_ERROR("glfwCreateWindowSurface failed!");
             }

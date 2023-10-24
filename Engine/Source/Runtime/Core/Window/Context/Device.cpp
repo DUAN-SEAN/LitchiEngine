@@ -4,8 +4,6 @@
 
 #include "Device.h"
 
-#include <glad/glad.h>
-
 #include "EDeviceError.h"
 
 LitchiRuntime::Event<LitchiRuntime::EDeviceError, std::string> LitchiRuntime::Device::ErrorEvent;

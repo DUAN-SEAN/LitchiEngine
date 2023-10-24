@@ -6,6 +6,7 @@
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
+#include "Runtime/Core/Window/Window.h"
 
 namespace LitchiRuntime
 {

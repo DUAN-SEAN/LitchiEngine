@@ -307,13 +307,14 @@ void LitchiRuntime::Resource::Material::PostResourceLoaded()
 			uniformData->second = std::make_any<glm::vec4>(uniformInfoVector4->vector);
 			break;
 		}
-		case UniformInfoType::Path:
+			// todo:
+		/*case UniformInfoType::Path:
 		{
 			auto uniformInfoPath = static_cast<UniformInfoPath*>(uniformInfo);
 			auto texture = ApplicationBase::Instance()->textureManager->GetResource(uniformInfoPath->path);
 			uniformData->second = std::make_any<Texture*>(texture);
 			break;
-		}
+		}*/
 		default:
 			DEBUG_LOG_ERROR("Material::PostResourceLoaded UniformInfoType Not Availiable Type:{}", uniformInfo->GetUniformType());
 			break;

@@ -12,7 +12,7 @@
 // 所以在 glfw3.h之前必须引用  Windows.h。
 #include <Windows.h>
 #endif
-#define GLFW_INCLUDE_NONE
+#define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
 #include "gtx/euler_angles.hpp"
 #include "Runtime/Core/Log/debug.h"

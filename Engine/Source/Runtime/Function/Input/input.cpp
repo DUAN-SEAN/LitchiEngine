@@ -4,8 +4,8 @@
 #include "KeyCode.h"
 #include "Runtime/Core/Log/debug.h"
 #include "GLFW/glfw3.h"
-#include "Runtime/Core/App/ApplicationBase.h"
-#include "Runtime/Core/Window/Window.h"
+//#include "Runtime/Core/App/ApplicationBase.h"
+//#include "Runtime/Core/Window/Window.h"
 
 namespace LitchiRuntime
 {
@@ -132,10 +132,11 @@ namespace LitchiRuntime
 
 	const Vector2 Input::GetMousePositionRelativeToWindow()
 	{
-		GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
 		int window_x, window_y;
 
-		glfwGetWindowPos(window, &window_x, &window_y);
+		// GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
+		
+		// glfwGetWindowPos(window, &window_x, &window_y);
 		return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
 	}
 
