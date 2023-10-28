@@ -9,9 +9,7 @@
 #include "Runtime/Core/Tools/Utils/PathParser.h"
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
-#include "Runtime/Function/Framework/Component/Light/PointLight.h"
-#include "Runtime/Function/Framework/Component/Light/SpotLight.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
@@ -84,9 +82,7 @@ LitchiEditor::Inspector::Inspector
 			case 2: GetTargetActor()->AddComponent<Camera>();				break;
 			case 3: GetTargetActor()->AddComponent<Collider>();				break;
 			case 4: GetTargetActor()->AddComponent<RigidActor>();				break;
-			case 5: GetTargetActor()->AddComponent<DirectionalLight>();				break;
-			case 6: GetTargetActor()->AddComponent<PointLight>();				break;
-			case 7: GetTargetActor()->AddComponent<SpotLight>();				break;
+			case 5: GetTargetActor()->AddComponent<Light>();				break;
 			case 8: GetTargetActor()->AddComponent<Animator>();				break;
 			case 9: GetTargetActor()->AddComponent<UIText>();				break;
 			case 10: GetTargetActor()->AddComponent<UIImage>();				break;
@@ -112,9 +108,7 @@ LitchiEditor::Inspector::Inspector
 			case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
 			case 3: defineButtonsStates(GetTargetActor()->GetComponent<Collider>());		return;
 			case 4: defineButtonsStates(GetTargetActor()->GetComponent<RigidActor>());		return;
-			case 5: defineButtonsStates(GetTargetActor()->GetComponent<DirectionalLight>());		return;
-			case 6: defineButtonsStates(GetTargetActor()->GetComponent<PointLight>());		return;
-			case 7: defineButtonsStates(GetTargetActor()->GetComponent<SpotLight>());		return;
+			case 5: defineButtonsStates(GetTargetActor()->GetComponent<Light>());		return;
 			case 8: defineButtonsStates(GetTargetActor()->GetComponent<Animator>());		return;
 			case 9: defineButtonsStates(GetTargetActor()->GetComponent<UIText>());		return;
 			case 10: defineButtonsStates(GetTargetActor()->GetComponent<UIImage>());		return;

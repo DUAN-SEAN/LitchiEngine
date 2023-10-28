@@ -23,8 +23,8 @@ LitchiEditor::AView::AView
 	// 初始化Cameraf
 	m_camera = new RenderCamera();
 
-	// 绑定fbo到ImGui的image
-	m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), glm::vec2{ 0.f, 0.f });
+	// 绑定fbo到ImGui的image todo:
+	// m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), glm::vec2{ 0.f, 0.f });
 
 	scrollable = false;
 }
@@ -38,7 +38,7 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 
 	m_image->size = glm::vec2(static_cast<float>(winWidth), static_cast<float>(winHeight));
 
-	m_fbo.Resize(winWidth, winHeight);
+	// m_fbo.Resize(winWidth, winHeight);
 }
 
 void LitchiEditor::AView::_Draw_Impl()
@@ -61,7 +61,8 @@ void LitchiEditor::AView::Render()
 
 	auto [winWidth, winHeight] = GetSafeSize();
 
-	ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix()*m_camera->GetViewMatrix());
+	// todo
+	// ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix()*m_camera->GetViewMatrix());
 
 	glViewport(0, 0, winWidth, winHeight);
 

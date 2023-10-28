@@ -482,7 +482,8 @@ void LitchiEditor::EditorActions::NextFrame()
 LitchiRuntime::Vector3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 {
 	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
-	return sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3(0,0,-1) * p_distanceToCamera;
+	auto pointGlm = sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3(0, 0, -1) * p_distanceToCamera;
+	return Vector3(pointGlm.x, pointGlm.y, pointGlm.z);
 }
 
 LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name)
@@ -801,11 +802,12 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Model, path)) = p_newName;
 		}
 
-		if (LitchiRuntime::ServiceLocator::Get<TextureManager>().MoveResource(p_previousName, p_newName))
+		// todo:
+		/*if (LitchiRuntime::ServiceLocator::Get<TextureManager>().MoveResource(p_previousName, p_newName))
 		{
 			LitchiRuntime::Texture* resource = LitchiRuntime::ServiceLocator::Get<TextureManager>()[p_newName];
 			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Texture, path)) = p_newName;
-		}
+		}*/
 
 		if (LitchiRuntime::ServiceLocator::Get<ShaderManager>().MoveResource(p_previousName, p_newName))
 		{

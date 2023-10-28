@@ -62,7 +62,7 @@ namespace LitchiEditor
 	private:
 		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
 	private:
-		Framebuffer m_actorPickingFramebuffer;
+		/*Framebuffer m_actorPickingFramebuffer;*/
 		GizmoBehaviour m_gizmoOperations;
 		EGizmoOperation m_currentOperation = EGizmoOperation::TRANSLATE;
 

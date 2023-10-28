@@ -14,7 +14,6 @@
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Core/App/ApplicationBase.h"
-#include "Runtime/Function/Renderer/Driver.h"
 #include "Runtime/Function/Renderer/Core/Renderer.h"
 #include "Runtime/Function/Renderer/Core/ShapeDrawer.h"
 #include "Runtime/Resource/MaterialManager.h"
@@ -54,8 +53,8 @@ namespace LitchiEditor
 		GameObject* GetSelectGameObject() { return m_selectGO; }
 
 		std::unique_ptr<Device>				device;
-		std::unique_ptr<Driver>				driver;
-		std::unique_ptr<ShapeDrawer>			shapeDrawer;
+	/*	std::unique_ptr<Driver>				driver;
+		std::unique_ptr<ShapeDrawer>			shapeDrawer;*/
 		std::unique_ptr<Window>				window;
 		std::unique_ptr<InputManager>		inputManager;
 		std::unique_ptr<UIManager>		uiManager;
@@ -67,7 +66,7 @@ namespace LitchiEditor
 
 		Resource::Shader* m_shadowMapShader;
 		Resource::Shader* m_shadowMapShader4Skinned;
-		std::unique_ptr<EditorRenderer> editorRenderer;
+		//std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;
 		std::string projectPath;

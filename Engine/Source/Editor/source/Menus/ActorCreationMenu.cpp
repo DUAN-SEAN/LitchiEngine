@@ -5,8 +5,8 @@
 
 #include "Editor/include/Core/EditorActions.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Light/DirectionalLight.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
+#include "Runtime/Function/Framework/Component/Light/Light.h"
 
 std::function<void()> Combine(std::function<void()> p_a, std::optional<std::function<void()>> p_b)
 {
@@ -57,7 +57,7 @@ void LitchiEditor::ActorCreationMenu::GenerateActorCreationMenu(LitchiRuntime::M
     physicals.CreateWidget<LitchiRuntime::MenuList>("Physical Sphere").ClickedEvent    += ActorWithComponentCreationHandler<CPhysicalSphere>(p_parent, p_onItemClicked);
     physicals.CreateWidget<LitchiRuntime::MenuList>("Physical Capsule").ClickedEvent   += ActorWithComponentCreationHandler<CPhysicalCapsule>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Point").ClickedEvent                 += ActorWithComponentCreationHandler<CPointLight>(p_parent, p_onItemClicked);*/
-    lights.CreateWidget<LitchiRuntime::MenuList>("Directional").ClickedEvent           += ActorWithComponentCreationHandler<LitchiRuntime::DirectionalLight>(p_parent, p_onItemClicked);
+    lights.CreateWidget<LitchiRuntime::MenuList>("Light").ClickedEvent           += ActorWithComponentCreationHandler<LitchiRuntime::Light>(p_parent, p_onItemClicked);
   /*  lights.CreateWidget<LitchiRuntime::MenuList>("Spot").ClickedEvent                  += ActorWithComponentCreationHandler<CSpotLight>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Ambient Box").ClickedEvent           += ActorWithComponentCreationHandler<CAmbientBoxLight>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Ambient Sphere").ClickedEvent        += ActorWithComponentCreationHandler<CAmbientSphereLight>(p_parent, p_onItemClicked);

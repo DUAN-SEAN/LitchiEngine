@@ -115,14 +115,14 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 	{
 		UpdateMouseState();
 
-		ImGui::GetIO().DisableMouseUpdate = m_rightMousePressed || m_middleMousePressed;
+		//ImGui::GetIO().DisableMouseUpdate = m_rightMousePressed || m_middleMousePressed;
 
 		if (!ImGui::IsAnyItemActive() && m_enableFocusInputs)
 		{
 			if (selectGO != nullptr)
 			{
 				
-				auto targetPos = selectGO->GetComponent<Transform>()->GetWorldPosition();
+				auto targetPos = selectGO->GetComponent<Transform>()->GetPosition();
 
 				float dist = GetActorFocusDist(selectGO);
 
@@ -133,8 +133,9 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 				auto focusObjectFromAngle = [this, &targetPos, &dist]( const glm::vec3& offset)
 				{
-					auto camPos = targetPos + offset * dist;
-					auto direction = glm::normalize(targetPos - camPos);
+					auto targetPosGlm = glm::vec3(targetPos.x, targetPos.y, targetPos.z);
+					auto camPos = targetPosGlm + offset * dist;
+					auto direction = glm::normalize(targetPosGlm - camPos);
 					m_cameraRotation = LitchiRuntime::Math::LookAt(direction, abs(direction.y) == 1.0f ? LitchiRuntime::Math::Right : LitchiRuntime::Math::Up);
 					m_cameraDestinations.push({ camPos, m_cameraRotation });
 				};
@@ -233,8 +234,10 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
 {
-	auto goWorldPos = p_target->GetComponent<Transform>()->GetTransform().GetWorldPosition();
-	m_cameraDestinations.push({ goWorldPos - m_cameraRotation * LitchiRuntime::Math::Forward * GetActorFocusDist(p_target), m_cameraRotation });
+	auto goWorldPos = p_target->GetComponent<Transform>()->GetPosition();
+
+	auto targetPosGlm = glm::vec3(goWorldPos.x, goWorldPos.y, goWorldPos.z);
+	m_cameraDestinations.push({ targetPosGlm - m_cameraRotation * LitchiRuntime::Math::Forward * GetActorFocusDist(p_target), m_cameraRotation });
 }
 
 void LitchiEditor::CameraController::SetSpeed(float p_speed)

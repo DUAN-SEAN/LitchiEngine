@@ -76,7 +76,8 @@ public:
 
 	void SetPath(const std::string& p_path)
 	{
-		texture = LitchiEditor::ApplicationEditor::Instance()->textureManager->GetResource(p_path);
+		// todo:
+		// texture = LitchiEditor::ApplicationEditor::Instance()->textureManager->GetResource(p_path);
 	}
 
 	virtual void Execute() override
@@ -825,30 +826,30 @@ public:
 	}
 };
 
-class TextureContextualMenu : public PreviewableContextualMenu<Texture, TextureManager>
-{
-public:
-	TextureContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-
-	virtual void CreateList() override
-	{
-		auto& reloadAction = CreateWidget<MenuItem>("Reload");
-
-		reloadAction.ClickedEvent += [this]
-		{
-			auto& textureManager = OVSERVICE(TextureManager);
-			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-			if (textureManager.IsResourceRegistered(resourcePath))
-			{
-				///* Trying to recompile */
-				//textureManager.AResourceManager::ReloadResource(resourcePath);
-				//EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
-			}
-		};
-
-		PreviewableContextualMenu::CreateList();
-	}
-};
+//class TextureContextualMenu : public PreviewableContextualMenu<Texture, TextureManager>
+//{
+//public:
+//	TextureContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+//
+//	virtual void CreateList() override
+//	{
+//		auto& reloadAction = CreateWidget<MenuItem>("Reload");
+//
+//		reloadAction.ClickedEvent += [this]
+//		{
+//			auto& textureManager = OVSERVICE(TextureManager);
+//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//			if (textureManager.IsResourceRegistered(resourcePath))
+//			{
+//				///* Trying to recompile */
+//				//textureManager.AResourceManager::ReloadResource(resourcePath);
+//				//EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
+//			}
+//		};
+//
+//		PreviewableContextualMenu::CreateList();
+//	}
+//};
 
 class SceneContextualMenu : public FileContextualMenu
 {
@@ -1179,7 +1180,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 		switch (fileType)
 		{
 		case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
-		case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break;
+		// case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
 		case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
 		case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
 		case PathParser::EFileType::SCENE:		contextMenu = &clickableText.AddPlugin<SceneContextualMenu>(path, protectedItem);		break;

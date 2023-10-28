@@ -27,9 +27,6 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
-#include <Runtime/Function/Renderer/window_system.h>
-#include <Runtime/Function/Renderer/Interface/vulkan/vulkan_rhi.h>
-
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data
 {
@@ -50,10 +47,8 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 	projectAssetsPath = editorAssetsPath;
 
 	ModelManager::ProvideAssetPaths(projectAssetsPath);
-	TextureManager::ProvideAssetPaths(projectAssetsPath);
 	ShaderManager::ProvideAssetPaths(projectAssetsPath);
 	MaterialManager::ProvideAssetPaths(projectAssetsPath);
-	FontManager::ProvideAssetPaths(projectAssetsPath);
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -66,7 +61,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(glm::vec3(0.0, y, z));
+	transform->SetPositionLocal((0.0f, y, z));
 	transform->PostResourceLoaded();
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
@@ -87,7 +82,7 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(glm::vec3(0.0, y, z));
+	transform->SetPositionLocal({ 0.0, y, z });
 	transform->PostResourceLoaded();
 
 	auto animator = go->AddComponent<Animator>();
@@ -101,13 +96,13 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 	mesh_renderer->PostResourceLoaded();
 	go->SetLayer(0x01);
 
-	// 初始化animator
-	auto* model = mesh_filter->GetModel();
+	// 初始化animator todo:
+	/*auto* model = mesh_filter->GetModel();
 	std::unordered_map<std::string, AnimationClip> animations;
 	model->GetAnimations(animations);
 	auto firstClipName = animations.begin()->first;
 	animator->SetAnimationClipMap(animations);
-	animator->Play(firstClipName);
+	animator->Play(firstClipName);*/
 
 	return go;
 }
@@ -118,9 +113,9 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(position);
-	transform->SetLocalRotation(rotation);
-	transform->SetLocalScale(scale);
+	transform->SetPositionLocal(Vector3(position.x, position.y, position.z));
+	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	transform->SetScaleLocal(Vector3(scale.x, scale.y, scale.z));
 	transform->PostResourceLoaded();
 
 	auto mesh_filter = go->AddComponent<MeshFilter>();
@@ -141,13 +136,13 @@ GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(pos);
-	transform->SetLocalRotation(rotation);
+	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
+	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
 	transform->PostResourceLoaded();
 
-	auto directionalLight = go->AddComponent<DirectionalLight>();
-	directionalLight->SetColor(glm::vec3(0.3, 0.6, 0.7));
-	directionalLight->SetIntensity(3.0f);
+	auto directionalLight = go->AddComponent<Light>();
+	directionalLight->SetColor((0.3, 0.6, 0.7));
+	directionalLight->SetIntensity(LightIntensity::bulb_100_watt);
 
 	return go;
 }
@@ -158,9 +153,9 @@ GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, g
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(pos);
-	transform->SetLocalRotation(rotation);
-	transform->SetLocalScale(glm::vec3(1));
+	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
+	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	transform->SetScaleLocal(Vector3(1));
 	transform->PostResourceLoaded();
 
 	/*auto mesh_filter = go->AddComponent<MeshFilter>();
@@ -184,9 +179,9 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	go->PostResourceLoaded();
 
 	auto transform = go->AddComponent<Transform>();
-	transform->SetLocalPosition(pos);
-	transform->SetLocalRotation(rotation);
-	transform->SetLocalScale(glm::vec3(1));
+	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
+	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
+	transform->SetScaleLocal(Vector3(1));
 	transform->PostResourceLoaded();
 
 	/*auto mesh_filter = go->AddComponent<MeshFilter>();
@@ -223,15 +218,6 @@ void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
 
-	std::shared_ptr<WindowSystem> windowSystem = std::make_shared<WindowSystem>();
-	WindowCreateInfo window_create_info;
-	windowSystem->initialize(window_create_info);
-
-	std::shared_ptr<VulkanRHI> vulkanRHI = std::make_shared<VulkanRHI>();
-	RHIInitInfo initInfo;
-	initInfo.window_system = windowSystem;
-	vulkanRHI->initialize(initInfo);
-
 	DeviceSettings deviceSettings;
 	deviceSettings.contextMajorVersion = 4;
 	deviceSettings.contextMinorVersion = 6;
@@ -257,15 +243,10 @@ void LitchiEditor::ApplicationEditor::Init()
 		window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
 		window->MakeCurrentContext();
 	}
-
-	driver = std::make_unique<Driver>(true);
-
+	
 	ApplicationBase::Init();
 
 	editorResources = std::make_unique<EditorResources>(editorAssetsPath);
-	renderer = std::make_unique<Renderer>(*driver);
-	renderer->SetCapability(ERenderingCapability::MULTISAMPLE, true);
-	shapeDrawer = std::make_unique<ShapeDrawer>(*renderer);
 
 	// 初始化InputManager
 	inputManager = std::make_unique<InputManager>(*window);
@@ -288,20 +269,12 @@ void LitchiEditor::ApplicationEditor::Init()
 	// 初始化ResourceManager
 	modelManager = std::make_unique<ModelManager>();
 	materialManager = std::make_unique<MaterialManager>();
-	textureManager = std::make_unique<TextureManager>();
 	shaderManager = std::make_unique<ShaderManager>();
-	fontManager = std::make_unique<FontManager>();
 
 
 	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
 	LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
-	LitchiRuntime::ServiceLocator::Provide<TextureManager>(*textureManager);
 	LitchiRuntime::ServiceLocator::Provide<ShaderManager>(*shaderManager);
-	LitchiRuntime::ServiceLocator::Provide<FontManager>(*fontManager);
-
-	// EditorResource
-
-	editorRenderer = std::make_unique<EditorRenderer>();
 
 	// UBO
 	engineUBO = std::make_unique<UniformBuffer>
@@ -324,56 +297,8 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	std::vector<glm::mat4> simulatedLights;
 
-	FTransform simulatedLightTransform;
-	simulatedLightTransform.SetLocalRotation(glm::quat(glm::degrees(glm::vec3{ -45.f, 180.f, 10.f })));
-
-	Light simulatedDirectionalLight(Light::Type::DIRECTIONAL);
-	simulatedDirectionalLight.color = { 1.f, 1.f, 1.f };
-	simulatedDirectionalLight.intensity = 1.f;
-
-	Light simulatedAmbientLight(Light::Type::AMBIENT_SPHERE);
-	simulatedAmbientLight.color = { 0.07f, 0.07f, 0.07f };
-	simulatedAmbientLight.intensity = 1.f;
-	simulatedAmbientLight.constant = 1000.0f;
-
-	simulatedLights.push_back(simulatedDirectionalLight.GenerateMatrix(simulatedLightTransform));
-	simulatedLights.push_back(simulatedAmbientLight.GenerateMatrix(simulatedLightTransform));
-
-	simulatedLightSSBO->SendBlocks<glm::mat4>(simulatedLights.data(), simulatedLights.size() * sizeof(glm::mat4));
-	// 
-
 	// Setup UI
 	SetupUI();
-
-	auto* font = fontManager->GetResource("Engine\\Fonts\\Ruda-Bold.ttf");
-	auto charVec = font->LoadStr("Hello World");
-
-	// 初始化默认场景
-	sceneManager = new SceneManager(projectAssetsPath);
-
-	auto scene = sceneManager->CreateScene("Default Scene");
-	{
-		GameObject* go = CreateDefaultObject(scene, "liubei", "Engine\\Models\\Cube.fbx", "Engine\\Materials\\Default.mat", glm::vec3(0.0f, -1.0f, 0.f), glm::quat(1, 0, 0, 0), glm::vec3(100, 1, 100));
-		GameObject* go2 = CreateDefaultObject4Skinned(scene, "diaochan", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx", "Engine\\Materials\\Default4Skinned.mat", 1, -3);
-		GameObject* go3 = CreateDefaultObject(scene, "xiaoqiao", "Engine\\Models\\Sphere.fbx", "Engine\\Materials\\DefaultUnlit.mat", 3.f, 1.5f);
-		GameObject* go4 = CreateLightObject(scene, "DirectionalLight", glm::vec3(0, 10, 0), glm::angleAxis(-160.0f, glm::vec3(1, 0, 0)));
-		// GameObject* go5 = CreateDefaultObject(scene, "plane", "../Engine/Models/Plane.fbx", "../material/Default.mat",glm::vec3(0.0f),glm::quat(1,0,0,0),glm::vec3(5,0,5));
-
-
-		// 创建UI物体, UILayer = 2;
-		Texture* image5 = this->textureManager->LoadResource("Engine\\Textures\\liuyifei.png");
-		GameObject* go5 = CreateUIImageObject(scene, "UIImage01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), image5);
-		GameObject* go6 = CreateUITextObject(scene, "UIText01", glm::vec3(0, 0, 0), glm::quat(1, 0, 0, 0), font);
-		GameObject* go7 = CreateScriptObject(scene, "UIText01", "LitchiEngine.TestScriptComponent");
-
-		auto hierachy = m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy");
-		m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
-	}
-	sceneManager->SetCurrentScene(scene);
-
-	// 创建光照贴图shader
-	m_shadowMapShader = shaderManager->LoadResource("Engine\\Shaders\\DepthShader.glsl");
-	m_shadowMapShader4Skinned = shaderManager->LoadResource("Engine\\Shaders\\DepthShader4Skinned.glsl");
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -451,9 +376,9 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
 	auto name = p_target->GetName();
 	auto transform = p_target->GetComponent<Transform>();
-	auto position = transform->GetWorldPosition();
-	auto rotation = transform->GetWorldRotation();
-	auto rotationEuler = glm::eulerAngles(rotation);
+	auto position = transform->GetPosition();
+	auto rotation = transform->GetRotation();
+	auto rotationEuler = rotation.ToEulerAngles();
 	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 
 	// todo Inspector 选择

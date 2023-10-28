@@ -34,10 +34,10 @@ LitchiEditor::AssetView::AssetView
 			if (auto resource =ServiceLocator::Get<ModelManager>().GetResource(path); resource)
 				m_resource = resource;
 			break;
-		case PathParser::EFileType::TEXTURE:
+		/*case PathParser::EFileType::TEXTURE:
 			if (auto resource =ServiceLocator::Get<TextureManager>().GetResource(path); resource)
 				m_resource = resource;
-			break;
+			break;*/ // todo:
 
 		case PathParser::EFileType::MATERIAL:
 			if (auto resource =ServiceLocator::Get<MaterialManager>().GetResource(path); resource)
@@ -51,32 +51,33 @@ void LitchiEditor::AssetView::_Render_Impl()
 {
 	PrepareCamera();
 
+	// todo:
 
-	auto& baseRenderer = *LitchiEditor::ApplicationEditor::Instance()->renderer;
+	//auto& baseRenderer = *LitchiEditor::ApplicationEditor::Instance()->renderer;
 
-	m_fbo.Bind();
+	//m_fbo.Bind();
 
-	baseRenderer.SetStencilMask(0xFF);
-	baseRenderer.Clear(m_camera);
-	baseRenderer.SetStencilMask(0x00);
+	//baseRenderer.SetStencilMask(0xFF);
+	//baseRenderer.Clear(m_camera);
+	//baseRenderer.SetStencilMask(0x00);
 
-	uint8_t glState = baseRenderer.FetchGLState();
-	baseRenderer.ApplyStateMask(glState);
+	//uint8_t glState = baseRenderer.FetchGLState();
+	//baseRenderer.ApplyStateMask(glState);
 
-	ApplicationEditor::Instance()->editorRenderer->RenderGrid(m_cameraPosition, m_gridColor);
+	//ApplicationEditor::Instance()->editorRenderer->RenderGrid(m_cameraPosition, m_gridColor);
 
-	if (auto pval = std::get_if<Model*>(&m_resource); pval && *pval)
-		ApplicationEditor::Instance()->editorRenderer->RenderModelAsset(**pval);
-	
-	if (auto pval = std::get_if<Texture*>(&m_resource); pval && *pval)
-		ApplicationEditor::Instance()->editorRenderer->RenderTextureAsset(**pval);
-	
-	if (auto pval = std::get_if<Resource::Material*>(&m_resource); pval && *pval)
-		ApplicationEditor::Instance()->editorRenderer->RenderMaterialAsset(**pval);
+	//if (auto pval = std::get_if<Model*>(&m_resource); pval && *pval)
+	//	ApplicationEditor::Instance()->editorRenderer->RenderModelAsset(**pval);
+	//
+	//if (auto pval = std::get_if<Texture*>(&m_resource); pval && *pval)
+	//	ApplicationEditor::Instance()->editorRenderer->RenderTextureAsset(**pval);
+	//
+	//if (auto pval = std::get_if<Resource::Material*>(&m_resource); pval && *pval)
+	//	ApplicationEditor::Instance()->editorRenderer->RenderMaterialAsset(**pval);
 
-	baseRenderer.ApplyStateMask(glState);
+	//baseRenderer.ApplyStateMask(glState);
 
-	m_fbo.Unbind();
+	//m_fbo.Unbind();
 }
 
 void LitchiEditor::AssetView::SetResource(ViewableResource p_resource)

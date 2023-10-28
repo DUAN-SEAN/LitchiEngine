@@ -27,7 +27,9 @@ void LitchiEditor::GizmoBehaviour::StartPicking(LitchiRuntime::GameObject* p_tar
 	m_originalTransform = m_target->GetComponent<LitchiRuntime::Transform>();
 	//m_originalTransform = p_target.transform.GetFTransform();
 
-	m_distanceToActor = glm::distance(p_cameraPosition, m_originalTransform->GetWorldPosition());
+	auto originalPos  = m_originalTransform->GetPosition();
+	auto originalPosGlm = glm::vec3(originalPos.x, originalPos.y, originalPos.z);
+	m_distanceToActor = glm::distance(p_cameraPosition, originalPosGlm);
 	//m_distanceToActor = glm::distance(p_cameraPosition, m_target->transform.GetWorldPosition());
 	m_currentOperation = p_operation;
 	m_direction = p_direction;
