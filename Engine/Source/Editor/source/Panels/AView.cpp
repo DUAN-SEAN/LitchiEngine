@@ -4,7 +4,6 @@
 
 #include <glad/glad.h>
 
-#include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Core/EditorRenderer.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
@@ -24,7 +23,7 @@ LitchiEditor::AView::AView
 	m_camera = new RenderCamera();
 
 	// 绑定fbo到ImGui的image todo:
-	// m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), glm::vec2{ 0.f, 0.f });
+	// m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), Vector2{ 0.f, 0.f });
 
 	scrollable = false;
 }
@@ -36,7 +35,7 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 	// 更新fbo的大小
 	auto [winWidth, winHeight] = GetSafeSize();
 
-	m_image->size = glm::vec2(static_cast<float>(winWidth), static_cast<float>(winHeight));
+	m_image->size = Vector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
 
 	// m_fbo.Resize(winWidth, winHeight);
 }
@@ -69,22 +68,22 @@ void LitchiEditor::AView::Render()
 	_Render_Impl();
 }
 
-void LitchiEditor::AView::SetCameraPosition(const glm::vec3& p_position)
+void LitchiEditor::AView::SetCameraPosition(const Vector3& p_position)
 {
 	m_cameraPosition = p_position;
 }
 
-void LitchiEditor::AView::SetCameraRotation(const glm::quat& p_rotation)
+void LitchiEditor::AView::SetCameraRotation(const Quaternion& p_rotation)
 {
 	m_cameraRotation = p_rotation;
 }
 
-const glm::vec3& LitchiEditor::AView::GetCameraPosition() const
+const Vector3& LitchiEditor::AView::GetCameraPosition() const
 {
 	return m_cameraPosition;
 }
 
-const glm::quat& LitchiEditor::AView::GetCameraRotation() const
+const Quaternion& LitchiEditor::AView::GetCameraRotation() const
 {
 	return m_cameraRotation;
 }
@@ -96,33 +95,33 @@ LitchiRuntime::RenderCamera* LitchiEditor::AView::GetCamera()
 
 std::pair<uint16_t, uint16_t> LitchiEditor::AView::GetSafeSize() const
 {
-	auto result = GetSize() - glm::vec2{ 0.f, 25.f }; // 25 == title bar height
+	auto result = GetSize() - Vector2{ 0.f, 25.f }; // 25 == title bar height
 	return { static_cast<uint16_t>(result.x), static_cast<uint16_t>(result.y) };
 }
 
-const glm::vec3& LitchiEditor::AView::GetGridColor() const
+const Vector3& LitchiEditor::AView::GetGridColor() const
 {
 	return m_gridColor;
 }
 
-void LitchiEditor::AView::SetGridColor(const glm::vec3& p_color)
+void LitchiEditor::AView::SetGridColor(const Vector3& p_color)
 {
 	m_gridColor = p_color;
 }
 
 void LitchiEditor::AView::FillEngineUBO()
 {
-	auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
-	size_t offset = sizeof(glm::mat4); // We skip the model matrix (Which is a special case, modified every draw calls)
-	engineUBO.SetSubData(m_camera->GetViewMatrix(), std::ref(offset));
-	engineUBO.SetSubData(m_camera->GetProjectionMatrix(), std::ref(offset));
-	engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
+	//auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
+	//size_t offset = sizeof(Matrix); // We skip the model matrix (Which is a special case, modified every draw calls)
+	//engineUBO.SetSubData(m_camera->GetViewMatrix(), std::ref(offset));
+	//engineUBO.SetSubData(m_camera->GetProjectionMatrix(), std::ref(offset));
+	//engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
 }
 
 void LitchiEditor::AView::PrepareCamera()
 {
 	auto [winWidth, winHeight] = GetSafeSize();
 	
-	// m_cameraPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+	// m_cameraPosition = Vector3(0.0f, 0.0f, 0.0f);
 	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
 }

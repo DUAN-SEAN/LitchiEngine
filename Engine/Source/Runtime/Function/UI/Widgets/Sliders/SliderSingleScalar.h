@@ -76,7 +76,7 @@ namespace LitchiRuntime
 		T max;
 		T value;
 		ESliderOrientation orientation;
-		glm::vec2 verticalModeSize; /* Only applied with ESliderOrientation::VERTICAL */
+		Vector2 verticalModeSize; /* Only applied with ESliderOrientation::VERTICAL */
 		std::string label;
 		std::string format;
 		Event<T> ValueChangedEvent;

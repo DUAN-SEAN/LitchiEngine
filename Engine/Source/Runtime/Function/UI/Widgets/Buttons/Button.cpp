@@ -1,12 +1,12 @@
 
 #include "Button.h"
 
-#include "glm.hpp"
+
 #include "Runtime/Function/UI/ImGui/imgui.h"
 #include "Runtime/Function/UI/ImGui/imgui_internal.h"
 #include "Runtime/Function/UI/Internal/Converter.h"
 
-LitchiRuntime::Button::Button(const std::string& p_label, const glm::vec2& p_size, bool p_disabled) :
+LitchiRuntime::Button::Button(const std::string& p_label, const Vector2& p_size, bool p_disabled) :
 	label(p_label), size(p_size), disabled(p_disabled)
 {
 	auto& style = ImGui::GetStyle();

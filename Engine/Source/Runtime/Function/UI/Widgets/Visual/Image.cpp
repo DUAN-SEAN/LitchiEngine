@@ -8,7 +8,7 @@
 
 #include "Runtime/Function/UI/Internal/Converter.h"
 
-LitchiRuntime::Image::Image(uint32_t p_textureID, const glm::vec2& p_size) :
+LitchiRuntime::Image::Image(uint32_t p_textureID, const Vector2& p_size) :
 	textureID{ p_textureID }, size(p_size)
 {
 	

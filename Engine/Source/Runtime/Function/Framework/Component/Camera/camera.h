@@ -4,7 +4,6 @@
 #include <iostream>
 #include <vector>
 #include <functional>
-#include <glm.hpp>
 
 #include "Runtime/Core/Math/Frustum.h"
 #include "Runtime/Core/Math/Matrix.h"

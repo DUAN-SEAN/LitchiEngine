@@ -2,7 +2,6 @@
 #pragma once
 
 #include "AButton.h"
-#include "glm.hpp"
 #include "Runtime/Function/UI/Internal/TextureID.h"
 #include  "Runtime/Function/Renderer/Rendering/Color.h"
 
@@ -19,7 +18,7 @@ namespace LitchiRuntime
 		* @param p_textureID
 		* @param p_size
 		*/
-		ButtonImage(uint32_t p_textureID, const glm::vec2& p_size);
+		ButtonImage(uint32_t p_textureID, const Vector2& p_size);
 
 	protected:
 		void _Draw_Impl() override;
@@ -31,6 +30,6 @@ namespace LitchiRuntime
 		Color tint = { 1, 1, 1, 1 };
 
 		TextureID textureID;
-		glm::vec2 size;
+		Vector2 size;
 	};
 }

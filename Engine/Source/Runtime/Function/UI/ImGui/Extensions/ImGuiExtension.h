@@ -31,7 +31,7 @@
 //        // load the model asynchronously
 //        LitchiRuntime::ThreadPool::AddTask([file_path, mesh_flags]()
 //        {
-//            LitchiRuntime::ResourceCache::Load<LitchiRuntime::Mesh>(file_path, mesh_flags);
+//            LitchiRuntimeCache::Load<LitchiRuntime::Mesh>(file_path, mesh_flags);
 //        });
 //    }
 //

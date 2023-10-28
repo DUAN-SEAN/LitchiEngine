@@ -5,6 +5,7 @@
 #include <sstream>
 #include <string>
 
+#include "Runtime/Core/Log/debug.h"
 #include "runtime/core/meta/serializer/serializer.h"
 
 namespace LitchiRuntime

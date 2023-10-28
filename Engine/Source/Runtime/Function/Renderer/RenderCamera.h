@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include "gtc/quaternion.hpp"
 #include "Runtime/Core/DataStruct/Frustum.h"
 #include "Runtime/Core/Math/Frustum.h"
 
@@ -31,7 +30,7 @@ namespace LitchiRuntime
         /// 设置相机位置 朝向
         /// \param cameraFowrad 相机朝前方向
         /// \param cameraUp 相机朝上方向
-        void SetAndUpdateView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp);
+        void SetAndUpdateView(const Vector3& cameraPos,const Vector3& centerPos, const Vector3& cameraUp);
 
         /// 设置相机视野
         /// \param fovDegrees   相机视野 可视角度
@@ -54,7 +53,7 @@ namespace LitchiRuntime
         /// \param g
         /// \param b
         /// \param a
-        void set_clear_color(float r, float g, float b, float a) { clear_color_ = glm::vec4(r, g, b, a); }
+        void set_clear_color(float r, float g, float b, float a) { clear_color_ = Vector4(r, g, b, a); }
 
         /// 设置刷帧清屏内容种类
         /// \param clear_flag
@@ -76,8 +75,8 @@ namespace LitchiRuntime
         /// 清空渲染目标RenderTexture
         void clear_target_render_texture();
 
-        glm::mat4& view_mat4() { return view_mat4_; }
-        glm::mat4& projection_mat4() { return projection_mat4_; }
+        Matrix& view_mat4() { return view_mat4_; }
+        Matrix& projection_mat4() { return projection_mat4_; }
 
 	public:
 		/**
@@ -87,7 +86,7 @@ namespace LitchiRuntime
 		* @param p_position
 		* @param p_rotation
 		*/
-		void CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const glm::vec3& p_position, const glm::quat& p_rotation);
+		void CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const Vector3& p_position, const Quaternion& p_rotation);
 
 		/**
 		* Calculate and cache the result projection matrix
@@ -101,7 +100,7 @@ namespace LitchiRuntime
 		* @param p_position
 		* @param p_rotation
 		*/
-		void CacheViewMatrix(const glm::vec3& p_position, const glm::quat& p_rotation);
+		void CacheViewMatrix(const Vector3& p_position, const Quaternion& p_rotation);
 
 		/**
 		* Calculate and cache the result frustum.
@@ -109,7 +108,7 @@ namespace LitchiRuntime
 		* @param p_view
 		* @param p_projection
 		*/
-		void CacheFrustum(const glm::mat4& p_view, const glm::mat4& p_projection);
+		void CacheFrustum(const Matrix& p_view, const Matrix& p_projection);
 
 		/**
 		* Returns the fov of the camera
@@ -134,17 +133,17 @@ namespace LitchiRuntime
 		/**
 		* Returns the clear color of the camera
 		*/
-		const glm::vec3& GetClearColor() const;
+		const Vector3& GetClearColor() const;
 
 		/**
 		* Returns the cached projection matrix
 		*/
-		const glm::mat4& GetProjectionMatrix() const;
+		const Matrix& GetProjectionMatrix() const;
 
 		/**
 		* Returns the cached view matrix
 		*/
-		const glm::mat4& GetViewMatrix() const;
+		const Matrix& GetViewMatrix() const;
 
 		/**
 		* Retursn the cached frustum
@@ -194,7 +193,7 @@ namespace LitchiRuntime
 		* Sets the clear color of the camera to the given value
 		* @param p_value
 		*/
-		void SetClearColor(const glm::vec3& p_clearColor);
+		void SetClearColor(const Vector3& p_clearColor);
 
 		/**
 		* Defines if the camera should apply frustum culling to geometry while rendering
@@ -217,14 +216,14 @@ namespace LitchiRuntime
 
 	private:
 
-		glm::mat4 CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const;
-		glm::mat4 CalculateViewMatrix(const glm::vec3 &p_position, const glm::quat& p_rotation) const;
+		Matrix CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const;
+		Matrix CalculateViewMatrix(const Vector3 &p_position, const Quaternion& p_rotation) const;
 	private:
 
 		Frustum m_frustum;
 
-        glm::mat4 view_mat4_;//指定相机坐标和朝向
-        glm::mat4 projection_mat4_;//指定相机范围
+        Matrix view_mat4_;//指定相机坐标和朝向
+        Matrix projection_mat4_;//指定相机范围
 
         ProjectionMode m_projectionMode;
 
@@ -235,7 +234,7 @@ namespace LitchiRuntime
         float farClip_;
 		float m_size;
 
-        glm::vec4 clear_color_;//清屏颜色
+        Vector4 clear_color_;//清屏颜色
         unsigned int clear_flag_;//刷新数据标志
 
         unsigned char depth_;//排序深度

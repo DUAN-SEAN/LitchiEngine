@@ -58,9 +58,8 @@ namespace LitchiRuntime
 
         // std::unique_ptr<Renderer>					renderer;
 
-        std::unique_ptr<UniformBuffer>	engineUBO;
+        //std::unique_ptr<UniformBuffer>	engineUBO;
         std::unique_ptr<ModelManager> modelManager;
-        std::unique_ptr<MaterialManager> materialManager;
         std::unique_ptr<ShaderManager> shaderManager;
         std::unique_ptr<Window> window;
 

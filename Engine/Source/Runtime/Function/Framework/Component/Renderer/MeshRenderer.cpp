@@ -1,17 +1,7 @@
 ﻿
 #include "MeshRenderer.h"
-
-#include <glad/glad.h>
-#include <rttr/registration>
-#include <gtx/transform2.hpp>
-
 #include "MeshFilter.h"
-#include "gtx/quaternion.hpp"
-#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
-#include "Runtime/Function/Framework/Component/Transform/transform.h"
-#include "Runtime/Function/Renderer/RenderCamera.h"
-#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 namespace LitchiRuntime
 {
@@ -23,7 +13,7 @@ namespace LitchiRuntime
 
 	}
 
-	//void MeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+	//void MeshRenderer::Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 	//{
 	//	// 通过MeshFilter获取当前的Mesh
 	//	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
@@ -34,7 +24,7 @@ namespace LitchiRuntime
 
 	//	// 计算模型矩阵
 	//	auto transform = GetGameObject()->GetComponent<Transform>();
-	//	glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
+	//	Matrix modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
 
 	//	auto* extraMesh =meshFilter->GetExtraMesh();
 	//	if(extraMesh != nullptr)
@@ -95,7 +85,7 @@ namespace LitchiRuntime
 
 		//// 计算模型矩阵
 		//auto transform = GetGameObject()->GetComponent<Transform>();
-		//glm::mat4 modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
+		//Matrix modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
 		//
 		//ApplicationBase::Instance()->engineUBO->SetSubData(modelMatrix, 0);
 

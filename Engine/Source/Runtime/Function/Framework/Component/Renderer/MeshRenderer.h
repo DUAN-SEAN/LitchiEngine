@@ -16,7 +16,7 @@ namespace LitchiRuntime
 
 
 		// void RenderOld(RenderCamera* renderCamera);//渲染
-		// virtual void Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
+		// virtual void Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
 
 		virtual void RenderShadowMap();
 	public:

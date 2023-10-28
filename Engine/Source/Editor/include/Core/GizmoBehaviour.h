@@ -1,12 +1,10 @@
 
 #pragma once
-#include "glm.hpp"
+
+#include "Runtime/Core/Math/Vector2.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
-namespace LitchiRuntime
-{
-	class GameObject;
-}
+using namespace LitchiRuntime;
 
 namespace LitchiEditor
 {
@@ -40,7 +38,7 @@ namespace LitchiEditor
 		* @param p_operation
 		* @param p_direction
 		*/
-		void StartPicking(LitchiRuntime::GameObject* p_target, const glm::vec3& p_cameraPosition, EGizmoOperation p_operation, EDirection p_direction);
+		void StartPicking(LitchiRuntime::GameObject* p_target, const LitchiRuntime::Vector3& p_cameraPosition, EGizmoOperation p_operation, EDirection p_direction);
 
 		/**
 		* Stops the gizmo picking behaviour
@@ -53,13 +51,13 @@ namespace LitchiEditor
 		* @param p_projectionMatrix
 		* @param p_viewSize
 		*/
-		void ApplyOperation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize);
+		void ApplyOperation(const LitchiRuntime::Matrix& p_viewMatrix, const LitchiRuntime::Matrix& p_projectionMatrix, const LitchiRuntime::Vector2& p_viewSize);
 
 		/**
 		* Set the given mouse position as the current mouse position and update the previous mouse position
 		* @param p_mousePosition
 		*/
-		void SetCurrentMouse(const glm::vec2& p_mousePosition);
+		void SetCurrentMouse(const LitchiRuntime::Vector2& p_mousePosition);
 
 		/**
 		* Returns true if the gizmo is currently picked
@@ -75,13 +73,13 @@ namespace LitchiEditor
 		/**
 		* Returns the global direction matching with the current m_direction
 		*/
-		glm::vec3 GetFakeDirection() const;
+		Vector3 GetFakeDirection() const;
 
 		/**
 		* Returns the actual direction of the target matching with the current m_direction
 		* @param p_relative (If true, the direction depends on hierarchy)
 		*/
-		glm::vec3 GetRealDirection(bool p_relative = false) const;
+		Vector3 GetRealDirection(bool p_relative = false) const;
 
 		/**
 		* Returns the 3D vector of the arrow projected to the screen
@@ -89,7 +87,7 @@ namespace LitchiEditor
 		* @param p_projectionMatrix
 		* @param p_viewSize
 		*/
-		glm::vec2 GetScreenDirection(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const;
+		Vector2 GetScreenDirection(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const;
 
 		/**
 		* Handle the translation behaviour
@@ -97,7 +95,7 @@ namespace LitchiEditor
 		* @param p_projectionMatrix
 		* @param p_viewSize
 		*/
-		void ApplyTranslation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const;
+		void ApplyTranslation(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const;
 
 		/**
 		* Handle the rotation behaviour
@@ -105,7 +103,7 @@ namespace LitchiEditor
 		* @param p_projectionMatrix
 		* @param p_viewSize
 		*/
-		void ApplyRotation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const;
+		void ApplyRotation(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const;
 
 		/**
 		* Handle the scale behaviour
@@ -113,7 +111,7 @@ namespace LitchiEditor
 		* @param p_projectionMatrix
 		* @param p_viewSize
 		*/
-		void ApplyScale(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const;
+		void ApplyScale(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const;
 
 	private:
 		bool m_firstMouse = true;
@@ -122,8 +120,8 @@ namespace LitchiEditor
 		EGizmoOperation m_currentOperation;
 		EDirection m_direction;
 		LitchiRuntime::Transform* m_originalTransform;
-		glm::vec2 m_originMouse;
-		glm::vec2 m_currentMouse;
-		glm::vec2 m_screenDirection;
+		Vector2 m_originMouse;
+		Vector2 m_currentMouse;
+		Vector2 m_screenDirection;
 	};
 }

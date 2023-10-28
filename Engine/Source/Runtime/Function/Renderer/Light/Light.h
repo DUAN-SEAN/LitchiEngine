@@ -30,14 +30,14 @@
 //		/**
 //		* Generate the light matrix, ready to send to the GPU
 //		*/
-//		glm::mat4 GenerateMatrix(FTransform& p_transform) const;
+//		Matrix GenerateMatrix(FTransform& p_transform) const;
 //
 //		/**
 //		* Calculate the light effect range from the quadratic falloff equation
 //		*/
 //		float GetEffectRange(FTransform& p_transform) const;
 //		
-//		glm::vec3	color		= { 1.f, 1.f, 1.f };
+//		Vector3	color		= { 1.f, 1.f, 1.f };
 //		float				intensity	= 1.0f; // 光照强度
 //		float				constant	= 0.0f; // point spot
 //		float				linear		= 0.0f; // point spot 

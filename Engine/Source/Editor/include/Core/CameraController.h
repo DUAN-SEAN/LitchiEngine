@@ -29,8 +29,8 @@ namespace LitchiEditor
 		(
 			AView& p_view,
 			RenderCamera* p_camera,
-			glm::vec3& p_position,
-			glm::quat& p_rotation,
+			Vector3& p_position,
+			Quaternion& p_rotation,
 			bool p_enableFocusInputs = false
 		);
 
@@ -61,23 +61,23 @@ namespace LitchiEditor
 		* Defines the position of the camera
 		* @param p_position
 		*/
-		void SetPosition(const glm::vec3& p_position);
+		void SetPosition(const Vector3& p_position);
 
 		/**
 		* Defines the rotation of the camera
 		* @param p_rotation
 		*/
-		void SetRotation(const glm::quat& p_rotation);
+		void SetRotation(const Quaternion& p_rotation);
 
 		/**
 		* Returns the position of the camera
 		*/
-		const glm::vec3& GetPosition() const;
+		const Vector3& GetPosition() const;
 
 		/**
 		* Returns the position of the camera
 		*/
-		const glm::quat& GetRotation() const;
+		const Quaternion& GetRotation() const;
 
 		/**
 		* Returns true if the right mouse click is being pressed
@@ -85,9 +85,9 @@ namespace LitchiEditor
 		bool IsRightMousePressed() const;
 
 	private:
-		void HandleCameraPanning(const glm::vec2& p_mouseOffset, bool p_firstMouse);
-		void HandleCameraOrbit(const glm::vec2& p_mouseOffset, bool p_firstMouse);
-		void HandleCameraFPSMouse(const glm::vec2& p_mouseOffset, bool p_firstMouse);
+		void HandleCameraPanning(const Vector2& p_mouseOffset, bool p_firstMouse);
+		void HandleCameraOrbit(const Vector2& p_mouseOffset, bool p_firstMouse);
+		void HandleCameraFPSMouse(const Vector2& p_mouseOffset, bool p_firstMouse);
 
 		void HandleCameraZoom();
 		void HandleCameraFPSKeyboard(float p_deltaTime);
@@ -98,10 +98,10 @@ namespace LitchiEditor
 		Window& m_window;
 		AView& m_view;
 		RenderCamera* m_camera;
-		glm::vec3& m_cameraPosition;
-		glm::quat& m_cameraRotation;
+		Vector3& m_cameraPosition;
+		Quaternion& m_cameraRotation;
 
-		std::queue<std::tuple<glm::vec3, glm::quat>> m_cameraDestinations;
+		std::queue<std::tuple<Vector3, Quaternion>> m_cameraDestinations;
 
 		bool m_enableFocusInputs;
 
@@ -109,15 +109,15 @@ namespace LitchiEditor
 		bool m_middleMousePressed = false;
 		bool m_rightMousePressed = false;
 
-		glm::vec3 m_targetSpeed;
-		glm::vec3 m_currentMovementSpeed;
+		Vector3 m_targetSpeed;
+		Vector3 m_currentMovementSpeed;
 
 		Transform* m_orbitTarget = nullptr;
-		glm::vec3 m_orbitStartOffset;
+		Vector3 m_orbitStartOffset;
 		bool m_firstMouse = true;
 		double m_lastMousePosX = 0.0;
 		double m_lastMousePosY = 0.0;
-		glm::vec3 m_xyz;
+		Vector3 m_xyz;
 		float m_mouseSensitivity = 0.01f;
 		float m_cameraDragSpeed = 0.03f;
 		float m_cameraOrbitSpeed = 0.5f;

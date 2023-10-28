@@ -10,7 +10,7 @@
 #include <Runtime/Resource/TextureManager.h>
 #include <Runtime/Resource/MaterialManager.h>
 
-#include "Editor/include/ApplicationEditor.h"
+//#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
 
 LitchiEditor::AssetView::AssetView

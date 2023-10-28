@@ -60,7 +60,7 @@ namespace LitchiEditor
 		*/
 		void HandleActorPicking();
 	private:
-		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
+		void RenderGrid(const Vector3& p_viewPos, const Vector3& p_color);
 	private:
 		/*Framebuffer m_actorPickingFramebuffer;*/
 		GizmoBehaviour m_gizmoOperations;
@@ -77,7 +77,7 @@ namespace LitchiEditor
 		 * \brief 相机控制器
 		 */
 		RenderCamera* m_camera4UI;
-		glm::vec3 m_cameraPosition4UI;
-		glm::quat m_cameraRotation4UI;
+		Vector3 m_cameraPosition4UI;
+		Quaternion m_cameraRotation4UI;
 	};
 }

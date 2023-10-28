@@ -1,6 +1,6 @@
 
 #pragma once
-#include "glm.hpp"
+
 #include "Runtime/Function/Renderer/Rendering/Color.h"
 #include "Runtime/Function/UI/ImGui/imgui.h"
 
@@ -33,12 +33,12 @@ namespace LitchiRuntime
 		* Convert the given FVector2 to ImVec2
 		* @param p_value
 		*/
-		static ImVec2 ToImVec2(const glm::vec2& p_value);
+		static ImVec2 ToImVec2(const Vector2& p_value);
 
 		/**
 		* Convert the given ImVec2 to FVector2
 		* @param p_value
 		*/
-		static glm::vec2 ToFVector2(const ImVec2& p_value);
+		static Vector2 ToFVector2(const ImVec2& p_value);
 	};
 }

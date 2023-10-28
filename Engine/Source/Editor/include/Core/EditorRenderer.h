@@ -43,14 +43,14 @@
 //		* Calculate the model matrix for a camera attached to the given actor
 //		* @param p_actor
 //		*/
-//		glm::mat4 CalculateCameraModelMatrix(LitchiRuntime::GameObject& p_actor);
+//		Matrix CalculateCameraModelMatrix(LitchiRuntime::GameObject& p_actor);
 //
 //		/**
 //		* Render the scene
 //		* @param p_cameraPosition
 //		* @param p_camera
 //		*/
-//		void RenderScene(const glm::vec3& p_cameraPosition, const RenderCamera& p_camera, const Frustum* p_customFrustum = nullptr);
+//		void RenderScene(const Vector3& p_cameraPosition, const RenderCamera& p_camera, const Frustum* p_customFrustum = nullptr);
 //
 //		/**
 //		* Render the scene for actor picking (Unlit version of the scene with colors indicating actor IDs)
@@ -80,12 +80,12 @@
 //		* @param p_pickable (Determine the shader to use to render the gizmo)
 //		* @param p_highlightedAxis (-1 to highlight no axis, 0 for X, 1 for Y, 2 for Z)
 //		*/
-//		void RenderGizmo(const glm::vec3& p_position, const glm::quat& p_rotation, LitchiEditor::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis = -1);
+//		void RenderGizmo(const Vector3& p_position, const Quaternion& p_rotation, LitchiEditor::EGizmoOperation p_operation, bool p_pickable, int p_highlightedAxis = -1);
 //
 //		/**
 //		* Render a model to the stencil buffer
 //		*/
-//		void RenderModelToStencil(const glm::mat4& p_worldMatrix, LitchiRuntime::Model& p_model);
+//		void RenderModelToStencil(const Matrix& p_worldMatrix, LitchiRuntime::Model& p_model);
 //
 //		/**
 //		* Render a model outline using the data stored in the stencil buffer
@@ -93,7 +93,7 @@
 //		* @param p_model
 //		* @param p_width
 //		*/
-//		void RenderModelOutline(const glm::mat4& p_worldMatrix, LitchiRuntime::Model& p_model, float p_width);
+//		void RenderModelOutline(const Matrix& p_worldMatrix, LitchiRuntime::Model& p_model, float p_width);
 //
 //		/**
 //		* Render the actor as a selected actor (Outline)
@@ -165,7 +165,7 @@
 //		/**
 //		* Render the grid
 //		*/
-//		void RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color);
+//		void RenderGrid(const Vector3& p_viewPos, const Vector3& p_color);
 //
 //		/**
 //		* Update the light SSBO with the current scene

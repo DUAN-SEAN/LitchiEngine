@@ -114,7 +114,7 @@
 //	LitchiRuntime::Loaders::ShaderLoader::Destroy(m_lineShader);
 //}
 //
-//void LitchiRuntime::ShapeDrawer::SetViewProjection(const glm::mat4& p_viewProjection)
+//void LitchiRuntime::ShapeDrawer::SetViewProjection(const Matrix& p_viewProjection)
 //{
 //	m_lineShader->Bind();
 //	m_lineShader->SetUniformMat4("viewProjection", p_viewProjection);
@@ -125,7 +125,7 @@
 //	m_gridShader->Unbind();
 //}
 //
-//void LitchiRuntime::ShapeDrawer::DrawLine(const glm::vec3& p_start, const glm::vec3& p_end, const glm::vec3& p_color, float p_lineWidth)
+//void LitchiRuntime::ShapeDrawer::DrawLine(const Vector3& p_start, const Vector3& p_end, const Vector3& p_color, float p_lineWidth)
 //{
 //	m_lineShader->Bind();
 //
@@ -142,7 +142,7 @@
 //	m_lineShader->Unbind();
 //}
 //
-//void LitchiRuntime::ShapeDrawer::DrawGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color, int32_t p_gridSize, float p_linear, float p_quadratic, float p_fadeThreshold, float p_lineWidth)
+//void LitchiRuntime::ShapeDrawer::DrawGrid(const Vector3& p_viewPos, const Vector3& p_color, int32_t p_gridSize, float p_linear, float p_quadratic, float p_fadeThreshold, float p_lineWidth)
 //{
 //	m_gridShader->Bind();
 //	m_gridShader->SetUniformVec3("color", p_color);
@@ -157,12 +157,12 @@
 //
 //	for (int32_t i = -p_gridSize + 1; i < p_gridSize; ++i)
 //	{
-//		m_gridShader->SetUniformVec3("start", glm::vec3{ -(float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
-//		m_gridShader->SetUniformVec3("end", glm::vec3{ (float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
+//		m_gridShader->SetUniformVec3("start", Vector3{ -(float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
+//		m_gridShader->SetUniformVec3("end", Vector3{ (float)p_gridSize + std::floor(p_viewPos.x), 0.f, (float)i + std::floor(p_viewPos.z) });
 //		m_renderer.Draw(*m_lineMesh, EPrimitiveMode::LINES);
 //
-//		m_gridShader->SetUniformVec3("start", glm::vec3{ (float)i + std::floor(p_viewPos.x), 0.f, -(float)p_gridSize + std::floor(p_viewPos.z) });
-//		m_gridShader->SetUniformVec3("end", glm::vec3{ (float)i + std::floor(p_viewPos.x), 0.f, (float)p_gridSize + std::floor(p_viewPos.z) });
+//		m_gridShader->SetUniformVec3("start", Vector3{ (float)i + std::floor(p_viewPos.x), 0.f, -(float)p_gridSize + std::floor(p_viewPos.z) });
+//		m_gridShader->SetUniformVec3("end", Vector3{ (float)i + std::floor(p_viewPos.x), 0.f, (float)p_gridSize + std::floor(p_viewPos.z) });
 //		m_renderer.Draw(*m_lineMesh, EPrimitiveMode::LINES);
 //	}
 //

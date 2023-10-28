@@ -7,16 +7,13 @@
 #include "Runtime/Core/Window/Context/Device.h"
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/UI/UIManager/UIManager.h"
-#include <Runtime/Function/Scene/SceneManager.h>
 
 #include "Core/EditorActions.h"
 #include "Core/EditorRenderer.h"
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Core/App/ApplicationBase.h"
-#include "Runtime/Function/Renderer/Core/Renderer.h"
 #include "Runtime/Function/Renderer/Core/ShapeDrawer.h"
-#include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
@@ -61,11 +58,11 @@ namespace LitchiEditor
 		std::unique_ptr<EditorResources>		editorResources;
 
 
-		std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
-		std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
+		//std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
+		//std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
 
-		Resource::Shader* m_shadowMapShader;
-		Resource::Shader* m_shadowMapShader4Skinned;
+		/*Resource::Shader* m_shadowMapShader;
+		Resource::Shader* m_shadowMapShader4Skinned;*/
 		//std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;

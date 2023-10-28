@@ -5,10 +5,11 @@
 #include <unordered_map>
 #include <string>
 
-#include "Mesh.h"
+//#include "Mesh.h"
 #include "SkinnedData.h"
 
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Renderer/Geometry/BoundingSphere.h"
 #include "Runtime/Function/Renderer/Rendering/Mesh.h"
 
 #define NUM_BONES_PER_VERTEX 4
@@ -41,8 +42,8 @@ namespace LitchiRuntime
 		};
 		struct BoneInfo {
 			bool isSkinned = false;
-			glm::mat4x4 boneOffset;// 骨骼空间到模型空间的转变矩阵 逆Bind Pose矩阵
-			glm::mat4x4 defaultOffset;// 到父骨骼的变换矩阵
+			Matrix boneOffset;// 骨骼空间到模型空间的转变矩阵 逆Bind Pose矩阵
+			Matrix defaultOffset;// 到父骨骼的变换矩阵
 			int parentIndex;
 		};
 
@@ -65,11 +66,11 @@ namespace LitchiRuntime
 		void GetBoneMapping(std::unordered_map<std::string, uint32_t>& boneMapping) {
 			boneMapping = this->boneMap;
 		}
-		void GetBoneOffsets(std::vector<glm::mat4>& boneOffsets) {
+		void GetBoneOffsets(std::vector<Matrix>& boneOffsets) {
 			for (size_t i = 0; i < boneInfoArr.size(); i++)
 				boneOffsets.push_back(boneInfoArr[i].boneOffset);
 		}
-		void GetNodeOffsets(std::vector<glm::mat4>& nodeOffsets) {
+		void GetNodeOffsets(std::vector<Matrix>& nodeOffsets) {
 			for (size_t i = 0; i < boneInfoArr.size(); i++)
 				nodeOffsets.push_back(boneInfoArr[i].defaultOffset);
 		}

@@ -6,7 +6,7 @@
 //	return (c0 << 24) | (c1 << 16) | (c2 << 8) | c3;
 //}
 //
-//uint32_t Pack(const glm::vec3& p_toPack)
+//uint32_t Pack(const Vector3& p_toPack)
 //{
 //	return Pack(static_cast<uint8_t>(p_toPack.x * 255.f), static_cast<uint8_t>(p_toPack.y * 255.f), static_cast<uint8_t>(p_toPack.z * 255.f), 0);
 //}
@@ -16,9 +16,9 @@
 //	
 //}
 //
-//glm::mat4 LitchiRuntime::Light::GenerateMatrix(FTransform& p_transform) const
+//Matrix LitchiRuntime::Light::GenerateMatrix(FTransform& p_transform) const
 //{
-//	glm::mat4 result;
+//	Matrix result;
 //
 //	// lightPosition = lightMat[0]
 //	auto position = p_transform.GetWorldPosition();
@@ -98,7 +98,7 @@
 //	}
 //}
 //
-//float CalculateAmbientBoxLightRadius(const glm::vec3& p_position, const glm::vec3& p_size)
+//float CalculateAmbientBoxLightRadius(const Vector3& p_position, const Vector3& p_size)
 //{
 //	return glm::distance(p_position, p_position + p_size);
 //}

@@ -2,7 +2,6 @@
 #pragma once
 
 #include <string>
-#include <detail/type_quat.hpp>
 
 #include "Runtime/Function/Renderer/Resources/Shader.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
@@ -59,23 +58,23 @@ namespace LitchiEditor
 		* Defines the camera position
 		* @param p_position
 		*/
-		void SetCameraPosition(const glm::vec3& p_position);
+		void SetCameraPosition(const Vector3& p_position);
 
 		/**
 		* Defines the camera rotation
 		* @param p_rotation
 		*/
-		void SetCameraRotation(const glm::quat& p_rotation);
+		void SetCameraRotation(const Quaternion& p_rotation);
 
 		/**
 		* Returns the camera position
 		*/
-		const glm::vec3& GetCameraPosition() const;
+		const Vector3& GetCameraPosition() const;
 
 		/**
 		* Returns the camera rotation
 		*/
-		const glm::quat& GetCameraRotation() const;
+		const Quaternion& GetCameraRotation() const;
 
 		/**
 		* Returns the camera used by this view
@@ -90,13 +89,13 @@ namespace LitchiEditor
 		/**
 		* Returns the grid color of the view
 		*/
-		const glm::vec3& GetGridColor() const;
+		const Vector3& GetGridColor() const;
 
 		/**
 		* Defines the grid color of the view
 		* @param p_color
 		*/
-		void SetGridColor(const glm::vec3& p_color);
+		void SetGridColor(const Vector3& p_color);
 
 		/**
 		* Fill the UBO using the view settings
@@ -112,11 +111,11 @@ namespace LitchiEditor
 	protected:
 		//EditorRenderer& editorRenderer;
 		RenderCamera* m_camera;
-		glm::vec3 m_cameraPosition;
-		glm::quat m_cameraRotation;
+		Vector3 m_cameraPosition;
+		Quaternion m_cameraRotation;
 		Image* m_image;
 
-        glm::vec3 m_gridColor = glm::vec3 { 0.176f, 0.176f, 0.176f };
+        Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };
 
 		/*Framebuffer m_fbo;
 		Framebuffer4Depth m_shadowMapFbo;*/

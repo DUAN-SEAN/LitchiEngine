@@ -30,7 +30,7 @@ void LitchiRuntime::Model::ComputeBoundingSphere()
 	}
 	else
 	{
-		boundingSphere.position = glm::vec3(0);
+		boundingSphere.position = Vector3(0);
 		boundingSphere.radius = 0.0f;
 
 		if (!mesheArr.empty())
@@ -55,8 +55,8 @@ void LitchiRuntime::Model::ComputeBoundingSphere()
 				maxZ = std::max(maxZ, boundingSphere.position.z + boundingSphere.radius);
 			}
 
-			boundingSphere.position = glm::vec3{ minX + maxX, minY + maxY, minZ + maxZ } / 2.0f;
-			boundingSphere.radius = glm::distance(boundingSphere.position, glm::vec3{ minX, minY, minZ });
+			boundingSphere.position = Vector3{ minX + maxX, minY + maxY, minZ + maxZ } / 2.0f;
+			boundingSphere.radius = glm::distance(boundingSphere.position, Vector3{ minX, minY, minZ });
 		}
 	}*/
 }

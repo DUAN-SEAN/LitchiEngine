@@ -1,7 +1,7 @@
 
 #pragma once
 
-#include "glm.hpp"
+
 #include "Runtime/Function/UI/Widgets/AWidget.h"
 
 namespace LitchiRuntime
@@ -16,12 +16,12 @@ namespace LitchiRuntime
 		* Constructor
 		* @param p_size
 		*/
-		Dummy(const glm::vec2& p_size = glm::vec2( 0.0f, 0.0f ));
+		Dummy(const Vector2& p_size = Vector2( 0.0f, 0.0f ));
 
 	protected:
 		void _Draw_Impl() override;
 
 	public:
-		glm::vec2 size;
+		Vector2 size;
 	};
 }

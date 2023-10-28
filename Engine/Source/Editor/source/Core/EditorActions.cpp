@@ -21,7 +21,6 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
-#include "Runtime/Resource/AssetManager.h"
 
 LitchiEditor::EditorActions::EditorActions(PanelsManager& p_panelsManager) :
 	m_panelsManager(p_panelsManager)
@@ -482,7 +481,7 @@ void LitchiEditor::EditorActions::NextFrame()
 LitchiRuntime::Vector3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(float p_distanceToCamera)
 {
 	auto& sceneView = m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View");
-	auto pointGlm = sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * glm::vec3(0, 0, -1) * p_distanceToCamera;
+	auto pointGlm = sceneView.GetCameraPosition() + sceneView.GetCameraRotation() * Vector3(0, 0, -1) * p_distanceToCamera;
 	return Vector3(pointGlm.x, pointGlm.y, pointGlm.z);
 }
 
@@ -811,8 +810,8 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 
 		if (LitchiRuntime::ServiceLocator::Get<ShaderManager>().MoveResource(p_previousName, p_newName))
 		{
-			LitchiRuntime::Resource::Shader* resource = LitchiRuntime::ServiceLocator::Get<ShaderManager>()[p_newName];
-			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Resource::Shader, path)) = p_newName;
+			LitchiRuntime::Shader* resource = LitchiRuntime::ServiceLocator::Get<ShaderManager>()[p_newName];
+			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Shader, path)) = p_newName;
 		}
 
 		if (LitchiRuntime::ServiceLocator::Get<MaterialManager>().MoveResource(p_previousName, p_newName))

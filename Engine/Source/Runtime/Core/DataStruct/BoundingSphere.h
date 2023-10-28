@@ -1,7 +1,5 @@
 
 #pragma once
-#include "glm.hpp"
-
 namespace LitchiRuntime
 {
 	///**
@@ -9,7 +7,7 @@ namespace LitchiRuntime
 	//*/
 	//struct BoundingSphere
 	//{
-	//	glm::vec3 position;
+	//	Vector3 position;
 	//	float radius;
 	//};
 }

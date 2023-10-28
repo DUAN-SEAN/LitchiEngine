@@ -1,11 +1,7 @@
 
 #pragma once
 
-#include <vector>
-#include <memory>
-
 #include "Runtime/Function/UI/Settings/Alignment.h"
-#include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "APanel.h"
 
 namespace LitchiRuntime
@@ -26,8 +22,8 @@ namespace LitchiRuntime
 		*/
 		APanelTransformable
 		(
-			const glm::vec2& p_defaultPosition = glm::vec2(-1.f, -1.f),
-			const glm::vec2& p_defaultSize = glm::vec2(-1.f, -1.f),
+			const Vector2& p_defaultPosition = Vector2(-1.f, -1.f),
+			const Vector2& p_defaultSize = Vector2(-1.f, -1.f),
 			EHorizontalAlignment p_defaultHorizontalAlignment = EHorizontalAlignment::LEFT,
 			EVerticalAlignment p_defaultVerticalAlignment = EVerticalAlignment::TOP,
 			bool p_ignoreConfigFile = false
@@ -37,13 +33,13 @@ namespace LitchiRuntime
 		* Defines the position of the panel
 		* @param p_position
 		*/
-		void SetPosition(const glm::vec2& p_position);
+		void SetPosition(const Vector2& p_position);
 
 		/**
 		* Defines the size of the panel
 		* @param p_size
 		*/
-		void SetSize(const glm::vec2& p_size);
+		void SetSize(const Vector2& p_size);
 
 		/**
 		* Defines the alignment of the panel
@@ -55,12 +51,12 @@ namespace LitchiRuntime
 		/**
 		* Returns the current position of the panel
 		*/
-		const glm::vec2& GetPosition() const;
+		const Vector2& GetPosition() const;
 
 		/**
 		* Returns the current size of the panel
 		*/
-		const glm::vec2& GetSize() const;
+		const Vector2& GetSize() const;
 
 		/**
 		* Returns the current horizontal alignment of the panel
@@ -77,7 +73,7 @@ namespace LitchiRuntime
 		virtual void _Draw_Impl() = 0;
 
 	private:
-		glm::vec2 CalculatePositionAlignmentOffset(bool p_default = false);
+		Vector2 CalculatePositionAlignmentOffset(bool p_default = false);
 
 		void UpdatePosition();
 		void UpdateSize();
@@ -88,14 +84,14 @@ namespace LitchiRuntime
 		bool autoSize = true;
 
 	protected:
-		glm::vec2 m_defaultPosition;
-		glm::vec2 m_defaultSize;
+		Vector2 m_defaultPosition;
+		Vector2 m_defaultSize;
 		EHorizontalAlignment m_defaultHorizontalAlignment;
 		EVerticalAlignment m_defaultVerticalAlignment;
 		bool m_ignoreConfigFile;
 
-		glm::vec2 m_position = glm::vec2(0.0f, 0.0f);
-		glm::vec2 m_size = glm::vec2(0.0f, 0.0f);
+		Vector2 m_position = Vector2(0.0f, 0.0f);
+		Vector2 m_size = Vector2(0.0f, 0.0f);
 
 		bool m_positionChanged = false;
 		bool m_sizeChanged = false;

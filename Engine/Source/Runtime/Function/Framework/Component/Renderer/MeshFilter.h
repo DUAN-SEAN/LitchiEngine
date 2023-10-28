@@ -2,7 +2,6 @@
 #pragma once
 
 #include <string>
-#include <glm.hpp>
 
 #include "Runtime/Core/Math/BoundingBox.h"
 #include "Runtime/Core/Math/Matrix.h"

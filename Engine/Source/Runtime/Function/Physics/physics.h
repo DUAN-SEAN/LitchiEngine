@@ -1,11 +1,10 @@
 ﻿#pragma once
 
-#include <list>
-#include "glm.hpp"
 #include "PxPhysicsAPI.h"
 #include "SimulationEventCallback.h"
 #include "PhysicErrorCallBack.h"
 #include "RaycastHit.h"
+#include "Runtime/Core/Math/Vector3.h"
 
 using namespace physx;
 
@@ -25,15 +24,15 @@ namespace LitchiRuntime
         /// \return 创建的物理场景单元
         static PxScene* CreatePxScene();
 
-        static PxRigidDynamic* CreateRigidDynamic(const glm::vec3& pos, const char* name);
+        static PxRigidDynamic* CreateRigidDynamic(const Vector3& pos, const char* name);
 
-        static PxRigidStatic* CreateRigidStatic(const glm::vec3& pos, const char* name);
+        static PxRigidStatic* CreateRigidStatic(const Vector3& pos, const char* name);
 
         static PxMaterial* CreateMaterial(float static_friction, float dynamic_friction, float restitution);
 
         static PxShape* CreateSphereShape(float radius, PxMaterial* material);
 
-        static PxShape* CreateBoxShape(const glm::vec3& size, PxMaterial* material);
+        static PxShape* CreateBoxShape(const Vector3& size, PxMaterial* material);
 
         static bool enable_ccd() { return enable_ccd_; }
         static void set_enable_ccd(bool enable_ccd) { enable_ccd_ = enable_ccd; }
@@ -44,7 +43,7 @@ namespace LitchiRuntime
         /// \param distance
         /// \param raycast_hit
         /// \return
-        static bool RaycastSingle(glm::vec3& origin, glm::vec3& dir, float distance, RaycastHit* raycast_hit);
+        static bool RaycastSingle(Vector3& origin, Vector3& dir, float distance, RaycastHit* raycast_hit);
     private:
         static PxDefaultAllocator		px_allocator_;
         static PhysicErrorCallback	    physic_error_callback_;

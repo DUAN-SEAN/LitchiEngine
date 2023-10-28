@@ -270,7 +270,7 @@ namespace LitchiRuntime
 	//	* @param p_modelMatrix
 	//	* @param p_defaultMaterial (Used if the given material has no shader attached)
 	//	*/
-	//	void DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
+	//	void DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, Matrix const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
 
 	//	/**
 	//	* Draw the model using the given materials
@@ -278,7 +278,7 @@ namespace LitchiRuntime
 	//	* @param p_modelMatrix
 	//	* @param p_defaultMaterial (Used when a submesh material has no shader attached)
 	//	*/
-	//	void DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
+	//	void DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, Matrix const* p_modelMatrix, Resource::Material* p_defaultMaterial = nullptr);
 
 	//	/**
 	//	*  Draw Mesh
@@ -286,8 +286,8 @@ namespace LitchiRuntime
 	//	*  @param p_material
 	//	*  @param p_modelMatrix
 	//	*/
-	//	void DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix);
-	//	void DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO);
+	//	void DrawMesh(IMesh& p_mesh, Resource::Material& p_material, Matrix const* p_modelMatrix);
+	//	void DrawMesh(IMesh& p_mesh, Resource::Material& p_material, Matrix const* p_modelMatrix, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO);
 
 	//	/**
 	//	* Draw the given model the amount of times passed in parameter (Instance rendering if p_instance > 1)

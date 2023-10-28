@@ -17,7 +17,7 @@ namespace LitchiRuntime
 	static bool m_mouse_is_in_viewport = true;
 
 	std::unordered_map<unsigned short, unsigned short> Input::key_event_map_;
-	glm::vec2 Input::mouse_position_ = { 0,0 };
+	Vector2 Input::mouse_position_ = { 0,0 };
 	short Input::mouse_scroll_ = 0;
 
 	bool Input::GetKey(unsigned short key_code) {

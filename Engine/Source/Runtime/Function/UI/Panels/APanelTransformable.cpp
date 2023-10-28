@@ -5,8 +5,8 @@
 
 LitchiRuntime::APanelTransformable::APanelTransformable
 (
-	const glm::vec2& p_defaultPosition,
-	const glm::vec2& p_defaultSize,
+	const Vector2& p_defaultPosition,
+	const Vector2& p_defaultSize,
 	EHorizontalAlignment p_defaultHorizontalAlignment,
 	EVerticalAlignment p_defaultVerticalAlignment,
 	bool p_ignoreConfigFile
@@ -19,13 +19,13 @@ LitchiRuntime::APanelTransformable::APanelTransformable
 {
 }
 
-void LitchiRuntime::APanelTransformable::SetPosition(const glm::vec2& p_position)
+void LitchiRuntime::APanelTransformable::SetPosition(const Vector2& p_position)
 {
 	m_position = p_position;
 	m_positionChanged = true;
 }
 
-void LitchiRuntime::APanelTransformable::SetSize(const glm::vec2& p_size)
+void LitchiRuntime::APanelTransformable::SetSize(const Vector2& p_size)
 {
 	m_size = p_size;
 	m_sizeChanged = true;
@@ -38,12 +38,12 @@ void LitchiRuntime::APanelTransformable::SetAlignment(EHorizontalAlignment p_hor
 	m_alignmentChanged = true;
 }
 
-const glm::vec2 & LitchiRuntime::APanelTransformable::GetPosition() const
+const LitchiRuntime::Vector2 & LitchiRuntime::APanelTransformable::GetPosition() const
 {
 	return m_position;
 }
 
-const glm::vec2 & LitchiRuntime::APanelTransformable::GetSize() const
+const LitchiRuntime::Vector2 & LitchiRuntime::APanelTransformable::GetSize() const
 {
 	return m_size;
 }
@@ -62,14 +62,14 @@ void LitchiRuntime::APanelTransformable::UpdatePosition()
 {
 	if (m_defaultPosition.x != -1.f && m_defaultPosition.y != 1.f)
 	{
-		glm::vec2 offsettedDefaultPos = m_defaultPosition + CalculatePositionAlignmentOffset(true);
+		Vector2 offsettedDefaultPos = m_defaultPosition + CalculatePositionAlignmentOffset(true);
 		ImGui::SetWindowPos(Converter::ToImVec2(offsettedDefaultPos), m_ignoreConfigFile ? ImGuiCond_Once : ImGuiCond_FirstUseEver);
 	}
 
 	if (m_positionChanged || m_alignmentChanged)
 	{
-		glm::vec2 offset = CalculatePositionAlignmentOffset(false);
-		glm::vec2 offsettedPos(m_position.x + offset.x, m_position.y + offset.y);
+		Vector2 offset = CalculatePositionAlignmentOffset(false);
+		Vector2 offsettedPos(m_position.x + offset.x, m_position.y + offset.y);
 		ImGui::SetWindowPos(Converter::ToImVec2(offsettedPos), ImGuiCond_Always);
 		m_positionChanged = false;
 		m_alignmentChanged = false;
@@ -114,9 +114,9 @@ void LitchiRuntime::APanelTransformable::Update()
 	m_firstFrame = false;
 }
 
-glm::vec2 LitchiRuntime::APanelTransformable::CalculatePositionAlignmentOffset(bool p_default)
+LitchiRuntime::Vector2 LitchiRuntime::APanelTransformable::CalculatePositionAlignmentOffset(bool p_default)
 {
-	glm::vec2 result(0.0f, 0.0f);
+	Vector2 result(0.0f, 0.0f);
 
 	switch (p_default ? m_defaultHorizontalAlignment : m_horizontalAlignment)
 	{

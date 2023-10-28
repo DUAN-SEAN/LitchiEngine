@@ -48,11 +48,11 @@ namespace LitchiEditor
 		* Returns the shader identified by the given string or nullptr on fail
 		* @param p_id
 		*/
-		LitchiRuntime::Resource::Shader* GetShader(const std::string& p_id);
+		LitchiRuntime::Shader* GetShader(const std::string& p_id);
 
 	private:
 		std::unordered_map<std::string, LitchiRuntime::Texture*> m_textures;
 		std::unordered_map<std::string, LitchiRuntime::Model*> m_models;
-		std::unordered_map<std::string, LitchiRuntime::Resource::Shader*> m_shaders;
+		std::unordered_map<std::string, LitchiRuntime::Shader*> m_shaders;
 	};
 }

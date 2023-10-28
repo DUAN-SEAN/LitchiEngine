@@ -5,10 +5,12 @@
 #include <unordered_map>
 
 #include "UniformInfo.h"
-#include "glm.hpp"
+#include "Runtime/Core/Math/Matrix.h"
+#include "Runtime/Core/Math/Vector2.h"
+#include "Runtime/Core/Math/Vector3.h"
 
 
-namespace LitchiRuntime::Resource
+namespace LitchiRuntime
 {
 	//namespace Loaders { class ShaderLoader; }
 
@@ -53,35 +55,35 @@ namespace LitchiRuntime::Resource
 		* @param p_name
 		* @param p_vec2
 		*/
-		void SetUniformVec2(const std::string& p_name, const glm::vec2& p_vec2);
+		void SetUniformVec2(const std::string& p_name, const Vector2& p_vec2);
 
 		/**
 		* Send a vec3 to the GPU via a shader uniform
 		* @param p_name
 		* @param p_vec3
 		*/
-		void SetUniformVec3(const std::string& p_name, const glm::vec3& p_vec3);
+		void SetUniformVec3(const std::string& p_name, const Vector3& p_vec3);
 
 		/**
 		* Send a vec4 to the GPU via a shader uniform
 		* @param p_name
 		* @param p_vec4
 		*/
-		void SetUniformVec4(const std::string& p_name, const glm::vec4& p_vec4);
+		void SetUniformVec4(const std::string& p_name, const Vector4& p_vec4);
 
 		/**
 		* Send a mat4 to the GPU via a shader uniform
 		* @param p_name
 		* @param p_mat4
 		*/
-		void SetUniformMat4(const std::string& p_name, const glm::mat4& p_mat4);
+		void SetUniformMat4(const std::string& p_name, const Matrix& p_mat4);
 
 		/**
 		* Send a mat4 to the GPU via a shader uniform
 		* @param p_name
 		* @param p_mat4
 		*/
-		void SetUniformMat4(const std::string& p_name, const glm::mat4& p_mat4,const int count);
+		void SetUniformMat4(const std::string& p_name, const Matrix& p_mat4,const int count);
 
 		/**
 		* Returns the int uniform value identified by the given name
@@ -99,25 +101,25 @@ namespace LitchiRuntime::Resource
 		* Returns the vec2 uniform value identified by the given name
 		* @param p_name
 		*/
-		glm::vec2 GetUniformVec2(const std::string& p_name);
+		Vector2 GetUniformVec2(const std::string& p_name);
 
 		/**
 		* Returns the vec3 uniform value identified by the given name
 		* @param p_name
 		*/
-		glm::vec3 GetUniformVec3(const std::string& p_name);
+		Vector3 GetUniformVec3(const std::string& p_name);
 
 		/**
 		* Returns the vec4 uniform value identified by the given name
 		* @param p_name
 		*/
-		glm::vec4 GetUniformVec4(const std::string& p_name);
+		Vector4 GetUniformVec4(const std::string& p_name);
 
 		/**
 		* Returns the mat4 uniform value identified by the given name
 		* @param p_name
 		*/
-		glm::mat4 GetUniformMat4(const std::string& p_name);
+		Matrix GetUniformMat4(const std::string& p_name);
 
 		/**
 		* Returns information about the uniform identified by the given name or nullptr if not found

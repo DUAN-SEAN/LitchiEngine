@@ -42,7 +42,7 @@
 //	glGetFloatv(GL_COLOR_CLEAR_VALUE, previousClearColor);
 //
 //	/* Clear the screen using the camera clear color */
-//	const glm::vec3& cameraClearColor = p_camera.GetClearColor();
+//	const Vector3& cameraClearColor = p_camera.GetClearColor();
 //	SetClearColor(cameraClearColor.x, cameraClearColor.y, cameraClearColor.z, 1.0f);
 //	Clear(p_colorBuffer, p_depthBuffer, p_stencilBuffer);
 //
@@ -209,7 +209,7 @@
 //	m_frameInfo.polyCount = 0;
 //}
 //
-//void LitchiRuntime::Renderer::DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial)
+//void LitchiRuntime::Renderer::DrawModelWithSingleMaterial(Model& p_model, Resource::Material& p_material, Matrix const* p_modelMatrix, Resource::Material* p_defaultMaterial)
 //{
 //	if (p_modelMatrix)
 //		ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
@@ -223,7 +223,7 @@
 //	}
 //}
 //
-//void LitchiRuntime::Renderer::DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, glm::mat4 const* p_modelMatrix, Resource::Material* p_defaultMaterial)
+//void LitchiRuntime::Renderer::DrawModelWithMaterials(Model& p_model, std::vector<Resource::Material*> p_materials, Matrix const* p_modelMatrix, Resource::Material* p_defaultMaterial)
 //{
 //	if (p_modelMatrix)
 //		ApplicationBase::Instance()->engineUBO->SetSubData(*p_modelMatrix, 0);
@@ -236,7 +236,7 @@
 //	}
 //}
 //
-//void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix)
+//void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, Matrix const* p_modelMatrix)
 //{
 //	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
 //	{
@@ -254,7 +254,7 @@
 //	}
 //}
 //
-//void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, glm::mat4 const* p_modelMatrix, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+//void LitchiRuntime::Renderer::DrawMesh(IMesh& p_mesh, Resource::Material& p_material, Matrix const* p_modelMatrix, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 //{
 //	if (p_material.HasShader() && p_material.GetGPUInstances() > 0)
 //	{

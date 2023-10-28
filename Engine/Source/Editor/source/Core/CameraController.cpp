@@ -1,10 +1,6 @@
 
 #include <algorithm>
 
-#include "glm.hpp"
-#include "gtc/quaternion.hpp"
-#include "gtx/compatibility.hpp"
-
 #include "Editor/include/Core/CameraController.h"
 
 #include "Editor/include/ApplicationEditor.h"
@@ -18,8 +14,8 @@ LitchiEditor::CameraController::CameraController
 (
 	AView& p_view,
 	RenderCamera* p_camera,
-	glm::vec3& p_position,
-	glm::quat& p_rotation,
+	Vector3& p_position,
+	Quaternion& p_rotation,
 	bool p_enableFocusInputs
 ) :
 	m_inputManager(*ApplicationEditor::Instance()->inputManager),
@@ -31,8 +27,9 @@ LitchiEditor::CameraController::CameraController
 	m_enableFocusInputs(p_enableFocusInputs)
 {
 	// 设置相机默认的位置和姿态
-	m_cameraPosition = glm::vec3(10.0f, 10.0f, 10.0f);
-	m_cameraRotation = glm::quat(glm::radians(glm::vec3(-45.0f, 45.0f, 0.0f)));
+	m_cameraPosition = Vector3(10.0f, 10.0f, 10.0f);
+	
+	m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
 
 	m_camera->SetFov(60.0f);
 }
@@ -91,7 +88,7 @@ float GetActorFocusDist(GameObject* p_actor)
 			const auto& actorScale = p_actor.GetComponent<Transform>()->GetWorldScale();
 			const auto scaleFactor = std::max(std::max(actorScale.x, actorScale.y), actorScale.z);
 
-			distance = std::max(distance, boundingSphere ? (boundingSphere->radius + glm::vec3::Length(boundingSphere->position)) * scaleFactor * 2.0f : 10.0f);
+			distance = std::max(distance, boundingSphere ? (boundingSphere->radius + Vector3::Length(boundingSphere->position)) * scaleFactor * 2.0f : 10.0f);
 		}
 
 		for (auto child : p_actor.GetChildren())
@@ -107,8 +104,8 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 	if(m_inputManager.IsKeyPressed(EKey::KEY_R))
 	{
-		m_cameraPosition = glm::vec3(10.0f, 10.0f, 10.0f);
-		m_cameraRotation = glm::quat(glm::radians(glm::vec3(-45.0f, 45.0f, 0.0f)));
+		m_cameraPosition = Vector3(10.0f, 10.0f, 10.0f);
+		m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
 	}
 
 	if (m_view.IsHovered())
@@ -131,9 +128,9 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 					MoveToTarget(selectGO);
 				}
 
-				auto focusObjectFromAngle = [this, &targetPos, &dist]( const glm::vec3& offset)
+				auto focusObjectFromAngle = [this, &targetPos, &dist]( const Vector3& offset)
 				{
-					auto targetPosGlm = glm::vec3(targetPos.x, targetPos.y, targetPos.z);
+					auto targetPosGlm = Vector3(targetPos.x, targetPos.y, targetPos.z);
 					auto camPos = targetPosGlm + offset * dist;
 					auto direction = glm::normalize(targetPosGlm - camPos);
 					m_cameraRotation = LitchiRuntime::Math::LookAt(direction, abs(direction.y) == 1.0f ? LitchiRuntime::Math::Right : LitchiRuntime::Math::Up);
@@ -188,7 +185,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 				m_firstMouse = false;
 			}
 
-			glm::vec2 mouseOffset
+			Vector2 mouseOffset
 			{
 				static_cast<float>(xPos - m_lastMousePosX),
 				static_cast<float>(m_lastMousePosY - yPos)
@@ -236,7 +233,7 @@ void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
 {
 	auto goWorldPos = p_target->GetComponent<Transform>()->GetPosition();
 
-	auto targetPosGlm = glm::vec3(goWorldPos.x, goWorldPos.y, goWorldPos.z);
+	auto targetPosGlm = Vector3(goWorldPos.x, goWorldPos.y, goWorldPos.z);
 	m_cameraDestinations.push({ targetPosGlm - m_cameraRotation * LitchiRuntime::Math::Forward * GetActorFocusDist(p_target), m_cameraRotation });
 }
 
@@ -250,22 +247,22 @@ float LitchiEditor::CameraController::GetSpeed() const
 	return m_cameraMoveSpeed;
 }
 
-void LitchiEditor::CameraController::SetPosition(const glm::vec3 & p_position)
+void LitchiEditor::CameraController::SetPosition(const Vector3 & p_position)
 {
 	m_cameraPosition = p_position;
 }
 
-void LitchiEditor::CameraController::SetRotation(const glm::quat & p_rotation)
+void LitchiEditor::CameraController::SetRotation(const Quaternion & p_rotation)
 {
 	m_cameraRotation = p_rotation;
 }
 
-const glm::vec3& LitchiEditor::CameraController::GetPosition() const
+const Vector3& LitchiEditor::CameraController::GetPosition() const
 {
 	return m_cameraPosition;
 }
 
-const glm::quat& LitchiEditor::CameraController::GetRotation() const
+const Quaternion& LitchiEditor::CameraController::GetRotation() const
 {
 	return m_cameraRotation;
 }
@@ -275,7 +272,7 @@ bool LitchiEditor::CameraController::IsRightMousePressed() const
 	return m_rightMousePressed;
 }
 
-void LitchiEditor::CameraController::HandleCameraPanning(const glm::vec2& p_mouseOffset, bool p_firstMouset)
+void LitchiEditor::CameraController::HandleCameraPanning(const Vector2& p_mouseOffset, bool p_firstMouset)
 {
 	m_window.SetCursorShape(ECursorShape::HAND);
 
@@ -285,9 +282,9 @@ void LitchiEditor::CameraController::HandleCameraPanning(const glm::vec2& p_mous
 	m_cameraPosition -= m_cameraRotation * LitchiRuntime::Math::Up * mouseOffset.y;
 }
 
-glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
+Vector3 RemoveRoll(const Vector3& p_ypr)
 {
-	glm::vec3 result = p_ypr;
+	Vector3 result = p_ypr;
 
 	if (result.z >= 179.0f || result.z <= -179.0f)
 	{
@@ -302,7 +299,7 @@ glm::vec3 RemoveRoll(const glm::vec3& p_ypr)
 	return result;
 }
 
-void LitchiEditor::CameraController::HandleCameraOrbit(const glm::vec2& p_mouseOffset, bool p_firstMouse)
+void LitchiEditor::CameraController::HandleCameraOrbit(const Vector2& p_mouseOffset, bool p_firstMouse)
 {
 	/*auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
 	auto mouseOffset = p_mouseOffset * m_cameraOrbitSpeed;
@@ -325,7 +322,7 @@ void LitchiEditor::CameraController::HandleCameraOrbit(const glm::vec2& p_mouseO
 	OvMaths::FTransform pivotTransform(target.GetWorldPosition());
 	OvMaths::FTransform cameraTransform(m_orbitStartOffset);
 	cameraTransform.SetParent(pivotTransform);
-	pivotTransform.RotateLocal(glm::quat(m_xyz));
+	pivotTransform.RotateLocal(Quaternion(m_xyz));
 	m_cameraPosition = cameraTransform.GetWorldPosition();
 	m_cameraRotation = cameraTransform.GetWorldRotation();*/
 }
@@ -335,7 +332,7 @@ void LitchiEditor::CameraController::HandleCameraZoom()
 	m_cameraPosition += m_cameraRotation * LitchiRuntime::Math::Forward * ImGui::GetIO().MouseWheel;
 }
 
-void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mouseOffset, bool p_firstMouse)
+void LitchiEditor::CameraController::HandleCameraFPSMouse(const Vector2& p_mouseOffset, bool p_firstMouse)
 {
 	//DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_xyz.x, m_xyz.y, m_xyz.z);
 
@@ -355,12 +352,12 @@ void LitchiEditor::CameraController::HandleCameraFPSMouse(const glm::vec2& p_mou
 	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);
 
 	// x , y z (pitch, yaw, roll)
-	m_cameraRotation = glm::quat(glm::vec3(glm::radians(m_xyz.x), glm::radians(m_xyz.y), glm::radians(0.0)));
+	m_cameraRotation = Quaternion(Vector3(glm::radians(m_xyz.x), glm::radians(m_xyz.y), glm::radians(0.0)));
 }
 
 void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 {
-	m_targetSpeed = glm::vec3(0.f, 0.f, 0.f);
+	m_targetSpeed = Vector3(0.f, 0.f, 0.f);
 
 	if (m_rightMousePressed)
 	{
@@ -376,9 +373,9 @@ void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 		if (m_inputManager.GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * LitchiRuntime::Math::Right * velocity;
 		if (m_inputManager.GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
-			m_targetSpeed += glm::vec3{0.0f, -velocity, 0.0f};
+			m_targetSpeed += Vector3{0.0f, -velocity, 0.0f};
 		if (m_inputManager.GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
-			m_targetSpeed += glm::vec3{0.0f, velocity, 0.0f};
+			m_targetSpeed += Vector3{0.0f, velocity, 0.0f};
 	}
 
 	m_currentMovementSpeed = glm::lerp(m_currentMovementSpeed, m_targetSpeed, 10.0f * p_deltaTime);

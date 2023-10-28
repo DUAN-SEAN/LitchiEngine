@@ -4,43 +4,42 @@
 #include <unordered_map>
 #include <vector>
 
-#include "glm.hpp"
-#include "gtc/matrix_transform.hpp"
-#include "gtc/quaternion.hpp"
-
+#include "Runtime/Core/Math/Matrix.h"
+#include "Runtime/Core/Math/Quaternion.h"
+#include "Runtime/Core/Math/Vector3.h"
 
 struct VectorKey {
 	float timePos;
-	glm::vec3 value;
+	LitchiRuntime::Vector3 value;
 };
 
 struct QuatKey {
 	float timePos;
-	glm::qua<float> value;
+	LitchiRuntime::Quaternion value;
 };
 
 class BoneAnimation {
 public:
 	float GetStartTime()const;
 	float GetEndTime()const;
-	void Interpolate(float t, glm::mat4x4& M);
+	void Interpolate(float t, LitchiRuntime::Matrix& M);
 
 	std::vector<VectorKey> translation;
 	std::vector<VectorKey> scale;
 	std::vector<QuatKey> rotationQuat;
 
-	glm::mat4x4 defaultTransform;
+	LitchiRuntime::Matrix defaultTransform;
 
 private:
-	glm::vec3 LerpKeys(float t, const std::vector<VectorKey>& keys);
-	glm::qua<float> LerpKeys(float t, const std::vector<QuatKey>& keys);
+	LitchiRuntime::Vector3 LerpKeys(float t, const std::vector<VectorKey>& keys);
+	LitchiRuntime::Quaternion LerpKeys(float t, const std::vector<QuatKey>& keys);
 };
 
 class AnimationClip {
 public:
 	float GetClipStartTime()const;
 	float GetClipEndTime()const;
-	void Interpolate(float t, std::vector<glm::mat4x4>& boneTransform);
+	void Interpolate(float t, std::vector<LitchiRuntime::Matrix>& boneTransform);
 
 	std::vector<BoneAnimation> boneAnimations;
 };
@@ -51,20 +50,20 @@ public:
 	float GetClipStartTime(const std::string& clipName)const;
 	float GetClipEndTime(const std::string& clipName)const;
 	void Set(std::vector<int>& boneHierarchy,
-		std::vector<glm::mat4x4>& boneOffsets,
+		std::vector<LitchiRuntime::Matrix>& boneOffsets,
 		std::unordered_map<std::string, AnimationClip>& animations);
-	void GetFinalTransform(const std::string& clipName, float timePos, std::vector<glm::mat4x4>& finalTransforms);
+	void GetFinalTransform(const std::string& clipName, float timePos, std::vector<LitchiRuntime::Matrix>& finalTransforms);
 
 private:
 	std::vector<int> boneHierarchy;
-	std::vector<glm::mat4x4> boneOffsets;
+	std::vector<LitchiRuntime::Matrix> boneOffsets;
 	std::unordered_map<std::string, AnimationClip> animations;
 };
 
 // Temp 
 struct SkinnedModelInstance {
 	SkinnedData skinnedInfo;
-	std::vector<glm::mat4x4> finalTransforms;
+	std::vector<LitchiRuntime::Matrix> finalTransforms;
 	std::string clipName;
 	float timePos = 0.0f;
 

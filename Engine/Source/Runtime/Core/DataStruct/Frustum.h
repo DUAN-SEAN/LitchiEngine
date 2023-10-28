@@ -3,7 +3,7 @@
 //
 //#include <array>
 //
-//#include "glm.hpp"
+//
 //#include "gtc/quaternion.hpp"
 //#include "Runtime/Function/Renderer/Geometry/BoundingSphere.h"
 //
@@ -19,7 +19,7 @@
 //		* Update frustum values
 //		* @param p_viewProjection
 //		*/ 
-//		void CalculateFrustum(const glm::mat4& p_viewProjection);
+//		void CalculateFrustum(const Matrix& p_viewProjection);
 //
 //		/**
 //		* Returns true if the given point is in frustum
@@ -52,7 +52,7 @@
 //		* @param p_boundingSphere
 //		* @param p_transform
 //		*/
-//		bool BoundingSphereInFrustum(const LitchiRuntime::BoundingSphere& p_boundingSphere, const glm::vec3 worldPos,const glm::quat worldRotation,const glm::vec3 worldScale) const;
+//		bool BoundingSphereInFrustum(const LitchiRuntime::BoundingSphere& p_boundingSphere, const Vector3 worldPos,const Quaternion worldRotation,const Vector3 worldScale) const;
 //		// bool BoundingSphereInFrustum(const LitchiRuntime::BoundingSphere& p_boundingSphere, const OvMaths::FTransform& p_transform) const;
 //
 //		/**

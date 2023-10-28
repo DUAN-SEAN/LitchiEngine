@@ -1,12 +1,8 @@
 ﻿
 #include "Editor/include/Panels/SceneView.h"
 
-#include "Editor/include/ApplicationEditor.h"
-#include "Runtime/Core/Window/Inputs/EKey.h"
-#include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
-#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 
@@ -17,7 +13,7 @@ LitchiEditor::SceneView::SceneView
 	const PanelWindowSettings& p_windowSettings
 ) : AViewControllable(p_title, p_opened, p_windowSettings, true)
 {
-	m_camera->SetClearColor(glm::vec3{ 0.098f, 0.098f, 0.098f });
+	m_camera->SetClearColor(Vector3{ 0.098f, 0.098f, 0.098f });
 	m_camera->SetFar(5000.0f);
 
 	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
@@ -32,10 +28,11 @@ LitchiEditor::SceneView::SceneView
 	//};
 
 
-	m_gridMaterial.SetShader(ApplicationEditor::Instance()->editorResources->GetShader("Grid"));
-	m_gridMaterial.SetBlendable(true);
-	m_gridMaterial.SetBackfaceCulling(false);
-	m_gridMaterial.SetDepthTest(false);
+	// todo:
+	//m_gridMaterial.SetShader(ApplicationEditor::Instance()->editorResources->GetShader("Grid"));
+	//m_gridMaterial.SetBlendable(true);
+	//m_gridMaterial.SetBackfaceCulling(false);
+	//m_gridMaterial.SetDepthTest(false);
 
 	/*m_shadowMapFbo.Bind();
 	m_shadowMapFbo.Resize(2048, 2048);
@@ -46,8 +43,8 @@ LitchiEditor::SceneView::SceneView
 	m_camera4UI = new RenderCamera();
 	m_camera4UI->set_clear_flag(GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);// 不清理颜色, 只清理深度信息
 	m_camera4UI->SetProjectionMode(ProjectionMode::ORTHOGRAPHIC);
-	m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
-	m_cameraRotation4UI = glm::quat(1,0,0,0);
+	m_cameraPosition4UI = Vector3(Vector3(0, 0, -10));
+	m_cameraRotation4UI = Quaternion(1,0,0,0);
 	auto [winWidth, winHeight] = GetSafeSize();
 	m_camera4UI->SetSize(winWidth / 2.0f);
 	m_camera4UI->SetNear(-100);
@@ -62,7 +59,7 @@ void LitchiEditor::SceneView::Update(float p_deltaTime)
 	auto trans = go->GetComponent<Transform>();*/
 
 	/*auto rotation = trans->GetLocalRotation();
-	auto next = glm::quat(glm::vec3(glm::radians(60.0) * p_deltaTime, glm::radians(30.0) * p_deltaTime, 0));
+	auto next = Quaternion(Vector3(glm::radians(60.0) * p_deltaTime, glm::radians(30.0) * p_deltaTime, 0));
 	rotation = rotation * next;
 	trans->SetLocalRotation(rotation);*/
 	// ApplicationEditor::Instance()->SetSelectGameObject(go);
@@ -111,7 +108,7 @@ void LitchiEditor::SceneView::RenderScene()
 	//FTransform* shadowLightTran = nullptr;
 	//ssbo->Bind(0);
 	//// 收集场景中的光
-	//std::vector<glm::mat4> lightMatrixArr;
+	//std::vector<Matrix> lightMatrixArr;
 	//ssbo->SendBlocks(lightMatrixArr.data(), 0);
 	//scene->Foreach([&](GameObject* game_object) {
 	//	if (game_object->GetActive() && game_object->GetLayer() != 0x02) {
@@ -133,11 +130,11 @@ void LitchiEditor::SceneView::RenderScene()
 	//			});
 	//	}
 	//	});
-	//ssbo->SendBlocks(lightMatrixArr.data(), sizeof(glm::mat4) * lightMatrixArr.size());
+	//ssbo->SendBlocks(lightMatrixArr.data(), sizeof(Matrix) * lightMatrixArr.size());
 
 
 	//// 先绘制一遍阴影
-	//glm::mat4 lightSpaceMatrix;
+	//Matrix lightSpaceMatrix;
 	//if (shadowLightTran != nullptr)
 	//{
 	//	glViewport(0, 0, 2048, 2048);
@@ -151,23 +148,23 @@ void LitchiEditor::SceneView::RenderScene()
 	//	GLfloat near_plane = 0.0f, far_plane = 50.0f;
 
 	//	// 计算光源的Projection
-	//	glm::mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
+	//	Matrix lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, near_plane, far_plane);
 
 	//	// 计算光源的View
 	//	auto shadowLightPos = shadowLightTran->GetWorldPosition();
 	//	auto shadowLightRotation = shadowLightTran->GetWorldRotation();
-	//	glm::vec3 up = glm::normalize(shadowLightRotation) * glm::vec3(0, 1.0, 0);
-	//	glm::vec3 forward = glm::normalize(shadowLightRotation) * glm::vec3(0, 0, -1.0);
+	//	Vector3 up = glm::normalize(shadowLightRotation) * Vector3(0, 1.0, 0);
+	//	Vector3 forward = glm::normalize(shadowLightRotation) * Vector3(0, 0, -1.0);
 
 	//	/*	DEBUG_LOG_INFO("---------------------------------");
 	//		DEBUG_LOG_INFO("CalculateViewMatrix eulerRotation.X:{},eulerRotation.Y:{},eulerRotation.Z:{}", eulerRotation.x, eulerRotation.y, eulerRotation.z);
 	//		DEBUG_LOG_INFO("CalculateViewMatrix forward.X:{},forward.Y:{},forward.Z:{}", forward.x, forward.y, forward.z);*/
 	//	
-	//	glm::mat4 lightView = glm::lookAt
+	//	Matrix lightView = glm::lookAt
 	//	(
-	//		glm::vec3(shadowLightPos.x, shadowLightPos.y, shadowLightPos.z),											// Position
-	//		glm::vec3(shadowLightPos.x + forward.x, shadowLightPos.y + forward.y, shadowLightPos.z + forward.z),			// LookAt (Position + Forward)
-	//		glm::vec3(up.x, up.y, up.z)																		// Up Vector
+	//		Vector3(shadowLightPos.x, shadowLightPos.y, shadowLightPos.z),											// Position
+	//		Vector3(shadowLightPos.x + forward.x, shadowLightPos.y + forward.y, shadowLightPos.z + forward.z),			// LookAt (Position + Forward)
+	//		Vector3(up.x, up.y, up.z)																		// Up Vector
 	//	);
 
 	//	lightSpaceMatrix = lightProjection * lightView;
@@ -223,7 +220,7 @@ void LitchiEditor::SceneView::RenderScene()
 	//// 获取当前需要渲染的相机 和 场景
 	//RenderCamera* render_camera = m_camera;
 	//render_camera->Clear();
-	//// RenderGrid(m_cameraPosition, glm::vec3(0.098f, 0.898f, 0.098f));
+	//// RenderGrid(m_cameraPosition, Vector3(0.098f, 0.898f, 0.098f));
 	//ApplicationEditor::Instance()->editorRenderer->RenderGrid(m_cameraPosition, m_gridColor);
 
 	//// 遍历所有的物体,执行MeshRenderer的Render函数
@@ -247,8 +244,8 @@ void LitchiEditor::SceneView::RenderScene()
 
 void LitchiEditor::SceneView::RenderUI()
 {
-	//m_cameraPosition4UI = glm::vec3(glm::vec3(0, 0, -10));
-	//m_cameraRotation4UI = glm::quat(1, 0, 0, 0);
+	//m_cameraPosition4UI = Vector3(Vector3(0, 0, -10));
+	//m_cameraRotation4UI = Quaternion(1, 0, 0, 0);
 	//auto [winWidth, winHeight] = GetSafeSize();
 	//m_camera4UI->SetSize(winWidth / 2.0f);
 	//m_camera4UI->SetNear(-100);
@@ -257,7 +254,7 @@ void LitchiEditor::SceneView::RenderUI()
 
 	//// 绑定相机参数
 	//auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
-	//size_t offset = sizeof(glm::mat4); // We skip the model matrix (Which is a special case, modified every draw calls)
+	//size_t offset = sizeof(Matrix); // We skip the model matrix (Which is a special case, modified every draw calls)
 	//engineUBO.SetSubData(m_camera4UI->GetViewMatrix(), std::ref(offset));
 	//engineUBO.SetSubData(m_camera4UI->GetProjectionMatrix(), std::ref(offset));
 	//engineUBO.SetSubData(m_cameraPosition4UI, std::ref(offset));
@@ -308,12 +305,12 @@ void LitchiEditor::SceneView::HandleActorPicking()
 {
 }
 
-void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::vec3& p_color)
+void LitchiEditor::SceneView::RenderGrid(const Vector3& p_viewPos, const Vector3& p_color)
 {
 	//constexpr float gridSize = 5000.0f;
 
 	//// 绘制plane
-	//glm::mat4 modelMatrix = glm::translate(glm::vec3{ p_viewPos.x, 0.0f, p_viewPos.z })* glm::scale(glm::vec3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
+	//Matrix modelMatrix = glm::translate(Vector3{ p_viewPos.x, 0.0f, p_viewPos.z })* glm::scale(Vector3{ gridSize * 2.0f, 1.f, gridSize * 2.0f });
 	//m_gridMaterial.Set("u_Color", p_color);
 
 	//// 设置ubo
@@ -336,7 +333,7 @@ void LitchiEditor::SceneView::RenderGrid(const glm::vec3& p_viewPos, const glm::
 	//m_gridMaterial.UnBind();
 
 
-	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(-gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(gridSize + p_viewPos.x, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
-	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, -gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, gridSize + p_viewPos.y, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 1.0f);
-	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(glm::vec3(0.0f, 0.0f, -gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, gridSize + p_viewPos.z), glm::vec3(0.0f, 0.0f, 1.0f), 1.0f);
+	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(Vector3(-gridSize + p_viewPos.x, 0.0f, 0.0f), Vector3(gridSize + p_viewPos.x, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), 1.0f);
+	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(Vector3(0.0f, -gridSize + p_viewPos.y, 0.0f), Vector3(0.0f, gridSize + p_viewPos.y, 0.0f), Vector3(0.0f, 1.0f, 0.0f), 1.0f);
+	//LitchiEditor::ApplicationEditor::Instance()->shapeDrawer->DrawLine(Vector3(0.0f, 0.0f, -gridSize + p_viewPos.z), Vector3(0.0f, 0.0f, gridSize + p_viewPos.z), Vector3(0.0f, 0.0f, 1.0f), 1.0f);
 }

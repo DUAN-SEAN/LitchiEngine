@@ -2,9 +2,8 @@
 #pragma once
 
 #include "rttr/registration"
-#include "glm.hpp"
 #include "collider.h"
-#include "glm.hpp"
+#include "Runtime/Core/Math/Vector3.h"
 
 using namespace rttr;
 namespace LitchiRuntime
@@ -13,7 +12,7 @@ namespace LitchiRuntime
     public:
         BoxCollider();
         ~BoxCollider();
-        glm::vec3 GetSize()
+        Vector3 GetSize()
         {
             return m_size;
         }
@@ -23,7 +22,7 @@ namespace LitchiRuntime
 
     private:
         //~zh 碰撞器尺寸
-        glm::vec3 m_size;
+        Vector3 m_size;
 
         RTTR_ENABLE(Collider);
     };

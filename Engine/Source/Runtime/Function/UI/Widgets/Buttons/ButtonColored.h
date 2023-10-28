@@ -4,7 +4,6 @@
 #include <string>
 
 #include "AButton.h"
-#include "glm.hpp"
 #include  "Runtime/Function/Renderer/Rendering/Color.h"
 
 namespace LitchiRuntime
@@ -22,7 +21,7 @@ namespace LitchiRuntime
 		* @param p_size
 		* @param p_enableAlpha
 		*/
-		ButtonColored(const std::string& p_label = "", const Color& p_color = {1.0f,1.0f ,1.0f ,1.0f }, const glm::vec2& p_size = glm::vec2(0.f, 0.f), bool p_enableAlpha = true);
+		ButtonColored(const std::string& p_label = "", const Color& p_color = {1.0f,1.0f ,1.0f ,1.0f }, const Vector2& p_size = Vector2(0.f, 0.f), bool p_enableAlpha = true);
 
 	protected:
 		void _Draw_Impl() override;
@@ -30,7 +29,7 @@ namespace LitchiRuntime
 	public:
 		std::string label;
 		Color color;
-		glm::vec2 size;
+		Vector2 size;
 		bool enableAlpha;
 	};
 }

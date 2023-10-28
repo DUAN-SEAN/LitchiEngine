@@ -3,8 +3,6 @@
 #define UNTITLED_SERIALIZERMANAGER_H
 
 #include "rttr/registration"
-#include "rttr/type"
-#include "Runtime/Core/Meta/Reflection/type.h"
 
 using namespace rttr;
 namespace LitchiRuntime

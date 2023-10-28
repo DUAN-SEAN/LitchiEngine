@@ -1,5 +1,5 @@
 #include "SkinnedData.h"
-
+using namespace LitchiRuntime;
 float BoneAnimation::GetStartTime()const {
 	float t0 = 0.0f;
 	float t1 = 0.0f;
@@ -26,8 +26,8 @@ float BoneAnimation::GetEndTime()const {
 	return timePos;
 }
 
-glm::vec3 BoneAnimation::LerpKeys(float t, const std::vector<VectorKey>& keys) {
-	glm::vec3 res = glm::vec3(0.0f);
+LitchiRuntime::Vector3 BoneAnimation::LerpKeys(float t, const std::vector<VectorKey>& keys) {
+	Vector3 res = Vector3(0.0f);
 	if (t <= keys.front().timePos) res = keys.front().value;
 	else if (t >= keys.back().timePos) res = keys.back().value;
 	else {
@@ -42,15 +42,15 @@ glm::vec3 BoneAnimation::LerpKeys(float t, const std::vector<VectorKey>& keys) {
 	return res;
 }
 
-glm::qua<float> BoneAnimation::LerpKeys(float t, const std::vector<QuatKey>& keys) {
-	glm::qua<float> res = glm::qua<float>();
+Quaternion BoneAnimation::LerpKeys(float t, const std::vector<QuatKey>& keys) {
+	Quaternion res = Quaternion();
 	if (t <= keys.front().timePos) res = keys.front().value;
 	else if (t >= keys.back().timePos) res = keys.back().value;
 	else {
 		for (size_t i = 0; i < keys.size() - 1; i++) {
 			if (t >= keys[i].timePos && t <= keys[i + 1].timePos) {
 				float lerpPercent = (t - keys[i].timePos) / (keys[i + 1].timePos - keys[i].timePos);
-				res = glm::slerp(keys[i].value, keys[i + 1].value, lerpPercent);
+				res = Quaternion::Lerp(keys[i].value, keys[i + 1].value, lerpPercent);
 				break;
 			}
 		}
@@ -58,21 +58,21 @@ glm::qua<float> BoneAnimation::LerpKeys(float t, const std::vector<QuatKey>& key
 	return res;
 }
 
-void BoneAnimation::Interpolate(float t, glm::mat4x4& M) {
+void BoneAnimation::Interpolate(float t, Matrix& M) {
 	if (translation.size() == 0 && scale.size() == 0 && rotationQuat.size() == 0) {
 		M = defaultTransform;
 		return;
 	}
 
-	glm::vec3 T = glm::vec3(0.0f);
-	glm::vec3 S = glm::vec3(0.0f);
-	glm::qua<float> R = glm::qua<float>();
+	Vector3 T = Vector3(0.0f);
+	Vector3 S = Vector3(0.0f);
+	Quaternion R = Quaternion();
 
 	if (translation.size() != 0) T = LerpKeys(t, translation);
 	if (scale.size() != 0) S = LerpKeys(t, scale);
 	if (rotationQuat.size() != 0) R = LerpKeys(t, rotationQuat);
 
-	M = glm::translate(glm::mat4(1.0f), T) * glm::mat4_cast(R) * glm::scale(glm::mat4(1.0f), S);
+	M = Matrix(T, R, S);
 }
 
 float AnimationClip::GetClipStartTime()const {
@@ -89,7 +89,7 @@ float AnimationClip::GetClipEndTime()const {
 	return t;
 }
 
-void AnimationClip::Interpolate(float t, std::vector<glm::mat4x4>& boneTransform) {
+void AnimationClip::Interpolate(float t, std::vector<Matrix>& boneTransform) {
 	for (uint32_t i = 0; i < boneAnimations.size(); i++)
 		boneAnimations[i].Interpolate(t, boneTransform[i]);
 }
@@ -105,21 +105,21 @@ float SkinnedData::GetClipEndTime(const std::string& clipName)const {
 }
 
 void SkinnedData::Set(std::vector<int>& boneHierarchy,
-	std::vector<glm::mat4x4>& boneOffsets,
+	std::vector<Matrix>& boneOffsets,
 	std::unordered_map<std::string, AnimationClip>& animations) {
 	this->boneHierarchy = boneHierarchy;
 	this->boneOffsets = boneOffsets;
 	this->animations = animations;
 }
 
-void SkinnedData::GetFinalTransform(const std::string& clipName, float timePos, std::vector<glm::mat4x4>& finalTransforms) {
+void SkinnedData::GetFinalTransform(const std::string& clipName, float timePos, std::vector<Matrix>& finalTransforms) {
 	uint32_t numBones = boneOffsets.size();
-	std::vector<glm::mat4x4> toParentTransforms(numBones);
+	std::vector<Matrix> toParentTransforms(numBones);
 
 	auto clip = animations.find(clipName);
 	clip->second.Interpolate(timePos, toParentTransforms);
 
-	std::vector<glm::mat4x4> toRootTransforms(numBones);
+	std::vector<Matrix> toRootTransforms(numBones);
 	toRootTransforms[0] = toParentTransforms[0];
 
 	// 计算所有骨骼到root的变换矩阵

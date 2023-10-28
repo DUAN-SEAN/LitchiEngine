@@ -3,7 +3,7 @@
 
 #include "Runtime/Function/UI/Internal/Converter.h"
 
-LitchiRuntime::Dummy::Dummy(const glm::vec2& p_size) : size(p_size)
+LitchiRuntime::Dummy::Dummy(const Vector2& p_size) : size(p_size)
 {
 }
 

@@ -1,6 +1,7 @@
 ﻿#include "SceneManager.h"
 
 #include "Runtime/Core/Meta/Serializer/serializer.h"
+#include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 #include "Runtime/Resource/AssetManager.h"

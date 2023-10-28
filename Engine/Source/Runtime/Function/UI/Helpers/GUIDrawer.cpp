@@ -51,7 +51,7 @@ void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer & p_root, const std::
 	dispatcher.RegisterReference(reinterpret_cast<bool&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, glm::vec2 & p_data, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, Vector2 & p_data, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 2>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -59,7 +59,7 @@ void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 2>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, glm::vec3 & p_data, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, Vector3 & p_data, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 3>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -67,7 +67,7 @@ void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 3>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, glm::vec4& p_data, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, Vector4& p_data, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -75,7 +75,7 @@ void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 4>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, glm::quat & p_data, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, Quaternion & p_data, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -144,7 +144,7 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
-	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data->id : (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0), glm::vec2{ 75, 75 });
+	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data->id : (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0), Vector2{ 75, 75 });
 
 	// TODO:
 	/*widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
@@ -178,7 +178,7 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Resource::Shader *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Shader *& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
@@ -216,16 +216,17 @@ Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, Resource::Material *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, Material *& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->GetResourceFilePath() : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);
 
-	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
+	// todo:
+	/*widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
 	{
 		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::MATERIAL)
 		{
@@ -237,7 +238,7 @@ Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std
 					p_updateNotifier->Invoke();
 			}
 		}
-	};
+	};*/
 
 	widget.lineBreak = false;
 
@@ -342,7 +343,7 @@ void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer & p_root, const std::
 	});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, std::function<glm::vec2(void)> p_gatherer, std::function<void(glm::vec2)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, std::function<Vector2(void)> p_gatherer, std::function<void(Vector2)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 2>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -350,17 +351,17 @@ void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::str
 	
 	dispatcher.RegisterGatherer([p_gatherer]()
 	{
-		glm::vec2 value = p_gatherer();
+		Vector2 value = p_gatherer();
 		return reinterpret_cast<const std::array<float, 2>&>(value);
 	});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 2> p_value)
 	{
-		p_provider(reinterpret_cast<glm::vec2&>(p_value));
+		p_provider(reinterpret_cast<Vector2&>(p_value));
 	});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, std::function<glm::vec3(void)> p_gatherer, std::function<void(glm::vec3)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, std::function<Vector3(void)> p_gatherer, std::function<void(Vector3)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 3>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -368,17 +369,17 @@ void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::str
 
 	dispatcher.RegisterGatherer([p_gatherer]()
 	{
-		glm::vec3 value = p_gatherer();
+		Vector3 value = p_gatherer();
 		return reinterpret_cast<const std::array<float, 3>&>(value);
 	});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 3> p_value)
 	{
-		p_provider(reinterpret_cast<glm::vec3&>(p_value));
+		p_provider(reinterpret_cast<Vector3&>(p_value));
 	});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, std::function<glm::vec4(void)> p_gatherer, std::function<void(glm::vec4)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, std::function<Vector4(void)> p_gatherer, std::function<void(Vector4)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -386,17 +387,17 @@ void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::str
 	
 	dispatcher.RegisterGatherer([p_gatherer]()
 	{
-		glm::vec4 value = p_gatherer();
+		Vector4 value = p_gatherer();
 		return reinterpret_cast<const std::array<float, 4>&>(value);
 	});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 4> p_value)
 	{
-		p_provider(reinterpret_cast<glm::vec4&>(p_value));
+		p_provider(reinterpret_cast<Vector4&>(p_value));
 	});
 }
 
-void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, std::function<glm::quat(void)> p_gatherer, std::function<void(glm::quat)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, std::function<Quaternion(void)> p_gatherer, std::function<void(Quaternion)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -404,13 +405,15 @@ void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::str
 	
 	dispatcher.RegisterGatherer([p_gatherer]()
 	{
-		glm::quat value = p_gatherer();
+		Quaternion value = p_gatherer();
 		return reinterpret_cast<const std::array<float, 4>&>(value);
 	});
 
 	dispatcher.RegisterProvider([&dispatcher, p_provider](std::array<float, 4> p_value)
 	{
-		p_provider(glm::normalize(reinterpret_cast<glm::quat&>(p_value)));
+		auto& rotation = reinterpret_cast<Quaternion&>(p_value);
+		rotation.Normalize();
+		p_provider(rotation);
 	});
 }
 

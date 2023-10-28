@@ -11,7 +11,6 @@
 #include "Editor/include/Panels/MenuBar.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
-#include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
@@ -26,6 +25,9 @@
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
+
+#include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data
@@ -107,7 +109,7 @@ GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::str
 	return go;
 }
 
-GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, glm::vec3 position, glm::quat rotation, glm::vec3 scale)
+GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, Vector3 position, Quaternion rotation, Vector3 scale)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
@@ -130,7 +132,7 @@ GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string mode
 	return go;
 }
 
-GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation)
+GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
@@ -147,7 +149,7 @@ GameObject* CreateLightObject(Scene* scene, std::string name, glm::vec3 pos, glm
 	return go;
 }
 
-GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Texture* image)
+GameObject* CreateUIImageObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, Texture* image)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
@@ -173,7 +175,7 @@ GameObject* CreateUIImageObject(Scene* scene, std::string name, glm::vec3 pos, g
 	return go;
 }
 
-GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, glm::quat rotation, Font* font)
+GameObject* CreateUITextObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, Font* font)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
@@ -197,7 +199,7 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, glm::vec3 pos, gl
 	auto uiText = go->AddComponent<UIText>();
 	uiText->SetFont(font);
 	uiText->SetText("EF");
-	uiText->SetColor(glm::vec4(1));
+	uiText->SetColor(Vector4(1));
 
 	return go;
 }
@@ -280,22 +282,22 @@ void LitchiEditor::ApplicationEditor::Init()
 	engineUBO = std::make_unique<UniformBuffer>
 		(
 			/* UBO Data Layout */
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
-			sizeof(glm::mat4) +
+			sizeof(Matrix) +
+			sizeof(Matrix) +
+			sizeof(Matrix) +
+			sizeof(Matrix) +
 			sizeof(float) +
-			sizeof(glm::mat4),
+			sizeof(Matrix),
 			0, 0,
 			EAccessSpecifier::STREAM_DRAW
 		);
 
 	// Light
-	lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
+	//lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
 
-	simulatedLightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW); // Used in Asset View
+	//simulatedLightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW); // Used in Asset View
 
-	std::vector<glm::mat4> simulatedLights;
+	std::vector<Matrix> simulatedLights;
 
 	// Setup UI
 	SetupUI();
@@ -349,7 +351,7 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
 	// ‰÷»æView 
-	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
+	/*auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
 	{
 		sceneView.Update(p_deltaTime);
@@ -363,7 +365,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 		assetView.Update(p_deltaTime);
 		assetView.Render();
 		simulatedLightSSBO->Unbind();
-	}
+	}*/
 
 }
 

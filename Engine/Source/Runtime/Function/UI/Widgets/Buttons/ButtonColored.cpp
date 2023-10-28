@@ -3,7 +3,7 @@
 
 #include "Runtime/Function/UI/Internal/Converter.h"
 
-LitchiRuntime::ButtonColored::ButtonColored(const std::string & p_label, const Color& p_color, const glm::vec2& p_size, bool p_enableAlpha) :
+LitchiRuntime::ButtonColored::ButtonColored(const std::string & p_label, const Color& p_color, const Vector2& p_size, bool p_enableAlpha) :
 	label(p_label), color(p_color), size(p_size), enableAlpha(p_enableAlpha)
 {
 }

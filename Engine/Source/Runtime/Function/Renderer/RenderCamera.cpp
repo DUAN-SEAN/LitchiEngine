@@ -1,20 +1,12 @@
 
 #include "RenderCamera.h"
-
-#include <glad/glad.h>
-
-#include "gtx/quaternion.hpp"
-#include "gtc/quaternion.hpp"
-#include "gtc/matrix_transform.hpp"
-
 #include "Runtime/Core/Log/debug.h"
-#include "Runtime/Core/Screen/screen.h"
 
 namespace LitchiRuntime
 {
 	RenderCamera::RenderCamera() :
 		clear_color_(49.f / 255, 77.f / 255, 121.f / 255, 1.f),
-		clear_flag_(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT),
+		clear_flag_(0),
 		m_size(5.0f),
 		fov_(45.0f),
 		nearClip_(1.0f),
@@ -25,17 +17,17 @@ namespace LitchiRuntime
 	{
 
 	}
-	void RenderCamera::SetAndUpdateView(const glm::vec3& cameraPos,const glm::vec3& centerPos, const glm::vec3& cameraUp) {
-		view_mat4_ = glm::lookAt(cameraPos, centerPos, cameraUp);
+	void RenderCamera::SetAndUpdateView(const Vector3& cameraPos,const Vector3& centerPos, const Vector3& cameraUp) {
+		view_mat4_ = Matrix::CreateLookAtLH(cameraPos, centerPos, cameraUp);
 	}
 
 	void RenderCamera::UpdateProjection() {
-		projection_mat4_ = glm::perspective(glm::radians(fov_), aspectRatio_, nearClip_, farClip_);
+		projection_mat4_ = Matrix::CreatePerspectiveFieldOfViewLH(LitchiRuntime::Math::Helper::DegreesToRadians(fov_), aspectRatio_, nearClip_, farClip_);
 	}
 
 	void RenderCamera::Clear() {
-		glClearColor(clear_color_.r, clear_color_.g, clear_color_.b, clear_color_.a);
-		glClear(clear_flag_);
+		/*glClearColor(clear_color_.r, clear_color_.g, clear_color_.b, clear_color_.a);
+		glClear(clear_flag_);*/
 	}
 
 	void RenderCamera::CheckRenderToTexture() {
@@ -102,7 +94,7 @@ namespace LitchiRuntime
 	}
 
 
-	void LitchiRuntime::RenderCamera::CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const glm::vec3& p_position, const glm::quat& p_rotation)
+	void LitchiRuntime::RenderCamera::CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const Vector3& p_position, const Quaternion& p_rotation)
 	{
 		SetAspectRatio(p_windowWidth / static_cast<float>(p_windowHeight));
 		CacheProjectionMatrix(p_windowWidth, p_windowHeight);
@@ -115,12 +107,12 @@ namespace LitchiRuntime
 		projection_mat4_ = CalculateProjectionMatrix(p_windowWidth, p_windowHeight);
 	}
 
-	void LitchiRuntime::RenderCamera::CacheViewMatrix(const glm::vec3& p_position, const glm::quat& p_rotation)
+	void LitchiRuntime::RenderCamera::CacheViewMatrix(const Vector3& p_position, const Quaternion& p_rotation)
 	{
 		view_mat4_ = CalculateViewMatrix(p_position, p_rotation);
 	}
 
-	void LitchiRuntime::RenderCamera::CacheFrustum(const glm::mat4& p_view, const glm::mat4& p_projection)
+	void LitchiRuntime::RenderCamera::CacheFrustum(const Matrix& p_view, const Matrix& p_projection)
 	{
 		// todo
 		// m_frustum.CalculateFrustum(p_projection * p_view);
@@ -146,17 +138,17 @@ namespace LitchiRuntime
 		return farClip_;
 	}
 
-	const glm::vec3& LitchiRuntime::RenderCamera::GetClearColor() const
+	const Vector3& LitchiRuntime::RenderCamera::GetClearColor() const
 	{
-		return glm::vec3(clear_color_);
+		return Vector3(clear_color_);
 	}
 
-	const glm::mat4& LitchiRuntime::RenderCamera::GetProjectionMatrix() const
+	const Matrix& LitchiRuntime::RenderCamera::GetProjectionMatrix() const
 	{
 		return projection_mat4_;
 	}
 
-	const glm::mat4& LitchiRuntime::RenderCamera::GetViewMatrix() const
+	const Matrix& LitchiRuntime::RenderCamera::GetViewMatrix() const
 	{
 		return view_mat4_;
 	}
@@ -197,9 +189,9 @@ namespace LitchiRuntime
 		farClip_ = p_value;
 	}
 
-	void LitchiRuntime::RenderCamera::SetClearColor(const glm::vec3& p_clearColor)
+	void LitchiRuntime::RenderCamera::SetClearColor(const Vector3& p_clearColor)
 	{
-		clear_color_ = glm::vec4(p_clearColor,0);
+		clear_color_ = Vector4(p_clearColor,0);
 	}
 
 	void LitchiRuntime::RenderCamera::SetFrustumGeometryCulling(bool p_enable)
@@ -217,7 +209,7 @@ namespace LitchiRuntime
 		m_projectionMode = p_projectionMode;
 	}
 
-	glm::mat4 LitchiRuntime::RenderCamera::CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const
+	Matrix LitchiRuntime::RenderCamera::CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const
 	{
 		const auto ratio = aspectRatio_;
 		const auto right = m_size * ratio;
@@ -228,31 +220,31 @@ namespace LitchiRuntime
 		switch (m_projectionMode)
 		{
 		case ProjectionMode::ORTHOGRAPHIC:
-			return glm::ortho(left,right,bottom,top,nearClip_,farClip_);
+			return Matrix::CreateOrthoOffCenterLH(left,right,bottom,top,nearClip_,farClip_);
 
 		case ProjectionMode::PERSPECTIVE:
-			return glm::perspective(glm::radians(fov_), aspectRatio_, nearClip_, farClip_);
+			return Matrix::CreatePerspectiveFieldOfViewLH(Math::Helper::DegreesToRadians(fov_), aspectRatio_, nearClip_, farClip_);
 
 		default:
-			return glm::mat4(1);
+			return Matrix::Identity;
 		}
 	}
 
-	glm::mat4 LitchiRuntime::RenderCamera::CalculateViewMatrix(const glm::vec3& p_position, const glm::quat& p_rotation) const
+	Matrix LitchiRuntime::RenderCamera::CalculateViewMatrix(const Vector3& p_position, const Quaternion& p_rotation) const
 	{
-		glm::vec3 up = glm::normalize(p_rotation) * glm::vec3(0,1.0,0);
+		Vector3 up = p_rotation.Normalized() * Vector3(0,1.0,0);
 			
-		glm::vec3 forward = glm::normalize(p_rotation)* glm::vec3(0, 0, -1.0);
+		Vector3 forward = p_rotation.Normalized() * Vector3(0, 0, -1.0);
 
 	/*	DEBUG_LOG_INFO("---------------------------------");
 		DEBUG_LOG_INFO("CalculateViewMatrix eulerRotation.X:{},eulerRotation.Y:{},eulerRotation.Z:{}", eulerRotation.x, eulerRotation.y, eulerRotation.z);
 		DEBUG_LOG_INFO("CalculateViewMatrix forward.X:{},forward.Y:{},forward.Z:{}", forward.x, forward.y, forward.z);*/
 
-		return glm::lookAt
+		return Matrix::CreateLookAtLH
 		(
-			glm::vec3(p_position.x, p_position.y, p_position.z),											// Position
-			glm::vec3(p_position.x + forward.x, p_position.y + forward.y, p_position.z + forward.z),			// LookAt (Position + Forward)
-			glm::vec3(up.x, up.y, up.z)																		// Up Vector
+			Vector3(p_position.x, p_position.y, p_position.z),											// Position
+			Vector3(p_position.x + forward.x, p_position.y + forward.y, p_position.z + forward.z),			// LookAt (Position + Forward)
+			Vector3(up.x, up.y, up.z)																		// Up Vector
 		);
 	}
 

@@ -50,7 +50,7 @@
 //}
 //
 //
-//float* TransMatrixToArr(glm::mat4 mat)
+//float* TransMatrixToArr(Matrix mat)
 //{
 //	float arr[16];
 //	arr[0] = mat[0][0];
@@ -78,7 +78,7 @@
 ///////
 /////////////////////////////////// CALCULATE FRUSTUM \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*
 //
-//void LitchiRuntime::Frustum::CalculateFrustum(const glm::mat4& p_viewProjection)
+//void LitchiRuntime::Frustum::CalculateFrustum(const Matrix& p_viewProjection)
 //{
 //	auto columnMajorViewProjection = glm::transpose(p_viewProjection);
 //	auto clip = TransMatrixToArr(columnMajorViewProjection);
@@ -268,7 +268,7 @@
 //	return true;
 //}
 //
-//bool LitchiRuntime::Frustum::BoundingSphereInFrustum(const LitchiRuntime::BoundingSphere& p_boundingSphere, const glm::vec3 worldPos, const glm::quat worldRotation, const glm::vec3 worldScale) const
+//bool LitchiRuntime::Frustum::BoundingSphereInFrustum(const LitchiRuntime::BoundingSphere& p_boundingSphere, const Vector3 worldPos, const Quaternion worldRotation, const Vector3 worldScale) const
 //{
 //	const auto& position = worldPos;
 //	const auto& rotation = worldRotation;
@@ -279,7 +279,7 @@
 //
 //	auto sphereOffset = rotation * p_boundingSphere.position * maxScale;
 //
-//	glm::vec3 worldCenter = position + sphereOffset;
+//	Vector3 worldCenter = position + sphereOffset;
 //
 //	return SphereInFrustum(worldCenter.x, worldCenter.y, worldCenter.z, scaledRadius);
 //}

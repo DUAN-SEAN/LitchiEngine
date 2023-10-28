@@ -11,7 +11,7 @@
 
 std::string LitchiRuntime::Loaders::ShaderLoader::__FILE_TRACE;
 
-LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(const std::string& p_filePath)
+LitchiRuntime::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(const std::string& p_filePath)
 {
 	__FILE_TRACE = p_filePath;
 
@@ -20,22 +20,22 @@ LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::Create(co
 	uint32_t programID = CreateProgram(source.first, source.second);
 
 	if (programID)
-		return new LitchiRuntime::Resource::Shader(p_filePath, programID);
+		return new LitchiRuntime::Shader(p_filePath, programID);
 
 	return nullptr;
 }
 
-LitchiRuntime::Resource::Shader* LitchiRuntime::Loaders::ShaderLoader::CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader)
+LitchiRuntime::Shader* LitchiRuntime::Loaders::ShaderLoader::CreateFromSource(const std::string& p_vertexShader, const std::string& p_fragmentShader)
 {
 	uint32_t programID = CreateProgram(p_vertexShader, p_fragmentShader);
 
 	if (programID)
-		return new LitchiRuntime::Resource::Shader("", programID);
+		return new LitchiRuntime::Shader("", programID);
 
 	return nullptr;
 }
 
-void LitchiRuntime::Loaders::ShaderLoader::Recompile(LitchiRuntime::Resource::Shader& p_shader, const std::string& p_filePath)
+void LitchiRuntime::Loaders::ShaderLoader::Recompile(LitchiRuntime::Shader& p_shader, const std::string& p_filePath)
 {
 	__FILE_TRACE = p_filePath;
 
@@ -47,7 +47,7 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(LitchiRuntime::Resource::Sh
 	if (newProgram)
 	{
 		/* Pointer to the shaderID (const data member, tricks to access it) */
-		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(LitchiRuntime::Resource::Shader, id);
+		std::uint32_t* shaderID = reinterpret_cast<uint32_t*>(&p_shader) + offsetof(LitchiRuntime::Shader, id);
 
 		/* Deletes the previous program */
 		glDeleteProgram(*shaderID);
@@ -65,7 +65,7 @@ void LitchiRuntime::Loaders::ShaderLoader::Recompile(LitchiRuntime::Resource::Sh
 	}
 }
 
-bool LitchiRuntime::Loaders::ShaderLoader::Destroy(LitchiRuntime::Resource::Shader*& p_shader)
+bool LitchiRuntime::Loaders::ShaderLoader::Destroy(LitchiRuntime::Shader*& p_shader)
 {
 	if (p_shader)
 	{

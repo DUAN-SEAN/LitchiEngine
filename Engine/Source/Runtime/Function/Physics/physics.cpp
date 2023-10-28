@@ -1,6 +1,7 @@
 ﻿
 #include "physics.h"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Core/Math/Vector3.h"
 
 namespace LitchiRuntime
 {
@@ -99,14 +100,14 @@ namespace LitchiRuntime
         return px_scene;
     }
 
-    PxRigidDynamic* Physics::CreateRigidDynamic(const glm::vec3& pos, const char* name) {
+    PxRigidDynamic* Physics::CreateRigidDynamic(const Vector3& pos, const char* name) {
         PxRigidDynamic* body = px_physics_->createRigidDynamic(PxTransform(PxVec3(pos.x, pos.y, pos.z)));
         body->setName(name);
         px_scene_->addActor(*body);
         return body;
     }
 
-    PxRigidStatic* Physics::CreateRigidStatic(const glm::vec3& pos, const char* name) {
+    PxRigidStatic* Physics::CreateRigidStatic(const Vector3& pos, const char* name) {
         PxRigidStatic* body = px_physics_->createRigidStatic(PxTransform(PxVec3(pos.x, pos.y, pos.z)));
         body->setName(name);
         px_scene_->addActor(*body);
@@ -123,12 +124,12 @@ namespace LitchiRuntime
         return shape;
     }
 
-    PxShape* Physics::CreateBoxShape(const glm::vec3& size, PxMaterial* material) {
+    PxShape* Physics::CreateBoxShape(const Vector3& size, PxMaterial* material) {
         PxShape* shape = px_physics_->createShape(PxBoxGeometry(size.x / 2, size.y / 2, size.z / 2), *material);
         return shape;
     }
 
-    bool Physics::RaycastSingle(glm::vec3& origin, glm::vec3& dir, float distance, RaycastHit* raycast_hit) {
+    bool Physics::RaycastSingle(Vector3& origin, Vector3& dir, float distance, RaycastHit* raycast_hit) {
         PxHitFlags hitFlags = PxHitFlag::ePOSITION | PxHitFlag::eNORMAL | PxHitFlag::eUV;
         PxRaycastHit px_raycast_hit;
         if (PxSceneQueryExt::raycastSingle(*px_scene_, PxVec3(origin.x, origin.y, origin.z), PxVec3(dir.x, dir.y, dir.z), distance, hitFlags, px_raycast_hit)) {

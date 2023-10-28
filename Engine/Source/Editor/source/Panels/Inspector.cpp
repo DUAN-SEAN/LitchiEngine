@@ -70,7 +70,7 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(9, "UIText");
 		componentSelectorWidget.choices.emplace(10, "UIImage");
 
-		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", glm::vec2{ 100.f, 0 });
+		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f ));
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
 		addComponentButton.textColor = Color::White;
 		addComponentButton.ClickedEvent += [&componentSelectorWidget, this]
@@ -124,7 +124,7 @@ LitchiEditor::Inspector::Inspector
 		m_scriptSelectorWidget->lineBreak = false;
 		auto& ddTarget = m_scriptSelectorWidget->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File");
 
-		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", glm::vec2{ 100.f, 0 });
+		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", Vector2{ 100.f, 0.0f});
 		addScriptButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
 		addScriptButton.textColor = Color::White;
 
@@ -256,7 +256,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 {
 	/*auto& col = p_root.CreateWidget<Columns<2>>();
 	col.widths[0] = 10.0f;
-	auto& dumy = col.CreateWidget<Dummy>(glm::vec2(0.0f, 5.0f));
+	auto& dumy = col.CreateWidget<Dummy>(Vector2(0.0f, 5.0f));
 	auto& propertyRoot = col.CreateWidget<GroupCollapsable>(propertyName.to_string());*/
 
 	auto& propertyRoot = p_root.CreateWidget<Columns<2>>();
@@ -534,12 +534,12 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 			PropertyField property_field(obj, propertyPathList);
 			auto getVec3 = [prop_value, property_field]
 			{
-				auto localRotation = property_field.GetValue().get_value<glm::quat>();
-				auto localRotation4Euler = glm::eulerAngles(localRotation);
-				auto localRotation4DegreesEuler = glm::degrees(localRotation4Euler);
+				auto localRotation = property_field.GetValue().get_value<Quaternion>();
+				auto localRotation4Euler = localRotation.ToEulerAngles();
+				auto localRotation4DegreesEuler = Vector3(Math::Helper::RadiansToDegrees(localRotation4Euler.x), Math::Helper::RadiansToDegrees(localRotation4Euler.y), Math::Helper::RadiansToDegrees(localRotation4Euler.z));
 				return localRotation4DegreesEuler;
 			};
-			auto setVec3 = [property_field](glm::vec3 eulerVec3)
+			auto setVec3 = [property_field](Vector3 eulerVec3)
 			{
 				// 万向节(x,y,z)(pitch, yaw, roll)
 				//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
@@ -551,7 +551,9 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 				{
 					eulerVec3.z = 0.0f;
 				}
-				bool result = property_field.SetValue(glm::quat(glm::radians(eulerVec3)));
+				
+				//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
+				bool result = property_field.SetValue(Quaternion::FromEulerAngles(Math::Helper::DegreesToRadians(eulerVec3.x), Math::Helper::DegreesToRadians(eulerVec3.y), Math::Helper::DegreesToRadians(eulerVec3.z)));
 				if (!result)
 				{
 					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");

@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "Runtime/Core/Log/debug.h"
-#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -22,6 +21,7 @@
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
 #include <Runtime/Function/UI/Plugins/DDSource.h>
 
+#include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/MaterialEditor.h"
 #include "Runtime/Core/Tools/Utils/String.h"
@@ -1004,7 +1004,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 	/* Find the icon to apply to the item */
 	uint32_t iconTextureID = isDirectory ? ApplicationEditor::Instance()->editorResources->GetTexture("Icon_Folder")->id : ApplicationEditor::Instance()->editorResources->GetFileIcon(itemname)->id;
 
-	itemGroup.CreateWidget<Image>(iconTextureID, glm::vec2{ 16, 16 }).lineBreak = false;
+	itemGroup.CreateWidget<Image>(iconTextureID, Vector2{ 16, 16 }).lineBreak = false;
 
 	/* If the entry is a directory, the content must be a tree node, otherwise (= is a file), a text will suffice */
 	if (isDirectory)

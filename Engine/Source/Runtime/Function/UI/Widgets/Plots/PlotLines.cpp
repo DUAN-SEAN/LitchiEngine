@@ -8,7 +8,7 @@ LitchiRuntime::PlotLines::PlotLines
 	const std::vector<float>& p_data,
 	float p_minScale,
 	float p_maxScale,
-	const glm::vec2& p_size,
+	const Vector2& p_size,
 	const std::string& p_overlay,
 	const std::string& p_label,
 	int p_forceHover

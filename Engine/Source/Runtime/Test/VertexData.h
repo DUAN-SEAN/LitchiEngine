@@ -3,114 +3,114 @@
 
 #include <glm.hpp>
 
-static const glm::vec3 kPositions[36] = {
+static const Vector3 kPositions[36] = {
     //Front
-    glm::vec3(-1.0f, -1.0f, 1.0f),
-    glm::vec3(1.0f, -1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, 1.0f),
+    Vector3(1.0f, -1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, 1.0f),
 
-    glm::vec3(-1.0f, -1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, 1.0f),
+    Vector3(-1.0f, 1.0f, 1.0f),
 
     //back
-    glm::vec3(1.0f, -1.0f, -1.0f),
-    glm::vec3(-1.0f, -1.0f, -1.0f),
-    glm::vec3(-1.0f, 1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, -1.0f),
+    Vector3(-1.0f, -1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, -1.0f),
 
-    glm::vec3(1.0f, -1.0f, -1.0f),
-    glm::vec3(-1.0f, 1.0f, -1.0f),
-    glm::vec3(1.0f, 1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, -1.0f),
+    Vector3(1.0f, 1.0f, -1.0f),
 
     //left
-    glm::vec3(-1.0f, -1.0f, -1.0f),
-    glm::vec3(-1.0f, -1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, -1.0f),
+    Vector3(-1.0f, -1.0f, 1.0f),
+    Vector3(-1.0f, 1.0f, 1.0f),
 
-    glm::vec3(-1.0f, -1.0f, -1.0f),
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(-1.0f, 1.0f, -1.0f),
+    Vector3(-1.0f, -1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, 1.0f),
+    Vector3(-1.0f, 1.0f, -1.0f),
 
     //right
-    glm::vec3(1.0f, -1.0f, 1.0f),
-    glm::vec3(1.0f, -1.0f, -1.0f),
-    glm::vec3(1.0f, 1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, 1.0f),
+    Vector3(1.0f, -1.0f, -1.0f),
+    Vector3(1.0f, 1.0f, -1.0f),
 
-    glm::vec3(1.0f, -1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, -1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
+    Vector3(1.0f, -1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, -1.0f),
+    Vector3(1.0f, 1.0f, 1.0f),
 
     //up
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, -1.0f),
 
-    glm::vec3(-1.0f, 1.0f, 1.0f),
-    glm::vec3(1.0f, 1.0f, -1.0f),
-    glm::vec3(-1.0f, 1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, 1.0f),
+    Vector3(1.0f, 1.0f, -1.0f),
+    Vector3(-1.0f, 1.0f, -1.0f),
 
     //down
-    glm::vec3(-1.0f, -1.0f, -1.0f),
-    glm::vec3(1.0f, -1.0f, -1.0f),
-    glm::vec3(1.0f, -1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, 1.0f),
 
-    glm::vec3(-1.0f, -1.0f, -1.0f),
-    glm::vec3(1.0f, -1.0f, 1.0f),
-    glm::vec3(-1.0f, -1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, -1.0f),
+    Vector3(1.0f, -1.0f, 1.0f),
+    Vector3(-1.0f, -1.0f, 1.0f),
 };
 
-static const glm::vec4 kColors[36] = {
+static const Vector4 kColors[36] = {
     //Front
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
 
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
 
     //back
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
 
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
-    glm::vec4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
+    Vector4(1, 0, 0, 1),
 
     //left
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
 
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
 
     //right
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
 
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
-    glm::vec4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
+    Vector4(0, 1, 0, 1),
 
     //up
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
 
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
 
     //down
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
 
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
-    glm::vec4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
+    Vector4(0, 0, 1, 1),
 };

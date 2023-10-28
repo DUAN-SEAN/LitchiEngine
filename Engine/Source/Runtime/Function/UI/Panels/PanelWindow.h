@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "APanelTransformable.h"
+#include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 
@@ -95,8 +96,8 @@ namespace LitchiRuntime
 	public:
 		std::string name;
 
-		glm::vec2 minSize = glm::vec2((0.f, 0.f));
-		glm::vec2 maxSize = glm::vec2( 0.f, 0.f );
+		Vector2 minSize = Vector2(0.f, 0.f);
+		Vector2 maxSize = Vector2( 0.f, 0.f );
 
 		bool resizable = true;
 		bool closable = false;

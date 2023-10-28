@@ -6,7 +6,8 @@
 #include <rapidjson/document.h>
 
 #include "serializer.h"
-#include "Runtime/Core/App/application.h"
+#include "rttr/type"
+#include "Runtime/Core/Meta/Reflection/type.h"
 
 using std::ifstream;
 using std::ios;
@@ -42,7 +43,7 @@ namespace LitchiRuntime
 
 		GameObject* go = new GameObject("TestObj");
 		auto transform = go->AddComponent<Transform>();
-		transform->set_position(glm::vec3(0, 1, 0));
+		transform->set_position(Vector3(0, 1, 0));
 		auto collider = go->AddComponent<Collider>();
 		collider->SetPhysicMaterial(PhysicMaterialRes(0.5f, 1.0f, 0.7f));
 

@@ -113,7 +113,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	};
 //	sceneViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &sceneViewGridPicker]
 //	{
-//		EDITOR_PANEL(SceneView, "Scene View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
+//		EDITOR_PANEL(SceneView, "Scene View").SetGridColor(Vector3(0.176f, 0.176f, 0.176f));
 //		sceneViewGridPicker.color = Color(0.176f, 0.176f, 0.176f);
 //	};
 //
@@ -137,7 +137,7 @@ LitchiEditor::MenuBar::MenuBar()
 //	};
 //	assetViewGrid.CreateWidget<MenuItem>("Reset").ClickedEvent += [this, &assetViewGridPicker]
 //	{
-//		EDITOR_PANEL(AssetView, "Asset View").SetGridColor(glm::vec3(0.176f, 0.176f, 0.176f));
+//		EDITOR_PANEL(AssetView, "Asset View").SetGridColor(Vector3(0.176f, 0.176f, 0.176f));
 //		assetViewGridPicker.color = Color(0.176f, 0.176f, 0.176f);
 //	};
 //

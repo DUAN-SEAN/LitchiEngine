@@ -2,7 +2,7 @@
 #pragma once
 
 #include <unordered_map>
-#include "glm.hpp"
+
 #include <Runtime/Core/Math/Vector2.h>
 
 namespace LitchiRuntime
@@ -48,7 +48,7 @@ namespace LitchiRuntime
         /// \return
         static bool GetMouseButtonUp(unsigned short mouse_button_index);
 
-        static glm::vec2 mousePosition() { return mouse_position_; }
+        static Vector2 mousePosition() { return mouse_position_; }
         /// 设置鼠标位置
         /// \param x
         /// \param y
@@ -74,7 +74,7 @@ namespace LitchiRuntime
 
     private:
         static std::unordered_map<unsigned short, unsigned short> key_event_map_;//按键状态 奇数按下 偶数弹起 0表示没有记录
-        static glm::vec2 mouse_position_;//鼠标位置
+        static Vector2 mouse_position_;//鼠标位置
         static short mouse_scroll_;//鼠标滚轮值
     };
 }

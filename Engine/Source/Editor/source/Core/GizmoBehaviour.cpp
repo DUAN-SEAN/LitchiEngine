@@ -2,9 +2,12 @@
 
 #include "Editor/include/Core/GizmoBehaviour.h"
 
-#include "Runtime/Core/Window/Inputs/EKey.h"
-#include "Runtime/Core/Window/Inputs/EKeyState.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+
+namespace meshopt
+{
+	struct Vector3;
+}
 
 float SnapValue(float p_value, float p_step)
 {
@@ -20,7 +23,7 @@ bool LitchiEditor::GizmoBehaviour::IsSnappedBehaviourEnabled() const
 	return false;
 }
 
-void LitchiEditor::GizmoBehaviour::StartPicking(LitchiRuntime::GameObject* p_target, const glm::vec3& p_cameraPosition, EGizmoOperation p_operation, EDirection p_direction)
+void LitchiEditor::GizmoBehaviour::StartPicking(LitchiRuntime::GameObject* p_target, const LitchiRuntime::Vector3& p_cameraPosition, EGizmoOperation p_operation, EDirection p_direction)
 {
 	m_target = p_target;
 	m_firstMouse = true;
@@ -28,8 +31,8 @@ void LitchiEditor::GizmoBehaviour::StartPicking(LitchiRuntime::GameObject* p_tar
 	//m_originalTransform = p_target.transform.GetFTransform();
 
 	auto originalPos  = m_originalTransform->GetPosition();
-	auto originalPosGlm = glm::vec3(originalPos.x, originalPos.y, originalPos.z);
-	m_distanceToActor = glm::distance(p_cameraPosition, originalPosGlm);
+	auto originalPosGlm = Vector3(originalPos.x, originalPos.y, originalPos.z);
+	m_distanceToActor = Vector3::Distance(p_cameraPosition, originalPosGlm);
 	//m_distanceToActor = glm::distance(p_cameraPosition, m_target->transform.GetWorldPosition());
 	m_currentOperation = p_operation;
 	m_direction = p_direction;
@@ -40,30 +43,30 @@ void LitchiEditor::GizmoBehaviour::StopPicking()
 	m_target = nullptr;
 }
 
-glm::vec3 LitchiEditor::GizmoBehaviour::GetFakeDirection() const
+Vector3 LitchiEditor::GizmoBehaviour::GetFakeDirection() const
 {
-	auto result = glm::vec3();
+	auto result = Vector3();
 
 	/*switch (m_direction)
 	{
 	case LitchiEditor::GizmoBehaviour::EDirection::X:
 		
-		result = glm::vec3::Right;
+		result = Vector3::Right;
 		break;
 	case LitchiEditor::GizmoBehaviour::EDirection::Y:
-		result = glm::vec3::Up;
+		result = Vector3::Up;
 		break;
 	case LitchiEditor::GizmoBehaviour::EDirection::Z:
-		result = glm::vec3::Forward;
+		result = Vector3::Forward;
 		break;
 	}*/
 
 	return result;
 }
 
-glm::vec3 LitchiEditor::GizmoBehaviour::GetRealDirection(bool p_relative) const
+Vector3 LitchiEditor::GizmoBehaviour::GetRealDirection(bool p_relative) const
 {
-	auto result = glm::vec3();
+	auto result = Vector3();
 
 	/*switch (m_direction)
 	{
@@ -81,26 +84,26 @@ glm::vec3 LitchiEditor::GizmoBehaviour::GetRealDirection(bool p_relative) const
 	return result;
 }
 
-glm::vec2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const
+Vector2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const
 {
 	//auto start = m_originalTransform.GetWorldPosition();
 	//auto end = m_originalTransform.GetWorldPosition() + GetRealDirection(true) * 0.01f;
 
-	//auto start2D = glm::vec2();
+	//auto start2D = Vector2();
 	//{
-	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::glm::vec4{ start.x, start.y, start.z, 1.0f });
-	//	auto ndcSpacePos = glm::vec3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
-	//	auto windowSpacePos = ((glm::vec2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
+	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::Vector4{ start.x, start.y, start.z, 1.0f });
+	//	auto ndcSpacePos = Vector3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
+	//	auto windowSpacePos = ((Vector2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
 	//	windowSpacePos.x *= p_viewSize.x;
 	//	windowSpacePos.y *= p_viewSize.y;
 	//	start2D = windowSpacePos;
 	//}
 
-	//auto end2D = glm::vec2();
+	//auto end2D = Vector2();
 	//{
-	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::glm::vec4{ end.x, end.y, end.z, 1.0f });
-	//	auto ndcSpacePos = glm::vec3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
-	//	auto windowSpacePos = ((glm::vec2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
+	//	auto clipSpacePos = p_projectionMatrix * (p_viewMatrix * OvMaths::Vector4{ end.x, end.y, end.z, 1.0f });
+	//	auto ndcSpacePos = Vector3{ clipSpacePos.x, clipSpacePos.y, clipSpacePos.z } / clipSpacePos.w;
+	//	auto windowSpacePos = ((Vector2{ ndcSpacePos.x, ndcSpacePos.y } + 1.0f) / 2.0f);
 	//	windowSpacePos.x *= p_viewSize.x;
 	//	windowSpacePos.y *= p_viewSize.y;
 	//	end2D = windowSpacePos;
@@ -110,11 +113,11 @@ glm::vec2 LitchiEditor::GizmoBehaviour::GetScreenDirection(const glm::mat4& p_vi
 
 	//result.y *= -1; // Screen coordinates are reversed, so we inverse the Y
 
-	//return glm::vec2::Normalize(result);
-	return glm::vec2();
+	//return Vector2::Normalize(result);
+	return Vector2();
 }
 
-void LitchiEditor::GizmoBehaviour::ApplyTranslation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const
+void LitchiEditor::GizmoBehaviour::ApplyTranslation(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const
 {
 	/*auto unitsPerPixel = 0.001f * m_distanceToActor;
 	auto originPosition = m_originalTransform.GetLocalPosition();
@@ -122,7 +125,7 @@ void LitchiEditor::GizmoBehaviour::ApplyTranslation(const glm::mat4& p_viewMatri
 	auto screenDirection = GetScreenDirection(p_viewMatrix, p_projectionMatrix, p_viewSize);
 
 	auto totalDisplacement = m_currentMouse - m_originMouse;
-	auto translationCoefficient = glm::vec2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
+	auto translationCoefficient = Vector2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
 
 	if (IsSnappedBehaviourEnabled())
 	{
@@ -132,27 +135,27 @@ void LitchiEditor::GizmoBehaviour::ApplyTranslation(const glm::mat4& p_viewMatri
 	m_target->transform.SetLocalPosition(originPosition + GetRealDirection() * translationCoefficient);*/
 }
 
-void LitchiEditor::GizmoBehaviour::ApplyRotation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const
+void LitchiEditor::GizmoBehaviour::ApplyRotation(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const
 {
 	/*auto unitsPerPixel = 0.2f;
 	auto originRotation = m_originalTransform.GetLocalRotation();
 
 	auto screenDirection = GetScreenDirection(p_viewMatrix, p_projectionMatrix, p_viewSize);
-	screenDirection = glm::vec2(-screenDirection.y, screenDirection.x);
+	screenDirection = Vector2(-screenDirection.y, screenDirection.x);
 
 	auto totalDisplacement = m_currentMouse - m_originMouse;
-	auto rotationCoefficient = glm::vec2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
+	auto rotationCoefficient = Vector2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
 
 	if (IsSnappedBehaviourEnabled())
 	{
 		rotationCoefficient = SnapValue(rotationCoefficient, OvEditor::Settings::EditorSettings::RotationSnapUnit);
 	}
 
-	auto rotationToApply = glm::quat(glm::vec3(GetFakeDirection() * rotationCoefficient));
+	auto rotationToApply = Quaternion(Vector3(GetFakeDirection() * rotationCoefficient));
 	m_target->transform.SetLocalRotation(originRotation * rotationToApply);*/
 }
 
-void LitchiEditor::GizmoBehaviour::ApplyScale(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize) const
+void LitchiEditor::GizmoBehaviour::ApplyScale(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize) const
 {
 	//auto unitsPerPixel = 0.01f;
 	//auto originScale = m_originalTransform.GetLocalScale();
@@ -160,7 +163,7 @@ void LitchiEditor::GizmoBehaviour::ApplyScale(const glm::mat4& p_viewMatrix, con
 	//auto screenDirection = GetScreenDirection(p_viewMatrix, p_projectionMatrix, p_viewSize);
 
 	//auto totalDisplacement = m_currentMouse - m_originMouse;
-	//auto scaleCoefficient = glm::vec2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
+	//auto scaleCoefficient = Vector2::Dot(totalDisplacement, screenDirection) * unitsPerPixel;
 
 	//if (IsSnappedBehaviourEnabled())
 	//{
@@ -177,7 +180,7 @@ void LitchiEditor::GizmoBehaviour::ApplyScale(const glm::mat4& p_viewMatrix, con
 	//m_target->transform.SetLocalScale(newScale);
 }
 
-void LitchiEditor::GizmoBehaviour::ApplyOperation(const glm::mat4& p_viewMatrix, const glm::mat4& p_projectionMatrix, const glm::vec2& p_viewSize)
+void LitchiEditor::GizmoBehaviour::ApplyOperation(const Matrix& p_viewMatrix, const Matrix& p_projectionMatrix, const Vector2& p_viewSize)
 {
 	switch (m_currentOperation)
 	{
@@ -195,7 +198,7 @@ void LitchiEditor::GizmoBehaviour::ApplyOperation(const glm::mat4& p_viewMatrix,
 	}
 }
 
-void LitchiEditor::GizmoBehaviour::SetCurrentMouse(const glm::vec2& p_mousePosition)
+void LitchiEditor::GizmoBehaviour::SetCurrentMouse(const Vector2& p_mousePosition)
 {
 	if (m_firstMouse)
 	{

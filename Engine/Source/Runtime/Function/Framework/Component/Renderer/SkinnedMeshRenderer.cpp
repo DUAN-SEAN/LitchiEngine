@@ -30,8 +30,8 @@ void SkinnedMeshRenderer::Update()
 
 	//// 获取模型上的骨骼信息
 	//std::vector<int> boneHierarchy;
-	//std::vector<glm::mat4> boneOffsets;
-	//std::vector<glm::mat4> defaultTransform;
+	//std::vector<Matrix> boneOffsets;
+	//std::vector<Matrix> defaultTransform;
 	//model->GetBoneHierarchy(boneHierarchy);
 	//model->GetBoneOffsets(boneOffsets);
 	//model->GetNodeOffsets(defaultTransform);
@@ -49,7 +49,7 @@ void SkinnedMeshRenderer::Update()
 	//CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets, m_finalTransformCacheArr);
 }
 
-//void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, glm::mat4 const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
+//void SkinnedMeshRenderer::Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
 //{
 //	// 提交FinalTransform到GPU
 //	GetMaterial()->GetShader()->Bind();
@@ -72,15 +72,15 @@ void SkinnedMeshRenderer::Update()
  * \param boneOffsets T-Pose 矩阵, 用于将顶点转换到骨骼空间
  * \param finalTransforms 输出顶点的最终变换矩阵
  */
-void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<glm::mat4>& boneOffsets, std::vector<glm::mat4x4>& finalTransforms)
+void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets, std::vector<Matrix>& finalTransforms)
 {
 	uint32_t numBones = boneOffsets.size();
 	finalTransforms.resize(numBones);
-	std::vector<glm::mat4x4> toParentTransforms(numBones);
+	std::vector<Matrix> toParentTransforms(numBones);
 
 	clip->Interpolate(timePos, toParentTransforms);
 
-	std::vector<glm::mat4x4> toRootTransforms(numBones);
+	std::vector<Matrix> toRootTransforms(numBones);
 	toRootTransforms[0] = toParentTransforms[0];
 
 	// 计算所有骨骼到root的变换矩阵

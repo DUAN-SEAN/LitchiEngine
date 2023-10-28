@@ -75,7 +75,7 @@
 //
 //void LitchiRuntime::Mesh::ComputeBoundingSphere(const std::vector<Vertex>& p_vertices)
 //{
-//	m_boundingSphere.position = glm::vec3(0);
+//	m_boundingSphere.position = Vector3(0);
 //	m_boundingSphere.radius = 0.0f;
 //
 //	if (!p_vertices.empty())
@@ -99,11 +99,11 @@
 //			maxZ = std::max(maxZ, vertex.position[2]);
 //		}
 //
-//		m_boundingSphere.position = glm::vec3{ minX + maxX, minY + maxY, minZ + maxZ } / 2.0f;
+//		m_boundingSphere.position = Vector3{ minX + maxX, minY + maxY, minZ + maxZ } / 2.0f;
 //
 //		for (const auto& vertex : p_vertices)
 //		{
-//			const auto& position = reinterpret_cast<const glm::vec3&>(vertex.position);
+//			const auto& position = reinterpret_cast<const Vector3&>(vertex.position);
 //			m_boundingSphere.radius = std::max(m_boundingSphere.radius, glm::distance(m_boundingSphere.position, position));
 //		}
 //	}

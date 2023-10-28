@@ -8,7 +8,7 @@
 
 #include "Runtime/Function/UI/Internal/Converter.h"
 
-LitchiRuntime::ProgressBar::ProgressBar(float p_fraction, const glm::vec2 & p_size, const std::string & p_overlay) :
+LitchiRuntime::ProgressBar::ProgressBar(float p_fraction, const Vector2 & p_size, const std::string & p_overlay) :
 	fraction(p_fraction), size(p_size), overlay(p_overlay)
 {
 }

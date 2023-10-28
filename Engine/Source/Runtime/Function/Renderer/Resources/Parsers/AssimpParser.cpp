@@ -44,7 +44,7 @@ void LitchiRuntime::Parsers::AssimpParser::ReadNodeHierarchy(Model* model, const
 	uint32_t boneIndex = model->boneInfoArr.size();
 	model->boneMap[node->mName.C_Str()] = boneIndex;
 
-	boneInfo.boneOffset = glm::mat4(1.0f);
+	boneInfo.boneOffset = Matrix::Identity;
 	boneInfo.parentIndex = parentIndex;
 	boneInfo.defaultOffset = {
 		node->mTransformation.a1, node->mTransformation.b1, node->mTransformation.c1, node->mTransformation.d1,

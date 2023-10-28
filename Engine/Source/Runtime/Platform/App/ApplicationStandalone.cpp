@@ -14,7 +14,6 @@
 #endif
 #define GLFW_INCLUDE_VULKAN
 #include "GLFW/glfw3.h"
-#include "gtx/euler_angles.hpp"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
 #include "Runtime/Function/Input/input.h"

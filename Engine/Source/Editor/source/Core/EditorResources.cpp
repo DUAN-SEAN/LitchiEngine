@@ -207,7 +207,7 @@ LitchiRuntime::Model* LitchiEditor::EditorResources::GetModel(const std::string&
 	return nullptr;
 }
 
-LitchiRuntime::Resource::Shader* LitchiEditor::EditorResources::GetShader(const std::string& p_id)
+LitchiRuntime::Shader* LitchiEditor::EditorResources::GetShader(const std::string& p_id)
 {
 	if (m_shaders.find(p_id) != m_shaders.end())
 		return m_shaders.at(p_id);

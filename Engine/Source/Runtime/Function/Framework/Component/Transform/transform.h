@@ -6,7 +6,7 @@
 #include "Runtime/Core/Math/Matrix.h"
 #include "Runtime/Core/Math/Quaternion.h"
 //#include "Runtime/Core/Math/FTransform.h"
-//#include "glm.hpp"
+//
 //#include <gtc/matrix_transform.hpp>
 //#include <gtx/transform2.hpp>
 //#include "gtx/quaternion.hpp"
@@ -18,26 +18,26 @@ namespace LitchiRuntime
         Transform();
         ~Transform();
 
-        //glm::vec3 GetLocalPosition() const { return m_transform.GetLocalPosition(); }
-        //glm::quat GetLocalRotation() const { return m_transform.GetLocalRotation(); }
-        //glm::vec3 GetLocalScale() const { return m_transform.GetLocalScale(); }
-        //glm::mat4 GetWorldMatrix() const
+        //Vector3 GetLocalPosition() const { return m_transform.GetLocalPosition(); }
+        //Quaternion GetLocalRotation() const { return m_transform.GetLocalRotation(); }
+        //Vector3 GetLocalScale() const { return m_transform.GetLocalScale(); }
+        //Matrix GetWorldMatrix() const
         //{
 
-        //    glm::mat4 trans = glm::translate(m_transform.GetWorldPosition());
-        //    glm::mat4 rotation = glm::toMat4(m_transform.GetWorldRotation());
-        //    glm::mat4 scale = glm::scale(m_transform.GetWorldScale()); //缩放;
+        //    Matrix trans = glm::translate(m_transform.GetWorldPosition());
+        //    Matrix rotation = glm::toMat4(m_transform.GetWorldRotation());
+        //    Matrix scale = glm::scale(m_transform.GetWorldScale()); //缩放;
         //    return trans * rotation * scale;
         //}
 
-        //void SetLocalPosition(glm::vec3 position) { m_transform.SetLocalPosition(position); }
-        //void SetLocalRotation(glm::quat rotation) { m_transform.SetLocalRotation(rotation); }
-        //void SetLocalScale(glm::vec3 scale) { m_transform.SetLocalScale(scale); }
+        //void SetLocalPosition(Vector3 position) { m_transform.SetLocalPosition(position); }
+        //void SetLocalRotation(Quaternion rotation) { m_transform.SetLocalRotation(rotation); }
+        //void SetLocalScale(Vector3 scale) { m_transform.SetLocalScale(scale); }
 
 
-        //glm::vec3 GetWorldPosition() const { return m_transform.GetWorldPosition(); }
-        //glm::quat GetWorldRotation() const { return m_transform.GetWorldRotation(); }
-        //glm::vec3 GetWorldScale() const { return m_transform.GetWorldScale(); }
+        //Vector3 GetWorldPosition() const { return m_transform.GetWorldPosition(); }
+        //Quaternion GetWorldRotation() const { return m_transform.GetWorldRotation(); }
+        //Vector3 GetWorldScale() const { return m_transform.GetWorldScale(); }
         //FTransform& GetTransform() { return m_transform; }
 
 
