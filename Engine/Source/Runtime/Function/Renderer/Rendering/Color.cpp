@@ -85,15 +85,15 @@ namespace LitchiRuntime
     const Color Color::standard_cornflower_blue = Color(0.396f, 0.611f, 0.937f, 1.0f);
 
 
-    static const Color Red = Color(1.0f, 0.0f, 0.0f, 1.0f);
-    static const Color Green= Color(0.0f, 1.0f, 0.0f, 1.0f);
-    static const Color Blue = Color(0.0f, 0.0f, 1.0f, 1.0f);
-    static const Color White = Color(1.0f, 1.0f, 1.0f, 1.0f);
-    static const Color Black = Color(0.0f, 0.0f, 0.0f, 1.0f);
-    static const Color Grey = { 0.5f, 0.5f, 0.5f };
-    static const Color Yellow = { 1.f, 1.f, 0.f };
-    static const Color Cyan = { 0.f, 1.f, 1.f };
-    static const Color Magenta = { 1.f, 0.f, 1.f };
+	const Color Color::Red = Color(1.0f, 0.0f, 0.0f, 1.0f);
+	const Color Color::Green= Color(0.0f, 1.0f, 0.0f, 1.0f);
+	const Color Color::Blue = Color(0.0f, 0.0f, 1.0f, 1.0f);
+	const Color Color::White = Color(1.0f, 1.0f, 1.0f, 1.0f);
+	const Color Color::Black = Color(0.0f, 0.0f, 0.0f, 1.0f);
+	const Color Color::Grey = { 0.5f, 0.5f, 0.5f };
+	const Color Color::Yellow = { 1.f, 1.f, 0.f };
+	const Color Color::Cyan = { 0.f, 1.f, 1.f };
+	const Color Color::Magenta = { 1.f, 0.f, 1.f };
 
     // Materials
     const Color Color::material_aluminum        = Color(0.912f, 0.914f, 0.920f); // Metallic: 1.0

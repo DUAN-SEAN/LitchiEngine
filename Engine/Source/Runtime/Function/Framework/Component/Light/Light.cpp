@@ -16,6 +16,10 @@ Light::Light() : Component()
 
 }
 
+LitchiRuntime::Light::~Light()
+{
+}
+
 
 void Light::SetLightType(LightType type)
 {

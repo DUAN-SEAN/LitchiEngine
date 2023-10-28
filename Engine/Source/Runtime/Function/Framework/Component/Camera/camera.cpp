@@ -19,6 +19,10 @@ namespace LitchiRuntime
 	
 	Camera::~Camera() {
 	}
+
+    void Camera::Update()
+    {
+    }
 	
 
     void Camera::SetNearPlane(const float near_plane)

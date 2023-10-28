@@ -6,6 +6,7 @@
 
 #include "Runtime/Function/UI/Modules/Canvas.h"
 #include "Runtime/Function/UI/Styling/EStyle.h"
+#include <GLFW/glfw3.h>
 
 namespace LitchiRuntime
 {

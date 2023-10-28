@@ -1,7 +1,7 @@
 
 #include "Canvas.h"
 
-#include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
+#include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 
 void LitchiRuntime::Canvas::Draw()
 {

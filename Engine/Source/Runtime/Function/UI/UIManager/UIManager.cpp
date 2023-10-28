@@ -1,6 +1,7 @@
 
 #include "UIManager.h"
 
+#include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 #include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
 
 LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, const std::string& p_glslVersion)
