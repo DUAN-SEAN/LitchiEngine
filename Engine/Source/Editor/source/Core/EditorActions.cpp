@@ -619,8 +619,9 @@ void LitchiEditor::EditorActions::CompileShaders()
 
 void LitchiEditor::EditorActions::SaveMaterials()
 {
-	for (auto& [id, material] : LitchiEditor::ApplicationEditor::Instance()->materialManager->GetResources())
-		Loaders::MaterialLoader::Save(*material, GetRealPath(material->path));
+	// todo:
+	/*for (auto& [id, material] : LitchiEditor::ApplicationEditor::Instance()->materialManager->GetResources())
+		Loaders::MaterialLoader::Save(*material, GetRealPath(material->path));*/
 }
 
 bool LitchiEditor::EditorActions::ImportAsset(const std::string& p_initialDestinationDirectory)
@@ -814,11 +815,11 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Shader, path)) = p_newName;
 		}
 
-		if (LitchiRuntime::ServiceLocator::Get<MaterialManager>().MoveResource(p_previousName, p_newName))
+		/*if (LitchiRuntime::ServiceLocator::Get<MaterialManager>().MoveResource(p_previousName, p_newName))
 		{
 			Resource::Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[p_newName];
 			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(Resource::Material, path)) = p_newName;
-		}
+		}*/
 
 		/*if (LitchiRuntime::ServiceLocator::Get<SoundManager>().MoveResource(p_previousName, p_newName))
 		{

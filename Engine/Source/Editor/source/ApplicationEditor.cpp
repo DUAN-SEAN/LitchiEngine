@@ -49,8 +49,7 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 	projectAssetsPath = editorAssetsPath;
 
 	ModelManager::ProvideAssetPaths(projectAssetsPath);
-	ShaderManager::ProvideAssetPaths(projectAssetsPath);
-	MaterialManager::ProvideAssetPaths(projectAssetsPath);
+	ShaderManager::ProvideAssetPaths(projectAssetsPath); 
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -270,27 +269,27 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// ≥ı ºªØResourceManager
 	modelManager = std::make_unique<ModelManager>();
-	materialManager = std::make_unique<MaterialManager>();
+	// materialManager = std::make_unique<MaterialManager>();
 	shaderManager = std::make_unique<ShaderManager>();
 
 
 	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
-	LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
+	// LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
 	LitchiRuntime::ServiceLocator::Provide<ShaderManager>(*shaderManager);
 
 	// UBO
-	engineUBO = std::make_unique<UniformBuffer>
-		(
-			/* UBO Data Layout */
-			sizeof(Matrix) +
-			sizeof(Matrix) +
-			sizeof(Matrix) +
-			sizeof(Matrix) +
-			sizeof(float) +
-			sizeof(Matrix),
-			0, 0,
-			EAccessSpecifier::STREAM_DRAW
-		);
+	//engineUBO = std::make_unique<UniformBuffer>
+	//	(
+	//		/* UBO Data Layout */
+	//		sizeof(Matrix) +
+	//		sizeof(Matrix) +
+	//		sizeof(Matrix) +
+	//		sizeof(Matrix) +
+	//		sizeof(float) +
+	//		sizeof(Matrix),
+	//		0, 0,
+	//		EAccessSpecifier::STREAM_DRAW
+	//	);
 
 	// Light
 	//lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
@@ -419,9 +418,9 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	//m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	//m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);
-	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);
+	// m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);// todo:
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
-	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
+	// m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);// todo:
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
 	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
 

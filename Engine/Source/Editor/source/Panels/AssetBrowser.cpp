@@ -639,7 +639,8 @@ public:
 
 	virtual void CreateList() override
 	{
-		auto& previewAction = CreateWidget<MenuItem>("Preview");
+		// todo:
+	/*	auto& previewAction = CreateWidget<MenuItem>("Preview");
 
 		previewAction.ClickedEvent += [this]
 		{
@@ -648,43 +649,43 @@ public:
 			assetView.SetResource(resource);
 			assetView.Open();
 			assetView.Focus();
-		};
+		};*/
 
 		FileContextualMenu::CreateList();
 	}
 };
 
-class ShaderContextualMenu : public FileContextualMenu
-{
-public:
-	ShaderContextualMenu(const std::string& p_filePath, bool p_protected = false) : FileContextualMenu(p_filePath, p_protected) {}
-
-	virtual void CreateList() override
-	{
-		FileContextualMenu::CreateList();
-
-		auto& compileAction = CreateWidget<MenuItem>("Compile");
-
-		compileAction.ClickedEvent += [this]
-		{
-			auto& shaderManager = OVSERVICE(ShaderManager);
-			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-			if (shaderManager.IsResourceRegistered(resourcePath))
-			{
-				/* Trying to recompile */
-				Loaders::ShaderLoader::Recompile(*shaderManager[resourcePath], filePath);
-			}
-			else
-			{
-				/* Trying to compile */
-				Resource::Shader* shader = OVSERVICE(ShaderManager)[resourcePath];
-				if (shader)
-					DEBUG_LOG_INFO("[COMPILE] \"" + filePath + "\": Success!");
-			}
-			
-		};
-	}
-};
+//class ShaderContextualMenu : public FileContextualMenu
+//{
+//public:
+//	ShaderContextualMenu(const std::string& p_filePath, bool p_protected = false) : FileContextualMenu(p_filePath, p_protected) {}
+//
+//	virtual void CreateList() override
+//	{
+//		FileContextualMenu::CreateList();
+//
+//		auto& compileAction = CreateWidget<MenuItem>("Compile");
+//
+//		compileAction.ClickedEvent += [this]
+//		{
+//			auto& shaderManager = OVSERVICE(ShaderManager);
+//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//			if (shaderManager.IsResourceRegistered(resourcePath))
+//			{
+//				/* Trying to recompile */
+//				Loaders::ShaderLoader::Recompile(*shaderManager[resourcePath], filePath);
+//			}
+//			else
+//			{
+//				/* Trying to compile */
+//				Resource::Shader* shader = OVSERVICE(ShaderManager)[resourcePath];
+//				if (shader)
+//					DEBUG_LOG_INFO("[COMPILE] \"" + filePath + "\": Success!");
+//			}
+//			
+//		};
+//	}
+//};
 
 class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
 {
@@ -869,49 +870,49 @@ public:
 	}
 };
 
-class MaterialContextualMenu : public PreviewableContextualMenu<Resource::Material, MaterialManager>
-{
-public:
-	MaterialContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-
-	virtual void CreateList() override
-	{
-		auto& editAction = CreateWidget<MenuItem>("Edit");
-
-		editAction.ClickedEvent += [this]
-		{
-			Resource::Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
-			if (material)
-			{
-				auto& materialEditor = EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor");
-				materialEditor.SetTarget(*material);
-				materialEditor.Open();
-				materialEditor.Focus();
-				
-				Resource::Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
-				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
-				assetView.SetResource(resource);
-				assetView.Open();
-				assetView.Focus();
-			}
-		};
-
-		auto& reload = CreateWidget<MenuItem>("Reload");
-		reload.ClickedEvent += [this]
-		{
-			auto materialManager = OVSERVICE(MaterialManager);
-			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-			Resource::Material* material = materialManager[resourcePath];
-			if (material)
-			{
-				materialManager.AResourceManager::ReloadResource(resourcePath);
-				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
-			}
-		};
-
-		PreviewableContextualMenu::CreateList();
-	}
-};
+//class MaterialContextualMenu : public PreviewableContextualMenu<Resource::Material, MaterialManager>
+//{
+//public:
+//	MaterialContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+//
+//	virtual void CreateList() override
+//	{
+//		auto& editAction = CreateWidget<MenuItem>("Edit");
+//
+//		editAction.ClickedEvent += [this]
+//		{
+//			Resource::Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+//			if (material)
+//			{
+//				auto& materialEditor = EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor");
+//				materialEditor.SetTarget(*material);
+//				materialEditor.Open();
+//				materialEditor.Focus();
+//				
+//				Resource::Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+//				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
+//				assetView.SetResource(resource);
+//				assetView.Open();
+//				assetView.Focus();
+//			}
+//		};
+//
+//		auto& reload = CreateWidget<MenuItem>("Reload");
+//		reload.ClickedEvent += [this]
+//		{
+//			auto materialManager = OVSERVICE(MaterialManager);
+//			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//			Resource::Material* material = materialManager[resourcePath];
+//			if (material)
+//			{
+//				materialManager.AResourceManager::ReloadResource(resourcePath);
+//				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
+//			}
+//		};
+//
+//		PreviewableContextualMenu::CreateList();
+//	}
+//};
 
 LitchiEditor::AssetBrowser::AssetBrowser
 (
@@ -1181,8 +1182,8 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 		{
 		case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
 		// case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
-		case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
-		case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
+		// case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
+		// case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
 		case PathParser::EFileType::SCENE:		contextMenu = &clickableText.AddPlugin<SceneContextualMenu>(path, protectedItem);		break;
 		default: contextMenu = &clickableText.AddPlugin<FileContextualMenu>(path, protectedItem); break;
 		}

@@ -71,7 +71,7 @@ namespace LitchiEditor
 		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
 
 
-		Resource::Material m_gridMaterial;
+		//Resource::Material m_gridMaterial;
 
 		/**
 		 * \brief 相机控制器
