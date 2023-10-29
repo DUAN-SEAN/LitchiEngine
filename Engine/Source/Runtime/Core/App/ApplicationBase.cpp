@@ -2,16 +2,17 @@
 #include "ApplicationBase.h"
 
 #include <memory>
-#include <iostream>
 
+#include "stb_image.h"
+#include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Time/time.h"
-#include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Input/input.h"
 
 #include "Runtime/Core/Meta/Reflection/type.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
+#include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Physics/physics.h"
 
 #include "Runtime/Function/Scene/SceneManager.h"
@@ -35,6 +36,24 @@ namespace LitchiRuntime
 
         //初始化图形库，例如glfw
         InitGraphicsLibraryFramework();
+        
+        WindowSettings windowSettings;
+        windowSettings.title = "Litchi Editor";
+        windowSettings.width = 1280;
+        windowSettings.height = 720;
+        windowSettings.maximized = true;
+        // 初始化Window
+        window = std::make_unique<Window>(windowSettings);
+        {
+            auto iconPath = editorAssetsPath + "Icon.png";
+            int iconWidth = 30;
+            int iconHeight = 30;
+            int iconChannel = 3;
+            unsigned char* dataBuffer = stbi_load(iconPath.c_str(), &iconWidth, &iconHeight, &iconChannel, 4);
+            window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
+            window->MakeCurrentContext();
+        }
+        inputManager = std::make_unique<InputManager>(*window);
 
         UpdateScreenSize();
 
@@ -53,7 +72,17 @@ namespace LitchiRuntime
 
         ScriptEngine::Init(m_dataPath);
 
+        // 初始化ResourceManager
+        modelManager = std::make_unique<ModelManager>();
+        // materialManager = std::make_unique<MaterialManager>();
+        shaderManager = std::make_unique<ShaderManager>();
+
+        ServiceLocator::Provide<ModelManager>(*modelManager);
+        // LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
+        ServiceLocator::Provide<ShaderManager>(*shaderManager);
+
         // 初始化场景 如果没有场景则构建默认场景
+        sceneManager = std::make_unique<SceneManager>();
     }
 
     /// 初始化图形库，例如glfw

@@ -76,7 +76,7 @@ namespace LitchiRuntime
 	{
 	public:
 
-		SceneManager(std::string sceneRootFolderPath);
+		SceneManager();
 		~SceneManager();
 
 		bool LoadScene(std::string path);
@@ -132,9 +132,7 @@ namespace LitchiRuntime
 		void SaveCurrentScene(const std::string& path);
 
 	private:
-
-		std::string m_sceneRootFolderPath;
-
+		
 		std::map<std::string, Scene*> m_sceneMap;
 		Scene* m_currScene = nullptr;
 		bool m_currentSceneLoadedFromPath = false;

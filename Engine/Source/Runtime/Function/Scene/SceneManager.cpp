@@ -110,7 +110,7 @@ namespace LitchiRuntime
 		}
 	}
 
-	SceneManager::SceneManager(std::string sceneRootFolderPath) :m_sceneRootFolderPath(sceneRootFolderPath)
+	SceneManager::SceneManager()
 	{
 
 	}
@@ -121,7 +121,7 @@ namespace LitchiRuntime
 
 	bool SceneManager::LoadScene(std::string path)
 	{
-		std::string completePath = m_sceneRootFolderPath + path;
+		std::string completePath = path;
 		auto* scene = new Scene("Temp");
 		if (!AssetManager::LoadAsset(completePath, *scene))
 		{

@@ -219,38 +219,9 @@ void LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
 
-	DeviceSettings deviceSettings;
-	deviceSettings.contextMajorVersion = 4;
-	deviceSettings.contextMinorVersion = 6;
-
-	WindowSettings windowSettings;
-	windowSettings.title = "Litchi Editor";
-	windowSettings.width = 1280;
-	windowSettings.height = 720;
-	windowSettings.maximized = true;
-
-	// 初始化驱动(OpenGL)
-	device = std::make_unique<Device>(deviceSettings);
-	device->SetVsync(true);
-
-	// 初始化Window
-	window = std::make_unique<Window>(*device, windowSettings);
-	{
-		auto iconPath = editorAssetsPath + "Icon.png";
-		int iconWidth = 30;
-		int iconHeight = 30;
-		int iconChannel = 3;
-		unsigned char* dataBuffer = stbi_load(iconPath.c_str(), &iconWidth, &iconHeight, &iconChannel, 4);
-		window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
-		window->MakeCurrentContext();
-	}
-	
 	ApplicationBase::Init();
-
-	editorResources = std::make_unique<EditorResources>(editorAssetsPath);
-
+	
 	// 初始化InputManager
-	inputManager = std::make_unique<InputManager>(*window);
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
 		/*uiManager->LoadFont("Ruda_Big", editorAssetsPath + "\\Fonts\\Ruda-Bold.ttf", 16);
@@ -267,35 +238,6 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
-	// 初始化ResourceManager
-	modelManager = std::make_unique<ModelManager>();
-	// materialManager = std::make_unique<MaterialManager>();
-	shaderManager = std::make_unique<ShaderManager>();
-
-
-	LitchiRuntime::ServiceLocator::Provide<ModelManager>(*modelManager);
-	// LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
-	LitchiRuntime::ServiceLocator::Provide<ShaderManager>(*shaderManager);
-
-	// UBO
-	//engineUBO = std::make_unique<UniformBuffer>
-	//	(
-	//		/* UBO Data Layout */
-	//		sizeof(Matrix) +
-	//		sizeof(Matrix) +
-	//		sizeof(Matrix) +
-	//		sizeof(Matrix) +
-	//		sizeof(float) +
-	//		sizeof(Matrix),
-	//		0, 0,
-	//		EAccessSpecifier::STREAM_DRAW
-	//	);
-
-	// Light
-	//lightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW);
-
-	//simulatedLightSSBO = std::make_unique<ShaderStorageBuffer>(EAccessSpecifier::STREAM_DRAW); // Used in Asset View
-
 	std::vector<Matrix> simulatedLights;
 
 	// Setup UI
@@ -310,7 +252,7 @@ void LitchiEditor::ApplicationEditor::Run()
 		Time::Update();
 
 		// PreUpdate
-		device->PollEvents();
+		window->PollEvents();
 
 		Update();
 
@@ -410,7 +352,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
+	// m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);// todo:
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);

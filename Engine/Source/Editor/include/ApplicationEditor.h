@@ -48,15 +48,9 @@ namespace LitchiEditor
 
 		void SetSelectGameObject(GameObject* selectedGO) { m_selectGO = selectedGO; }
 		GameObject* GetSelectGameObject() { return m_selectGO; }
-
-		std::unique_ptr<Device>				device;
-	/*	std::unique_ptr<Driver>				driver;
-		std::unique_ptr<ShapeDrawer>			shapeDrawer;*/
-		std::unique_ptr<Window>				window;
-		std::unique_ptr<InputManager>		inputManager;
+		
 		std::unique_ptr<UIManager>		uiManager;
 		std::unique_ptr<EditorResources>		editorResources;
-
 
 		//std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
 		//std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
@@ -66,13 +60,6 @@ namespace LitchiEditor
 		//std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;
-		std::string projectPath;
-		std::string projectName;
-		std::string projectFilePath;
-		std::string engineAssetsPath;
-		std::string projectAssetsPath;
-		std::string projectScriptsPath;
-		std::string editorAssetsPath;
 
 
 	public:

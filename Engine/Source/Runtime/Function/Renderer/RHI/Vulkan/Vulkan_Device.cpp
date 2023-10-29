@@ -121,6 +121,28 @@ namespace LitchiRuntime
 
 			return extensions_supported;
 		}
+
+
+		std::vector<const char*> getGlfwRequiredExtensions()
+		{
+			uint32_t     glfwExtensionCount = 0;
+			const char** glfwExtensions;
+			glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+
+			std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
+//
+//			if (m_enable_validation_Layers || m_enable_debug_utils_label)
+//			{
+//				extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+//			}
+//
+//#if defined(__MACH__)
+//			extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+//#endif
+
+			return extensions;
+		}
+
 	}
 
 	namespace command_pools
@@ -557,6 +579,12 @@ namespace LitchiRuntime
 
 			// Get the supported extensions out of the requested extensions
 			vector<const char*> extensions_supported = get_supported_extensions(RHI_Context::extensions_instance);
+
+			auto glfwRequiredExtensions = getGlfwRequiredExtensions();
+			for (auto glfw_required_extension : glfwRequiredExtensions)
+			{
+				extensions_supported.push_back(glfw_required_extension);
+			}
 
 			VkInstanceCreateInfo create_info = {};
 			create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;

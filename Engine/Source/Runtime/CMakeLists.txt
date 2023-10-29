@@ -58,9 +58,21 @@ target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mt)
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/freetype-windows-binaries-master/static/vs2015-2022/win64)
 target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 
-
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)
 target_link_libraries(${TARGET_NAME} PUBLIC vulkan-1)
+
+target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/dxc/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC dxcompiler)
+
+target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/spirv_cross/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC spirv-cross-core_debug spirv-cross-cpp_debug spirv-cross-glsl_debug spirv-cross-hlsl_debug)
+
+target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/compressonator/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC Compressonator_MT_debug)
+
+
+target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/free_image/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC FreeImageLib_debug)
 
 # 将Source目录添加到Link Target 的项目include中
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>)
@@ -106,7 +118,7 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/spirv_cross>)
 
 # include dxc
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxc>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxc/include>)
 
 # include compressonator
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/compressonator>)

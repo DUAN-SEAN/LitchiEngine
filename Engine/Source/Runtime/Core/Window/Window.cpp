@@ -11,8 +11,9 @@
 
 std::unordered_map<GLFWwindow*, LitchiRuntime::Window*> LitchiRuntime::Window::__WINDOWS_MAP;
 
-LitchiRuntime::Window::Window(const Device& p_device, const WindowSettings& p_windowSettings) :
-	m_device(p_device),
+LitchiRuntime::Event<LitchiRuntime::EDeviceError, std::string> LitchiRuntime::Window::ErrorEvent;
+
+LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	m_title(p_windowSettings.title),
 	m_size{ p_windowSettings.width, p_windowSettings.height },
 	m_minimumSize { p_windowSettings.minimumWidth, p_windowSettings.minimumHeight },
@@ -22,6 +23,17 @@ LitchiRuntime::Window::Window(const Device& p_device, const WindowSettings& p_wi
 	m_cursorMode(p_windowSettings.cursorMode),
 	m_cursorShape(p_windowSettings.cursorShape)
 {
+	BindErrorCallback();
+
+	int initializationCode = glfwInit();
+	if (initializationCode == GLFW_FALSE)
+	{
+		throw std::runtime_error("Failed to Init GLFW");
+		glfwTerminate();
+	}
+
+	CreateCursors();
+
 	/* Window creation */
 	CreateGlfwWindow(p_windowSettings);
 
@@ -222,7 +234,7 @@ void LitchiRuntime::Window::SetCursorMode(ECursorMode p_cursorMode)
 void LitchiRuntime::Window::SetCursorShape(ECursorShape p_cursorShape)
 {
 	m_cursorShape = p_cursorShape;
-	glfwSetCursor(m_glfwWindow, m_device.GetCursorInstance(p_cursorShape));
+	glfwSetCursor(m_glfwWindow, GetCursorInstance(p_cursorShape));
 }
 
 void LitchiRuntime::Window::SetCursorPosition(int16_t p_x, int16_t p_y)
@@ -315,11 +327,10 @@ float LitchiRuntime::Window::GetDpiScale()
 void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSettings)
 {
 	GLFWmonitor* selectedMonitor = nullptr;
-
 	if (m_fullscreen)
 		selectedMonitor = glfwGetPrimaryMonitor();
 
-	glfwWindowHint(GLFW_RESIZABLE,		p_windowSettings.resizable);
+	/*glfwWindowHint(GLFW_RESIZABLE,		p_windowSettings.resizable);
 	glfwWindowHint(GLFW_DECORATED,		p_windowSettings.decorated);
 	glfwWindowHint(GLFW_FOCUSED,		p_windowSettings.focused);
 	glfwWindowHint(GLFW_MAXIMIZED,		p_windowSettings.maximized);
@@ -327,7 +338,9 @@ void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSetti
 	glfwWindowHint(GLFW_VISIBLE,		p_windowSettings.visible);
 	glfwWindowHint(GLFW_AUTO_ICONIFY,	p_windowSettings.autoIconify);
 	glfwWindowHint(GLFW_REFRESH_RATE,	p_windowSettings.refreshRate);
-	glfwWindowHint(GLFW_SAMPLES,		p_windowSettings.samples);
+	glfwWindowHint(GLFW_SAMPLES,		p_windowSettings.samples);*/
+
+	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 	m_glfwWindow = glfwCreateWindow(static_cast<int>(m_size.first), static_cast<int>(m_size.second), m_title.c_str(), selectedMonitor, nullptr);
 
@@ -524,4 +537,68 @@ void LitchiRuntime::Window::UpdateSizeLimit() const
 		static_cast<int>(m_maximumSize.first),
 		static_cast<int>(m_maximumSize.second)
 	);
+}
+
+std::pair<int16_t, int16_t> LitchiRuntime::Window::GetMonitorSize() const
+{
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+
+	return std::pair<int16_t, int16_t>(static_cast<int16_t>(mode->width), static_cast<int16_t>(mode->height));
+}
+
+GLFWcursor* LitchiRuntime::Window::GetCursorInstance(ECursorShape p_cursorShape) const
+{
+	return m_cursors.at(p_cursorShape);
+}
+
+bool LitchiRuntime::Window::HasVsync() const
+{
+	return m_vsync;
+}
+
+void LitchiRuntime::Window::SetVsync(bool p_value)
+{
+	glfwSwapInterval(p_value ? 1 : 0);
+	m_vsync = p_value;
+}
+
+void LitchiRuntime::Window::PollEvents() const
+{
+	glfwPollEvents();
+}
+
+float LitchiRuntime::Window::GetElapsedTime() const
+{
+	return static_cast<float>(glfwGetTime());
+}
+
+void LitchiRuntime::Window::BindErrorCallback()
+{
+	auto errorCallback = [](int p_code, const char* p_description)
+	{
+		ErrorEvent.Invoke(static_cast<EDeviceError>(p_code), p_description);
+	};
+
+	glfwSetErrorCallback(errorCallback);
+}
+
+
+void LitchiRuntime::Window::CreateCursors()
+{
+	m_cursors[ECursorShape::ARROW] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::ARROW));
+	m_cursors[ECursorShape::IBEAM] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::IBEAM));
+	m_cursors[ECursorShape::CROSSHAIR] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::CROSSHAIR));
+	m_cursors[ECursorShape::HAND] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::HAND));
+	m_cursors[ECursorShape::HRESIZE] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::HRESIZE));
+	m_cursors[ECursorShape::VRESIZE] = glfwCreateStandardCursor(static_cast<int>(ECursorShape::VRESIZE));
+}
+
+void LitchiRuntime::Window::DestroyCursors()
+{
+	glfwDestroyCursor(m_cursors[ECursorShape::ARROW]);
+	glfwDestroyCursor(m_cursors[ECursorShape::IBEAM]);
+	glfwDestroyCursor(m_cursors[ECursorShape::CROSSHAIR]);
+	glfwDestroyCursor(m_cursors[ECursorShape::HAND]);
+	glfwDestroyCursor(m_cursors[ECursorShape::HRESIZE]);
+	glfwDestroyCursor(m_cursors[ECursorShape::VRESIZE]);
 }

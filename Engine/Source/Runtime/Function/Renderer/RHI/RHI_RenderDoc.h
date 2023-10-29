@@ -7,7 +7,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_RenderDoc
+   /* class SP_CLASS RHI_RenderDoc
     {
     public:
         static void OnPreDeviceCreation();
@@ -17,5 +17,5 @@ namespace LitchiRuntime
         static void EndCapture();
         static void LaunchRenderDocUi();
         static bool IsEnabled();
-    };
+    };*/
 }

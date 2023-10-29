@@ -123,10 +123,10 @@ namespace LitchiRuntime
         {
             RHI_Context::Initialize();
 
-            if (RHI_Context::renderdoc)
+            /*if (RHI_Context::renderdoc)
             {
                 RHI_RenderDoc::OnPreDeviceCreation();
-            }
+            }*/
 
             RHI_Device::Initialize();
         }
@@ -164,8 +164,8 @@ namespace LitchiRuntime
         // command pool
         m_cmd_pool = RHI_Device::CommandPoolAllocate("renderer", swap_chain->GetObjectId(), RHI_Queue_Type::Graphics);
 
-        // AMD FidelityFX suite
-        RHI_AMD_FidelityFX::Initialize();
+        //// AMD FidelityFX suite
+        //RHI_AMD_FidelityFX::Initialize();
 
         // options
         m_options.fill(0.0f);
@@ -211,7 +211,7 @@ namespace LitchiRuntime
         CreateSamplers(false);
         CreateStructuredBuffers();
         CreateStandardTextures();
-        CreateStandardMeshes();
+        // CreateStandardMeshes();// todo:
 
         // events
         {
@@ -249,9 +249,9 @@ namespace LitchiRuntime
             environment_texture   = nullptr;
         }
 
-        RHI_RenderDoc::Shutdown();
+        // RHI_RenderDoc::Shutdown();
         RHI_Device::QueueWaitAll();
-        RHI_AMD_FidelityFX::Destroy();
+        // RHI_AMD_FidelityFX::Destroy();
         RHI_Device::DeletionQueueParse();
         RHI_Device::Destroy();
     }
@@ -339,16 +339,16 @@ namespace LitchiRuntime
                 }
             }
 
-            // generate jitter sample in case FSR (which also does TAA) is enabled
-            Renderer_Upsampling upsampling_mode = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling);
-            if (upsampling_mode == Renderer_Upsampling::FSR2 || GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa)
-            {
-                RHI_AMD_FidelityFX::FSR2_GenerateJitterSample(&jitter_offset.x, &jitter_offset.y);
-                jitter_offset.x            = (jitter_offset.x / m_resolution_render.x);
-                jitter_offset.y            = (jitter_offset.y / m_resolution_render.y);
-                m_cb_frame_cpu.projection *= Matrix::CreateTranslation(Vector3(jitter_offset.x, jitter_offset.y, 0.0f));
-            }
-            else
+            //// generate jitter sample in case FSR (which also does TAA) is enabled
+            //Renderer_Upsampling upsampling_mode = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling);
+            //if (upsampling_mode == Renderer_Upsampling::FSR2 || GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa)
+            //{
+            //    RHI_AMD_FidelityFX::FSR2_GenerateJitterSample(&jitter_offset.x, &jitter_offset.y);
+            //    jitter_offset.x            = (jitter_offset.x / m_resolution_render.x);
+            //    jitter_offset.y            = (jitter_offset.y / m_resolution_render.y);
+            //    m_cb_frame_cpu.projection *= Matrix::CreateTranslation(Vector3(jitter_offset.x, jitter_offset.y, 0.0f));
+            //}
+            //else
             {
                 jitter_offset = Vector2::Zero;
             }
@@ -777,7 +777,7 @@ namespace LitchiRuntime
                     if (!fsr_enabled)
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Upsampling)] = static_cast<float>(Renderer_Upsampling::FSR2);
-                        RHI_AMD_FidelityFX::FSR2_ResetHistory();
+                        // RHI_AMD_FidelityFX::FSR2_ResetHistory();
                         DEBUG_LOG_INFO("Enabled FSR 2.0 since it's used for TAA.");
                     }
                 }
@@ -811,7 +811,7 @@ namespace LitchiRuntime
                     if (!taa_enabled)
                     {
                         m_options[static_cast<uint32_t>(Renderer_Option::Antialiasing)] = static_cast<float>(Renderer_Antialiasing::Taa);
-                        RHI_AMD_FidelityFX::FSR2_ResetHistory();
+                        // RHI_AMD_FidelityFX::FSR2_ResetHistory();
                         DEBUG_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
                     }
                 }
@@ -899,6 +899,10 @@ namespace LitchiRuntime
     {
         lock_guard<mutex> guard(mutex_mip_generation);
         textures_mip_generation.push_back(texture);
+    }
+
+    void Renderer::Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture)
+    {
     }
 
     RHI_CommandList* Renderer::GetCmdList()

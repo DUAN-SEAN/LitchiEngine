@@ -56,10 +56,15 @@ namespace LitchiRuntime
             gpu_profiling = true;
             renderdoc     = false;
         #else
-            validation    = false;
+           /* validation    = false;
             gpu_markers   = false;
             gpu_profiling = true;
-            renderdoc     = false;
+            renderdoc     = false;*/
+
+            validation = true;
+            gpu_markers = true;
+            gpu_profiling = true;
+            renderdoc = false;
         #endif
     } 
 }

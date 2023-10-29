@@ -7,11 +7,12 @@
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Core/Window/Window.h"
+#include "Runtime/Core/Window/Inputs/InputManager.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 
 namespace LitchiRuntime
 {
 	class Window;
-	class SceneManager;
 
 	class ApplicationBase {
     public:
@@ -27,7 +28,7 @@ namespace LitchiRuntime
             // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
         }
 
-        /// 初始化OpenGL
+        /// 初始化
         virtual void Init();
 
         /// 初始化图形库，例如glfw
@@ -62,14 +63,24 @@ namespace LitchiRuntime
         std::unique_ptr<ModelManager> modelManager;
         std::unique_ptr<ShaderManager> shaderManager;
         std::unique_ptr<Window> window;
+        std::unique_ptr<InputManager>		inputManager;
 
-        SceneManager* sceneManager;
+        std::unique_ptr<SceneManager> sceneManager;
 
         static ApplicationBase* Instance() { return s_instance; }
         static ApplicationBase* s_instance;
+
+        std::string projectPath;
+        std::string projectName;
+        std::string projectFilePath;
+        std::string engineAssetsPath;
+        std::string projectAssetsPath;
+        std::string projectScriptsPath;
+        std::string editorAssetsPath;
     protected:
         std::string m_title;//标题栏显示
 
         std::string m_dataPath;//资源目录
+
     };
 }

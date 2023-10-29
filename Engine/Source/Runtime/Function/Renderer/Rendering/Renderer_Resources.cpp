@@ -231,7 +231,7 @@ namespace LitchiRuntime
         }
 
         RHI_Device::QueueWaitAll();
-        RHI_AMD_FidelityFX::FSR2_Resize(GetResolutionRender(), GetResolutionOutput());
+        // RHI_AMD_FidelityFX::FSR2_Resize(GetResolutionRender(), GetResolutionOutput());
     }
 
     void Renderer::CreateShaders()

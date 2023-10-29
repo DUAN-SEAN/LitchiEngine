@@ -3,10 +3,12 @@
 #pragma once
 
 #include <string>
-
-#include "Context/Device.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Settings/WindowSettings.h"
+
+#define GLFW_INCLUDE_VULKAN
+#include "Context/EDeviceError.h"
+#include "GLFW/glfw3.h"
 
 namespace LitchiRuntime
 {
@@ -17,6 +19,12 @@ namespace LitchiRuntime
 	class Window
 	{
 	public:
+
+		/**
+		* Bind a listener to this event to receive device errors
+		*/
+		static Event<EDeviceError, std::string> ErrorEvent;
+
 		/* Inputs relatives */
 		Event<int> KeyPressedEvent;
 		Event<int> KeyReleasedEvent;
@@ -36,10 +44,9 @@ namespace LitchiRuntime
 
 		/**
 		* Create the window
-		* @param p_device
 		* @param p_windowSettings
 		*/
-		Window(const Device& p_device, const WindowSettings& p_windowSettings);
+		Window(const WindowSettings& p_windowSettings);
 
 		/**
 		* Destructor of the window, responsible of the GLFW window memory free
@@ -287,6 +294,40 @@ namespace LitchiRuntime
 
 		float GetDpiScale();
 
+		/**
+		* Return the size, in pixels, of the primary monity
+		*/
+		std::pair<int16_t, int16_t> GetMonitorSize() const;
+
+		/**
+		* Return an instance of GLFWcursor corresponding to the given shape
+		* @param p_cursorShape
+		*/
+		GLFWcursor* GetCursorInstance(ECursorShape p_cursorShape) const;
+
+		/**
+		* Return true if the vsync is currently enabled
+		*/
+		bool HasVsync() const;
+
+		/**
+		* Enable or disable the vsync
+		* @note You must call this method after creating and defining a window as the current context
+		* @param p_value (True to enable vsync)
+		*/
+		void SetVsync(bool p_value);
+
+		/**
+		* Enable the inputs and events managments with created windows
+		* @note Should be called every frames
+		*/
+		void PollEvents() const;
+
+		/**
+		* Returns the elapsed time since the device startup
+		*/
+		float GetElapsedTime() const;
+
 	private:
 		void CreateGlfwWindow(const WindowSettings& p_windowSettings);
 
@@ -308,11 +349,15 @@ namespace LitchiRuntime
 		/* Internal helpers */
 		void UpdateSizeLimit() const;
 
+
+		void BindErrorCallback();
+		void CreateCursors();
+		void DestroyCursors();
+
 	private:
 		/* This map is used by callbacks to find a "Window" instance out of a "GLFWwindow" instnace*/
 		static std::unordered_map<GLFWwindow*, Window*> __WINDOWS_MAP;
-
-		const Device& m_device;
+		
 		GLFWwindow* m_glfwWindow;
 
 		/* Window settings */
@@ -325,5 +370,10 @@ namespace LitchiRuntime
 		int32_t m_refreshRate;
 		ECursorMode m_cursorMode;
 		ECursorShape m_cursorShape;
+
+		bool m_vsync = true;
+		bool m_isAlive = false;
+
+		std::unordered_map<ECursorShape, GLFWcursor*> m_cursors;
 	};
 }
