@@ -42,3 +42,4 @@ bld/
 !Engine/ThridParty/physx-4.1/physx/[Bb]in/*/[Dd]ebug/*
 !Engine/ThridParty/assimp/[Bb]in/
 !Engine/ThridParty/assimp/[Bb]in/*
+/Engine/ThridParty/free_image/lib/FreeImageLib_debug.lib
