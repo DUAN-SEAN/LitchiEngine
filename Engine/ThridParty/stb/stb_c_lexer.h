@@ -830,8 +830,8 @@ static void print_token(stb_lexer *lexer)
       case CLEX_shleq     : printf("<<="); break;
       case CLEX_shreq     : printf(">>="); break;
       case CLEX_eqarrow   : printf("=>"); break;
-      case CLEX_dqstring  : printf("\"%s\"", lexer->string); break;
-      case CLEX_sqstring  : printf("'\"%s\"'", lexer->string); break;
+      case CLEX_dqstring  : printf("{}", lexer->string); break;
+      case CLEX_sqstring  : printf("'{}'", lexer->string); break;
       case CLEX_charlit   : printf("'%s'", lexer->string); break;
       #if defined(STB__clex_int_as_double) && !defined(STB__CLEX_use_stdlib)
       case CLEX_intlit    : printf("#%g", lexer->real_number); break;

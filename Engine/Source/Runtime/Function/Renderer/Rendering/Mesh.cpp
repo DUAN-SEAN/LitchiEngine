@@ -92,7 +92,7 @@ namespace LitchiRuntime
             }
         }
 
-        DEBUG_LOG_INFO("Loading \"%s\" took %d ms", FileSystem::GetFileNameFromFilePath(file_path).c_str(), static_cast<int>(timer.GetElapsedTimeMs()));
+        DEBUG_LOG_INFO("Loading {} took %d ms", FileSystem::GetFileNameFromFilePath(file_path).c_str(), static_cast<int>(timer.GetElapsedTimeMs()));
 
         return true;
     }

@@ -261,6 +261,9 @@ void LitchiEditor::ApplicationEditor::Run()
 		// 检测运行模式 Game or no
 		// 渲染Views
 		RenderViews(Time::delta_time());
+
+		Renderer::Tick();
+
 		// 渲染UI
 		RenderUI();
 

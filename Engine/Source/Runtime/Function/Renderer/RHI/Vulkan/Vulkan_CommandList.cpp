@@ -1032,7 +1032,7 @@ namespace LitchiRuntime
 
         if (!m_descriptor_layout_current)
         {
-            DEBUG_LOG_WARN("Descriptor layout not set, try setting constant buffer \"%s\" within a render pass", constant_buffer->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting constant buffer {} within a render pass", constant_buffer->GetObjectName().c_str());
             return;
         }
 
@@ -1076,7 +1076,7 @@ namespace LitchiRuntime
 
         if (!m_descriptor_layout_current)
         {
-            DEBUG_LOG_WARN("Descriptor layout not set, try setting sampler \"%s\" within a render pass", sampler->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting sampler {} within a render pass", sampler->GetObjectName().c_str());
             return;
         }
 
@@ -1095,7 +1095,7 @@ namespace LitchiRuntime
 
         if (!m_descriptor_layout_current)
         {
-            DEBUG_LOG_WARN("Descriptor layout not set, try setting texture \"%s\" within a render pass", texture->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting texture {} within a render pass", texture->GetObjectName().c_str());
             return;
         }
 
@@ -1179,7 +1179,7 @@ namespace LitchiRuntime
 
         if (!m_descriptor_layout_current)
         {
-            DEBUG_LOG_WARN("Descriptor layout not set, try setting structured buffer \"%s\" within a render pass", structured_buffer->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting structured buffer {} within a render pass", structured_buffer->GetObjectName().c_str());
             return;
         }
 

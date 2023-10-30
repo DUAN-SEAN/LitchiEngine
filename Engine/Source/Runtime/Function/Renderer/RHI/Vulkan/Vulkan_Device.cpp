@@ -96,7 +96,7 @@ namespace LitchiRuntime
 				}
 				else
 				{
-					DEBUG_LOG_ERROR("Device extension \"%s\" is not supported", extension);
+					DEBUG_LOG_ERROR("Device extension {} is not supported", extension);
 				}
 			}
 
@@ -115,7 +115,7 @@ namespace LitchiRuntime
 				}
 				else
 				{
-					DEBUG_LOG_ERROR("Instance extension \"%s\" is not supported", extension);
+					DEBUG_LOG_ERROR("Instance extension {} is not supported", extension);
 				}
 			}
 
@@ -570,7 +570,7 @@ namespace LitchiRuntime
 					// Detect and log version
 					string driver_version_str = to_string(VK_API_VERSION_MAJOR(driver_version)) + "." + to_string(VK_API_VERSION_MINOR(driver_version)) + "." + to_string(VK_API_VERSION_PATCH(driver_version));
 					string sdk_version_str = to_string(VK_API_VERSION_MAJOR(sdk_version)) + "." + to_string(VK_API_VERSION_MINOR(sdk_version)) + "." + to_string(VK_API_VERSION_PATCH(sdk_version));
-					DEBUG_LOG_WARN("Falling back to Vulkan %s. Please update your graphics drivers to support Vulkan %s.", driver_version_str.c_str(), sdk_version_str.c_str());
+					DEBUG_LOG_WARN("Falling back to Vulkan {}. Please update your graphics drivers to support Vulkan {}.", driver_version_str.c_str(), sdk_version_str.c_str());
 				}
 
 				//  Save API version

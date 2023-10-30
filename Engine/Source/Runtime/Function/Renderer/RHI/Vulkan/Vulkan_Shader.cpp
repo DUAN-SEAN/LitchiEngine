@@ -1,4 +1,4 @@
-
+﻿
 //= INCLUDES ============================
 #include "Runtime/Core/pch.h"
 #include "../RHI_Implementation.h"
@@ -82,7 +82,7 @@ namespace LitchiRuntime
                 arguments.emplace_back("-fspv-target-env=vulkan1.3"); // specify the target environment
 
                 // this prevents all sorts of issues with constant buffers having random data.
-                arguments.emplace_back("-fspv-preserve-bindings");  // preserves all bindings declared within the module, even when those bindings are unused
+            	arguments.emplace_back("-fspv-preserve-bindings");  // preserves all bindings declared within the module, even when those bindings are unused
                 arguments.emplace_back("-fspv-preserve-interface"); // preserves all interface variables in the entry point, even when those variables are unused
 
                 // shift registers to avoid conflicts
@@ -105,11 +105,11 @@ namespace LitchiRuntime
             }
 
             // debug: disable optimizations and embed HLSL source in the shaders
-            #ifdef DEBUG
+            //#ifdef DEBUG
             arguments.emplace_back("-Od");           // disable optimizations
             arguments.emplace_back("-Zi");           // enable debug information
             arguments.emplace_back("-Qembed_debug"); // embed PDB in shader container (must be used with -Zi)
-            #endif
+            // #endif
 
             // misc
             arguments.emplace_back("-Zpc"); // pack matrices in column-major order

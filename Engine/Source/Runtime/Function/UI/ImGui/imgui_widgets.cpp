@@ -4755,7 +4755,7 @@ bool ImGui::InputTextEx(const char* label, const char* hint, char* buf, int buf_
             apply_new_text_length = ImMin(callback_data.BufTextLen, buf_size - 1);
             IM_ASSERT(apply_new_text_length <= buf_size);
         }
-        //IMGUI_DEBUG_PRINT("InputText(\"%s\"): apply_new_text length %d\n", label, apply_new_text_length);
+        //IMGUI_DEBUG_PRINT("InputText({}): apply_new_text length %d\n", label, apply_new_text_length);
 
         // If the underlying buffer resize was denied or not carried to the next frame, apply_new_text_length+1 may be >= buf_size.
         ImStrncpy(buf, apply_new_text, ImMin(apply_new_text_length + 1, buf_size));
@@ -5040,7 +5040,7 @@ void ImGui::DebugNodeInputTextState(ImGuiInputTextState* state)
             char buf[64] = "";
             if (undo_rec_type != ' ' && undo_rec->char_storage != -1)
                 ImTextStrToUtf8(buf, IM_ARRAYSIZE(buf), undo_state->undo_char + undo_rec->char_storage, undo_state->undo_char + undo_rec->char_storage + undo_rec->insert_length);
-            Text("%c [%02d] where %03d, insert %03d, delete %03d, char_storage %03d \"%s\"",
+            Text("%c [%02d] where %03d, insert %03d, delete %03d, char_storage %03d {}",
                 undo_rec_type, n, undo_rec->where, undo_rec->insert_length, undo_rec->delete_length, undo_rec->char_storage, buf);
             if (undo_rec_type == ' ')
                 EndDisabled();

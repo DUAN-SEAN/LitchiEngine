@@ -270,7 +270,7 @@ namespace LitchiRuntime
             //    auto file = make_unique<FileStream>(file_path, FileStream_Read);
             //    if (!file->IsOpen())
             //    {
-            //        DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+            //        DEBUG_LOG_ERROR("Failed to load {}.", file_path.c_str());
             //        return false;
             //    }
 
@@ -328,7 +328,7 @@ namespace LitchiRuntime
                 {
                     if (!ImageImporter::Load(file_paths[slice_index], slice_index, this))
                     {
-                        DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+                        DEBUG_LOG_ERROR("Failed to load {}.", file_path.c_str());
                         return false;
                     }
                 }
@@ -502,7 +502,7 @@ namespace LitchiRuntime
             // Wait in case this texture loading in another thread.
             while (!IsReadyForUse())
             {
-                DEBUG_LOG_INFO("Waiting for texture \"%s\" to finish loading...", m_object_name.c_str());
+                DEBUG_LOG_INFO("Waiting for texture {} to finish loading...", m_object_name.c_str());
                 this_thread::sleep_for(chrono::milliseconds(16));
             }
 

@@ -334,7 +334,7 @@ namespace LitchiRuntime
 
         if (!FileSystem::Exists(file_path))
         {
-            DEBUG_LOG_ERROR("Path \"%s\" is invalid.", file_path.c_str());
+            DEBUG_LOG_ERROR("Path {} is invalid.", file_path.c_str());
             return false;
         }
 
@@ -361,7 +361,7 @@ namespace LitchiRuntime
         FIBITMAP* bitmap = FreeImage_Load(format, file_path.c_str());
         if (!bitmap)
         {
-            DEBUG_LOG_ERROR("Failed to load \"%s\"", file_path.c_str());
+            DEBUG_LOG_ERROR("Failed to load {}", file_path.c_str());
             return false;
         }
 

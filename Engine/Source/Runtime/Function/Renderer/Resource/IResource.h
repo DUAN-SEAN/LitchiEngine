@@ -42,7 +42,7 @@ namespace LitchiRuntime
             {
                 if (!LitchiRuntime::FileSystem::IsFile(path))
                 {
-                    DEBUG_LOG_ERROR("\"%s\" is not a valid file path", path.c_str());
+                    DEBUG_LOG_ERROR("{} is not a valid file path", path.c_str());
                     return;
                 }
             }

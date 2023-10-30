@@ -260,8 +260,8 @@ namespace LitchiRuntime
     {
         // don't produce frames if the window is minimized
         // if (ApplicationBase::Instance()->window->IsMinimised())
-        if (ApplicationBase::Instance()->window->IsMinimized())
-            return;
+        // if (ApplicationBase::Instance()->window->IsMinimized())
+            //return;
 
         // after the first frame has completed, we know the renderer is working
         // we stop logging to a file and we start logging to the on-screen console

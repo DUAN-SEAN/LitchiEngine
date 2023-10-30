@@ -234,11 +234,11 @@ namespace LitchiRuntime
                 }
                 else if (line.find("warning") != std::string::npos)
                 {
-                    DEBUG_LOG_WARN(line);
+                    DEBUG_LOG_ERROR(line);
                 }
                 else if (!LitchiRuntime::FileSystem::IsEmptyOrWhitespace(line))
                 {
-                    DEBUG_LOG_INFO(line);
+                    DEBUG_LOG_ERROR(line);
                 }
             }
         }

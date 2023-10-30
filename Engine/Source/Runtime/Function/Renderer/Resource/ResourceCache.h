@@ -91,7 +91,7 @@ namespace LitchiRuntime
         {
             if (!FileSystem::Exists(file_path))
             {
-                DEBUG_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
+                DEBUG_LOG_ERROR("{} doesn't exist.", file_path.c_str());
                 return nullptr;
             }
 
@@ -114,7 +114,7 @@ namespace LitchiRuntime
             // Load
             if (!resource || !resource->LoadFromFile(file_path))
             {
-                DEBUG_LOG_ERROR("Failed to load \"%s\".", file_path.c_str());
+                DEBUG_LOG_ERROR("Failed to load {}.", file_path.c_str());
                 return nullptr;
             }
 

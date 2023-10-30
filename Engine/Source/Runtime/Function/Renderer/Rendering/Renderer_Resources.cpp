@@ -236,193 +236,193 @@ namespace LitchiRuntime
 
     void Renderer::CreateShaders()
     {
-        const bool async        = true;
+        const bool async        = false;
         const string shader_dir = ResourceCache::GetResourceDirectory(ResourceDirectory::Shaders) + "\\";
         #define shader(x) m_shaders[static_cast<uint8_t>(x)]
 
-        // G-Buffer
-        shader(Renderer_Shader::gbuffer_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::gbuffer_v)->Compile(RHI_Shader_Vertex, shader_dir + "g_buffer.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
-        shader(Renderer_Shader::gbuffer_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::gbuffer_p)->Compile(RHI_Shader_Pixel, shader_dir + "g_buffer.hlsl", async);
+        //// G-Buffer
+        //shader(Renderer_Shader::gbuffer_v) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::gbuffer_v)->Compile(RHI_Shader_Vertex, shader_dir + "g_buffer.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //shader(Renderer_Shader::gbuffer_p) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::gbuffer_p)->Compile(RHI_Shader_Pixel, shader_dir + "g_buffer.hlsl", async);
 
-        // Light
-        shader(Renderer_Shader::light_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::light_c)->Compile(RHI_Shader_Compute, shader_dir + "light.hlsl", async);
+        //// Light
+        //shader(Renderer_Shader::light_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::light_c)->Compile(RHI_Shader_Compute, shader_dir + "light.hlsl", async);
 
-        // Triangle & Quad
-        {
-            shader(Renderer_Shader::fullscreen_triangle_v) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::fullscreen_triangle_v)->Compile(RHI_Shader_Vertex, shader_dir + "fullscreen_triangle.hlsl", async, RHI_Vertex_Type::Undefined);
+        //// Triangle & Quad
+        //{
+        //    shader(Renderer_Shader::fullscreen_triangle_v) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::fullscreen_triangle_v)->Compile(RHI_Shader_Vertex, shader_dir + "fullscreen_triangle.hlsl", async, RHI_Vertex_Type::Undefined);
 
-            shader(Renderer_Shader::quad_v) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::quad_v)->Compile(RHI_Shader_Vertex, shader_dir + "quad.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //    shader(Renderer_Shader::quad_v) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::quad_v)->Compile(RHI_Shader_Vertex, shader_dir + "quad.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
 
-            shader(Renderer_Shader::quad_p) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::quad_p)->Compile(RHI_Shader_Pixel, shader_dir + "quad.hlsl", async);
-        }
+        //    shader(Renderer_Shader::quad_p) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::quad_p)->Compile(RHI_Shader_Pixel, shader_dir + "quad.hlsl", async);
+        //}
 
-        // Depth prepass
-        {
-            shader(Renderer_Shader::depth_prepass_v) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::depth_prepass_v)->Compile(RHI_Shader_Vertex, shader_dir + "depth_prepass.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //// Depth prepass
+        //{
+        //    shader(Renderer_Shader::depth_prepass_v) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::depth_prepass_v)->Compile(RHI_Shader_Vertex, shader_dir + "depth_prepass.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
 
-            shader(Renderer_Shader::depth_prepass_p) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::depth_prepass_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_prepass.hlsl", async);
-        }
+        //    shader(Renderer_Shader::depth_prepass_p) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::depth_prepass_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_prepass.hlsl", async);
+        //}
 
-        // Depth light
-        {
-            shader(Renderer_Shader::depth_light_V) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::depth_light_V)->Compile(RHI_Shader_Vertex, shader_dir + "depth_light.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //// Depth light
+        //{
+        //    shader(Renderer_Shader::depth_light_V) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::depth_light_V)->Compile(RHI_Shader_Vertex, shader_dir + "depth_light.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
 
-            shader(Renderer_Shader::depth_light_p) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::depth_light_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light.hlsl", async);
-        }
+        //    shader(Renderer_Shader::depth_light_p) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::depth_light_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light.hlsl", async);
+        //}
 
-        // Font
-        shader(Renderer_Shader::font_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::font_v)->Compile(RHI_Shader_Vertex, shader_dir + "font.hlsl", async, RHI_Vertex_Type::PosUv);
-        shader(Renderer_Shader::font_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "font.hlsl", async);
+        //// Font
+        //shader(Renderer_Shader::font_v) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::font_v)->Compile(RHI_Shader_Vertex, shader_dir + "font.hlsl", async, RHI_Vertex_Type::PosUv);
+        //shader(Renderer_Shader::font_p) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "font.hlsl", async);
 
-        // Line
-        shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
-        shader(Renderer_Shader::line_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::line_p)->Compile(RHI_Shader_Pixel, shader_dir + "line.hlsl", async);
+        //// Line
+        //shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
+        //shader(Renderer_Shader::line_p) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::line_p)->Compile(RHI_Shader_Pixel, shader_dir + "line.hlsl", async);
 
-        // Outline
-        shader(Renderer_Shader::outline_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::outline_v)->Compile(RHI_Shader_Vertex, shader_dir + "outline.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
-        shader(Renderer_Shader::outline_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::outline_p)->Compile(RHI_Shader_Pixel, shader_dir + "outline.hlsl", async);
-        shader(Renderer_Shader::outline_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::outline_c)->Compile(RHI_Shader_Compute, shader_dir + "outline.hlsl", async);
+        //// Outline
+        //shader(Renderer_Shader::outline_v) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::outline_v)->Compile(RHI_Shader_Vertex, shader_dir + "outline.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //shader(Renderer_Shader::outline_p) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::outline_p)->Compile(RHI_Shader_Pixel, shader_dir + "outline.hlsl", async);
+        //shader(Renderer_Shader::outline_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::outline_c)->Compile(RHI_Shader_Compute, shader_dir + "outline.hlsl", async);
 
-        // Reflection probe
-        shader(Renderer_Shader::reflection_probe_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::reflection_probe_v)->Compile(RHI_Shader_Vertex, shader_dir + "reflection_probe.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
-        shader(Renderer_Shader::reflection_probe_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::reflection_probe_p)->Compile(RHI_Shader_Pixel, shader_dir + "reflection_probe.hlsl", async);
+        //// Reflection probe
+        //shader(Renderer_Shader::reflection_probe_v) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::reflection_probe_v)->Compile(RHI_Shader_Vertex, shader_dir + "reflection_probe.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //shader(Renderer_Shader::reflection_probe_p) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::reflection_probe_p)->Compile(RHI_Shader_Pixel, shader_dir + "reflection_probe.hlsl", async);
 
-        // Debug
-        {
-            shader(Renderer_Shader::debug_reflection_probe_v) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::debug_reflection_probe_v)->Compile(RHI_Shader_Vertex, shader_dir + "debug_reflection_probe.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
-            shader(Renderer_Shader::debug_reflection_probe_p) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::debug_reflection_probe_p)->Compile(RHI_Shader_Pixel, shader_dir + "debug_reflection_probe.hlsl", async);
-        }
+        //// Debug
+        //{
+        //    shader(Renderer_Shader::debug_reflection_probe_v) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::debug_reflection_probe_v)->Compile(RHI_Shader_Vertex, shader_dir + "debug_reflection_probe.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        //    shader(Renderer_Shader::debug_reflection_probe_p) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::debug_reflection_probe_p)->Compile(RHI_Shader_Pixel, shader_dir + "debug_reflection_probe.hlsl", async);
+        //}
 
-        // Blur
-        {
-            // Gaussian
-            shader(Renderer_Shader::blur_gaussian_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::blur_gaussian_c)->AddDefine("PASS_BLUR_GAUSSIAN");
-            shader(Renderer_Shader::blur_gaussian_c)->Compile(RHI_Shader_Compute, shader_dir + "blur.hlsl", async);
+        //// Blur
+        //{
+        //    // Gaussian
+        //    shader(Renderer_Shader::blur_gaussian_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::blur_gaussian_c)->AddDefine("PASS_BLUR_GAUSSIAN");
+        //    shader(Renderer_Shader::blur_gaussian_c)->Compile(RHI_Shader_Compute, shader_dir + "blur.hlsl", async);
 
-            // Gaussian bilateral 
-            shader(Renderer_Shader::blur_gaussian_bilaterial_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::blur_gaussian_bilaterial_c)->AddDefine("PASS_BLUR_BILATERAL_GAUSSIAN");
-            shader(Renderer_Shader::blur_gaussian_bilaterial_c)->Compile(RHI_Shader_Compute, shader_dir + "blur.hlsl", async);
-        }
+        //    // Gaussian bilateral 
+        //    shader(Renderer_Shader::blur_gaussian_bilaterial_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::blur_gaussian_bilaterial_c)->AddDefine("PASS_BLUR_BILATERAL_GAUSSIAN");
+        //    shader(Renderer_Shader::blur_gaussian_bilaterial_c)->Compile(RHI_Shader_Compute, shader_dir + "blur.hlsl", async);
+        //}
 
-        // Bloom
-        {
-            // Downsample luminance
-            shader(Renderer_Shader::bloom_luminance_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::bloom_luminance_c)->AddDefine("LUMINANCE");
-            shader(Renderer_Shader::bloom_luminance_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
+        //// Bloom
+        //{
+        //    // Downsample luminance
+        //    shader(Renderer_Shader::bloom_luminance_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::bloom_luminance_c)->AddDefine("LUMINANCE");
+        //    shader(Renderer_Shader::bloom_luminance_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
 
-            // Upsample blend (with previous mip)
-            shader(Renderer_Shader::bloom_upsample_blend_mip_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::bloom_upsample_blend_mip_c)->AddDefine("UPSAMPLE_BLEND_MIP");
-            shader(Renderer_Shader::bloom_upsample_blend_mip_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
+        //    // Upsample blend (with previous mip)
+        //    shader(Renderer_Shader::bloom_upsample_blend_mip_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::bloom_upsample_blend_mip_c)->AddDefine("UPSAMPLE_BLEND_MIP");
+        //    shader(Renderer_Shader::bloom_upsample_blend_mip_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
 
-            // Upsample blend (with frame)
-            shader(Renderer_Shader::bloom_blend_frame_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::bloom_blend_frame_c)->AddDefine("BLEND_FRAME");
-            shader(Renderer_Shader::bloom_blend_frame_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
-        }
+        //    // Upsample blend (with frame)
+        //    shader(Renderer_Shader::bloom_blend_frame_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::bloom_blend_frame_c)->AddDefine("BLEND_FRAME");
+        //    shader(Renderer_Shader::bloom_blend_frame_c)->Compile(RHI_Shader_Compute, shader_dir + "bloom.hlsl", async);
+        //}
 
-        // Film grain
-        shader(Renderer_Shader::film_grain_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::film_grain_c)->Compile(RHI_Shader_Compute, shader_dir + "film_grain.hlsl", async);
+        //// Film grain
+        //shader(Renderer_Shader::film_grain_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::film_grain_c)->Compile(RHI_Shader_Compute, shader_dir + "film_grain.hlsl", async);
 
-        // Chromatic aberration
-        shader(Renderer_Shader::chromatic_aberration_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::chromatic_aberration_c)->Compile(RHI_Shader_Compute, shader_dir + "chromatic_aberration.hlsl", async);
+        //// Chromatic aberration
+        //shader(Renderer_Shader::chromatic_aberration_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::chromatic_aberration_c)->Compile(RHI_Shader_Compute, shader_dir + "chromatic_aberration.hlsl", async);
 
-        // Tone-mapping & gamma correction
-        shader(Renderer_Shader::tonemapping_gamma_correction_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::tonemapping_gamma_correction_c)->Compile(RHI_Shader_Compute, shader_dir + "tone_mapping_gamma_correction.hlsl", async);
+        //// Tone-mapping & gamma correction
+        //shader(Renderer_Shader::tonemapping_gamma_correction_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::tonemapping_gamma_correction_c)->Compile(RHI_Shader_Compute, shader_dir + "tone_mapping_gamma_correction.hlsl", async);
 
-        // FXAA
-        shader(Renderer_Shader::fxaa_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::fxaa_c)->Compile(RHI_Shader_Compute, shader_dir + "fxaa\\fxaa.hlsl", async);
+        //// FXAA
+        //shader(Renderer_Shader::fxaa_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::fxaa_c)->Compile(RHI_Shader_Compute, shader_dir + "fxaa\\fxaa.hlsl", async);
 
-        // Depth of Field
-        {
-            shader(Renderer_Shader::dof_downsample_coc_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::dof_downsample_coc_c)->AddDefine("DOWNSAMPLE_CIRCLE_OF_CONFUSION");
-            shader(Renderer_Shader::dof_downsample_coc_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
+        //// Depth of Field
+        //{
+        //    shader(Renderer_Shader::dof_downsample_coc_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::dof_downsample_coc_c)->AddDefine("DOWNSAMPLE_CIRCLE_OF_CONFUSION");
+        //    shader(Renderer_Shader::dof_downsample_coc_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
 
-            shader(Renderer_Shader::dof_bokeh_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::dof_bokeh_c)->AddDefine("BOKEH");
-            shader(Renderer_Shader::dof_bokeh_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
+        //    shader(Renderer_Shader::dof_bokeh_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::dof_bokeh_c)->AddDefine("BOKEH");
+        //    shader(Renderer_Shader::dof_bokeh_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
 
-            shader(Renderer_Shader::dof_tent_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::dof_tent_c)->AddDefine("TENT");
-            shader(Renderer_Shader::dof_tent_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
+        //    shader(Renderer_Shader::dof_tent_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::dof_tent_c)->AddDefine("TENT");
+        //    shader(Renderer_Shader::dof_tent_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
 
-            shader(Renderer_Shader::dof_upscale_blend_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::dof_upscale_blend_c)->AddDefine("UPSCALE_BLEND");
-            shader(Renderer_Shader::dof_upscale_blend_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
-        }
+        //    shader(Renderer_Shader::dof_upscale_blend_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::dof_upscale_blend_c)->AddDefine("UPSCALE_BLEND");
+        //    shader(Renderer_Shader::dof_upscale_blend_c)->Compile(RHI_Shader_Compute, shader_dir + "depth_of_field.hlsl", async);
+        //}
 
-        // Motion Blur
-        shader(Renderer_Shader::motion_blur_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::motion_blur_c)->Compile(RHI_Shader_Compute, shader_dir + "motion_blur.hlsl", async);
+        //// Motion Blur
+        //shader(Renderer_Shader::motion_blur_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::motion_blur_c)->Compile(RHI_Shader_Compute, shader_dir + "motion_blur.hlsl", async);
 
-        // Dithering
-        shader(Renderer_Shader::debanding_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::debanding_c)->Compile(RHI_Shader_Compute, shader_dir + "debanding.hlsl", async);
+        //// Dithering
+        //shader(Renderer_Shader::debanding_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::debanding_c)->Compile(RHI_Shader_Compute, shader_dir + "debanding.hlsl", async);
 
-        // SSGI
-        shader(Renderer_Shader::ssgi_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::ssgi_c)->Compile(RHI_Shader_Compute, shader_dir + "ssgi.hlsl", async);
+        //// SSGI
+        //shader(Renderer_Shader::ssgi_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::ssgi_c)->Compile(RHI_Shader_Compute, shader_dir + "ssgi.hlsl", async);
 
-        // Light
-        {
-            shader(Renderer_Shader::light_composition_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::light_composition_c)->Compile(RHI_Shader_Compute, shader_dir + "light_composition.hlsl", async);
+        //// Light
+        //{
+        //    shader(Renderer_Shader::light_composition_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::light_composition_c)->Compile(RHI_Shader_Compute, shader_dir + "light_composition.hlsl", async);
 
-            shader(Renderer_Shader::light_image_based_p) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::light_image_based_p)->Compile(RHI_Shader_Pixel, shader_dir + "light_image_based.hlsl", async);
-        }
+        //    shader(Renderer_Shader::light_image_based_p) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::light_image_based_p)->Compile(RHI_Shader_Pixel, shader_dir + "light_image_based.hlsl", async);
+        //}
 
-        // SSR
-        shader(Renderer_Shader::ssr_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::ssr_c)->Compile(RHI_Shader_Compute, shader_dir + "ssr.hlsl", async);
+        //// SSR
+        //shader(Renderer_Shader::ssr_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::ssr_c)->Compile(RHI_Shader_Compute, shader_dir + "ssr.hlsl", async);
 
-        // Temporal filter
-        shader(Renderer_Shader::temporal_filter_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::temporal_filter_c)->Compile(RHI_Shader_Compute, shader_dir + "temporal_filter.hlsl", async);
+        //// Temporal filter
+        //shader(Renderer_Shader::temporal_filter_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::temporal_filter_c)->Compile(RHI_Shader_Compute, shader_dir + "temporal_filter.hlsl", async);
 
-        // AMD FidelityFX CAS - Contrast Adaptive Sharpening
-        shader(Renderer_Shader::ffx_cas_c) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::ffx_cas_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\cas.hlsl", async);
+        //// AMD FidelityFX CAS - Contrast Adaptive Sharpening
+        //shader(Renderer_Shader::ffx_cas_c) = make_shared<RHI_Shader>();
+        //shader(Renderer_Shader::ffx_cas_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\cas.hlsl", async);
 
-        // Compiled immediately, they are needed the moment the engine starts.
-        {
-            // AMD FidelityFX SPD - Single Pass Downsample
-            shader(Renderer_Shader::ffx_spd_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::ffx_spd_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\spd.hlsl", false);
+        //// Compiled immediately, they are needed the moment the engine starts.
+        //{
+        //    // AMD FidelityFX SPD - Single Pass Downsample
+        //    shader(Renderer_Shader::ffx_spd_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::ffx_spd_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\spd.hlsl", false);
 
-            // BRDF - Specular Lut
-            shader(Renderer_Shader::brdf_specular_lut_c) = make_shared<RHI_Shader>();
-            shader(Renderer_Shader::brdf_specular_lut_c)->Compile(RHI_Shader_Compute, shader_dir + "brdf_specular_lut.hlsl", false);
-        }
+        //    // BRDF - Specular Lut
+        //    shader(Renderer_Shader::brdf_specular_lut_c) = make_shared<RHI_Shader>();
+        //    shader(Renderer_Shader::brdf_specular_lut_c)->Compile(RHI_Shader_Compute, shader_dir + "brdf_specular_lut.hlsl", false);
+        //}
     }
 
     void Renderer::CreateFonts()

@@ -57,11 +57,14 @@ namespace LitchiRuntime
 
         UpdateScreenSize();
 
-        // RenderSystem::Initialize(new RenderSystem(),true,true);
-        Renderer::Initialize();
+        {
+
+            ResourceCache::Initialize();
+            Renderer::Initialize();
+
+        }
 
         TypeManager::Initialize(new TypeManager());
-
         SerializerManager::Initialize(new SerializerManager());
 
         //初始化 fmod

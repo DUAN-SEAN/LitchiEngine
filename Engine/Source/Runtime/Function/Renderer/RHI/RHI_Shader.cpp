@@ -40,11 +40,11 @@ namespace LitchiRuntime
             {
                 if (defines_str.empty())
                 {
-                    DEBUG_LOG_INFO("Successfully compiled %s shader \"%s\" in %.2f ms.", type_str.c_str(), object_name.c_str(), stopwatch.GetElapsedTimeMs());
+                    DEBUG_LOG_INFO("Successfully compiled {} shader {} in {} ms.", type_str.c_str(), object_name.c_str(), stopwatch.GetElapsedTimeMs());
                 }
                 else
                 {
-                    DEBUG_LOG_INFO("Successfully compiled %s shader \"%s\" with definitions \"%s\" in %.2f ms.", type_str.c_str(), object_name.c_str(), defines_str.c_str(), stopwatch.GetElapsedTimeMs());
+                    DEBUG_LOG_INFO("Successfully compiled %s shader {} with definitions {} in {} ms.", type_str.c_str(), object_name.c_str(), defines_str.c_str(), stopwatch.GetElapsedTimeMs());
                 }
             }
             // failure
@@ -52,11 +52,11 @@ namespace LitchiRuntime
             {
                 if (defines_str.empty())
                 {
-                    DEBUG_LOG_ERROR("Failed to compile shader \"%s\".", object_name.c_str());
+                    DEBUG_LOG_ERROR("Failed to compile shader {}.", object_name.c_str());
                 }
                 else
                 {
-                    DEBUG_LOG_ERROR("Failed to compile shader \"%s\" with definitions \"%s\".", object_name.c_str(), defines_str.c_str());
+                    DEBUG_LOG_ERROR("Failed to compile shader {} with definitions {}.", object_name.c_str(), defines_str.c_str());
                 }
             }
         }
@@ -78,7 +78,7 @@ namespace LitchiRuntime
 
         if (!FileSystem::IsFile(file_path))
         {
-            DEBUG_LOG_ERROR("\"%s\" doesn't exist.", file_path.c_str());
+            DEBUG_LOG_ERROR("{} doesn't exist.", file_path.c_str());
             return;
         }
 
