@@ -80,6 +80,7 @@ namespace LitchiRuntime
             {
                 arguments.emplace_back("-spirv");                     // generate SPIR-V code
                 arguments.emplace_back("-fspv-target-env=vulkan1.3"); // specify the target environment
+                arguments.emplace_back("-fspv-extension=KHR"); // allow all KHR extensions
 
                 // this prevents all sorts of issues with constant buffers having random data.
             	arguments.emplace_back("-fspv-preserve-bindings");  // preserves all bindings declared within the module, even when those bindings are unused
