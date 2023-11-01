@@ -60,13 +60,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 // // Misc
 // Texture2D tex_lut_ibl            : register(t30);
-// Texture2D tex_environment        : register(t31);
-// Texture2D tex_ssgi               : register(t32);
-// Texture2D tex_ssr                : register(t33);
-// Texture2D tex_frame              : register(t34);
+Texture2D tex_environment        : register(t31);
+Texture2D tex_ssgi               : register(t32);
+Texture2D tex_ssr                : register(t33);
+Texture2D tex_frame              : register(t34);
 Texture2D tex                    : register(t35);
-// Texture2D tex2                   : register(t36);
-// Texture2D tex_font_atlas         : register(t37);
+Texture2D tex2                   : register(t36);
+Texture2D tex_font_atlas         : register(t37);
 // TextureCube tex_reflection_probe : register(t38);
 // Texture2DArray tex_sss			 : register(t39);
 
