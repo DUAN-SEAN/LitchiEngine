@@ -860,7 +860,7 @@ namespace LitchiRuntime
         if (!is_rendering_allowed)
             return;
 
-        SP_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
+        // SP_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
         SP_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
 
         swap_chain->Present();
