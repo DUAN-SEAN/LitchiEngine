@@ -120,14 +120,14 @@ namespace LitchiRuntime
     
         // Misc
         lutIbl           = 28,
-        environment      = 29,
-        ssgi             = 30,
-        ssr              = 31,
-        frame            = 32,
-        tex              = 33,
-        tex2             = 34,
-        font_atlas       = 35,
-        reflection_probe = 36
+        environment      = 31,
+        ssgi             = 32,
+        ssr              = 33,
+        frame            = 34,
+        tex              = 35,
+        tex2             = 36,
+        font_atlas       = 37,
+        reflection_probe = 38
     };
 
     enum class Renderer_BindingsUav
