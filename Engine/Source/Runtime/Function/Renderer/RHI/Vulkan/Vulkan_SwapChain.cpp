@@ -12,6 +12,7 @@
 
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 
 //SP_WARNINGS_OFF
 //#include <SDL_vulkan.h>
@@ -175,6 +176,8 @@ namespace LitchiRuntime
 
        /* SP_SUBSCRIBE_TO_EVENT(EventType::WindowResized, SP_EVENT_HANDLER(ResizeToWindowSize));
         SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreen, SP_EVENT_HANDLER(ResizeToWindowSize));*/
+
+        ApplicationBase::Instance()->window->ResizeEvent.AddListener(std::bind(&RHI_SwapChain::OnResize, this, std::placeholders::_1, std::placeholders::_2));
     }
 
     RHI_SwapChain::~RHI_SwapChain()
@@ -384,8 +387,8 @@ namespace LitchiRuntime
     void RHI_SwapChain::ResizeToWindowSize()
     {
         // todo swapChainÐèÒªWindow¾ä±ú
-        // auto = Window::GetSize();
-        // Resize(Window::(), Window::GetHeight());
+        const auto& size = ApplicationBase::Instance()->window->GetSize();
+        Resize(size.first, size.second);
     }
 
     void RHI_SwapChain::AcquireNextImage()
@@ -420,6 +423,10 @@ namespace LitchiRuntime
         signal_semaphore->SetStateCpu(RHI_Sync_State::Submitted);
     }
 
+    void RHI_SwapChain::OnResize(uint32_t width, uint32_t height)
+    {
+        Resize(width, height);
+    }
     void RHI_SwapChain::Present()
     {
         // SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");

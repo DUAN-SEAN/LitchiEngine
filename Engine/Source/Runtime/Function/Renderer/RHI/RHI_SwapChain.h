@@ -60,6 +60,8 @@ namespace LitchiRuntime
         void Destroy();
         void AcquireNextImage();
 
+        void OnResize(uint32_t width, uint32_t height);
+
         // Main
         bool m_windowed                 = false;
         uint32_t m_buffer_count         = 0;
