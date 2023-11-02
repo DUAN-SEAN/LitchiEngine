@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Runtime/Function/Renderer/Resources/Shader.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -30,7 +31,8 @@ namespace LitchiEditor
 		(
 			const std::string& p_title,
 			bool p_opened,
-			const PanelWindowSettings& p_windowSettings
+			const PanelWindowSettings& p_windowSettings,
+			RHI_Texture* renderTargetTexture
 		);
 
 		/**
@@ -99,6 +101,7 @@ namespace LitchiEditor
 
 		/**
 		* Fill the UBO using the view settings
+		* todo: remove
 		*/
 		void FillEngineUBO();
 
@@ -114,6 +117,7 @@ namespace LitchiEditor
 		Vector3 m_cameraPosition;
 		Quaternion m_cameraRotation;
 		Image* m_image;
+		RHI_Texture* m_renderTargetTexture;
 
         Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };
 

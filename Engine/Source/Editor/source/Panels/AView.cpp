@@ -2,8 +2,6 @@
 
 #include "Editor/include/Panels/AView.h"
 
-#include <glad/glad.h>
-
 #include "Editor/include/Core/EditorRenderer.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
@@ -15,15 +13,18 @@ LitchiEditor::AView::AView
 (
 	const std::string& p_title,
 	bool p_opened,
-	const PanelWindowSettings& p_windowSettings
+	const PanelWindowSettings& p_windowSettings,
+	RHI_Texture* renderTargetTexture
 ) :
 	PanelWindow(p_title, p_opened, p_windowSettings)
 {
 	// 初始化Cameraf
 	m_camera = new RenderCamera();
 
-	// 绑定fbo到ImGui的image todo:
-	// m_image = &CreateWidget<Image>(m_fbo.GetTextureID(), Vector2{ 0.f, 0.f });
+	m_renderTargetTexture = renderTargetTexture;
+
+	// 绑定rt到ImGui的image
+	m_image = &CreateWidget<Image>(m_renderTargetTexture, Vector2{ 0.f, 0.f });
 
 	scrollable = false;
 }
@@ -63,7 +64,7 @@ void LitchiEditor::AView::Render()
 	// todo
 	// ApplicationEditor::Instance()->shapeDrawer->SetViewProjection(m_camera->GetProjectionMatrix()*m_camera->GetViewMatrix());
 
-	glViewport(0, 0, winWidth, winHeight);
+	// glViewport(0, 0, winWidth, winHeight);
 
 	_Render_Impl();
 }

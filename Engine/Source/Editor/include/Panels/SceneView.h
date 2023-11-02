@@ -21,12 +21,14 @@ namespace LitchiEditor
 		* @param p_title
 		* @param p_opened
 		* @param p_windowSettings
+		* @param p_renderTargetTexture
 		*/
 		SceneView
 		(
 			const std::string& p_title,
 			bool p_opened,
-			const PanelWindowSettings& p_windowSettings
+			const PanelWindowSettings& p_windowSettings,
+			RHI_Texture* renderTargetTexture
 		);
 
 		/**

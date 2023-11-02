@@ -21,6 +21,7 @@ namespace LitchiEditor
 			const std::string& p_title,
 			bool p_opened,
 			const PanelWindowSettings& p_windowSettings,
+			RHI_Texture* renderTargetTexture,
 			bool p_enableFocusInputs = false
 		);
 

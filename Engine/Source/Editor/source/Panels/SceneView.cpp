@@ -10,8 +10,9 @@ LitchiEditor::SceneView::SceneView
 (
 	const std::string& p_title,
 	bool p_opened,
-	const PanelWindowSettings& p_windowSettings
-) : AViewControllable(p_title, p_opened, p_windowSettings, true)
+	const PanelWindowSettings& p_windowSettings,
+	RHI_Texture* renderTargetTexture
+) : AViewControllable(p_title, p_opened, p_windowSettings, renderTargetTexture,true)
 {
 	m_camera->SetClearColor(Vector3{ 0.098f, 0.098f, 0.098f });
 	m_camera->SetFar(5000.0f);

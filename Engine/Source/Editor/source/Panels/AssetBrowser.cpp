@@ -69,7 +69,7 @@ void RemoveAsset(const std::string& p_toDelete)
 class TexturePreview : public LitchiRuntime::IPlugin
 {
 public:
-	TexturePreview() : image(0, { 80, 80 })
+	TexturePreview() : image((uint32_t)0, { 80, 80 })
 	{
 
 	}

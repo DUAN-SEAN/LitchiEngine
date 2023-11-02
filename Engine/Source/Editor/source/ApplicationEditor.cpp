@@ -29,6 +29,8 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 
+#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
+
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data
 {
@@ -295,13 +297,13 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
 	// ‰÷»æView 
-	/*auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
+	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
 	{
 		sceneView.Update(p_deltaTime);
 		sceneView.Render();
 	}
-	auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
+	/*auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
 	if (assetView.IsOpened())
 	{
 		simulatedLightSSBO->Bind(0);
@@ -352,7 +354,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	settings.dockable = true;
 
 	m_panelsManager.CreatePanel<MenuBar>("Menu Bar");
-	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
+	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings,Renderer::GetRenderTarget(Renderer_RenderTexture::frame_output).get());
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	// m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);// todo:
