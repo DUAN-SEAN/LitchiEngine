@@ -20,7 +20,6 @@
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
-#include "stb_image.h"
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
@@ -50,8 +49,8 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 	// todo ÔÝÊ±ÕâÑùÐ´
 	projectAssetsPath = editorAssetsPath;
 
-	ModelManager::ProvideAssetPaths(projectAssetsPath);
-	ShaderManager::ProvideAssetPaths(projectAssetsPath); 
+	/*ModelManager::ProvideAssetPaths(projectAssetsPath);
+	ShaderManager::ProvideAssetPaths(projectAssetsPath); */
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -150,7 +149,7 @@ GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quate
 	return go;
 }
 
-GameObject* CreateUIImageObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, Texture* image)
+GameObject* CreateUIImageObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, RHI_Texture* image)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();

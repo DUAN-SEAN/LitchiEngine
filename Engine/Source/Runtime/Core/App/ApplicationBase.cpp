@@ -2,7 +2,7 @@
 #include "ApplicationBase.h"
 
 #include <memory>
-
+#define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Time/time.h"
@@ -76,13 +76,13 @@ namespace LitchiRuntime
         ScriptEngine::Init(m_dataPath);
 
         // 初始化ResourceManager
-        modelManager = std::make_unique<ModelManager>();
+        //modelManager = std::make_unique<ModelManager>();
         // materialManager = std::make_unique<MaterialManager>();
-        shaderManager = std::make_unique<ShaderManager>();
+        //shaderManager = std::make_unique<ShaderManager>();
 
-        ServiceLocator::Provide<ModelManager>(*modelManager);
+        //ServiceLocator::Provide<ModelManager>(*modelManager);
         // LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
-        ServiceLocator::Provide<ShaderManager>(*shaderManager);
+        // ServiceLocator::Provide<ShaderManager>(*shaderManager);
 
         // 初始化场景 如果没有场景则构建默认场景
         sceneManager = std::make_unique<SceneManager>();

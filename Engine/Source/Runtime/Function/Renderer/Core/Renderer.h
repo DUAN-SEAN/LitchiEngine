@@ -20,8 +20,8 @@
 //#include "Runtime/Function/Renderer/Settings/EPixelDataType.h"
 //#include "Runtime/Function/Renderer/Settings/ERenderingCapability.h"
 
-namespace LitchiRuntime
-{
+// namespace LitchiRuntime
+// {
 	///**
 	//* The renderer is one of the main classes of OvRendering. It is necessary to have one to
 	//* send batches to the GPU
@@ -343,4 +343,4 @@ namespace LitchiRuntime
 
 	//	Texture* m_emptyTexture = nullptr;
 	//};
-}
+//}

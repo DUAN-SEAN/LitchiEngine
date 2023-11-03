@@ -613,8 +613,8 @@ void LitchiEditor::EditorActions::MoveToTarget(LitchiRuntime::GameObject* p_targ
 
 void LitchiEditor::EditorActions::CompileShaders()
 {
-	for (auto shader : LitchiEditor::ApplicationEditor::Instance()->shaderManager->GetResources())
-		LitchiRuntime::Loaders::ShaderLoader::Recompile(*shader.second, GetRealPath(shader.second->path));
+	/*for (auto shader : LitchiEditor::ApplicationEditor::Instance()->shaderManager->GetResources())
+		LitchiRuntime::Loaders::ShaderLoader::Recompile(*shader.second, GetRealPath(shader.second->path));*/
 }
 
 void LitchiEditor::EditorActions::SaveMaterials()
@@ -796,24 +796,24 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 	{
 		/* If not a real rename is asked (Not delete) */
 
-		if (LitchiRuntime::ServiceLocator::Get<ModelManager>().MoveResource(p_previousName, p_newName))
-		{
-			LitchiRuntime::Model* resource = LitchiRuntime::ServiceLocator::Get<ModelManager>()[p_newName];
-			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Model, path)) = p_newName;
-		}
+		//if (LitchiRuntime::ServiceLocator::Get<ModelManager>().MoveResource(p_previousName, p_newName))
+		//{
+		//	LitchiRuntime::Model* resource = LitchiRuntime::ServiceLocator::Get<ModelManager>()[p_newName];
+		//	*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Model, path)) = p_newName;
+		//}
 
-		// todo:
-		/*if (LitchiRuntime::ServiceLocator::Get<TextureManager>().MoveResource(p_previousName, p_newName))
-		{
-			LitchiRuntime::Texture* resource = LitchiRuntime::ServiceLocator::Get<TextureManager>()[p_newName];
-			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Texture, path)) = p_newName;
-		}*/
+		//// todo:
+		///*if (LitchiRuntime::ServiceLocator::Get<TextureManager>().MoveResource(p_previousName, p_newName))
+		//{
+		//	LitchiRuntime::Texture* resource = LitchiRuntime::ServiceLocator::Get<TextureManager>()[p_newName];
+		//	*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Texture, path)) = p_newName;
+		//}*/
 
-		if (LitchiRuntime::ServiceLocator::Get<ShaderManager>().MoveResource(p_previousName, p_newName))
-		{
-			LitchiRuntime::Shader* resource = LitchiRuntime::ServiceLocator::Get<ShaderManager>()[p_newName];
-			*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Shader, path)) = p_newName;
-		}
+		//if (LitchiRuntime::ServiceLocator::Get<ShaderManager>().MoveResource(p_previousName, p_newName))
+		//{
+		//	LitchiRuntime::Shader* resource = LitchiRuntime::ServiceLocator::Get<ShaderManager>()[p_newName];
+		//	*reinterpret_cast<std::string*>(reinterpret_cast<char*>(resource) + offsetof(LitchiRuntime::Shader, path)) = p_newName;
+		//}
 
 		/*if (LitchiRuntime::ServiceLocator::Get<MaterialManager>().MoveResource(p_previousName, p_newName))
 		{

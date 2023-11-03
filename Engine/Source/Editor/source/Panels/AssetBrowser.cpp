@@ -82,7 +82,7 @@ public:
 
 	virtual void Execute() override
 	{
-		if (ImGui::IsItemHovered())
+		/*if (ImGui::IsItemHovered())
 		{
 			if (texture)
 				image.textureID.id = texture->id;
@@ -90,10 +90,10 @@ public:
 			ImGui::BeginTooltip();
 			image.Draw();
 			ImGui::EndTooltip();
-		}
+		}*/
 	}
 
-	LitchiRuntime::Texture* texture = nullptr;
+	LitchiRuntime::RHI_Texture* texture = nullptr;
 	LitchiRuntime::Image image;
 };
 
@@ -687,145 +687,145 @@ public:
 //	}
 //};
 
-class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
-{
-public:
-	ModelContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-
-	virtual void CreateList() override
-	{
-		auto& reloadAction = CreateWidget<MenuItem>("Reload");
-
-		reloadAction.ClickedEvent += [this]
-		{
-			auto& modelManager = OVSERVICE(ModelManager);
-			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-			if (modelManager.IsResourceRegistered(resourcePath))
-			{
-				modelManager.AResourceManager::ReloadResource(resourcePath);
-			}
-		};
-
-		if (!m_protected)
-		{
-			auto& generateMaterialsMenu = CreateWidget<MenuList>("Generate materials...");
-
-			generateMaterialsMenu.CreateWidget<MenuItem>("Standard").ClickedEvent += [this]
-			{
-				auto& modelManager = OVSERVICE(ModelManager);
-				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-				if (auto model = modelManager.GetResource(resourcePath))
-				{
-					for (const std::string& materialName : model->GetMaterialNames())
-					{
-						size_t fails = 0;
-						std::string finalPath;
-
-						do
-						{
-							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-
-							++fails;
-						} while (std::filesystem::exists(finalPath));
-
-						{
-							std::ofstream outfile(finalPath);
-							outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
-						}
-
-						DuplicateEvent.Invoke(finalPath);
-					}
-				}
-			};
-
-			generateMaterialsMenu.CreateWidget<MenuItem>("StandardPBR").ClickedEvent += [this]
-			{
-				auto& modelManager = OVSERVICE(ModelManager);
-				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-				if (auto model = modelManager.GetResource(resourcePath))
-				{
-					for (const std::string& materialName : model->GetMaterialNames())
-					{
-						size_t fails = 0;
-						std::string finalPath;
-
-						do
-						{
-							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-
-							++fails;
-						} while (std::filesystem::exists(finalPath));
-
-						{
-							std::ofstream outfile(finalPath);
-							outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
-						}
-
-						DuplicateEvent.Invoke(finalPath);
-					}
-				}
-			};
-
-			generateMaterialsMenu.CreateWidget<MenuItem>("Unlit").ClickedEvent += [this]
-			{
-				auto& modelManager = OVSERVICE(ModelManager);
-				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-				if (auto model = modelManager.GetResource(resourcePath))
-				{
-					for (const std::string& materialName : model->GetMaterialNames())
-					{
-						size_t fails = 0;
-						std::string finalPath;
-
-						do
-						{
-							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-
-							++fails;
-						} while (std::filesystem::exists(finalPath));
-
-						{
-							std::ofstream outfile(finalPath);
-							outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
-						}
-
-						DuplicateEvent.Invoke(finalPath);
-					}
-				}
-			};
-
-			generateMaterialsMenu.CreateWidget<MenuItem>("Lambert").ClickedEvent += [this]
-			{
-				auto& modelManager = OVSERVICE(ModelManager);
-				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-				if (auto model = modelManager.GetResource(resourcePath))
-				{
-					for (const std::string& materialName : model->GetMaterialNames())
-					{
-						size_t fails = 0;
-						std::string finalPath;
-
-						do
-						{
-							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-
-							++fails;
-						} while (std::filesystem::exists(finalPath));
-
-						{
-							std::ofstream outfile(finalPath);
-							outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
-						}
-
-						DuplicateEvent.Invoke(finalPath);
-					}
-				}
-			};
-		}
-
-		PreviewableContextualMenu::CreateList();
-	}
-};
+//class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
+//{
+//public:
+//	ModelContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+//
+//	virtual void CreateList() override
+//	{
+//		auto& reloadAction = CreateWidget<MenuItem>("Reload");
+//
+//		reloadAction.ClickedEvent += [this]
+//		{
+//			auto& modelManager = OVSERVICE(ModelManager);
+//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//			if (modelManager.IsResourceRegistered(resourcePath))
+//			{
+//				modelManager.AResourceManager::ReloadResource(resourcePath);
+//			}
+//		};
+//
+//		if (!m_protected)
+//		{
+//			auto& generateMaterialsMenu = CreateWidget<MenuList>("Generate materials...");
+//
+//			generateMaterialsMenu.CreateWidget<MenuItem>("Standard").ClickedEvent += [this]
+//			{
+//				auto& modelManager = OVSERVICE(ModelManager);
+//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//				if (auto model = modelManager.GetResource(resourcePath))
+//				{
+//					for (const std::string& materialName : model->GetMaterialNames())
+//					{
+//						size_t fails = 0;
+//						std::string finalPath;
+//
+//						do
+//						{
+//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+//
+//							++fails;
+//						} while (std::filesystem::exists(finalPath));
+//
+//						{
+//							std::ofstream outfile(finalPath);
+//							outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
+//						}
+//
+//						DuplicateEvent.Invoke(finalPath);
+//					}
+//				}
+//			};
+//
+//			generateMaterialsMenu.CreateWidget<MenuItem>("StandardPBR").ClickedEvent += [this]
+//			{
+//				auto& modelManager = OVSERVICE(ModelManager);
+//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//				if (auto model = modelManager.GetResource(resourcePath))
+//				{
+//					for (const std::string& materialName : model->GetMaterialNames())
+//					{
+//						size_t fails = 0;
+//						std::string finalPath;
+//
+//						do
+//						{
+//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+//
+//							++fails;
+//						} while (std::filesystem::exists(finalPath));
+//
+//						{
+//							std::ofstream outfile(finalPath);
+//							outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
+//						}
+//
+//						DuplicateEvent.Invoke(finalPath);
+//					}
+//				}
+//			};
+//
+//			generateMaterialsMenu.CreateWidget<MenuItem>("Unlit").ClickedEvent += [this]
+//			{
+//				auto& modelManager = OVSERVICE(ModelManager);
+//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//				if (auto model = modelManager.GetResource(resourcePath))
+//				{
+//					for (const std::string& materialName : model->GetMaterialNames())
+//					{
+//						size_t fails = 0;
+//						std::string finalPath;
+//
+//						do
+//						{
+//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+//
+//							++fails;
+//						} while (std::filesystem::exists(finalPath));
+//
+//						{
+//							std::ofstream outfile(finalPath);
+//							outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
+//						}
+//
+//						DuplicateEvent.Invoke(finalPath);
+//					}
+//				}
+//			};
+//
+//			generateMaterialsMenu.CreateWidget<MenuItem>("Lambert").ClickedEvent += [this]
+//			{
+//				auto& modelManager = OVSERVICE(ModelManager);
+//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+//				if (auto model = modelManager.GetResource(resourcePath))
+//				{
+//					for (const std::string& materialName : model->GetMaterialNames())
+//					{
+//						size_t fails = 0;
+//						std::string finalPath;
+//
+//						do
+//						{
+//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+//
+//							++fails;
+//						} while (std::filesystem::exists(finalPath));
+//
+//						{
+//							std::ofstream outfile(finalPath);
+//							outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
+//						}
+//
+//						DuplicateEvent.Invoke(finalPath);
+//					}
+//				}
+//			};
+//		}
+//
+//		PreviewableContextualMenu::CreateList();
+//	}
+//};
 
 //class TextureContextualMenu : public PreviewableContextualMenu<Texture, TextureManager>
 //{
@@ -1002,10 +1002,12 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 	/* If there is a given treenode (p_root) we attach the new widget to it */
 	auto& itemGroup = p_root ? p_root->CreateWidget<Group>() : m_assetList->CreateWidget<Group>();
 
-	/* Find the icon to apply to the item */
-	uint32_t iconTextureID = isDirectory ? ApplicationEditor::Instance()->editorResources->GetTexture("Icon_Folder")->id : ApplicationEditor::Instance()->editorResources->GetFileIcon(itemname)->id;
 
-	itemGroup.CreateWidget<Image>(iconTextureID, Vector2{ 16, 16 }).lineBreak = false;
+	// TODO:Í¼±ê
+	///* Find the icon to apply to the item */
+	//uint32_t iconTextureID = isDirectory ? ApplicationEditor::Instance()->editorResources->GetTexture("Icon_Folder")->id : ApplicationEditor::Instance()->editorResources->GetFileIcon(itemname)->id;
+
+	//itemGroup.CreateWidget<Image>(iconTextureID, Vector2{ 16, 16 }).lineBreak = false;
 
 	/* If the entry is a directory, the content must be a tree node, otherwise (= is a file), a text will suffice */
 	if (isDirectory)
@@ -1180,7 +1182,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 
 		switch (fileType)
 		{
-		case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
+		// case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
 		// case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
 		// case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
 		// case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;

@@ -50,7 +50,7 @@ namespace LitchiEditor
 		GameObject* GetSelectGameObject() { return m_selectGO; }
 		
 		std::unique_ptr<UIManager>		uiManager;
-		std::unique_ptr<EditorResources>		editorResources;
+		// std::unique_ptr<EditorResources>		editorResources;
 
 		//std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
 		//std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;

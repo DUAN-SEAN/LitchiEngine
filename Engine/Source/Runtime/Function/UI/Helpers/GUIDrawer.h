@@ -8,7 +8,8 @@
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
-#include "Runtime/Function/Renderer/Resources/Shader.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 
 namespace LitchiRuntime
 {
@@ -28,7 +29,7 @@ namespace LitchiRuntime
 		* Defines the texture to use when there is no texture in a texture resource field
 		* @param p_emptyTexture
 		*/
-		static void ProvideEmptyTexture(Texture& p_emptyTexture);
+		static void ProvideEmptyTexture(RHI_Texture& p_emptyTexture);
 
 		/**
 		* Draw a title with the title color
@@ -47,8 +48,8 @@ namespace LitchiRuntime
 		static void DrawString(WidgetContainer& p_root, const std::string& p_name, std::string& p_data);
 		static void DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha = false);
 		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, Model*& p_data, Event<>* p_updateNotifier = nullptr);
-		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Texture*& p_data, Event<>* p_updateNotifier = nullptr);
-		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, Shader*& p_data, Event<>* p_updateNotifier = nullptr);
+		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier = nullptr);
+		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, RHI_Shader*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, Material*& p_data, Event<>* p_updateNotifier = nullptr);
 		// static Text& DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::LitchiRuntime::Sound*& p_data, Event<>* p_updateNotifier = nullptr);
 		// static Text& DrawAsset(WidgetContainer& p_root, const std::string& p_name, std::string& p_data, Event<>* p_updateNotifier = nullptr);
@@ -76,7 +77,7 @@ namespace LitchiRuntime
 		static std::string GetFormat();
 
 	private:
-		static Texture* __EMPTY_TEXTURE;
+		static RHI_Texture* __EMPTY_TEXTURE;
 	};
 }
 

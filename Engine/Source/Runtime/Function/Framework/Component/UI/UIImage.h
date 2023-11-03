@@ -1,7 +1,7 @@
 ﻿#pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
-#include "Runtime/Function/Renderer/Resources/Texture.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 
 namespace LitchiRuntime
 {
@@ -14,15 +14,15 @@ namespace LitchiRuntime
         {
 	        if(m_texture2D != nullptr)
 	        {
-                return m_texture2D->path;
+                return m_texture2D->GetResourceFilePath();
 	        }
             return "";
         }
-        Texture* GetTexture() { return m_texture2D; }
-        void SetTexture(Texture* texture2D) {
+        RHI_Texture* GetTexture() { return m_texture2D; }
+        void SetTexture(RHI_Texture* texture2D) {
             m_texture2D = texture2D;
-            m_width = texture2D->width;
-            m_height = texture2D->height;
+            m_width = texture2D->GetWidth();
+            m_height = texture2D->GetHeight();
         }
 
         int GetWidth() { return m_width; }
@@ -35,7 +35,7 @@ namespace LitchiRuntime
 
         void OnPostRender() override;
     private:
-        Texture* m_texture2D;//Texture
+        RHI_Texture* m_texture2D;//Texture
         int m_width;
         int m_height;
 

@@ -7,8 +7,6 @@
 
 #include <unordered_map>
 
-#include "stb_image.h"
-
 std::unordered_map<GLFWwindow*, LitchiRuntime::Window*> LitchiRuntime::Window::__WINDOWS_MAP;
 
 LitchiRuntime::Event<LitchiRuntime::EDeviceError, std::string> LitchiRuntime::Window::ErrorEvent;

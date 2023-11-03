@@ -31,9 +31,9 @@ const Color LitchiRuntime::GUIDrawer::TitleColor = { 0.85f, 0.65f, 0.0f };
 const Color LitchiRuntime::GUIDrawer::ClearButtonColor = { 0.5f, 0.0f, 0.0f };
 const float LitchiRuntime::GUIDrawer::_MIN_FLOAT = -999999999.f;
 const float LitchiRuntime::GUIDrawer::_MAX_FLOAT = +999999999.f;
-Texture* LitchiRuntime::GUIDrawer::__EMPTY_TEXTURE = nullptr;
+RHI_Texture* LitchiRuntime::GUIDrawer::__EMPTY_TEXTURE = nullptr;
 
-void LitchiRuntime::GUIDrawer::ProvideEmptyTexture(Texture& p_emptyTexture)
+void LitchiRuntime::GUIDrawer::ProvideEmptyTexture(RHI_Texture& p_emptyTexture)
 {
 	__EMPTY_TEXTURE = &p_emptyTexture;
 }
@@ -101,13 +101,14 @@ void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::st
 
 Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Model *& p_data, Event<>* p_updateNotifier)
 {
+	// TODO:
 	CreateTitle(p_root, p_name);
 
 	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);
-
+	/*
 	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
 	{
 		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::MODEL)
@@ -132,19 +133,19 @@ Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::st
 		widget.content = "Empty";
 		if (p_updateNotifier)
 			p_updateNotifier->Invoke();
-	};
+	};*/
 
 	return widget;
 }
 
-Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Texture *& p_data, Event<>* p_updateNotifier)
+Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->GetResourceFilePath() : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
-	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data->id : (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0), Vector2{ 75, 75 });
+	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data : (__EMPTY_TEXTURE ), Vector2{ 75, 75 });
 
 	// TODO:
 	/*widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
@@ -178,40 +179,40 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Shader *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::RHI_Shader *& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->GetFilePath() : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);
 
-	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
-	{
-		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::SHADER)
-		{
-			if (auto resource = OVSERVICE(LitchiRuntime::ShaderManager).GetResource(p_receivedData.first); resource)
-			{
-				p_data = resource;
-				widget.content = p_receivedData.first;
-				if (p_updateNotifier)
-					p_updateNotifier->Invoke();
-			}
-		}
-	};
+	//widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
+	//{
+	//	if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::SHADER)
+	//	{
+	//		if (auto resource = OVSERVICE(LitchiRuntime::ShaderManager).GetResource(p_receivedData.first); resource)
+	//		{
+	//			p_data = resource;
+	//			widget.content = p_receivedData.first;
+	//			if (p_updateNotifier)
+	//				p_updateNotifier->Invoke();
+	//		}
+	//	}
+	//};
 
-	widget.lineBreak = false;
+	//widget.lineBreak = false;
 
-	auto& resetButton = rightSide.CreateWidget<ButtonSmall>("Clear");
-	resetButton.idleBackgroundColor = ClearButtonColor;
-	resetButton.ClickedEvent += [&widget, &p_data, p_updateNotifier]
-	{
-		p_data = nullptr;
-		widget.content = "Empty";
-		if (p_updateNotifier)
-			p_updateNotifier->Invoke();
-	};
+	//auto& resetButton = rightSide.CreateWidget<ButtonSmall>("Clear");
+	//resetButton.idleBackgroundColor = ClearButtonColor;
+	//resetButton.ClickedEvent += [&widget, &p_data, p_updateNotifier]
+	//{
+	//	p_data = nullptr;
+	//	widget.content = "Empty";
+	//	if (p_updateNotifier)
+	//		p_updateNotifier->Invoke();
+	//};
 
 	return widget;
 }
