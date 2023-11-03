@@ -141,6 +141,8 @@ namespace LitchiRuntime
 
     enum class Renderer_Shader : uint8_t
     {
+        forward_v,
+        forward_p,
         gbuffer_v,
         gbuffer_p,
         depth_prepass_v,
