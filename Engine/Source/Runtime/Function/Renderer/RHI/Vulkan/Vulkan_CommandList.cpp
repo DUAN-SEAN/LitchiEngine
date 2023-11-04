@@ -15,6 +15,7 @@
 #include "../RHI_Semaphore.h"
 #include "../RHI_Fence.h"
 #include "../RHI_SwapChain.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 //=====================================
 
@@ -1290,7 +1291,7 @@ namespace LitchiRuntime
     {
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        // Renderer::SetGlobalShaderResources(this); todo:change
+        Renderer::SetGlobalShaderResources(this);//
 
         // bind descriptor sets - If the descriptor set is null, it means we don't need to bind anything.
         if (RHI_DescriptorSet* descriptor_set = m_descriptor_layout_current->GetDescriptorSet())

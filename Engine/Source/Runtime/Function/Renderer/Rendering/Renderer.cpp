@@ -260,8 +260,8 @@ namespace LitchiRuntime
     {
         // don't produce frames if the window is minimized
         // if (ApplicationBase::Instance()->window->IsMinimised())
-        // if (ApplicationBase::Instance()->window->IsMinimized())
-            //return;
+         if (ApplicationBase::Instance()->window->IsMinimized())
+            return;
 
         // after the first frame has completed, we know the renderer is working
         // we stop logging to a file and we start logging to the on-screen console
@@ -492,12 +492,15 @@ namespace LitchiRuntime
         DEBUG_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
     }
 
-    void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list)
+    void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set /*= true*/)
     {
         GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&m_cb_frame_cpu);
 
         // Bind because the offset just changed
-        cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
+        if(set)
+        {
+            cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
+        }
     }
 
     void Renderer::PushPassConstants(RHI_CommandList* cmd_list)

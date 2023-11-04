@@ -34,6 +34,7 @@ namespace LitchiRuntime
         RHI_PrimitiveTopology_Mode primitive_topology = RHI_PrimitiveTopology_Mode::Undefined;
         bool can_use_vertex_index_buffers             = true;
         bool dynamic_scissor                          = false;
+        //  bool instancing                               = false;
 
         // RTs
         RHI_Texture* render_target_depth_texture = nullptr;

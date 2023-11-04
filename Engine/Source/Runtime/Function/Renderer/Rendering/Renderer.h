@@ -117,7 +117,7 @@ namespace LitchiRuntime
 
     private:
         // Constant buffers
-        static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list);
+        static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set = true);
         static void PushPassConstants(RHI_CommandList* cmd_list);
         static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light);
         static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
@@ -138,7 +138,7 @@ namespace LitchiRuntime
         // Passes - Core
         static void Pass_Frame(RHI_CommandList* cmd_list);
         static void Pass_ShadowMaps(RHI_CommandList* cmd_list, const bool is_transparent_pass);
-        static void Pass_ForwardBasePass(RHI_CommandList* cmd_list, const bool is_transparent_pass);
+        static void Pass_ForwardPass(RHI_CommandList* cmd_list, const bool is_transparent_pass);
 
         // Event handlers
         // static void OnWorldResolved(sp_variant data);
