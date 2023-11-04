@@ -89,6 +89,7 @@ namespace LitchiRuntime
 				{
 					bool is_transparent_pass = false;
 
+					Pass_ForwardPass(cmd_list, is_transparent_pass);
 					//Pass_Depth_Prepass(cmd_list);
 					//Pass_GBuffer(cmd_list, is_transparent_pass);
 					//Pass_Ssgi(cmd_list);

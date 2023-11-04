@@ -93,7 +93,7 @@ namespace LitchiRuntime
         void SetParent(Transform* new_parent);
         Transform* GetChildByIndex(uint32_t index);
         Transform* GetChildByName(const std::string& name);
-        // void AcquireChildren();
+    	void AcquireChildren();
         void RemoveChild(Transform* child);
         void AddChild(Transform* child);
         bool IsDescendantOf(Transform* transform) const;

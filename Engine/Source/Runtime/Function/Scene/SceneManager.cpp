@@ -3,6 +3,7 @@
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 #include "Runtime/Resource/AssetManager.h"
 
@@ -33,7 +34,42 @@ namespace LitchiRuntime
 		// 将go添加到game_object_vec_中
 		m_gameObjectList.push_back(game_object);
 
+		m_resolve = true;
+
 		return game_object;
+	}
+
+	void Scene::RemoveGameObject(GameObject* go)
+	{
+		// todo: 考虑层级关系, 递归移除
+
+		std::vector<Transform*> entities_to_remove;
+		auto tran = go->GetComponent<Transform>();
+		entities_to_remove.push_back(tran);  // Add the root entity
+		tran->GetDescendants(&entities_to_remove); // Get descendants
+
+		// Create a set containing the object IDs of entities to remove
+		std::set<uint64_t> ids_to_remove;
+		for (Transform* transform : entities_to_remove)
+		{
+			ids_to_remove.insert(transform->GetGameObject()->GetObjectId());
+		}
+
+		// Remove entities using a single loop
+		m_gameObjectList.erase(std::remove_if(m_gameObjectList.begin(), m_gameObjectList.end(),
+		                                      [&](GameObject* entity)
+		                                      {
+			                                      return ids_to_remove.count(entity->GetObjectId()) > 0;
+		                                      }),
+			m_gameObjectList.end());
+
+		// If there was a parent, update it
+		if (Transform* parent = tran->GetParent())
+		{
+			parent->AcquireChildren();
+		}
+
+		m_resolve = true;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)
@@ -91,6 +127,28 @@ namespace LitchiRuntime
 		}
 
 		return root_entities;
+	}
+
+	void Scene::Tick()
+	{
+		// Start
+
+
+		// Update
+		for (auto* entity : m_gameObjectList)
+		{
+			// entity->Update();
+		}
+
+
+
+		if(m_resolve)
+		{   
+			Renderer::OnSceneResolved(m_gameObjectList);
+
+			m_resolve = false;
+		}
+
 	}
 
 	void Scene::PostResourceLoaded()

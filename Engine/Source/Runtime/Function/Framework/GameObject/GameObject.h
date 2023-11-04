@@ -17,7 +17,7 @@ namespace LitchiRuntime
 		GameObject() {}
 		GameObject(std::string name,int64_t id);
 		~GameObject();
-
+		
 		std::string GetName() { return m_name; }
 		void SetName(std::string name) { m_name = name; }
 
@@ -25,7 +25,7 @@ namespace LitchiRuntime
 		void SetLayer(unsigned char layer) { m_layer = layer; }
 
 		bool GetActive() { return m_active; }
-		void SetActive(bool active) { m_active = active; }
+		void SetActive(bool active);
 
 		/// 设置父节点
 		/// \param parent

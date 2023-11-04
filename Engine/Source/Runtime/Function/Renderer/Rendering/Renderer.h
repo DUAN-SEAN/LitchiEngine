@@ -48,6 +48,9 @@ namespace LitchiRuntime
         static void DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
         static void DrawPlane(const Plane& plane, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 
+        // Scene
+        static void OnSceneResolved(std::vector<GameObject*> gameObjectList);
+
         // Options
         template<typename T>
         static T GetOption(const Renderer_Option option) { return static_cast<T>(GetOptions()[static_cast<uint32_t>(option)]); }

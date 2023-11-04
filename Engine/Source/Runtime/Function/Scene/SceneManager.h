@@ -25,10 +25,15 @@ namespace LitchiRuntime
 		 * \return go
 		 */
 		GameObject* CreateGameObject(std::string name);
+		void RemoveGameObject(GameObject* go);
 		
 		/// 遍历GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
+
+		void Tick();
+
+		void Resolve() { m_resolve = true; }
 
 		/// 全局查找GameObject
 		/// \param name
@@ -41,7 +46,6 @@ namespace LitchiRuntime
 		/// \return
 		GameObject* Find(const int64_t id);
 
-
 		/// 全局查找GameObject
 		/// \param unmanagedId 非托管唯一Id
 		/// \return
@@ -52,6 +56,7 @@ namespace LitchiRuntime
 		{
 			return m_gameObjectList;
 		}
+
 
 
 
@@ -68,6 +73,7 @@ namespace LitchiRuntime
 
 	private:
 		std::string m_name; //场景名字
+		bool m_resolve = false;
 		
 	};
 

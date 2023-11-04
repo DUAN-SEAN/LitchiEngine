@@ -1,6 +1,7 @@
 ﻿
 #include "transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 
 using namespace std;
 
@@ -313,37 +314,37 @@ namespace LitchiRuntime
         m_children.erase(remove_if(m_children.begin(), m_children.end(), [child](Transform* vec_transform) { return vec_transform->GetObjectId() == child->GetObjectId(); }), m_children.end());
     }
 
-    //// Searches the entire hierarchy, finds any children and saves them in m_children.
-    //// This is a recursive function, the children will also find their own children and so on...
-    //void Transform::AcquireChildren()
-    //{
-    //    m_children.clear();
-    //    m_children.shrink_to_fit();
+    // Searches the entire hierarchy, finds any children and saves them in m_children.
+    // This is a recursive function, the children will also find their own children and so on...
+    void Transform::AcquireChildren()
+    {
+        m_children.clear();
+        m_children.shrink_to_fit();
 
-    //    auto entities = World::GetAllEntities();
-    //    for (const auto& entity : entities)
-    //    {
-    //        if (!entity)
-    //            continue;
+        auto entities = GetGameObject()->GetScene()->GetAllGameObjectList();
+        for (const auto& entity : entities)
+        {
+            if (!entity)
+                continue;
 
-    //        // get the possible child
-    //        auto possible_child = entity->GetTransform();
+            // get the possible child
+            auto possible_child = entity->GetComponent<Transform>();
 
-    //        // if it doesn't have a parent, forget about it.
-    //        if (!possible_child->HasParent())
-    //            continue;
+            // if it doesn't have a parent, forget about it.
+            if (!possible_child->HasParent())
+                continue;
 
-    //        // if it's parent matches this transform
-    //        if (possible_child->GetParent()->GetObjectId() == GetObjectId())
-    //        {
-    //            // welcome home son
-    //            m_children.emplace_back(possible_child.get());
+            // if it's parent matches this transform
+            if (possible_child->GetParent()->GetObjectId() == GetObjectId())
+            {
+                // welcome home son
+                m_children.emplace_back(possible_child);
 
-    //            // make the child do the same thing all over, essentially resolving the entire hierarchy.
-    //            possible_child->AcquireChildren();
-    //        }
-    //    }
-    //}
+                // make the child do the same thing all over, essentially resolving the entire hierarchy.
+                possible_child->AcquireChildren();
+            }
+        }
+    }
 
     bool Transform::IsDescendantOf(Transform* transform) const
     {

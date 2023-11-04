@@ -400,6 +400,22 @@ namespace LitchiRuntime
         frame_num++;
     }
 
+    void Renderer::OnSceneResolved(std::vector<GameObject*> gameObjectList)
+    {
+        lock_guard lock(mutex_entity_addition);
+        m_entities_to_add.clear();
+
+        for (GameObject* entity : gameObjectList)
+        {
+            SP_ASSERT_MSG(entity != nullptr, "Entity is null");
+
+            if (entity->GetActive())
+            {
+                m_entities_to_add.emplace_back(entity);
+            }
+        }
+    }
+
     const RHI_Viewport& Renderer::GetViewport()
     {
         return m_viewport;
@@ -640,6 +656,8 @@ namespace LitchiRuntime
 
     void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
     {
+        // 全量更新
+
         // acquire renderables
         if (!m_entities_to_add.empty())
         {

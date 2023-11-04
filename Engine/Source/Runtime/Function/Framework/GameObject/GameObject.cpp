@@ -18,6 +18,12 @@ namespace LitchiRuntime
 		DEBUG_LOG_INFO("GameObject::~GameObject");
 	}
 
+	void GameObject::SetActive(bool active)
+	{
+		m_active = active;
+		m_scene->Resolve();
+	}
+
 	bool GameObject::SetParent(GameObject* parent) {
 		
 		GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
