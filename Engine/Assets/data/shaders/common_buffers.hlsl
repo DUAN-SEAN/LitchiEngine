@@ -59,8 +59,8 @@ struct LightBufferData
     uint options;
     float2 padding;
     
-    float3 cascade_ends;
-    float padding2;
+    //float3 cascade_ends;
+    //float padding2;
 };
 
 struct MaterialBufferData
