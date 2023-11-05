@@ -322,9 +322,11 @@ namespace LitchiRuntime
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
-		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+
 		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		// pso.clear_depth = 0.0f; // reverse-z
 		pso.clear_color[0] = Color::Green; // reverse-z
