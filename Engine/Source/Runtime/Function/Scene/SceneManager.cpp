@@ -143,10 +143,11 @@ namespace LitchiRuntime
 		// Update
 		for (auto* entity : m_gameObjectList)
 		{
-			// entity->Update();
+			for (auto* comp :entity->GetComponents())
+			{
+				comp->Update();
+			}
 		}
-
-
 
 		if(m_resolve)
 		{   

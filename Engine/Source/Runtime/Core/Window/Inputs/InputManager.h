@@ -12,6 +12,7 @@
 #include "EKeyState.h"
 #include "EMouseButton.h"
 #include "EMouseButtonState.h"
+#include "Runtime/Core/Math/Vector2.h"
 #include "Runtime/Core/Window/Window.h"
 
 namespace LitchiRuntime
@@ -80,6 +81,19 @@ namespace LitchiRuntime
 		*/
 		void ClearEvents();
 
+
+		void SetMouseCursorVisible(const bool visible);
+		bool GetMouseCursorVisible();
+		void SetMouseIsInViewport(const bool is_in_viewport);
+		bool GetMouseIsInViewport();
+		const Vector2& GetMousePosition();
+		void SetMousePosition(const Vector2& position);
+		const Vector2& GetMouseDelta();
+		const Vector2& GetMouseWheelDelta();
+		void SetEditorViewportOffset(const Vector2& offset);
+		const Vector2 GetMousePositionRelativeToWindow();
+		const Vector2 GetMousePositionRelativeToEditorViewport();
+
 	private:
 		void OnKeyPressed(int p_key);
 		void OnKeyReleased(int p_key);
@@ -96,5 +110,12 @@ namespace LitchiRuntime
 
 		std::unordered_map<EKey, EKeyState>					m_keyEvents;
 		std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
+
+		//// Mouse
+		 Vector2 m_mouse_position = Vector2::Zero;
+		 Vector2 m_mouse_delta = Vector2::Zero;
+		 Vector2 m_mouse_wheel_delta = Vector2::Zero;
+		 Vector2 m_editor_viewport_offset = Vector2::Zero;
+		 bool m_mouse_is_in_viewport = true;
 	};
 }

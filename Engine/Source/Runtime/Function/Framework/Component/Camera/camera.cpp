@@ -5,7 +5,6 @@
 #include "Runtime/Core/Window/Window.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-#include "Runtime/Function/Input/input.h"
 #include "Runtime/Function/Input/KeyCode.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Scene/SceneManager.h"
@@ -14,14 +13,51 @@ namespace LitchiRuntime
 {
 
 	Camera::Camera() :m_depth(0), m_culling_mask(0x01) {
-		
+
 	}
 	
 	Camera::~Camera() {
 	}
 
+    void Camera::Awake()
+    {
+        m_view = ComputeViewMatrix();
+        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
+        m_view_projection = m_view * m_projection;
+    }
+
     void Camera::Update()
     {
+        const auto& current_viewport = Renderer::GetViewport();
+        if (m_last_known_viewport != current_viewport)
+        {
+            m_last_known_viewport = current_viewport;
+            m_is_dirty = true;
+        }
+
+        // DIRTY CHECK
+        auto* transform = GetGameObject()->GetComponent<Transform>();
+        if (m_position != transform->GetPosition() || m_rotation != transform->GetRotation())
+        {
+            m_position = transform->GetPosition();
+            m_rotation = transform->GetRotation();
+
+            DEBUG_LOG_INFO("Camera::Update Pos:{},{},{}", m_position.x, m_position.y, m_position.z);
+            DEBUG_LOG_INFO("Camera::Update Rotation:{},{},{}", m_rotation.ToEulerAngles().x, m_rotation.ToEulerAngles().y, m_rotation.ToEulerAngles().z);
+
+            m_is_dirty = true;
+        }
+
+        ProcessInput();
+
+        if (!m_is_dirty)
+            return;
+
+        m_view = ComputeViewMatrix();
+        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
+        m_view_projection = m_view * m_projection;
+        m_frustum = Frustum(GetViewMatrix(), GetProjectionMatrix(), m_near_plane); // reverse-z
+        m_is_dirty = false;
     }
 	
 
@@ -81,14 +117,14 @@ namespace LitchiRuntime
     const Ray Camera::ComputePickingRay()
     {
         Vector3 ray_start = GetGameObject()->GetComponent<Transform>()->GetPosition();
-        Vector3 ray_direction = ScreenToWorldCoordinates(Input::GetMousePositionRelativeToEditorViewport(), 1.0f);
+        Vector3 ray_direction = ScreenToWorldCoordinates(ApplicationBase::Instance()->inputManager->GetMousePositionRelativeToEditorViewport(), 1.0f);
         return Ray(ray_start, ray_direction);
     }
 
     void Camera::Pick()
     {
         // Ensure the mouse is inside the viewport
-        if (!Input::GetMouseIsInViewport())
+        if (!ApplicationBase::Instance()->inputManager->GetMouseIsInViewport())
         {
             m_selected_entity = nullptr;
             return;
@@ -269,13 +305,13 @@ namespace LitchiRuntime
         // Detect if fps control should be activated
         {
             // Initiate control only when the mouse is within the viewport
-            if (Input::GetKeyDown(KeyCode::MOUSE_BUTTON_RIGHT) && Input::GetMouseIsInViewport())
+            if (ApplicationBase::Instance()->inputManager->GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && ApplicationBase::Instance()->inputManager->GetMouseIsInViewport())
             {
                 m_is_controlled_by_keyboard_mouse = true;
             }
 
             // Maintain control as long as the right click is pressed and initial control has been given
-            m_is_controlled_by_keyboard_mouse = Input::GetKey(KeyCode::MOUSE_BUTTON_RIGHT) && m_is_controlled_by_keyboard_mouse;
+            m_is_controlled_by_keyboard_mouse = ApplicationBase::Instance()->inputManager->GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
         }
 
         // Cursor visibility and position
@@ -283,110 +319,112 @@ namespace LitchiRuntime
             // Toggle mouse cursor and adjust mouse position
             if (m_is_controlled_by_keyboard_mouse && !m_fps_control_cursor_hidden)
             {
-                m_mouse_last_position = Input::GetMousePosition();
+                m_mouse_last_position = ApplicationBase::Instance()->inputManager->GetMousePosition();
 
                 if(!ApplicationBase::Instance()->window->IsFullscreen())
                 // if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
                 {
-                    Input::SetMouseCursorVisible(false);
+                    // todo:
+                    // ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(false);
                 }
 
                 m_fps_control_cursor_hidden = true;
             }
             else if (!m_is_controlled_by_keyboard_mouse && m_fps_control_cursor_hidden)
             {
-                Input::SetMousePosition(m_mouse_last_position);
+                ApplicationBase::Instance()->inputManager->SetMousePosition(m_mouse_last_position);
 
                 // if (!Window::IsFullscreen()) // change the mouse state only in editor mode
                 if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
                 {
-                    Input::SetMouseCursorVisible(true);
+                    // todo:
+                    // ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(true);
                 }
 
                 m_fps_control_cursor_hidden = false;
             }
         }
 
-        //if (m_is_controlled_by_keyboard_mouse)
-        //{
-        //    // Mouse look
-        //    {
-        //        // Wrap around left and right screen edges (to allow for infinite scrolling)
-        //        {
-        //            uint32_t edge_padding = 5;
-        //            Vector2 mouse_position = Input::GetMousePosition();
-        //            if (mouse_position.x >= Display::GetWidth() - edge_padding)
-        //            {
-        //                mouse_position.x = static_cast<float>(edge_padding + 1);
-        //                Input::SetMousePosition(mouse_position);
-        //            }
-        //            else if (mouse_position.x <= edge_padding)
-        //            {
-        //                mouse_position.x = static_cast<float>(Display::GetWidth() - edge_padding - 1);
-        //                Input::SetMousePosition(mouse_position);
-        //            }
-        //        }
+        if (m_is_controlled_by_keyboard_mouse)
+        {
+            // Mouse look
+            {
+                // Wrap around left and right screen edges (to allow for infinite scrolling)
+                {
+                    uint32_t edge_padding = 5;
+                    Vector2 mouse_position = ApplicationBase::Instance()->inputManager->GetMousePosition();
+                    if (mouse_position.x >= ApplicationBase::Instance()->window->GetWidth() - edge_padding)
+                    {
+                        mouse_position.x = static_cast<float>(edge_padding + 1);
+                        ApplicationBase::Instance()->inputManager->SetMousePosition(mouse_position);
+                    }
+                    else if (mouse_position.x <= edge_padding)
+                    {
+                        mouse_position.x = static_cast<float>(ApplicationBase::Instance()->window->GetWidth() - edge_padding - 1);
+                        ApplicationBase::Instance()->inputManager->SetMousePosition(mouse_position);
+                    }
+                }
 
-        //        // Get camera rotation.
-        //        m_first_person_rotation.x = GetGameObject()->GetComponent<Transform>()->GetRotation().Yaw();
-        //        m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();
+                // Get camera rotation.
+                m_first_person_rotation.x = GetGameObject()->GetComponent<Transform>()->GetRotation().Yaw();
+                m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();
 
-        //        // Get mouse delta.
-        //        const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
+                // Get mouse delta.
+                const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
 
-        //        // Lerp to it.
-        //        m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
+                // Lerp to it.
+                m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
 
-        //        // Accumulate rotation.
-        //        m_first_person_rotation += m_mouse_smoothed;
+                // Accumulate rotation.
+                m_first_person_rotation += m_mouse_smoothed;
 
-        //        // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-        //        m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
+                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
 
-        //        // Compute rotation.
-        //        const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-        //        const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-        //        const Quaternion rotation = xQuaternion * yQuaternion;
+                // Compute rotation.
+                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+                const Quaternion rotation = xQuaternion * yQuaternion;
 
-        //        // Rotate
-        //        GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-        //    }
+                // Rotate
+                GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
+            }
 
-        //    // Keyboard movement direction
-        //    {
-        //        // Compute direction
-        //        if (Input::GetKey(KeyCode::KEY_CODE_W)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
-        //        if (Input::GetKey(KeyCode::KEY_CODE_S)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
-        //        if (Input::GetKey(KeyCode::KEY_CODE_D)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
-        //        if (Input::GetKey(KeyCode::KEY_CODE_A)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
-        //        if (Input::GetKey(KeyCode::KEY_CODE_Q)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
-        //        if (Input::GetKey(KeyCode::KEY_CODE_E)) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
-        //        movement_direction.Normalize();
-        //    }
+            // Keyboard movement direction
+            {
+                // Compute direction
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
+                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
+                movement_direction.Normalize();
+            }
 
-        //    // Wheel delta (used to adjust movement speed)
-        //    {
-        //        // Accumulate
-        //        m_movement_scroll_accumulator += Input::GetMouseWheelDelta().y * 0.1f;
+            // Wheel delta (used to adjust movement speed)
+            {
+                // Accumulate
+                m_movement_scroll_accumulator += ApplicationBase::Instance()->inputManager->GetMouseWheelDelta().y * 0.1f;
 
-        //        // Clamp
-        //        float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
-        //        float max = movement_acceleration * 2.0f;  // An empirically chosen max.
-        //        m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
-        //    }
-        //}
+                // Clamp
+                float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
+                float max = movement_acceleration * 2.0f;  // An empirically chosen max.
+                m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
+            }
+        }
 
         //// Controller movement
-        //if (Input::IsControllerConnected())
+        //if (ApplicationBase::Instance()->inputManager->IsControllerConnected())
         //{
         //    // Look
         //    {
         //        // Get camera rotation
-        //        m_first_person_rotation.x += Input::GetControllerThumbStickRight().x;
-        //        m_first_person_rotation.y += Input::GetControllerThumbStickRight().y;
+        //        m_first_person_rotation.x += ApplicationBase::Instance()->inputManager->GetControllerThumbStickRight().x;
+        //        m_first_person_rotation.y += ApplicationBase::Instance()->inputManager->GetControllerThumbStickRight().y;
 
         //        // Get mouse delta.
-        //        const Vector2 mouse_delta = Input::GetMouseDelta() * m_mouse_sensitivity;
+        //        const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
 
         //        // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
         //        m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
@@ -401,10 +439,10 @@ namespace LitchiRuntime
         //    }
 
         //    // Controller movement direction
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -Input::GetControllerThumbStickLeft().y;
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * Input::GetControllerThumbStickLeft().x;
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * Input::GetControllerTriggerLeft();
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * Input::GetControllerTriggerRight();
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -ApplicationBase::Instance()->inputManager->GetControllerThumbStickLeft().y;
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * ApplicationBase::Instance()->inputManager->GetControllerThumbStickLeft().x;
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * ApplicationBase::Instance()->inputManager->GetControllerTriggerLeft();
+        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * ApplicationBase::Instance()->inputManager->GetControllerTriggerRight();
         //    movement_direction.Normalize();
         //}
 
@@ -413,7 +451,7 @@ namespace LitchiRuntime
             Vector3 translation = (movement_acceleration + m_movement_scroll_accumulator) * movement_direction;
 
             // On shift, double the translation
-            if (Input::GetKey(KeyCode::KEY_CODE_LEFT_SHIFT))
+            if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
             {
                 translation *= 2.0f;
             }
@@ -441,7 +479,7 @@ namespace LitchiRuntime
     void Camera::ProcessInputLerpToEntity()
     {
         // Set focused entity as a lerp target
-        if (Input::GetKeyDown(KeyCode::KEY_CODE_P))
+        if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_P) == EKeyState::KEY_DOWN)
         {
             FocusOnSelectedEntity();
         }

@@ -112,8 +112,8 @@ namespace LitchiRuntime
         {
             scene->Tick();
         }
-
-        Input::Update();
+        
+        // Input::Update();
         //Audio::Update();
     }
 

@@ -32,7 +32,7 @@ static void error_callback(int error, const char* description)
 /// \param mods
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	LitchiRuntime::Input::RecordKey(key, action);
+	// LitchiRuntime::Input::RecordKey(key, action);
 }
 /// 鼠标按键回调
 /// \param window
@@ -41,7 +41,7 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
 /// \param mods
 static void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	LitchiRuntime::Input::RecordKey(button, action);
+	// LitchiRuntime::Input::RecordKey(button, action);
 	//    std::cout<<"mouse_button_callback:"<<button<<","<<action<<std::endl;
 }
 /// 鼠标移动回调
@@ -50,7 +50,7 @@ static void mouse_button_callback(GLFWwindow* window, int button, int action, in
 /// \param y
 static void mouse_move_callback(GLFWwindow* window, double x, double y)
 {
-	LitchiRuntime::Input::set_mousePosition(x, y);
+	// LitchiRuntime::Input::set_mousePosition(x, y);
 	//    std::cout<<"mouse_move_callback:"<<x<<","<<y<<std::endl;
 }
 /// 鼠标滚轮回调
@@ -59,7 +59,7 @@ static void mouse_move_callback(GLFWwindow* window, double x, double y)
 /// \param y
 static void mouse_scroll_callback(GLFWwindow* window, double x, double y)
 {
-	LitchiRuntime::Input::RecordScroll(y);
+	// LitchiRuntime::Input::RecordScroll(y);
 	//    std::cout<<"mouse_scroll_callback:"<<x<<","<<y<<std::endl;
 }
 
@@ -69,55 +69,55 @@ GLint mvp_location, vpos_location, vcol_location;
 
 void CompilerShader()
 {
-	// 创建vs GLuint
-	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
-	// 指定shader源码
-	glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
-	// 编译shader
-	glCompileShader(vertex_shader);
-	GLint compileResult = GL_FALSE;
-	glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compileResult);
-	if (compileResult == GL_FALSE)
-	{
-		GLchar message[256];
-		glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
-		DEBUG_LOG_ERROR("compile vs error");
-		DEBUG_LOG_ERROR(message);
-	}
+	//// 创建vs GLuint
+	//vertex_shader = glCreateShader(GL_VERTEX_SHADER);
+	//// 指定shader源码
+	//glShaderSource(vertex_shader, 1, &vertex_shader_text, NULL);
+	//// 编译shader
+	//glCompileShader(vertex_shader);
+	//GLint compileResult = GL_FALSE;
+	//glGetShaderiv(vertex_shader, GL_COMPILE_STATUS, &compileResult);
+	//if (compileResult == GL_FALSE)
+	//{
+	//	GLchar message[256];
+	//	glGetShaderInfoLog(vertex_shader, sizeof(message), 0, message);
+	//	DEBUG_LOG_ERROR("compile vs error");
+	//	DEBUG_LOG_ERROR(message);
+	//}
 
-	// 创建fs GLuint
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
-	// 指定shader源码
-	glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
-	// 编译Shader
-	glCompileShader(fragment_shader);
-	// 获取编译结果
-	compileResult = GL_FALSE;
-	glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compileResult);
-	if (compileResult == GL_FALSE)
-	{
-		GLchar message[256];
-		DEBUG_LOG_ERROR("compile fs error");
-		DEBUG_LOG_ERROR(message);
-	}
+	//// 创建fs GLuint
+	//fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+	//// 指定shader源码
+	//glShaderSource(fragment_shader, 1, &fragment_shader_text, NULL);
+	//// 编译Shader
+	//glCompileShader(fragment_shader);
+	//// 获取编译结果
+	//compileResult = GL_FALSE;
+	//glGetShaderiv(fragment_shader, GL_COMPILE_STATUS, &compileResult);
+	//if (compileResult == GL_FALSE)
+	//{
+	//	GLchar message[256];
+	//	DEBUG_LOG_ERROR("compile fs error");
+	//	DEBUG_LOG_ERROR(message);
+	//}
 
-	// 创建GPU程序
-	program = glCreateProgram();
-	// 附加Shader
-	glAttachShader(program, vertex_shader);
-	glAttachShader(program, fragment_shader);
-	// 将program链接到当前的OpenGL状态机
-	glLinkProgram(program);
-	// 获取编译结果
-	GLint linkResult = GL_FALSE;
-	glGetProgramiv(program, GL_LINK_STATUS, &linkResult);
-	if (linkResult == GL_FALSE)
-	{
-		GLchar message[256];
-		glGetProgramInfoLog(program, sizeof(message), 0, message);
-		DEBUG_LOG_ERROR("link program error");
-		DEBUG_LOG_ERROR(message);
-	}
+	//// 创建GPU程序
+	//program = glCreateProgram();
+	//// 附加Shader
+	//glAttachShader(program, vertex_shader);
+	//glAttachShader(program, fragment_shader);
+	//// 将program链接到当前的OpenGL状态机
+	//glLinkProgram(program);
+	//// 获取编译结果
+	//GLint linkResult = GL_FALSE;
+	//glGetProgramiv(program, GL_LINK_STATUS, &linkResult);
+	//if (linkResult == GL_FALSE)
+	//{
+	//	GLchar message[256];
+	//	glGetProgramInfoLog(program, sizeof(message), 0, message);
+	//	DEBUG_LOG_ERROR("link program error");
+	//	DEBUG_LOG_ERROR(message);
+	//}
 }
 
 namespace LitchiRuntime

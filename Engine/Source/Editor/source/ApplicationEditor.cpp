@@ -58,6 +58,21 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
 }
 
+GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale)
+{
+	auto gameObject4Cube = scene->CreateGameObject("Cube");
+	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
+	transform4Cube->SetPositionLocal(position);
+	transform4Cube->SetRotationLocal(rotation);
+	transform4Cube->SetScaleLocal(scale);
+	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
+	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
+	meshFilter4Cube->SetGeometry(Renderer::GetStandardMesh(Renderer_MeshType::Cube).get());
+	meshRenderer4Cube->SetDefaultMaterial();
+
+	return gameObject4Cube;
+}
+
 GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
 {
 	GameObject* go = scene->CreateGameObject(name);
@@ -240,8 +255,8 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
-	Vector3& camera_position = Vector3(0.0f, 2.0f, -10.0f);
-	Vector3& camera_rotation = Vector3(0.0f, 0.0f, 0.0f);
+	Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
+	Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
 	auto scene = sceneManager->CreateScene("Default");
 	auto camerGo = scene->CreateGameObject("Camera");
 	auto camera = camerGo->AddComponent<Camera>();
@@ -249,11 +264,12 @@ void LitchiEditor::ApplicationEditor::Init()
 	transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
 	transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
-	auto gameObject4Cube = scene->CreateGameObject("Cube");
-	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
-	meshFilter4Cube->SetGeometry(Renderer::GetStandardMesh(Renderer_MeshType::Cube).get());
-	meshRenderer4Cube->SetDefaultMaterial();
+	CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
+
+	CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
+
+
+	CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
 	// Setup UI
 	SetupUI();

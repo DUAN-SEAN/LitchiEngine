@@ -314,25 +314,20 @@ namespace LitchiRuntime
 		}
 
 		cmd_list->BeginTimeblock(!is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent");
-
-		// deduce rasterizer state
-		RHI_RasterizerState* rasterizer_state = is_transparent_pass ? GetRasterizerState(Renderer_RasterizerState::Solid_cull_none).get() : GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
-		// rasterizer_state = wireframe ? GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get() : rasterizer_state;
-
-		// deduce depth-stencil state depth_prepass ? GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get() : 
-		RHI_DepthStencilState* depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
-
+		
+	
 		// define PipelineState
 		static RHI_PipelineState pso;
 		pso.name = !is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent";
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
-		pso.rasterizer_state = rasterizer_state;
-		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
-		pso.depth_stencil_state = depth_stencil_state;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
-		pso.clear_depth = 0.0f; // reverse-z
+		// pso.clear_depth = 0.0f; // reverse-z
+		pso.clear_color[0] = Color::Green; // reverse-z
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 
 		// begin render pass
@@ -364,7 +359,10 @@ namespace LitchiRuntime
 
 			// skip objects outside of the view frustum
 			if (!GetCamera()->IsInViewFrustum(renderable))
+			{
+				DEBUG_LOG_INFO("Renderer::Pass_ForwardPass Object Not InViewFrustum, name:{}", entity->GetName());
 				continue;
+			}
 
 			//if (!render_pass_active)
 			//{

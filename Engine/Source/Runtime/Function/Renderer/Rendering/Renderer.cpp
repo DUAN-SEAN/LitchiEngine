@@ -259,8 +259,8 @@ namespace LitchiRuntime
     void Renderer::Tick()
     {
         // don't produce frames if the window is minimized
-         if (ApplicationBase::Instance()->window->IsMinimized())
-            return;
+        /* if (ApplicationBase::Instance()->window->IsMinimized())
+            return;*/
 
         // after the first frame has completed, we know the renderer is working
         // we stop logging to a file and we start logging to the on-screen console
@@ -650,7 +650,7 @@ namespace LitchiRuntime
             SetResolutionOutput(width_previous_output, height_previous_output);
         }
 
-        Input::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
+       //  ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
     }
 
     void Renderer::OnFrameStart(RHI_CommandList* cmd_list)

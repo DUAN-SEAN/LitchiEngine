@@ -4,6 +4,8 @@
 
 #include <iostream>
 
+using namespace LitchiRuntime;
+
 LitchiRuntime::InputManager::InputManager(Window& p_window) : m_window(p_window)
 {
 	m_keyPressedListener = m_window.KeyPressedEvent.AddListener(std::bind(&InputManager::OnKeyPressed, this, std::placeholders::_1));
@@ -93,4 +95,82 @@ void LitchiRuntime::InputManager::OnMouseButtonPressed(int p_button)
 void LitchiRuntime::InputManager::OnMouseButtonReleased(int p_button)
 {
 	m_mouseButtonEvents[static_cast<EMouseButton>(p_button)] = EMouseButtonState::MOUSE_UP;
+}
+
+
+void LitchiRuntime::InputManager::SetMouseIsInViewport(const bool is_in_viewport)
+{
+	m_mouse_is_in_viewport = is_in_viewport;
+}
+
+bool LitchiRuntime::InputManager::GetMouseIsInViewport()
+{
+	return m_mouse_is_in_viewport;
+}
+
+const Vector2& LitchiRuntime::InputManager::GetMousePosition()
+{
+	return m_mouse_position;
+}
+
+void LitchiRuntime::InputManager::SetMousePosition(const Vector2& position)
+{
+	// todo: 
+	/*if (SDL_WarpMouseGlobal(static_cast<int>(position.x), static_cast<int>(position.y)) != 0)
+	{
+		DEBUG_LOG_ERROR("Failed to set mouse position.");
+		return;
+	}*/
+
+	m_mouse_position = position;
+}
+
+const Vector2& LitchiRuntime::InputManager::GetMouseDelta()
+{
+	return m_mouse_delta;
+}
+
+const Vector2& LitchiRuntime::InputManager::GetMouseWheelDelta()
+{
+	return m_mouse_wheel_delta;
+}
+
+void LitchiRuntime::InputManager::SetEditorViewportOffset(const Vector2& offset)
+{
+	m_editor_viewport_offset = offset;
+}
+
+bool LitchiRuntime::InputManager::GetMouseCursorVisible()
+{
+	// todo:
+	// glfwGetCursorPos()
+	// return SDL_ShowCursor(SDL_QUERY) == 1;
+	return true;
+}
+
+void LitchiRuntime::InputManager::SetMouseCursorVisible(const bool visible)
+{
+	// todo:
+   /* if (visible == GetMouseCursorVisible())
+		return;
+
+	if (SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE) < 0)
+	{
+		SP_LOG_ERROR("Failed to change cursor visibility");
+	}*/
+}
+
+const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
+{
+	int window_x, window_y;
+
+	// GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
+	
+	// glfwGetWindowPos(window, &window_x, &window_y);
+	return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
+}
+
+const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToEditorViewport()
+{
+	return GetMousePositionRelativeToWindow() - m_editor_viewport_offset;
 }
