@@ -325,7 +325,7 @@ namespace LitchiRuntime
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
-		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();// 不需要输出深度蒙版缓冲
 
 		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		// pso.clear_depth = 0.0f; // reverse-z

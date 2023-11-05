@@ -52,13 +52,6 @@ void LitchiEditor::AView::_Draw_Impl()
 
 void LitchiEditor::AView::Render()
 {
-	// 渲染绘制前调用
-	// 1. 设置UBO
-	// 2. 设置视口大小
-	// 3. 执行绘制
-
-	FillEngineUBO();
-
 	auto [winWidth, winHeight] = GetSafeSize();
 
 	// todo
@@ -108,15 +101,6 @@ const Vector3& LitchiEditor::AView::GetGridColor() const
 void LitchiEditor::AView::SetGridColor(const Vector3& p_color)
 {
 	m_gridColor = p_color;
-}
-
-void LitchiEditor::AView::FillEngineUBO()
-{
-	//auto& engineUBO = *ApplicationEditor::Instance()->engineUBO.get();
-	//size_t offset = sizeof(Matrix); // We skip the model matrix (Which is a special case, modified every draw calls)
-	//engineUBO.SetSubData(m_camera->GetViewMatrix(), std::ref(offset));
-	//engineUBO.SetSubData(m_camera->GetProjectionMatrix(), std::ref(offset));
-	//engineUBO.SetSubData(m_cameraPosition, std::ref(offset));
 }
 
 void LitchiEditor::AView::PrepareCamera()

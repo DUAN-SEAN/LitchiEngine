@@ -99,13 +99,7 @@ namespace LitchiEditor
 		* @param p_color
 		*/
 		void SetGridColor(const Vector3& p_color);
-
-		/**
-		* Fill the UBO using the view settings
-		* todo: remove
-		*/
-		void FillEngineUBO();
-
+		
 	protected:
 		/**
 		* Update camera matrices
@@ -121,8 +115,6 @@ namespace LitchiEditor
 		RHI_Texture* m_renderTargetTexture;
 
         Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };
-
-		/*Framebuffer m_fbo;
-		Framebuffer4Depth m_shadowMapFbo;*/
+		
 	};
 }

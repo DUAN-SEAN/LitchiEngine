@@ -8,7 +8,6 @@
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-#include "Runtime/Function/Input/input.h"
 
 #include "Runtime/Core/Meta/Reflection/type.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"

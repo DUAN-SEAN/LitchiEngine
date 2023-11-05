@@ -40,18 +40,7 @@ namespace LitchiEditor
 		* Custom implementation of the render method
 		*/
 		virtual void _Render_Impl() override;
-
-		/**
-		* Render the actual scene
-		* @param p_defaultRenderState
-		*/
-		void RenderScene();
-
-		/**
-		* Render UI
-		*/
-		void RenderUI();
-
+		
 		/**
 		* Render the scene for actor picking (Using unlit colors)
 		*/
@@ -62,7 +51,6 @@ namespace LitchiEditor
 		*/
 		void HandleActorPicking();
 	private:
-		void RenderGrid(const Vector3& p_viewPos, const Vector3& p_color);
 	private:
 		/*Framebuffer m_actorPickingFramebuffer;*/
 		GizmoBehaviour m_gizmoOperations;

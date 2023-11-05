@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include "Runtime/Core/DataStruct/Frustum.h"
 #include "Runtime/Core/Math/Frustum.h"
 
 namespace LitchiRuntime

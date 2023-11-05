@@ -16,8 +16,6 @@
 #include "GLFW/glfw3.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Screen/screen.h"
-#include "Runtime/Function/Input/input.h"
-#include "Runtime/Test/ShaderSource.h"
 
 static void error_callback(int error, const char* description)
 {

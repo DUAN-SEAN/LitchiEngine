@@ -6,7 +6,6 @@
 #include <string>
 #include <list>
 #include <functional>
-#include "Runtime/Core/DataStruct/tree.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 
 namespace LitchiRuntime
