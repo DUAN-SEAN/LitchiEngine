@@ -211,7 +211,7 @@ namespace LitchiRuntime
         CreateSamplers(false);
         CreateStructuredBuffers();
         CreateStandardTextures();
-        // CreateStandardMeshes();// todo:
+        CreateStandardMeshes();// todo:
 
         // events
         {
@@ -259,7 +259,6 @@ namespace LitchiRuntime
     void Renderer::Tick()
     {
         // don't produce frames if the window is minimized
-        // if (ApplicationBase::Instance()->window->IsMinimised())
          if (ApplicationBase::Instance()->window->IsMinimized())
             return;
 

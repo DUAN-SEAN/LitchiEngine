@@ -24,6 +24,7 @@
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
 //#include "../../Widgets/TextureViewer.h"
 #include "ImGui_RHI.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 //=============================================
 
 namespace ImGui::RHI
@@ -408,7 +409,8 @@ namespace ImGui::RHI
 
         if (!is_child_window)
         {
-            // if (!Spartan::Window::IsMinimised())
+            // todo: ÓĞbug ÏÈ×¢ÊÍµô
+        	// if (!ApplicationBase::Instance()->window->IsMinimized())
             {
                 Renderer::Present();
             }

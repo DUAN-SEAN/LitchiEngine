@@ -330,7 +330,8 @@ namespace LitchiRuntime
 		pso.rasterizer_state = rasterizer_state;
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = depth_stencil_state;
-		pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		pso.clear_depth = 0.0f; // reverse-z
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 

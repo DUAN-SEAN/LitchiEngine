@@ -161,6 +161,8 @@ namespace LitchiRuntime
         Frustum m_frustum;
         std::vector<camera_bookmark> m_bookmarks;
         GameObject* m_selected_entity;
+
+        RTTR_ENABLE(Component)
     private:
 
         // todo Remove

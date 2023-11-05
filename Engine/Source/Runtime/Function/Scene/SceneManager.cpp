@@ -69,6 +69,12 @@ namespace LitchiRuntime
 			parent->AcquireChildren();
 		}
 
+		// delete gameObject
+		for (Transform* transform : entities_to_remove)
+		{
+			delete transform->GetGameObject();
+		}
+
 		m_resolve = true;
 	}
 

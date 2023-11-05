@@ -186,7 +186,9 @@ namespace LitchiRuntime
 		//SetMaterial(material);
 		//m_material_default = true;
 
-		m_material_default = false;
+		m_material = new Material();
+
+		m_material_default = true;
 	}
 
 	string MeshRenderer::GetMaterialName() const

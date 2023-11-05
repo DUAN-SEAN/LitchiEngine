@@ -27,6 +27,7 @@
 
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
+#include "Runtime/Function/Framework/Component/Camera/Camera.h";
 
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 
@@ -239,7 +240,20 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
-	std::vector<Matrix> simulatedLights;
+	Vector3& camera_position = Vector3(0.0f, 2.0f, -10.0f);
+	Vector3& camera_rotation = Vector3(0.0f, 0.0f, 0.0f);
+	auto scene = sceneManager->CreateScene("Default");
+	auto camerGo = scene->CreateGameObject("Camera");
+	auto camera = camerGo->AddComponent<Camera>();
+	auto transform4Camera = camerGo->GetComponent<Transform>();
+	transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
+	transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
+
+	auto gameObject4Cube = scene->CreateGameObject("Cube");
+	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
+	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
+	meshFilter4Cube->SetGeometry(Renderer::GetStandardMesh(Renderer_MeshType::Cube).get());
+	meshRenderer4Cube->SetDefaultMaterial();
 
 	// Setup UI
 	SetupUI();
@@ -249,9 +263,6 @@ void LitchiEditor::ApplicationEditor::Run()
 {
 	while (IsRunning())
 	{
-		// 更新时间
-		Time::Update();
-
 		// PreUpdate
 		window->PollEvents();
 
@@ -270,7 +281,7 @@ void LitchiEditor::ApplicationEditor::Run()
 
 		// PostUpdate
 
-		window->SwapBuffers();
+		//window->SwapBuffers();
 		inputManager->ClearEvents();
 		++m_elapsedFrames;
 	}
@@ -278,14 +289,7 @@ void LitchiEditor::ApplicationEditor::Run()
 
 void LitchiEditor::ApplicationEditor::Update()
 {
-	// todo 目前游戏世界的Tick不完整, 先不处理
-	this->sceneManager->Foreach([](GameObject* game_object) {
-		if (game_object->GetActive()) {
-			game_object->ForeachComponent([](Component* component) {
-				component->Update();
-				});
-		}
-		});
+	ApplicationBase::Update();
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const

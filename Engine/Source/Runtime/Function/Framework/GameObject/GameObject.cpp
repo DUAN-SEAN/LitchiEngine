@@ -12,10 +12,19 @@ namespace LitchiRuntime
 {
 	GameObject::GameObject(std::string name,int64_t id) : m_layer(0x01),m_id(id), m_parentId(0){
 		SetName(name);
+
+		Initialize();
 	}
 
 	GameObject::~GameObject() {
 		DEBUG_LOG_INFO("GameObject::~GameObject");
+
+		UnInitialize();
+	}
+
+	void GameObject::Initialize()
+	{
+		AddComponent<Transform>();
 	}
 
 	void GameObject::SetActive(bool active)
@@ -83,6 +92,13 @@ namespace LitchiRuntime
 		for (auto& v : m_componentList) {
 			
 			func(v);
+		}
+	}
+
+	void GameObject::UnInitialize()
+	{
+		for (auto& v : m_componentList) {
+			RemoveComponent(v);
 		}
 	}
 

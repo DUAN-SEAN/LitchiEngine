@@ -107,13 +107,11 @@ namespace LitchiRuntime
         Time::Update();
         UpdateScreenSize();
 
-        this->sceneManager->Foreach([](GameObject* game_object) {
-            if (game_object->GetActive()) {
-                game_object->ForeachComponent([](Component* component) {
-                    component->Update();
-                    });
-            }
-            });
+        auto scene = this->sceneManager->GetCurrentScene();
+        if(scene)
+        {
+            scene->Tick();
+        }
 
         Input::Update();
         //Audio::Update();

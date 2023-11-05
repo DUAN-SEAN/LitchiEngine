@@ -16,8 +16,11 @@ namespace LitchiRuntime
 	public:
 		GameObject() {}
 		GameObject(std::string name,int64_t id);
+
 		~GameObject();
-		
+
+		void Initialize();
+
 		std::string GetName() { return m_name; }
 		void SetName(std::string name) { m_name = name; }
 
@@ -26,32 +29,18 @@ namespace LitchiRuntime
 
 		bool GetActive() { return m_active; }
 		void SetActive(bool active);
-
-		/// 设置父节点
-		/// \param parent
-		/// \return
+		
 		bool SetParent(GameObject* parent);
-
-		/**
-		 * \brief 是否有父亲
-		 * \return 
-		 */
 		bool HasParent();
-
 		GameObject* GetParent();
-
 		std::list<GameObject*>& GetChildren();
-	
 
 		virtual void PostResourceLoaded() override;
 
 	public:
 		Scene* GetScene();
 		void SetScene(Scene* scene);
-
-		/// 添加组件，仅用于C++中添加组件。
-		/// \tparam T 组件类型
-		/// \return 组件实例
+		
 		template <class T = Component>
 		T* AddComponent() {
 			T* component = new T();
@@ -59,10 +48,7 @@ namespace LitchiRuntime
 			component->Awake();
 			return dynamic_cast<T*>(component);
 		}
-
-		/// 附加组件实例
-		/// \param component_instance_table
-
+		
 		template <class T = Component>
 		void AttachComponent(T* component)
 		{
@@ -74,10 +60,7 @@ namespace LitchiRuntime
 			m_componentList.push_back(component);
 			
 		}
-
-		/// 获取组件，仅用于C++中。
-		/// \tparam T 组件类型
-		/// \return 组件实例
+		
 		template <class T = Component>
 		T* GetComponent() const {
 			//获取类名
@@ -94,13 +77,7 @@ namespace LitchiRuntime
 			}
 			return nullptr;
 		}
-
-		/**
-		 * \brief 获取组件
-		 * \tparam T 组件类型
-		 * \param unmanagedId 组件的非托管id 
-		 * \return 
-		 */
+		
 		template <class T = Component>
 		T* GetComponent(const uint64_t unmanagedId) {
 			//获取类名
@@ -119,9 +96,7 @@ namespace LitchiRuntime
 		}
 
 		std::vector<Component*>& GetComponents() { return m_componentList; }
-
-		/// 遍历组件
-		/// \param func
+		
 		void ForeachComponent(std::function<void(Component*)> func);
 		bool RemoveComponent(Component* component)
 		{
@@ -142,7 +117,6 @@ namespace LitchiRuntime
 			return false;
 		}
 
-
 		int64_t m_id;
 		int64_t m_parentId;
 		std::string m_name;
@@ -150,11 +124,14 @@ namespace LitchiRuntime
 
 		RTTR_ENABLE()
 	private:
+		void UnInitialize();
 
-		unsigned char m_layer;//将物体分不同的层，用于相机分层、物理碰撞分层等。
-
-		Scene* m_scene;//场景
-
-		bool m_active = true;//是否激活
+	private:
+		// 将物体分不同的层，用于相机分层、物理碰撞分层等。
+		unsigned char m_layer;
+		// 场景
+		Scene* m_scene;
+		// 是否激活
+		bool m_active = true;
 	};
 }
