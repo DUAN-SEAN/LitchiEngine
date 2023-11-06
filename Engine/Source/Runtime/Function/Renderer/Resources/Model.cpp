@@ -3,7 +3,6 @@
 
 #include <algorithm>
 
-#include "Runtime/Core/DataStruct/BoundingSphere.h"
 #include "Runtime/Function/Renderer/Rendering/Mesh.h"
 
 

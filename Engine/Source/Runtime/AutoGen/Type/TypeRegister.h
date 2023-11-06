@@ -93,7 +93,9 @@ RTTR_REGISTRATION //注册反射
 
 
 	registration::class_<Object>("Object")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("Id", &Object::GetObjectId, &Object::SetObjectId)
+		.property("Name", &Object::GetObjectName, &Object::SetObjectName);
 
 
 	registration::class_<ScriptObject>("ScriptObject")
@@ -155,7 +157,6 @@ RTTR_REGISTRATION //注册反射
 	//	.property("cutoff", &Light::cutoff)
 	//	.property("outerCutoff", &Light::outerCutoff);
 
-
 	// 场景管理
 	// GO
 	registration::class_<GameObject>("GameObject")
@@ -165,7 +166,6 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("id", &GameObject::m_id)
 		.property("parentId", &GameObject::m_parentId)
-		.property("name", &GameObject::m_name)
 		.property("layer", &GameObject::GetLayer,&GameObject::SetLayer)
 		.property("componentList", &GameObject::m_componentList);
 

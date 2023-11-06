@@ -271,8 +271,21 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
+
+	Mesh* mesh = new Mesh();
+	mesh->LoadFromFile(projectAssetsPath+"Engine\\Models\\Cube.fbx");
+	mesh = new Mesh();
+	mesh->LoadFromFile(projectAssetsPath + "Engine\\Models\\LadyCat.fbx");
+
 	// Setup UI
 	SetupUI();
+
+	for (auto go : scene->GetAllGameObjectList())
+	{
+		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
+	}
+
+	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
 }
 
 void LitchiEditor::ApplicationEditor::Run()

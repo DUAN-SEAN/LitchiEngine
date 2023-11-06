@@ -381,7 +381,7 @@ namespace LitchiRuntime
         Create();
         AcquireNextImage();
 
-        DEBUG_LOG_INFO("Resolution has been set to %dx%d", width, height);
+        DEBUG_LOG_INFO("Resolution has been set to {}x{}", width, height);
     }
 
     void RHI_SwapChain::ResizeToWindowSize()

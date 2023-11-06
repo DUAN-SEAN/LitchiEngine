@@ -1,6 +1,7 @@
 
 #include "Editor/include/Panels/Hierarchy.h"
 
+#include "Editor/include/ApplicationEditor.h"
 #include "Editor/include/Menus/ActorCreationMenu.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Scene/SceneManager.h"
@@ -169,24 +170,24 @@ void LitchiEditor::Hierarchy::Refresh()
 	// 清理
 	Clear();
 
-	// 先构建所有的叶子
-	//auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-	//for (auto go : scene->m_gameObjectList)
-	//{
-	//	if(go != nullptr)
-	//	{
-	//		AddActorByInstance(go);
-	//	}
-	//}
+	 // 先构建所有的叶子
+	auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+	for (auto go : scene->m_gameObjectList)
+	{
+		if(go != nullptr)
+		{
+			AddActorByInstance(go);
+		}
+	}
 
-	//// 根据父子关系重构树状结构
-	//for (auto go : scene->m_gameObjectList)
-	//{
-	//	if (go != nullptr && go->HasParent())
-	//	{
-	//		AttachActorToParent(go);
-	//	}
-	//}
+	// 根据父子关系重构树状结构
+	for (auto go : scene->m_gameObjectList)
+	{
+		if (go != nullptr && go->HasParent())
+		{
+			AttachActorToParent(go);
+		}
+	}
 
 }
 
@@ -279,31 +280,30 @@ void LitchiEditor::Hierarchy::DeleteActorByInstance(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 {
-	// todo:
-	//auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->GetName(), true);
-	//textSelectable.leaf = true;
-	//textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
-	//textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(p_actor, &textSelectable));
-	//textSelectable.AddPlugin<DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [p_actor, &textSelectable](std::pair<GameObject*, TreeNode*> p_element)
-	//{
-	//	if (p_element.second->HasParent())
-	//		p_element.second->GetParent()->UnconsiderWidget(*p_element.second);
+	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->GetName(), true);
+	textSelectable.leaf = true;
+	textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
+	textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(p_actor, &textSelectable));
+	textSelectable.AddPlugin<DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [p_actor, &textSelectable](std::pair<GameObject*, TreeNode*> p_element)
+	{
+		if (p_element.second->HasParent())
+			p_element.second->GetParent()->UnconsiderWidget(*p_element.second);
 
-	//	textSelectable.ConsiderWidget(*p_element.second);
+		textSelectable.ConsiderWidget(*p_element.second);
 
-	//	p_element.first->SetParent(p_actor);
-	//};
-	//auto& dispatcher = textSelectable.AddPlugin<DataDispatcher<std::string>>();
+		p_element.first->SetParent(p_actor);
+	};
+	auto& dispatcher = textSelectable.AddPlugin<DataDispatcher<std::string>>();
 
-	//GameObject* targetPtr = p_actor;
-	//dispatcher.RegisterGatherer([targetPtr] { return targetPtr->GetName(); });
+	GameObject* targetPtr = p_actor;
+	dispatcher.RegisterGatherer([targetPtr] { return targetPtr->GetName(); });
 
-	//m_widgetActorLink[targetPtr] = &textSelectable;
+	m_widgetActorLink[targetPtr] = &textSelectable;
 
-	//// 暂时不用点击和双击事件 回头再加
-	//textSelectable.ClickedEvent += std::bind(&ApplicationEditor::SelectActor, ApplicationEditor::Instance(), p_actor);
-	//textSelectable.DoubleClickedEvent += [this, p_actor]
-	//{
-	//	ApplicationEditor::Instance()->MoveToTarget(p_actor);
-	//};// 将相机对焦到物体
+	// 暂时不用点击和双击事件 回头再加
+	textSelectable.ClickedEvent += std::bind(&ApplicationEditor::SelectActor, ApplicationEditor::Instance(), p_actor);
+	textSelectable.DoubleClickedEvent += [this, p_actor]
+	{
+		ApplicationEditor::Instance()->MoveToTarget(p_actor);
+	};// 将相机对焦到物体
 }

@@ -20,8 +20,8 @@ namespace LitchiRuntime
 
 		void Initialize();
 
-		std::string GetName() { return m_name; }
-		void SetName(std::string name) { m_name = name; }
+		std::string GetName() { return GetObjectName(); }
+		void SetName(std::string name) { SetObjectName(name); }
 
 		unsigned char GetLayer() { return m_layer; }
 		void SetLayer(unsigned char layer) { m_layer = layer; }
@@ -118,7 +118,6 @@ namespace LitchiRuntime
 
 		int64_t m_id;
 		int64_t m_parentId;
-		std::string m_name;
 		std::vector<Component*> m_componentList;
 
 		RTTR_ENABLE()
