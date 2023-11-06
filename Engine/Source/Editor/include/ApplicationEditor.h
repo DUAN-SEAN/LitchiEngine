@@ -13,7 +13,6 @@
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Core/App/ApplicationBase.h"
-#include "Runtime/Function/Renderer/Core/ShapeDrawer.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
