@@ -433,12 +433,12 @@ namespace LitchiRuntime
 
             // make the root entity active since it's now thread-safe
             mesh->GetRootEntity()->SetActive(true);
-            // World::Resolve(); // todo
+            ApplicationBase::Instance()->sceneManager->GetCurrentScene()->Resolve();
         }
         else
         {
             ProgressTracker::GetProgress(ProgressType::ModelImporter).JobDone();
-            DEBUG_LOG_ERROR("%s", importer.GetErrorString());
+            DEBUG_LOG_ERROR(importer.GetErrorString());
         }
 
         importer.FreeScene();
@@ -464,7 +464,7 @@ namespace LitchiRuntime
 
         // Name the entity
         string node_name = is_root_node ? model_name : node->mName.C_Str();
-        entity->SetObjectName(model_name);
+        entity->SetObjectName(node_name);
 
         // Update progress tracking
         ProgressTracker::GetProgress(ProgressType::ModelImporter).SetText("Creating entity for " + entity->GetObjectName());
