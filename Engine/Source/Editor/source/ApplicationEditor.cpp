@@ -344,7 +344,6 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 		assetView.Render();
 		simulatedLightSSBO->Unbind();
 	}*/
-
 }
 
 void LitchiEditor::ApplicationEditor::RenderUI()
