@@ -75,6 +75,9 @@ namespace LitchiRuntime
 		*/
 		std::pair<double, double> GetMousePosition() const;
 
+
+		void Tick();
+
 		/**
 		* Clear any event occured
 		* @note Should be called at the end of every game tick
@@ -112,10 +115,10 @@ namespace LitchiRuntime
 		std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
 
 		//// Mouse
-		 Vector2 m_mouse_position = Vector2::Zero;
-		 Vector2 m_mouse_delta = Vector2::Zero;
-		 Vector2 m_mouse_wheel_delta = Vector2::Zero;
-		 Vector2 m_editor_viewport_offset = Vector2::Zero;
-		 bool m_mouse_is_in_viewport = true;
+		Vector2 m_mouse_position = Vector2::Zero;
+		Vector2 m_mouse_delta = Vector2::Zero;
+		Vector2 m_mouse_wheel_delta = Vector2::Zero;
+		Vector2 m_editor_viewport_offset = Vector2::Zero;
+		bool m_mouse_is_in_viewport = true;
 	};
 }

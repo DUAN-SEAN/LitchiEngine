@@ -143,6 +143,8 @@ namespace LitchiRuntime
         static void Pass_ShadowMaps(RHI_CommandList* cmd_list, const bool is_transparent_pass);
         static void Pass_ForwardPass(RHI_CommandList* cmd_list, const bool is_transparent_pass);
 
+        static void Pass_DebugGridPass(RHI_CommandList* cmd_list);
+
         // Event handlers
         // static void OnWorldResolved(sp_variant data);
         static void OnClear();

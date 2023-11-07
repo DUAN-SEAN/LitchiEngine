@@ -1,7 +1,7 @@
 
 
 #include "InputManager.h"
-
+#include "Runtime/Core/Log/Debug.h"
 #include <iostream>
 
 using namespace LitchiRuntime;
@@ -69,6 +69,27 @@ std::pair<double, double> LitchiRuntime::InputManager::GetMousePosition() const
 	std::pair<double, double> result;
 	glfwGetCursorPos(m_window.GetGlfwWindow(), &result.first, &result.second);
 	return result;
+}
+
+void LitchiRuntime::InputManager::Tick()
+{
+	/*m_keys_previous_frame = m_keys;
+
+	PollMouse();
+	PollKeyboard();
+	PollController();*/
+
+	double x, y;
+	glfwGetCursorPos(m_window.GetGlfwWindow(), &x, &y);
+	Vector2 position = Vector2(static_cast<int>(x), static_cast<int>(y));
+	// Get delta
+	m_mouse_delta = position - m_mouse_position;
+
+	// Get position
+	m_mouse_position = position;
+
+	DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
+
 }
 
 void LitchiRuntime::InputManager::ClearEvents()

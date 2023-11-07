@@ -161,7 +161,7 @@ namespace LitchiRuntime
         Ray m_ray;
         Frustum m_frustum;
         std::vector<camera_bookmark> m_bookmarks;
-        GameObject* m_selected_entity;
+        GameObject* m_selected_entity = nullptr;
 
         RTTR_ENABLE(Component)
     private:

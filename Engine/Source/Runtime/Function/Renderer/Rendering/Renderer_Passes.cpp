@@ -90,6 +90,7 @@ namespace LitchiRuntime
 					bool is_transparent_pass = false;
 
 					Pass_ForwardPass(cmd_list, is_transparent_pass);
+					Pass_DebugGridPass(cmd_list);
 					//Pass_Depth_Prepass(cmd_list);
 					//Pass_GBuffer(cmd_list, is_transparent_pass);
 					//Pass_Ssgi(cmd_list);
@@ -323,13 +324,13 @@ namespace LitchiRuntime
 		pso.shader_pixel = shader_p;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 
-		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::frame_output).get();// 不需要输出深度蒙版缓冲
+		pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
 
 		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
-		// pso.clear_depth = 0.0f; // reverse-z
-		pso.clear_color[0] = Color::Green; // reverse-z
+		pso.clear_depth = 0.0f; // reverse-z
+		pso.clear_color[0] = Color::standard_blue; // reverse-z
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 
 		// begin render pass
@@ -395,6 +396,47 @@ namespace LitchiRuntime
 
 		cmd_list->EndRenderPass();
 		cmd_list->EndTimeblock();
+
+	}
+
+	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list)
+	{
+		RHI_Shader* shader_v = GetShader(Renderer_Shader::line_v).get();
+		RHI_Shader* shader_p = GetShader(Renderer_Shader::line_p).get();
+
+		// define the pipeline state
+		static RHI_PipelineState pso;
+		pso.shader_vertex = shader_v;
+		pso.shader_pixel = shader_p;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
+		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		pso.clear_color[0] = rhi_color_load;
+	/*	pso.render_target_color_textures[1] = tex_reactive_mask;
+		pso.clear_color[1] = rhi_color_load;*/
+		pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();
+		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
+
+		cmd_list->BeginMarker("DebugGridPass");
+
+		// set pipeline state
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+
+		cmd_list->SetPipelineState(pso);
+		cmd_list->BeginRenderPass();
+		// push pass constants
+		{
+			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
+			if (GetCamera())
+			{
+				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(GetCamera()->GetGameObject()->GetComponent<Transform>());
+			}
+			PushPassConstants(cmd_list);
+		}
+		cmd_list->SetBufferVertex(m_world_grid->GetVertexBuffer().get());
+		cmd_list->Draw(m_world_grid->GetVertexCount());
+		cmd_list->EndRenderPass();
+		cmd_list->EndMarker();
 
 	}
 

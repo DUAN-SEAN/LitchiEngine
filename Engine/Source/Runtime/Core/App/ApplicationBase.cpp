@@ -106,6 +106,8 @@ namespace LitchiRuntime
         Time::Update();
         UpdateScreenSize();
 
+        inputManager->Tick();
+
         auto scene = this->sceneManager->GetCurrentScene();
         if(scene)
         {

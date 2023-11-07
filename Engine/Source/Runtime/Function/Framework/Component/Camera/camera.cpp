@@ -413,37 +413,38 @@ namespace LitchiRuntime
             }
         }
 
-        //// Controller movement
-        //if (ApplicationBase::Instance()->inputManager->IsControllerConnected())
-        //{
-        //    // Look
-        //    {
-        //        // Get camera rotation
-        //        m_first_person_rotation.x += ApplicationBase::Instance()->inputManager->GetControllerThumbStickRight().x;
-        //        m_first_person_rotation.y += ApplicationBase::Instance()->inputManager->GetControllerThumbStickRight().y;
+        // Controller movement
+        // if (ApplicationBase::Instance()->inputManager->IsControllerConnected())
+        if(m_is_controlled_by_keyboard_mouse)
+        {
+            // Look
+            {
+                // Get camera rotation
+                m_first_person_rotation.x += ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
+                m_first_person_rotation.y += ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
 
-        //        // Get mouse delta.
-        //        const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
+                // Get mouse delta.
+                const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
 
-        //        // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-        //        m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
+                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
 
-        //        // Compute rotation.
-        //        const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-        //        const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-        //        const Quaternion rotation = xQuaternion * yQuaternion;
+                // Compute rotation.
+                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+                const Quaternion rotation = xQuaternion * yQuaternion;
 
-        //        // Rotate
-        //        GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-        //    }
+                // Rotate
+                GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
+            }
 
-        //    // Controller movement direction
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -ApplicationBase::Instance()->inputManager->GetControllerThumbStickLeft().y;
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * ApplicationBase::Instance()->inputManager->GetControllerThumbStickLeft().x;
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * ApplicationBase::Instance()->inputManager->GetControllerTriggerLeft();
-        //    movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * ApplicationBase::Instance()->inputManager->GetControllerTriggerRight();
-        //    movement_direction.Normalize();
-        //}
+            // Controller movement direction
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
+            movement_direction.Normalize();
+        }
 
         // Translation
         {
@@ -478,7 +479,7 @@ namespace LitchiRuntime
     void Camera::ProcessInputLerpToEntity()
     {
         // Set focused entity as a lerp target
-        if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_P) == EKeyState::KEY_DOWN)
+        if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_F) == EKeyState::KEY_DOWN)
         {
             FocusOnSelectedEntity();
         }
@@ -537,7 +538,7 @@ namespace LitchiRuntime
     {
         if (GameObject* entity = Renderer::GetCamera()->GetSelectedEntity())
         {
-            DEBUG_LOG_INFO("Focusing on entity \"{}\"...", entity->GetObjectName());
+            DEBUG_LOG_INFO("Focusing on entity {}", entity->GetObjectName());
 
             m_lerp_to_target_position = entity->GetComponent<Transform>()->GetPosition();
             const Vector3 target_direction = (m_lerp_to_target_position - GetGameObject()->GetComponent<Transform>()->GetPosition()).Normalized();

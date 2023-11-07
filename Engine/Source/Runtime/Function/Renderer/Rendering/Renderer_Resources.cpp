@@ -292,11 +292,11 @@ namespace LitchiRuntime
         //shader(Renderer_Shader::font_p) = make_shared<RHI_Shader>();
         //shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "font.hlsl", async);
 
-        //// Line
-        //shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
-        //shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
-        //shader(Renderer_Shader::line_p) = make_shared<RHI_Shader>();
-        //shader(Renderer_Shader::line_p)->Compile(RHI_Shader_Pixel, shader_dir + "line.hlsl", async);
+        // Line
+        shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
+        shader(Renderer_Shader::line_p) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::line_p)->Compile(RHI_Shader_Pixel, shader_dir + "line.hlsl", async);
 
         //// Outline
         //shader(Renderer_Shader::outline_v) = make_shared<RHI_Shader>();
