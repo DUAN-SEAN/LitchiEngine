@@ -471,6 +471,15 @@ void LitchiRuntime::GUIDrawer::DrawInputField4Int32(WidgetContainer& p_root, con
 	dispatcher.RegisterProvider(p_provider);
 }
 
+void LitchiRuntime::GUIDrawer::DrawInputField4UInt64(WidgetContainer& p_root, const std::string& p_name, std::function<uint64_t(void)> p_gatherer, std::function<void(uint64_t)> p_provider)
+{
+	CreateTitle(p_root, p_name);
+	auto& widget = p_root.CreateWidget<InputInt32>();
+	auto& dispatcher = widget.AddPlugin<DataDispatcher<int32_t>>();
+	dispatcher.RegisterGatherer(p_gatherer);
+	dispatcher.RegisterProvider(p_provider);
+}
+
 void LitchiRuntime::GUIDrawer::DrawInputField4Float(WidgetContainer& p_root, const std::string& p_name, std::function<float(void)> p_gatherer, std::function<void(float)> p_provider)
 {
 	CreateTitle(p_root, p_name);

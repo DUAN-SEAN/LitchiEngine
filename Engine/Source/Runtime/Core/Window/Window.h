@@ -21,28 +21,6 @@ namespace LitchiRuntime
 	public:
 
 		/**
-		* Bind a listener to this event to receive device errors
-		*/
-		static Event<EDeviceError, std::string> ErrorEvent;
-
-		/* Inputs relatives */
-		Event<int> KeyPressedEvent;
-		Event<int> KeyReleasedEvent;
-		Event<int> MouseButtonPressedEvent;
-		Event<int> MouseButtonReleasedEvent;
-
-		/* Window events */
-		Event<uint16_t, uint16_t> ResizeEvent;
-		Event<uint16_t, uint16_t> FramebufferResizeEvent;
-		Event<int16_t, int16_t> MoveEvent;
-		Event<int16_t, int16_t> CursorMoveEvent;
-		Event<> MinimizeEvent;
-		Event<> MaximizeEvent;
-		Event<> GainFocusEvent;
-		Event<> LostFocusEvent;
-		Event<> CloseEvent;
-
-		/**
 		* Create the window
 		* @param p_windowSettings
 		*/
@@ -337,6 +315,7 @@ namespace LitchiRuntime
 		void BindResizeCallback() const;
 		void BindFramebufferResizeCallback() const;
 		void BindCursorMoveCallback() const;
+		void BindScrollMoveCallback() const;
 		void BindMoveCallback() const;
 		void BindIconifyCallback() const;
 		void BindFocusCallback() const;
@@ -353,6 +332,30 @@ namespace LitchiRuntime
 		void BindErrorCallback();
 		void CreateCursors();
 		void DestroyCursors();
+	public:
+
+		/**
+		* Bind a listener to this event to receive device errors
+		*/
+		static Event<EDeviceError, std::string> ErrorEvent;
+
+		/* Inputs relatives */
+		Event<int> KeyPressedEvent;
+		Event<int> KeyReleasedEvent;
+		Event<int> MouseButtonPressedEvent;
+		Event<int> MouseButtonReleasedEvent;
+
+		/* Window events */
+		Event<uint16_t, uint16_t> ResizeEvent;
+		Event<uint16_t, uint16_t> FramebufferResizeEvent;
+		Event<int16_t, int16_t> MoveEvent;
+		Event<int16_t, int16_t> ScrollMoveEvent;
+		Event<int16_t, int16_t> CursorMoveEvent;
+		Event<> MinimizeEvent;
+		Event<> MaximizeEvent;
+		Event<> GainFocusEvent;
+		Event<> LostFocusEvent;
+		Event<> CloseEvent;
 
 	private:
 		/* This map is used by callbacks to find a "Window" instance out of a "GLFWwindow" instnace*/
@@ -375,5 +378,6 @@ namespace LitchiRuntime
 		bool m_isAlive = false;
 
 		std::unordered_map<ECursorShape, GLFWcursor*> m_cursors;
+
 	};
 }

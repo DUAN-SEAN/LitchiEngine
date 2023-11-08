@@ -293,6 +293,20 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			};
 
 			GUIDrawer::DrawInputField4Int(propertyRoot, propertyName.to_string(), getInt, setInt);
+		}else if(t == type::get<uint64_t>())
+		{
+			auto getInt = [var, property_field]
+			{
+				return property_field.GetValue().to_uint64();
+			};
+
+			auto setInt = [property_field](uint64_t value)
+			{
+				property_field.SetValue(value);
+			};
+
+			GUIDrawer::DrawInputField4UInt64(propertyRoot, propertyName.to_string(), getInt, setInt);
+			
 		}
 		/*else if (t == type::get<int8_t>())
 		{

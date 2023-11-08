@@ -55,7 +55,8 @@ namespace LitchiRuntime
 			//获取类名
 			type t = type::get<T>();
 			std::string component_type_name = t.get_name().to_string();
-			
+			component->SetObjectName(component_type_name);
+
 			m_componentList.push_back(component);
 			
 		}

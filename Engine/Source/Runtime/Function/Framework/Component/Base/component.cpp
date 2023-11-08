@@ -5,8 +5,7 @@
 
 namespace LitchiRuntime
 {
-	Component::Component() {
-
+	Component::Component():ScriptObject() {
 	}
 
 	Component::~Component() {

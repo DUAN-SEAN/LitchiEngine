@@ -12,6 +12,7 @@ ListenerID InputManager::m_keyPressedListener;
 ListenerID InputManager::m_keyReleasedListener;
 ListenerID InputManager::m_mouseButtonPressedListener;
 ListenerID InputManager::m_mouseButtonReleasedListener;
+ListenerID InputManager::m_scrollMoveListener;
 
 std::unordered_map<EKey, EKeyState>					InputManager::m_keyEvents;
 std::unordered_map<EMouseButton, EMouseButtonState>	InputManager::m_mouseButtonEvents;
@@ -29,6 +30,7 @@ void LitchiRuntime::InputManager::Initialize(Window* p_window)
 	m_keyReleasedListener = m_window->KeyReleasedEvent.AddListener(InputManager::OnKeyReleased);
 	m_mouseButtonPressedListener = m_window->MouseButtonPressedEvent.AddListener(InputManager::OnMouseButtonPressed);
 	m_mouseButtonReleasedListener = m_window->MouseButtonReleasedEvent.AddListener(InputManager::OnMouseButtonReleased);
+	m_scrollMoveListener = m_window->ScrollMoveEvent.AddListener(InputManager::OnScrollMove);
 
 }
 
@@ -39,6 +41,7 @@ void LitchiRuntime::InputManager::UnInit()
 	m_window->KeyReleasedEvent.RemoveListener(m_keyReleasedListener);
 	m_window->MouseButtonPressedEvent.RemoveListener(m_mouseButtonPressedListener);
 	m_window->MouseButtonReleasedEvent.RemoveListener(m_mouseButtonReleasedListener);
+	m_window->ScrollMoveEvent.RemoveListener(m_scrollMoveListener);
 }
 
 LitchiRuntime::EKeyState LitchiRuntime::InputManager::GetKeyState(EKey p_key)
@@ -100,7 +103,8 @@ void LitchiRuntime::InputManager::Tick()
 	// Get position
 	m_mouse_position = position;
 
-	DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
+	/*DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
+	DEBUG_LOG_INFO("mouse wheel delta {}{}", m_mouse_wheel_delta.x, m_mouse_wheel_delta.y);*/
 
 }
 
@@ -130,6 +134,10 @@ void LitchiRuntime::InputManager::OnMouseButtonReleased(int p_button)
 	m_mouseButtonEvents[static_cast<EMouseButton>(p_button)] = EMouseButtonState::MOUSE_UP;
 }
 
+void LitchiRuntime::InputManager::OnScrollMove(int16_t x, int16_t y)
+{
+	m_mouse_wheel_delta = Vector2(x, y);
+}
 
 void LitchiRuntime::InputManager::SetMouseIsInViewport(const bool is_in_viewport)
 {
@@ -148,12 +156,7 @@ const Vector2& LitchiRuntime::InputManager::GetMousePosition()
 
 void LitchiRuntime::InputManager::SetMousePosition(const Vector2& position)
 {
-	// todo: 
-	/*if (SDL_WarpMouseGlobal(static_cast<int>(position.x), static_cast<int>(position.y)) != 0)
-	{
-		DEBUG_LOG_ERROR("Failed to set mouse position.");
-		return;
-	}*/
+	glfwSetCursorPos(m_window->GetGlfwWindow(), position.x, position.y);
 
 	m_mouse_position = position;
 }

@@ -46,6 +46,7 @@ LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	BindCloseCallback();
 	BindResizeCallback();
 	BindCursorMoveCallback();
+	BindScrollMoveCallback();
 	BindFramebufferResizeCallback();
 	BindMoveCallback();
 	BindFocusCallback();
@@ -440,6 +441,21 @@ void LitchiRuntime::Window::BindCursorMoveCallback() const
 	};
 
 	glfwSetCursorPosCallback(m_glfwWindow, cursorMoveCallback);
+}
+
+void LitchiRuntime::Window::BindScrollMoveCallback() const
+{
+	auto scrollMoveCallback = [](GLFWwindow* p_window, double p_x, double p_y)
+	{
+		Window* windowInstance = FindInstance(p_window);
+
+		if (windowInstance)
+		{
+			windowInstance->ScrollMoveEvent.Invoke(static_cast<int16_t>(p_x), static_cast<int16_t>(p_y));
+		}
+	};
+
+	glfwSetScrollCallback(m_glfwWindow, scrollMoveCallback);
 }
 
 void LitchiRuntime::Window::BindMoveCallback() const

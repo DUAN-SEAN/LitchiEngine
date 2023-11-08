@@ -10,6 +10,7 @@ namespace LitchiRuntime
 	class ScriptObject : public Object
 	{
 	public:
+		ScriptObject() :Object() {}
 		uint64_t GetUnmanagedId()
 		{
 			return m_unmanagedId;

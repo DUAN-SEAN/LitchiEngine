@@ -82,6 +82,7 @@ namespace LitchiRuntime
 		static void OnKeyReleased(int p_key);
 		static void OnMouseButtonPressed(int p_button);
 		static void OnMouseButtonReleased(int p_button);
+		static void OnScrollMove(int16_t x, int16_t y);
 
 	private:
 		static Window* m_window;
@@ -90,6 +91,7 @@ namespace LitchiRuntime
 		static ListenerID m_keyReleasedListener;
 		static ListenerID m_mouseButtonPressedListener;
 		static ListenerID m_mouseButtonReleasedListener;
+		static ListenerID m_scrollMoveListener;
 
 		static std::unordered_map<EKey, EKeyState>					m_keyEvents;
 		static std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
