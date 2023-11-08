@@ -24,10 +24,11 @@ bool InputManager::m_mouse_is_in_viewport = true;
 
 void LitchiRuntime::InputManager::Initialize(Window* p_window)
 {
-	m_keyPressedListener = m_window->KeyPressedEvent.AddListener(std::bind(&InputManager::OnKeyPressed , std::placeholders::_1));
-	m_keyReleasedListener = m_window->KeyReleasedEvent.AddListener(std::bind(&InputManager::OnKeyReleased, std::placeholders::_1));
-	m_mouseButtonPressedListener = m_window->MouseButtonPressedEvent.AddListener(std::bind(&InputManager::OnMouseButtonPressed, std::placeholders::_1));
-	m_mouseButtonReleasedListener = m_window->MouseButtonReleasedEvent.AddListener(std::bind(&InputManager::OnMouseButtonReleased, std::placeholders::_1));
+	m_window = p_window;
+	m_keyPressedListener = m_window->KeyPressedEvent.AddListener(InputManager::OnKeyPressed);
+	m_keyReleasedListener = m_window->KeyReleasedEvent.AddListener(InputManager::OnKeyReleased);
+	m_mouseButtonPressedListener = m_window->MouseButtonPressedEvent.AddListener(InputManager::OnMouseButtonPressed);
+	m_mouseButtonReleasedListener = m_window->MouseButtonReleasedEvent.AddListener(InputManager::OnMouseButtonReleased);
 
 }
 
