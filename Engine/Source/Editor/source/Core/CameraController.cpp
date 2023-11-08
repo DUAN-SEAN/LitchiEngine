@@ -18,7 +18,6 @@ LitchiEditor::CameraController::CameraController
 	Quaternion& p_rotation,
 	bool p_enableFocusInputs
 ) :
-	m_inputManager(*ApplicationEditor::Instance()->inputManager),
 	m_window(*ApplicationEditor::Instance()->window),
 	m_view(p_view),
 	m_camera(p_camera),
@@ -102,7 +101,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
 	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
 
-	if(m_inputManager.IsKeyPressed(EKey::KEY_R))
+	if(InputManager::IsKeyPressed(EKey::KEY_R))
 	{
 		m_cameraPosition = Vector3(10.0f, 10.0f, 10.0f);
 		m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
@@ -123,7 +122,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 
 				float dist = GetActorFocusDist(selectGO);
 
-				if (m_inputManager.IsKeyPressed(EKey::KEY_F))
+				if (InputManager::IsKeyPressed(EKey::KEY_F))
 				{
 					MoveToTarget(selectGO);
 				}
@@ -137,12 +136,12 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 					m_cameraDestinations.push({ camPos, m_cameraRotation });
 				};
 
-				if (m_inputManager.IsKeyPressed(EKey::KEY_UP))			focusObjectFromAngle(Vector3::Up);
-				if (m_inputManager.IsKeyPressed(EKey::KEY_DOWN))		focusObjectFromAngle(-Vector3::Up);
-				if (m_inputManager.IsKeyPressed(EKey::KEY_RIGHT))		focusObjectFromAngle(Vector3::Right);
-				if (m_inputManager.IsKeyPressed(EKey::KEY_LEFT))		focusObjectFromAngle(-Vector3::Right);
-				if (m_inputManager.IsKeyPressed(EKey::KEY_PAGE_UP))	focusObjectFromAngle(Vector3::Forward);
-				if (m_inputManager.IsKeyPressed(EKey::KEY_PAGE_DOWN))	focusObjectFromAngle(-Vector3::Forward);
+				if (InputManager::IsKeyPressed(EKey::KEY_UP))			focusObjectFromAngle(Vector3::Up);
+				if (InputManager::IsKeyPressed(EKey::KEY_DOWN))		focusObjectFromAngle(-Vector3::Up);
+				if (InputManager::IsKeyPressed(EKey::KEY_RIGHT))		focusObjectFromAngle(Vector3::Right);
+				if (InputManager::IsKeyPressed(EKey::KEY_LEFT))		focusObjectFromAngle(-Vector3::Right);
+				if (InputManager::IsKeyPressed(EKey::KEY_PAGE_UP))	focusObjectFromAngle(Vector3::Forward);
+				if (InputManager::IsKeyPressed(EKey::KEY_PAGE_DOWN))	focusObjectFromAngle(-Vector3::Forward);
 			}
 		}
 	}
@@ -174,7 +173,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 	{
 		if (m_rightMousePressed || m_middleMousePressed || m_leftMousePressed)
 		{
-			auto [xPos, yPos] = m_inputManager.GetMousePosition();
+			auto [xPos, yPos] = InputManager::GetMousePosition();
 
 			bool wasFirstMouse = m_firstMouse;
 
@@ -202,7 +201,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			{
 				if (m_middleMousePressed)
 				{
-					if (m_inputManager.GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
+					if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
 					{
 						if (selectGO != nullptr)
 						{
@@ -364,20 +363,20 @@ void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 
 	if (m_rightMousePressed)
 	{
-		bool run = m_inputManager.GetKeyState(EKey::KEY_LEFT_SHIFT) == EKeyState::KEY_DOWN;
+		bool run = InputManager::GetKeyState(EKey::KEY_LEFT_SHIFT) == EKeyState::KEY_DOWN;
 		float velocity = m_cameraMoveSpeed * p_deltaTime * (run ? 2.0f : 1.0f);
 
-		if (m_inputManager.GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * Vector3::Forward * velocity;
-		if (m_inputManager.GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * Vector3::Forward * -velocity;
-		if (m_inputManager.GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * Vector3::Right * -velocity;
-		if (m_inputManager.GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
 			m_targetSpeed += m_cameraRotation * Vector3::Right * velocity;
-		if (m_inputManager.GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
 			m_targetSpeed += Vector3{0.0f, -velocity, 0.0f};
-		if (m_inputManager.GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
+		if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
 			m_targetSpeed += Vector3{0.0f, velocity, 0.0f};
 	}
 
@@ -387,31 +386,31 @@ void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
 
 void LitchiEditor::CameraController::UpdateMouseState()
 {
-	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_LEFT))
+	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_LEFT))
 		m_leftMousePressed = true;
 
-	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_LEFT))
+	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_LEFT))
 	{
 		m_leftMousePressed = false;
 		m_firstMouse = true;
 	}
 
-	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_MIDDLE))
+	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_MIDDLE))
 		m_middleMousePressed = true;
 
-	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_MIDDLE))
+	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_MIDDLE))
 	{
 		m_middleMousePressed = false;
 		m_firstMouse = true;
 	}
 
-	if (m_inputManager.IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_RIGHT))
+	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_RIGHT))
 	{
 		m_rightMousePressed = true;
 		m_window.SetCursorMode(ECursorMode::DISABLED);
 	}
 
-	if (m_inputManager.IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_RIGHT))
+	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_RIGHT))
 	{
 		m_rightMousePressed = false;
 		m_firstMouse = true;

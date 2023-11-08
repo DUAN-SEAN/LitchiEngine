@@ -12,7 +12,7 @@ namespace LitchiRuntime
 	class TypeManager {
 	public:
 
-		static void Initialize(TypeManager* instance);
+		static void Initialize();
 
 		/**
 		 * \brief 获取类型句柄

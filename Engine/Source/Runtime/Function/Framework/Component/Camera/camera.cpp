@@ -116,14 +116,14 @@ namespace LitchiRuntime
     const Ray Camera::ComputePickingRay()
     {
         Vector3 ray_start = GetGameObject()->GetComponent<Transform>()->GetPosition();
-        Vector3 ray_direction = ScreenToWorldCoordinates(ApplicationBase::Instance()->inputManager->GetMousePositionRelativeToEditorViewport(), 1.0f);
+        Vector3 ray_direction = ScreenToWorldCoordinates(InputManager::GetMousePositionRelativeToEditorViewport(), 1.0f);
         return Ray(ray_start, ray_direction);
     }
 
     void Camera::Pick()
     {
         // Ensure the mouse is inside the viewport
-        if (!ApplicationBase::Instance()->inputManager->GetMouseIsInViewport())
+        if (!InputManager::GetMouseIsInViewport())
         {
             m_selected_entity = nullptr;
             return;
@@ -304,13 +304,13 @@ namespace LitchiRuntime
         // Detect if fps control should be activated
         {
             // Initiate control only when the mouse is within the viewport
-            if (ApplicationBase::Instance()->inputManager->GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && ApplicationBase::Instance()->inputManager->GetMouseIsInViewport())
+            if (InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && InputManager::GetMouseIsInViewport())
             {
                 m_is_controlled_by_keyboard_mouse = true;
             }
 
             // Maintain control as long as the right click is pressed and initial control has been given
-            m_is_controlled_by_keyboard_mouse = ApplicationBase::Instance()->inputManager->GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
+            m_is_controlled_by_keyboard_mouse = InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
         }
 
         // Cursor visibility and position
@@ -318,26 +318,26 @@ namespace LitchiRuntime
             // Toggle mouse cursor and adjust mouse position
             if (m_is_controlled_by_keyboard_mouse && !m_fps_control_cursor_hidden)
             {
-                m_mouse_last_position = ApplicationBase::Instance()->inputManager->GetMousePosition();
+                m_mouse_last_position = InputManager::GetMousePosition();
 
                 if(!ApplicationBase::Instance()->window->IsFullscreen())
                 // if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
                 {
                     // todo:
-                    // ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(false);
+                    // InputManager::SetMouseCursorVisible(false);
                 }
 
                 m_fps_control_cursor_hidden = true;
             }
             else if (!m_is_controlled_by_keyboard_mouse && m_fps_control_cursor_hidden)
             {
-                ApplicationBase::Instance()->inputManager->SetMousePosition(m_mouse_last_position);
+                InputManager::SetMousePosition(m_mouse_last_position);
 
                 // if (!Window::IsFullscreen()) // change the mouse state only in editor mode
                 if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
                 {
                     // todo:
-                    // ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(true);
+                    // InputManager::SetMouseCursorVisible(true);
                 }
 
                 m_fps_control_cursor_hidden = false;
@@ -351,16 +351,16 @@ namespace LitchiRuntime
                 // Wrap around left and right screen edges (to allow for infinite scrolling)
                 {
                     uint32_t edge_padding = 5;
-                    Vector2 mouse_position = ApplicationBase::Instance()->inputManager->GetMousePosition();
+                    Vector2 mouse_position = InputManager::GetMousePosition();
                     if (mouse_position.x >= ApplicationBase::Instance()->window->GetWidth() - edge_padding)
                     {
                         mouse_position.x = static_cast<float>(edge_padding + 1);
-                        ApplicationBase::Instance()->inputManager->SetMousePosition(mouse_position);
+                        InputManager::SetMousePosition(mouse_position);
                     }
                     else if (mouse_position.x <= edge_padding)
                     {
                         mouse_position.x = static_cast<float>(ApplicationBase::Instance()->window->GetWidth() - edge_padding - 1);
-                        ApplicationBase::Instance()->inputManager->SetMousePosition(mouse_position);
+                        InputManager::SetMousePosition(mouse_position);
                     }
                 }
 
@@ -369,7 +369,7 @@ namespace LitchiRuntime
                 m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();
 
                 // Get mouse delta.
-                const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
+                const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
 
                 // Lerp to it.
                 m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
@@ -392,19 +392,19 @@ namespace LitchiRuntime
             // Keyboard movement direction
             {
                 // Compute direction
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
-                if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
+                if (InputManager::GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward();
+                if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetBackward();
+                if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight();
+                if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetLeft();
+                if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown();
+                if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp();
                 movement_direction.Normalize();
             }
 
             // Wheel delta (used to adjust movement speed)
             {
                 // Accumulate
-                m_movement_scroll_accumulator += ApplicationBase::Instance()->inputManager->GetMouseWheelDelta().y * 0.1f;
+                m_movement_scroll_accumulator += InputManager::GetMouseWheelDelta().y * 0.1f;
 
                 // Clamp
                 float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
@@ -414,17 +414,17 @@ namespace LitchiRuntime
         }
 
         // Controller movement
-        // if (ApplicationBase::Instance()->inputManager->IsControllerConnected())
+        // if (InputManager::IsControllerConnected())
         if(m_is_controlled_by_keyboard_mouse)
         {
             // Look
             {
                 // Get camera rotation
-                m_first_person_rotation.x += ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
-                m_first_person_rotation.y += ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
+                m_first_person_rotation.x += InputManager::GetMouseDelta().x;
+                m_first_person_rotation.y += InputManager::GetMouseDelta().y;
 
                 // Get mouse delta.
-                const Vector2 mouse_delta = ApplicationBase::Instance()->inputManager->GetMouseDelta() * m_mouse_sensitivity;
+                const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
 
                 // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
                 m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
@@ -439,10 +439,10 @@ namespace LitchiRuntime
             }
 
             // Controller movement direction
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * ApplicationBase::Instance()->inputManager->GetMouseDelta().x;
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
-            movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * ApplicationBase::Instance()->inputManager->GetMouseDelta().y;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetForward() * -InputManager::GetMouseDelta().x;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetRight() * InputManager::GetMouseDelta().x;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetDown() * InputManager::GetMouseDelta().y;
+            movement_direction += GetGameObject()->GetComponent<Transform>()->GetUp() * InputManager::GetMouseDelta().y;
             movement_direction.Normalize();
         }
 
@@ -451,7 +451,7 @@ namespace LitchiRuntime
             Vector3 translation = (movement_acceleration + m_movement_scroll_accumulator) * movement_direction;
 
             // On shift, double the translation
-            if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
+            if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
             {
                 translation *= 2.0f;
             }
@@ -479,7 +479,7 @@ namespace LitchiRuntime
     void Camera::ProcessInputLerpToEntity()
     {
         // Set focused entity as a lerp target
-        if (ApplicationBase::Instance()->inputManager->GetKeyState(EKey::KEY_F) == EKeyState::KEY_DOWN)
+        if (InputManager::GetKeyState(EKey::KEY_F) == EKeyState::KEY_DOWN)
         {
             FocusOnSelectedEntity();
         }

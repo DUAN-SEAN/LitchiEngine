@@ -13,7 +13,7 @@ namespace LitchiRuntime
     Time::~Time() {
     }
 
-    void Time::Init() {
+    void Time::Initialize() {
         startup_time_ = std::chrono::system_clock::now();
     }
 

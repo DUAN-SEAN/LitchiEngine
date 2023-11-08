@@ -15,7 +15,7 @@ namespace LitchiRuntime
 
 		static bool DeserializeFromJson(const std::string& json, rttr::instance obj);
 
-		static void Initialize(SerializerManager* instance);
+		static void Initialize();
 
 	private:
 	};

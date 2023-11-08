@@ -649,7 +649,7 @@ namespace LitchiRuntime
             SetResolutionOutput(width_previous_output, height_previous_output);
         }
 
-       //  ApplicationBase::Instance()->inputManager->SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
+       //  InputManager::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
     }
 
     void Renderer::OnFrameStart(RHI_CommandList* cmd_list)

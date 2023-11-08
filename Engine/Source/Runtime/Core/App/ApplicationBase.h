@@ -63,8 +63,6 @@ namespace LitchiRuntime
         // std::unique_ptr<ModelManager> modelManager;
         // std::unique_ptr<ShaderManager> shaderManager;
         std::unique_ptr<Window> window;
-        std::unique_ptr<InputManager>		inputManager;
-
         std::unique_ptr<SceneManager> sceneManager;
 
         static ApplicationBase* Instance() { return s_instance; }

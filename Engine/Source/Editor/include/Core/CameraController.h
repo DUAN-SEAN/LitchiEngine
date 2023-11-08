@@ -94,7 +94,6 @@ namespace LitchiEditor
 		void UpdateMouseState();
 
 	private:
-		InputManager& m_inputManager;
 		Window& m_window;
 		AView& m_view;
 		RenderCamera* m_camera;

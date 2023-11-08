@@ -1,8 +1,3 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
 
 #pragma once
 
@@ -23,102 +18,87 @@ namespace LitchiRuntime
 	class InputManager
 	{
 	public:
+		
+		static void Initialize(Window* p_window);
+		static void UnInit();
+		static void Tick();
 		/**
-		* Create the window
-		* @param p_windowSettings
+		* Clear any event occured
+		* @note Should be called at the end of every game tick
 		*/
-		InputManager(Window& p_window);
-
-		/**
-		* Destroy the input manager by removing listeners on the window
-		*/
-		~InputManager();
+		static void ClearEvents();
 
 		/**
 		* Return the current state of the given key
 		* @param p_key
 		*/
-		EKeyState GetKeyState(EKey p_key) const;
+		static EKeyState GetKeyState(EKey p_key);
 
 		/**
 		* Return the current state of the given mouse button
 		* @param p_button
 		*/
-		EMouseButtonState GetMouseButtonState(EMouseButton p_button) const;
+		static EMouseButtonState GetMouseButtonState(EMouseButton p_button);
 
 		/**
 		* Return true if the given key has been pressed during the frame
 		* @param p_key
 		*/
-		bool IsKeyPressed(EKey p_key) const;
+		static bool IsKeyPressed(EKey p_key);
 
 		/**
 		* Return true if the given key has been released during the frame
 		* @param p_key
 		*/
-		bool IsKeyReleased(EKey p_key) const;
+		static bool IsKeyReleased(EKey p_key);
 
 		/**
 		* Return true if the given mouse button has been pressed during the frame
 		* @param p_button
 		*/
-		bool IsMouseButtonPressed(EMouseButton p_button) const;
+		static bool IsMouseButtonPressed(EMouseButton p_button);
 
 		/**
 		* Return true if the given mouse button has been released during the frame
 		* @param p_button
 		*/
-		bool IsMouseButtonReleased(EMouseButton p_button) const;
+		static bool IsMouseButtonReleased(EMouseButton p_button);
+		
 
-		/**
-		* Return the current mouse position relative to the window
-		*/
-		std::pair<double, double> GetMousePosition() const;
-
-
-		void Tick();
-
-		/**
-		* Clear any event occured
-		* @note Should be called at the end of every game tick
-		*/
-		void ClearEvents();
-
-
-		void SetMouseCursorVisible(const bool visible);
-		bool GetMouseCursorVisible();
-		void SetMouseIsInViewport(const bool is_in_viewport);
-		bool GetMouseIsInViewport();
-		const Vector2& GetMousePosition();
-		void SetMousePosition(const Vector2& position);
-		const Vector2& GetMouseDelta();
-		const Vector2& GetMouseWheelDelta();
-		void SetEditorViewportOffset(const Vector2& offset);
-		const Vector2 GetMousePositionRelativeToWindow();
-		const Vector2 GetMousePositionRelativeToEditorViewport();
+		static void SetMouseCursorVisible(const bool visible);
+		static bool GetMouseCursorVisible();
+		static void SetMouseIsInViewport(const bool is_in_viewport);
+		static bool GetMouseIsInViewport();
+		static const Vector2& GetMousePosition();
+		static void SetMousePosition(const Vector2& position);
+		static const Vector2& GetMouseDelta();
+		static const Vector2& GetMouseWheelDelta();
+		static void SetEditorViewportOffset(const Vector2& offset);
+		static const Vector2 GetMousePositionRelativeToWindow();
+		static const Vector2 GetMousePositionRelativeToEditorViewport();
 
 	private:
-		void OnKeyPressed(int p_key);
-		void OnKeyReleased(int p_key);
-		void OnMouseButtonPressed(int p_button);
-		void OnMouseButtonReleased(int p_button);
+		static void OnKeyPressed(int p_key);
+		static void OnKeyReleased(int p_key);
+		static void OnMouseButtonPressed(int p_button);
+		static void OnMouseButtonReleased(int p_button);
 
 	private:
-		Window& m_window;
+		static Window* m_window;
 
-		ListenerID m_keyPressedListener;
-		ListenerID m_keyReleasedListener;
-		ListenerID m_mouseButtonPressedListener;
-		ListenerID m_mouseButtonReleasedListener;
+		static ListenerID m_keyPressedListener;
+		static ListenerID m_keyReleasedListener;
+		static ListenerID m_mouseButtonPressedListener;
+		static ListenerID m_mouseButtonReleasedListener;
 
-		std::unordered_map<EKey, EKeyState>					m_keyEvents;
-		std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
+		static std::unordered_map<EKey, EKeyState>					m_keyEvents;
+		static std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
 
 		//// Mouse
-		Vector2 m_mouse_position = Vector2::Zero;
-		Vector2 m_mouse_delta = Vector2::Zero;
-		Vector2 m_mouse_wheel_delta = Vector2::Zero;
-		Vector2 m_editor_viewport_offset = Vector2::Zero;
-		bool m_mouse_is_in_viewport = true;
+		static Vector2 m_mouse_position;
+		static Vector2 m_mouse_delta;
+		static Vector2 m_mouse_wheel_delta;
+		static Vector2 m_editor_viewport_offset;
+		static bool m_mouse_is_in_viewport;
 	};
 }

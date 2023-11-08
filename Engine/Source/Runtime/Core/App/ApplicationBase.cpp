@@ -24,14 +24,14 @@ namespace LitchiRuntime
     void ApplicationBase::Init() {
         s_instance = this;
 
-        Debug::Init();
+        Debug::Initialize();
 
         DEBUG_LOG_INFO("game start");
 
         // 第二个参数支持后续修改
         ConfigManager::Initialize(new ConfigManager(), "ProjectConfig.Litchi");
 
-        Time::Init();
+        Time::Initialize();
 
         //初始化图形库，例如glfw
         InitGraphicsLibraryFramework();
@@ -52,7 +52,8 @@ namespace LitchiRuntime
             window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
             window->MakeCurrentContext();
         }
-        inputManager = std::make_unique<InputManager>(*window);
+
+        InputManager::Initialize(window.get());
 
         UpdateScreenSize();
 
@@ -63,8 +64,8 @@ namespace LitchiRuntime
 
         }
 
-        TypeManager::Initialize(new TypeManager());
-        SerializerManager::Initialize(new SerializerManager());
+        TypeManager::Initialize();
+        SerializerManager::Initialize();
 
         //初始化 fmod
         //Audio::Init();
@@ -106,7 +107,7 @@ namespace LitchiRuntime
         Time::Update();
         UpdateScreenSize();
 
-        inputManager->Tick();
+        InputManager::Tick();
 
         auto scene = this->sceneManager->GetCurrentScene();
         if(scene)

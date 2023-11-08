@@ -20,6 +20,6 @@ namespace LitchiRuntime
 {
     class Debug {
     public:
-        static void Init();
+        static void Initialize();
     };
 }

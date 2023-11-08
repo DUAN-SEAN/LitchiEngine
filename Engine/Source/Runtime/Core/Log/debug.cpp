@@ -5,7 +5,7 @@
 #include "spdlog/sinks/basic_file_sink.h"
 namespace LitchiRuntime
 {
-    void Debug::Init() {
+    void Debug::Initialize() {
         try
         {
             auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();

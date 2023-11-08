@@ -17,7 +17,7 @@ using namespace rapidjson;
 
 namespace LitchiRuntime
 {
-	void SerializerManager::Initialize(SerializerManager* instance)
+	void SerializerManager::Initialize()
 	{
 		/*MaterialRes materialRes;
 		materialRes.shader_path_ = "shader/XXX.fs";

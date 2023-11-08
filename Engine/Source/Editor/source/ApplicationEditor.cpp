@@ -311,7 +311,7 @@ void LitchiEditor::ApplicationEditor::Run()
 		// PostUpdate
 
 		//window->SwapBuffers();
-		inputManager->ClearEvents();
+		InputManager::ClearEvents();
 		++m_elapsedFrames;
 	}
 }

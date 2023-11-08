@@ -6,25 +6,43 @@
 
 using namespace LitchiRuntime;
 
-LitchiRuntime::InputManager::InputManager(Window& p_window) : m_window(p_window)
+Window* InputManager::m_window = nullptr;
+
+ListenerID InputManager::m_keyPressedListener;
+ListenerID InputManager::m_keyReleasedListener;
+ListenerID InputManager::m_mouseButtonPressedListener;
+ListenerID InputManager::m_mouseButtonReleasedListener;
+
+std::unordered_map<EKey, EKeyState>					InputManager::m_keyEvents;
+std::unordered_map<EMouseButton, EMouseButtonState>	InputManager::m_mouseButtonEvents;
+
+Vector2 InputManager::m_mouse_position = Vector2::Zero;
+Vector2 InputManager::m_mouse_delta = Vector2::Zero;
+Vector2 InputManager::m_mouse_wheel_delta = Vector2::Zero;
+Vector2 InputManager::m_editor_viewport_offset = Vector2::Zero;
+bool InputManager::m_mouse_is_in_viewport = true;
+
+void LitchiRuntime::InputManager::Initialize(Window* p_window)
 {
-	m_keyPressedListener = m_window.KeyPressedEvent.AddListener(std::bind(&InputManager::OnKeyPressed, this, std::placeholders::_1));
-	m_keyReleasedListener = m_window.KeyReleasedEvent.AddListener(std::bind(&InputManager::OnKeyReleased, this, std::placeholders::_1));
-	m_mouseButtonPressedListener = m_window.MouseButtonPressedEvent.AddListener(std::bind(&InputManager::OnMouseButtonPressed, this, std::placeholders::_1));
-	m_mouseButtonReleasedListener = m_window.MouseButtonReleasedEvent.AddListener(std::bind(&InputManager::OnMouseButtonReleased, this, std::placeholders::_1));
+	m_keyPressedListener = m_window->KeyPressedEvent.AddListener(std::bind(&InputManager::OnKeyPressed , std::placeholders::_1));
+	m_keyReleasedListener = m_window->KeyReleasedEvent.AddListener(std::bind(&InputManager::OnKeyReleased, std::placeholders::_1));
+	m_mouseButtonPressedListener = m_window->MouseButtonPressedEvent.AddListener(std::bind(&InputManager::OnMouseButtonPressed, std::placeholders::_1));
+	m_mouseButtonReleasedListener = m_window->MouseButtonReleasedEvent.AddListener(std::bind(&InputManager::OnMouseButtonReleased, std::placeholders::_1));
+
 }
 
-LitchiRuntime::InputManager::~InputManager()
+void LitchiRuntime::InputManager::UnInit()
 {
-	m_window.KeyPressedEvent.RemoveListener(m_keyPressedListener);
-	m_window.KeyReleasedEvent.RemoveListener(m_keyReleasedListener);
-	m_window.MouseButtonPressedEvent.RemoveListener(m_mouseButtonPressedListener);
-	m_window.MouseButtonReleasedEvent.RemoveListener(m_mouseButtonReleasedListener);
+
+	m_window->KeyPressedEvent.RemoveListener(m_keyPressedListener);
+	m_window->KeyReleasedEvent.RemoveListener(m_keyReleasedListener);
+	m_window->MouseButtonPressedEvent.RemoveListener(m_mouseButtonPressedListener);
+	m_window->MouseButtonReleasedEvent.RemoveListener(m_mouseButtonReleasedListener);
 }
 
-LitchiRuntime::EKeyState LitchiRuntime::InputManager::GetKeyState(EKey p_key) const
+LitchiRuntime::EKeyState LitchiRuntime::InputManager::GetKeyState(EKey p_key)
 {
-	switch (glfwGetKey(m_window.GetGlfwWindow(), static_cast<int>(p_key)))
+	switch (glfwGetKey(m_window->GetGlfwWindow(), static_cast<int>(p_key)))
 	{
 		case GLFW_PRESS:	return EKeyState::KEY_DOWN;
 		case GLFW_RELEASE:	return EKeyState::KEY_UP;
@@ -33,9 +51,9 @@ LitchiRuntime::EKeyState LitchiRuntime::InputManager::GetKeyState(EKey p_key) co
 	return EKeyState::KEY_UP;
 }
 
-LitchiRuntime::EMouseButtonState LitchiRuntime::InputManager::GetMouseButtonState(EMouseButton p_button) const
+LitchiRuntime::EMouseButtonState LitchiRuntime::InputManager::GetMouseButtonState(EMouseButton p_button)
 {
-	switch (glfwGetMouseButton(m_window.GetGlfwWindow(), static_cast<int>(p_button)))
+	switch (glfwGetMouseButton(m_window->GetGlfwWindow(), static_cast<int>(p_button)))
 	{
 		case GLFW_PRESS:	return EMouseButtonState::MOUSE_DOWN;
 		case GLFW_RELEASE:	return EMouseButtonState::MOUSE_UP;
@@ -44,31 +62,24 @@ LitchiRuntime::EMouseButtonState LitchiRuntime::InputManager::GetMouseButtonStat
 	return EMouseButtonState::MOUSE_UP;
 }
 
-bool LitchiRuntime::InputManager::IsKeyPressed(EKey p_key) const
+bool LitchiRuntime::InputManager::IsKeyPressed(EKey p_key)
 {
 	return m_keyEvents.find(p_key) != m_keyEvents.end() && m_keyEvents.at(p_key) == EKeyState::KEY_DOWN;
 }
 
-bool LitchiRuntime::InputManager::IsKeyReleased(EKey p_key) const
+bool LitchiRuntime::InputManager::IsKeyReleased(EKey p_key)
 {
 	return m_keyEvents.find(p_key) != m_keyEvents.end() && m_keyEvents.at(p_key) == EKeyState::KEY_UP;
 }
 
-bool LitchiRuntime::InputManager::IsMouseButtonPressed(EMouseButton p_button) const
+bool LitchiRuntime::InputManager::IsMouseButtonPressed(EMouseButton p_button)
 {
 	return m_mouseButtonEvents.find(p_button) != m_mouseButtonEvents.end() && m_mouseButtonEvents.at(p_button) == EMouseButtonState::MOUSE_DOWN;
 }
 
-bool LitchiRuntime::InputManager::IsMouseButtonReleased(EMouseButton p_button) const
+bool LitchiRuntime::InputManager::IsMouseButtonReleased(EMouseButton p_button)
 {
 	return m_mouseButtonEvents.find(p_button) != m_mouseButtonEvents.end() && m_mouseButtonEvents.at(p_button) == EMouseButtonState::MOUSE_UP;
-}
-
-std::pair<double, double> LitchiRuntime::InputManager::GetMousePosition() const
-{
-	std::pair<double, double> result;
-	glfwGetCursorPos(m_window.GetGlfwWindow(), &result.first, &result.second);
-	return result;
 }
 
 void LitchiRuntime::InputManager::Tick()
@@ -80,7 +91,7 @@ void LitchiRuntime::InputManager::Tick()
 	PollController();*/
 
 	double x, y;
-	glfwGetCursorPos(m_window.GetGlfwWindow(), &x, &y);
+	glfwGetCursorPos(m_window->GetGlfwWindow(), &x, &y);
 	Vector2 position = Vector2(static_cast<int>(x), static_cast<int>(y));
 	// Get delta
 	m_mouse_delta = position - m_mouse_position;

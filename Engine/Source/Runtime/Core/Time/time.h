@@ -14,7 +14,7 @@ namespace LitchiRuntime
         ~Time();
 
         //初始化
-        static void Init();
+        static void Initialize();
 
         static void Update();
 
