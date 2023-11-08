@@ -481,7 +481,7 @@ namespace LitchiRuntime
         // Return if resolution is invalid
         if (!RHI_Device::IsValidResolution(width, height))
         {
-            DEBUG_LOG_WARN("%dx%d is an invalid resolution", width, height);
+            DEBUG_LOG_WARN("{}x{} is an invalid resolution", width, height);
             return;
         }
 

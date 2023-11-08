@@ -39,6 +39,12 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 	m_image->size = Vector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
 
 	// m_fbo.Resize(winWidth, winHeight);
+
+
+	// todo: refactor
+
+	// update render viewport
+
 }
 
 void LitchiEditor::AView::_Draw_Impl()
