@@ -8,6 +8,7 @@
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
+#include "Runtime/Function/UI/Widgets/TransformGizmo/TransformGizmo.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 // namespace LitchiEditor { class EditorRenderer; }
@@ -112,6 +113,7 @@ namespace LitchiEditor
 		Vector3 m_cameraPosition;
 		Quaternion m_cameraRotation;
 		Image* m_image;
+		TransformGizmo* m_transform_gizmo;
 		RHI_Texture* m_renderTargetTexture;
 
         Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };

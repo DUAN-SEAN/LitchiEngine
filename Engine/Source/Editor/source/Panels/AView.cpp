@@ -28,6 +28,7 @@ LitchiEditor::AView::AView
 
 	// °ó¶¨rtµ½ImGuiµÄimage
 	m_image = &CreateWidget<Image>(m_renderTargetTexture, Vector2{ 0.f, 0.f });
+	m_transform_gizmo = &CreateWidget<TransformGizmo>(nullptr);
 
 	scrollable = false;
 }
@@ -59,7 +60,12 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 		DEBUG_LOG_INFO("AView Mouse is clicked left button");
 	}*/
 
-	ImGui::TransformGizmo::tick();
+	auto camera = Renderer::GetCamera();
+	if(camera)
+	{
+		m_transform_gizmo->SetCamera(camera);
+		m_transform_gizmo->SetSelectGameObject(camera->GetSelectedEntity());
+	}
 
 }
 
