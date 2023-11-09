@@ -264,21 +264,18 @@ void LitchiEditor::ApplicationEditor::Init()
 	transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
 	transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
-	CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
+	//CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
-	CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
+	//CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
 
-	auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
+	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
 
 	Mesh* mesh = new Mesh();
 	mesh->LoadFromFile(projectAssetsPath+"Engine\\Models\\Cube.fbx");
 	mesh = new Mesh();
 	mesh->LoadFromFile(projectAssetsPath + "Engine\\Models\\LadyCat.fbx");
-	
-	camera->SetSelectedEntity(cube);
-
 
 	// Setup UI
 	SetupUI();

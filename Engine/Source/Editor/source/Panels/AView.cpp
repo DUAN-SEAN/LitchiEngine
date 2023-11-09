@@ -49,24 +49,6 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 
 	// update render viewport
 
-
-	/*if (ImGui::IsItemHovered())
-	{
-		DEBUG_LOG_INFO("AView Mouse is in Viewport");
-	}
-
-	if (ImGui::IsMouseClicked(0))
-	{
-		DEBUG_LOG_INFO("AView Mouse is clicked left button");
-	}*/
-
-	auto camera = Renderer::GetCamera();
-	if(camera)
-	{
-		m_transform_gizmo->SetCamera(camera);
-		m_transform_gizmo->SetSelectGameObject(camera->GetSelectedEntity());
-	}
-
 }
 
 void LitchiEditor::AView::_Draw_Impl()

@@ -134,7 +134,7 @@ namespace LitchiRuntime
         // Traces ray against all AABBs in the world
         std::vector<RayHit> hits;
         {
-            const auto& entities = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->GetRootGameObjectList();
+            const auto& entities = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->GetAllGameObjectList();
             for (const auto entity : entities)
             {
                 // Make sure there entity has a renderable

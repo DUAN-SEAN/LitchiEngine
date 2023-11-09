@@ -4,6 +4,8 @@
 #include "Runtime/Core/Log/Debug.h"
 #include <iostream>
 
+#include "Runtime/Core/App/ApplicationBase.h"
+
 using namespace LitchiRuntime;
 
 Window* InputManager::m_window = nullptr;
@@ -200,9 +202,9 @@ const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
 {
 	int window_x, window_y;
 
-	// GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
+	GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
 	
-	// glfwGetWindowPos(window, &window_x, &window_y);
+	glfwGetWindowPos(window, &window_x, &window_y);
 	return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
 }
 
