@@ -3,10 +3,13 @@
 #include "Editor/include/Panels/AView.h"
 
 #include "Editor/include/Core/EditorRenderer.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Core/Log/debug.h"
+
+#include "Runtime\Function\UI\ImGui\ImGui_TransformGizmo.h"
 
 using namespace LitchiRuntime;
 LitchiEditor::AView::AView
@@ -44,6 +47,19 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 	// todo: refactor
 
 	// update render viewport
+
+
+	/*if (ImGui::IsItemHovered())
+	{
+		DEBUG_LOG_INFO("AView Mouse is in Viewport");
+	}
+
+	if (ImGui::IsMouseClicked(0))
+	{
+		DEBUG_LOG_INFO("AView Mouse is clicked left button");
+	}*/
+
+	ImGui::TransformGizmo::tick();
 
 }
 
