@@ -11,24 +11,13 @@
 #include "Runtime/Core/Math/Rectangle.h"
 #include "Runtime/Core/Math/Vector2.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Rendering/Color.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Viewport.h"
 
 namespace LitchiRuntime
 {
 	class MeshFilter;
-
-	enum ProjectionType
-    {
-        Projection_Perspective,
-        Projection_Orthographic,
-    };
-
-    struct camera_bookmark
-    {
-        Vector3 position = Vector3::Zero;
-        Vector3 rotation = Vector3::Zero;
-    };
 
     class Camera : public Component {
     public:

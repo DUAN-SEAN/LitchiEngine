@@ -3,248 +3,168 @@
 
 #include <algorithm>
 
+#include "RHI/RHI_Viewport.h"
 #include "Runtime/Core/Math/Frustum.h"
+#include "Runtime/Core/Math/Ray.h"
+#include "Runtime/Core/Math/Rectangle.h"
+#include "Runtime/Core/Math/Vector2.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 
 namespace LitchiRuntime
 {
 	/**
     * Projection modes, mostly used for cameras
     */
-    enum class ProjectionMode
+    enum ProjectionType
     {
-        ORTHOGRAPHIC,
-        PERSPECTIVE
+        Projection_Perspective,
+        Projection_Orthographic,
     };
-    class RenderTexture;
+
+    struct camera_bookmark
+    {
+        Vector3 position = Vector3::Zero;
+        Vector3 rotation = Vector3::Zero;
+    };
+
 	class RenderCamera
 	{
 	public:
 
         RenderCamera();
         ~RenderCamera();
+		
+    public:
 
-        static constexpr float MIN_FOV{ 10.0f };
-        static constexpr float MAX_FOV{ 89.0f };
+        // Matrices
+        const Matrix& GetViewMatrix()           const { return m_view; }
+        const Matrix& GetProjectionMatrix()     const { return m_projection; }
+        const Matrix& GetViewProjectionMatrix() const { return m_view_projection; }
 
-        /// 设置相机位置 朝向
-        /// \param cameraFowrad 相机朝前方向
-        /// \param cameraUp 相机朝上方向
-        void SetAndUpdateView(const Vector3& cameraPos,const Vector3& centerPos, const Vector3& cameraUp);
+        // Raycasting
+        const Ray ComputePickingRay();
+        const Ray& GetPickingRay() const { return m_ray; }
 
-        /// 设置相机视野
-        /// \param fovDegrees   相机视野 可视角度
-        /// \param aspectRatio  宽高比
-        /// \param nearClip 近裁剪面
-        /// \param farClip  远裁剪面
-        void UpdateProjection();
+        // Picks the nearest entity under the mouse cursor
+        void Pick();
 
-        float GetFov () { return fov_; }
-        void SetFov(float fovDegrees)
-        {
-            fov_ = std::clamp(fovDegrees, MIN_FOV, MAX_FOV);
-        }
+        // Converts a world point to a screen point
+        Vector2 WorldToScreenCoordinates(const Vector3& position_world) const;
 
-        float GetAspectRatio() { return aspectRatio_; }
-        void SetAspectRatio(float aspectRatio) { aspectRatio_ = aspectRatio; }
+        // Converts a world bounding box to a screen rectangle
+        Rectangle WorldToScreenCoordinates(const BoundingBox& bounding_box) const;
 
-        /// 设置清屏颜色
-        /// \param r
-        /// \param g
-        /// \param b
-        /// \param a
-        void set_clear_color(float r, float g, float b, float a) { clear_color_ = Vector4(r, g, b, a); }
+        // Converts a screen point to a world point. Z can be 0.0f to 1.0f and it will lerp between the near and far plane.
+        Vector3 ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const;
+        //=================================================================================================================
 
-        /// 设置刷帧清屏内容种类
-        /// \param clear_flag
-        void set_clear_flag(unsigned int clear_flag) { clear_flag_ = clear_flag; }
+        // Aperture
+        float GetAperture() const { return m_aperture; }
+        void SetAperture(const float aperture) { m_aperture = aperture; }
 
-        /// 刷帧清屏
-        void Clear();
+        // Shutter speed
+        float GetShutterSpeed() const { return m_shutter_speed; }
+        void SetShutterSpeed(const float shutter_speed) { m_shutter_speed = shutter_speed; }
 
-        /// 检查target_render_texture_是否设置，是则使用FBO，渲染到RenderTexture。
-        void CheckRenderToTexture();
+        // ISO
+        float GetIso() const { return m_iso; }
+        void SetIso(const float iso) { m_iso = iso; }
 
-        /// 检查是否要取消使用RenderTexture.
-        void CheckCancelRenderToTexture();
-
-        /// 设置渲染目标RenderTexture
-        /// \param render_texture
-        void set_target_render_texture(RenderTexture* render_texture);
-
-        /// 清空渲染目标RenderTexture
-        void clear_target_render_texture();
-
-        Matrix& view_mat4() { return view_mat4_; }
-        Matrix& projection_mat4() { return projection_mat4_; }
-
-	public:
-		/**
-		* Cache the projection, view and frustum matrices
-		* @param p_windowWidth
-		* @param p_windowHeight
-		* @param p_position
-		* @param p_rotation
-		*/
-		void CacheMatrices(uint16_t p_windowWidth, uint16_t p_windowHeight, const Vector3& p_position, const Quaternion& p_rotation);
-
-		/**
-		* Calculate and cache the result projection matrix
-		* @param p_windowWidth
-		* @param p_windowHeight
-		*/
-		void CacheProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight);
-
-		/**
-		* Calculate and cache the result view matrix
-		* @param p_position
-		* @param p_rotation
-		*/
-		void CacheViewMatrix(const Vector3& p_position, const Quaternion& p_rotation);
-
-		/**
-		* Calculate and cache the result frustum.
-		* This method should be called after projection and view matrices are cached.
-		* @param p_view
-		* @param p_projection
-		*/
-		void CacheFrustum(const Matrix& p_view, const Matrix& p_projection);
-
-		/**
-		* Returns the fov of the camera
-		*/
-		float GetFov() const;
-
-		/**
-		* Returns the size of the camera
-		*/
-		float GetSize() const;
-
-		/**
-		* Returns the near of the camera
-		*/
-		float GetNear() const;
-
-		/**
-		* Returns the far of the camera
-		*/
-		float GetFar() const;
-
-		/**
-		* Returns the clear color of the camera
-		*/
-		const Vector3& GetClearColor() const;
-
-		/**
-		* Returns the cached projection matrix
-		*/
-		const Matrix& GetProjectionMatrix() const;
-
-		/**
-		* Returns the cached view matrix
-		*/
-		const Matrix& GetViewMatrix() const;
-
-		/**
-		* Retursn the cached frustum
-		*/
-		const LitchiRuntime::Frustum& GetFrustum() const;
-
-		/**
-		* Returns true if the frustum culling for geometry is enabled
-		*/
-		bool HasFrustumGeometryCulling() const;
-
-		/**
-		* Returns true if the frustum culling for lights is enabled
-		*/
-		bool HasFrustumLightCulling() const;
-
-		/**
-		* Returns the current projection mode
-		*/
-		ProjectionMode GetProjectionMode() const;
-
-		///**
-		//* Sets the fov of the camera to the given value
-		//* @param p_value
-		//*/
-		//void SetFov(float p_value);
-
-		/**
-		* Sets the size of the camera to the given value
-		* @param p_value
-		*/
-		void SetSize(float p_value);
-
-		/**
-		* Sets the near of the camera to the given value
-		* @param p_value
-		*/
-		void SetNear(float p_value);
-
-		/**
-		* Sets the far of the camera to the given value
-		* @param p_value
-		*/
-		void SetFar(float p_value);
-
-		/**
-		* Sets the clear color of the camera to the given value
-		* @param p_value
-		*/
-		void SetClearColor(const Vector3& p_clearColor);
-
-		/**
-		* Defines if the camera should apply frustum culling to geometry while rendering
-		* @param p_enable
-		*/
-		void SetFrustumGeometryCulling(bool p_enable);
-
-		/**
-		* Defines if the camera should apply frustum culling to lights while rendering
-		* @param p_enable
-		*/
-		void SetFrustumLightCulling(bool p_enable);
-
-		/**
-		* Defines the projection mode the camera should adopt
-		* @param p_projectionMode
-		*/
-		void SetProjectionMode(ProjectionMode p_projectionMode);
+        // Exposure
+        float GetEv100()    const { return std::log2(m_aperture / m_shutter_speed * 100.0f / m_iso); }
+        float GetExposure() const { return 1.0f / (std::pow(2.0f, GetEv100())); }
 
 
-	private:
+        // Planes/projection
+        void SetNearPlane(float near_plane);
+        void SetFarPlane(float far_plane);
+        void SetProjection(ProjectionType projection);
+        float GetNearPlane()               const { return m_near_plane; }
+        float GetFarPlane()                const { return m_far_plane; }
+        ProjectionType GetProjectionType() const { return m_projection_type; }
 
-		Matrix CalculateProjectionMatrix(uint16_t p_windowWidth, uint16_t p_windowHeight) const;
-		Matrix CalculateViewMatrix(const Vector3 &p_position, const Quaternion& p_rotation) const;
-	private:
+        // FOV
+        float GetFovHorizontalRad() const { return m_fov_horizontal_rad; }
+        float GetFovVerticalRad()   const;
+        float GetFovHorizontalDeg() const;
+        void SetFovHorizontalDeg(float fov);
 
-		Frustum m_frustum;
+        // Frustum
+        bool IsInViewFrustum(MeshFilter* renderable) const;
+        bool IsInViewFrustum(const Vector3& center, const Vector3& extents) const;
 
-        Matrix view_mat4_;//指定相机坐标和朝向
-        Matrix projection_mat4_;//指定相机范围
+        // Bookmarks
+        void AddBookmark(camera_bookmark bookmark) { m_bookmarks.emplace_back(bookmark); };
+        const std::vector<camera_bookmark>& GetBookmarks() const { return m_bookmarks; };
 
-        ProjectionMode m_projectionMode;
+        // Clear color
+        const Color& GetClearColor()                   const { return m_clear_color; }
+        void SetClearColor(const Color& color) { m_clear_color = color; }
 
-        float fov_;
+        // First person control
+        bool GetFirstPersonControlEnabled()            const { return m_first_person_control_enabled; }
+        void SetFirstPersonControlEnabled(const bool enabled) { m_first_person_control_enabled = enabled; }
+        bool IsControledInFirstPerson() const;
 
-        float aspectRatio_;
-        float nearClip_;
-        float farClip_;
-		float m_size;
+        // Misc
+        void MakeDirty() { m_is_dirty = true; }
+        void SetSelectedEntity(GameObject* entity) { m_selected_entity = entity; }
+        GameObject* GetSelectedEntity() { return m_selected_entity; }
 
-        Vector4 clear_color_;//清屏颜色
-        unsigned int clear_flag_;//刷新数据标志
+        Matrix ComputeViewMatrix() const;
+        Matrix ComputeProjection(const float near_plane, const float far_plane);
 
-        unsigned char depth_;//排序深度
+        void GoToCameraBookmark(int bookmark_index);
+        void FocusOnSelectedEntity();
 
-        unsigned char culling_mask_;//控制渲染哪些Layer的物体
+    private:
+        void ProcessInput();
+        void ProcessInputFpsControl();
+        void ProcessInputLerpToEntity();
 
-        RenderTexture* target_render_texture_;//渲染目标RenderTexture
+        Vector3 GetUp()       const;
+        Vector3 GetDown()     const;
+        Vector3 GetForward()  const;
+        Vector3 GetBackward() const;
+        Vector3 GetRight()    const;
+        Vector3 GetLeft()     const;
 
-
-        bool m_frustumGeometryCulling;
-        bool m_frustumLightCulling;
-
+        float m_aperture = 2.8f;         // Aperture value in f-stop. Controls the amount of light, depth of field and chromatic aberration.
+        float m_shutter_speed = 1.0f / 60.0f; // Length of time for which the camera shutter is open (sec). Also controls the amount of motion blur.
+        float m_iso = 500.0f;       // Sensitivity to light.
+        float m_fov_horizontal_rad = Math::Helper::DegreesToRadians(90.0f);
+        float m_near_plane = 0.1f;
+        float m_far_plane = 1000.0f;
+        ProjectionType m_projection_type = Projection_Perspective;
+        Color m_clear_color = Color::standard_cornflower_blue;
+        Matrix m_view = Matrix::Identity;
+        Matrix m_projection = Matrix::Identity;
+        Matrix m_view_projection = Matrix::Identity;
+        Vector3 m_position = Vector3::Zero;
+        Quaternion m_rotation = Quaternion::Identity;
+        bool m_is_dirty = false;
+        bool m_first_person_control_enabled = true;
+        bool m_is_controlled_by_keyboard_mouse = false;
+        Vector2 m_mouse_last_position = Vector2::Zero;
+        bool m_fps_control_cursor_hidden = false;
+        Vector3 m_movement_speed = Vector3::Zero;
+        float m_movement_scroll_accumulator = 0.0f;
+        Vector2 m_mouse_smoothed = Vector2::Zero;
+        Vector2 m_first_person_rotation = Vector2::Zero;
+        float m_mouse_sensitivity = 0.2f;
+        float m_mouse_smoothing = 0.5f;
+        bool m_lerp_to_target_p = false;
+        bool m_lerp_to_target_r = false;
+        bool m_lerpt_to_bookmark = false;
+        int m_target_bookmark_index = -1;
+        float m_lerp_to_target_alpha = 0.0f;
+        float m_lerp_to_target_distance = 0.0f;
+        Vector3 m_lerp_to_target_position = Vector3::Zero;
+        Quaternion m_lerp_to_target_rotation = Quaternion::Identity;
+        RHI_Viewport m_last_known_viewport;
+        Ray m_ray;
+        Frustum m_frustum;
+        std::vector<camera_bookmark> m_bookmarks;
+        GameObject* m_selected_entity = nullptr;
 	};
 }
