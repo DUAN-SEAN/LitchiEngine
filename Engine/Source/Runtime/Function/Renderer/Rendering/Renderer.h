@@ -14,7 +14,7 @@
 #include "Renderer_ConstantBuffers.h"
 #include "Font/Font.h"
 #include "Grid.h"
-#include "Runtime/Function/Scene/SceneManager.h"
+#include "RendererPath.h"
 //===================================
 
 namespace LitchiRuntime
@@ -32,41 +32,6 @@ namespace LitchiRuntime
 	//}
 	//====================
 
-	enum RendererPathType
-	{
-		RendererPathType_Invalid,
-		RendererPathType_SceneView,
-		RendererPathType_GameView,
-		RendererPathType_Custom,
-		RendererPathType_Count
-	};
-
-	// rendererPath, completed once pass, render to texture
-	class RendererPath
-	{
-	public:
-		RendererPath(RendererPathType rendererPathType)
-		{
-			m_rendererPathType = rendererPathType;
-		}
-	public:
-
-		// type
-		RendererPathType m_rendererPathType = RendererPathType_Invalid;
-
-		// scene
-		Scene* m_renderScene = nullptr;
-
-		// camera
-		RenderCamera* m_renderCamera = nullptr;
-
-		// rt
-		RHI_Texture* m_depthRenderTarget = nullptr;
-
-		// rt
-		RHI_Texture* m_colorRenderTarget = nullptr;
-	};
-
 
 	class SP_CLASS Renderer
 	{
@@ -74,8 +39,6 @@ namespace LitchiRuntime
 		static void Initialize();
 		static void Shutdown();
 		static void Tick();
-
-		static void Render4BuildInSceneView(Scene* scene, RenderCamera* camera);
 
 		// Primitive rendering (excellent for debugging)
 		static void DrawLine(const Vector3& from, const Vector3& to, const Vector4& color_from = DEBUG_COLOR, const Vector4& color_to = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
@@ -181,11 +144,12 @@ namespace LitchiRuntime
 		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
 
 		// Passes - Core
+		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_Frame(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath,const bool is_transparent_pass);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 
-		static void Pass_DebugGridPass(RHI_CommandList* cmd_list);
+		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
 		// Event handlers
 		// static void OnWorldResolved(sp_variant data);

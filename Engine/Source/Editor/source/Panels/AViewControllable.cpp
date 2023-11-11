@@ -9,9 +9,9 @@ LitchiEditor::AViewControllable::AViewControllable
 	const std::string& p_title,
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings,
-	RHI_Texture* renderTargetTexture,
+	RendererPath* rendererPath,
 	bool p_enableFocusInputs
-) : AView(p_title, p_opened, p_windowSettings, renderTargetTexture),
+) : AView(p_title, p_opened, p_windowSettings, rendererPath),
 	m_cameraController(*this, m_camera, m_cameraPosition, m_cameraRotation, p_enableFocusInputs)
 {
 

@@ -3,6 +3,7 @@
 
 #include "AView.h"
 #include "Editor/include/Core/CameraController.h"
+#include "Runtime/Function/Renderer/Rendering/RendererPath.h"
 
 namespace LitchiEditor
 {
@@ -21,7 +22,7 @@ namespace LitchiEditor
 			const std::string& p_title,
 			bool p_opened,
 			const PanelWindowSettings& p_windowSettings,
-			RHI_Texture* renderTargetTexture,
+			RendererPath* rendererPath,
 			bool p_enableFocusInputs = false
 		);
 

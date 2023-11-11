@@ -4,10 +4,7 @@
 #include <string>
 
 #include "AViewControllable.h"
-#include "Editor/include/Core/GizmoBehaviour.h"
-#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
-#include <optional>
 
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
@@ -29,7 +26,7 @@ namespace LitchiEditor
 			const std::string& p_title,
 			bool p_opened,
 			const PanelWindowSettings& p_windowSettings,
-			RHI_Texture* renderTargetTexture
+			RendererPath* rendererPath
 		);
 
 		/**
@@ -52,9 +49,6 @@ namespace LitchiEditor
 		*/
 		void HandleActorPicking();
 	private:
-
-		RendererPath* m_renderPath4SceneView;
-
 		GameObject* m_highlightedActor;
 		TransformGizmo* m_transform_gizmo;
 	};

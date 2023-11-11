@@ -20,6 +20,8 @@ namespace LitchiRuntime
 		Image(uint32_t p_textureID, const Vector2& p_size);
 		Image(RHI_Texture* p_renderTarget, const Vector2& p_size);
 
+		void UpdateRenderTarget(RHI_Texture* p_renderTarget) { renderTarget = p_renderTarget; }
+
 	protected:
 		void _Draw_Impl() override;
 

@@ -13,6 +13,7 @@
 #include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Renderer/Rendering/RendererPath.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
@@ -60,6 +61,8 @@ namespace LitchiEditor
 
 		PanelsManager	m_panelsManager;
 
+		RenderCamera* m_renderCamera4SceneView = nullptr;
+		RendererPath* m_rendererPath4SceneView = nullptr;
 
 	public:
 		/**

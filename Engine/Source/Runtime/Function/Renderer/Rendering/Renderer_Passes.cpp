@@ -90,7 +90,7 @@ namespace LitchiRuntime
 					bool is_transparent_pass = false;
 
 					Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
-					Pass_DebugGridPass(cmd_list);
+					Pass_DebugGridPass(cmd_list, rendererPath);
 					//Pass_Depth_Prepass(cmd_list);
 					//Pass_GBuffer(cmd_list, is_transparent_pass);
 					//Pass_Ssgi(cmd_list);
@@ -307,9 +307,11 @@ namespace LitchiRuntime
 			return;
 		}
 
+		auto camera = rendererPath->GetRenderCamera();
+
 		// acquire entities
 		// auto& entities = m_renderables[Renderer_Entity::Geometry];
-		auto& entities = rendererPath->m_renderScene->GetAllGameObjectList();
+		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::Geometry);
 		if (entities.empty())
 		{
 			return;
@@ -327,9 +329,11 @@ namespace LitchiRuntime
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 
-		pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
 
-		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
 		pso.clear_color[0] = Color::standard_blue; // reverse-z
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
@@ -362,7 +366,7 @@ namespace LitchiRuntime
 				continue;
 
 			// skip objects outside of the view frustum
-			if (!GetCamera()->IsInViewFrustum(renderable))
+			if (!camera->IsInViewFrustum(renderable))
 			{
 				DEBUG_LOG_INFO("Renderer::Pass_ForwardPass Object Not InViewFrustum, name:{}", entity->GetName());
 				continue;
@@ -400,7 +404,7 @@ namespace LitchiRuntime
 
 	}
 
-	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list)
+	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::line_v).get();
 		RHI_Shader* shader_p = GetShader(Renderer_Shader::line_p).get();
@@ -410,11 +414,13 @@ namespace LitchiRuntime
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
-		pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_color[0] = rhi_color_load;
 	/*	pso.render_target_color_textures[1] = tex_reactive_mask;
 		pso.clear_color[1] = rhi_color_load;*/
-		pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
 
 		cmd_list->BeginMarker("DebugGridPass");

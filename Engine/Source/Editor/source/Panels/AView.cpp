@@ -17,18 +17,15 @@ LitchiEditor::AView::AView
 	const std::string& p_title,
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings,
-	RHI_Texture* renderTargetTexture
+	RendererPath* rendererPath
 ) :
 	PanelWindow(p_title, p_opened, p_windowSettings)
 {
-	// 初始化Cameraf
-	m_camera = new RenderCamera();
-	m_camera->Initialize();
-
-	m_renderTargetTexture = renderTargetTexture;
+	m_rendererPath = rendererPath;
+	m_camera = m_rendererPath->GetRenderCamera();
 
 	// 绑定rt到ImGui的image
-	m_image = &CreateWidget<Image>(m_renderTargetTexture, Vector2{ 0.f, 0.f });
+	m_image = &CreateWidget<Image>(m_rendererPath->GetColorRenderTarget().get(), Vector2{ 0.f, 0.f });
 
 	scrollable = false;
 }

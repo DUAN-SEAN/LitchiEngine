@@ -255,7 +255,22 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
+
+	// ³õÊ¼»¯Cameraf
+	m_renderCamera4SceneView = new RenderCamera();
+	m_renderCamera4SceneView->Initialize();
+
+	// prepare renderer path 
+	if (m_rendererPath4SceneView == nullptr)
+	{
+		m_rendererPath4SceneView = new RendererPath(RendererPathType_SceneView, m_renderCamera4SceneView);
+		
+		// update renderer path
+		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
+	}
+
 	auto scene = sceneManager->CreateScene("Default");
+	m_rendererPath4SceneView->SetScene(ApplicationBase::Instance()->sceneManager->GetCurrentScene());
 
 	//Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
 	//Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
@@ -406,7 +421,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	settings.dockable = true;
 
 	m_panelsManager.CreatePanel<MenuBar>("Menu Bar");
-	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings,Renderer::GetRenderTarget(Renderer_RenderTexture::frame_output).get());
+	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	// m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);// todo:

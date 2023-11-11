@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Runtime/Core/Math/Quaternion.h"
+#include "Runtime/Function/Renderer/Rendering/RendererPath.h"
 #include "Runtime/Function/Renderer/Resources/Shader.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
@@ -34,7 +35,7 @@ namespace LitchiEditor
 			const std::string& p_title,
 			bool p_opened,
 			const PanelWindowSettings& p_windowSettings,
-			RHI_Texture* renderTargetTexture
+			RendererPath* rendererPath
 		);
 
 		/**
@@ -112,7 +113,7 @@ namespace LitchiEditor
 		Vector3 m_cameraPosition;
 		Quaternion m_cameraRotation;
 		Image* m_image;
-		RHI_Texture* m_renderTargetTexture;
+		RendererPath* m_rendererPath;
 
         Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };
 		
