@@ -43,7 +43,7 @@ namespace ImGui::TransformGizmo
 
         // Switch between position, rotation and scale operations, with W, E and R respectively
         static ImGuizmo::OPERATION transform_operation = ImGuizmo::TRANSLATE;
-        if (!camera->IsControledInFirstPerson())
+        // if (!camera->IsControledInFirstPerson())
         {
             if (LitchiRuntime::InputManager::GetKeyState(LitchiRuntime::EKey::KEY_W) == LitchiRuntime::EKeyState::KEY_DOWN)
             {

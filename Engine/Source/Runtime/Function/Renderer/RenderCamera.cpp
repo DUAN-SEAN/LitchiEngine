@@ -21,6 +21,28 @@ namespace LitchiRuntime
     {
     }
 
+    void RenderCamera::Initialize()
+    {
+		// default viewport
+        auto& size = ApplicationBase::Instance()->window->GetSize();
+        uint32_t width = size.first;
+        uint32_t height = size.second;
+
+        SetViewport(width, height);
+
+        m_view = ComputeViewMatrix();
+        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
+        m_view_projection = m_view * m_projection;
+    }
+
+    void RenderCamera::Tick()
+    {
+        m_view = ComputeViewMatrix();
+        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
+        m_view_projection = m_view * m_projection;
+        m_frustum = Frustum(GetViewMatrix(), GetProjectionMatrix(), m_near_plane); // reverse-z
+    }
+
 
     void RenderCamera::SetNearPlane(const float near_plane)
     {
@@ -29,20 +51,17 @@ namespace LitchiRuntime
         if (m_near_plane != near_plane_limited)
         {
             m_near_plane = near_plane_limited;
-            m_is_dirty = true;
         }
     }
 
     void RenderCamera::SetFarPlane(const float far_plane)
     {
         m_far_plane = far_plane;
-        m_is_dirty = true;
     }
 
     void RenderCamera::SetProjection(const ProjectionType projection)
     {
         m_projection_type = projection;
-        m_is_dirty = true;
     }
 
     float RenderCamera::GetFovHorizontalDeg() const
@@ -58,7 +77,6 @@ namespace LitchiRuntime
     void RenderCamera::SetFovHorizontalDeg(const float fov)
     {
         m_fov_horizontal_rad = Math::Helper::DegreesToRadians(fov);
-        m_is_dirty = true;
     }
 
     bool RenderCamera::IsInViewFrustum(MeshFilter* renderable) const
@@ -237,303 +255,7 @@ namespace LitchiRuntime
 
         return Vector3(position_world) / position_world.w;
     }
-
-    void RenderCamera::ProcessInput()
-    {
-        // FPS camera controls.
-        // X-axis movement: W, A, S, D.
-        // Y-axis movement: Q, E.
-        // Mouse look: Hold right click to enable.
-        if (m_first_person_control_enabled)
-        {
-            ProcessInputFpsControl();
-        }
-
-        // Shortcuts
-        {
-            // Focus on selected entity: F.
-            ProcessInputLerpToEntity();
-        }
-    }
-
-    void RenderCamera::ProcessInputFpsControl()
-    {
-        static const float movement_speed_max = 5.0f;
-        static float movement_acceleration = 1.0f;
-        static const float movement_drag = 10.0f;
-        Vector3 movement_direction = Vector3::Zero;
-        float delta_time = static_cast<float>(Time::delta_time());
-
-        // Detect if fps control should be activated
-        {
-            // Initiate control only when the mouse is within the viewport
-            if (InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && InputManager::GetMouseIsInViewport())
-            {
-                m_is_controlled_by_keyboard_mouse = true;
-            }
-
-            // Maintain control as long as the right click is pressed and initial control has been given
-            m_is_controlled_by_keyboard_mouse = InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
-        }
-
-        // Cursor visibility and position
-        {
-            // Toggle mouse cursor and adjust mouse position
-            if (m_is_controlled_by_keyboard_mouse && !m_fps_control_cursor_hidden)
-            {
-                m_mouse_last_position = InputManager::GetMousePosition();
-
-                if (!ApplicationBase::Instance()->window->IsFullscreen())
-                    // if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
-                {
-                    // todo:
-                    // InputManager::SetMouseCursorVisible(false);
-                }
-
-                m_fps_control_cursor_hidden = true;
-            }
-            else if (!m_is_controlled_by_keyboard_mouse && m_fps_control_cursor_hidden)
-            {
-                InputManager::SetMousePosition(m_mouse_last_position);
-
-                // if (!Window::IsFullscreen()) // change the mouse state only in editor mode
-                if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
-                {
-                    // todo:
-                    // InputManager::SetMouseCursorVisible(true);
-                }
-
-                m_fps_control_cursor_hidden = false;
-            }
-        }
-
-        if (m_is_controlled_by_keyboard_mouse)
-        {
-            // Mouse look
-            {
-                // Wrap around left and right screen edges (to allow for infinite scrolling)
-                {
-                    uint32_t edge_padding = 5;
-                    Vector2 mouse_position = InputManager::GetMousePosition();
-                    if (mouse_position.x >= ApplicationBase::Instance()->window->GetWidth() - edge_padding)
-                    {
-                        mouse_position.x = static_cast<float>(edge_padding + 1);
-                        InputManager::SetMousePosition(mouse_position);
-                    }
-                    else if (mouse_position.x <= edge_padding)
-                    {
-                        mouse_position.x = static_cast<float>(ApplicationBase::Instance()->window->GetWidth() - edge_padding - 1);
-                        InputManager::SetMousePosition(mouse_position);
-                    }
-                }
-
-                // Get camera rotation.
-              /*  m_first_person_rotation.x = GetGameObject()->GetComponent<Transform>()->GetRotation().Yaw();
-                m_first_person_rotation.y = GetGameObject()->GetComponent<Transform>()->GetRotation().Pitch();*/
-                m_first_person_rotation.x = m_rotation.Yaw();
-                m_first_person_rotation.y = m_rotation.Pitch();
-
-                // Get mouse delta.
-                const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
-
-                // Lerp to it.
-                m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
-
-                // Accumulate rotation.
-                m_first_person_rotation += m_mouse_smoothed;
-
-                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
-
-                // Compute rotation.
-                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-                const Quaternion rotation = xQuaternion * yQuaternion;
-
-                // Rotate
-                //GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-                m_rotation = rotation;
-            }
-
-            // Keyboard movement direction
-            {
-                // Compute direction
-                if (InputManager::GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN) movement_direction += GetForward();
-                if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += GetBackward();
-                if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += GetRight();
-                if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += GetLeft();
-                if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += GetDown();
-                if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += GetUp();
-                movement_direction.Normalize();
-            }
-
-            // Wheel delta (used to adjust movement speed)
-            {
-                // Accumulate
-                m_movement_scroll_accumulator += InputManager::GetMouseWheelDelta().y * 0.1f;
-
-                // Clamp
-                float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
-                float max = movement_acceleration * 2.0f;  // An empirically chosen max.
-                m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
-            }
-        }
-
-        // Controller movement
-        // if (InputManager::IsControllerConnected())
-        if (m_is_controlled_by_keyboard_mouse)
-        {
-            // Look
-            {
-                // Get camera rotation
-                m_first_person_rotation.x += InputManager::GetMouseDelta().x;
-                m_first_person_rotation.y += InputManager::GetMouseDelta().y;
-
-                // Get mouse delta.
-                const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
-
-                // Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-                m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
-
-                // Compute rotation.
-                const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-                const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-                const Quaternion rotation = xQuaternion * yQuaternion;
-
-                // Rotate
-                // GetGameObject()->GetComponent<Transform>()->SetRotationLocal(rotation);
-                m_rotation = rotation;
-            }
-
-            // Controller movement direction
-            movement_direction += GetForward() * -InputManager::GetMouseDelta().x;
-            movement_direction += GetRight() * InputManager::GetMouseDelta().x;
-            movement_direction += GetDown() * InputManager::GetMouseDelta().y;
-            movement_direction += GetUp() * InputManager::GetMouseDelta().y;
-            movement_direction.Normalize();
-        }
-
-        // Translation
-        {
-            Vector3 translation = (movement_acceleration + m_movement_scroll_accumulator) * movement_direction;
-
-            // On shift, double the translation
-            if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
-            {
-                translation *= 2.0f;
-            }
-
-            // Accelerate
-            m_movement_speed += translation * delta_time;
-
-            // Apply drag
-            m_movement_speed *= 1.0f - movement_drag * delta_time;
-
-            // Clamp it
-            if (m_movement_speed.Length() > movement_speed_max)
-            {
-                m_movement_speed = m_movement_speed.Normalized() * movement_speed_max;
-            }
-
-            // Translate for as long as there is speed
-            if (m_movement_speed != Vector3::Zero)
-            {
-                // GetGameObject()->GetComponent<Transform>()->Translate(m_movement_speed);
-                m_position += m_movement_speed;
-            }
-        }
-    }
-
-    void RenderCamera::ProcessInputLerpToEntity()
-    {
-        // Set focused entity as a lerp target
-        if (InputManager::GetKeyState(EKey::KEY_F) == EKeyState::KEY_DOWN)
-        {
-            FocusOnSelectedEntity();
-        }
-
-        // Set bookmark as a lerp target
-        bool lerp_to_bookmark = false;
-        if (lerp_to_bookmark = m_lerpt_to_bookmark && m_target_bookmark_index >= 0 && m_target_bookmark_index < m_bookmarks.size())
-        {
-            m_lerp_to_target_position = m_bookmarks[m_target_bookmark_index].position;
-
-            // Compute lerp speed based on how far the entity is from the camera.
-            //m_lerp_to_target_distance = Vector3::Distance(m_lerp_to_target_position, GetGameObject()->GetComponent<Transform>()->GetPosition());
-            m_lerp_to_target_distance = Vector3::Distance(m_lerp_to_target_position, m_position);
-            m_lerp_to_target_p = true;
-
-            m_target_bookmark_index = -1;
-            m_lerpt_to_bookmark = false;
-        }
-
-        // Lerp
-        if (m_lerp_to_target_p || m_lerp_to_target_r || lerp_to_bookmark)
-        {
-            // Lerp duration in seconds
-            // 2.0 seconds + [0.0 - 2.0] seconds based on distance
-            // Something is not right with the duration...
-            const float lerp_duration = 2.0f + Math::Helper::Clamp(m_lerp_to_target_distance * 0.01f, 0.0f, 2.0f);
-
-            // Alpha
-            m_lerp_to_target_alpha += static_cast<float>(Time::delta_time()) / lerp_duration;
-
-            // Position
-            if (m_lerp_to_target_p)
-            {
-                const Vector3 interpolated_position = Vector3::Lerp(m_position, m_lerp_to_target_position, m_lerp_to_target_alpha);
-                // GetGameObject()->GetComponent<Transform>()->SetPosition(interpolated_position);
-                m_position = (interpolated_position);
-            }
-
-            // Rotation
-            if (m_lerp_to_target_r)
-            {
-                const Quaternion interpolated_rotation = Quaternion::Lerp(m_rotation, m_lerp_to_target_rotation, Math::Helper::Clamp(m_lerp_to_target_alpha, 0.0f, 1.0f));
-                m_rotation = (interpolated_rotation);
-            }
-
-            // If the lerp has completed or the user has initiated fps control, stop lerping.
-            if (m_lerp_to_target_alpha >= 1.0f || m_is_controlled_by_keyboard_mouse)
-            {
-                m_lerp_to_target_p = false;
-                m_lerp_to_target_r = false;
-                m_lerp_to_target_alpha = 0.0f;
-                m_lerp_to_target_position = Vector3::Zero;
-            }
-        }
-    }
-
-    void RenderCamera::FocusOnSelectedEntity()
-    {
-        if (GameObject* entity = Renderer::GetCamera()->GetSelectedEntity())
-        {
-            DEBUG_LOG_INFO("Focusing on entity {}", entity->GetObjectName());
-
-            m_lerp_to_target_position = entity->GetComponent<Transform>()->GetPosition();
-            const Vector3 target_direction = (m_lerp_to_target_position - m_position).Normalized();
-
-            // If the entity has a renderable component, we can get a more accurate target position.
-            // ...otherwise we apply a simple offset so that the rotation vector doesn't suffer
-            if (auto renderable = entity->GetComponent<MeshFilter>())
-            {
-                m_lerp_to_target_position -= target_direction * renderable->GetAabb().GetExtents().Length() * 2.0f;
-            }
-            else
-            {
-                m_lerp_to_target_position -= target_direction;
-            }
-
-            m_lerp_to_target_rotation = Quaternion::FromLookRotation(entity->GetComponent<Transform>()->GetPosition() - m_lerp_to_target_position).Normalized();
-            m_lerp_to_target_distance = Vector3::Distance(m_lerp_to_target_position, m_position);
-
-            const float lerp_angle = acosf(Quaternion::Dot(m_lerp_to_target_rotation.Normalized(), m_rotation.Normalized())) * Math::Helper::RAD_TO_DEG;
-
-            m_lerp_to_target_p = m_lerp_to_target_distance > 0.1f ? true : false;
-            m_lerp_to_target_r = lerp_angle > 1.0f ? true : false;
-        }
-    }
-
+    
     const RHI_Viewport& RenderCamera::GetViewport()
     {
         return m_viewport;
@@ -544,12 +266,7 @@ namespace LitchiRuntime
         m_viewport.width = width;
         m_viewport.height = height;
     }
-
-    bool RenderCamera::IsControledInFirstPerson() const
-    {
-        return m_is_controlled_by_keyboard_mouse;
-    }
-
+    
     Matrix RenderCamera::ComputeViewMatrix() const
     {
         const auto position = m_position;
@@ -576,17 +293,7 @@ namespace LitchiRuntime
 
         return Matrix::Identity;
     }
-
-    void RenderCamera::GoToCameraBookmark(int bookmark_index)
-    {
-        if (bookmark_index >= 0)
-        {
-            m_target_bookmark_index = bookmark_index;
-            m_lerpt_to_bookmark = true;
-        }
-    }
-
-
+    
     Vector3 RenderCamera::GetUp() const
     {
         return m_rotation * Vector3::Up;

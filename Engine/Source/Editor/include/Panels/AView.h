@@ -108,12 +108,10 @@ namespace LitchiEditor
 		void PrepareCamera();
 
 	protected:
-		//EditorRenderer& editorRenderer;
 		RenderCamera* m_camera;
 		Vector3 m_cameraPosition;
 		Quaternion m_cameraRotation;
 		Image* m_image;
-		TransformGizmo* m_transform_gizmo;
 		RHI_Texture* m_renderTargetTexture;
 
         Vector3 m_gridColor = Vector3 { 0.176f, 0.176f, 0.176f };

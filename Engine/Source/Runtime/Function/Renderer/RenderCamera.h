@@ -36,6 +36,9 @@ namespace LitchiRuntime
 		
     public:
 
+        void Initialize();
+        void Tick();
+
         // Matrices
         const Matrix& GetViewMatrix()           const { return m_view; }
         const Matrix& GetProjectionMatrix()     const { return m_projection; }
@@ -92,39 +95,27 @@ namespace LitchiRuntime
         // Frustum
         bool IsInViewFrustum(MeshFilter* renderable) const;
         bool IsInViewFrustum(const Vector3& center, const Vector3& extents) const;
-
-        // Bookmarks
-        void AddBookmark(camera_bookmark bookmark) { m_bookmarks.emplace_back(bookmark); };
-        const std::vector<camera_bookmark>& GetBookmarks() const { return m_bookmarks; };
-
+        
         // Clear color
         const Color& GetClearColor()                   const { return m_clear_color; }
         void SetClearColor(const Color& color) { m_clear_color = color; }
-
-        // First person control
-        bool GetFirstPersonControlEnabled()            const { return m_first_person_control_enabled; }
-        void SetFirstPersonControlEnabled(const bool enabled) { m_first_person_control_enabled = enabled; }
-        bool IsControledInFirstPerson() const;
-
-        // Misc
-        void MakeDirty() { m_is_dirty = true; }
+        
         void SetSelectedEntity(GameObject* entity) { m_selected_entity = entity; }
         GameObject* GetSelectedEntity() { return m_selected_entity; }
 
         Matrix ComputeViewMatrix() const;
         Matrix ComputeProjection(const float near_plane, const float far_plane);
-
-        void GoToCameraBookmark(int bookmark_index);
-        void FocusOnSelectedEntity();
-
+        
 		const RHI_Viewport& GetViewport();
 		void SetViewport(float width, float height);
 
         //= POSITION ======================================================================
+        void SetPosition(const Vector3& pos) { m_position = pos; }
         Vector3 GetPosition()             const { return m_position; }
         //=================================================================================
 
         //= ROTATION ======================================================================
+        void SetRotation(const Quaternion& rotation) { m_rotation = rotation; }
         Quaternion GetRotation()             const { return m_rotation; }
 
         Vector3 GetUp()       const;
@@ -135,10 +126,6 @@ namespace LitchiRuntime
         Vector3 GetLeft()     const;
 
     private:
-        void ProcessInput();
-        void ProcessInputFpsControl();
-        void ProcessInputLerpToEntity();
-
 
         float m_aperture = 2.8f;         // Aperture value in f-stop. Controls the amount of light, depth of field and chromatic aberration.
         float m_shutter_speed = 1.0f / 60.0f; // Length of time for which the camera shutter is open (sec). Also controls the amount of motion blur.
@@ -154,34 +141,14 @@ namespace LitchiRuntime
         Matrix m_projection = Matrix::Identity;
         Matrix m_view_projection = Matrix::Identity;
 
+        // world pos,rotation
         Vector3 m_position = Vector3::Zero;
         Quaternion m_rotation = Quaternion::Identity;
-
-        bool m_is_dirty = false;
-        bool m_first_person_control_enabled = true;
-        bool m_is_controlled_by_keyboard_mouse = false;
-        Vector2 m_mouse_last_position = Vector2::Zero;
-        bool m_fps_control_cursor_hidden = false;
-        Vector3 m_movement_speed = Vector3::Zero;
-        float m_movement_scroll_accumulator = 0.0f;
-        Vector2 m_mouse_smoothed = Vector2::Zero;
-        Vector2 m_first_person_rotation = Vector2::Zero;
-        float m_mouse_sensitivity = 0.2f;
-        float m_mouse_smoothing = 0.5f;
-        bool m_lerp_to_target_p = false;
-        bool m_lerp_to_target_r = false;
-        bool m_lerpt_to_bookmark = false;
-        int m_target_bookmark_index = -1;
-        float m_lerp_to_target_alpha = 0.0f;
-        float m_lerp_to_target_distance = 0.0f;
-        Vector3 m_lerp_to_target_position = Vector3::Zero;
-        Quaternion m_lerp_to_target_rotation = Quaternion::Identity;
-
+        
         RHI_Viewport m_last_known_viewport;
         Ray m_ray;
         Frustum m_frustum;
         GameObject* m_selected_entity = nullptr;
         RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
-        std::vector<camera_bookmark> m_bookmarks;
 	};
 }

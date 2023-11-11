@@ -31,6 +31,8 @@ LitchiEditor::CameraController::CameraController
 	m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
 
 	m_camera->SetFovHorizontalDeg(60.0f);
+	m_camera->SetPosition(m_cameraPosition);
+	m_camera->SetRotation(m_cameraRotation);
 }
 
 float GetActorFocusDist(GameObject* p_actor)

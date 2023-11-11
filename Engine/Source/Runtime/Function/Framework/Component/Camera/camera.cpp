@@ -12,21 +12,22 @@ namespace LitchiRuntime
 {
 
 	Camera::Camera() :m_depth(0), m_culling_mask(0x01) {
-
+        m_renderCamera = new RenderCamera();
 	}
 	
 	Camera::~Camera() {
+        delete m_renderCamera;
+        m_renderCamera = nullptr;
 	}
 
     void Camera::Awake()
     {
-        m_view = ComputeViewMatrix();
-        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
-        m_view_projection = m_view * m_projection;
+        m_renderCamera->Initialize();
     }
 
     void Camera::Update()
     {
+        // 默认editor状态不执行
         const auto& current_viewport = Renderer::GetViewport();
         if (m_last_known_viewport != current_viewport)
         {
@@ -52,51 +53,47 @@ namespace LitchiRuntime
         if (!m_is_dirty)
             return;
 
-        m_view = ComputeViewMatrix();
-        m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z
-        m_view_projection = m_view * m_projection;
-        m_frustum = Frustum(GetViewMatrix(), GetProjectionMatrix(), m_near_plane); // reverse-z
+        // update renderCamera vp matrix
+        m_renderCamera->SetPosition(m_position);
+        m_renderCamera->SetRotation(m_rotation);
+        m_renderCamera->Tick();
+
         m_is_dirty = false;
     }
 	
 
     void Camera::SetNearPlane(const float near_plane)
     {
-        float near_plane_limited = Math::Helper::Max(near_plane, 0.01f);
-
-        if (m_near_plane != near_plane_limited)
-        {
-            m_near_plane = near_plane_limited;
-            m_is_dirty = true;
-        }
+        m_renderCamera->SetNearPlane(near_plane);
+        m_is_dirty = true;
     }
 
     void Camera::SetFarPlane(const float far_plane)
     {
-        m_far_plane = far_plane;
+        m_renderCamera->SetFarPlane(far_plane);
         m_is_dirty = true;
     }
 
     void Camera::SetProjection(const ProjectionType projection)
     {
-        m_projection_type = projection;
+        m_renderCamera->SetProjection(projection);
         m_is_dirty = true;
     }
 
     float Camera::GetFovHorizontalDeg() const
     {
-        return Math::Helper::RadiansToDegrees(m_fov_horizontal_rad);
+        return m_renderCamera->GetFovHorizontalDeg();
     }
 
     float Camera::GetFovVerticalRad() const
     {
-        return 2.0f * atan(tan(m_fov_horizontal_rad / 2.0f) * (Renderer::GetViewport().height / Renderer::GetViewport().width));
+        return m_renderCamera->GetFovVerticalRad();
     }
 
     void Camera::SetFovHorizontalDeg(const float fov)
     {
-        m_fov_horizontal_rad = Math::Helper::DegreesToRadians(fov);
         m_is_dirty = true;
+        return m_renderCamera->SetFovHorizontalDeg(fov);
     }
 
     bool Camera::IsInViewFrustum(MeshFilter* renderable) const
@@ -105,12 +102,12 @@ namespace LitchiRuntime
         const Vector3 center = box.GetCenter();
         const Vector3 extents = box.GetExtents();
 
-        return m_frustum.IsVisible(center, extents);
+        return m_renderCamera->IsInViewFrustum(center, extents);
     }
 
     bool Camera::IsInViewFrustum(const Vector3& center, const Vector3& extents) const
     {
-        return m_frustum.IsVisible(center, extents);
+        return m_renderCamera->IsInViewFrustum(center, extents);
     }
 
     const Ray Camera::ComputePickingRay()
@@ -215,20 +212,7 @@ namespace LitchiRuntime
 
     Vector2 Camera::WorldToScreenCoordinates(const Vector3& position_world) const
     {
-        const RHI_Viewport& viewport = Renderer::GetViewport();
-
-        // A non reverse-z projection matrix is need, we create it
-        const Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), viewport.GetAspectRatio(), m_near_plane, m_far_plane);
-
-        // Convert world space position to clip space position
-        const Vector3 position_clip = position_world * m_view * projection;
-
-        // Convert clip space position to screen space position
-        Vector2 position_screen;
-        position_screen.x = (position_clip.x / position_clip.z) * (0.5f * viewport.width) + (0.5f * viewport.width);
-        position_screen.y = (position_clip.y / position_clip.z) * -(0.5f * viewport.height) + (0.5f * viewport.height);
-
-        return position_screen;
+        return m_renderCamera->WorldToScreenCoordinates(position_world);
     }
 
     Rectangle Camera::WorldToScreenCoordinates(const BoundingBox& bounding_box) const
@@ -257,22 +241,7 @@ namespace LitchiRuntime
 
     Vector3 Camera::ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const
     {
-        const RHI_Viewport& viewport = Renderer::GetViewport();
-
-        // A non reverse-z projection matrix is need, we create it
-        const Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), viewport.GetAspectRatio(), m_near_plane, m_far_plane); // reverse-z
-
-        // Convert screen space position to clip space position
-        Vector3 position_clip;
-        position_clip.x = (position_screen.x / viewport.width) * 2.0f - 1.0f;
-        position_clip.y = (position_screen.y / viewport.height) * -2.0f + 1.0f;
-        position_clip.z = std::clamp(z, 0.0f, 1.0f);
-
-        // Compute world space position
-        Matrix view_projection_inverted = (m_view * projection).Inverted();
-        Vector4 position_world = Vector4(position_clip, 1.0f) * view_projection_inverted;
-
-        return Vector3(position_world) / position_world.w;
+        return m_renderCamera->ScreenToWorldCoordinates(position_screen, z);
     }
 
     void Camera::ProcessInput()
@@ -485,21 +454,22 @@ namespace LitchiRuntime
         }
 
         // Set bookmark as a lerp target
-        bool lerp_to_bookmark = false;
-        if (lerp_to_bookmark = m_lerpt_to_bookmark && m_target_bookmark_index >= 0 && m_target_bookmark_index < m_bookmarks.size())
-        {
-            m_lerp_to_target_position = m_bookmarks[m_target_bookmark_index].position;
+        //bool lerp_to_bookmark = false;
+        //if (lerp_to_bookmark = m_lerpt_to_bookmark && m_target_bookmark_index >= 0 && m_target_bookmark_index < m_bookmarks.size())
+        //{
+        //    m_lerp_to_target_position = m_bookmarks[m_target_bookmark_index].position;
 
-            // Compute lerp speed based on how far the entity is from the camera.
-            m_lerp_to_target_distance = Vector3::Distance(m_lerp_to_target_position, GetGameObject()->GetComponent<Transform>()->GetPosition());
-            m_lerp_to_target_p = true;
+        //    // Compute lerp speed based on how far the entity is from the camera.
+        //    m_lerp_to_target_distance = Vector3::Distance(m_lerp_to_target_position, GetGameObject()->GetComponent<Transform>()->GetPosition());
+        //    m_lerp_to_target_p = true;
 
-            m_target_bookmark_index = -1;
-            m_lerpt_to_bookmark = false;
-        }
+        //    m_target_bookmark_index = -1;
+        //    m_lerpt_to_bookmark = false;
+        //}
 
         // Lerp
-        if (m_lerp_to_target_p || m_lerp_to_target_r || lerp_to_bookmark)
+        // if (m_lerp_to_target_p || m_lerp_to_target_r || lerp_to_bookmark)
+        if (m_lerp_to_target_p || m_lerp_to_target_r)
         {
             // Lerp duration in seconds
             // 2.0 seconds + [0.0 - 2.0] seconds based on distance
@@ -568,34 +538,7 @@ namespace LitchiRuntime
     {
         return m_is_controlled_by_keyboard_mouse;
     }
-
-    Matrix Camera::ComputeViewMatrix() const
-    {
-        const auto position = GetGameObject()->GetComponent<Transform>()->GetPosition();
-        auto look_at = GetGameObject()->GetComponent<Transform>()->GetRotation() * Vector3::Forward;
-        const auto up = GetGameObject()->GetComponent<Transform>()->GetRotation() * Vector3::Up;
-
-        // offset look_at by current position
-        look_at += position;
-
-        // compute view matrix
-        return Matrix::CreateLookAtLH(position, look_at, up);
-    }
-
-    Matrix Camera::ComputeProjection(const float near_plane, const float far_plane)
-    {
-        if (m_projection_type == Projection_Perspective)
-        {
-            return Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), Renderer::GetViewport().GetAspectRatio(), near_plane, far_plane);
-        }
-        else if (m_projection_type == Projection_Orthographic)
-        {
-            return Matrix::CreateOrthographicLH(Renderer::GetViewport().width, Renderer::GetViewport().height, near_plane, far_plane);
-        }
-
-        return Matrix::Identity;
-    }
-
+    
     void Camera::GoToCameraBookmark(int bookmark_index)
     {
         if (bookmark_index >= 0)

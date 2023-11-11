@@ -255,14 +255,15 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
 
-	Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
-	Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
 	auto scene = sceneManager->CreateScene("Default");
-	auto camerGo = scene->CreateGameObject("Camera");
-	auto camera = camerGo->AddComponent<Camera>();
-	auto transform4Camera = camerGo->GetComponent<Transform>();
-	transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
-	transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
+
+	//Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
+	//Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
+	//auto camerGo = scene->CreateGameObject("Camera");
+	//auto camera = camerGo->AddComponent<Camera>();
+	//auto transform4Camera = camerGo->GetComponent<Transform>();
+	//transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
+	//transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
 	//CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
@@ -318,7 +319,27 @@ void LitchiEditor::ApplicationEditor::Run()
 
 void LitchiEditor::ApplicationEditor::Update()
 {
-	ApplicationBase::Update();
+	Time::Update();
+	UpdateScreenSize();
+
+	InputManager::Tick();
+
+	auto scene = this->sceneManager->GetCurrentScene();
+
+	// Update
+	/*for (auto* entity : scene->GetAllGameObjectList())
+	{
+		for (auto* comp : entity->GetComponents())
+		{
+			comp->Update();
+		}
+	}*/
+
+	// 默认每帧都更新渲染对象
+	// Renderer::OnSceneResolved(scene->GetAllGameObjectList());
+
+	// Input::Update();
+	//Audio::Update();
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const

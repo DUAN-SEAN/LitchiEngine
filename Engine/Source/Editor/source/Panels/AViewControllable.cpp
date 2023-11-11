@@ -11,7 +11,8 @@ LitchiEditor::AViewControllable::AViewControllable
 	const PanelWindowSettings& p_windowSettings,
 	RHI_Texture* renderTargetTexture,
 	bool p_enableFocusInputs
-) : AView(p_title, p_opened, p_windowSettings, renderTargetTexture), m_cameraController(*this, m_camera, m_cameraPosition, m_cameraRotation, p_enableFocusInputs)
+) : AView(p_title, p_opened, p_windowSettings, renderTargetTexture),
+	m_cameraController(*this, m_camera, m_cameraPosition, m_cameraRotation, p_enableFocusInputs)
 {
 
 }
@@ -20,6 +21,9 @@ void LitchiEditor::AViewControllable::Update(float p_deltaTime)
 {
 	// 1. 更新cameraCtrl
 	m_cameraController.HandleInputs(p_deltaTime);
+
+	m_camera->SetPosition(m_cameraController.GetPosition());
+	m_camera->SetRotation(m_cameraController.GetRotation());
 
 	// 2. 更新View
 	AView::Update(p_deltaTime);

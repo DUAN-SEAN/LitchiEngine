@@ -9,6 +9,7 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include <optional>
 
+#include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Resources/Material.h"
 
 namespace LitchiEditor
@@ -51,13 +52,10 @@ namespace LitchiEditor
 		*/
 		void HandleActorPicking();
 	private:
-	private:
-		/*Framebuffer m_actorPickingFramebuffer;*/
-		GizmoBehaviour m_gizmoOperations;
-		EGizmoOperation m_currentOperation = EGizmoOperation::TRANSLATE;
 
-		// std::optional<std::reference_wrapper<GameObject>> m_highlightedActor;
+		RendererPath* m_renderPath4SceneView;
+
 		GameObject* m_highlightedActor;
-		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
+		TransformGizmo* m_transform_gizmo;
 	};
 }
