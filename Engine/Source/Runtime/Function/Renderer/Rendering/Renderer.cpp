@@ -214,6 +214,12 @@ namespace LitchiRuntime
         CreateStandardTextures();
         CreateStandardMeshes();// todo:
 
+        m_rendererPaths.clear();
+        for (size_t i = RendererPathType_Invalid+1; i < RendererPathType_Count; i++)
+        {
+            m_rendererPaths[(RendererPathType)i] = nullptr;
+        }
+
         // events
         {
             // todo
@@ -225,6 +231,8 @@ namespace LitchiRuntime
             //// fire
             //SP_FIRE_EVENT(EventType::RendererOnInitialized);
         }
+
+
     }
 
     void Renderer::Shutdown()
@@ -387,8 +395,8 @@ namespace LitchiRuntime
             m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows),     1 << 3);
         }
 
-
-        Pass_Frame(cmd_current);
+        if(rendererPath)
+			Pass_Frame(cmd_current, rendererPath);
 
         // blit to back buffer when in full screen
         if (ApplicationBase::Instance()->window->IsFullscreen())

@@ -42,7 +42,7 @@ namespace LitchiRuntime
 		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
 	}
 
-	void Renderer::Pass_Frame(RHI_CommandList* cmd_list)
+	void Renderer::Pass_Frame(RHI_CommandList* cmd_list,RendererPath* rendererPath)
 	{
 		// SP_PROFILE_FUNCTION();
 
@@ -57,11 +57,11 @@ namespace LitchiRuntime
 		if (auto camera = GetCamera())
 		{
 			// if there are no entities, clear to the camera's color
-			if (GetEntities()[Renderer_Entity::Geometry].empty() && GetEntities()[Renderer_Entity::GeometryTransparent].empty() && GetEntities()[Renderer_Entity::Light].empty())
-			{
-				GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, camera->GetClearColor());
-			}
-			else // render frame
+			//if (GetEntities()[Renderer_Entity::Geometry].empty() && GetEntities()[Renderer_Entity::GeometryTransparent].empty() && GetEntities()[Renderer_Entity::Light].empty())
+			//{
+			//	GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, camera->GetClearColor());
+			//}
+			//else // render frame
 			{
 				// generate brdf specular lut
 				if (!m_brdf_specular_lut_rendered)
@@ -89,7 +89,7 @@ namespace LitchiRuntime
 				{
 					bool is_transparent_pass = false;
 
-					Pass_ForwardPass(cmd_list, is_transparent_pass);
+					Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
 					Pass_DebugGridPass(cmd_list);
 					//Pass_Depth_Prepass(cmd_list);
 					//Pass_GBuffer(cmd_list, is_transparent_pass);
@@ -146,7 +146,7 @@ namespace LitchiRuntime
 		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
 	}
 
-	void Renderer::Pass_ShadowMaps(RHI_CommandList* cmd_list, const bool is_transparent_pass)
+	void Renderer::Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
 		// All objects are rendered from the lights point of view.
 		// Opaque objects write their depth information to a depth buffer, using just a vertex shader.
@@ -295,7 +295,7 @@ namespace LitchiRuntime
 		cmd_list->EndTimeblock();
 	}
 
-	void Renderer::Pass_ForwardPass(RHI_CommandList* cmd_list, const bool is_transparent_pass)
+	void Renderer::Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
 		// acquire shaderer
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::forward_v).get();
@@ -308,7 +308,8 @@ namespace LitchiRuntime
 		}
 
 		// acquire entities
-		auto& entities = m_renderables[Renderer_Entity::Geometry];
+		// auto& entities = m_renderables[Renderer_Entity::Geometry];
+		auto& entities = rendererPath->m_renderScene->GetAllGameObjectList();
 		if (entities.empty())
 		{
 			return;

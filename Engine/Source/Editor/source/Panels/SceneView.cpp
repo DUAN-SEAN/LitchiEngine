@@ -18,7 +18,7 @@ LitchiEditor::SceneView::SceneView
 	m_camera->SetFarPlane(5000.0f);
 
 	m_transform_gizmo = &CreateWidget<TransformGizmo>(nullptr);
-
+	m_renderPath4SceneView = nullptr;
 	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
 	//{
 	//	std::string path = p_data.first;
