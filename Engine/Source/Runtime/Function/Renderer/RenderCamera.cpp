@@ -52,7 +52,7 @@ namespace LitchiRuntime
 
     float RenderCamera::GetFovVerticalRad() const
     {
-        return 2.0f * atan(tan(m_fov_horizontal_rad / 2.0f) * (Renderer::GetViewport().height / Renderer::GetViewport().width));
+        return 2.0f * atan(tan(m_fov_horizontal_rad / 2.0f) * (m_viewport.height / m_viewport.width));
     }
 
     void RenderCamera::SetFovHorizontalDeg(const float fov)
@@ -178,7 +178,7 @@ namespace LitchiRuntime
 
     Vector2 RenderCamera::WorldToScreenCoordinates(const Vector3& position_world) const
     {
-        const RHI_Viewport& viewport = Renderer::GetViewport();
+        const RHI_Viewport& viewport = m_viewport;
 
         // A non reverse-z projection matrix is need, we create it
         const Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), viewport.GetAspectRatio(), m_near_plane, m_far_plane);
@@ -220,7 +220,7 @@ namespace LitchiRuntime
 
     Vector3 RenderCamera::ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const
     {
-        const RHI_Viewport& viewport = Renderer::GetViewport();
+        const RHI_Viewport& viewport = m_viewport;
 
         // A non reverse-z projection matrix is need, we create it
         const Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), viewport.GetAspectRatio(), m_near_plane, m_far_plane); // reverse-z
@@ -534,6 +534,17 @@ namespace LitchiRuntime
         }
     }
 
+    const RHI_Viewport& RenderCamera::GetViewport()
+    {
+        return m_viewport;
+    }
+
+    void RenderCamera::SetViewport(float width, float height)
+    {
+        m_viewport.width = width;
+        m_viewport.height = height;
+    }
+
     bool RenderCamera::IsControledInFirstPerson() const
     {
         return m_is_controlled_by_keyboard_mouse;
@@ -556,11 +567,11 @@ namespace LitchiRuntime
     {
         if (m_projection_type == Projection_Perspective)
         {
-            return Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), Renderer::GetViewport().GetAspectRatio(), near_plane, far_plane);
+            return Matrix::CreatePerspectiveFieldOfViewLH(GetFovVerticalRad(), m_viewport.GetAspectRatio(), near_plane, far_plane);
         }
         else if (m_projection_type == Projection_Orthographic)
         {
-            return Matrix::CreateOrthographicLH(Renderer::GetViewport().width, Renderer::GetViewport().height, near_plane, far_plane);
+            return Matrix::CreateOrthographicLH(m_viewport.width, m_viewport.height, near_plane, far_plane);
         }
 
         return Matrix::Identity;

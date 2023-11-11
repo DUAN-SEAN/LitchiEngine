@@ -59,15 +59,5 @@ namespace LitchiEditor
 		// std::optional<std::reference_wrapper<GameObject>> m_highlightedActor;
 		GameObject* m_highlightedActor;
 		std::optional<GizmoBehaviour::EDirection> m_highlightedGizmoDirection;
-
-
-		//Resource::Material m_gridMaterial;
-
-		/**
-		 * \brief 相机控制器
-		 */
-		RenderCamera* m_camera4UI;
-		Vector3 m_cameraPosition4UI;
-		Quaternion m_cameraRotation4UI;
 	};
 }

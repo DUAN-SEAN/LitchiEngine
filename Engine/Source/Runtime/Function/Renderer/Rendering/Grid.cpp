@@ -25,7 +25,7 @@ namespace LitchiRuntime
         m_vertex_buffer->Create(vertices);
     }
 
-    const Matrix& Grid::ComputeWorldMatrix(Transform* camera)
+    const Matrix& Grid::ComputeWorldMatrix(const Vector3& cameraPos)
     {
         // To get the grid to feel infinite, it has to follow the camera,
         // but only by increments of the grid's spacing size. This gives the illusion 
@@ -33,9 +33,9 @@ namespace LitchiRuntime
         const float grid_spacing  = 1.0f;
         const Vector3 translation = Vector3
         (
-            static_cast<int>(camera->GetPosition().x / grid_spacing) * grid_spacing, 
+            static_cast<int>(cameraPos.x / grid_spacing) * grid_spacing,
             0.0f, 
-            static_cast<int>(camera->GetPosition().z / grid_spacing) * grid_spacing
+            static_cast<int>(cameraPos.z / grid_spacing) * grid_spacing
         );
     
         m_world = Matrix::CreateScale(grid_spacing) * Matrix::CreateTranslation(translation);

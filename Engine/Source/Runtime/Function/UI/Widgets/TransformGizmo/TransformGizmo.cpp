@@ -7,7 +7,7 @@
 
 using namespace LitchiRuntime;
 
-LitchiRuntime::TransformGizmo::TransformGizmo(Camera* camera) :
+LitchiRuntime::TransformGizmo::TransformGizmo(RenderCamera* camera) :
 	m_camera(camera)
 {
 }
@@ -17,7 +17,7 @@ void TransformGizmo::SetSelectGameObject(GameObject* go)
 	m_selectObject = go;
 }
 
-void LitchiRuntime::TransformGizmo::SetCamera(Camera* camera)
+void LitchiRuntime::TransformGizmo::SetCamera(RenderCamera* camera)
 {
 	m_camera = camera;
 }

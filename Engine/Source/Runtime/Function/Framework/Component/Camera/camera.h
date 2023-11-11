@@ -109,6 +109,8 @@ namespace LitchiRuntime
         void GoToCameraBookmark(int bookmark_index);
         void FocusOnSelectedEntity();
 
+        RenderCamera* GetRenderCamera() { m_renderCamera; }
+
     private:
         void ProcessInput();
         void ProcessInputFpsControl();
@@ -151,6 +153,8 @@ namespace LitchiRuntime
         Frustum m_frustum;
         std::vector<camera_bookmark> m_bookmarks;
         GameObject* m_selected_entity = nullptr;
+
+        RenderCamera* m_renderCamera;
 
         RTTR_ENABLE(Component)
     private:

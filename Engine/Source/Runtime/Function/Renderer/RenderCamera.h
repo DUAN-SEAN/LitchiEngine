@@ -117,10 +117,15 @@ namespace LitchiRuntime
         void GoToCameraBookmark(int bookmark_index);
         void FocusOnSelectedEntity();
 
-    private:
-        void ProcessInput();
-        void ProcessInputFpsControl();
-        void ProcessInputLerpToEntity();
+		const RHI_Viewport& GetViewport();
+		void SetViewport(float width, float height);
+
+        //= POSITION ======================================================================
+        Vector3 GetPosition()             const { return m_position; }
+        //=================================================================================
+
+        //= ROTATION ======================================================================
+        Quaternion GetRotation()             const { return m_rotation; }
 
         Vector3 GetUp()       const;
         Vector3 GetDown()     const;
@@ -129,19 +134,29 @@ namespace LitchiRuntime
         Vector3 GetRight()    const;
         Vector3 GetLeft()     const;
 
+    private:
+        void ProcessInput();
+        void ProcessInputFpsControl();
+        void ProcessInputLerpToEntity();
+
+
         float m_aperture = 2.8f;         // Aperture value in f-stop. Controls the amount of light, depth of field and chromatic aberration.
         float m_shutter_speed = 1.0f / 60.0f; // Length of time for which the camera shutter is open (sec). Also controls the amount of motion blur.
         float m_iso = 500.0f;       // Sensitivity to light.
         float m_fov_horizontal_rad = Math::Helper::DegreesToRadians(90.0f);
         float m_near_plane = 0.1f;
         float m_far_plane = 1000.0f;
+
         ProjectionType m_projection_type = Projection_Perspective;
         Color m_clear_color = Color::standard_cornflower_blue;
+
         Matrix m_view = Matrix::Identity;
         Matrix m_projection = Matrix::Identity;
         Matrix m_view_projection = Matrix::Identity;
+
         Vector3 m_position = Vector3::Zero;
         Quaternion m_rotation = Quaternion::Identity;
+
         bool m_is_dirty = false;
         bool m_first_person_control_enabled = true;
         bool m_is_controlled_by_keyboard_mouse = false;
@@ -161,10 +176,12 @@ namespace LitchiRuntime
         float m_lerp_to_target_distance = 0.0f;
         Vector3 m_lerp_to_target_position = Vector3::Zero;
         Quaternion m_lerp_to_target_rotation = Quaternion::Identity;
+
         RHI_Viewport m_last_known_viewport;
         Ray m_ray;
         Frustum m_frustum;
-        std::vector<camera_bookmark> m_bookmarks;
         GameObject* m_selected_entity = nullptr;
+        RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
+        std::vector<camera_bookmark> m_bookmarks;
 	};
 }

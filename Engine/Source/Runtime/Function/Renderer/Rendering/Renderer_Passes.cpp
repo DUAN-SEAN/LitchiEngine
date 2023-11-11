@@ -429,7 +429,7 @@ namespace LitchiRuntime
 			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
 			if (GetCamera())
 			{
-				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(GetCamera()->GetGameObject()->GetComponent<Transform>());
+				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(GetCamera()->GetPosition());
 			}
 			PushPassConstants(cmd_list);
 		}

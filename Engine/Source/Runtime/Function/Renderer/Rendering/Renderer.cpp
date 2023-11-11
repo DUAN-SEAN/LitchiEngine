@@ -10,14 +10,15 @@
 #include "../RHI/RHI_Implementation.h"
 #include "../RHI/RHI_AMD_FidelityFX.h"
 #include "../RHI/RHI_StructuredBuffer.h"
-#include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Core/Window/Window.h"
+#include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -41,7 +42,7 @@ namespace LitchiRuntime
     uint32_t Renderer::m_lines_index_depth_on;
     bool Renderer::m_brdf_specular_lut_rendered;
     RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
-    Camera* Renderer::m_camera = nullptr;
+    RenderCamera* Renderer::m_camera = nullptr;
 
     namespace
     {
@@ -82,7 +83,7 @@ namespace LitchiRuntime
         float far_plane                          = 1.0f;
         uint32_t buffers_frames_since_last_reset = 0;
 
-        void sort_renderables(Camera* camera, vector<GameObject*>* renderables, const bool are_transparent)
+        void sort_renderables(RenderCamera* camera, vector<GameObject*>* renderables, const bool are_transparent)
         {
             if (!camera || renderables->size() <= 2)
                 return;
@@ -93,7 +94,7 @@ namespace LitchiRuntime
                 if (!renderable)
                     return 0.0f;
 
-                return (renderable->GetAabb().GetCenter() - camera->GetGameObject()->GetComponent<Transform>()->GetPosition()).LengthSquared();
+                return (renderable->GetAabb().GetCenter() - camera->GetPosition()).LengthSquared();
             };
 
             // sort by depth
@@ -360,8 +361,8 @@ namespace LitchiRuntime
                 m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * m_camera->GetProjectionMatrix();
                 m_cb_frame_cpu.camera_near                = m_camera->GetNearPlane();
                 m_cb_frame_cpu.camera_far                 = m_camera->GetFarPlane();
-                m_cb_frame_cpu.camera_position            = m_camera->GetGameObject()->GetComponent<Transform>()->GetPosition();
-                m_cb_frame_cpu.camera_direction           = m_camera->GetGameObject()->GetComponent<Transform>()->GetForward();
+                m_cb_frame_cpu.camera_position            = m_camera->GetPosition();
+                m_cb_frame_cpu.camera_direction           = m_camera->GetForward();
             }
             m_cb_frame_cpu.resolution_output   = m_resolution_output;
             m_cb_frame_cpu.resolution_render   = m_resolution_render;
@@ -376,6 +377,106 @@ namespace LitchiRuntime
             m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi),                   1 << 1);
             m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog),          1 << 2);
             m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows),     1 << 3);
+        }
+
+
+        Pass_Frame(cmd_current);
+
+        // blit to back buffer when in full screen
+        if (ApplicationBase::Instance()->window->IsFullscreen())
+        {
+            cmd_current->BeginMarker("copy_to_back_buffer");
+            cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+            cmd_current->EndMarker();
+        }
+
+        OnFrameEnd(cmd_current);
+
+        // submit
+        cmd_current->End();
+        cmd_current->Submit();
+
+        // track frame
+        frame_num++;
+    }
+
+    void Renderer::Render4BuildInSceneView(Scene* scene, RenderCamera* camera)
+    {
+        if (!is_rendering_allowed)
+            return;
+        
+        // begin
+        m_cmd_pool->Tick();
+        cmd_current = m_cmd_pool->GetCurrentCommandList();
+        cmd_current->Begin();
+
+        OnFrameStart(cmd_current);
+
+        // update frame buffer
+        {
+            // Matrices
+            {
+                if (m_camera)
+                {
+                    if (near_plane != m_camera->GetNearPlane() || far_plane != m_camera->GetFarPlane())
+                    {
+                        near_plane = m_camera->GetNearPlane();
+                        far_plane = m_camera->GetFarPlane();
+                        dirty_orthographic_projection = true;
+                    }
+
+                    m_cb_frame_cpu.view = m_camera->GetViewMatrix();
+                    m_cb_frame_cpu.projection = m_camera->GetProjectionMatrix();
+                }
+
+                if (dirty_orthographic_projection)
+                {
+                    // near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
+                    Matrix projection_ortho = Matrix::CreateOrthographicLH(m_viewport.width, m_viewport.height, 0.0f, far_plane);
+                    m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
+                    dirty_orthographic_projection = false;
+                }
+            }
+
+            //// generate jitter sample in case FSR (which also does TAA) is enabled
+            //Renderer_Upsampling upsampling_mode = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling);
+            //if (upsampling_mode == Renderer_Upsampling::FSR2 || GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa)
+            //{
+            //    RHI_AMD_FidelityFX::FSR2_GenerateJitterSample(&jitter_offset.x, &jitter_offset.y);
+            //    jitter_offset.x            = (jitter_offset.x / m_resolution_render.x);
+            //    jitter_offset.y            = (jitter_offset.y / m_resolution_render.y);
+            //    m_cb_frame_cpu.projection *= Matrix::CreateTranslation(Vector3(jitter_offset.x, jitter_offset.y, 0.0f));
+            //}
+            //else
+            {
+                jitter_offset = Vector2::Zero;
+            }
+
+            // update the remaining of the frame buffer
+            m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
+            m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
+            m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
+            if (m_camera)
+            {
+                m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * m_camera->GetProjectionMatrix();
+                m_cb_frame_cpu.camera_near = m_camera->GetNearPlane();
+                m_cb_frame_cpu.camera_far = m_camera->GetFarPlane();
+                m_cb_frame_cpu.camera_position = m_camera->GetPosition();
+                m_cb_frame_cpu.camera_direction = m_camera->GetForward();
+            }
+            m_cb_frame_cpu.resolution_output = m_resolution_output;
+            m_cb_frame_cpu.resolution_render = m_resolution_render;
+            m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
+            m_cb_frame_cpu.taa_jitter_current = jitter_offset;
+            m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
+            m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
+            m_cb_frame_cpu.frame = static_cast<uint32_t>(frame_num);
+
+            // These must match what Common_Buffer.hlsl is reading
+            m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
+            m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
+            m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
+            m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
         }
 
         Pass_Frame(cmd_current);
@@ -687,11 +788,12 @@ namespace LitchiRuntime
                     m_renderables[Renderer_Entity::Light].emplace_back(entity);
                 }
 
-                if (auto camera = entity->GetComponent<Camera>())
+                // remove Camera
+                /*if (auto camera = entity->GetComponent<Camera>())
                 {
                     m_renderables[Renderer_Entity::Camera].emplace_back(entity);
-                    m_camera = camera;
-                }
+                    m_camera = camera->m_renderCamera;
+                }*/
 
                /* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())
                 {
@@ -944,7 +1046,7 @@ namespace LitchiRuntime
         return frame_num;
     }
 
-    Camera* Renderer::GetCamera()
+    RenderCamera* Renderer::GetCamera()
     {
         return m_camera;
     }

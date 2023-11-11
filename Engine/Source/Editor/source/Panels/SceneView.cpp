@@ -14,8 +14,8 @@ LitchiEditor::SceneView::SceneView
 	RHI_Texture* renderTargetTexture
 ) : AViewControllable(p_title, p_opened, p_windowSettings, renderTargetTexture,true)
 {
-	m_camera->SetClearColor(Vector3{ 0.098f, 0.098f, 0.098f });
-	m_camera->SetFar(5000.0f);
+	m_camera->SetClearColor({ 0.098f, 0.098f, 0.098f });
+	m_camera->SetFarPlane(5000.0f);
 
 	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
 	//{
@@ -27,30 +27,6 @@ LitchiEditor::SceneView::SceneView
 	//	case PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
 	//	}
 	//};
-
-
-	// todo:
-	//m_gridMaterial.SetShader(ApplicationEditor::Instance()->editorResources->GetShader("Grid"));
-	//m_gridMaterial.SetBlendable(true);
-	//m_gridMaterial.SetBackfaceCulling(false);
-	//m_gridMaterial.SetDepthTest(false);
-
-	/*m_shadowMapFbo.Bind();
-	m_shadowMapFbo.Resize(2048, 2048);
-	m_shadowMapFbo.Unbind();*/
-
-
-	// 初始化UI相机
-	m_camera4UI = new RenderCamera();
-	m_camera4UI->set_clear_flag(GL_DEPTH_BUFFER_BIT|GL_STENCIL_BUFFER_BIT);// 不清理颜色, 只清理深度信息
-	m_camera4UI->SetProjectionMode(ProjectionMode::ORTHOGRAPHIC);
-	m_cameraPosition4UI = Vector3(Vector3(0, 0, -10));
-	m_cameraRotation4UI = Quaternion(1,0,0,0);
-	auto [winWidth, winHeight] = GetSafeSize();
-	m_camera4UI->SetSize(winWidth / 2.0f);
-	m_camera4UI->SetNear(-100);
-	m_camera4UI->SetFar(100);
-	m_camera4UI->CacheMatrices(winWidth, winHeight, m_cameraPosition4UI, m_cameraRotation4UI);
 }
 
 void LitchiEditor::SceneView::Update(float p_deltaTime)

@@ -14,14 +14,15 @@
 #include "Renderer_ConstantBuffers.h"
 #include "Font/Font.h"
 #include "Grid.h"
+#include "Runtime/Function/Scene/SceneManager.h"
 //===================================
 
 namespace LitchiRuntime
 {
-    //= FWD DECLARATIONS =
+	//= FWD DECLARATIONS =
     class Window;
     class GameObject;
-    class Camera;
+    class RenderCamera;
     class Light;
     class Environment;
     //namespace Math
@@ -37,6 +38,8 @@ namespace LitchiRuntime
         static void Initialize();
         static void Shutdown();
         static void Tick();
+
+        static void Render4BuildInSceneView(Scene* scene,RenderCamera* camera);
 
         // Primitive rendering (excellent for debugging)
         static void DrawLine(const Vector3& from, const Vector3& to, const Vector4& color_from = DEBUG_COLOR, const Vector4& color_to = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
@@ -97,7 +100,7 @@ namespace LitchiRuntime
 
         //= RESOURCES ===========================================================================================
         static RHI_Texture* GetFrameTexture();
-        static Camera* GetCamera();
+        static RenderCamera* GetCamera();
         static std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetEntities();
 
         // Get all
@@ -177,7 +180,7 @@ namespace LitchiRuntime
         static uint32_t m_lines_index_depth_off;
         static uint32_t m_lines_index_depth_on;
         static RHI_CommandPool* m_cmd_pool;
-        static Camera* m_camera;
+        static RenderCamera* m_camera;
         static const uint32_t m_frames_in_flight = 5;
 
         // window

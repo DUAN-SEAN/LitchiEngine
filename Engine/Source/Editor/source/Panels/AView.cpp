@@ -118,5 +118,5 @@ void LitchiEditor::AView::PrepareCamera()
 	auto [winWidth, winHeight] = GetSafeSize();
 	
 	// m_cameraPosition = Vector3(0.0f, 0.0f, 0.0f);
-	m_camera->CacheMatrices(winWidth, winHeight, m_cameraPosition, m_cameraRotation);
+	m_camera->SetViewport(winWidth, winHeight);
 }

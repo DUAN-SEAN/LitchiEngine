@@ -133,7 +133,7 @@ void Light::SetIntensityLumens(const float lumens)
     m_intensity = LightIntensity::custom;
 }
 
-float Light::GetIntensityWatt(Camera* camera) const
+float Light::GetIntensityWatt(RenderCamera* camera) const
 {
     SP_ASSERT(camera != nullptr);
 
@@ -278,7 +278,7 @@ void Light::ComputeCascadeSplits()
     if (!Renderer::GetCamera())
         return;
 
-    Camera* camera = Renderer::GetCamera();
+    RenderCamera* camera = Renderer::GetCamera();
     const float clip_near = camera->GetNearPlane();
     const float clip_far = camera->GetFarPlane();
     const Matrix projection = camera->ComputeProjection(clip_near, clip_far); // Non reverse-z matrix

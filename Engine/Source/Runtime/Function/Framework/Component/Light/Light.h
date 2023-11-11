@@ -4,6 +4,7 @@
 #include "Runtime/Core/Math/Frustum.h"
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 
@@ -74,7 +75,7 @@ namespace LitchiRuntime
         void SetIntensity(const LightIntensity lumens);
         float GetIntensityLumens() const { return m_intensity_lumens; }
         LightIntensity GetIntensity() const { return m_intensity; }
-        float GetIntensityWatt(Camera* camera) const;
+        float GetIntensityWatt(RenderCamera* camera) const;
 
         bool GetShadowsEnabled() const { return m_shadows_enabled; }
         void SetShadowsEnabled(bool cast_shadows);

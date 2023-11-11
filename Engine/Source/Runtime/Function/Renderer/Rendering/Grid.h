@@ -18,7 +18,7 @@ namespace LitchiRuntime
         Grid();
         ~Grid() = default;
         
-        const Matrix& ComputeWorldMatrix(Transform* camera);
+        const Matrix& ComputeWorldMatrix(const Vector3& cameraPos);
         const auto& GetVertexBuffer()   const { return m_vertex_buffer; }
         const uint32_t GetVertexCount() const { return m_vertex_count; }
 
