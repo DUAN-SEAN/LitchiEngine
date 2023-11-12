@@ -50,8 +50,8 @@ LitchiRuntime::EKeyState LitchiRuntime::InputManager::GetKeyState(EKey p_key)
 {
 	switch (glfwGetKey(m_window->GetGlfwWindow(), static_cast<int>(p_key)))
 	{
-		case GLFW_PRESS:	return EKeyState::KEY_DOWN;
-		case GLFW_RELEASE:	return EKeyState::KEY_UP;
+	case GLFW_PRESS:	return EKeyState::KEY_DOWN;
+	case GLFW_RELEASE:	return EKeyState::KEY_UP;
 	}
 
 	return EKeyState::KEY_UP;
@@ -61,8 +61,8 @@ LitchiRuntime::EMouseButtonState LitchiRuntime::InputManager::GetMouseButtonStat
 {
 	switch (glfwGetMouseButton(m_window->GetGlfwWindow(), static_cast<int>(p_button)))
 	{
-		case GLFW_PRESS:	return EMouseButtonState::MOUSE_DOWN;
-		case GLFW_RELEASE:	return EMouseButtonState::MOUSE_UP;
+	case GLFW_PRESS:	return EMouseButtonState::MOUSE_DOWN;
+	case GLFW_RELEASE:	return EMouseButtonState::MOUSE_UP;
 	}
 
 	return EMouseButtonState::MOUSE_UP;
@@ -180,22 +180,15 @@ void LitchiRuntime::InputManager::SetEditorViewportOffset(const Vector2& offset)
 
 bool LitchiRuntime::InputManager::GetMouseCursorVisible()
 {
-	// todo:
-	// glfwGetCursorPos()
-	// return SDL_ShowCursor(SDL_QUERY) == 1;
-	return true;
+	return ApplicationBase::Instance()->window->GetCursorMode() == ECursorMode::NORMAL;
+	
 }
 
 void LitchiRuntime::InputManager::SetMouseCursorVisible(const bool visible)
 {
-	// todo:
-   /* if (visible == GetMouseCursorVisible())
+	if (visible == GetMouseCursorVisible())
 		return;
-
-	if (SDL_ShowCursor(visible ? SDL_ENABLE : SDL_DISABLE) < 0)
-	{
-		SP_LOG_ERROR("Failed to change cursor visibility");
-	}*/
+	ApplicationBase::Instance()->window->SetCursorMode(visible ? ECursorMode::NORMAL : ECursorMode::DISABLED);
 }
 
 const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
@@ -203,7 +196,7 @@ const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
 	int window_x, window_y;
 
 	GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
-	
+
 	glfwGetWindowPos(window, &window_x, &window_y);
 	return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
 }

@@ -35,8 +35,10 @@ void LitchiEditor::AView::Update(float p_deltaTime)
 	// 更新fbo的大小
 	auto [winWidth, winHeight] = GetSafeSize();
 
+	// 
+
 	m_image->size = Vector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
-	m_camera->Tick();
+	m_camera->Update();
 }
 
 void LitchiEditor::AView::_Draw_Impl()

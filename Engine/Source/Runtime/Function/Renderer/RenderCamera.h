@@ -37,7 +37,7 @@ namespace LitchiRuntime
     public:
 
         void Initialize();
-        void Tick();
+        void Update();
 
         // Matrices
         const Matrix& GetViewMatrix()           const { return m_view; }

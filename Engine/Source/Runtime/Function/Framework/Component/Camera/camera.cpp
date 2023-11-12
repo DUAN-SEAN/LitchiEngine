@@ -56,7 +56,7 @@ namespace LitchiRuntime
         // update renderCamera vp matrix
         m_renderCamera->SetPosition(m_position);
         m_renderCamera->SetRotation(m_rotation);
-        m_renderCamera->Tick();
+        m_renderCamera->Update();
 
         m_is_dirty = false;
     }

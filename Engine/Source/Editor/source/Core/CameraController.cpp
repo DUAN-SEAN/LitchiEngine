@@ -128,7 +128,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 				// if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
 			{
 				// todo:
-				// InputManager::SetMouseCursorVisible(false);
+				InputManager::SetMouseCursorVisible(false);
 			}
 
 			m_fps_control_cursor_hidden = true;
@@ -141,7 +141,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
 			{
 				// todo:
-				// InputManager::SetMouseCursorVisible(true);
+				InputManager::SetMouseCursorVisible(true);
 			}
 
 			m_fps_control_cursor_hidden = false;
@@ -215,39 +215,6 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			float max = movement_acceleration * 2.0f;  // An empirically chosen max.
 			m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
 		}
-	}
-
-	// Controller movement
-	// if (InputManager::IsControllerConnected())
-	if (m_is_controlled_by_keyboard_mouse)
-	{
-		// Look
-		{
-			// Get camera rotation
-			m_first_person_rotation.x += InputManager::GetMouseDelta().x;
-			m_first_person_rotation.y += InputManager::GetMouseDelta().y;
-
-			// Get mouse delta.
-			const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
-
-			// Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
-			m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
-
-			// Compute rotation.
-			const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
-			const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
-			const Quaternion rotation = xQuaternion * yQuaternion;
-
-			// Rotate
-			m_camera->SetRotation(rotation);
-		}
-
-		// Controller movement direction
-		movement_direction += m_camera->GetForward() * -InputManager::GetMouseDelta().x;
-		movement_direction += m_camera->GetRight() * InputManager::GetMouseDelta().x;
-		movement_direction += m_camera->GetDown() * InputManager::GetMouseDelta().y;
-		movement_direction += m_camera->GetUp() * InputManager::GetMouseDelta().y;
-		movement_direction.Normalize();
 	}
 
 	// Translation

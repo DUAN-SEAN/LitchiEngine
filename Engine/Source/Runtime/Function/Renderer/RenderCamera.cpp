@@ -35,7 +35,7 @@ namespace LitchiRuntime
         m_view_projection = m_view * m_projection;
     }
 
-    void RenderCamera::Tick()
+    void RenderCamera::Update()
     {
         m_view = ComputeViewMatrix();
         m_projection = ComputeProjection(m_far_plane, m_near_plane); // reverse-z

@@ -77,8 +77,8 @@ namespace LitchiEditor
 		float m_movement_scroll_accumulator = 0.0f;
 		Vector2 m_mouse_smoothed = Vector2::Zero;
 		Vector2 m_first_person_rotation = Vector2::Zero;
-		float m_mouse_sensitivity = 0.2f;
-		float m_mouse_smoothing = 0.5f;
+		float m_mouse_sensitivity = 0.005f;
+		float m_mouse_smoothing = 0.05f;
 	
 	};
 }
