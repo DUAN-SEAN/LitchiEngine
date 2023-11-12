@@ -506,7 +506,7 @@ namespace LitchiRuntime
 
     void Camera::FocusOnSelectedEntity()
     {
-        if (GameObject* entity = Renderer::GetCamera()->GetSelectedEntity())
+        if (GameObject* entity = m_renderCamera->GetSelectedEntity())
         {
             DEBUG_LOG_INFO("Focusing on entity {}", entity->GetObjectName());
 

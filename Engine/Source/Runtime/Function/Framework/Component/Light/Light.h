@@ -113,7 +113,7 @@ namespace LitchiRuntime
     private:
         void ComputeViewMatrix();
         void ComputeProjectionMatrix(uint32_t index = 0);
-        void ComputeCascadeSplits();
+        // void ComputeCascadeSplits();
 
         // Intensity
         LightIntensity m_intensity = LightIntensity::bulb_500_watt;

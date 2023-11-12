@@ -67,9 +67,9 @@ namespace LitchiRuntime
         DrawLine(v2, v0, color, color, duration, depth);
     }
 
-    void Renderer::DrawRectangle(const Rectangle& rectangle, const Vector4& color /*= DebugColor*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
+    void Renderer::DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Vector4& color /*= DebugColor*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
     {
-        const float cam_z = GetCamera()->GetPosition().z + GetCamera()->GetNearPlane() + 5.0f;
+        const float cam_z = camera->GetPosition().z + camera->GetNearPlane() + 5.0f;
 
         DrawLine(Vector3(rectangle.left,  rectangle.top,    cam_z), Vector3(rectangle.right, rectangle.top,    cam_z), color, color, duration, depth);
         DrawLine(Vector3(rectangle.right, rectangle.top,    cam_z), Vector3(rectangle.right, rectangle.bottom, cam_z), color, color, duration, depth);
@@ -257,87 +257,87 @@ namespace LitchiRuntime
         //}
     }
 
-    void Renderer::Lines_OneFrameStart()
-    {
-        // Picking ray
-        if (GetOption<bool>(Renderer_Option::Debug_PickingRay))
-        {
-            const auto& ray = GetCamera()->GetPickingRay();
-            DrawLine(ray.GetStart(), ray.GetStart() + ray.GetDirection() * GetCamera()->GetFarPlane(), Vector4(0, 1, 0, 1));
-        }
-        
-        // Lights
-        if (GetOption<bool>(Renderer_Option::Debug_Lights))
-        {
-            auto& lights = GetEntities()[Renderer_Entity::Light];
-            for (const auto& entity : lights)
-            {
-                if (auto camera = GetCamera())
-                {
-                    GameObject* entity_selected = camera->GetSelectedEntity();
-                    if (entity_selected && entity_selected->GetObjectId() == entity->GetObjectId())
-                    {
-                        Light* light = entity->GetComponent<Light>();
+    //void Renderer::Lines_OneFrameStart()
+    //{
+    //    // Picking ray
+    //    if (GetOption<bool>(Renderer_Option::Debug_PickingRay))
+    //    {
+    //        const auto& ray = GetCamera()->GetPickingRay();
+    //        DrawLine(ray.GetStart(), ray.GetStart() + ray.GetDirection() * GetCamera()->GetFarPlane(), Vector4(0, 1, 0, 1));
+    //    }
+    //    
+    //    // Lights
+    //    if (GetOption<bool>(Renderer_Option::Debug_Lights))
+    //    {
+    //        auto& lights = GetEntities()[Renderer_Entity::Light];
+    //        for (const auto& entity : lights)
+    //        {
+    //            if (auto camera = GetCamera())
+    //            {
+    //                GameObject* entity_selected = camera->GetSelectedEntity();
+    //                if (entity_selected && entity_selected->GetObjectId() == entity->GetObjectId())
+    //                {
+    //                    Light* light = entity->GetComponent<Light>();
 
-                        if (light->GetLightType() == LightType::Directional)
-                        {
-                            Vector3 extent    = entity->GetComponent<Transform>()->GetForward() * 1000.0f;
-                            Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition() - extent;
-                            Vector3 pos_end   = entity->GetComponent<Transform>()->GetPosition() + extent;
-                            DrawLine(pos_start, pos_end);
-                        }
-                        else if (light->GetLightType() == LightType::Point)
-                        {
-                            Vector3 center = entity->GetComponent<Transform>()->GetPosition();
-                            float radius = light->GetRange();
-                            uint32_t segment_count = 64;
+    //                    if (light->GetLightType() == LightType::Directional)
+    //                    {
+    //                        Vector3 extent    = entity->GetComponent<Transform>()->GetForward() * 1000.0f;
+    //                        Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition() - extent;
+    //                        Vector3 pos_end   = entity->GetComponent<Transform>()->GetPosition() + extent;
+    //                        DrawLine(pos_start, pos_end);
+    //                    }
+    //                    else if (light->GetLightType() == LightType::Point)
+    //                    {
+    //                        Vector3 center = entity->GetComponent<Transform>()->GetPosition();
+    //                        float radius = light->GetRange();
+    //                        uint32_t segment_count = 64;
 
-                            DrawCircle(center, Vector3::Up, radius, segment_count);
-                            DrawCircle(center, Vector3::Right, radius, segment_count);
-                            DrawCircle(center, Vector3::Forward, radius, segment_count);
-                        }
-                        else if (light->GetLightType() == LightType::Spot)
-                        {
-                            // tan(angle) = opposite/adjacent
-                            // opposite = adjacent * tan(angle)
-                            float opposite = light->GetRange() * Math::Helper::Tan(light->GetAngle());
+    //                        DrawCircle(center, Vector3::Up, radius, segment_count);
+    //                        DrawCircle(center, Vector3::Right, radius, segment_count);
+    //                        DrawCircle(center, Vector3::Forward, radius, segment_count);
+    //                    }
+    //                    else if (light->GetLightType() == LightType::Spot)
+    //                    {
+    //                        // tan(angle) = opposite/adjacent
+    //                        // opposite = adjacent * tan(angle)
+    //                        float opposite = light->GetRange() * Math::Helper::Tan(light->GetAngle());
 
-                            Vector3 pos_end_center = entity->GetComponent<Transform>()->GetForward() * light->GetRange();
-                            Vector3 pos_end_up     = pos_end_center + entity->GetComponent<Transform>()->GetUp() * opposite;
-                            Vector3 pos_end_right  = pos_end_center + entity->GetComponent<Transform>()->GetRight() * opposite;
-                            Vector3 pos_end_down   = pos_end_center + entity->GetComponent<Transform>()->GetDown() * opposite;
-                            Vector3 pos_end_left   = pos_end_center + entity->GetComponent<Transform>()->GetLeft() * opposite;
+    //                        Vector3 pos_end_center = entity->GetComponent<Transform>()->GetForward() * light->GetRange();
+    //                        Vector3 pos_end_up     = pos_end_center + entity->GetComponent<Transform>()->GetUp() * opposite;
+    //                        Vector3 pos_end_right  = pos_end_center + entity->GetComponent<Transform>()->GetRight() * opposite;
+    //                        Vector3 pos_end_down   = pos_end_center + entity->GetComponent<Transform>()->GetDown() * opposite;
+    //                        Vector3 pos_end_left   = pos_end_center + entity->GetComponent<Transform>()->GetLeft() * opposite;
 
-                            Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition();
-                            DrawLine(pos_start, pos_start + pos_end_center);
-                            DrawLine(pos_start, pos_start + pos_end_up);
-                            DrawLine(pos_start, pos_start + pos_end_right);
-                            DrawLine(pos_start, pos_start + pos_end_down);
-                            DrawLine(pos_start, pos_start + pos_end_left);
-                        }
-                    }
-                }
-            }
-        }
-        
-        // AABBs
-        if (GetOption<bool>(Renderer_Option::Debug_Aabb))
-        {
-            for (const auto& entity : GetEntities()[Renderer_Entity::Geometry])
-            {
-                if (auto renderable = entity->GetComponent<MeshFilter>())
-                {
-                    DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
-                }
-            }
-        
-            for (const auto& entity : GetEntities()[Renderer_Entity::GeometryTransparent])
-            {
-                if (auto renderable = entity->GetComponent<MeshFilter>())
-                {
-                    DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
-                }
-            }
-        }
-    }
+    //                        Vector3 pos_start = entity->GetComponent<Transform>()->GetPosition();
+    //                        DrawLine(pos_start, pos_start + pos_end_center);
+    //                        DrawLine(pos_start, pos_start + pos_end_up);
+    //                        DrawLine(pos_start, pos_start + pos_end_right);
+    //                        DrawLine(pos_start, pos_start + pos_end_down);
+    //                        DrawLine(pos_start, pos_start + pos_end_left);
+    //                    }
+    //                }
+    //            }
+    //        }
+    //    }
+    //    
+    //    // AABBs
+    //    if (GetOption<bool>(Renderer_Option::Debug_Aabb))
+    //    {
+    //        for (const auto& entity : GetEntities()[Renderer_Entity::Geometry])
+    //        {
+    //            if (auto renderable = entity->GetComponent<MeshFilter>())
+    //            {
+    //                DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
+    //            }
+    //        }
+    //    
+    //        for (const auto& entity : GetEntities()[Renderer_Entity::GeometryTransparent])
+    //        {
+    //            if (auto renderable = entity->GetComponent<MeshFilter>())
+    //            {
+    //                DrawBox(renderable->GetAabb(), Vector4(0.41f, 0.86f, 1.0f, 1.0f));
+    //            }
+    //        }
+    //    }
+    //}
 }

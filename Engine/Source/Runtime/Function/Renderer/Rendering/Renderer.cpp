@@ -28,7 +28,6 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-	unordered_map<Renderer_Entity, vector<GameObject*>> Renderer::m_renderables;
 	std::unordered_map<RendererPathType, RendererPath*> Renderer::m_rendererPaths;
 	Cb_Frame Renderer::m_cb_frame_cpu;
 	Pcb_Pass Renderer::m_cb_pass_cpu;
@@ -43,7 +42,6 @@ namespace LitchiRuntime
 	uint32_t Renderer::m_lines_index_depth_on;
 	bool Renderer::m_brdf_specular_lut_rendered;
 	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
-	RenderCamera* Renderer::m_camera = nullptr;
 
 	namespace
 	{
@@ -250,7 +248,6 @@ namespace LitchiRuntime
 			DestroyResources();
 
 			m_entities_to_add.clear();
-			m_renderables.clear();
 			m_world_grid.reset();
 			m_font.reset();
 			swap_chain = nullptr;
@@ -350,6 +347,7 @@ namespace LitchiRuntime
 	void Renderer::Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		auto camera = rendererPath->GetRenderCamera();
+		auto rendererables = rendererPath->GetRenderables();
 		// update frame buffer
 		{
 			// Matrices
@@ -414,7 +412,7 @@ namespace LitchiRuntime
 		{
 
 			// determine if a transparent pass is required
-			const bool do_transparent_pass = !GetEntities()[Renderer_Entity::GeometryTransparent].empty();
+			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
 
 			// shadow maps
 			{
@@ -569,7 +567,7 @@ namespace LitchiRuntime
 		cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light)
+	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light, RenderCamera* renderCamera)
 	{
 		for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
 		{
@@ -578,7 +576,7 @@ namespace LitchiRuntime
 
 		m_cb_light_cpu.intensity_range_angle_bias = Vector4
 		(
-			light->GetIntensityWatt(m_camera),
+			light->GetIntensityWatt(renderCamera),
 			light->GetRange(), light->GetAngle(),
 			light->GetBias()
 		);
@@ -667,7 +665,6 @@ namespace LitchiRuntime
 	{
 		// Flush to remove references to entity resources that will be deallocated
 		Flush();
-		m_renderables.clear();
 	}
 
 	void Renderer::OnFullScreenToggled()
@@ -702,63 +699,7 @@ namespace LitchiRuntime
 	void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
 	{
 		// 全量更新
-
-		// acquire renderables
-		if (!m_entities_to_add.empty())
-		{
-			// clear previous state
-			m_renderables.clear();
-			m_camera = nullptr;
-
-			for (auto entity : m_entities_to_add)
-			{
-				if (auto renderable = entity->GetComponent<MeshRenderer>())
-				{
-					bool is_transparent = false;
-					bool is_visible = true;
-
-					if (const Material* material = renderable->GetMaterial())
-					{
-						is_transparent = material->GetProperty(MaterialProperty::ColorA) < 1.0f;
-						is_visible = material->GetProperty(MaterialProperty::ColorA) != 0.0f;
-					}
-
-					if (is_visible)
-					{
-						m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
-					}
-				}
-
-				if (auto light = entity->GetComponent<Light>())
-				{
-					m_renderables[Renderer_Entity::Light].emplace_back(entity);
-				}
-
-				// remove Camera
-				/*if (auto camera = entity->GetComponent<Camera>())
-				{
-					m_renderables[Renderer_Entity::Camera].emplace_back(entity);
-					m_camera = camera->m_renderCamera;
-				}*/
-
-				/* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())
-				 {
-					 m_renderables[Renderer_Entity::ReflectionProbe].emplace_back(entity);
-				 }
-
-				 if (auto audio_source = entity->GetComponent<AudioSource>())
-				 {
-					 m_renderables[Renderer_Entity::AudioSource].emplace_back(entity);
-				 }*/
-			}
-
-			// sort them by distance
-			sort_renderables(m_camera, &m_renderables[Renderer_Entity::Geometry], false);
-			sort_renderables(m_camera, &m_renderables[Renderer_Entity::GeometryTransparent], true);
-
-			m_entities_to_add.clear();
-		}
-
+		
 		// generate mips
 		{
 			lock_guard lock(mutex_mip_generation);
@@ -769,12 +710,12 @@ namespace LitchiRuntime
 			textures_mip_generation.clear();
 		}
 
-		Lines_OneFrameStart();
+		// Lines_OneFrameStart();
 	}
 
 	void Renderer::OnFrameEnd(RHI_CommandList* cmd_list)
 	{
-		Lines_OnFrameEnd();
+		// Lines_OnFrameEnd();
 	}
 
 	bool Renderer::IsCallingFromOtherThread()
@@ -883,19 +824,19 @@ namespace LitchiRuntime
 					}
 				}
 			}
-			// Shadow resolution
-			else if (option == Renderer_Option::ShadowResolution)
-			{
-				const auto& light_entities = m_renderables[Renderer_Entity::Light];
-				for (const auto& light_entity : light_entities)
-				{
-					auto light = light_entity->GetComponent<Light>();
-					if (light->GetShadowsEnabled())
-					{
-						light->CreateShadowMap();
-					}
-				}
-			}
+			//// Shadow resolution
+			//else if (option == Renderer_Option::ShadowResolution)
+			//{
+			//	const auto& light_entities = m_renderables[Renderer_Entity::Light];
+			//	for (const auto& light_entity : light_entities)
+			//	{
+			//		auto light = light_entity->GetComponent<Light>();
+			//		if (light->GetShadowsEnabled())
+			//		{
+			//			light->CreateShadowMap();
+			//		}
+			//	}
+			//}
 			else if (option == Renderer_Option::Hdr)
 			{
 				swap_chain->SetHdr(value == 1.0f);
@@ -991,17 +932,7 @@ namespace LitchiRuntime
 	{
 		return frame_num;
 	}
-
-	RenderCamera* Renderer::GetCamera()
-	{
-		return m_camera;
-	}
-
-	unordered_map<Renderer_Entity, vector<GameObject*>>& Renderer::GetEntities()
-	{
-		return m_renderables;
-	}
-
+	
 	void Renderer::UpdateRendererPath(RendererPathType rendererPathType, RendererPath* rendererPath)
 	{
 		m_rendererPaths[rendererPathType] = rendererPath;

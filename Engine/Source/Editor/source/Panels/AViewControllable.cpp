@@ -22,8 +22,8 @@ void LitchiEditor::AViewControllable::Update(float p_deltaTime)
 	// 1. 更新cameraCtrl
 	m_cameraController.HandleInputs(p_deltaTime);
 
-	m_camera->SetPosition(m_cameraController.GetPosition());
-	m_camera->SetRotation(m_cameraController.GetRotation());
+	/*m_camera->SetPosition(m_cameraController.GetPosition());
+	m_camera->SetRotation(m_cameraController.GetRotation());*/
 
 	// 2. 更新View
 	AView::Update(p_deltaTime);

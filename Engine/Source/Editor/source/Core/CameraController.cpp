@@ -9,6 +9,7 @@
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
 #include "Runtime/Core/Math/MathHelper.h"
+#include "Runtime/Core/Time/time.h"
 
 LitchiEditor::CameraController::CameraController
 (
@@ -20,19 +21,16 @@ LitchiEditor::CameraController::CameraController
 ) :
 	m_window(*ApplicationEditor::Instance()->window),
 	m_view(p_view),
-	m_camera(p_camera),
-	m_cameraPosition(p_position),
-	m_cameraRotation(p_rotation),
-	m_enableFocusInputs(p_enableFocusInputs)
+	m_camera(p_camera)
 {
 	// 设置相机默认的位置和姿态
-	m_cameraPosition = Vector3(10.0f, 10.0f, 10.0f);
+	auto cameraPosition = Vector3(10.0f, 5.0f, -10.0f);
 	
-	m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
+	auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
 
 	m_camera->SetFovHorizontalDeg(60.0f);
-	m_camera->SetPosition(m_cameraPosition);
-	m_camera->SetRotation(m_cameraRotation);
+	m_camera->SetPosition(cameraPosition);
+	m_camera->SetRotation(cameraRotation);
 }
 
 float GetActorFocusDist(GameObject* p_actor)
@@ -101,186 +99,209 @@ float GetActorFocusDist(GameObject* p_actor)
 
 void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
-	auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
+	static const float movement_speed_max = 5.0f;
+	static float movement_acceleration = 1.0f;
+	static const float movement_drag = 10.0f;
+	Vector3 movement_direction = Vector3::Zero;
+	float delta_time = static_cast<float>(p_deltaTime);
 
-	if(InputManager::IsKeyPressed(EKey::KEY_R))
+	// Detect if fps control should be activated
 	{
-		m_cameraPosition = Vector3(10.0f, 10.0f, 10.0f);
-		m_cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
+		// Initiate control only when the mouse is within the viewport
+		if (InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && InputManager::GetMouseIsInViewport())
+		{
+			m_is_controlled_by_keyboard_mouse = true;
+		}
+
+		// Maintain control as long as the right click is pressed and initial control has been given
+		m_is_controlled_by_keyboard_mouse = InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
 	}
 
-	if (m_view.IsHovered())
+	// Cursor visibility and position
 	{
-		UpdateMouseState();
-
-		//ImGui::GetIO().DisableMouseUpdate = m_rightMousePressed || m_middleMousePressed;
-
-		if (!ImGui::IsAnyItemActive() && m_enableFocusInputs)
+		// Toggle mouse cursor and adjust mouse position
+		if (m_is_controlled_by_keyboard_mouse && !m_fps_control_cursor_hidden)
 		{
-			if (selectGO != nullptr)
+			m_mouse_last_position = InputManager::GetMousePosition();
+
+			if (!ApplicationBase::Instance()->window->IsFullscreen())
+				// if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
 			{
-				
-				auto targetPos = selectGO->GetComponent<Transform>()->GetPosition();
+				// todo:
+				// InputManager::SetMouseCursorVisible(false);
+			}
 
-				float dist = GetActorFocusDist(selectGO);
+			m_fps_control_cursor_hidden = true;
+		}
+		else if (!m_is_controlled_by_keyboard_mouse && m_fps_control_cursor_hidden)
+		{
+			InputManager::SetMousePosition(m_mouse_last_position);
 
-				if (InputManager::IsKeyPressed(EKey::KEY_F))
+			// if (!Window::IsFullscreen()) // change the mouse state only in editor mode
+			if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
+			{
+				// todo:
+				// InputManager::SetMouseCursorVisible(true);
+			}
+
+			m_fps_control_cursor_hidden = false;
+		}
+	}
+
+	if (m_is_controlled_by_keyboard_mouse)
+	{
+		// Mouse look
+		{
+			// Wrap around left and right screen edges (to allow for infinite scrolling)
+			{
+				uint32_t edge_padding = 5;
+				Vector2 mouse_position = InputManager::GetMousePosition();
+				if (mouse_position.x >= ApplicationBase::Instance()->window->GetWidth() - edge_padding)
 				{
-					MoveToTarget(selectGO);
+					mouse_position.x = static_cast<float>(edge_padding + 1);
+					InputManager::SetMousePosition(mouse_position);
 				}
-
-				auto focusObjectFromAngle = [this, &targetPos, &dist]( const Vector3& offset)
+				else if (mouse_position.x <= edge_padding)
 				{
-					auto targetPosGlm = Vector3(targetPos.x, targetPos.y, targetPos.z);
-					auto camPos = targetPosGlm + offset * dist;
-					auto direction = (targetPosGlm - camPos).Normalized();
-					m_cameraRotation = Quaternion::FromLookRotation(direction, abs(direction.y) == 1.0f ? Vector3::Right : Vector3::Up);
-					m_cameraDestinations.push({ camPos, m_cameraRotation });
-				};
-
-				if (InputManager::IsKeyPressed(EKey::KEY_UP))			focusObjectFromAngle(Vector3::Up);
-				if (InputManager::IsKeyPressed(EKey::KEY_DOWN))		focusObjectFromAngle(-Vector3::Up);
-				if (InputManager::IsKeyPressed(EKey::KEY_RIGHT))		focusObjectFromAngle(Vector3::Right);
-				if (InputManager::IsKeyPressed(EKey::KEY_LEFT))		focusObjectFromAngle(-Vector3::Right);
-				if (InputManager::IsKeyPressed(EKey::KEY_PAGE_UP))	focusObjectFromAngle(Vector3::Forward);
-				if (InputManager::IsKeyPressed(EKey::KEY_PAGE_DOWN))	focusObjectFromAngle(-Vector3::Forward);
-			}
-		}
-	}
-
-	if (!m_cameraDestinations.empty())
-	{
-		m_currentMovementSpeed = Vector3::Zero;
-
-		while (m_cameraDestinations.size() != 1)
-			m_cameraDestinations.pop();
-
-		auto& [destPos, destRotation] = m_cameraDestinations.front();
-
-		float t = m_focusLerpCoefficient * p_deltaTime;
-
-		if (Vector3::Distance(m_cameraPosition, destPos) <= 0.03f)
-		{
-			m_cameraPosition = destPos;
-			m_cameraRotation = destRotation;
-			m_cameraDestinations.pop();
-		}
-		else
-		{
-			m_cameraPosition = Vector3::Lerp(m_cameraPosition, destPos, t);
-			m_cameraRotation = Quaternion::Lerp(m_cameraRotation, destRotation, t);
-		}
-	} 
-	else
-	{
-		if (m_rightMousePressed || m_middleMousePressed || m_leftMousePressed)
-		{
-			auto [xPos, yPos] = InputManager::GetMousePosition();
-
-			bool wasFirstMouse = m_firstMouse;
-
-			if (m_firstMouse)
-			{
-				m_lastMousePosX = xPos;
-				m_lastMousePosY = yPos;
-				m_firstMouse = false;
-			}
-
-			Vector2 mouseOffset
-			{
-				static_cast<float>(xPos - m_lastMousePosX),
-				static_cast<float>(m_lastMousePosY - yPos)
-			};
-
-			m_lastMousePosX = xPos;
-			m_lastMousePosY = yPos;
-
-			if (m_rightMousePressed)
-			{
-				HandleCameraFPSMouse(mouseOffset, wasFirstMouse);
-			}
-			else
-			{
-				if (m_middleMousePressed)
-				{
-					if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
-					{
-						if (selectGO != nullptr)
-						{
-							HandleCameraOrbit(mouseOffset, wasFirstMouse);
-						}
-					}
-					else
-					{
-						HandleCameraPanning(mouseOffset, wasFirstMouse);
-					}
+					mouse_position.x = static_cast<float>(ApplicationBase::Instance()->window->GetWidth() - edge_padding - 1);
+					InputManager::SetMousePosition(mouse_position);
 				}
 			}
+
+			// Get camera rotation.
+			m_first_person_rotation.x = GetRotation().Yaw();
+			m_first_person_rotation.y = GetRotation().Pitch();
+
+			// Get mouse delta.
+			const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
+
+			// Lerp to it.
+			m_mouse_smoothed = Math::Helper::Lerp(m_mouse_smoothed, mouse_delta, Math::Helper::Saturate(1.0f - m_mouse_smoothing));
+
+			// Accumulate rotation.
+			m_first_person_rotation += m_mouse_smoothed;
+
+			// Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+			m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
+
+			// Compute rotation.
+			const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+			const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+			const Quaternion rotation = xQuaternion * yQuaternion;
+
+			// Rotate
+			m_camera->SetRotation(rotation);
 		}
 
-		if (m_view.IsHovered())
+		// Keyboard movement direction
 		{
-			HandleCameraZoom();
+			// Compute direction
+			if (InputManager::GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetForward();
+			if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetBackward();
+			if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetRight();
+			if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetLeft();
+			if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetDown();
+			if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetUp();
+			movement_direction.Normalize();
 		}
 
-		HandleCameraFPSKeyboard(p_deltaTime);
+		// Wheel delta (used to adjust movement speed)
+		{
+			// Accumulate
+			m_movement_scroll_accumulator += InputManager::GetMouseWheelDelta().y * 0.1f;
+
+			// Clamp
+			float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
+			float max = movement_acceleration * 2.0f;  // An empirically chosen max.
+			m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
+		}
 	}
 
-	// DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_xyz.x, m_xyz.y, m_xyz.z);
-	// DEBUG_LOG_INFO("HandleCameraFPSMouse x:{},y:{},z:{}", m_cameraPosition.x, m_cameraPosition.y, m_cameraPosition.z);
-}
+	// Controller movement
+	// if (InputManager::IsControllerConnected())
+	if (m_is_controlled_by_keyboard_mouse)
+	{
+		// Look
+		{
+			// Get camera rotation
+			m_first_person_rotation.x += InputManager::GetMouseDelta().x;
+			m_first_person_rotation.y += InputManager::GetMouseDelta().y;
 
-void LitchiEditor::CameraController::MoveToTarget(GameObject* p_target)
-{
-	auto goWorldPos = p_target->GetComponent<Transform>()->GetPosition();
+			// Get mouse delta.
+			const Vector2 mouse_delta = InputManager::GetMouseDelta() * m_mouse_sensitivity;
 
-	auto targetPosGlm = Vector3(goWorldPos.x, goWorldPos.y, goWorldPos.z);
-	m_cameraDestinations.push({ targetPosGlm - m_cameraRotation * Vector3::Forward * GetActorFocusDist(p_target), m_cameraRotation });
-}
+			// Clamp rotation along the x-axis (but not exactly at 90 degrees, this is to avoid a gimbal lock).
+			m_first_person_rotation.y = Math::Helper::Clamp(m_first_person_rotation.y, -80.0f, 80.0f);
 
-void LitchiEditor::CameraController::SetSpeed(float p_speed)
-{
-	m_cameraMoveSpeed = p_speed;
-}
+			// Compute rotation.
+			const Quaternion xQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.x * Math::Helper::DEG_TO_RAD, Vector3::Up);
+			const Quaternion yQuaternion = Quaternion::FromAngleAxis(m_first_person_rotation.y * Math::Helper::DEG_TO_RAD, Vector3::Right);
+			const Quaternion rotation = xQuaternion * yQuaternion;
 
-float LitchiEditor::CameraController::GetSpeed() const
-{
-	return m_cameraMoveSpeed;
+			// Rotate
+			m_camera->SetRotation(rotation);
+		}
+
+		// Controller movement direction
+		movement_direction += m_camera->GetForward() * -InputManager::GetMouseDelta().x;
+		movement_direction += m_camera->GetRight() * InputManager::GetMouseDelta().x;
+		movement_direction += m_camera->GetDown() * InputManager::GetMouseDelta().y;
+		movement_direction += m_camera->GetUp() * InputManager::GetMouseDelta().y;
+		movement_direction.Normalize();
+	}
+
+	// Translation
+	{
+		Vector3 translation = (movement_acceleration + m_movement_scroll_accumulator) * movement_direction;
+
+		// On shift, double the translation
+		if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
+		{
+			translation *= 2.0f;
+		}
+
+		// Accelerate
+		m_movement_speed += translation * delta_time;
+
+		// Apply drag
+		m_movement_speed *= 1.0f - movement_drag * delta_time;
+
+		// Clamp it
+		if (m_movement_speed.Length() > movement_speed_max)
+		{
+			m_movement_speed = m_movement_speed.Normalized() * movement_speed_max;
+		}
+
+		// Translate for as long as there is speed
+		if (m_movement_speed != Vector3::Zero)
+		{
+			m_camera->SetPosition(m_camera->GetPosition()+m_movement_speed);
+		}
+	}
 }
 
 void LitchiEditor::CameraController::SetPosition(const Vector3 & p_position)
 {
-	m_cameraPosition = p_position;
+	m_camera->SetPosition(p_position);
 }
 
 void LitchiEditor::CameraController::SetRotation(const Quaternion & p_rotation)
 {
-	m_cameraRotation = p_rotation;
+	m_camera->SetRotation(p_rotation);
+}
+
+void LitchiEditor::CameraController::MoveToTarget(GameObject* target)
+{
 }
 
 const Vector3& LitchiEditor::CameraController::GetPosition() const
 {
-	return m_cameraPosition;
+	return m_camera->GetPosition();
 }
 
 const Quaternion& LitchiEditor::CameraController::GetRotation() const
 {
-	return m_cameraRotation;
-}
-
-bool LitchiEditor::CameraController::IsRightMousePressed() const
-{
-	return m_rightMousePressed;
-}
-
-void LitchiEditor::CameraController::HandleCameraPanning(const Vector2& p_mouseOffset, bool p_firstMouset)
-{
-	m_window.SetCursorShape(ECursorShape::HAND);
-
-	auto mouseOffset = p_mouseOffset * m_cameraDragSpeed;
-
-	m_cameraPosition += m_cameraRotation * Vector3::Right * mouseOffset.x;
-	m_cameraPosition -= m_cameraRotation * Vector3::Up * mouseOffset.y;
+	return m_camera->GetRotation();
 }
 
 Vector3 RemoveRoll(const Vector3& p_ypr)
@@ -298,124 +319,4 @@ Vector3 RemoveRoll(const Vector3& p_ypr)
 	if (result.y < -180.0f) result.y += 360.0f;
 
 	return result;
-}
-
-void LitchiEditor::CameraController::HandleCameraOrbit(const Vector2& p_mouseOffset, bool p_firstMouse)
-{
-	/*auto selectGO = ApplicationEditor::Instance()->GetSelectGameObject();
-	auto mouseOffset = p_mouseOffset * m_cameraOrbitSpeed;
-
-	if (p_firstMouse)
-	{
-		m_xyz = glm::eulerAngles(m_cameraRotation);
-		m_xyz = RemoveRoll(m_xyz);
-		m_orbitTarget = selectGO->GetComponent<Transform>();
-		m_orbitStartOffset = -LitchiRuntime::Math::Forward * glm::distance(m_orbitTarget->position(), m_cameraPosition);
-	}
-
-	m_xyz.y -= mouseOffset.x;
-	m_xyz.x += -mouseOffset.y;
-	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
-	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);*/
-
-	// TODO 绑定相机transform 和 物体Transform 目前还不能实现
-	/*auto target = selectGO->GetComponent<Transform>();
-	OvMaths::FTransform pivotTransform(target.GetWorldPosition());
-	OvMaths::FTransform cameraTransform(m_orbitStartOffset);
-	cameraTransform.SetParent(pivotTransform);
-	pivotTransform.RotateLocal(Quaternion(m_xyz));
-	m_cameraPosition = cameraTransform.GetWorldPosition();
-	m_cameraRotation = cameraTransform.GetWorldRotation();*/
-}
-
-void LitchiEditor::CameraController::HandleCameraZoom()
-{
-	m_cameraPosition += m_cameraRotation * Vector3::Forward * ImGui::GetIO().MouseWheel;
-}
-
-void LitchiEditor::CameraController::HandleCameraFPSMouse(const Vector2& p_mouseOffset, bool p_firstMouse)
-{
-	//DEBUG_LOG_INFO("HandleCameraFPSMouse xAng:{},yAng:{},zAng:{}", m_xyz.x, m_xyz.y, m_xyz.z);
-
-	auto mouseOffset = p_mouseOffset * m_mouseSensitivity;
-
-	if (p_firstMouse)
-	{
-		auto& eulerAngles = m_cameraRotation.ToEulerAngles();
-
-		// m_xyz =   glm::degrees(glm::eulerAngles(m_cameraRotation));
-		m_xyz = eulerAngles;
-		m_xyz = RemoveRoll(m_xyz);
-	}
-
-	// 万向节(x,y,z)(pitch, yaw, roll)
-	//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
-	m_xyz.y -= mouseOffset.x;
-	m_xyz.x += mouseOffset.y;
-	m_xyz.y = std::max(std::min(m_xyz.y, 90.0f), -90.0f);
-	m_xyz.x = std::max(std::min(m_xyz.x, 90.0f), -90.0f);
-
-	// x , y z (pitch, yaw, roll)
-	m_cameraRotation = Quaternion::FromEulerAngles(Vector3(Math::Helper::DegreesToRadians(m_xyz.x), Math::Helper::DegreesToRadians(m_xyz.y), Math::Helper::DegreesToRadians(0.0)));
-}
-
-void LitchiEditor::CameraController::HandleCameraFPSKeyboard(float p_deltaTime)
-{
-	m_targetSpeed = Vector3(0.f, 0.f, 0.f);
-
-	if (m_rightMousePressed)
-	{
-		bool run = InputManager::GetKeyState(EKey::KEY_LEFT_SHIFT) == EKeyState::KEY_DOWN;
-		float velocity = m_cameraMoveSpeed * p_deltaTime * (run ? 2.0f : 1.0f);
-
-		if (InputManager::GetKeyState(EKey::KEY_W) == EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * Vector3::Forward * velocity;
-		if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * Vector3::Forward * -velocity;
-		if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * Vector3::Right * -velocity;
-		if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN)
-			m_targetSpeed += m_cameraRotation * Vector3::Right * velocity;
-		if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN)
-			m_targetSpeed += Vector3{0.0f, -velocity, 0.0f};
-		if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN)
-			m_targetSpeed += Vector3{0.0f, velocity, 0.0f};
-	}
-
-	m_currentMovementSpeed = Vector3::Lerp(m_currentMovementSpeed, m_targetSpeed, 10.0f * p_deltaTime);
-	m_cameraPosition += m_currentMovementSpeed;
-}
-
-void LitchiEditor::CameraController::UpdateMouseState()
-{
-	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_LEFT))
-		m_leftMousePressed = true;
-
-	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_LEFT))
-	{
-		m_leftMousePressed = false;
-		m_firstMouse = true;
-	}
-
-	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_MIDDLE))
-		m_middleMousePressed = true;
-
-	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_MIDDLE))
-	{
-		m_middleMousePressed = false;
-		m_firstMouse = true;
-	}
-
-	if (InputManager::IsMouseButtonPressed(EMouseButton::MOUSE_BUTTON_RIGHT))
-	{
-		m_rightMousePressed = true;
-		m_window.SetCursorMode(ECursorMode::DISABLED);
-	}
-
-	if (InputManager::IsMouseButtonReleased(EMouseButton::MOUSE_BUTTON_RIGHT))
-	{
-		m_rightMousePressed = false;
-		m_firstMouse = true;
-		m_window.SetCursorMode(ECursorMode::NORMAL);
-	}
 }

@@ -31,7 +31,7 @@ void TransformGizmo::_Draw_Impl()
 		if (ImGui::IsMouseClicked(0))
 		{
 
-			if (auto camera = Renderer::GetCamera())
+			if (auto camera = m_camera)
 			{
 				m_camera = camera;
 				camera->Pick();

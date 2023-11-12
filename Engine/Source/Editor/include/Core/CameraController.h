@@ -41,23 +41,6 @@ namespace LitchiEditor
 		void HandleInputs(float p_deltaTime);
 
 		/**
-		* Asks the camera to move to the target actor
-		* @param p_target
-		*/
-		void MoveToTarget(GameObject* p_target);
-
-		/**
-		* Defines the speed of the camera
-		* @param p_speed
-		*/
-		void SetSpeed(float p_speed);
-
-		/**
-		* Returns the camera speed
-		*/
-		float GetSpeed() const;
-
-		/**
 		* Defines the position of the camera
 		* @param p_position
 		*/
@@ -68,6 +51,7 @@ namespace LitchiEditor
 		* @param p_rotation
 		*/
 		void SetRotation(const Quaternion& p_rotation);
+		void MoveToTarget(GameObject* target);
 
 		/**
 		* Returns the position of the camera
@@ -78,52 +62,23 @@ namespace LitchiEditor
 		* Returns the position of the camera
 		*/
 		const Quaternion& GetRotation() const;
-
-		/**
-		* Returns true if the right mouse click is being pressed
-		*/
-		bool IsRightMousePressed() const;
-
-	private:
-		void HandleCameraPanning(const Vector2& p_mouseOffset, bool p_firstMouse);
-		void HandleCameraOrbit(const Vector2& p_mouseOffset, bool p_firstMouse);
-		void HandleCameraFPSMouse(const Vector2& p_mouseOffset, bool p_firstMouse);
-
-		void HandleCameraZoom();
-		void HandleCameraFPSKeyboard(float p_deltaTime);
-		void UpdateMouseState();
-
+		
 	private:
 		Window& m_window;
 		AView& m_view;
 		RenderCamera* m_camera;
-		Vector3& m_cameraPosition;
-		Quaternion& m_cameraRotation;
-
-		std::queue<std::tuple<Vector3, Quaternion>> m_cameraDestinations;
-
-		bool m_enableFocusInputs;
-
-		bool m_leftMousePressed = false;
-		bool m_middleMousePressed = false;
-		bool m_rightMousePressed = false;
-
-		Vector3 m_targetSpeed;
-		Vector3 m_currentMovementSpeed;
-
-		Transform* m_orbitTarget = nullptr;
-		Vector3 m_orbitStartOffset;
-		bool m_firstMouse = true;
-		double m_lastMousePosX = 0.0;
-		double m_lastMousePosY = 0.0;
-		Vector3 m_xyz;
-		float m_mouseSensitivity = 0.01f;
-		float m_cameraDragSpeed = 0.03f;
-		float m_cameraOrbitSpeed = 0.5f;
-		float m_cameraMoveSpeed = 15.0f;
-		float m_focusDistance = 15.0f;
-		float m_focusLerpCoefficient = 8.0f;
-		float m_yaw = 0.0;
-		float m_pitch = 0.0;
+	/*	Vector3& m_cameraPosition;
+		Quaternion& m_cameraRotation;*/
+		
+		bool m_is_controlled_by_keyboard_mouse = false;
+		Vector2 m_mouse_last_position = Vector2::Zero;
+		bool m_fps_control_cursor_hidden = false;
+		Vector3 m_movement_speed = Vector3::Zero;
+		float m_movement_scroll_accumulator = 0.0f;
+		Vector2 m_mouse_smoothed = Vector2::Zero;
+		Vector2 m_first_person_rotation = Vector2::Zero;
+		float m_mouse_sensitivity = 0.2f;
+		float m_mouse_smoothing = 0.5f;
+	
 	};
 }

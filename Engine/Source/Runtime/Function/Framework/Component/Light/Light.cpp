@@ -269,104 +269,104 @@ const Matrix& Light::GetProjectionMatrix(uint32_t index /*= 0*/) const
     return m_matrix_projection[index];
 }
 
-void Light::ComputeCascadeSplits()
-{
-    if (m_shadow_map.slices.empty())
-        return;
-
-    // Can happen during the first frame, don't log error
-    if (!Renderer::GetCamera())
-        return;
-
-    RenderCamera* camera = Renderer::GetCamera();
-    const float clip_near = camera->GetNearPlane();
-    const float clip_far = camera->GetFarPlane();
-    const Matrix projection = camera->ComputeProjection(clip_near, clip_far); // Non reverse-z matrix
-    const Matrix view_projection_inverted = Matrix::Invert(camera->GetViewMatrix() * projection);
-
-    // Calculate split depths based on view camera frustum
-    const float split_lambda = 0.98f;
-    const float clip_range = clip_far - clip_near;
-    const float min_z = clip_near;
-    const float max_z = clip_near + clip_range;
-    const float range = max_z - min_z;
-    const float ratio = max_z / min_z;
-    std::vector<float> splits(m_cascade_count);
-    for (uint32_t i = 0; i < m_cascade_count; i++)
-    {
-        const float p = (i + 1) / static_cast<float>(m_cascade_count);
-        const float log = min_z * Math::Helper::Pow(ratio, p);
-        const float uniform = min_z + range * p;
-        const float d = split_lambda * (log - uniform) + uniform;
-        splits[i] = (d - clip_near) / clip_range;
-    }
-
-    float last_split_distance = 0.0f;
-    for (uint32_t i = 0; i < m_cascade_count; i++)
-    {
-        // Define camera frustum corners in clip space
-        Vector3 frustum_corners[8] =
-        {
-            Vector3(-1.0f,  1.0f, -1.0f),
-            Vector3(1.0f,  1.0f, -1.0f),
-            Vector3(1.0f, -1.0f, -1.0f),
-            Vector3(-1.0f, -1.0f, -1.0f),
-            Vector3(-1.0f,  1.0f,  1.0f),
-            Vector3(1.0f,  1.0f,  1.0f),
-            Vector3(1.0f, -1.0f,  1.0f),
-            Vector3(-1.0f, -1.0f,  1.0f)
-        };
-
-        // Project frustum corners into world space
-        for (Vector3& frustum_corner : frustum_corners)
-        {
-            Vector4 inverted_corner = Vector4(frustum_corner, 1.0f) * view_projection_inverted;
-            frustum_corner = inverted_corner / inverted_corner.w;
-        }
-
-        // Compute split distance
-        {
-            const float split_distance = splits[i];
-            for (uint32_t i = 0; i < 4; i++)
-            {
-                Vector3 distance = frustum_corners[i + 4] - frustum_corners[i];
-                frustum_corners[i + 4] = frustum_corners[i] + (distance * split_distance);
-                frustum_corners[i] = frustum_corners[i] + (distance * last_split_distance);
-            }
-            last_split_distance = splits[i];
-        }
-
-        // Compute frustum bounds
-        {
-            // Compute bounding sphere which encloses the frustum.
-            // Since a sphere is rotational invariant it will keep the size of the orthographic
-            // projection frustum same independent of eye view direction, hence eliminating shimmering.
-
-            ShadowSlice& shadow_slice = m_shadow_map.slices[i];
-
-            // Compute center
-            shadow_slice.center = Vector3::Zero;
-            for (const Vector3& frustum_corner : frustum_corners)
-            {
-                shadow_slice.center += Vector3(frustum_corner);
-            }
-            shadow_slice.center /= 8.0f;
-
-            // Compute radius
-            float radius = 0.0f;
-            for (const Vector3& frustum_corner : frustum_corners)
-            {
-                const float distance = Vector3::Distance(frustum_corner, shadow_slice.center);
-                radius = Math::Helper::Max(radius, distance);
-            }
-            radius = Math::Helper::Ceil(radius * 16.0f) / 16.0f;
-
-            // Compute min and max
-            shadow_slice.max = radius;
-            shadow_slice.min = -radius;
-        }
-    }
-}
+//void Light::ComputeCascadeSplits()
+//{
+//    if (m_shadow_map.slices.empty())
+//        return;
+//
+//    // Can happen during the first frame, don't log error
+//    if (!Renderer::GetCamera())
+//        return;
+//
+//    RenderCamera* camera = Renderer::GetCamera();
+//    const float clip_near = camera->GetNearPlane();
+//    const float clip_far = camera->GetFarPlane();
+//    const Matrix projection = camera->ComputeProjection(clip_near, clip_far); // Non reverse-z matrix
+//    const Matrix view_projection_inverted = Matrix::Invert(camera->GetViewMatrix() * projection);
+//
+//    // Calculate split depths based on view camera frustum
+//    const float split_lambda = 0.98f;
+//    const float clip_range = clip_far - clip_near;
+//    const float min_z = clip_near;
+//    const float max_z = clip_near + clip_range;
+//    const float range = max_z - min_z;
+//    const float ratio = max_z / min_z;
+//    std::vector<float> splits(m_cascade_count);
+//    for (uint32_t i = 0; i < m_cascade_count; i++)
+//    {
+//        const float p = (i + 1) / static_cast<float>(m_cascade_count);
+//        const float log = min_z * Math::Helper::Pow(ratio, p);
+//        const float uniform = min_z + range * p;
+//        const float d = split_lambda * (log - uniform) + uniform;
+//        splits[i] = (d - clip_near) / clip_range;
+//    }
+//
+//    float last_split_distance = 0.0f;
+//    for (uint32_t i = 0; i < m_cascade_count; i++)
+//    {
+//        // Define camera frustum corners in clip space
+//        Vector3 frustum_corners[8] =
+//        {
+//            Vector3(-1.0f,  1.0f, -1.0f),
+//            Vector3(1.0f,  1.0f, -1.0f),
+//            Vector3(1.0f, -1.0f, -1.0f),
+//            Vector3(-1.0f, -1.0f, -1.0f),
+//            Vector3(-1.0f,  1.0f,  1.0f),
+//            Vector3(1.0f,  1.0f,  1.0f),
+//            Vector3(1.0f, -1.0f,  1.0f),
+//            Vector3(-1.0f, -1.0f,  1.0f)
+//        };
+//
+//        // Project frustum corners into world space
+//        for (Vector3& frustum_corner : frustum_corners)
+//        {
+//            Vector4 inverted_corner = Vector4(frustum_corner, 1.0f) * view_projection_inverted;
+//            frustum_corner = inverted_corner / inverted_corner.w;
+//        }
+//
+//        // Compute split distance
+//        {
+//            const float split_distance = splits[i];
+//            for (uint32_t i = 0; i < 4; i++)
+//            {
+//                Vector3 distance = frustum_corners[i + 4] - frustum_corners[i];
+//                frustum_corners[i + 4] = frustum_corners[i] + (distance * split_distance);
+//                frustum_corners[i] = frustum_corners[i] + (distance * last_split_distance);
+//            }
+//            last_split_distance = splits[i];
+//        }
+//
+//        // Compute frustum bounds
+//        {
+//            // Compute bounding sphere which encloses the frustum.
+//            // Since a sphere is rotational invariant it will keep the size of the orthographic
+//            // projection frustum same independent of eye view direction, hence eliminating shimmering.
+//
+//            ShadowSlice& shadow_slice = m_shadow_map.slices[i];
+//
+//            // Compute center
+//            shadow_slice.center = Vector3::Zero;
+//            for (const Vector3& frustum_corner : frustum_corners)
+//            {
+//                shadow_slice.center += Vector3(frustum_corner);
+//            }
+//            shadow_slice.center /= 8.0f;
+//
+//            // Compute radius
+//            float radius = 0.0f;
+//            for (const Vector3& frustum_corner : frustum_corners)
+//            {
+//                const float distance = Vector3::Distance(frustum_corner, shadow_slice.center);
+//                radius = Math::Helper::Max(radius, distance);
+//            }
+//            radius = Math::Helper::Ceil(radius * 16.0f) / 16.0f;
+//
+//            // Compute min and max
+//            shadow_slice.max = radius;
+//            shadow_slice.min = -radius;
+//        }
+//    }
+//}
 
 uint32_t Light::GetShadowArraySize() const
 {

@@ -43,7 +43,7 @@ namespace LitchiRuntime
 		// Primitive rendering (excellent for debugging)
 		static void DrawLine(const Vector3& from, const Vector3& to, const Vector4& color_from = DEBUG_COLOR, const Vector4& color_to = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 		static void DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawRectangle(const Rectangle& rectangle, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
+		static void DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 		static void DrawBox(const BoundingBox& box, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 		static void DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 		static void DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
@@ -99,8 +99,6 @@ namespace LitchiRuntime
 
 		//= RESOURCES ===========================================================================================
 		static RHI_Texture* GetFrameTexture();
-		static RenderCamera* GetCamera();
-		static std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetEntities();
 
 		// Get all
 		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
@@ -127,7 +125,7 @@ namespace LitchiRuntime
 		// Constant buffers
 		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set = true);
 		static void PushPassConstants(RHI_CommandList* cmd_list);
-		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light);
+		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light,RenderCamera* renderCamera);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 
 		// Resource creation
@@ -145,7 +143,6 @@ namespace LitchiRuntime
 
 		// Passes - Core
 		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
-		static void Pass_Frame(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath,const bool is_transparent_pass);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 
@@ -157,7 +154,7 @@ namespace LitchiRuntime
 		static void OnFullScreenToggled();
 
 		// Lines
-		static void Lines_OneFrameStart();
+	/*	static void Lines_OneFrameStart();*/
 		static void Lines_OnFrameEnd();
 
 		// Frame
@@ -167,9 +164,7 @@ namespace LitchiRuntime
 		// Misc
 		static bool IsCallingFromOtherThread();
 		static void DestroyResources();
-
-		// misc
-		static std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
+		
 		static Cb_Frame m_cb_frame_cpu;
 		static Pcb_Pass m_cb_pass_cpu;
 		static Cb_Light m_cb_light_cpu;
@@ -183,7 +178,6 @@ namespace LitchiRuntime
 		static uint32_t m_lines_index_depth_off;
 		static uint32_t m_lines_index_depth_on;
 		static RHI_CommandPool* m_cmd_pool;
-		static RenderCamera* m_camera;
 		static const uint32_t m_frames_in_flight = 5;
 
 		static std::unordered_map<RendererPathType, RendererPath*> m_rendererPaths;
