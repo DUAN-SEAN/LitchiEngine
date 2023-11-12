@@ -238,6 +238,8 @@ namespace LitchiRuntime
 
     Vector3 RenderCamera::ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const
     {
+        DEBUG_LOG_INFO("positionScreen {},{}",position_screen.x, position_screen.y);
+
         const RHI_Viewport& viewport = m_viewport;
 
         // A non reverse-z projection matrix is need, we create it

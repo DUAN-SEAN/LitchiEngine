@@ -69,7 +69,7 @@ namespace LitchiRuntime
 		EVerticalAlignment GetVerticalAlignment() const;
 
 	protected:
-		void Update();
+		virtual void OnDraw();
 		virtual void _Draw_Impl() = 0;
 
 	private:

@@ -17,7 +17,7 @@ LitchiEditor::AViewControllable::AViewControllable
 
 }
 
-void LitchiEditor::AViewControllable::Update(float p_deltaTime)
+void LitchiEditor::AViewControllable::UpdateView(float p_deltaTime)
 {
 	// 1. 更新cameraCtrl
 	m_cameraController.HandleInputs(p_deltaTime);
@@ -26,7 +26,7 @@ void LitchiEditor::AViewControllable::Update(float p_deltaTime)
 	m_camera->SetRotation(m_cameraController.GetRotation());*/
 
 	// 2. 更新View
-	AView::Update(p_deltaTime);
+	AView::UpdateView(p_deltaTime);
 }
 
 LitchiEditor::CameraController& LitchiEditor::AViewControllable::GetCameraController()

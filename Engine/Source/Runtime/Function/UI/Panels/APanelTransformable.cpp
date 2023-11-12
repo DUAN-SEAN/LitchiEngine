@@ -99,7 +99,7 @@ void LitchiRuntime::APanelTransformable::CopyImGuiSize()
 	m_size = Converter::ToFVector2(ImGui::GetWindowSize());
 }
 
-void LitchiRuntime::APanelTransformable::Update()
+void LitchiRuntime::APanelTransformable::OnDraw()
 {
 	if (!m_firstFrame)
 	{

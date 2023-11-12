@@ -98,6 +98,7 @@ void LitchiRuntime::InputManager::Tick()
 
 	double x, y;
 	glfwGetCursorPos(m_window->GetGlfwWindow(), &x, &y);
+	
 	Vector2 position = Vector2(static_cast<int>(x), static_cast<int>(y));
 	// Get delta
 	m_mouse_delta = position - m_mouse_position;
@@ -105,8 +106,10 @@ void LitchiRuntime::InputManager::Tick()
 	// Get position
 	m_mouse_position = position;
 
-	/*DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
-	DEBUG_LOG_INFO("mouse wheel delta {}{}", m_mouse_wheel_delta.x, m_mouse_wheel_delta.y);*/
+	/*DEBUG_LOG_INFO("mouse_position {},{}", m_mouse_position.x, m_mouse_position.y);
+	DEBUG_LOG_INFO("window_position {},{}", window_x, window_y);*/
+	// DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
+	// DEBUG_LOG_INFO("mouse wheel delta {}{}", m_mouse_wheel_delta.x, m_mouse_wheel_delta.y);
 
 }
 
@@ -198,7 +201,8 @@ const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
 	GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
 
 	glfwGetWindowPos(window, &window_x, &window_y);
-	return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
+	// return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
+	return Vector2(static_cast<float>(m_mouse_position.x), static_cast<float>(m_mouse_position.y));
 }
 
 const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToEditorViewport()

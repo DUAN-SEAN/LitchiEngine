@@ -14,7 +14,7 @@ void LitchiRuntime::PanelUndecorated::_Draw_Impl()
 		style.WindowPadding = previousPadding;
 		style.WindowMinSize = previousMinSize;
 
-		Update();
+		OnDraw();
 			
 		DrawWidgets();
 

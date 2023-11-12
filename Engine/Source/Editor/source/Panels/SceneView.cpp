@@ -3,6 +3,7 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
+#include "Runtime/Function/UI/ImGui/ImGui_TransformGizmo.h"
 
 LitchiEditor::SceneView::SceneView
 (
@@ -15,7 +16,7 @@ LitchiEditor::SceneView::SceneView
 	m_camera->SetClearColor({ 0.098f, 0.098f, 0.098f });
 	m_camera->SetFarPlane(5000.0f);
 
-	m_transform_gizmo = &CreateWidget<TransformGizmo>(nullptr);
+	m_transform_gizmo = &CreateWidget<TransformGizmo>(m_camera);
 	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
 	//{
 	//	std::string path = p_data.first;
@@ -28,13 +29,31 @@ LitchiEditor::SceneView::SceneView
 	//};
 }
 
-void LitchiEditor::SceneView::Update(float p_deltaTime)
+void LitchiEditor::SceneView::UpdateView(float p_deltaTime)
 {
-	AViewControllable::Update(p_deltaTime);
+	AViewControllable::UpdateView(p_deltaTime);
 }
 
 void LitchiEditor::SceneView::_Render_Impl()
 {
+}
+
+void LitchiEditor::SceneView::OnDraw()
+{
+	// let the input system know if the mouse is within the viewport
+	InputManager::SetMouseIsInViewport(IsHovered());
+	InputManager::SetEditorViewportOffset(GetPosition());
+	
+	// mouse picking
+	if (ImGui::IsMouseClicked(0) && IsHovered() && ImGui::TransformGizmo::allow_picking())
+	{
+		if (auto camera = m_camera)
+		{
+			camera->Pick();
+		}
+	}
+
+	AView::OnDraw();
 }
 
 void LitchiEditor::SceneView::RenderSceneForActorPicking()

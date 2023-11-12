@@ -146,7 +146,7 @@ void LitchiRuntime::PanelWindow::_Draw_Impl()
 			if (!m_opened)
 				CloseEvent.Invoke();
 
-			Update();
+			OnDraw();
 
             if (m_mustScrollToBottom)
             {

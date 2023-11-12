@@ -240,6 +240,12 @@ namespace LitchiRuntime
         const string shader_dir = ResourceCache::GetResourceDirectory(ResourceDirectory::Shaders) + "\\";
         #define shader(x) m_shaders[static_cast<uint8_t>(x)]
 
+        shader(Renderer_Shader::forward_v) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::forward_v)->Compile(RHI_Shader_Vertex, shader_dir + "test.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        shader(Renderer_Shader::forward_p) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::forward_p)->Compile(RHI_Shader_Pixel, shader_dir + "test.hlsl", async);
+
+
         // G-Buffer
 		shader(Renderer_Shader::forward_v) = make_shared<RHI_Shader>();
     	shader(Renderer_Shader::forward_v)->Compile(RHI_Shader_Vertex, shader_dir + "forward.hlsl", async, RHI_Vertex_Type::PosUvNorTan);

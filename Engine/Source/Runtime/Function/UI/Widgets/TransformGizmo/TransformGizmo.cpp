@@ -3,6 +3,7 @@
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
+#include "Runtime/Function/UI/ImGui/ImGui_TransformGizmo.h"
 #include "Runtime/Function/UI/ImGui/ImGuizmo/ImGuizmo.h"
 
 using namespace LitchiRuntime;
@@ -24,25 +25,10 @@ void LitchiRuntime::TransformGizmo::SetCamera(RenderCamera* camera)
 
 void TransformGizmo::_Draw_Impl()
 {
-	if (ImGui::IsItemHovered())
+	if (auto camera = m_camera)
 	{
-		InputManager::SetMouseIsInViewport(true);
-
-		if (ImGui::IsMouseClicked(0))
-		{
-
-			if (auto camera = m_camera)
-			{
-				m_camera = camera;
-				camera->Pick();
-
-				m_selectObject = camera->GetSelectedEntity();
-			}
-
-			DEBUG_LOG_INFO("AView Mouse is clicked left button");
-		}
+		m_selectObject = camera->GetSelectedEntity();
 	}
-
 
 	// Enable/disable gizmo
 	ImGuizmo::Enable(m_selectObject != nullptr);

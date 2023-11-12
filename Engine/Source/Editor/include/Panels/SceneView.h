@@ -32,13 +32,18 @@ namespace LitchiEditor
 		/**
 		* Update the scene view
 		*/
-		virtual void Update(float p_deltaTime) override;
+		virtual void UpdateView(float p_deltaTime) override;
 
 		/**
 		* Custom implementation of the render method
 		*/
 		virtual void _Render_Impl() override;
-		
+
+		/**
+		* OnDraw
+		*/
+		virtual void OnDraw() override;
+
 		/**
 		* Render the scene for actor picking (Using unlit colors)
 		*/

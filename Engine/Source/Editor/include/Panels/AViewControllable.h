@@ -30,7 +30,7 @@ namespace LitchiEditor
 		* Update the controllable view (Handle inputs)
 		* @param p_deltaTime
 		*/
-		virtual void Update(float p_deltaTime) override;
+		virtual void UpdateView(float p_deltaTime) override;
 
 		/**
 		* Returns the camera controller of the controllable view

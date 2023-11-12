@@ -30,7 +30,7 @@ LitchiEditor::AView::AView
 	scrollable = false;
 }
 
-void LitchiEditor::AView::Update(float p_deltaTime)
+void LitchiEditor::AView::UpdateView(float p_deltaTime)
 {
 	// 更新fbo的大小
 	auto [winWidth, winHeight] = GetSafeSize();

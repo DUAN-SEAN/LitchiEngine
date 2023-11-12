@@ -42,7 +42,7 @@ namespace LitchiEditor
 		* Update the view
 		* @param p_deltaTime
 		*/
-		virtual void Update(float p_deltaTime);
+		virtual void UpdateView(float p_deltaTime);
 
 		/**
 		* Custom implementation of the draw method
