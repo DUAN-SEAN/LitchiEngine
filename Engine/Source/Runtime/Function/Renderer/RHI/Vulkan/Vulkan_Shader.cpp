@@ -187,7 +187,7 @@ namespace LitchiRuntime
 
 				descriptors.emplace_back
 				(
-					resource.name,   // name
+					name,   // name
 					descriptor_type, // type
 					layout,          // layout
 					slot,            // slot
