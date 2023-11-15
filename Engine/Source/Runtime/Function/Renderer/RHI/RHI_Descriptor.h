@@ -3,6 +3,7 @@
 
 //= INCLUDES ===============
 #include "RHI_Definitions.h"
+#include "Runtime/Function/Renderer/Resources/UniformInfo.h"
 //==========================
 
 namespace LitchiRuntime
@@ -22,6 +23,8 @@ namespace LitchiRuntime
             mip          = descriptor.mip;
             array_length = descriptor.array_length;
             struct_size  = descriptor.struct_size;
+            isGlobal4Vulkan = descriptor.isGlobal4Vulkan;
+            uniformList = descriptor.uniformList;
         }
 
         RHI_Descriptor(
@@ -31,7 +34,9 @@ namespace LitchiRuntime
             const uint32_t slot,
             const uint32_t array_length,
             const uint32_t stage,
-            const uint32_t struct_size
+            const uint32_t struct_size,
+            const uint32_t isGlobal4Vulkan,
+            const std::vector<UniformInfo> uniformList
         )
         {
             this->type         = type;
@@ -41,6 +46,8 @@ namespace LitchiRuntime
             this->name         = name;
             this->array_length = array_length;
             this->struct_size  = struct_size;
+            this->isGlobal4Vulkan  = isGlobal4Vulkan;
+            this->uniformList = uniformList;
         }
 
         uint64_t ComputeHash()
@@ -76,6 +83,11 @@ namespace LitchiRuntime
 
         // Debugging
         std::string name;
+
+        // global var 
+        bool isGlobal4Vulkan;
+
+        std::vector<UniformInfo> uniformList;
 
     private:
         uint64_t m_hash = 0;

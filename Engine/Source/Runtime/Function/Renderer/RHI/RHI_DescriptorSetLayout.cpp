@@ -139,6 +139,7 @@ namespace LitchiRuntime
         RHI_DescriptorSet* descriptor_set = nullptr;
 
         // integrate descriptor data into the hash (anything that can change)
+        // todo: hash not full
         uint64_t hash = m_hash;
         for (const RHI_Descriptor& descriptor : m_descriptors)
         {

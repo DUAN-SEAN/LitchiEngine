@@ -17,5 +17,7 @@ namespace LitchiRuntime
 		std::string		name;
 		uint32_t		location;
 		std::any		defaultValue;
+		int size;
+		std::vector<UniformInfo> memberUniform;
 	};
 }
