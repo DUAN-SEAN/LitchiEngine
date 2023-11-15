@@ -73,6 +73,9 @@ namespace LitchiRuntime
         RHI_Vertex_Type m_vertex_type                               = RHI_Vertex_Type::Undefined;
         uint64_t m_hash                                             = 0;
 
+        // todo: 每一个descrptorSet对应的数据集
+        // vector<UniformSet(vector<uniformInfo>)>
+
         void* m_rhi_resource = nullptr;
     };
 }

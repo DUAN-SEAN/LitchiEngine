@@ -36,7 +36,38 @@ namespace LitchiRuntime
             for (const Resource& resource : resources)
             {
                 uint32_t slot         = compiler.get_decoration(resource.id, spv::DecorationBinding);
+                auto name = compiler.get_name(resource.id);
+
                 SPIRType type         = compiler.get_type(resource.type_id);
+                if(name._Equal("$Globals"))
+                {
+                    unsigned member_count = type.member_types.size();
+                    for (unsigned i = 0; i < member_count; i++)
+                    {
+                        auto& member_type = compiler.get_type(type.member_types[i]);
+                        size_t member_size = compiler.get_declared_struct_member_size(type, i);
+
+                        // Get member offset within this struct.
+                        size_t offset = compiler.type_struct_member_offset(type, i);
+
+                        uint32_t slot = compiler.get_member_decoration(resource.id, i, spv::DecorationBinding);
+                        unsigned member_count2 = member_type.member_types.size();
+                        if (!member_type.array.empty())
+                        {
+                            // Get array stride, e.g. float4 foo[]; Will have array stride of 16 bytes.
+                            size_t array_stride = compiler.type_struct_member_array_stride(type, i);
+                        }
+
+                        const string& mname = compiler.get_member_name(type.self, i);
+                        if (member_type.columns > 1)
+                        {
+                            // Get bytes stride between columns (if column major), for float4x4 -> 16 bytes.
+                            size_t matrix_stride = compiler.type_struct_member_matrix_stride(type, i);
+                            size_t matrix_stride2 = matrix_stride;
+                        }
+                    }
+                }
+              
                 uint32_t array_length = !type.array.empty() ? type.array[0] : 0;
                 uint32_t size         = 0;
                 if (descriptor_type == RHI_Descriptor_Type::ConstantBuffer || descriptor_type == RHI_Descriptor_Type::PushConstantBuffer)
