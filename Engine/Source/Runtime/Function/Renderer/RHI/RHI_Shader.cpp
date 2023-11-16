@@ -223,6 +223,19 @@ namespace LitchiRuntime
         return m_input_layout->GetVertexSize();
     }
 
+    const RHI_Descriptor& RHI_Shader::GetGlobalDescriptor()
+    {
+	    for (auto descriptor : m_descriptors)
+	    {
+		    if(descriptor.name == "$Global")
+		    {
+                return descriptor;
+		    }
+	    }
+
+        return RHI_Descriptor();
+    }
+
     const char* RHI_Shader::GetEntryPoint() const
     {
         if (m_shader_type == RHI_Shader_Vertex)  return "mainVS";

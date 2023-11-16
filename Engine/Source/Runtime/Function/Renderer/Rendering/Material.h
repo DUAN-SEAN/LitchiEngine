@@ -121,12 +121,12 @@ namespace LitchiRuntime
 	class MaterialRes
 	{
 	public:
-		std::string vertexShaderPath;
-		std::string piexlShaderPath;
+		std::string shaderPath;
 		std::vector<UniformInfoBase*> uniformInfoList;
 
 		RTTR_ENABLE()
 	};
+
 	enum class MaterialTexture
 	{
 		Color,
@@ -183,20 +183,69 @@ namespace LitchiRuntime
 		void SetTexture(const int slot, RHI_Texture* texture);
 
 		/* Set Variable with not resource */
-		void SetValue(const int slot, const std::vector<std::string>& pathArr, const UniformType uniformType, const std::any value);
+		template<typename T> void SetValue(const std::string& name, const T& value);
+
+		/**
+		* Set a shader uniform value
+		* @param p_key
+		*/
+		template<typename T> const T& GetValue(const std::string p_key);
 
 		MaterialRes* GetMaterialRes() { return m_materialRes; }
 		RHI_Shader* GetVertexShader() { return m_vertex_shader; }
 		RHI_Shader* GetPixelShader() { return m_piexl_shader; }
 
+		void PostResourceModify() override;
+		void PostResourceLoaded() override;
+
+		static Material* CreateMaterial4StandardPBR();
+		static Material* CreateMaterial4StandardPhong();
+
 	private:
 
-		/* serialize data */
-		MaterialRes* m_materialRes;
+		void UpdateValue(const std::string& name);
+		int CalcValueSize();
 
 		/* shader */
 		RHI_Shader* m_vertex_shader;
 		RHI_Shader* m_piexl_shader;
 
+		/* global cbuffer */
+		void* m_value;
+		int m_valueSize;
+		std::map<std::string, std::any> m_valueMap;
+
+		/* texture shader srv */
+		std::map<std::string, RHI_Texture*> m_textureMap;
+	private:
+
+		/* serialize data */
+		MaterialRes* m_materialRes;
+		RTTR_ENABLE(Object)
 	};
+
+	template<typename T>
+	inline void Material::SetValue(const std::string& name, const T& value)
+	{
+		if (m_valueMap.find(name) != m_valueMap.end())
+		{
+			m_valueMap[name] = std::any(value);
+			UpdateValue(name);
+		}
+	}
+
+	template<typename T>
+	inline const T& Material::GetValue(const std::string p_key)
+	{
+		if (m_valueMap.find(p_key) != m_valueMap.end())
+			return T();
+		else
+			return std::any_cast<T>(m_valueMap.at(p_key));
+	}
+
+	/*
+	 * standard pbr
+	 *
+	 *
+	 */
 }
