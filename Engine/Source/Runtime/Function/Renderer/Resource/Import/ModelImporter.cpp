@@ -236,14 +236,16 @@ namespace LitchiRuntime
         // FIX: materials that have a diffuse texture should not be tinted black/gray
         if (type_assimp == aiTextureType_BASE_COLOR || type_assimp == aiTextureType_DIFFUSE)
         {
-            material->SetProperty(MaterialProperty::ColorR, 1.0f);
+            // todo:
+           /* material->SetProperty(MaterialProperty::ColorR, 1.0f);
             material->SetProperty(MaterialProperty::ColorG, 1.0f);
             material->SetProperty(MaterialProperty::ColorB, 1.0f);
-            material->SetProperty(MaterialProperty::ColorA, 1.0f);
+            material->SetProperty(MaterialProperty::ColorA, 1.0f);*/
         }
 
+        // todo:
         // FIX: Some models pass a normal map as a height map and vice versa, we correct that.
-        if (texture_type == MaterialTexture::Normal || texture_type == MaterialTexture::Height)
+      /*  if (texture_type == MaterialTexture::Normal || texture_type == MaterialTexture::Height)
         {
             if (shared_ptr<RHI_Texture> texture = material->GetTexture_PtrShared(texture_type))
             {
@@ -257,7 +259,7 @@ namespace LitchiRuntime
                     material->SetTexture(proper_type, texture);
                 }
             }
-        }
+        }*/
 
         return true;
     }
@@ -283,11 +285,12 @@ namespace LitchiRuntime
         aiColor4D opacity(1.0f, 1.0f, 1.0f, 1.0f);
         aiGetMaterialColor(material_assimp, AI_MATKEY_OPACITY, &opacity);
 
+        // todo:
         // Set color and opacity
-        material->SetProperty(MaterialProperty::ColorR, color_diffuse.r);
+      /*  material->SetProperty(MaterialProperty::ColorR, color_diffuse.r);
         material->SetProperty(MaterialProperty::ColorG, color_diffuse.g);
         material->SetProperty(MaterialProperty::ColorB, color_diffuse.b);
-        material->SetProperty(MaterialProperty::ColorA, opacity.r);
+        material->SetProperty(MaterialProperty::ColorA, opacity.r);*/
 
         //                                                                         Texture type,                Texture type Assimp (PBR),       Texture type Assimp (Legacy/fallback)
         load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Color,      aiTextureType_BASE_COLOR,        aiTextureType_DIFFUSE);
@@ -299,7 +302,8 @@ namespace LitchiRuntime
         load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Height,     aiTextureType_HEIGHT,            aiTextureType_NONE);
         load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::AlphaMask,  aiTextureType_OPACITY,           aiTextureType_NONE);
 
-        material->SetProperty(MaterialProperty::SingleTextureRoughnessMetalness, static_cast<float>(is_gltf));
+        // todo:
+        // material->SetProperty(MaterialProperty::SingleTextureRoughnessMetalness, static_cast<float>(is_gltf));
 
         return material;
     }
@@ -665,13 +669,15 @@ namespace LitchiRuntime
         // material
         if (scene->HasMaterials())
         {
-            // get aiMaterial
-            const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
+            // todo:
 
-            // convert it and add it to the model
-            Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
+            //// get aiMaterial
+            //const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
 
-            mesh->AddMaterial(material, entity_parent);
+            //// convert it and add it to the model
+            //Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
+
+            //mesh->AddMaterial(material, entity_parent);
         }
 
         // Bones

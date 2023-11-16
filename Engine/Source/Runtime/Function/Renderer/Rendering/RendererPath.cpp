@@ -98,11 +98,11 @@ namespace LitchiRuntime
 				bool is_transparent = false;
 				bool is_visible = true;
 
-				if (const Material* material = renderable->GetMaterial())
+				/*if (const Material* material = renderable->GetMaterial())
 				{
 					is_transparent = material->GetProperty(MaterialProperty::ColorA) < 1.0f;
 					is_visible = material->GetProperty(MaterialProperty::ColorA) != 0.0f;
-				}
+				}*/
 
 				if (is_visible)
 				{

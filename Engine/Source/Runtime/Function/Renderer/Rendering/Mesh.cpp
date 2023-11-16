@@ -273,17 +273,18 @@ namespace LitchiRuntime
         const auto tex_name = FileSystem::GetFileNameWithoutExtensionFromFilePath(file_path);
         shared_ptr<RHI_Texture> texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
 
-        if (texture)
-        {
-            material->SetTexture(texture_type, texture);
-        }
-        else // If we didn't get a texture, it's not cached, hence we have to load it and cache it now
-        {
-            // Load texture
-            texture = ResourceCache::Load<RHI_Texture2D>(file_path, RHI_Texture_Srv | RHI_Texture_Mips | RHI_Texture_PerMipViews | RHI_Texture_Compressed);
+        // todo:
+        //if (texture)
+        //{
+        //    material->SetTexture(texture_type, texture);
+        //}
+        //else // If we didn't get a texture, it's not cached, hence we have to load it and cache it now
+        //{
+        //    // Load texture
+        //    texture = ResourceCache::Load<RHI_Texture2D>(file_path, RHI_Texture_Srv | RHI_Texture_Mips | RHI_Texture_PerMipViews | RHI_Texture_Compressed);
 
-            // Set the texture to the provided material
-            material->SetTexture(texture_type, texture);
-        }
+        //    // Set the texture to the provided material
+        //    material->SetTexture(texture_type, texture);
+        //}
     }
 }

@@ -162,16 +162,17 @@ namespace LitchiRuntime
 						render_pass_active = true;
 					}
 
+					// todo:
 					// Bind material (only for transparents)
-					if (is_transparent_pass)
-					{
-						// Bind material textures
-						RHI_Texture* tex_albedo = material->GetTexture(MaterialTexture::Color);
-						cmd_list->SetTexture(Renderer_BindingsSrv::tex, tex_albedo ? tex_albedo : GetStandardTexture(Renderer_StandardTexture::White).get());
+					//if (is_transparent_pass)
+					//{
+					//	// Bind material textures
+					//	RHI_Texture* tex_albedo = material->GetTexture(MaterialTexture::Color);
+					//	cmd_list->SetTexture(Renderer_BindingsSrv::tex, tex_albedo ? tex_albedo : GetStandardTexture(Renderer_StandardTexture::White).get());
 
-						// Set pass constants with material properties
-						UpdateConstantBufferMaterial(cmd_list, material);
-					}
+					//	// Set pass constants with material properties
+					//	UpdateConstantBufferMaterial(cmd_list, material);
+					//}
 
 					// Bind geometry
 					cmd_list->SetBufferIndex(mesh->GetIndexBuffer());

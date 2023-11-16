@@ -20,6 +20,7 @@ namespace LitchiRuntime
 		UNIFORM_FLOAT_VEC4,
 		UNIFORM_FLOAT_MAT4,
 		UNIFORM_DOUBLE_MAT4,
+		UNIFORM_Texture,
 		UNIFORM_Struct,
 	};
 }

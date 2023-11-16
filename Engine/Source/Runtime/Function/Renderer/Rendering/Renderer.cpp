@@ -602,7 +602,7 @@ namespace LitchiRuntime
 	void Renderer::UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material)
 	{
 		// Set
-		m_cb_material_cpu.color.x = material->GetProperty(MaterialProperty::ColorR);
+		/*m_cb_material_cpu.color.x = material->GetProperty(MaterialProperty::ColorR);
 		m_cb_material_cpu.color.y = material->GetProperty(MaterialProperty::ColorG);
 		m_cb_material_cpu.color.z = material->GetProperty(MaterialProperty::ColorB);
 		m_cb_material_cpu.color.w = material->GetProperty(MaterialProperty::ColorA);
@@ -629,7 +629,7 @@ namespace LitchiRuntime
 		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Metalness) ? (1U << 5) : 0;
 		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::AlphaMask) ? (1U << 6) : 0;
 		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Emission) ? (1U << 7) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Occlusion) ? (1U << 8) : 0;
+		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Occlusion) ? (1U << 8) : 0;*/
 
 		// Update
 		GetConstantBuffer(Renderer_ConstantBuffer::Material)->Update(&m_cb_material_cpu);
