@@ -30,6 +30,7 @@
 #include "Runtime/Function/Framework/Component/Camera/Camera.h";
 
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
+#include "Runtime/Resource/FontManager.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 struct data
@@ -46,9 +47,15 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 	projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
 	editorAssetsPath = filePath + "\\..\\..\\Assets\\";
-
+	
 	// todo ÔÝÊ±ÕâÑùÐ´
 	projectAssetsPath = editorAssetsPath;
+
+	ModelManager::ProvideAssetPaths(projectAssetsPath);
+	TextureManager::ProvideAssetPaths(projectAssetsPath);
+	ShaderManager::ProvideAssetPaths(projectAssetsPath);
+	MaterialManager::ProvideAssetPaths(projectAssetsPath);
+	FontManager::ProvideAssetPaths(projectAssetsPath);
 
 	/*ModelManager::ProvideAssetPaths(projectAssetsPath);
 	ShaderManager::ProvideAssetPaths(projectAssetsPath); */
@@ -284,6 +291,8 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
+
+	auto textMat= materialManager->LoadResource("Engine\\Materials\\Test.mat");
 
 	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 

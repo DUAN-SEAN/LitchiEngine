@@ -24,7 +24,11 @@ LitchiRuntime::RHI_Texture2D* LitchiRuntime::TextureManager::CreateResource(cons
 	RHI_Texture2D* texture_2d = new RHI_Texture2D();
 	if (texture_2d)
 	{
-		texture_2d->LoadFromFile(realPath);
+		if(!texture_2d->LoadFromFile(realPath))
+		{
+			delete texture_2d;
+			return nullptr;
+		}
 	}
 		//*reinterpret_cast<std::string*>(reinterpret_cast<char*>(texture) + offsetof(LitchiRuntime::Texture, path)) = p_path; // Force the resource path to fit the given path
 

@@ -9,6 +9,8 @@
 #include "Runtime/Core/Window/Window.h"
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Scene/SceneManager.h"
+#include "Runtime/Resource/FontManager.h"
+#include "Runtime/Resource/TextureManager.h"
 
 namespace LitchiRuntime
 {
@@ -60,9 +62,11 @@ namespace LitchiRuntime
         // std::unique_ptr<Renderer>					renderer;
 
         //std::unique_ptr<UniformBuffer>	engineUBO;
-        // std::unique_ptr<ModelManager> modelManager;
+         std::unique_ptr<ModelManager> modelManager;
         std::unique_ptr<ShaderManager> shaderManager;
         std::unique_ptr<MaterialManager> materialManager;
+        std::unique_ptr<FontManager> fontManager;
+        std::unique_ptr<TextureManager> textureManager;
         std::unique_ptr<Window> window;
         std::unique_ptr<SceneManager> sceneManager;
 

@@ -1,0 +1,25 @@
+{
+  "shaderPath": "Engine\\Shaders\\test.hlsl",
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoFloat",
+      "name": "color",
+      "value": 64.0
+    },
+    {
+      "Type": "UniformInfoVector4",
+      "name": "color4",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "tex",
+      "path": "Engine\\Textures\\base_albedo.jpg"
+    }
+  ]
+}

@@ -263,7 +263,7 @@ namespace LitchiRuntime
 		}
 		for (const auto& element : textureDescriptorList)
 		{
-			m_uniformsData.emplace(element.name, make_any<RHI_Texture*>());
+			m_uniformsData.emplace(element.name, std::any());
 		}
 
 		// load value and texuture from material
@@ -319,8 +319,7 @@ namespace LitchiRuntime
 			{
 				auto uniformTexture = static_cast<UniformInfoTexture*>(uniformInfo);
 				auto texturePath = uniformTexture->path;
-				RHI_Texture* tex = new RHI_Texture2D();
-				tex->LoadFromFile(texturePath);
+				RHI_Texture* tex = ApplicationBase::Instance()->textureManager->LoadResource(texturePath);
 				uniformData->second = make_any<RHI_Texture*>(tex);
 				break;
 			}

@@ -131,16 +131,93 @@ RTTR_REGISTRATION //注册反射
 
 
 	/* Material Resource  */
+	/* Material Resource  */
+	// UniformInfoBase
+	registration::class_<UniformInfoBase>("UniformInfoBase")
+		(
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("name", &UniformInfoBase::name);
+
+	registration::class_<UniformInfoBool>("UniformInfoBool")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &UniformInfoBool::value);
+
+	registration::class_<UniformInfoInt>("UniformInfoInt")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &UniformInfoInt::value);
+
+	registration::class_<UniformInfoFloat>("UniformInfoFloat")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("value", &UniformInfoFloat::value);
+
+	registration::class_<UniformInfoVector2>("UniformInfoVector2")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &UniformInfoVector2::vector);
+
+	registration::class_<UniformInfoVector3>("UniformInfoVector3")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &UniformInfoVector3::vector);
+
+	registration::class_<UniformInfoVector4>("UniformInfoVector4")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("vector", &UniformInfoVector4::vector);
+
+	registration::class_<UniformInfoTexture>("UniformInfoTexture")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("path", &UniformInfoTexture::path);
+
+	registration::class_<MaterialResSetting>("MaterialResSetting")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()
+		.property("blendable", &MaterialResSetting::blendable)
+		.property("backfaceCulling", &MaterialResSetting::backfaceCulling)
+		.property("depthTest", &MaterialResSetting::depthTest)
+		.property("gpuInstances", &MaterialResSetting::gpuInstances);
+
+	registration::class_<MaterialRes>("MaterialRes")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()
+		.property("shaderPath", &MaterialRes::shaderPath)
+		.property("uniformInfoList", &MaterialRes::uniformInfoList);
+
 
 	//// 内存中的material句柄, 需要在Asset中显示, 需要被反射
-	//registration::class_<Resource::Material>("Material")
+	//registration::class_<Material>("Material")
 	//	(
 	//		rttr::metadata("Serializable", true),
 	//		rttr::metadata("Polymorphic", true)
 	//		)
 	//	.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-	//	.property("materialPath", &Resource::Material::path)
-	//	.property("materialRes", &Resource::Material::materialRes);
+	//	.property("materialPath", &Material::G)
+	//	.property("materialRes", &Material::materialRes);
 
 	//// 内存中的material句柄, 需要在Asset中显示, 需要被反射
 	//registration::class_<LitchiRuntime::Light>("Light")

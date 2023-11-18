@@ -13,6 +13,9 @@
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Physics/physics.h"
+#include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
+#include "Runtime/Function/Renderer/Resource/Import/ImageImporter.h"
+#include "Runtime/Function/Renderer/Resource/Import/ModelImporter.h"
 
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
@@ -33,9 +36,13 @@ namespace LitchiRuntime
 
         Time::Initialize();
 
-        //初始化图形库，例如glfw
-        InitGraphicsLibraryFramework();
-        
+        ////初始化图形库，例如glfw
+        //InitGraphicsLibraryFramework();
+
+        FontImporter::Initialize();
+        ModelImporter::Initialize();
+        ImageImporter::Initialize();
+
         WindowSettings windowSettings;
         windowSettings.title = "Litchi Editor";
         windowSettings.width = 1280;
@@ -88,6 +95,9 @@ namespace LitchiRuntime
         sceneManager = std::make_unique<SceneManager>();
         shaderManager = std::make_unique<ShaderManager>();
         materialManager = std::make_unique<MaterialManager>();
+        fontManager = std::make_unique<FontManager>();
+        textureManager = std::make_unique<TextureManager>();
+        modelManager = std::make_unique<ModelManager>();
     }
 
     /// 初始化图形库，例如glfw

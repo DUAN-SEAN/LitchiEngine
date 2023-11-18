@@ -227,7 +227,7 @@ namespace LitchiRuntime
     {
 	    for (auto descriptor : m_descriptors)
 	    {
-		    if(descriptor.name == "$Global")
+		    if(descriptor.name == "$Globals")
 		    {
                 return descriptor;
 		    }
