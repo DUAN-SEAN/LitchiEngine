@@ -5,6 +5,8 @@
 #include <any>
 #include <memory>
 #include <array>
+
+#include "MaterialShader.h"
 #include "../RHI/RHI_Definitions.h"
 #include "../Resource/IResource.h"
 #include "Runtime/Function/Renderer/Resources/UniformType.h"
@@ -166,32 +168,6 @@ namespace LitchiRuntime
 		SingleTextureRoughnessMetalness,
 		CanBeEdited,
 		Undefined
-	};
-
-	/* composite RHI_Shader Group */
-	struct MaterialShader
-	{
-		MaterialShader(std::string shaderPath, RHI_Shader* vertex_shader, RHI_Shader* pixel_shader)
-		{
-			m_shaderPath = shaderPath;
-			m_vertex_shader = vertex_shader;
-			m_pixel_shader = pixel_shader;
-		}
-
-		/* Global Uniform  */
-		const ShaderUniform GetGlobalUniformInfo(std::string name);
-		const std::vector<ShaderUniform> GetGlobalShaderUniformList();
-		const RHI_Descriptor& GetTextureDescriptor(std::string name);
-		const std::vector<RHI_Descriptor> GetTextureDescriptorList();
-		int GetGlobalSize();
-
-		std::string m_shaderPath;
-
-		/* shader */
-		RHI_Shader* m_vertex_shader;
-		RHI_Shader* m_pixel_shader;
-
-		RHI_Descriptor m_invalidTextureDescriptor;
 	};
 
 	/**

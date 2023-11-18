@@ -6,8 +6,10 @@
 #include "../Resource/ResourceCache.h"
 #include "../RHI/RHI_Texture2D.h"
 #include "../RHI/RHI_TextureCube.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 #include "Runtime/Resource/AssetManager.h"
+#include "Runtime/Resource/ShaderManager.h"
 //====================================
 
 //= NAMESPACES ===============
@@ -17,71 +19,6 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-	const ShaderUniform MaterialShader::GetGlobalUniformInfo(std::string name)
-	{
-		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-		const auto& uniformList = descriptor.uniformList;
-
-		for (auto uniform : uniformList)
-		{
-			if (uniform.name == name)
-			{
-				return uniform;
-			}
-		}
-
-		return ShaderUniform();
-	}
-
-	const std::vector<ShaderUniform> MaterialShader::GetGlobalShaderUniformList()
-	{
-		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-		const auto& uniformList = descriptor.uniformList;
-		return uniformList;
-	}
-
-	const RHI_Descriptor& MaterialShader::GetTextureDescriptor(std::string name)
-	{
-		auto& descriptor = m_vertex_shader->GetDescriptors();
-
-		for (auto& rhi_descriptor : descriptor)
-		{
-			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.name == name)
-			{
-				return rhi_descriptor;
-			}
-		}
-
-		return m_invalidTextureDescriptor;
-	}
-
-	const std::vector<RHI_Descriptor> MaterialShader::GetTextureDescriptorList()
-	{
-		std::vector<RHI_Descriptor> descriptorList;
-		auto& descriptor = m_vertex_shader->GetDescriptors();
-
-		for (auto rhi_descriptor : descriptor)
-		{
-			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture)
-			{
-				descriptorList.push_back(rhi_descriptor);
-			}
-		}
-
-		return descriptorList;
-	}
-
-	int MaterialShader::GetGlobalSize()
-	{
-		if (m_vertex_shader)
-		{
-			const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-			return descriptor.struct_size;
-		}
-
-		return 0;
-	}
-
 	Material::Material() : IResource(ResourceType::Material)
 	{
 	}
@@ -104,11 +41,8 @@ namespace LitchiRuntime
 		{
 			return true;
 		}
-		auto vertexShader = new RHI_Shader();
-		vertexShader->Compile(RHI_Shader_Stage::RHI_Shader_Vertex, m_materialRes->shaderPath, false, RHI_Vertex_Type::PosUv);
-		auto pixelShader = new RHI_Shader();
-		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, m_materialRes->shaderPath, false, RHI_Vertex_Type::PosUv);
-		m_shader = new MaterialShader(m_materialRes->shaderPath, vertexShader, pixelShader);
+
+		m_shader = ApplicationBase::Instance()->shaderManager->LoadResource(m_materialRes->shaderPath);
 
 		PostResourceLoaded();
 

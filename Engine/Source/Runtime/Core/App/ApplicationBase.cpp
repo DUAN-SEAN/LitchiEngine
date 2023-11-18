@@ -86,6 +86,8 @@ namespace LitchiRuntime
 
         // 初始化场景 如果没有场景则构建默认场景
         sceneManager = std::make_unique<SceneManager>();
+        shaderManager = std::make_unique<ShaderManager>();
+        materialManager = std::make_unique<MaterialManager>();
     }
 
     /// 初始化图形库，例如glfw
