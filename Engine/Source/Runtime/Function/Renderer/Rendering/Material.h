@@ -12,6 +12,8 @@
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Core/Math/Vector4.h"
 #include "Runtime/Core/Math/Matrix.h"
+#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Descriptor.h"
 //=================================
 
 namespace LitchiRuntime
@@ -100,7 +102,7 @@ namespace LitchiRuntime
 	public:
 		UniformType GetUniformType() override
 		{
-			return UniformType::UNIFORM_Texture;
+			return UniformType::UNIFORM_TEXTURE;
 		}
 		std::string path;
 		RTTR_ENABLE(UniformInfoBase)
@@ -166,6 +168,32 @@ namespace LitchiRuntime
 		Undefined
 	};
 
+	/* composite RHI_Shader Group */
+	struct MaterialShader
+	{
+		MaterialShader(std::string shaderPath, RHI_Shader* vertex_shader, RHI_Shader* pixel_shader)
+		{
+			m_shaderPath = shaderPath;
+			m_vertex_shader = vertex_shader;
+			m_pixel_shader = pixel_shader;
+		}
+
+		/* Global Uniform  */
+		const ShaderUniform GetGlobalUniformInfo(std::string name);
+		const std::vector<ShaderUniform> GetGlobalShaderUniformList();
+		const RHI_Descriptor& GetTextureDescriptor(std::string name);
+		const std::vector<RHI_Descriptor> GetTextureDescriptorList();
+		int GetGlobalSize();
+
+		std::string m_shaderPath;
+
+		/* shader */
+		RHI_Shader* m_vertex_shader;
+		RHI_Shader* m_pixel_shader;
+
+		RHI_Descriptor m_invalidTextureDescriptor;
+	};
+
 	/**
 	 * \brief only support simple struct global cbuffer as material data
 	 */
@@ -180,7 +208,7 @@ namespace LitchiRuntime
 		bool SaveToFile(const std::string& file_path) override;
 
 		/* Set Texture Resource */
-		void SetTexture(const int slot, RHI_Texture* texture);
+		void SetTexture(const std::string& name, RHI_Texture* texture);
 
 		/* Set Variable with not resource */
 		template<typename T> void SetValue(const std::string& name, const T& value);
@@ -192,8 +220,14 @@ namespace LitchiRuntime
 		template<typename T> const T& GetValue(const std::string p_key);
 
 		MaterialRes* GetMaterialRes() { return m_materialRes; }
-		RHI_Shader* GetVertexShader() { return m_vertex_shader; }
-		RHI_Shader* GetPixelShader() { return m_piexl_shader; }
+		RHI_Shader* GetVertexShader() { return m_shader->m_vertex_shader; }
+		RHI_Shader* GetPixelShader() { return m_shader->m_pixel_shader; }
+		void SetShader(MaterialShader* shader);
+		MaterialShader* GetShader() { return m_shader; }
+		std::map<std::string, std::any>& GetUniformsData() { return m_uniformsData; }
+
+		void* GetValues4DescriptorSet();
+		std::map<int, RHI_Texture*>& GetTextures4DescriptorSet();
 
 		void PostResourceModify() override;
 		void PostResourceLoaded() override;
@@ -207,16 +241,15 @@ namespace LitchiRuntime
 		int CalcValueSize();
 
 		/* shader */
-		RHI_Shader* m_vertex_shader;
-		RHI_Shader* m_piexl_shader;
+		MaterialShader* m_shader = nullptr;
+
+		/* material resource */
+		std::map<std::string, std::any> m_uniformsData;
 
 		/* global cbuffer */
-		void* m_value;
-		int m_valueSize;
-		std::map<std::string, std::any> m_valueMap;
+		void* m_value = nullptr;
+		int m_valueSize = 0;
 
-		/* texture shader srv */
-		std::map<std::string, RHI_Texture*> m_textureMap;
 	private:
 
 		/* serialize data */
@@ -227,9 +260,9 @@ namespace LitchiRuntime
 	template<typename T>
 	inline void Material::SetValue(const std::string& name, const T& value)
 	{
-		if (m_valueMap.find(name) != m_valueMap.end())
+		if (m_uniformsData.find(name) != m_uniformsData.end())
 		{
-			m_valueMap[name] = std::any(value);
+			m_uniformsData[name] = std::any(value);
 			UpdateValue(name);
 		}
 	}
@@ -237,10 +270,10 @@ namespace LitchiRuntime
 	template<typename T>
 	inline const T& Material::GetValue(const std::string p_key)
 	{
-		if (m_valueMap.find(p_key) != m_valueMap.end())
+		if (m_uniformsData.find(p_key) != m_uniformsData.end())
 			return T();
 		else
-			return std::any_cast<T>(m_valueMap.at(p_key));
+			return std::any_cast<T>(m_uniformsData.at(p_key));
 	}
 
 	/*

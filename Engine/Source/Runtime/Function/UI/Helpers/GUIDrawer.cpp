@@ -179,11 +179,11 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::RHI_Shader *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, MaterialShader*& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->GetFilePath() : std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->m_shaderPath: std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);

@@ -6,7 +6,7 @@
 #include "../RHI_Shader.h"
 #include "../RHI_InputLayout.h"
 #include "../RHI_DirectXShaderCompiler.h"
-#include "Runtime/Function/Renderer/Resources/UniformInfo.h"
+#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
 SP_WARNINGS_OFF
 #include <spirv_cross/spirv_hlsl.hpp>
 SP_WARNINGS_ON
@@ -21,9 +21,9 @@ namespace LitchiRuntime
 {
 	namespace
 	{
-		vector<UniformInfo> spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler,const SPIRType parentType)
+		vector<ShaderUniform> spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler,const SPIRType parentType)
 		{
-			vector<UniformInfo> uniformList;
+			vector<ShaderUniform> uniformList;
 			uniformList.resize(0);
 			unsigned member_count = parentType.member_types.size();
 
@@ -34,7 +34,7 @@ namespace LitchiRuntime
 				const string& member_name = compiler.get_member_name(parentType.self, i);
 				size_t member_offset = compiler.type_struct_member_offset(parentType, i);
 
-				UniformInfo uniformInfo;
+				ShaderUniform uniformInfo;
 				uniformInfo.name = member_name;
 				uniformInfo.size = member_size;
 				uniformInfo.location = member_offset;
@@ -166,7 +166,7 @@ namespace LitchiRuntime
 				auto name = compiler.get_name(resource.id);
 
 				SPIRType type = compiler.get_type(resource.type_id);
-				vector<UniformInfo> uniformList;
+				vector<ShaderUniform> uniformList;
 				bool isGlobal = false;
 				if(type.basetype == SPIRType::Struct)
 				{

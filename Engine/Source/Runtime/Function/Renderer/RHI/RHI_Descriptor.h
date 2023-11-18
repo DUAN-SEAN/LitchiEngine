@@ -3,7 +3,7 @@
 
 //= INCLUDES ===============
 #include "RHI_Definitions.h"
-#include "Runtime/Function/Renderer/Resources/UniformInfo.h"
+#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
 //==========================
 
 namespace LitchiRuntime
@@ -36,7 +36,7 @@ namespace LitchiRuntime
             const uint32_t stage,
             const uint32_t struct_size,
             const uint32_t isGlobal4Vulkan,
-            const std::vector<UniformInfo> uniformList
+            const std::vector<ShaderUniform> uniformList
         )
         {
             this->type         = type;
@@ -87,7 +87,7 @@ namespace LitchiRuntime
         // global var 
         bool isGlobal4Vulkan;
 
-        std::vector<UniformInfo> uniformList;
+        std::vector<ShaderUniform> uniformList;
 
     private:
         uint64_t m_hash = 0;

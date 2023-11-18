@@ -1,3 +1,7 @@
+#include "Material.h"
+#include "Runtime/Function/Renderer/Rendering/Material.h"
+
+#include "ShaderUniform.h"
 //
 //
 //#include "Material.h"

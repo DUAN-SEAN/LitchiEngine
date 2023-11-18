@@ -7,6 +7,7 @@
 #include "../RHI/RHI_Texture2D.h"
 #include "../RHI/RHI_TextureCube.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
+#include "Runtime/Resource/AssetManager.h"
 //====================================
 
 //= NAMESPACES ===============
@@ -16,72 +17,100 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
+	const ShaderUniform MaterialShader::GetGlobalUniformInfo(std::string name)
+	{
+		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
+		const auto& uniformList = descriptor.uniformList;
+
+		for (auto uniform : uniformList)
+		{
+			if (uniform.name == name)
+			{
+				return uniform;
+			}
+		}
+
+		return ShaderUniform();
+	}
+
+	const std::vector<ShaderUniform> MaterialShader::GetGlobalShaderUniformList()
+	{
+		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
+		const auto& uniformList = descriptor.uniformList;
+		return uniformList;
+	}
+
+	const RHI_Descriptor& MaterialShader::GetTextureDescriptor(std::string name)
+	{
+		auto& descriptor = m_vertex_shader->GetDescriptors();
+
+		for (auto& rhi_descriptor : descriptor)
+		{
+			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.name == name)
+			{
+				return rhi_descriptor;
+			}
+		}
+
+		return m_invalidTextureDescriptor;
+	}
+
+	const std::vector<RHI_Descriptor> MaterialShader::GetTextureDescriptorList()
+	{
+		std::vector<RHI_Descriptor> descriptorList;
+		auto& descriptor = m_vertex_shader->GetDescriptors();
+
+		for (auto rhi_descriptor : descriptor)
+		{
+			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture)
+			{
+				descriptorList.push_back(rhi_descriptor);
+			}
+		}
+
+		return descriptorList;
+	}
+
+	int MaterialShader::GetGlobalSize()
+	{
+		if (m_vertex_shader)
+		{
+			const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
+			return descriptor.struct_size;
+		}
+
+		return 0;
+	}
+
 	Material::Material() : IResource(ResourceType::Material)
 	{
 	}
 
 	bool Material::LoadFromFile(const string& file_path)
 	{
+		// load material json
+		MaterialRes* materialRes = new MaterialRes();
+		if (!AssetManager::LoadAsset(file_path, *materialRes))
 		{
-			// todo:
-			//auto xml = make_unique<XmlDocument>();
-			//if (!xml->Load(file_path))
-			//    return false;
-
-			//SetResourceFilePath(file_path);
-
-			//xml->GetAttribute("Material", "color_r",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorR)]);
-			//xml->GetAttribute("Material", "color_g",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorG)]);
-			//xml->GetAttribute("Material", "color_b",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorB)]);
-			//xml->GetAttribute("Material", "color_a",                         &m_properties[static_cast<uint32_t>(MaterialProperty::ColorA)]);
-			//xml->GetAttribute("Material", "roughness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::RoughnessMultiplier)]);
-			//xml->GetAttribute("Material", "metalness_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::MetalnessMultiplier)]);
-			//xml->GetAttribute("Material", "normal_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::NormalMultiplier)]);
-			//xml->GetAttribute("Material", "height_multiplier",               &m_properties[static_cast<uint32_t>(MaterialProperty::HeightMultiplier)]);
-			//xml->GetAttribute("Material", "clearcoat_multiplier",            &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat)]);
-			//xml->GetAttribute("Material", "clearcoat_roughness_multiplier",  &m_properties[static_cast<uint32_t>(MaterialProperty::Clearcoat_Roughness)]);
-			//xml->GetAttribute("Material", "anisotropic_multiplier",          &m_properties[static_cast<uint32_t>(MaterialProperty::Anisotropic)]);
-			//xml->GetAttribute("Material", "anisotropic_rotation_multiplier", &m_properties[static_cast<uint32_t>(MaterialProperty::AnisotropicRotation)]);
-			//xml->GetAttribute("Material", "sheen_multiplier",                &m_properties[static_cast<uint32_t>(MaterialProperty::Sheen)]);
-			//xml->GetAttribute("Material", "sheen_tint_multiplier",           &m_properties[static_cast<uint32_t>(MaterialProperty::SheenTint)]);
-			//xml->GetAttribute("Material", "uv_tiling_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingX)]);
-			//xml->GetAttribute("Material", "uv_tiling_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvTilingY)]);
-			//xml->GetAttribute("Material", "uv_offset_x",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetX)]);
-			//xml->GetAttribute("Material", "uv_offset_y",                     &m_properties[static_cast<uint32_t>(MaterialProperty::UvOffsetY)]);
-			//xml->GetAttribute("Material", "can_be_edited",                   &m_properties[static_cast<uint32_t>(MaterialProperty::CanBeEdited)]);
-
-			//const uint32_t texture_count = xml->GetAttributeAs<uint32_t>("textures", "count");
-			//for (uint32_t i = 0; i < texture_count; i++)
-			//{
-			//    auto node_name                 = "texture_" + to_string(i);
-			//    const MaterialTexture tex_type = static_cast<MaterialTexture>(xml->GetAttributeAs<uint32_t>(node_name, "texture_type"));
-			//    auto tex_name                  = xml->GetAttributeAs<string>(node_name, "texture_name");
-			//    auto tex_path                  = xml->GetAttributeAs<string>(node_name, "texture_path");
-
-			//    // If the texture happens to be loaded, get a reference to it
-			//    auto texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
-			//    // If there is not texture (it's not loaded yet), load it
-			//    if (!texture)
-			//    {
-			//        texture = ResourceCache::Load<RHI_Texture2D>(tex_path);
-			//    }
-
-			//    SetTexture(tex_type, texture);
-			//}
-
-			//m_object_size_cpu = sizeof(*this);
-
+			return false;
 		}
 
-		// load material json
+
+		SetResourceFilePath(file_path);
+		m_materialRes = materialRes;
 
 		// load shader
+		if (m_materialRes->shaderPath.empty())
+		{
+			return true;
+		}
+		auto vertexShader = new RHI_Shader();
+		vertexShader->Compile(RHI_Shader_Stage::RHI_Shader_Vertex, m_materialRes->shaderPath, false, RHI_Vertex_Type::PosUv);
+		auto pixelShader = new RHI_Shader();
+		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, m_materialRes->shaderPath, false, RHI_Vertex_Type::PosUv);
+		m_shader = new MaterialShader(m_materialRes->shaderPath, vertexShader, pixelShader);
 
-		// load material texture path
-		// load 
-
-		// get descriptor and set data
-
+		PostResourceLoaded();
 
 		return true;
 	}
@@ -90,47 +119,185 @@ namespace LitchiRuntime
 	{
 		SetResourceFilePath(file_path);
 
-		// todo:
-	   /* auto xml = make_unique<XmlDocument>();
-		xml->AddNode("Material");
-		xml->AddAttribute("Material", "color_r",                         GetProperty(MaterialProperty::ColorR));
-		xml->AddAttribute("Material", "color_g",                         GetProperty(MaterialProperty::ColorG));
-		xml->AddAttribute("Material", "color_b",                         GetProperty(MaterialProperty::ColorB));
-		xml->AddAttribute("Material", "color_a",                         GetProperty(MaterialProperty::ColorA));
-		xml->AddAttribute("Material", "roughness_multiplier",            GetProperty(MaterialProperty::RoughnessMultiplier));
-		xml->AddAttribute("Material", "metalness_multiplier",            GetProperty(MaterialProperty::MetalnessMultiplier));
-		xml->AddAttribute("Material", "normal_multiplier",               GetProperty(MaterialProperty::NormalMultiplier));
-		xml->AddAttribute("Material", "height_multiplier",               GetProperty(MaterialProperty::HeightMultiplier));
-		xml->AddAttribute("Material", "clearcoat_multiplier",            GetProperty(MaterialProperty::Clearcoat));
-		xml->AddAttribute("Material", "clearcoat_roughness_multiplier",  GetProperty(MaterialProperty::Clearcoat_Roughness));
-		xml->AddAttribute("Material", "anisotropic_multiplier",          GetProperty(MaterialProperty::Anisotropic));
-		xml->AddAttribute("Material", "anisotropic_rotation_multiplier", GetProperty(MaterialProperty::AnisotropicRotation));
-		xml->AddAttribute("Material", "sheen_multiplier",                GetProperty(MaterialProperty::Sheen));
-		xml->AddAttribute("Material", "sheen_tint_multiplier",           GetProperty(MaterialProperty::SheenTint));
-		xml->AddAttribute("Material", "uv_tiling_x",                     GetProperty(MaterialProperty::UvTilingX));
-		xml->AddAttribute("Material", "uv_tiling_y",                     GetProperty(MaterialProperty::UvTilingY));
-		xml->AddAttribute("Material", "uv_offset_x",                     GetProperty(MaterialProperty::UvOffsetX));
-		xml->AddAttribute("Material", "uv_offset_y",                     GetProperty(MaterialProperty::UvOffsetY));
-		xml->AddAttribute("Material", "can_be_edited",                   GetProperty(MaterialProperty::CanBeEdited));
-
-		xml->AddChildNode("Material", "textures");
-		xml->AddAttribute("textures", "count", static_cast<uint32_t>(m_textures.size()));
-		uint32_t i = 0;
-		for (const auto& texture : m_textures)
+		if (!m_shader)
 		{
-			auto tex_node = "texture_" + to_string(i);
-			xml->AddChildNode("textures", tex_node);
-			xml->AddAttribute(tex_node, "texture_type", i++);
-			xml->AddAttribute(tex_node, "texture_name", texture ? texture->GetObjectName() : "");
-			xml->AddAttribute(tex_node, "texture_path", texture ? texture->GetResourceFilePathNative() : "");
+			// save data to materialRes
+			m_materialRes->shaderPath = m_shader->m_shaderPath;
+
+			// 清理已存在的uniformData
+			for (auto value : m_materialRes->uniformInfoList)
+			{
+				delete value;
+			}
+			m_materialRes->uniformInfoList.clear();
+
+			for (auto& [name, value] : m_uniformsData)
+			{
+				auto shaderUniform = m_shader->GetGlobalUniformInfo(name);
+
+				if (shaderUniform.type != UniformType::UNIFORM_Unknown)
+				{
+					switch (shaderUniform.type)
+					{
+					case UniformType::UNIFORM_BOOL:
+						if (value.type() == typeid(bool))
+						{
+							auto uniformBool = new UniformInfoBool();
+							uniformBool->name = shaderUniform.name;
+							uniformBool->value = std::any_cast<bool>(value);
+							m_materialRes->uniformInfoList.push_back(uniformBool);
+						}
+						break;
+					case UniformType::UNIFORM_INT:
+						if (value.type() == typeid(int))
+						{
+							auto uniformInt = new UniformInfoInt();
+							uniformInt->name = shaderUniform.name;
+							uniformInt->value = std::any_cast<int>(value);
+							m_materialRes->uniformInfoList.push_back(uniformInt);
+
+						}
+						break;
+					case UniformType::UNIFORM_FLOAT:
+						if (value.type() == typeid(float))
+						{
+							auto uniformFloat = new UniformInfoFloat();
+							uniformFloat->name = shaderUniform.name;
+							uniformFloat->value = std::any_cast<float>(value);
+							m_materialRes->uniformInfoList.push_back(uniformFloat);
+						}
+						break;
+					case UniformType::UNIFORM_FLOAT_VEC2:
+						if (value.type() == typeid(Vector2))
+						{
+							auto uniformVec2 = new UniformInfoVector2();
+							uniformVec2->name = shaderUniform.name;
+							uniformVec2->vector = std::any_cast<Vector2>(value);
+							m_materialRes->uniformInfoList.push_back(uniformVec2);
+						}
+						break;
+					case UniformType::UNIFORM_FLOAT_VEC3:
+						if (value.type() == typeid(Vector3))
+						{
+							auto uniformVec3 = new UniformInfoVector3();
+							uniformVec3->name = shaderUniform.name;
+							uniformVec3->vector = std::any_cast<Vector3>(value);
+							m_materialRes->uniformInfoList.push_back(uniformVec3);
+						}
+						break;
+					case UniformType::UNIFORM_FLOAT_VEC4:
+						if (value.type() == typeid(Vector4))
+						{
+							auto uniformVec4 = new UniformInfoVector4();
+							uniformVec4->name = shaderUniform.name;
+							uniformVec4->vector = std::any_cast<Vector4>(value);
+							m_materialRes->uniformInfoList.push_back(uniformVec4);
+						}
+						break;
+						//case UniformType::UNIFORM_TEXTURE:
+						//	// if (value.type() == typeid(RHI_Texture*))
+						//{
+						//	auto uniformPath = new UniformInfoTexture();
+						//	uniformPath->name = shaderUniform.name;
+						//	uniformPath->path = "";
+						//	if (auto tex = std::any_cast<RHI_Texture*>(value); tex)
+						//	{
+						//		uniformPath->path = tex->GetResourceFilePath();
+						//	}
+						//	m_materialRes->uniformInfoList.push_back(uniformPath);
+						//}
+						//break;
+					default:
+						DEBUG_LOG_ERROR("RebuildResourceFromMemory Not Found UniformType type:{}", shaderUniform.type);
+						break;
+					}
+				}
+				else
+				{
+					auto& descriptor = m_shader->GetTextureDescriptor(name);
+					if (descriptor.type == RHI_Descriptor_Type::Texture)
+					{
+						auto uniformPath = new UniformInfoTexture();
+						uniformPath->name = shaderUniform.name;
+						uniformPath->path = "";
+						if (auto tex = std::any_cast<RHI_Texture*>(value); tex)
+						{
+							uniformPath->path = tex->GetResourceFilePath();
+						}
+						m_materialRes->uniformInfoList.push_back(uniformPath);
+					}
+					else
+					{
+						DEBUG_LOG_ERROR("Uniform Not Found GlobalValue or Texture in Shader name:{}", name);
+					}
+				}
+			}
+
+
+
 		}
 
-		return xml->Save(GetResourceFilePathNative());*/
-		return  false;
+		if (!AssetManager::SaveAsset(*m_materialRes, file_path))
+		{
+			DEBUG_LOG_ERROR("Save Fail path:{}", file_path);
+			return false;
+		}
+
+		return  true;
 	}
 
-	void Material::SetTexture(const int slot, RHI_Texture* texture)
+	void Material::SetTexture(const std::string& name, RHI_Texture* texture)
 	{
+		if (m_uniformsData.find(name) != m_uniformsData.end())
+		{
+			m_uniformsData[name] = std::make_any<RHI_Texture*>(texture);
+		}
+	}
+
+	void Material::SetShader(MaterialShader* shader)
+	{
+		if (!shader)
+		{
+			return;
+		}
+
+		if (m_shader)
+		{
+			delete m_shader;
+		}
+
+		m_shader = shader;
+
+		// todo: update value and texture
+		// m_valueMap
+		// m_textureMap
+	}
+
+	void* Material::GetValues4DescriptorSet()
+	{
+		for (auto uniform : m_uniformsData)
+		{
+			UpdateValue(uniform.first);
+		}
+
+		return m_value;
+	}
+
+	std::map<int, RHI_Texture*>& Material::GetTextures4DescriptorSet()
+	{
+		std::map<int, RHI_Texture*> textureMap;
+		for (auto uniform : m_uniformsData)
+		{
+			auto name = uniform.first;
+			auto descriptor = m_shader->GetTextureDescriptor(name);
+			if (descriptor.type == RHI_Descriptor_Type::Texture)
+			{
+				auto slot = descriptor.slot;
+				textureMap[slot] = any_cast<RHI_Texture*>(uniform.second);
+			}
+		}
+
+		return textureMap;
 	}
 
 	void Material::PostResourceModify()
@@ -141,6 +308,93 @@ namespace LitchiRuntime
 
 	void Material::PostResourceLoaded()
 	{
+		if (!m_materialRes)
+		{
+			return;
+		}
+
+		if (!m_shader)
+		{
+			return;
+		}
+
+		// fill uniformDatas by shader
+		m_uniformsData.clear();
+		auto uniformInfoList = m_materialRes->uniformInfoList;
+		auto shaderUniformList = m_shader->GetGlobalShaderUniformList();
+		auto textureDescriptorList = m_shader->GetTextureDescriptorList();
+		for (const ShaderUniform& element : shaderUniformList)
+		{
+			m_uniformsData.emplace(element.name, element.defaultValue);
+		}
+		for (const auto& element : textureDescriptorList)
+		{
+			m_uniformsData.emplace(element.name, make_any<RHI_Texture*>());
+		}
+
+		// load value and texuture from material
+		for (auto uniformInfo : uniformInfoList)
+		{
+			auto& uniformData = m_uniformsData.find(uniformInfo->name);
+			if (uniformData == m_uniformsData.end())
+			{
+				DEBUG_LOG_ERROR("Material::PostResourceLoaded Not Found Uniform uniformName:{}", uniformInfo->name);
+				continue;
+
+			}
+			switch (uniformInfo->GetUniformType())
+			{
+			case UniformType::UNIFORM_BOOL:
+			{
+				auto uniformInfoBool = static_cast<UniformInfoBool*>(uniformInfo);
+				uniformData->second = std::make_any<bool>(uniformInfoBool->value);
+				break;
+			}
+			case UniformType::UNIFORM_FLOAT:
+			{
+				auto uniformInfoFloat = static_cast<UniformInfoFloat*>(uniformInfo);
+				uniformData->second = std::make_any<float>(uniformInfoFloat->value);
+				break;
+			}
+			case UniformType::UNIFORM_INT:
+			{
+				auto uniformInfoInt = static_cast<UniformInfoInt*>(uniformInfo);
+				uniformData->second = std::make_any<int>(uniformInfoInt->value);
+				break;
+			}
+			case UniformType::UNIFORM_FLOAT_VEC2:
+			{
+				auto uniformInfoVector2 = static_cast<UniformInfoVector2*>(uniformInfo);
+				uniformData->second = std::make_any<Vector2>(uniformInfoVector2->vector);
+				break;
+			}
+			case UniformType::UNIFORM_FLOAT_VEC3:
+			{
+				auto uniformInfoVector3 = static_cast<UniformInfoVector3*>(uniformInfo);
+				uniformData->second = std::make_any<Vector3>(uniformInfoVector3->vector);
+				break;
+			}
+			case UniformType::UNIFORM_FLOAT_VEC4:
+			{
+				auto uniformInfoVector4 = static_cast<UniformInfoVector4*>(uniformInfo);
+				uniformData->second = std::make_any<Vector4>(uniformInfoVector4->vector);
+				break;
+			}
+			// todo:
+			case UniformType::UNIFORM_TEXTURE:
+			{
+				auto uniformTexture = static_cast<UniformInfoTexture*>(uniformInfo);
+				auto texturePath = uniformTexture->path;
+				RHI_Texture* tex = new RHI_Texture2D();
+				tex->LoadFromFile(texturePath);
+				uniformData->second = make_any<RHI_Texture*>(tex);
+				break;
+			}
+			default:
+				DEBUG_LOG_ERROR("Material::PostResourceLoaded UniformInfoType Not Availiable Type:{}", uniformInfo->GetUniformType());
+				break;
+			}
+		}
 	}
 
 	Material* Material::CreateMaterial4StandardPBR()
@@ -167,28 +421,17 @@ namespace LitchiRuntime
 		}
 
 		// check name is valid 
-		if (m_valueMap.find(name) == m_valueMap.end())
+		if (m_uniformsData.find(name) == m_uniformsData.end())
 		{
 			return;
 		}
 
-		const auto& value = m_valueMap[name];
-		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-		const auto& uniformList = descriptor.uniformList;
+		const auto& value = m_uniformsData[name];
+		const auto& uniformInfo = m_shader->GetGlobalUniformInfo(name);
 
-		// get uniform property: offset,size,type 
-		int offset = 0;
-		int size = 0;
+		int offset = uniformInfo.location;
+		int size = uniformInfo.size;
 		UniformType uniformType = UniformType::UNIFORM_Unknown;
-		for (auto uniform : uniformList)
-		{
-			if (uniform.name == name)
-			{
-				offset = uniform.location;
-				size = uniform.size;
-				uniformType = uniform.type;
-			}
-		}
 
 		switch (uniformType)
 		{
@@ -241,7 +484,7 @@ namespace LitchiRuntime
 			break;
 		}
 		case UniformType::UNIFORM_DOUBLE_MAT4:
-		case UniformType::UNIFORM_Texture:
+		case UniformType::UNIFORM_TEXTURE:
 		case UniformType::UNIFORM_Struct:
 		case UniformType::UNIFORM_Unknown:
 		default:
@@ -254,13 +497,7 @@ namespace LitchiRuntime
 
 	int Material::CalcValueSize()
 	{
-		if (m_vertex_shader)
-		{
-			const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-			return descriptor.struct_size;
-		}
-
-		return 0;
+		return m_shader->GetGlobalSize();
 	}
 
 	//void Material::SetTexture(const MaterialTexture texture_type, RHI_Texture* texture)

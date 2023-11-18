@@ -11,13 +11,13 @@ namespace LitchiRuntime
 	/**
 	* Data structure containing information about a uniform
 	*/
-	struct UniformInfo
+	struct ShaderUniform
 	{
 		UniformType		type;
 		std::string		name;
 		uint32_t		location;
 		std::any		defaultValue;
 		int size;
-		std::vector<UniformInfo> memberUniform;
+		std::vector<ShaderUniform> memberUniform;
 	};
 }

@@ -49,7 +49,7 @@ namespace LitchiRuntime
 		static void DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha = false);
 		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, Model*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier = nullptr);
-		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, RHI_Shader*& p_data, Event<>* p_updateNotifier = nullptr);
+		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, MaterialShader*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, Material*& p_data, Event<>* p_updateNotifier = nullptr);
 		// static Text& DrawSound(WidgetContainer& p_root, const std::string& p_name, OvAudio::LitchiRuntime::Sound*& p_data, Event<>* p_updateNotifier = nullptr);
 		// static Text& DrawAsset(WidgetContainer& p_root, const std::string& p_name, std::string& p_data, Event<>* p_updateNotifier = nullptr);
