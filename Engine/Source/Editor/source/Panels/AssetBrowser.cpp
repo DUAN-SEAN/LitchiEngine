@@ -905,7 +905,7 @@ public:
 		auto& reload = CreateWidget<MenuItem>("Reload");
 		reload.ClickedEvent += [this]
 		{
-			auto materialManager = OVSERVICE(MaterialManager);
+			auto& materialManager = OVSERVICE(MaterialManager);
 			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
 			Material* material = materialManager[resourcePath];
 			if (material)

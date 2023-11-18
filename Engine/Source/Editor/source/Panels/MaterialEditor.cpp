@@ -14,6 +14,7 @@
 #include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
+#include "Runtime/Resource/MaterialManager.h"
 
 
 void DrawHybridVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step, float p_min, float p_max)
@@ -331,7 +332,18 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 			}
 
 			sortedUniformsData.emplace(orderID, std::pair<std::string, std::any*>{ name, & value });
+		}else
+		{
+
+			auto textureDesc = m_target->GetShader()->GetTextureDescriptor(name);
+			if(textureDesc.type == RHI_Descriptor_Type::Texture)
+			{
+				orderID = 6;
+				sortedUniformsData.emplace(orderID, std::pair<std::string, std::any*>{ name, & value });
+			}
+			
 		}
+
 	}
 
 	for (auto& [order, info] : sortedUniformsData)
@@ -350,8 +362,18 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 			case UniformType::UNIFORM_FLOAT_VEC4:	DrawHybridVec4(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector4&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);			break;
 			case UniformType::UNIFORM_TEXTURE:	GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second));																break;
 			}
+		}else
+		{
+			auto textureDesc = m_target->GetShader()->GetTextureDescriptor(info.first);
+			if (textureDesc.type == RHI_Descriptor_Type::Texture)
+			{
+				GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second));
+			}
 		}
 	}
+
+
+
 }
 
 void LitchiEditor::MaterialEditor::GenerateMaterialSettingsContent()

@@ -53,7 +53,7 @@ namespace LitchiRuntime
 	{
 		SetResourceFilePath(file_path);
 
-		if (!m_shader)
+		if (m_shader)
 		{
 			// save data to materialRes
 			m_materialRes->shaderPath = m_shader->m_shaderPath;

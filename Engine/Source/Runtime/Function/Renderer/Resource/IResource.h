@@ -47,22 +47,26 @@ namespace LitchiRuntime
                 }
             }
 
-            const std::string file_path_relative = LitchiRuntime::FileSystem::GetRelativePath(path);
+            //const std::string file_path_relative = LitchiRuntime::FileSystem::GetRelativePath(path);
 
-            // Foreign file
-            if (!LitchiRuntime::FileSystem::IsEngineFile(path))
-            {
-                m_resource_file_path_foreign    = file_path_relative;
-                m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);
-            }
-            // Native file
-            else
-            {
-                m_resource_file_path_foreign.clear();
-                m_resource_file_path_native = file_path_relative;
-            }
-            m_object_name        = LitchiRuntime::FileSystem::GetFileNameWithoutExtensionFromFilePath(file_path_relative);
-            m_resource_directory = LitchiRuntime::FileSystem::GetDirectoryFromFilePath(file_path_relative);
+            //// Foreign file
+            //if (!LitchiRuntime::FileSystem::IsEngineFile(path))
+            //{
+            //    m_resource_file_path_foreign    = file_path_relative;
+            //    m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);
+            //}
+            //// Native file
+            //else
+            //{
+            //    m_resource_file_path_foreign.clear();
+            //    m_resource_file_path_native = file_path_relative;
+            //}
+
+            m_resource_file_path_foreign = path;
+            m_resource_file_path_native = path;
+
+            m_object_name        = LitchiRuntime::FileSystem::GetFileNameWithoutExtensionFromFilePath(path);
+            m_resource_directory = LitchiRuntime::FileSystem::GetDirectoryFromFilePath(path);
         }
         
         ResourceType GetResourceType()                 const { return m_resource_type; }
