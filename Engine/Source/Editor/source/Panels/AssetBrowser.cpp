@@ -655,202 +655,207 @@ public:
 	}
 };
 
-//class ShaderContextualMenu : public FileContextualMenu
-//{
-//public:
-//	ShaderContextualMenu(const std::string& p_filePath, bool p_protected = false) : FileContextualMenu(p_filePath, p_protected) {}
-//
-//	virtual void CreateList() override
-//	{
-//		FileContextualMenu::CreateList();
-//
-//		auto& compileAction = CreateWidget<MenuItem>("Compile");
-//
-//		compileAction.ClickedEvent += [this]
-//		{
-//			auto& shaderManager = OVSERVICE(ShaderManager);
-//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//			if (shaderManager.IsResourceRegistered(resourcePath))
-//			{
-//				/* Trying to recompile */
-//				Loaders::ShaderLoader::Recompile(*shaderManager[resourcePath], filePath);
-//			}
-//			else
-//			{
-//				/* Trying to compile */
-//				Resource::Shader* shader = OVSERVICE(ShaderManager)[resourcePath];
-//				if (shader)
-//					DEBUG_LOG_INFO("[COMPILE] \"" + filePath + "\": Success!");
-//			}
-//			
-//		};
-//	}
-//};
+class ShaderContextualMenu : public FileContextualMenu
+{
+public:
+	ShaderContextualMenu(const std::string& p_filePath, bool p_protected = false) : FileContextualMenu(p_filePath, p_protected) {}
 
-//class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
-//{
-//public:
-//	ModelContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-//
-//	virtual void CreateList() override
-//	{
-//		auto& reloadAction = CreateWidget<MenuItem>("Reload");
-//
-//		reloadAction.ClickedEvent += [this]
-//		{
-//			auto& modelManager = OVSERVICE(ModelManager);
-//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//			if (modelManager.IsResourceRegistered(resourcePath))
-//			{
-//				modelManager.AResourceManager::ReloadResource(resourcePath);
-//			}
-//		};
-//
-//		if (!m_protected)
-//		{
-//			auto& generateMaterialsMenu = CreateWidget<MenuList>("Generate materials...");
-//
-//			generateMaterialsMenu.CreateWidget<MenuItem>("Standard").ClickedEvent += [this]
-//			{
-//				auto& modelManager = OVSERVICE(ModelManager);
-//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//				if (auto model = modelManager.GetResource(resourcePath))
-//				{
-//					for (const std::string& materialName : model->GetMaterialNames())
-//					{
-//						size_t fails = 0;
-//						std::string finalPath;
-//
-//						do
-//						{
-//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-//
-//							++fails;
-//						} while (std::filesystem::exists(finalPath));
-//
-//						{
-//							std::ofstream outfile(finalPath);
-//							outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
-//						}
-//
-//						DuplicateEvent.Invoke(finalPath);
-//					}
-//				}
-//			};
-//
-//			generateMaterialsMenu.CreateWidget<MenuItem>("StandardPBR").ClickedEvent += [this]
-//			{
-//				auto& modelManager = OVSERVICE(ModelManager);
-//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//				if (auto model = modelManager.GetResource(resourcePath))
-//				{
-//					for (const std::string& materialName : model->GetMaterialNames())
-//					{
-//						size_t fails = 0;
-//						std::string finalPath;
-//
-//						do
-//						{
-//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-//
-//							++fails;
-//						} while (std::filesystem::exists(finalPath));
-//
-//						{
-//							std::ofstream outfile(finalPath);
-//							outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
-//						}
-//
-//						DuplicateEvent.Invoke(finalPath);
-//					}
-//				}
-//			};
-//
-//			generateMaterialsMenu.CreateWidget<MenuItem>("Unlit").ClickedEvent += [this]
-//			{
-//				auto& modelManager = OVSERVICE(ModelManager);
-//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//				if (auto model = modelManager.GetResource(resourcePath))
-//				{
-//					for (const std::string& materialName : model->GetMaterialNames())
-//					{
-//						size_t fails = 0;
-//						std::string finalPath;
-//
-//						do
-//						{
-//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-//
-//							++fails;
-//						} while (std::filesystem::exists(finalPath));
-//
-//						{
-//							std::ofstream outfile(finalPath);
-//							outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
-//						}
-//
-//						DuplicateEvent.Invoke(finalPath);
-//					}
-//				}
-//			};
-//
-//			generateMaterialsMenu.CreateWidget<MenuItem>("Lambert").ClickedEvent += [this]
-//			{
-//				auto& modelManager = OVSERVICE(ModelManager);
-//				std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//				if (auto model = modelManager.GetResource(resourcePath))
-//				{
-//					for (const std::string& materialName : model->GetMaterialNames())
-//					{
-//						size_t fails = 0;
-//						std::string finalPath;
-//
-//						do
-//						{
-//							finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
-//
-//							++fails;
-//						} while (std::filesystem::exists(finalPath));
-//
-//						{
-//							std::ofstream outfile(finalPath);
-//							outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
-//						}
-//
-//						DuplicateEvent.Invoke(finalPath);
-//					}
-//				}
-//			};
-//		}
-//
-//		PreviewableContextualMenu::CreateList();
-//	}
-//};
+	virtual void CreateList() override
+	{
+		FileContextualMenu::CreateList();
 
-//class TextureContextualMenu : public PreviewableContextualMenu<Texture, TextureManager>
-//{
-//public:
-//	TextureContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-//
-//	virtual void CreateList() override
-//	{
-//		auto& reloadAction = CreateWidget<MenuItem>("Reload");
-//
-//		reloadAction.ClickedEvent += [this]
-//		{
-//			auto& textureManager = OVSERVICE(TextureManager);
-//			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//			if (textureManager.IsResourceRegistered(resourcePath))
-//			{
-//				///* Trying to recompile */
-//				//textureManager.AResourceManager::ReloadResource(resourcePath);
-//				//EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
-//			}
-//		};
-//
-//		PreviewableContextualMenu::CreateList();
-//	}
-//};
+		auto& compileAction = CreateWidget<MenuItem>("Compile");
+
+		compileAction.ClickedEvent += [this]
+		{
+			DEBUG_LOG_ERROR("ShaderContextualMenu Compile No Impl");
+		};
+
+		//compileAction.ClickedEvent += [this]
+		//{
+		//	auto& shaderManager = OVSERVICE(ShaderManager);
+		//	std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+		//	if (shaderManager.IsResourceRegistered(resourcePath))
+		//	{
+		//		/* Trying to recompile */
+		//		Loaders::ShaderLoader::Recompile(*shaderManager[resourcePath], filePath);
+		//	}
+		//	else
+		//	{
+		//		/* Trying to compile */
+		//		MaterialShader* shader = OVSERVICE(ShaderManager)[resourcePath];
+		//		if (shader)
+		//			DEBUG_LOG_INFO("[COMPILE] \"" + filePath + "\": Success!");
+		//	}
+		//	
+		//};
+	}
+};
+
+class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
+{
+public:
+	ModelContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+
+	virtual void CreateList() override
+	{
+		auto& reloadAction = CreateWidget<MenuItem>("Reload");
+
+		reloadAction.ClickedEvent += [this]
+		{
+			auto& modelManager = OVSERVICE(ModelManager);
+			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			if (modelManager.IsResourceRegistered(resourcePath))
+			{
+				modelManager.AResourceManager::ReloadResource(resourcePath);
+			}
+		};
+
+		if (!m_protected)
+		{
+			auto& generateMaterialsMenu = CreateWidget<MenuList>("Generate materials...");
+
+			//generateMaterialsMenu.CreateWidget<MenuItem>("Standard").ClickedEvent += [this]
+			//{
+			//	auto& modelManager = OVSERVICE(ModelManager);
+			//	std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			//	if (auto model = modelManager.GetResource(resourcePath))
+			//	{
+			//		for (const std::string& materialName : model->GetMaterialNames())
+			//		{
+			//			size_t fails = 0;
+			//			std::string finalPath;
+
+			//			do
+			//			{
+			//				finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+
+			//				++fails;
+			//			} while (std::filesystem::exists(finalPath));
+
+			//			{
+			//				std::ofstream outfile(finalPath);
+			//				outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
+			//			}
+
+			//			DuplicateEvent.Invoke(finalPath);
+			//		}
+			//	}
+			//};
+
+			//generateMaterialsMenu.CreateWidget<MenuItem>("StandardPBR").ClickedEvent += [this]
+			//{
+			//	auto& modelManager = OVSERVICE(ModelManager);
+			//	std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			//	if (auto model = modelManager.GetResource(resourcePath))
+			//	{
+			//		for (const std::string& materialName : model->GetMaterialNames())
+			//		{
+			//			size_t fails = 0;
+			//			std::string finalPath;
+
+			//			do
+			//			{
+			//				finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+
+			//				++fails;
+			//			} while (std::filesystem::exists(finalPath));
+
+			//			{
+			//				std::ofstream outfile(finalPath);
+			//				outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
+			//			}
+
+			//			DuplicateEvent.Invoke(finalPath);
+			//		}
+			//	}
+			//};
+
+			//generateMaterialsMenu.CreateWidget<MenuItem>("Unlit").ClickedEvent += [this]
+			//{
+			//	auto& modelManager = OVSERVICE(ModelManager);
+			//	std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			//	if (auto model = modelManager.GetResource(resourcePath))
+			//	{
+			//		for (const std::string& materialName : model->GetMaterialNames())
+			//		{
+			//			size_t fails = 0;
+			//			std::string finalPath;
+
+			//			do
+			//			{
+			//				finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+
+			//				++fails;
+			//			} while (std::filesystem::exists(finalPath));
+
+			//			{
+			//				std::ofstream outfile(finalPath);
+			//				outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
+			//			}
+
+			//			DuplicateEvent.Invoke(finalPath);
+			//		}
+			//	}
+			//};
+
+			//generateMaterialsMenu.CreateWidget<MenuItem>("Lambert").ClickedEvent += [this]
+			//{
+			//	auto& modelManager = OVSERVICE(ModelManager);
+			//	std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			//	if (auto model = modelManager.GetResource(resourcePath))
+			//	{
+			//		for (const std::string& materialName : model->GetMaterialNames())
+			//		{
+			//			size_t fails = 0;
+			//			std::string finalPath;
+
+			//			do
+			//			{
+			//				finalPath = PathParser::GetContainingFolder(filePath) + (!fails ? materialName : materialName + " (" + std::to_string(fails) + ')') + ".ovmat";
+
+			//				++fails;
+			//			} while (std::filesystem::exists(finalPath));
+
+			//			{
+			//				std::ofstream outfile(finalPath);
+			//				outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
+			//			}
+
+			//			DuplicateEvent.Invoke(finalPath);
+			//		}
+			//	}
+			//};
+		}
+
+		PreviewableContextualMenu::CreateList();
+	}
+};
+
+class TextureContextualMenu : public PreviewableContextualMenu<RHI_Texture2D, TextureManager>
+{
+public:
+	TextureContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+
+	virtual void CreateList() override
+	{
+		auto& reloadAction = CreateWidget<MenuItem>("Reload");
+
+		reloadAction.ClickedEvent += [this]
+		{
+			auto& textureManager = OVSERVICE(TextureManager);
+			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			if (textureManager.IsResourceRegistered(resourcePath))
+			{
+				///* Trying to recompile */
+				//textureManager.AResourceManager::ReloadResource(resourcePath);
+				//EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
+			}
+		};
+
+		PreviewableContextualMenu::CreateList();
+	}
+};
 
 class SceneContextualMenu : public FileContextualMenu
 {
@@ -870,49 +875,49 @@ public:
 	}
 };
 
-//class MaterialContextualMenu : public PreviewableContextualMenu<Resource::Material, MaterialManager>
-//{
-//public:
-//	MaterialContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
-//
-//	virtual void CreateList() override
-//	{
-//		auto& editAction = CreateWidget<MenuItem>("Edit");
-//
-//		editAction.ClickedEvent += [this]
-//		{
-//			Resource::Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
-//			if (material)
-//			{
-//				auto& materialEditor = EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor");
-//				materialEditor.SetTarget(*material);
-//				materialEditor.Open();
-//				materialEditor.Focus();
-//				
-//				Resource::Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
-//				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
-//				assetView.SetResource(resource);
-//				assetView.Open();
-//				assetView.Focus();
-//			}
-//		};
-//
-//		auto& reload = CreateWidget<MenuItem>("Reload");
-//		reload.ClickedEvent += [this]
-//		{
-//			auto materialManager = OVSERVICE(MaterialManager);
-//			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-//			Resource::Material* material = materialManager[resourcePath];
-//			if (material)
-//			{
-//				materialManager.AResourceManager::ReloadResource(resourcePath);
-//				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
-//			}
-//		};
-//
-//		PreviewableContextualMenu::CreateList();
-//	}
-//};
+class MaterialContextualMenu : public PreviewableContextualMenu<Material, MaterialManager>
+{
+public:
+	MaterialContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
+
+	virtual void CreateList() override
+	{
+		auto& editAction = CreateWidget<MenuItem>("Edit");
+
+		editAction.ClickedEvent += [this]
+		{
+			Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+			if (material)
+			{
+				auto& materialEditor = EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor");
+				materialEditor.SetTarget(material);
+				materialEditor.Open();
+				materialEditor.Focus();
+				
+				Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
+				assetView.SetResource(resource);
+				assetView.Open();
+				assetView.Focus();
+			}
+		};
+
+		auto& reload = CreateWidget<MenuItem>("Reload");
+		reload.ClickedEvent += [this]
+		{
+			auto materialManager = OVSERVICE(MaterialManager);
+			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			Material* material = materialManager[resourcePath];
+			if (material)
+			{
+				materialManager.AResourceManager::ReloadResource(resourcePath);
+				EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor").Refresh();
+			}
+		};
+
+		PreviewableContextualMenu::CreateList();
+	}
+};
 
 LitchiEditor::AssetBrowser::AssetBrowser
 (
@@ -1182,10 +1187,10 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 
 		switch (fileType)
 		{
-		// case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
-		// case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
-		// case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
-		// case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
+		 case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
+		 case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
+		 case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
+		 case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
 		case PathParser::EFileType::SCENE:		contextMenu = &clickableText.AddPlugin<SceneContextualMenu>(path, protectedItem);		break;
 		default: contextMenu = &clickableText.AddPlugin<FileContextualMenu>(path, protectedItem); break;
 		}

@@ -59,6 +59,7 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 
 	/*ModelManager::ProvideAssetPaths(projectAssetsPath);
 	ShaderManager::ProvideAssetPaths(projectAssetsPath); */
+
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -311,6 +312,13 @@ void LitchiEditor::ApplicationEditor::Init()
 	}
 
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
+
+
+	ServiceLocator::Provide(*shaderManager.get());
+	ServiceLocator::Provide(*modelManager.get());
+	ServiceLocator::Provide(*materialManager.get());
+	ServiceLocator::Provide(*textureManager.get());
+	ServiceLocator::Provide(*fontManager.get());
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -433,17 +441,14 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	// m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);// todo:
+	 m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
-	//m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
-	//m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	//m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings);
 	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);
-	// m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings);// todo:
+	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
-	// m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);// todo:
+	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
 	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
 
