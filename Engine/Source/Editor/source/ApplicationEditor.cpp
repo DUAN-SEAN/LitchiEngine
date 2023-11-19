@@ -41,25 +41,9 @@ struct data
 		unsigned char byte_value[4];
 	};
 };
-LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager)
+LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager),ApplicationBase()
 {
-	char* projectPath = nullptr;
-	projectPath = _getcwd(nullptr, 1);
-	std::string filePath(projectPath);
-	editorAssetsPath = filePath + "\\..\\..\\Assets\\";
 	
-	// todo ‘› ±’‚—˘–¥
-	projectAssetsPath = editorAssetsPath;
-
-	ModelManager::ProvideAssetPaths(projectAssetsPath);
-	TextureManager::ProvideAssetPaths(projectAssetsPath);
-	ShaderManager::ProvideAssetPaths(projectAssetsPath);
-	MaterialManager::ProvideAssetPaths(projectAssetsPath);
-	FontManager::ProvideAssetPaths(projectAssetsPath);
-
-	/*ModelManager::ProvideAssetPaths(projectAssetsPath);
-	ShaderManager::ProvideAssetPaths(projectAssetsPath); */
-
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()

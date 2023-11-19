@@ -207,7 +207,7 @@ void LitchiEditor::MaterialEditor::CreateHeaderButtons()
 	{
 		if (m_target)
 		{
-			m_target->SaveToFile(m_target->GetResourceFilePath());
+			m_target->SaveToFile(EDITOR_EXEC(GetRealPath(m_target->GetResourceFilePathAsset())));
 		}
 		// Loaders::MaterialLoader::Save(*m_target, EDITOR_EXEC(GetRealPath(m_target->path)));
 	};
@@ -220,7 +220,7 @@ void LitchiEditor::MaterialEditor::CreateHeaderButtons()
 	{
 		if (m_target)
 		{
-			m_target->LoadFromFile(m_target->GetResourceFilePath());
+			m_target->LoadFromFile(EDITOR_EXEC(GetRealPath(m_target->GetResourceFilePathAsset())));
 		}
 			// Loaders::MaterialLoader::Reload(*m_target, EDITOR_EXEC(GetRealPath(m_target->path)));
 

@@ -10,7 +10,10 @@ LitchiRuntime::Material* LitchiRuntime::MaterialManager::CreateResource(const st
 	LitchiRuntime::Material* material = new Material();
 	if (material)
 	{
-		material->LoadFromFile(realPath);
+		if(material->LoadFromFile(realPath))
+		{
+			// material->SetResourceFilePath(p_path);
+		}
 	}
 
 	return material;

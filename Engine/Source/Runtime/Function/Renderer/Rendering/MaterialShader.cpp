@@ -19,7 +19,7 @@ namespace LitchiRuntime
 		auto pixelShader = new RHI_Shader();
 		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, file_path, false, RHI_Vertex_Type::PosUv);
 
-		m_shaderPath = file_path;
+		m_shaderPath = FileSystem::GetRelativePathAssetFromNative(file_path);
 		m_vertex_shader = vertexShader;
 		m_pixel_shader = pixelShader;
 

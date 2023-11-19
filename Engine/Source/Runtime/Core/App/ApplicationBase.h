@@ -18,7 +18,7 @@ namespace LitchiRuntime
 
 	class ApplicationBase {
     public:
-        ApplicationBase() {}
+        ApplicationBase(){}
         virtual ~ApplicationBase() {}
 
         void SetTitle(std::string title) { m_title = title; }

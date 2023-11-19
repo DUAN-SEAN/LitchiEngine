@@ -33,27 +33,29 @@ namespace LitchiRuntime
         IResource(ResourceType type);
         virtual ~IResource() = default;
 
-        void SetResourceFilePath(const std::string& path)
+        void SetResourceFilePath(const std::string& obsoultePath)
         {
-            const bool is_native_file = LitchiRuntime::FileSystem::IsEngineMaterialFile(path) || LitchiRuntime::FileSystem::IsEngineModelFile(path);
+            const bool is_native_file = LitchiRuntime::FileSystem::IsEngineMaterialFile(obsoultePath) || LitchiRuntime::FileSystem::IsEngineModelFile(obsoultePath);
 
             // If this is an native engine file, don't do a file check as no actual foreign material exists (it was created on the fly)
             if (!is_native_file)
             {
-                if (!LitchiRuntime::FileSystem::IsFile(path))
+                if (!LitchiRuntime::FileSystem::IsFile(obsoultePath))
                 {
-                    DEBUG_LOG_ERROR("{} is not a valid file path", path.c_str());
+                    DEBUG_LOG_ERROR("{} is not a valid file path", obsoultePath.c_str());
                     return;
                 }
             }
 
-            //const std::string file_path_relative = LitchiRuntime::FileSystem::GetRelativePath(path);
+            const std::string file_path_relative = LitchiRuntime::FileSystem::GetRelativePath(obsoultePath);
 
             //// Foreign file
             //if (!LitchiRuntime::FileSystem::IsEngineFile(path))
             //{
-            //    m_resource_file_path_foreign    = file_path_relative;
-            //    m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);
+                m_resource_file_path_foreign    = file_path_relative;
+                m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);
+                m_resource_file_path_asset = LitchiRuntime::FileSystem::GetRelativePathAssetFromNative(obsoultePath);
+
             //}
             //// Native file
             //else
@@ -61,12 +63,9 @@ namespace LitchiRuntime
             //    m_resource_file_path_foreign.clear();
             //    m_resource_file_path_native = file_path_relative;
             //}
-
-            m_resource_file_path_foreign = path;
-            m_resource_file_path_native = path;
-
-            m_object_name        = LitchiRuntime::FileSystem::GetFileNameWithoutExtensionFromFilePath(path);
-            m_resource_directory = LitchiRuntime::FileSystem::GetDirectoryFromFilePath(path);
+                
+            m_object_name        = LitchiRuntime::FileSystem::GetFileNameWithoutExtensionFromFilePath(obsoultePath);
+            m_resource_directory = LitchiRuntime::FileSystem::GetDirectoryFromFilePath(obsoultePath);
         }
         
         ResourceType GetResourceType()                 const { return m_resource_type; }
@@ -75,6 +74,7 @@ namespace LitchiRuntime
         const std::string& GetResourceFilePath()       const { return m_resource_file_path_foreign; }
         const std::string& GetResourceFilePathNative() const { return m_resource_file_path_native; }
         const std::string& GetResourceDirectory()      const { return m_resource_directory; }
+        const std::string& GetResourceFilePathAsset()      const { return m_resource_file_path_asset; }
 
         // Flags
         void SetFlag(const uint32_t flag, bool enabled = true)
@@ -111,5 +111,6 @@ namespace LitchiRuntime
         std::string m_resource_directory;
         std::string m_resource_file_path_native;
         std::string m_resource_file_path_foreign;
+        std::string m_resource_file_path_asset;
     };
 }

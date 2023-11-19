@@ -152,12 +152,16 @@ namespace LitchiRuntime
 					if (descriptor.type == RHI_Descriptor_Type::Texture)
 					{
 						auto uniformPath = new UniformInfoTexture();
-						uniformPath->name = shaderUniform.name;
+						uniformPath->name = descriptor.name;
 						uniformPath->path = "";
-						if (auto tex = std::any_cast<RHI_Texture*>(value); tex)
+						if (value.type() == typeid(RHI_Texture*))
 						{
-							uniformPath->path = tex->GetResourceFilePath();
+							if (auto tex = std::any_cast<RHI_Texture*>(value); tex)
+							{
+								uniformPath->path = tex->GetResourceFilePathAsset();
+							}
 						}
+
 						m_materialRes->uniformInfoList.push_back(uniformPath);
 					}
 					else

@@ -6,6 +6,8 @@
 using namespace std;
 namespace LitchiRuntime {
 
+	std::string FileSystem::ProjectAssetDirectoryPath = "";
+
 	Buffer FileSystem::ReadFileBinary(const std::filesystem::path& filepath)
 	{
 		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
@@ -448,6 +450,16 @@ namespace LitchiRuntime {
             IsEngineShaderFile(path);
     }
 
+    void FileSystem::SetProjectAssetDirectoryPath(const std::string& workDir)
+    {
+        ProjectAssetDirectoryPath = workDir;
+    }
+
+    std::string FileSystem::GetProjectAssetDirectoryPath()
+    {
+        return ProjectAssetDirectoryPath;
+    }
+    
     vector<string> FileSystem::GetSupportedFilesInDirectory(const string& path)
     {
         const vector<string> filesInDirectory = GetFilesInDirectory(path);
@@ -579,9 +591,52 @@ namespace LitchiRuntime {
         return result.generic_string();
     }
 
+    std::string FileSystem::GetRelativePathAssetFromNative(const std::string& path)
+    {
+        // create absolute paths
+        const filesystem::path p = filesystem::absolute(path);
+        const filesystem::path r = filesystem::absolute(GetProjectAssetDirectoryPath());
+
+        // if root paths are different, return absolute path
+        if (p.root_path() != r.root_path())
+            return p.generic_string();
+
+        // initialize relative path
+        filesystem::path result;
+
+        // find out where the two paths diverge
+        filesystem::path::const_iterator itr_path = p.begin();
+        filesystem::path::const_iterator itr_relative_to = r.begin();
+        while (*itr_path == *itr_relative_to && itr_path != p.end() && itr_relative_to != r.end())
+        {
+            ++itr_path;
+            ++itr_relative_to;
+        }
+
+        // add "../" for each remaining token in relative_to
+        if (itr_relative_to != r.end())
+        {
+            ++itr_relative_to;
+            while (itr_relative_to != r.end())
+            {
+                result /= "..";
+                ++itr_relative_to;
+            }
+        }
+
+        // add remaining path
+        while (itr_path != p.end())
+        {
+            result /= *itr_path;
+            ++itr_path;
+        }
+
+        return result.generic_string();
+    }
+
     string FileSystem::GetWorkingDirectory()
     {
-        return filesystem::current_path().generic_string();
+		return filesystem::current_path().generic_string();
     }
 
     string FileSystem::GetParentDirectory(const string& path)

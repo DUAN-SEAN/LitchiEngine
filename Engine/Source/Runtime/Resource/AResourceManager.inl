@@ -123,6 +123,8 @@ namespace LitchiRuntime
 	template<typename T>
 	inline std::string AResourceManager<T>::GetRealPath(const std::string& p_path) const
 	{
+		FileSystem::GetWorkingDirectory();
+
 		std::string result = __PROJECT_ASSETS_PATH + p_path;
 		return result;
 	}

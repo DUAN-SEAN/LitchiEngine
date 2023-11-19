@@ -29,6 +29,24 @@ namespace LitchiRuntime
 
         Debug::Initialize();
 
+        char* projectPath = nullptr;
+        projectPath = _getcwd(nullptr, 1);
+        std::string filePath(projectPath);
+        editorAssetsPath = filePath + "\\..\\..\\Assets\\";
+
+        // todo 暂时这样写
+        projectAssetsPath = editorAssetsPath;
+
+        FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
+        ModelManager::ProvideAssetPaths(projectAssetsPath);
+        TextureManager::ProvideAssetPaths(projectAssetsPath);
+        ShaderManager::ProvideAssetPaths(projectAssetsPath);
+        MaterialManager::ProvideAssetPaths(projectAssetsPath);
+        FontManager::ProvideAssetPaths(projectAssetsPath);
+
+        /*ModelManager::ProvideAssetPaths(projectAssetsPath);
+        ShaderManager::ProvideAssetPaths(projectAssetsPath); */
+
         DEBUG_LOG_INFO("game start");
 
         // 第二个参数支持后续修改
