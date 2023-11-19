@@ -638,6 +638,14 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
 	}
 
+	void Renderer::UpdateMaterialGlobalBuffer(RHI_CommandList* cmd_list, Material* material)
+	{
+		// todo: if material state change, maybe not update to shader !
+		uint32_t size;
+		auto buffer = material->GetValues4DescriptorSet(size);
+		cmd_list->SetMaterialGlobalBuffer(buffer,size);
+	}
+
 	// todo: 
 	//void Renderer::OnWorldResolved(sp_variant data)
 	//{

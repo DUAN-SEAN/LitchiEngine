@@ -123,6 +123,25 @@ namespace LitchiRuntime
         }
     }
 
+    void RHI_DescriptorSetLayout::SetMaterialGlobalBuffer(void* buffer, const uint32_t bufferSize)
+    {
+        for (RHI_Descriptor& descriptor : m_descriptors)
+        {
+            if (descriptor.slot == 0)
+            {
+                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
+                m_needs_to_bind = true;
+
+                // update
+                descriptor.data = buffer;
+                descriptor.range = bufferSize;
+                descriptor.dynamic_offset = 0;
+
+                return;
+            }
+        }
+    }
+
     void RHI_DescriptorSetLayout::ClearDescriptorData()
     {
         for (RHI_Descriptor& descriptor : m_descriptors)

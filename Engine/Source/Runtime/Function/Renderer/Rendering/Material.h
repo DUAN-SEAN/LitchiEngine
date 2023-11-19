@@ -202,7 +202,7 @@ namespace LitchiRuntime
 		MaterialShader* GetShader() { return m_shader; }
 		std::map<std::string, std::any>& GetUniformsData() { return m_uniformsData; }
 
-		void* GetValues4DescriptorSet();
+		void* GetValues4DescriptorSet(uint32_t& size);
 		std::map<int, RHI_Texture*>& GetTextures4DescriptorSet();
 
 		void PostResourceModify() override;

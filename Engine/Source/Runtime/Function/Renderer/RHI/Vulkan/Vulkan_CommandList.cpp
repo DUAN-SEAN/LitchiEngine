@@ -1187,6 +1187,19 @@ namespace LitchiRuntime
         m_descriptor_layout_current->SetStructuredBuffer(slot, structured_buffer);
     }
 
+    void RHI_CommandList::SetMaterialGlobalBuffer(void* buffer, const uint32_t bufferSize) const
+    {
+        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+
+        if (!m_descriptor_layout_current)
+        {
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting MaterialGlobalBuffer within a render pass");
+            return;
+        }
+
+        m_descriptor_layout_current->SetMaterialGlobalBuffer(buffer, bufferSize);
+    }
+
     void RHI_CommandList::BeginMarker(const char* name)
     {
         if (RHI_Context::gpu_markers)

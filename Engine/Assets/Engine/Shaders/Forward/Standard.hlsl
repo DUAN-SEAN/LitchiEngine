@@ -6,8 +6,11 @@
 // Global Var
 float2 u_TextureOffset;
 float2 u_TextureTiling;
+float4 u_testColor;
 
 Texture2D u_shadowMap : register(t100);
+Texture2D m_diffuseTexture : register(t101);
+Texture2D m_specularTexture : register(t102);
 
 Pixel_PosUvNorTan mainVS(Vertex_PosUvNorTan input)
 {
@@ -73,5 +76,6 @@ float4 mainPS(Pixel_PosUvNorTan input) : SV_Target
 
 
     // just a color
-    return pass_get_f4_value();
+    //return pass_get_f4_value();
+    return u_testColor;
 }

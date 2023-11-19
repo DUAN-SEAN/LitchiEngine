@@ -211,12 +211,14 @@ namespace LitchiRuntime
 		// m_textureMap
 	}
 
-	void* Material::GetValues4DescriptorSet()
+	void* Material::GetValues4DescriptorSet(uint32_t& size)
 	{
 		for (auto uniform : m_uniformsData)
 		{
 			UpdateValue(uniform.first);
 		}
+
+		size = m_valueSize;
 
 		return m_value;
 	}
@@ -364,11 +366,15 @@ namespace LitchiRuntime
 		}
 
 		const auto& value = m_uniformsData[name];
+		if (!value.has_value())
+		{
+			return;
+		}
 		const auto& uniformInfo = m_shader->GetGlobalUniformInfo(name);
 
 		int offset = uniformInfo.location;
 		int size = uniformInfo.size;
-		UniformType uniformType = UniformType::UNIFORM_Unknown;
+		UniformType uniformType = uniformInfo.type;
 
 		switch (uniformType)
 		{
@@ -381,7 +387,7 @@ namespace LitchiRuntime
 		}
 		case UniformType::UNIFORM_INT:
 		{
-			auto intValue = std::any_cast<int32_t>(value);
+				auto intValue = std::any_cast<int32_t>(value);
 			memcpy(reinterpret_cast<std::byte*>(m_value) + offset, reinterpret_cast<std::byte*>(&intValue), size);
 			break; }
 		case UniformType::UNIFORM_UINT:

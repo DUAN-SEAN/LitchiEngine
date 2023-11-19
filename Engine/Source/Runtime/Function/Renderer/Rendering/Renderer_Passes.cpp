@@ -265,6 +265,10 @@ namespace LitchiRuntime
 			if (!material)
 				continue;
 
+			pso.shader_vertex = material->GetVertexShader();
+			pso.shader_pixel = material->GetPixelShader();
+			cmd_list->SetPipelineState(pso);
+
 			// skip objects outside of the view frustum
 			if (!camera->IsInViewFrustum(renderable))
 			{
@@ -286,7 +290,8 @@ namespace LitchiRuntime
 			//{
 				// todo: ÔÝÊ±²»°ó¶¨
 				// BindTexturesMaterial(cmd_list, material);
-			UpdateConstantBufferMaterial(cmd_list, material);
+			// UpdateConstantBufferMaterial(cmd_list, material);
+			UpdateMaterialGlobalBuffer(cmd_list, material);
 			// bound_material_id = material->GetObjectId();
 			// }
 
