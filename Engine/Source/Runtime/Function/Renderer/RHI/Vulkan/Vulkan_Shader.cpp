@@ -223,6 +223,7 @@ namespace LitchiRuntime
 			{
 				arguments.emplace_back("-spirv");                     // generate SPIR-V code
 				arguments.emplace_back("-fspv-target-env=vulkan1.3"); // specify the target environment
+				// arguments.emplace_back("-fvk-bind-globals 0 1"); // specify the target environment
 				// arguments.emplace_back("-fspv-extension=KHR"); // allow all KHR extensions
 
 				// this prevents all sorts of issues with constant buffers having random data.
@@ -234,6 +235,7 @@ namespace LitchiRuntime
 				arguments.emplace_back("-fvk-b-shift"); arguments.emplace_back(to_string(rhi_shader_shift_register_b)); arguments.emplace_back("all"); // binding number shift for b-type (buffer) register
 				arguments.emplace_back("-fvk-t-shift"); arguments.emplace_back(to_string(rhi_shader_shift_register_t)); arguments.emplace_back("all"); // binding number shift for t-type (texture) register
 				arguments.emplace_back("-fvk-s-shift"); arguments.emplace_back(to_string(rhi_shader_shift_register_s)); arguments.emplace_back("all"); // binding number shift for s-type (sampler) register
+				arguments.emplace_back("-fvk-bind-globals"); arguments.emplace_back(to_string(rhi_shader_shift_register_global)) ; arguments.emplace_back("0"); // binding number shift for s-type (sampler) register
 			}
 
 			// directX conventions

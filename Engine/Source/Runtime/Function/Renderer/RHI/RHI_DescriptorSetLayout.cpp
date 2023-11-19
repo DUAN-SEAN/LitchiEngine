@@ -127,7 +127,7 @@ namespace LitchiRuntime
     {
         for (RHI_Descriptor& descriptor : m_descriptors)
         {
-            if (descriptor.slot == 0)
+            if (descriptor.slot == rhi_shader_shift_register_global)
             {
                 // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
                 m_needs_to_bind = true;
