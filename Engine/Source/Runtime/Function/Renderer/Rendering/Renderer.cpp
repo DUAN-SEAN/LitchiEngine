@@ -642,8 +642,10 @@ namespace LitchiRuntime
 	{
 		// todo: if material state change, maybe not update to shader !
 		uint32_t size;
-		auto buffer = material->GetValues4DescriptorSet(size);
-		cmd_list->SetMaterialGlobalBuffer(buffer,size);
+		auto cbuffer = material->GetValuesCBuffer().get();
+		cbuffer->ResetOffset();
+		cbuffer->Update(material->GetValues4DescriptorSet(size));
+		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
 	}
 
 	// todo: 

@@ -31,6 +31,18 @@ namespace LitchiRuntime
             RHI_CreateResource();
         }
 
+        void Create(const uint32_t size, const uint32_t element_count)
+        {
+            SP_ASSERT_MSG(size % 16 == 0, "The size is not a multiple of 16");
+            SP_ASSERT_MSG(element_count != 0, "Element count can't be zero");
+
+            m_type_size = size;
+            m_stride = m_type_size; // will be aligned based on minimum device offset alignment
+            m_element_count = element_count;
+
+            RHI_CreateResource();
+        }
+
         void Update(void* data_cpu);
 
         void ResetOffset()

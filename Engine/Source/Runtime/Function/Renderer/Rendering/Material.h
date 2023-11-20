@@ -203,6 +203,7 @@ namespace LitchiRuntime
 		std::map<std::string, std::any>& GetUniformsData() { return m_uniformsData; }
 
 		void* GetValues4DescriptorSet(uint32_t& size);
+		std::shared_ptr<RHI_ConstantBuffer> GetValuesCBuffer() { return m_valueConstantBuffer; }
 		std::map<int, RHI_Texture*>& GetTextures4DescriptorSet();
 
 		void PostResourceModify() override;
@@ -218,6 +219,8 @@ namespace LitchiRuntime
 
 		/* shader */
 		MaterialShader* m_shader = nullptr;
+
+		std::shared_ptr<RHI_ConstantBuffer> m_valueConstantBuffer;
 
 		/* material resource */
 		std::map<std::string, std::any> m_uniformsData;

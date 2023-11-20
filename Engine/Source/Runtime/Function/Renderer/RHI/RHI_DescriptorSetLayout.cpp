@@ -123,19 +123,18 @@ namespace LitchiRuntime
         }
     }
 
-    void RHI_DescriptorSetLayout::SetMaterialGlobalBuffer(void* buffer, const uint32_t bufferSize)
+    void RHI_DescriptorSetLayout::SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer)
     {
         for (RHI_Descriptor& descriptor : m_descriptors)
         {
-            if (descriptor.slot == rhi_shader_shift_register_global)
+            if (descriptor.name == "Material")
             {
                 // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
                 m_needs_to_bind = true;
 
-                // update
-                descriptor.data = buffer;
-                descriptor.range = bufferSize;
-                descriptor.dynamic_offset = 0;
+                descriptor.data = static_cast<void*>(constant_buffer); // needed for vkUpdateDescriptorSets()
+                descriptor.range = constant_buffer->GetStride();        // needed for vkUpdateDescriptorSets()
+                descriptor.dynamic_offset = constant_buffer->GetOffset();        // needed for vkCmdBindDescriptorSets
 
                 return;
             }

@@ -7,6 +7,7 @@
 #include "../RHI/RHI_Texture2D.h"
 #include "../RHI/RHI_TextureCube.h"
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 #include "Runtime/Resource/AssetManager.h"
 #include "Runtime/Resource/ShaderManager.h"
@@ -334,6 +335,14 @@ namespace LitchiRuntime
 				break;
 			}
 		}
+
+		// init constantBuffer
+		uint32_t size;
+		auto value = GetValues4DescriptorSet(size);
+		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName()+"CBuffer");
+		m_valueConstantBuffer->Create(size,1);
+		m_valueConstantBuffer->ResetOffset();
+		m_valueConstantBuffer->Update(value);
 	}
 
 	Material* Material::CreateMaterial4StandardPBR()

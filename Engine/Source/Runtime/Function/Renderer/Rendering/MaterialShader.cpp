@@ -32,7 +32,7 @@ namespace LitchiRuntime
 	const ShaderUniform MaterialShader::GetGlobalUniformInfo(std::string name)
 	{
 		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-		const auto& uniformList = descriptor.uniformList;
+		const auto& uniformList = descriptor.uniformList[0].memberUniform;
 
 		for (auto uniform : uniformList)
 		{
@@ -48,7 +48,7 @@ namespace LitchiRuntime
 	const std::vector<ShaderUniform> MaterialShader::GetGlobalShaderUniformList()
 	{
 		const auto& descriptor = m_vertex_shader->GetGlobalDescriptor();
-		const auto& uniformList = descriptor.uniformList;
+		const auto& uniformList = descriptor.uniformList[0].memberUniform;
 		return uniformList;
 	}
 

@@ -21,10 +21,10 @@
       "Type": "UniformInfoVector4",
       "name": "u_testColor",
       "vector": {
-        "x": 1.0,
+        "x": 0.5,
         "y": 1.0,
-        "z": 1.0,
-        "w": 1.0
+        "z": 0.5,
+        "w": 0.3
       }
     },
     {

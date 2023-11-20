@@ -1187,7 +1187,7 @@ namespace LitchiRuntime
         m_descriptor_layout_current->SetStructuredBuffer(slot, structured_buffer);
     }
 
-    void RHI_CommandList::SetMaterialGlobalBuffer(void* buffer, const uint32_t bufferSize) const
+    void RHI_CommandList::SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer) const
     {
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
@@ -1197,7 +1197,7 @@ namespace LitchiRuntime
             return;
         }
 
-        m_descriptor_layout_current->SetMaterialGlobalBuffer(buffer, bufferSize);
+        m_descriptor_layout_current->SetMaterialGlobalBuffer(constant_buffer);
     }
 
     void RHI_CommandList::BeginMarker(const char* name)

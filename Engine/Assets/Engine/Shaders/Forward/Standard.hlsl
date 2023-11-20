@@ -3,10 +3,19 @@
 #include "../Common/common.hlsl"
 //====================
 
-// Global Var
-float2 u_TextureOffset;
-float2 u_TextureTiling;
-float4 u_testColor;
+struct MaterialData
+{
+	// Global Var
+    float2 u_TextureOffset;
+    float2 u_TextureTiling;
+    float4 u_testColor;
+
+};
+
+cbuffer Material : register(b10)
+{
+    MaterialData materialData;
+}; 
 
 Texture2D u_shadowMap : register(t100);
 Texture2D m_diffuseTexture : register(t101);
@@ -69,7 +78,7 @@ float ShadowCalculation(float4 fragPosLightSpace)
 
 float4 mainPS(Pixel_PosUvNorTan input) : SV_Target
 {
-    float2 g_TexCoords = u_TextureOffset + float2((input.uv.x * u_TextureTiling.x) % 1.0, (input.uv.y * u_TextureTiling.y) % 1.0);
+    float2 g_TexCoords = materialData.u_TextureOffset + float2((input.uv.x * materialData.u_TextureTiling.x) % 1.0, (input.uv.y * materialData.u_TextureTiling.y) % 1.0);
 
     // float shadow = ShadowCalculation(input.ShadowCoord);
 
@@ -77,5 +86,5 @@ float4 mainPS(Pixel_PosUvNorTan input) : SV_Target
 
     // just a color
     //return pass_get_f4_value();
-    return u_testColor;
+    return materialData.u_testColor;
 }
