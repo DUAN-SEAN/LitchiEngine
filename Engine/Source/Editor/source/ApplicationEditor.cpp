@@ -274,7 +274,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	auto cube = CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
-	CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
+	// CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
 
 	auto textMat= materialManager->LoadResource("Engine\\Materials\\test.mat");

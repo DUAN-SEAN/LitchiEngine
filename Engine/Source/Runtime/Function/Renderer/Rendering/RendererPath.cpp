@@ -50,6 +50,7 @@ namespace LitchiRuntime
 		m_renderables.clear();
 
 		CreateColorRenderTarget();
+		CreateDepthRenderTarget();
 	}
 
 	void RendererPath::UpdateRenderTarget(float width, float height)
@@ -72,7 +73,7 @@ namespace LitchiRuntime
 		std::string rtName = GetRenderPathName() + std::string("_frame_depth");
 		static float resolutionWidth = 4096;
 		static float resolutionHeight = 4096;
-		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(resolutionWidth, resolutionHeight, 1, RHI_Format::D32_Float, RHI_Texture_RenderTarget | RHI_Texture_Srv, rtName.c_str());
+		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, RHI_Texture_RenderTarget | RHI_Texture_Srv, rtName.c_str());
 	}
 
 	std::string RendererPath::GetRenderPathName()
