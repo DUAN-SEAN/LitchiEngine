@@ -265,16 +265,16 @@ namespace LitchiRuntime
 			if (!material)
 				continue;
 
-			pso.shader_vertex = material->GetVertexShader();
-			pso.shader_pixel = material->GetPixelShader();
-			cmd_list->SetPipelineState(pso);
-
 			// skip objects outside of the view frustum
 			if (!camera->IsInViewFrustum(renderable))
 			{
 				// DEBUG_LOG_INFO("Renderer::Pass_ForwardPass Object Not InViewFrustum, name:{}", entity->GetName());
 				continue;
 			}
+
+			pso.shader_vertex = material->GetVertexShader();
+			pso.shader_pixel = material->GetPixelShader();
+			cmd_list->SetPipelineState(pso);
 
 			//if (!render_pass_active)
 			//{
@@ -291,7 +291,7 @@ namespace LitchiRuntime
 				// todo: ÔÝÊ±²»°ó¶¨
 				// BindTexturesMaterial(cmd_list, material);
 			// UpdateConstantBufferMaterial(cmd_list, material);
-			UpdateMaterialGlobalBuffer(cmd_list, material);
+			UpdateMaterial(cmd_list, material);
 			// bound_material_id = material->GetObjectId();
 			// }
 
@@ -327,6 +327,7 @@ namespace LitchiRuntime
 	/*	pso.render_target_color_textures[1] = tex_reactive_mask;
 		pso.clear_color[1] = rhi_color_load;*/
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();
+		// pso.clear_depth = 0.0f; // reverse-z
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
 
@@ -334,7 +335,7 @@ namespace LitchiRuntime
 
 		// set pipeline state
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 
 		cmd_list->SetPipelineState(pso);
 		cmd_list->BeginRenderPass();
