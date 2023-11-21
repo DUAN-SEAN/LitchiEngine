@@ -436,7 +436,6 @@ namespace LitchiRuntime
 			break;
 		}
 		case UniformType::UNIFORM_DOUBLE_MAT4:
-		case UniformType::UNIFORM_TEXTURE:
 		case UniformType::UNIFORM_Struct:
 		case UniformType::UNIFORM_Unknown:
 		default:

@@ -44,6 +44,7 @@ namespace LitchiRuntime
         }
 
         void Update(void* data_cpu);
+        void UpdateWithReset(void* data_cpu);
 
         void ResetOffset()
         {

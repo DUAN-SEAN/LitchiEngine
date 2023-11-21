@@ -14,10 +14,11 @@ namespace LitchiRuntime
 {
 	bool MaterialShader::LoadFromFile(const std::string& file_path)
 	{
+		// todo: Ä¬ÈÏ¶¼ÊÇ
 		auto vertexShader = new RHI_Shader();
-		vertexShader->Compile(RHI_Shader_Stage::RHI_Shader_Vertex, file_path, false, RHI_Vertex_Type::PosUv);
+		vertexShader->Compile(RHI_Shader_Stage::RHI_Shader_Vertex, file_path, false, RHI_Vertex_Type::PosUvNorTan);
 		auto pixelShader = new RHI_Shader();
-		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, file_path, false, RHI_Vertex_Type::PosUv);
+		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, file_path, false, RHI_Vertex_Type::PosUvNorTan);
 
 		m_shaderPath = FileSystem::GetRelativePathAssetFromNative(file_path);
 		m_vertex_shader = vertexShader;

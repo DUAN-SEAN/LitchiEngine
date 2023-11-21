@@ -277,7 +277,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	// CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
 
-	auto textMat= materialManager->LoadResource("Engine\\Materials\\Test.mat");
+	auto textMat= materialManager->LoadResource("Engine\\Materials\\test.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
 

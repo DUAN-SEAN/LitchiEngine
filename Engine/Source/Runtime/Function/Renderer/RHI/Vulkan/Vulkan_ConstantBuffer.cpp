@@ -73,4 +73,9 @@ namespace LitchiRuntime
 
         m_has_updated = true;
     }
+    void RHI_ConstantBuffer::UpdateWithReset(void* data_cpu)
+    {
+        ResetOffset();
+        Update(data_cpu);
+    }
 }
