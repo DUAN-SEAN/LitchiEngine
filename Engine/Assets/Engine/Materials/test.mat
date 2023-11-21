@@ -1,36 +1,46 @@
 {
-  "shaderPath": "Engine\\Shaders\\Forward\\Standard.hlsl",
-  "uniformInfoList": [
-    {
-      "Type": "UniformInfoVector2",
-      "name": "u_TextureOffset",
-      "vector": {
-        "x": 0.0,
-        "y": 0.0
-      }
-    },
-    {
-      "Type": "UniformInfoVector2",
-      "name": "u_TextureTiling",
-      "vector": {
-        "x": 0.0,
-        "y": 0.0
-      }
-    },
-    {
-      "Type": "UniformInfoVector4",
-      "name": "u_testColor",
-      "vector": {
-        "x": 0.5,
-        "y": 1.0,
-        "z": 0.5,
-        "w": 0.3
-      }
-    },
-    {
-      "Type": "UniformInfoTexture",
-      "name": "tex",
-      "path": "Engine\\Textures\\base_albedo.jpg"
-    }
-  ]
+    "shaderPath": "Engine/Shaders/Forward/Standard.hlsl",
+    "uniformInfoList": [
+        {
+            "Type": "UniformInfoTexture",
+            "name": "m_diffuseTexture",
+            "path": "data/textures/no_texture.png"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "m_specularTexture",
+            "path": "Engine/Textures/liuyifei.png"
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureOffset",
+            "vector": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_TextureTiling",
+            "vector": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_shadowMap",
+            "path": ""
+        },
+        {
+            "Type": "UniformInfoVector4",
+            "name": "u_testColor",
+            "vector": {
+                "x": 0.5,
+                "y": 0.9200000166893005,
+                "z": 0.8600000143051148,
+                "w": 0.26499998569488528
+            }
+        }
+    ]
 }

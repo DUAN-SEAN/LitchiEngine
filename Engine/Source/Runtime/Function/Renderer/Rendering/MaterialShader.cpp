@@ -59,7 +59,7 @@ namespace LitchiRuntime
 
 		for (auto& rhi_descriptor : descriptor)
 		{
-			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.name == name)
+			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.name == name && rhi_descriptor.slot>= rhi_shader_shift_register_material_t)
 			{
 				return rhi_descriptor;
 			}
@@ -75,7 +75,7 @@ namespace LitchiRuntime
 
 		for (auto rhi_descriptor : descriptor)
 		{
-			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture)
+			if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.slot >= rhi_shader_shift_register_material_t)
 			{
 				descriptorList.push_back(rhi_descriptor);
 			}

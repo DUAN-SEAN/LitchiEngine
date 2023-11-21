@@ -23,7 +23,7 @@ namespace LitchiRuntime
             mip          = descriptor.mip;
             array_length = descriptor.array_length;
             struct_size  = descriptor.struct_size;
-            isGlobal4Vulkan = descriptor.isGlobal4Vulkan;
+            isMaterial = descriptor.isMaterial;
             uniformList = descriptor.uniformList;
         }
 
@@ -35,7 +35,7 @@ namespace LitchiRuntime
             const uint32_t array_length,
             const uint32_t stage,
             const uint32_t struct_size,
-            const uint32_t isGlobal4Vulkan,
+            const uint32_t isMaterial,
             const std::vector<ShaderUniform> uniformList
         )
         {
@@ -46,7 +46,7 @@ namespace LitchiRuntime
             this->name         = name;
             this->array_length = array_length;
             this->struct_size  = struct_size;
-            this->isGlobal4Vulkan  = isGlobal4Vulkan;
+            this->isMaterial  = isMaterial;
             this->uniformList = uniformList;
         }
 
@@ -85,7 +85,7 @@ namespace LitchiRuntime
         std::string name;
 
         // global var 
-        bool isGlobal4Vulkan;
+        bool isMaterial;
 
         std::vector<ShaderUniform> uniformList;
 

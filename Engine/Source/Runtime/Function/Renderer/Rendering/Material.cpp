@@ -224,7 +224,7 @@ namespace LitchiRuntime
 		return m_value;
 	}
 
-	std::map<int, RHI_Texture*>& Material::GetTextures4DescriptorSet()
+	std::map<int, RHI_Texture*> Material::GetTextures4DescriptorSet()
 	{
 		std::map<int, RHI_Texture*> textureMap;
 		for (auto uniform : m_uniformsData)
@@ -435,12 +435,15 @@ namespace LitchiRuntime
 			memcpy(reinterpret_cast<std::byte*>(m_value) + offset, reinterpret_cast<std::byte*>(&matrixValue), size);
 			break;
 		}
+		case UniformType::UNIFORM_TEXTURE:
+			// texture jump
+			break;
 		case UniformType::UNIFORM_DOUBLE_MAT4:
 		case UniformType::UNIFORM_Struct:
 		case UniformType::UNIFORM_Unknown:
 		default:
 		{
-			DEBUG_LOG_ERROR("UpdateValue no support type name:{} type:{}", name, uniformType);
+			// DEBUG_LOG_ERROR("UpdateValue no support type name:{} type:{}", name, uniformType);
 			break;
 		}
 		}

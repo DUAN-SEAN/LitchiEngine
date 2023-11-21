@@ -204,7 +204,7 @@ namespace LitchiRuntime
 
 		void* GetValues4DescriptorSet(uint32_t& size);
 		std::shared_ptr<RHI_ConstantBuffer> GetValuesCBuffer() { return m_valueConstantBuffer; }
-		std::map<int, RHI_Texture*>& GetTextures4DescriptorSet();
+		std::map<int, RHI_Texture*> GetTextures4DescriptorSet();
 
 		void PostResourceModify() override;
 		void PostResourceLoaded() override;

@@ -104,6 +104,10 @@ namespace LitchiRuntime
         {
             bool is_storage = layout == RHI_Image_Layout::General;
             uint32_t shift  = is_storage ? rhi_shader_shift_register_u : rhi_shader_shift_register_t;
+            if(descriptor.isMaterial)
+            {
+                shift = 0;
+            }
 
             if (descriptor.slot == (slot + shift))
             {

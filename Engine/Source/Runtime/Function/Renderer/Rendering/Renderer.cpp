@@ -645,6 +645,12 @@ namespace LitchiRuntime
 		auto cbuffer = material->GetValuesCBuffer().get();
 		cbuffer->UpdateWithReset(material->GetValues4DescriptorSet(size));
 		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
+
+		auto textureMap = material->GetTextures4DescriptorSet();
+		for (auto texture_map : textureMap)
+		{
+			cmd_list->SetTexture(texture_map.first, texture_map.second);
+		}
 	}
 
 	// todo: 

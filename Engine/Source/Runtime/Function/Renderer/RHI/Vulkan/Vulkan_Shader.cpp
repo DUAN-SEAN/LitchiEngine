@@ -21,7 +21,7 @@ namespace LitchiRuntime
 {
 	namespace
 	{
-		vector<ShaderUniform> spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler,const SPIRType parentType)
+		vector<ShaderUniform> spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler, const SPIRType parentType)
 		{
 			vector<ShaderUniform> uniformList;
 			uniformList.resize(0);
@@ -93,7 +93,8 @@ namespace LitchiRuntime
 						else if (member_type.vecsize == 1 && member_type.columns == 1)
 						{
 							uniformInfo.type = UniformType::UNIFORM_FLOAT;
-						}else
+						}
+						else
 						{
 							uniformInfo.type = UniformType::UNIFORM_Unknown;
 						}
@@ -122,10 +123,11 @@ namespace LitchiRuntime
 						uniformInfo.type = UniformType::UNIFORM_Unknown;
 						break;
 					}
-				}else
+				}
+				else
 				{
 					uniformInfo.type = UniformType::UNIFORM_Struct;
-					uniformInfo.memberUniform  = spirv_constantBuffer_struct_uniformList(compiler,member_type);
+					uniformInfo.memberUniform = spirv_constantBuffer_struct_uniformList(compiler, member_type);
 				}
 
 				uniformList.push_back(uniformInfo);
@@ -145,6 +147,18 @@ namespace LitchiRuntime
 			}
 
 			return uniformList;
+		}
+
+		bool CheckIsMaterialDescriptor(const CompilerHLSL& compiler, const Resource& resource)
+		{
+			uint32_t slot = compiler.get_decoration(resource.id, spv::DecorationBinding);
+			// check is material
+			if (slot >= rhi_shader_shift_register_material_t || slot == rhi_shader_shift_register_b + rhi_shader_shift_register_material_value)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		void spirv_resources_to_descriptors(
@@ -167,16 +181,14 @@ namespace LitchiRuntime
 
 				SPIRType type = compiler.get_type(resource.type_id);
 				vector<ShaderUniform> uniformList;
-				bool isGlobal = false;
-				if(type.basetype == SPIRType::Struct)
+				bool isMaterial = false;
+				if (type.basetype == SPIRType::Struct)
 				{
-					if (name._Equal("$Globals"))
-					{
-						isGlobal = true;
-					}
-
 					uniformList = spirv_constantBuffer_struct_uniformList(compiler, type);
 				}
+
+				// check is material
+				isMaterial = CheckIsMaterialDescriptor(compiler, resource);
 
 				uint32_t array_length = !type.array.empty() ? type.array[0] : 0;
 				uint32_t size = 0;
@@ -194,7 +206,7 @@ namespace LitchiRuntime
 					array_length,    // array length
 					shader_stage,    // stage
 					size,             // struct size
-					isGlobal,
+					isMaterial,
 					uniformList
 				);
 			}

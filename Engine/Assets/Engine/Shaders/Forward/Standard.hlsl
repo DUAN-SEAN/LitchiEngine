@@ -82,9 +82,11 @@ float4 mainPS(Pixel_PosUvNorTan input) : SV_Target
 
     // float shadow = ShadowCalculation(input.ShadowCoord);
 
-
+    float4 color = float4(m_specularTexture.Sample(samplers[sampler_point_wrap], input.uv).xyz, 1.0f);
+    float4 output = color * materialData.u_testColor;
 
     // just a color
     //return pass_get_f4_value();
-    return materialData.u_testColor;
+    return color;
+    // return materialData.u_testColor;
 }
