@@ -36,6 +36,9 @@ struct LightBufferData
     float4 direction;
 
     float normal_bias;
+    // 0001: Directional 0010:Point 0100:Spot
+    // 1000: ShadowsEnabled 1 0000: ShadowsTransparentEnabled
+    // 10 0000:VolumetricEnabled
     uint options;
     float2 padding;
     
