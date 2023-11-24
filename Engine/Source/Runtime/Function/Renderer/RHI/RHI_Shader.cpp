@@ -223,9 +223,9 @@ namespace LitchiRuntime
         return m_input_layout->GetVertexSize();
     }
 
-    const RHI_Descriptor RHI_Shader::GetGlobalDescriptor()
+    const RHI_Descriptor& RHI_Shader::GetGlobalDescriptor()
     {
-	    for (auto descriptor : m_descriptors)
+	    for (const auto& descriptor : m_descriptors)
 	    {
 		    if(descriptor.name == "Material")
 		    {

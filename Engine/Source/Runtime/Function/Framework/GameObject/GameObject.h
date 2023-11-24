@@ -109,7 +109,7 @@ namespace LitchiRuntime
 				{
 					m_componentList.erase(iter);
 					// todo: delete iter
-					delete *iter;
+					delete component;
 					return true;
 				}
 			}

@@ -34,8 +34,14 @@ namespace LitchiRuntime
 	}
 
 	bool GameObject::SetParent(GameObject* parent) {
-		
-		GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
+
+		if(parent)
+		{
+			GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
+		}else
+		{
+			GetComponent<Transform>()->SetParent(nullptr);
+		}
 
 		return true;
 	}
@@ -97,7 +103,8 @@ namespace LitchiRuntime
 
 	void GameObject::UnInitialize()
 	{
-		for (auto& v : m_componentList) {
+		auto tempList = m_componentList;
+		for (auto& v : tempList) {
 			RemoveComponent(v);
 		}
 	}

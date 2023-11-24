@@ -234,7 +234,10 @@ namespace LitchiRuntime
 			if (descriptor.type == RHI_Descriptor_Type::Texture)
 			{
 				auto slot = descriptor.slot;
-				textureMap[slot] = any_cast<RHI_Texture*>(uniform.second);
+				if(uniform.second.type() == typeid(RHI_Texture*))
+				{
+					textureMap[slot] = any_cast<RHI_Texture*>(uniform.second);
+				}
 			}
 		}
 

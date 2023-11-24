@@ -182,6 +182,12 @@ namespace LitchiRuntime
 
 	SceneManager::~SceneManager()
 	{
+		for (auto m_scene_map : m_sceneMap)
+		{
+			delete m_scene_map.second;
+		}
+
+		m_sceneMap.clear();
 	}
 
 	bool SceneManager::LoadScene(std::string path)

@@ -18,6 +18,7 @@ LitchiRuntime::MaterialShader* LitchiRuntime::ShaderManager::CreateResource(cons
 
 void LitchiRuntime::ShaderManager::DestroyResource(LitchiRuntime::MaterialShader* p_resource)
 {
+	delete p_resource;
 	// Loaders::ShaderLoader::Destroy(p_resource);
 }
 

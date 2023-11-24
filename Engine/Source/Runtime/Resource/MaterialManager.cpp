@@ -21,6 +21,7 @@ LitchiRuntime::Material* LitchiRuntime::MaterialManager::CreateResource(const st
 
 void LitchiRuntime::MaterialManager::DestroyResource(LitchiRuntime::Material* p_resource)
 {
+	delete p_resource;
 	// Loaders::MaterialLoader::Destroy(p_resource);
 }
 

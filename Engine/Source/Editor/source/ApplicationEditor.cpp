@@ -28,6 +28,8 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/Camera/Camera.h";
+#include "Runtime/Function/Physics/physics.h"
+#include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
 
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Resource/FontManager.h"
@@ -48,6 +50,37 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
+	/*if (ImGui::GetCurrentContext())
+	{
+		ImGui::RHI::shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+	}*/
+
+	// Îö¹¹ÆäËû
+	sceneManager = nullptr;
+	modelManager->UnloadResources();
+	modelManager = nullptr;
+	shaderManager->UnloadResources();
+	shaderManager = nullptr;
+	materialManager->UnloadResources();
+	materialManager = nullptr;
+	fontManager->UnloadResources();
+	fontManager = nullptr;
+	textureManager->UnloadResources();
+	textureManager = nullptr;
+	window = nullptr;
+	ResourceCache::Shutdown();
+	// World::Shutdown();
+	Renderer::Shutdown();
+	// Physics::Shutdown();
+	// ThreadPool::Shutdown();
+	// Event::Shutdown();
+	// Audio::Shutdown();
+	// Profiler::Shutdown();
+	//ImageImporterExporter::Shutdown();
+	FontImporter::Shutdown();
+	Renderer::Shutdown();
 }
 
 GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale)
@@ -145,13 +178,13 @@ GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quate
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
 
-	auto transform = go->AddComponent<Transform>();
+	auto transform = go->GetComponent<Transform>();
 	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
 	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
 	transform->PostResourceLoaded();
 
 	auto directionalLight = go->AddComponent<Light>();
-	directionalLight->SetColor((0.3, 0.6, 0.7));
+	directionalLight->SetColor({0.3f,0.6f,0.7f});
 	directionalLight->SetIntensity(LightIntensity::bulb_100_watt);
 
 	return go;
@@ -277,11 +310,11 @@ void LitchiEditor::ApplicationEditor::Init()
 	// CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
 
-	auto textMat= materialManager->LoadResource("Engine\\Materials\\test.mat");
+	auto textMat= materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
 
-
+	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(20,0,0));
 	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
 

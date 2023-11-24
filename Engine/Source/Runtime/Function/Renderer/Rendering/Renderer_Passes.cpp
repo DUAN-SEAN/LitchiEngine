@@ -242,6 +242,14 @@ namespace LitchiRuntime
 		cmd_list->SetPipelineState(pso);
 		cmd_list->BeginRenderPass();
 
+		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
+		if (!lightEntities.empty())
+		{
+			auto lightGameObject = lightEntities[0];
+			auto mainLight = lightGameObject->GetComponent<Light>();
+			UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());
+		}
+
 		// 绘制所有的实体
 		for (GameObject* entity : entities)
 		{
@@ -275,26 +283,12 @@ namespace LitchiRuntime
 			pso.shader_vertex = material->GetVertexShader();
 			pso.shader_pixel = material->GetPixelShader();
 			cmd_list->SetPipelineState(pso);
-
-			//if (!render_pass_active)
-			//{
-			//	cmd_list->BeginRenderPass();
-			//	render_pass_active = true;
-			//}
-
+			
 			// Bind geometry
 			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
 			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
-
-			// if (bound_material_id != material->GetObjectId())
-			//{
-				// todo: 暂时不绑定
-				// BindTexturesMaterial(cmd_list, material);
-			// UpdateConstantBufferMaterial(cmd_list, material);
+			
 			UpdateMaterial(cmd_list, material);
-			// bound_material_id = material->GetObjectId();
-			// }
-
 
 			// Set pass constants with cascade transform
 			m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
