@@ -1,6 +1,8 @@
 #include "RendererPath.h"
 
 #include <memory>
+#include <easy/profiler.h>
+#include <easy/details/profiler_colors.h>
 
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
@@ -89,6 +91,7 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateRenderableGameObject()
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		if (!m_renderScene->IsNeedResolve())
 		{
 			return;

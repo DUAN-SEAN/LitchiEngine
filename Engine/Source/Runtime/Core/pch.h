@@ -65,3 +65,11 @@
 #if !defined(_MSC_VER)
     #define FFX_GCC
 #endif
+
+
+#define USING_EASY_PROFILER
+
+#include <easy/details/profiler_colors.h>
+#include <easy/profiler.h>
+
+

@@ -1,10 +1,14 @@
 
 #include "Canvas.h"
 
+#include <easy/profiler.h>
+#include <easy/details/profiler_colors.h>
+
 #include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 
 void LitchiRuntime::Canvas::Draw()
 {
+	EASY_FUNCTION(profiler::colors::Magenta);
 	if (!m_panels.empty())
 	{
 		// ImGui_ImplOpenGL3_NewFrame();

@@ -2,6 +2,7 @@
 #include "Editor/include/ApplicationEditor.h"
 
 #include <filesystem>
+#include <easy/profiler.h>
 
 #include "Editor/include/Panels/AssetBrowser.h"
 #include "Editor/include/Panels/AssetView.h"
@@ -363,70 +364,47 @@ void LitchiEditor::ApplicationEditor::Init()
 
 void LitchiEditor::ApplicationEditor::Run()
 {
-	Stopwatch sw;
-	float costTime;
 	while (IsRunning())
 	{
-		// PreUpdate
-		window->PollEvents();
+		EASY_BLOCK("Frame") {
+			// PreUpdate
+			window->PollEvents();
+			
+			EASY_BLOCK("Update") {
+				Update();
+			}  EASY_END_BLOCK;
+			
+			// Update
+			// ºÏ≤‚ «∑Ò…æ≥˝ŒÔÃÂ
+			// ºÏ≤‚‘À––ƒ£ Ω Game or no
+			// ‰÷»æViews
 
-		if (m_elapsedFrames % 100 == 0)
-		{
-			sw.Start();
-		}
+			EASY_BLOCK("RenderViews"){
+			RenderViews(Time::delta_time());
+			}  EASY_END_BLOCK;
 
-		Update();
+			EASY_BLOCK("Renderer") {
+				Renderer::Tick();
+			}  EASY_END_BLOCK;
 
-		if (m_elapsedFrames % 100 == 0)
-		{
-			costTime = sw.GetElapsedTimeMs();
-			DEBUG_LOG_INFO("Run::DeltaTime:{}", Time::delta_time());
-			DEBUG_LOG_INFO("Run::Update CostTime:{}", costTime);
-			sw.Start();
-		}
+			
+			EASY_BLOCK("RenderUI") {
+				// ‰÷»æUI
+				RenderUI();
+			}  EASY_END_BLOCK;
+			
+			// PostUpdate
 
-		// Update
-		// ºÏ≤‚ «∑Ò…æ≥˝ŒÔÃÂ
-		// ºÏ≤‚‘À––ƒ£ Ω Game or no
-		// ‰÷»æViews
-		RenderViews(Time::delta_time());
-		if (m_elapsedFrames % 100 == 0)
-		{
-			costTime = sw.GetElapsedTimeMs();
-			DEBUG_LOG_INFO("Run::RenderViews CostTime:{}", costTime);
-			sw.Start();
-		}
-		
-
-		Renderer::Tick();
-
-		if (m_elapsedFrames % 100 == 0)
-		{
-			costTime = sw.GetElapsedTimeMs();
-			DEBUG_LOG_INFO("Run::Renderer CostTime:{}", costTime);
-			sw.Start();
-		}
-
-		// ‰÷»æUI
-		RenderUI();
-
-		if (m_elapsedFrames % 100 == 0)
-		{
-			costTime = sw.GetElapsedTimeMs();
-			DEBUG_LOG_INFO("Run::RenderUI CostTime:{}", costTime);
-			DEBUG_LOG_INFO("Run::End");
-		}
-
-		// PostUpdate
-
-		//window->SwapBuffers();
-		InputManager::ClearEvents();
-		++m_elapsedFrames;
+			//window->SwapBuffers();
+			InputManager::ClearEvents();
+			++m_elapsedFrames;
+		}  EASY_END_BLOCK;
 	}
 }
 
 void LitchiEditor::ApplicationEditor::Update()
 {
+	// EASY_FUNCTION(profiler::colors::Magenta);
 	Time::Update();
 	UpdateScreenSize();
 
@@ -457,6 +435,7 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
+	EASY_FUNCTION(profiler::colors::Magenta);
 	// ‰÷»æView 
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
@@ -477,6 +456,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 
 void LitchiEditor::ApplicationEditor::RenderUI()
 {
+	EASY_FUNCTION(profiler::colors::Magenta);
 	uiManager->Render();
 }
 

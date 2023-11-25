@@ -2,7 +2,6 @@
 
 #include <direct.h>
 #include <string>
-
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"

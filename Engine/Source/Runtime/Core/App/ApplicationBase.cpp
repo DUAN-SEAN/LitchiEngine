@@ -2,6 +2,8 @@
 #include "ApplicationBase.h"
 
 #include <memory>
+#include "Runtime/Core/pch.h"
+
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
@@ -19,8 +21,6 @@
 
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
-
-#include <easy/profiler.h>
 
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime

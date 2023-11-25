@@ -2,6 +2,10 @@
 //= INCLUDES ===================================
 #include "Runtime/Core/pch.h"
 #include "Renderer.h"
+
+#include <easy/profiler.h>
+#include <easy/details/profiler_colors.h>
+
 #include "../RHI/RHI_Device.h"
 #include "../RHI/RHI_SwapChain.h"
 #include "../RHI/RHI_RenderDoc.h"
@@ -264,6 +268,7 @@ namespace LitchiRuntime
 
 	void Renderer::Tick()
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		// don't produce frames if the window is minimized
 		/* if (ApplicationBase::Instance()->window->IsMinimized())
 			return;*/
@@ -346,6 +351,7 @@ namespace LitchiRuntime
 
 	void Renderer::Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		auto camera = rendererPath->GetRenderCamera();
 		auto rendererables = rendererPath->GetRenderables();
 		// update frame buffer

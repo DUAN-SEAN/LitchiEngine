@@ -353,6 +353,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Submit()
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Ended);
 
         RHI_Device::QueueSubmit(

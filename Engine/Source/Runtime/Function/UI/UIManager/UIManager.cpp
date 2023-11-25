@@ -1,6 +1,9 @@
 
 #include "UIManager.h"
 
+#include <easy/profiler.h>
+#include <easy/details/profiler_colors.h>
+
 #include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 #include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
 
@@ -280,6 +283,7 @@ void LitchiRuntime::UIManager::RemoveCanvas()
 
 void LitchiRuntime::UIManager::Render()
 {
+	EASY_FUNCTION(profiler::colors::Magenta);
 	if (m_currentCanvas)
 	{
 		m_currentCanvas->Draw();

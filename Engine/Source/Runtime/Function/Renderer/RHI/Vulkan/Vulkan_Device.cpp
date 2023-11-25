@@ -1,5 +1,8 @@
 
 //= INCLUDES ==========================
+#include <easy/profiler.h>
+#include <easy/details/profiler_colors.h>
+
 #include "Runtime/Core/pch.h"
 #include "../RHI_Device.h"
 #include "../RHI_Implementation.h"
@@ -838,6 +841,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::Tick(const uint64_t frame_count)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		// https://gpuopen-librariesandsdks.github.io/VulkanMemoryAllocator/html/staying_within_budget.html
 		// Make sure to call vmaSetCurrentFrameIndex() every frame.
 		// Budget is queried from Vulkan inside of it to avoid overhead of querying it with every allocation.
