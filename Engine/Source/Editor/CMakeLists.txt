@@ -64,6 +64,6 @@ target_link_libraries(${TARGET_NAME} LitchiRuntime)
 
 
 if(MSVC)
-	file(GLOB MODEL ${THIRD_PARTY_DIR}/mono/Libs/*.dll ${THIRD_PARTY_DIR}/assimp/bin/*.dll ${THIRD_PARTY_DIR}/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/*.dll)
+	file(GLOB MODEL ${THIRD_PARTY_DIR}/mono/Libs/*.dll ${THIRD_PARTY_DIR}/assimp/bin/*.dll ${THIRD_PARTY_DIR}/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/*.dll ${THIRD_PARTY_DIR}/easy_profiler_core/lib/*.dll)
 	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${MODEL} $<TARGET_FILE_DIR:${TARGET_NAME}>)
 endif()
