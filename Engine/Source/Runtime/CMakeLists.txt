@@ -74,6 +74,9 @@ target_link_libraries(${TARGET_NAME} PUBLIC Compressonator_MT_debug)
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/free_image/lib)
 target_link_libraries(${TARGET_NAME} PUBLIC FreeImageLib_debug)
 
+target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/easy_profiler_core/lib)
+target_link_libraries(${TARGET_NAME} PUBLIC easy_profiler)
+
 # 将Source目录添加到Link Target 的项目include中
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>)
 
@@ -125,3 +128,7 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY
 
 # FreeImage
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/free_image/FreeImage>)
+
+
+# easy_profiler
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/easy_profiler_core/include>)

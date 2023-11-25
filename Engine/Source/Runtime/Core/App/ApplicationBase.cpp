@@ -20,6 +20,8 @@
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 
+#include <easy/profiler.h>
+
 //#include "Runtime/Function/Physics/physics.h"
 namespace LitchiRuntime
 {
@@ -27,7 +29,11 @@ namespace LitchiRuntime
     void ApplicationBase::Init() {
         s_instance = this;
 
-        Debug::Initialize();
+        // Easy Profiler
+        EASY_MAIN_THREAD;
+        profiler::startListen();// 启动profiler服务器，等待gui连接。
+
+    	Debug::Initialize();
 
         char* projectPath = nullptr;
         projectPath = _getcwd(nullptr, 1);

@@ -43,3 +43,5 @@ bld/
 !Engine/ThridParty/assimp/[Bb]in/
 !Engine/ThridParty/assimp/[Bb]in/*
 /Engine/ThridParty/free_image/lib/FreeImageLib_debug.lib
+
+Tools/easy_profiler-v2.1.0-msvc15-win64
