@@ -43,9 +43,9 @@ struct data
 		unsigned char byte_value[4];
 	};
 };
-LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager),ApplicationBase()
+LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager), ApplicationBase()
 {
-	
+
 }
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
@@ -80,7 +80,6 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	// Profiler::Shutdown();
 	//ImageImporterExporter::Shutdown();
 	FontImporter::Shutdown();
-	Renderer::Shutdown();
 }
 
 GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale)
@@ -94,6 +93,26 @@ GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quatern
 	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
 	meshFilter4Cube->SetGeometry(Renderer::GetStandardMesh(Renderer_MeshType::Cube).get());
 	meshRenderer4Cube->SetDefaultMaterial();
+
+	return gameObject4Cube;
+}
+
+GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string materialPath, std::string modelPath)
+{
+	auto gameObject4Cube = scene->CreateGameObject(name);
+	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
+	transform4Cube->SetPositionLocal(position);
+	transform4Cube->SetRotationLocal(rotation);
+	transform4Cube->SetScaleLocal(scale);
+
+	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
+	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
+
+	auto material = ApplicationBase::Instance()->materialManager->LoadResource(materialPath);
+
+	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
+	meshFilter4Cube->SetGeometry(mesh);
+	meshRenderer4Cube->SetMaterial(material);
 
 	return gameObject4Cube;
 }
@@ -184,7 +203,7 @@ GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quate
 	transform->PostResourceLoaded();
 
 	auto directionalLight = go->AddComponent<Light>();
-	directionalLight->SetColor({0.3f,0.6f,0.7f});
+	directionalLight->SetColor({ 0.3f,0.6f,0.7f });
 	directionalLight->SetIntensity(LightIntensity::bulb_100_watt);
 
 	return go;
@@ -245,7 +264,7 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, Vector3 pos, Quat
 	return go;
 }
 
-GameObject* CreateScriptObject(Scene* scene,std::string name,std::string scriptName)
+GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scriptName)
 {
 	GameObject* go = scene->CreateGameObject(name);
 	go->PostResourceLoaded();
@@ -262,7 +281,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	instance_ = this;
 
 	ApplicationBase::Init();
-	
+
 	// 初始化InputManager
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
@@ -278,7 +297,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	}
 
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
-		uiManager->ResetLayout(this->projectAssetsPath +"Config\\layout.ini");
+		uiManager->ResetLayout(this->projectAssetsPath + "Config\\layout.ini");
 
 
 	// 初始化Cameraf
@@ -289,7 +308,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (m_rendererPath4SceneView == nullptr)
 	{
 		m_rendererPath4SceneView = new RendererPath(RendererPathType_SceneView, m_renderCamera4SceneView);
-		
+
 		// update renderer path
 		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
 	}
@@ -309,12 +328,13 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
 
+	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 6.0f, 0.0f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
 
-	auto textMat= materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+	auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
 
-	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(20,0,0));
+	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(20, 0, 0));
 	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
 
@@ -343,23 +363,59 @@ void LitchiEditor::ApplicationEditor::Init()
 
 void LitchiEditor::ApplicationEditor::Run()
 {
+	Stopwatch sw;
+	float costTime;
 	while (IsRunning())
 	{
 		// PreUpdate
 		window->PollEvents();
 
+		if (m_elapsedFrames % 100 == 0)
+		{
+			sw.Start();
+		}
+
 		Update();
+
+		if (m_elapsedFrames % 100 == 0)
+		{
+			costTime = sw.GetElapsedTimeMs();
+			DEBUG_LOG_INFO("Run::DeltaTime:{}", Time::delta_time());
+			DEBUG_LOG_INFO("Run::Update CostTime:{}", costTime);
+			sw.Start();
+		}
 
 		// Update
 		// 检测是否删除物体
 		// 检测运行模式 Game or no
 		// 渲染Views
 		RenderViews(Time::delta_time());
+		if (m_elapsedFrames % 100 == 0)
+		{
+			costTime = sw.GetElapsedTimeMs();
+			DEBUG_LOG_INFO("Run::RenderViews CostTime:{}", costTime);
+			sw.Start();
+		}
+		
 
 		Renderer::Tick();
 
+		if (m_elapsedFrames % 100 == 0)
+		{
+			costTime = sw.GetElapsedTimeMs();
+			DEBUG_LOG_INFO("Run::Renderer CostTime:{}", costTime);
+			sw.Start();
+		}
+
 		// 渲染UI
 		RenderUI();
+
+		if (m_elapsedFrames % 100 == 0)
+		{
+			costTime = sw.GetElapsedTimeMs();
+			DEBUG_LOG_INFO("Run::RenderUI CostTime:{}", costTime);
+			DEBUG_LOG_INFO("Run::End");
+		}
 
 		// PostUpdate
 
@@ -461,7 +517,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	 m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
+	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
 	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);

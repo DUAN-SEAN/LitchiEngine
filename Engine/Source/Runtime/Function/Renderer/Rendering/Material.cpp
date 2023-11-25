@@ -347,17 +347,7 @@ namespace LitchiRuntime
 		m_valueConstantBuffer->ResetOffset();
 		m_valueConstantBuffer->Update(value);
 	}
-
-	Material* Material::CreateMaterial4StandardPBR()
-	{
-		return nullptr;
-	}
-
-	Material* Material::CreateMaterial4StandardPhong()
-	{
-		return nullptr;
-	}
-
+	
 	void Material::UpdateValue(const std::string& name)
 	{
 		// malloc value 

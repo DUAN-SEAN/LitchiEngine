@@ -6,13 +6,13 @@
 struct MaterialData
 {
 	// Global Var
-    float2 u_textureTiling = float2(1.0, 1.0);
-    float2 u_textureOffset = float2(0.0, 0.0);
-    float4 u_diffuse = float4(1.0, 1.0, 1.0, 1.0);
-    float3 u_specular = float3(1.0, 1.0, 1.0);
-	float u_shininess = 100.0;
-	float u_heightScale = 0.0;
-	bool u_enableNormalMapping = false;
+    float2 u_textureTiling;
+    float2 u_textureOffset;
+    float4 u_diffuse;
+    float u_shininess;
+    float3 u_specular;
+    float u_heightScale;
+    float3 padding;
 };
 
 // Material Buffer Name Must Be "Material"
@@ -27,8 +27,15 @@ struct Pixel
     float2 uv : TEXCOORD;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
+};
+
+struct VertexOut
+{
     float3 fragPos;
 };
+static VertexOut vertex_out;
+
+
 
 Texture2D u_shadowMap : register(t100);
 Texture2D u_normalMap : register(t101);
@@ -42,10 +49,11 @@ Pixel mainVS(Vertex_PosUvNorTan input)
     Pixel output;
 
     input.position.w = 1.0f;
-    output.fragPos = mul(input.position, buffer_pass.transform);
-    output.position = mul(output.fragPos, buffer_frame.view_projection_unjittered);
-    output.normal = mul(input.normal, buffer_pass.transform);
-    output.tangent = mul(input.tangent, buffer_pass.transform);
+    vertex_out.fragPos = mul(input.position, buffer_pass.transform).xyz;
+    output.position = mul(input.position, buffer_pass.transform);
+    output.position = mul(output.position, buffer_frame.view_projection_unjittered);
+    output.normal = mul(float4(input.normal, 0), buffer_pass.transform).xyz;
+    output.tangent = mul(float4(input.tangent, 0), buffer_pass.transform).xyz;
     output.uv = input.uv;
 
     return output;
@@ -98,14 +106,14 @@ float4 mainPS(Pixel input) : SV_Target
 
     // todo: float shadow = ShadowCalculation(input.ShadowCoord);
 
-    float3 viewDir = normalize(buffer_frame.camera_position - input.fragPos);
+    float3 viewDir = normalize(buffer_frame.camera_position - vertex_out.fragPos);
     float4 diffuseTexel = u_diffuseMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * materialData.u_diffuse;
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
-    float3 normal = normalize(input.normal);;
+    float3 normal = normalize(input.normal);
 
 
     float3 lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -buffer_light.direction.xyz,buffer_light.color.xyz,1.0f);
+				materialData.u_shininess, -buffer_light.direction.xyz, buffer_light.color.xyz, 1.0f);
     
     float4 color = float4(lightSum, diffuseTexel.a);
     

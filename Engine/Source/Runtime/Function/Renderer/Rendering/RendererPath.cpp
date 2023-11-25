@@ -89,6 +89,11 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateRenderableGameObject()
 	{
+		if (!m_renderScene->IsNeedResolve())
+		{
+			return;
+		}
+
 		// clear previous state
 		m_renderables.clear();
 
@@ -132,6 +137,8 @@ namespace LitchiRuntime
 				 m_renderables[Renderer_Entity::AudioSource].emplace_back(entity);
 			 }*/
 		}
+
+		m_renderScene->ResetResolve();
 
 		// sort them by distance
 		sort_renderables(m_renderCamera, &m_renderables[Renderer_Entity::Geometry], false);

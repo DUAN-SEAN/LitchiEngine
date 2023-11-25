@@ -148,14 +148,14 @@ namespace LitchiRuntime
 				comp->Update();
 			}
 		}
+	}
 
-		if(m_resolve)
-		{   
-			Renderer::OnSceneResolved(m_gameObjectList);
-
+	void Scene::ResetResolve()
+	{
+		if (m_resolve)
+		{
 			m_resolve = false;
 		}
-
 	}
 
 	void Scene::PostResourceLoaded()

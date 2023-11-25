@@ -209,9 +209,6 @@ namespace LitchiRuntime
 		void PostResourceModify() override;
 		void PostResourceLoaded() override;
 
-		static Material* CreateMaterial4StandardPBR();
-		static Material* CreateMaterial4StandardPhong();
-
 	private:
 
 		void UpdateValue(const std::string& name);

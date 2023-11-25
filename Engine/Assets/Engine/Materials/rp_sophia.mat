@@ -1,0 +1,83 @@
+{
+  "shaderPath": "Engine/Shaders/Forward/Standard4Phong.hlsl",
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_normalMap",
+      "path": "Engine/Textures/rp_sophia_animated_003_norm.jpg"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_diffuseMap",
+      "path": "Engine/Textures/rp_sophia_animated_003_dif.jpg"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_specularMap",
+      "path": "data/textures/white.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_heightMap",
+      "path": "data/textures/white.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_maskMap",
+      "path": "Engine/Textures/rp_sophia_animated_003_mask01.jpg"
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureOffset",
+      "vector": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureTiling",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureOffset",
+      "vector": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector4",
+      "name": "u_diffuse",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector3",
+      "name": "u_specular",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoFloat",
+      "name": "u_shininess",
+      "value": 100.0
+    },
+    {
+      "Type": "UniformInfoFloat",
+      "name": "u_heightScale",
+      "value": 0.0
+    }
+  ]
+}

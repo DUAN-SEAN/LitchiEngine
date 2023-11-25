@@ -33,6 +33,8 @@ namespace LitchiRuntime
 		void Tick();
 
 		void Resolve() { m_resolve = true; }
+		bool IsNeedResolve() { return m_resolve; }
+		void ResetResolve();
 
 		/// 全局查找GameObject
 		/// \param name

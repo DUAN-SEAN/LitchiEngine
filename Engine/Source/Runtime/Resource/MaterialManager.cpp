@@ -3,29 +3,33 @@
 
 #include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 
-LitchiRuntime::Material* LitchiRuntime::MaterialManager::CreateResource(const std::string & p_path)
+namespace LitchiRuntime
 {
-	std::string realPath = GetRealPath(p_path);
-
-	LitchiRuntime::Material* material = new Material();
-	if (material)
+	Material* MaterialManager::CreateResource(const std::string& p_path)
 	{
-		if(material->LoadFromFile(realPath))
+		std::string realPath = GetRealPath(p_path);
+
+		Material* material = new Material();
+		if (material)
 		{
-			// material->SetResourceFilePath(p_path);
+			if (material->LoadFromFile(realPath))
+			{
+				// material->SetResourceFilePath(p_path);
+			}
 		}
+
+		return material;
 	}
 
-	return material;
-}
+	void MaterialManager::DestroyResource(Material* p_resource)
+	{
+		delete p_resource;
+		// Loaders::MaterialLoader::Destroy(p_resource);
+	}
 
-void LitchiRuntime::MaterialManager::DestroyResource(LitchiRuntime::Material* p_resource)
-{
-	delete p_resource;
-	// Loaders::MaterialLoader::Destroy(p_resource);
-}
-
-void LitchiRuntime::MaterialManager::ReloadResource(LitchiRuntime::Material* p_resource, const std::string& p_path)
-{
-	// Loaders::MaterialLoader::Reload(*p_resource, p_path);
+	void MaterialManager::ReloadResource(Material* p_resource, const std::string& p_path)
+	{
+		// Loaders::MaterialLoader::Reload(*p_resource, p_path);
+	}
+	
 }
