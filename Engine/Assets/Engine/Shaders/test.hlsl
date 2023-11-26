@@ -43,6 +43,12 @@ struct LightBufferData
     //float padding2;
 };
 
+const static int MaxLight = 15;
+struct LightBufferData2
+{
+    LightBufferData lightBufferDataArr[MaxLight];
+};
+
 struct MaterialBufferData
 {
     float4 color;
@@ -86,6 +92,10 @@ cbuffer GlobalMatrix : register(b1)
 cbuffer BufferMaterial : register(b2)
 {
     uniform float4 g_color;
+}
+cbuffer LightBufferData2 : register(b3)
+{
+    uniform LightBufferData2 light;
 }
 
 int Const;

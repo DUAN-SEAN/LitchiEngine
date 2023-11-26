@@ -19,6 +19,7 @@ namespace LitchiRuntime
 {
     void RHI_DescriptorSet::Update(const vector<RHI_Descriptor>& descriptors)
     {
+        EASY_FUNCTION(profiler::colors::Yellow500)
         // Validate descriptor set
         SP_ASSERT(m_resource != nullptr);
 
