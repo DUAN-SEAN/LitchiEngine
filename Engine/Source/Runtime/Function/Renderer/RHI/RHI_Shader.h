@@ -45,6 +45,7 @@ namespace LitchiRuntime
 
         // Misc
         uint32_t GetVertexSize() const;
+        // sorted by slot
         const std::vector<RHI_Descriptor>& GetDescriptors()      const { return m_descriptors; }
         const RHI_Descriptor& GetGlobalDescriptor();
         const std::shared_ptr<RHI_InputLayout>& GetInputLayout() const { return m_input_layout; } // only valid for a vertex shader

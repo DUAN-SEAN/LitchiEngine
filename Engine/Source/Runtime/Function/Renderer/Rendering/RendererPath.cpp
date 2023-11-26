@@ -91,7 +91,7 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateRenderableGameObject()
 	{
-		EASY_FUNCTION(profiler::colors::Magenta);
+		// EASY_FUNCTION(profiler::colors::Magenta);
 		if (!m_renderScene->IsNeedResolve())
 		{
 			return;

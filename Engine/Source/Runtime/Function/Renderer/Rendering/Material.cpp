@@ -269,7 +269,7 @@ namespace LitchiRuntime
 		auto textureDescriptorList = m_shader->GetTextureDescriptorList();
 		for (const ShaderUniform& element : shaderUniformList)
 		{
-			m_uniformsData.emplace(element.name, element.defaultValue);
+			m_uniformsData.emplace(element.name, std::any());
 		}
 		for (const auto& element : textureDescriptorList)
 		{

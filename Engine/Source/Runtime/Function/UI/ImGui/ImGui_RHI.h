@@ -185,7 +185,7 @@ namespace ImGui::RHI
 
     static void render(ImDrawData* draw_data, WindowData* window_data = nullptr, const bool clear = true)
     {
-        EASY_FUNCTION(profiler::colors::Magenta);
+        // EASY_FUNCTION(profiler::colors::Magenta);
         // Avoid rendering when minimized, scale coordinates for retina displays (screen coordinates != framebuffer coordinates)
         int fb_width  = static_cast<int>(draw_data->DisplaySize.x * draw_data->FramebufferScale.x);
         int fb_height = static_cast<int>(draw_data->DisplaySize.y * draw_data->FramebufferScale.y);

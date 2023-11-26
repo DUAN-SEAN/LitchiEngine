@@ -1,8 +1,5 @@
 
 //= INCLUDES ==========================
-#include <easy/profiler.h>
-#include <easy/details/profiler_colors.h>
-
 #include "Runtime/Core/pch.h"
 #include "../RHI_Device.h"
 #include "../RHI_Implementation.h"
@@ -133,15 +130,15 @@ namespace LitchiRuntime
 			glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
 
 			std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-//
-//			if (m_enable_validation_Layers || m_enable_debug_utils_label)
-//			{
-//				extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-//			}
-//
-//#if defined(__MACH__)
-//			extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-//#endif
+			//
+			//			if (m_enable_validation_Layers || m_enable_debug_utils_label)
+			//			{
+			//				extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
+			//			}
+			//
+			//#if defined(__MACH__)
+			//			extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
+			//#endif
 
 			return extensions;
 		}
@@ -421,8 +418,10 @@ namespace LitchiRuntime
 		static void get_descriptors_from_pipeline_state(RHI_PipelineState& pipeline_state, vector<RHI_Descriptor>& descriptors)
 		{
 			SP_ASSERT(pipeline_state.IsValid());
-			descriptors.clear();
 
+			EASY_BLOCK("Build Descriptors")
+				descriptors.clear();
+			bool isNeedSort = false;
 			if (pipeline_state.IsCompute())
 			{
 				SP_ASSERT(pipeline_state.shader_compute->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
@@ -455,32 +454,44 @@ namespace LitchiRuntime
 						// If no updating took place, this a pixel shader only resource, add it
 						if (!updated_existing)
 						{
+							isNeedSort = true;
 							descriptors.emplace_back(descriptor_pixel);
 						}
 					}
 				}
 			}
+			EASY_END_BLOCK
 
-			// sort descriptors by slot, this is because dynamic offsets (which are computed in a serialized
-			// manner in RHI_DescriptorSetLayout::GetDynamicOffsets(), need to be ordered by their slot
-			sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
+				EASY_BLOCK("Sort Descriptors")
+				if (isNeedSort)
 				{
-					return a.slot < b.slot;
-				});
+					// sort descriptors by slot, this is because dynamic offsets (which are computed in a serialized
+					// manner in RHI_DescriptorSetLayout::GetDynamicOffsets(), need to be ordered by their slot
+					std::sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
+						{
+							return a.slot < b.slot;
+						});
+				}
+			EASY_END_BLOCK
 		}
 
 		static shared_ptr<RHI_DescriptorSetLayout> get_or_create_descriptor_set_layout(RHI_PipelineState& pipeline_state)
 		{
 			// get descriptors from pipeline state
 			vector<RHI_Descriptor> descriptors;
-			get_descriptors_from_pipeline_state(pipeline_state, descriptors);
+			EASY_BLOCK("get_descriptors_from_pipeline_state") {
+				get_descriptors_from_pipeline_state(pipeline_state, descriptors);
+			}EASY_END_BLOCK
 
 			// compute a hash for the descriptors
 			uint64_t hash = 0;
-			for (RHI_Descriptor& descriptor : descriptors)
+			EASY_BLOCK("compute descriptor hash")
 			{
-				hash = rhi_hash_combine(hash, descriptor.ComputeHash());
-			}
+				for (RHI_Descriptor& descriptor : descriptors)
+				{
+					hash = rhi_hash_combine(hash, descriptor.ComputeHash());
+				}
+			}EASY_END_BLOCK
 
 			// search for a descriptor set layout which matches this hash
 			auto it = descriptor_set_layouts.find(hash);
@@ -489,8 +500,11 @@ namespace LitchiRuntime
 			// if there is no descriptor set layout for this particular hash, create one
 			if (!cached)
 			{
-				// emplace a new descriptor set layout
-				it = descriptor_set_layouts.emplace(make_pair(hash, make_shared<RHI_DescriptorSetLayout>(descriptors, pipeline_state.name))).first;
+				EASY_BLOCK("Create RHI_DescriptorSetLayout") {
+					// emplace a new descriptor set layout
+					it = descriptor_set_layouts.emplace(make_pair(hash, make_shared<RHI_DescriptorSetLayout>(descriptors, pipeline_state.name))).first;
+				}EASY_END_BLOCK
+
 			}
 			shared_ptr<RHI_DescriptorSetLayout> descriptor_set_layout = it->second;
 
@@ -1035,6 +1049,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::QueuePresent(void* swapchain, uint32_t* image_index, vector<RHI_Semaphore*>& wait_semaphores)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> lock(queues::mutex_queue);
 
 		array<VkSemaphore, 3> vk_wait_semaphores = { nullptr, nullptr, nullptr };
@@ -1066,6 +1081,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::QueueSubmit(const RHI_Queue_Type type, const uint32_t wait_flags, void* cmd_buffer, RHI_Semaphore* wait_semaphore /*= nullptr*/, RHI_Semaphore* signal_semaphore /*= nullptr*/, RHI_Fence* signal_fence /*= nullptr*/)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> lock(queues::mutex_queue);
 
 		SP_ASSERT_MSG(cmd_buffer != nullptr, "Invalid command buffer");
@@ -1105,6 +1121,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::QueueWait(const RHI_Queue_Type type)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> lock(queues::mutex_queue);
 
 		SP_VK_ASSERT_MSG(vkQueueWaitIdle(static_cast<VkQueue>(QueueGet(type))), "Failed to wait for queue");
@@ -1172,6 +1189,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::DeletionQueueParse()
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> guard(mutex_deletion_queue);
 
 		for (const auto& it : deletion_queue)
@@ -1382,20 +1400,26 @@ namespace LitchiRuntime
 		SP_ASSERT(pso.IsValid());
 
 		pso.ComputeHash();
-
-		descriptor_set_layout = descriptors::get_or_create_descriptor_set_layout(pso).get();
-
-		// If no pipeline exists, create one
-		uint64_t hash = pso.GetHash();
-		auto it = descriptors::pipelines.find(hash);
-		if (it == descriptors::pipelines.end())
+		EASY_BLOCK("descriptors::get_or_create_descriptor_set_layout")
 		{
-			// Create a new pipeline
-			it = descriptors::pipelines.emplace(make_pair(hash, make_shared<RHI_Pipeline>(pso, descriptor_set_layout))).first;
-			DEBUG_LOG_INFO("A new pipeline has been created.");
-		}
+			descriptor_set_layout = descriptors::get_or_create_descriptor_set_layout(pso).get();
+		}EASY_END_BLOCK
 
-		pipeline = it->second.get();
+			EASY_BLOCK("Create Pipeline")
+		{
+			// If no pipeline exists, create one
+			uint64_t hash = pso.GetHash();
+			auto it = descriptors::pipelines.find(hash);
+			if (it == descriptors::pipelines.end())
+			{
+				// Create a new pipeline
+				it = descriptors::pipelines.emplace(make_pair(hash, make_shared<RHI_Pipeline>(pso, descriptor_set_layout))).first;
+				DEBUG_LOG_INFO("A new pipeline has been created.");
+
+			}
+			pipeline = it->second.get();
+		}EASY_END_BLOCK
+
 	}
 
 	uint32_t RHI_Device::GetPipelineCount()

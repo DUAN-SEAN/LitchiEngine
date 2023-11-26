@@ -268,185 +268,217 @@ namespace LitchiRuntime
 
 	void Renderer::Tick()
 	{
-		EASY_FUNCTION(profiler::colors::Magenta);
-		// don't produce frames if the window is minimized
-		/* if (ApplicationBase::Instance()->window->IsMinimized())
-			return;*/
+		EASY_BLOCK("Renderer::Tick") {
+			// don't produce frames if the window is minimized
+			/* if (ApplicationBase::Instance()->window->IsMinimized())
+				return;*/
 
-			// after the first frame has completed, we know the renderer is working
-			// we stop logging to a file and we start logging to the on-screen console
-		if (frame_num == 1)
-		{
-			// Log::SetLogToFile(false);
-			// SP_FIRE_EVENT(EventType::RendererOnFirstFrameCompleted); //TODO 第一帧后界面显示
-		}
-
-		// happens when core resources are created/destroyed
-		if (flush_requested)
-		{
-			Flush();
-		}
-
-		if (!is_rendering_allowed)
-			return;
-
-		// delete any RHI resources that have accumulated
-		if (RHI_Device::DeletionQueueNeedsToParse())
-		{
-			RHI_Device::QueueWaitAll();
-			RHI_Device::DeletionQueueParse();
-			DEBUG_LOG_INFO("Parsed deletion queue");
-		}
-
-		// reset buffer offsets
-		{
-			if (buffers_frames_since_last_reset == m_frames_in_flight)
+				// after the first frame has completed, we know the renderer is working
+				// we stop logging to a file and we start logging to the on-screen console
+			if (frame_num == 1)
 			{
-				for (shared_ptr<RHI_ConstantBuffer> constant_buffer : GetConstantBuffers())
-				{
-					constant_buffer->ResetOffset();
-				}
-				GetStructuredBuffer()->ResetOffset();
-
-				buffers_frames_since_last_reset = true;
+				// Log::SetLogToFile(false);
+				// SP_FIRE_EVENT(EventType::RendererOnFirstFrameCompleted); //TODO 第一帧后界面显示
 			}
 
-			buffers_frames_since_last_reset++;
-		}
+			EASY_BLOCK("Renderer::Flush") {
+				// happens when core resources are created/destroyed
+				if (flush_requested)
+				{
+					Flush();
+				}
+			}EASY_END_BLOCK;
 
-		RHI_Device::Tick(frame_num);
+			if (!is_rendering_allowed)
+				return;
 
-		// begin
-		m_cmd_pool->Tick();
-		cmd_current = m_cmd_pool->GetCurrentCommandList();
-		cmd_current->Begin();
+			EASY_BLOCK("Device::DeletionQueueParse") {
+				// delete any RHI resources that have accumulated
+				if (RHI_Device::DeletionQueueNeedsToParse())
+				{
+					RHI_Device::QueueWaitAll();
+					RHI_Device::DeletionQueueParse();
+					DEBUG_LOG_INFO("Parsed deletion queue");
+				}
+			}EASY_END_BLOCK;
 
-		OnFrameStart(cmd_current);
+			// reset buffer offsets
+			{
+				if (buffers_frames_since_last_reset == m_frames_in_flight)
+				{
+					for (shared_ptr<RHI_ConstantBuffer> constant_buffer : GetConstantBuffers())
+					{
+						constant_buffer->ResetOffset();
+					}
+					GetStructuredBuffer()->ResetOffset();
 
-		// 绘制SceneView Path
-		auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
-		if (rendererPath)
-		{
-			rendererPath->UpdateRenderableGameObject();
-			Render4BuildInSceneView(cmd_current, rendererPath);
-		}
+					buffers_frames_since_last_reset = true;
+				}
 
-		// blit to back buffer when in full screen
-		if (ApplicationBase::Instance()->window->IsFullscreen())
-		{
-			cmd_current->BeginMarker("copy_to_back_buffer");
-			cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
-			cmd_current->EndMarker();
-		}
+				buffers_frames_since_last_reset++;
+			}
+			EASY_BLOCK("Device::Tick") {
+				RHI_Device::Tick(frame_num);
+			}EASY_END_BLOCK;
 
-		OnFrameEnd(cmd_current);
+			EASY_BLOCK("Begin CommandList") {
+				// begin
+				m_cmd_pool->Tick();
+				cmd_current = m_cmd_pool->GetCurrentCommandList();
+				cmd_current->Begin();
+			}EASY_END_BLOCK;
 
-		// submit
-		cmd_current->End();
-		cmd_current->Submit();
+			EASY_BLOCK("OnFrameStart") {
+				OnFrameStart(cmd_current);
+			}EASY_END_BLOCK;
 
-		// track frame
-		frame_num++;
+			EASY_BLOCK("Render4BuildInSceneView") {
+				// 绘制SceneView Path
+				auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
+				if (rendererPath)
+				{
+					rendererPath->UpdateRenderableGameObject();
+					Render4BuildInSceneView(cmd_current, rendererPath);
+				}
+			}EASY_END_BLOCK;
+
+			// blit to back buffer when in full screen
+			if (ApplicationBase::Instance()->window->IsFullscreen())
+			{
+				cmd_current->BeginMarker("copy_to_back_buffer");
+				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+				cmd_current->EndMarker();
+			}
+
+			OnFrameEnd(cmd_current);
+			EASY_BLOCK("CommandList::Submit") {
+				// submit
+				cmd_current->End();
+				cmd_current->Submit();
+			}EASY_END_BLOCK;
+
+			// track frame
+			frame_num++;
+		} EASY_END_BLOCK;
 	}
 
 	void Renderer::Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
-		EASY_FUNCTION(profiler::colors::Magenta);
-		auto camera = rendererPath->GetRenderCamera();
-		auto rendererables = rendererPath->GetRenderables();
-		// update frame buffer
+		EASY_BLOCK("Render4BuildInSceneView")
 		{
-			// Matrices
+			auto camera = rendererPath->GetRenderCamera();
+			auto rendererables = rendererPath->GetRenderables();
+			EASY_BLOCK("Render4BuildInSceneView::UpdateConstantBufferFrame")
 			{
-				if (camera)
+				// update frame buffer
 				{
-					if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
+					// Matrices
 					{
-						near_plane = camera->GetNearPlane();
-						far_plane = camera->GetFarPlane();
-						dirty_orthographic_projection = true;
+						if (camera)
+						{
+							if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
+							{
+								near_plane = camera->GetNearPlane();
+								far_plane = camera->GetFarPlane();
+								dirty_orthographic_projection = true;
+							}
+
+							m_cb_frame_cpu.view = camera->GetViewMatrix();
+							m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
+						}
+
+						if (dirty_orthographic_projection)
+						{
+							// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
+							Matrix projection_ortho = Matrix::CreateOrthographicLH(m_viewport.width, m_viewport.height, 0.0f, far_plane);
+							m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
+							dirty_orthographic_projection = false;
+						}
 					}
 
-					m_cb_frame_cpu.view = camera->GetViewMatrix();
-					m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
-				}
+					// update the remaining of the frame buffer
+					m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
+					m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
+					m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
+					if (camera)
+					{
+						m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * camera->GetProjectionMatrix();
+						m_cb_frame_cpu.camera_near = camera->GetNearPlane();
+						m_cb_frame_cpu.camera_far = camera->GetFarPlane();
+						m_cb_frame_cpu.camera_position = camera->GetPosition();
+						m_cb_frame_cpu.camera_direction = camera->GetForward();
+					}
+					m_cb_frame_cpu.resolution_output = m_resolution_output;
+					m_cb_frame_cpu.resolution_render = m_resolution_render;
+					m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
+					m_cb_frame_cpu.taa_jitter_current = jitter_offset;
+					m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
+					m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
+					m_cb_frame_cpu.frame = static_cast<uint32_t>(frame_num);
 
-				if (dirty_orthographic_projection)
-				{
-					// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
-					Matrix projection_ortho = Matrix::CreateOrthographicLH(m_viewport.width, m_viewport.height, 0.0f, far_plane);
-					m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
-					dirty_orthographic_projection = false;
+					// These must match what Common_Buffer.hlsl is reading
+					m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
+					m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
+					m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
+					m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
 				}
-			}
+			}EASY_END_BLOCK
 
-			// update the remaining of the frame buffer
-			m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
-			m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
-			m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
+				//if (rendererPath)
+				//    Pass_Frame(cmd_current, rendererPath);
+			EASY_BLOCK("Render4BuildInSceneView::UpdateConstantBufferFrame")
+			{
+
+				// update frame constant buffer
+				UpdateConstantBufferFrame(cmd_list, false);
+
+			}EASY_END_BLOCK
+
+			auto rt_output = rendererPath->GetColorRenderTarget().get();
 			if (camera)
 			{
-				m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * camera->GetProjectionMatrix();
-				m_cb_frame_cpu.camera_near = camera->GetNearPlane();
-				m_cb_frame_cpu.camera_far = camera->GetFarPlane();
-				m_cb_frame_cpu.camera_position = camera->GetPosition();
-				m_cb_frame_cpu.camera_direction = camera->GetForward();
-			}
-			m_cb_frame_cpu.resolution_output = m_resolution_output;
-			m_cb_frame_cpu.resolution_render = m_resolution_render;
-			m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
-			m_cb_frame_cpu.taa_jitter_current = jitter_offset;
-			m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
-			m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
-			m_cb_frame_cpu.frame = static_cast<uint32_t>(frame_num);
 
-			// These must match what Common_Buffer.hlsl is reading
-			m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
-			m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
-			m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
-			m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
-		}
+				// determine if a transparent pass is required
+				const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
 
-		//if (rendererPath)
-		//    Pass_Frame(cmd_current, rendererPath);
-
-		// update frame constant buffer
-		UpdateConstantBufferFrame(cmd_list, false);
-
-		auto rt_output = rendererPath->GetColorRenderTarget().get();
-		if (camera)
-		{
-
-			// determine if a transparent pass is required
-			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
-
-			// shadow maps
-			{
-				// todo: temp commit
-				/*Pass_ShadowMaps(cmd_list, false);
-				if (do_transparent_pass)
+				// shadow maps
 				{
-					Pass_ShadowMaps(cmd_list, true);
-				}*/
-			}
+					// todo: temp commit
+					/*Pass_ShadowMaps(cmd_list, false);
+					if (do_transparent_pass)
+					{
+						Pass_ShadowMaps(cmd_list, true);
+					}*/
+				}
 
-			// opaque
+				// opaque
+				{
+					bool is_transparent_pass = false;
+					EASY_BLOCK("Render4BuildInSceneView::Pass_ForwardPass")
+					{
+
+						Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
+
+					}EASY_END_BLOCK
+
+					EASY_BLOCK("Render4BuildInSceneView::Pass_DebugGridPass")
+					{
+
+						Pass_DebugGridPass(cmd_list, rendererPath);
+
+					}EASY_END_BLOCK
+				}
+			}
+			else
 			{
-				bool is_transparent_pass = false;
-
-				Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
-				Pass_DebugGridPass(cmd_list, rendererPath);
+				// if there is no camera, clear to black and and render the performance metrics
+				GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
 			}
-		}
-		else
-		{
-			// if there is no camera, clear to black and and render the performance metrics
-			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
-		}
 
-		// transition the render target to a readable state so it can be rendered
-		// within the viewport or copied to the swap chain back buffer
-		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+			// transition the render target to a readable state so it can be rendered
+			// within the viewport or copied to the swap chain back buffer
+			rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+		}EASY_END_BLOCK
 	}
 
 	void Renderer::OnSceneResolved(std::vector<GameObject*> gameObjectList)
@@ -720,7 +752,7 @@ namespace LitchiRuntime
 	void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
 	{
 		// 全量更新
-		
+
 		// generate mips
 		{
 			lock_guard lock(mutex_mip_generation);
@@ -953,7 +985,7 @@ namespace LitchiRuntime
 	{
 		return frame_num;
 	}
-	
+
 	void Renderer::UpdateRendererPath(RendererPathType rendererPathType, RendererPath* rendererPath)
 	{
 		m_rendererPaths[rendererPathType] = rendererPath;

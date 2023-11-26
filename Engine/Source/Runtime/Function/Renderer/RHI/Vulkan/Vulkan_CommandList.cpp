@@ -341,6 +341,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::End()
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         SP_ASSERT_MSG(
@@ -370,10 +371,13 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso)
     {
+        EASY_FUNCTION(profiler::colors::Brown600);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
+        EASY_BLOCK("GetOrCreatePipeline")
         // get (or create) a pipeline which matches the requested pipeline state
         RHI_Device::GetOrCreatePipeline(pso, m_pipeline, m_descriptor_layout_current);
+        EASY_END_BLOCK
 
         uint64_t hash_previous = m_pso.GetHash();
         m_pso                  = pso;
@@ -387,6 +391,7 @@ namespace LitchiRuntime
         // Bind pipeline
         if (m_pipeline_dirty)
         {
+            EASY_BLOCK("vkCmdBindPipeline")
             // Get vulkan pipeline object
             SP_ASSERT(m_pipeline != nullptr);
             VkPipeline vk_pipeline = static_cast<VkPipeline>(m_pipeline->GetResource_Pipeline());
@@ -395,6 +400,7 @@ namespace LitchiRuntime
             // Bind
             VkPipelineBindPoint pipeline_bind_point = m_pso.IsCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
             vkCmdBindPipeline(static_cast<VkCommandBuffer>(m_rhi_resource), pipeline_bind_point, vk_pipeline);
+            EASY_END_BLOCK
 
             // Profile
             // Profiler::m_rhi_bindings_pipeline++;
@@ -409,6 +415,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::BeginRenderPass()
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
         SP_ASSERT_MSG(m_pso.IsGraphics(), "You can't use a render pass with a compute pipeline");
         SP_ASSERT_MSG(!m_is_rendering, "The command list is already rendering");
@@ -534,6 +541,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::EndRenderPass()
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         if (m_is_rendering)
         {
             vkCmdEndRendering(static_cast<VkCommandBuffer>(m_rhi_resource));
@@ -658,6 +666,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Draw(const uint32_t vertex_count, uint32_t vertex_start_index /*= 0*/)
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to draw
@@ -1303,6 +1312,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::OnDraw()
     {
+        EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         Renderer::SetGlobalShaderResources(this);//

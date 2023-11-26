@@ -435,7 +435,7 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
-	EASY_FUNCTION(profiler::colors::Magenta);
+	// EASY_FUNCTION(profiler::colors::Magenta);
 	// ‰÷»æView 
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
@@ -456,7 +456,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 
 void LitchiEditor::ApplicationEditor::RenderUI()
 {
-	EASY_FUNCTION(profiler::colors::Magenta);
+	// EASY_FUNCTION(profiler::colors::Magenta);
 	uiManager->Render();
 }
 

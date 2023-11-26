@@ -181,14 +181,12 @@ namespace LitchiRuntime
 
 				SPIRType type = compiler.get_type(resource.type_id);
 				vector<ShaderUniform> uniformList;
-				bool isMaterial = false;
-				if (type.basetype == SPIRType::Struct)
+				// check is material
+				bool isMaterial = CheckIsMaterialDescriptor(compiler, resource);
+				if (isMaterial && type.basetype == SPIRType::Struct)
 				{
 					uniformList = spirv_constantBuffer_struct_uniformList(compiler, type);
 				}
-
-				// check is material
-				isMaterial = CheckIsMaterialDescriptor(compiler, resource);
 
 				uint32_t array_length = !type.array.empty() ? type.array[0] : 0;
 				uint32_t size = 0;
@@ -335,5 +333,11 @@ namespace LitchiRuntime
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.uniform_buffers, RHI_Descriptor_Type::ConstantBuffer, shader_stage);
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.push_constant_buffers, RHI_Descriptor_Type::PushConstantBuffer, shader_stage);
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.separate_samplers, RHI_Descriptor_Type::Sampler, shader_stage);
+
+		// pre sort
+		sort(m_descriptors.begin(), m_descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
+			{
+				return a.slot < b.slot;
+			});
 	}
 }

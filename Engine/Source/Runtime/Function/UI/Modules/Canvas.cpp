@@ -1,9 +1,6 @@
 
 #include "Canvas.h"
-
-#include <easy/profiler.h>
-#include <easy/details/profiler_colors.h>
-
+#include "Runtime/Core/pch.h"
 #include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 
 void LitchiRuntime::Canvas::Draw()

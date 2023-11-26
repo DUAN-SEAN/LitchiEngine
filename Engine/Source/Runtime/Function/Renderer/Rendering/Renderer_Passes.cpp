@@ -32,6 +32,7 @@ namespace LitchiRuntime
 
 	void Renderer::SetGlobalShaderResources(RHI_CommandList* cmd_list)
 	{
+		EASY_FUNCTION(profiler::colors::Magenta);
 		// constant buffers
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
