@@ -240,9 +240,10 @@ namespace LitchiRuntime
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 
 		// begin render pass
-		cmd_list->SetPipelineState(pso);
-		cmd_list->BeginRenderPass();
+		bool isBeginRendererPass = false;
+		// cmd_list->SetPipelineState(pso);
 
+		EASY_BLOCK("UpdateConstantBufferLight")
 		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
 		if (!lightEntities.empty())
 		{
@@ -250,10 +251,14 @@ namespace LitchiRuntime
 			auto mainLight = lightGameObject->GetComponent<Light>();
 			UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());
 		}
+		EASY_END_BLOCK
 
+		EASY_BLOCK("Render Entities")
 		// 绘制所有的实体
 		for (GameObject* entity : entities)
 		{
+			EASY_BLOCK("Render Entity")
+			EASY_BLOCK("Prevoius SetPSO")
 			// Acquire renderable component
 			MeshFilter* renderable = entity->GetComponent<MeshFilter>();
 			MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
@@ -280,28 +285,54 @@ namespace LitchiRuntime
 				// DEBUG_LOG_INFO("Renderer::Pass_ForwardPass Object Not InViewFrustum, name:{}", entity->GetName());
 				continue;
 			}
+			EASY_END_BLOCK
 
+			EASY_BLOCK("SetPipelineState")
 			pso.shader_vertex = material->GetVertexShader();
 			pso.shader_pixel = material->GetPixelShader();
 			cmd_list->SetPipelineState(pso);
-			
+			EASY_END_BLOCK
+
+			if(!isBeginRendererPass)
+			{
+				EASY_BLOCK("BeginRenderPass")
+				cmd_list->BeginRenderPass();
+				isBeginRendererPass = true;
+				EASY_END_BLOCK
+			}
+
+			EASY_BLOCK("SetBuffer")
 			// Bind geometry
 			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
 			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
-			
-			UpdateMaterial(cmd_list, material);
+			EASY_END_BLOCK
 
+			EASY_BLOCK("UpdateMaterial")
+			UpdateMaterial(cmd_list, material);
+			EASY_END_BLOCK
+
+			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform
 			m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 			PushPassConstants(cmd_list);
+			EASY_END_BLOCK
 
+			EASY_BLOCK("DrawCall")
 			// Draw 
 			cmd_list->DrawIndexed(renderable->GetIndexCount(), renderable->GetIndexOffset(), renderable->GetVertexOffset());
+			EASY_END_BLOCK
+			EASY_END_BLOCK
+		}
+		EASY_END_BLOCK
+
+		if (isBeginRendererPass)
+		{
+			EASY_BLOCK("EndRenderPass")
+			cmd_list->EndRenderPass();
+			EASY_END_BLOCK
 		}
 
-		cmd_list->EndRenderPass();
 		cmd_list->EndTimeblock();
-
 	}
 
 	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)

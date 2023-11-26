@@ -290,6 +290,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Begin()
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Idle);
 
         // Get queries
@@ -556,6 +557,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::ClearPipelineStateRenderTargets(RHI_PipelineState& pipeline_state)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         uint32_t attachment_count = 0;
@@ -620,6 +622,7 @@ namespace LitchiRuntime
         const uint32_t clear_stencil        /*= rhi_stencil_load*/
     )
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
         SP_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
 
@@ -689,6 +692,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::DrawIndexed(const uint32_t index_count, const uint32_t index_offset, const uint32_t vertex_offset)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to draw
@@ -713,6 +717,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Dispatch(uint32_t x, uint32_t y, uint32_t z /*= 1*/, bool async /*= false*/)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to dispatch
@@ -726,6 +731,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0,      "The texture needs the RHI_Texture_ClearOrBlit flag");
         SP_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         if (blit_mips)
@@ -804,6 +810,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_SwapChain* destination)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         SP_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
             "The source texture dimension(s) are larger than the those of the destination texture");
@@ -860,6 +867,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         SP_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         SP_ASSERT(source->GetWidth() == destination->GetWidth());
@@ -920,6 +928,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_SwapChain* destination)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         SP_ASSERT(source->GetWidth() == destination->GetWidth());
         SP_ASSERT(source->GetHeight() == destination->GetHeight());
@@ -956,6 +965,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetViewport(const RHI_Viewport& viewport) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
         SP_ASSERT(viewport.width != 0);
         SP_ASSERT(viewport.height != 0);
@@ -978,6 +988,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetScissorRectangle(const Rectangle& scissor_rectangle) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         VkRect2D vk_scissor;
@@ -996,6 +1007,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetBufferVertex(const RHI_VertexBuffer* buffer)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Skip if already set
@@ -1020,6 +1032,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetBufferIndex(const RHI_IndexBuffer* buffer)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (m_index_buffer_id == buffer->GetObjectId())
@@ -1039,6 +1052,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetConstantBuffer(const uint32_t slot, RHI_ConstantBuffer* constant_buffer) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
@@ -1053,6 +1067,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::PushConstants(const uint32_t offset, const uint32_t size, const void* data)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
         SP_ASSERT(size <= RHI_Device::PropertyGetMaxPushConstantSize());
 
@@ -1083,6 +1098,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetSampler(const uint32_t slot, RHI_Sampler* sampler) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
@@ -1097,6 +1113,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetTexture(const uint32_t slot, RHI_Texture* texture, const uint32_t mip_index /*= all_mips*/, uint32_t mip_range /*= 0*/, const bool uav /*= false*/)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (mip_index != rhi_all_mips)
@@ -1186,6 +1203,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetStructuredBuffer(const uint32_t slot, RHI_StructuredBuffer* structured_buffer) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
@@ -1199,6 +1217,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer) const
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
@@ -1315,7 +1334,9 @@ namespace LitchiRuntime
         EASY_FUNCTION(profiler::colors::Magenta);
         SP_ASSERT(m_state == RHI_CommandListState::Recording);
 
+        EASY_BLOCK("SetGlobalShaderResources")
         Renderer::SetGlobalShaderResources(this);//
+    	EASY_END_BLOCK
 
         // bind descriptor sets - If the descriptor set is null, it means we don't need to bind anything.
         if (RHI_DescriptorSet* descriptor_set = m_descriptor_layout_current->GetDescriptorSet())
@@ -1328,14 +1349,17 @@ namespace LitchiRuntime
                 RHI_Device::GetDescriptorSet(RHI_Device_Resource::sampler_regular)
             };
 
+            EASY_BLOCK("GetDynamicOffsets")
             // get dynamic offsets
             vector<uint32_t> dynamic_offsets;
             m_descriptor_layout_current->GetDynamicOffsets(&dynamic_offsets);
+            EASY_END_BLOCK
 
             VkPipelineBindPoint bind_point = m_pso.IsCompute() ?
                 VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_COMPUTE :
                 VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS;
 
+            EASY_BLOCK("vkCmdBindDescriptorSets")
             // bind descriptor set
             vkCmdBindDescriptorSets
             (
@@ -1348,6 +1372,7 @@ namespace LitchiRuntime
                 static_cast<uint32_t>(dynamic_offsets.size()),                           // dynamicOffsetCount
                 dynamic_offsets.data()                                                   // pDynamicOffsets
             );
+            EASY_END_BLOCK
 
             // Profiler::m_rhi_bindings_descriptor_set++;
         }
@@ -1358,6 +1383,7 @@ namespace LitchiRuntime
         const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new
     )
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(image != nullptr);
 
         VkImageMemoryBarrier image_barrier            = {};
@@ -1423,12 +1449,14 @@ namespace LitchiRuntime
 
     void RHI_CommandList::InsertMemoryBarrierImage(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(texture != nullptr);
         InsertMemoryBarrierImage(texture->GetRhiResource(), get_aspect_mask(texture), mip_start, mip_range, array_length, layout_old, layout_new);
     }
 
     void RHI_CommandList::InsertMemoryBarrierImageWaitForWrite(RHI_Texture* texture)
     {
+        EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT(texture != nullptr);
 
         VkImageMemoryBarrier image_barrier            = {};

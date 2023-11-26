@@ -214,7 +214,7 @@ namespace LitchiRuntime
 
 	void* Material::GetValues4DescriptorSet(uint32_t& size)
 	{
-		for (auto uniform : m_uniformsData)
+		for (auto& uniform : m_uniformsData)
 		{
 			UpdateValue(uniform.first);
 		}
@@ -227,10 +227,10 @@ namespace LitchiRuntime
 	std::map<int, RHI_Texture*> Material::GetTextures4DescriptorSet()
 	{
 		std::map<int, RHI_Texture*> textureMap;
-		for (auto uniform : m_uniformsData)
+		for (auto& uniform : m_uniformsData)
 		{
 			auto name = uniform.first;
-			auto descriptor = m_shader->GetTextureDescriptor(name);
+			auto& descriptor = m_shader->GetTextureDescriptor(name);
 			if (descriptor.type == RHI_Descriptor_Type::Texture)
 			{
 				auto slot = descriptor.slot;

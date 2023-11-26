@@ -81,6 +81,7 @@ namespace LitchiRuntime
 
     bool RenderCamera::IsInViewFrustum(MeshFilter* renderable) const
     {
+        EASY_FUNCTION(profiler::colors::Blue600)
         const BoundingBox& box = renderable->GetAabb();
         const Vector3 center = box.GetCenter();
         const Vector3 extents = box.GetExtents();
@@ -90,6 +91,7 @@ namespace LitchiRuntime
 
     bool RenderCamera::IsInViewFrustum(const Vector3& center, const Vector3& extents) const
     {
+        EASY_FUNCTION(profiler::colors::Blue600)
         return m_frustum.IsVisible(center, extents);
     }
 

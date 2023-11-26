@@ -475,10 +475,12 @@ namespace LitchiRuntime
 			EASY_END_BLOCK
 		}
 
+		// temp descriptors 
+		static vector<RHI_Descriptor> descriptorsCache;
 		static shared_ptr<RHI_DescriptorSetLayout> get_or_create_descriptor_set_layout(RHI_PipelineState& pipeline_state)
 		{
 			// get descriptors from pipeline state
-			vector<RHI_Descriptor> descriptors;
+			vector<RHI_Descriptor>& descriptors = descriptorsCache;
 			EASY_BLOCK("get_descriptors_from_pipeline_state") {
 				get_descriptors_from_pipeline_state(pipeline_state, descriptors);
 			}EASY_END_BLOCK
@@ -508,12 +510,14 @@ namespace LitchiRuntime
 			}
 			shared_ptr<RHI_DescriptorSetLayout> descriptor_set_layout = it->second;
 
+			EASY_BLOCK("ClearDescriptorData")
 			if (cached)
 			{
 				descriptor_set_layout->ClearDescriptorData();
 			}
 			descriptor_set_layout->NeedsToBind();
 
+			EASY_BLOCK("get_or_create_descriptor_set_layout return ")
 			return descriptor_set_layout;
 		}
 	}
@@ -1405,7 +1409,7 @@ namespace LitchiRuntime
 			descriptor_set_layout = descriptors::get_or_create_descriptor_set_layout(pso).get();
 		}EASY_END_BLOCK
 
-			EASY_BLOCK("Create Pipeline")
+		EASY_BLOCK("Create Pipeline")
 		{
 			// If no pipeline exists, create one
 			uint64_t hash = pso.GetHash();
