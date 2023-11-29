@@ -113,10 +113,10 @@ float4 mainPS(Pixel input) : SV_Target
 
     // int lightCount = light_buffer_data_arr.lightCount;
     int lightCount = 2;
-    float3 lightSum;
+    float3 lightSum = float3(0,0,0);
     for (int index = 0; index < lightCount;index++)
     {
-    	lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
+    	lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
 				materialData.u_shininess, -light_buffer_data_arr.lightBufferDataArr[index].direction.xyz, light_buffer_data_arr.lightBufferDataArr[index].color.xyz, 1.0f);
     }
 
