@@ -103,7 +103,7 @@ namespace LitchiRuntime
 		// Get all
 		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
 		static std::array<std::shared_ptr<RHI_Shader>, 45>& GetShaders();
-		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 3>& GetConstantBuffers();
+		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 4>& GetConstantBuffers();
 
 		// Get individual
 		static std::shared_ptr<RHI_RasterizerState> GetRasterizerState(const Renderer_RasterizerState type);
@@ -126,6 +126,7 @@ namespace LitchiRuntime
 		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set = true);
 		static void PushPassConstants(RHI_CommandList* cmd_list);
 		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light,RenderCamera* renderCamera);
+		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RenderCamera* renderCamera);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
 
@@ -169,6 +170,7 @@ namespace LitchiRuntime
 		static Cb_Frame m_cb_frame_cpu;
 		static Pcb_Pass m_cb_pass_cpu;
 		static Cb_Light m_cb_light_cpu;
+		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_lines;
 		static std::unique_ptr<Font> m_font;

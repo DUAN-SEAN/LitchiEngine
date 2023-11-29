@@ -37,6 +37,7 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
 
 		// textures todo: ÔÝÊ±Ã»ÓÐ
 		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
@@ -243,13 +244,31 @@ namespace LitchiRuntime
 		bool isBeginRendererPass = false;
 		// cmd_list->SetPipelineState(pso);
 
+
 		EASY_BLOCK("UpdateConstantBufferLight")
 		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
 		if (!lightEntities.empty())
 		{
-			auto lightGameObject = lightEntities[0];
-			auto mainLight = lightGameObject->GetComponent<Light>();
-			UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());
+			size_t lightCount = lightEntities.size();
+			if (lightCount > MaxLightCount)
+			{
+				lightCount = MaxLightCount;
+				DEBUG_LOG_WARN("Light Count Limit Count, lightCount:{}, MaxLightCount:{}", lightCount, MaxLightCount);
+			}
+
+			std::vector<Light*> lightArr;
+			for (size_t index = 0; index < lightCount; index++)
+			{
+				auto lightGameObject = lightEntities[index];
+				auto mainLight = lightGameObject->GetComponent<Light>();
+				lightArr.push_back(mainLight);
+			}
+
+			UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
+
+			/*		auto lightGameObject = lightEntities[0];
+					auto mainLight = lightGameObject->GetComponent<Light>();
+					UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());*/
 		}
 		EASY_END_BLOCK
 
@@ -299,6 +318,7 @@ namespace LitchiRuntime
 				cmd_list->BeginRenderPass();
 				isBeginRendererPass = true;
 				EASY_END_BLOCK
+
 			}
 
 			EASY_BLOCK("SetBuffer")

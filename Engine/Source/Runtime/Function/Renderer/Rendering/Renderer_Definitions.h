@@ -75,7 +75,8 @@ namespace LitchiRuntime
     {
         frame    = 0,
         light    = 1,
-        material = 2
+        material = 2,
+        lightArr = 3
     };
     
     enum class Renderer_BindingsSrv
@@ -247,7 +248,8 @@ namespace LitchiRuntime
     {
         Frame,
         Light,
-        Material
+        Material,
+        LightArr,
     };
 
     enum class Renderer_StandardTexture

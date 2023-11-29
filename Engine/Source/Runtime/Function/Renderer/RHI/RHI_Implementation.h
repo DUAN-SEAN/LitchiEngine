@@ -386,7 +386,8 @@ static const char* vkresult_to_string(const VkResult result)
     {                                                      \
        /* Log::SetLogToFile(true);                           \
         DEBUG_LOG_ERROR("%s", vkresult_to_string(vk_result)); \*/\
-        SP_ASSERT(false && text_message);                  \
+        DEBUG_LOG_ERROR("{}", vkresult_to_string(vk_result));\
+		SP_ASSERT(false && text_message);                  \
     }
 #endif
 

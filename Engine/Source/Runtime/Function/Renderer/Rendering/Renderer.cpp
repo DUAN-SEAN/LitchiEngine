@@ -36,6 +36,7 @@ namespace LitchiRuntime
 	Cb_Frame Renderer::m_cb_frame_cpu;
 	Pcb_Pass Renderer::m_cb_pass_cpu;
 	Cb_Light Renderer::m_cb_light_cpu;
+	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 	Cb_Material Renderer::m_cb_material_cpu;
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	unique_ptr<Font> Renderer::m_font;
@@ -312,23 +313,23 @@ namespace LitchiRuntime
 		}
 
 		EASY_BLOCK("Device::Tick")
-		RHI_Device::Tick(LitchiRuntime::frame_num);
+			RHI_Device::Tick(LitchiRuntime::frame_num);
 		EASY_END_BLOCK
 
-		EASY_BLOCK("Begin CommandList")
-		// begin
-		m_cmd_pool->Tick();
+			EASY_BLOCK("Begin CommandList")
+			// begin
+			m_cmd_pool->Tick();
 		cmd_current = m_cmd_pool->GetCurrentCommandList();
 		cmd_current->Begin();
 		EASY_END_BLOCK
 
-		EASY_BLOCK("OnFrameStart")
-		OnFrameStart(cmd_current);
+			EASY_BLOCK("OnFrameStart")
+			OnFrameStart(cmd_current);
 		EASY_END_BLOCK
 
-		EASY_BLOCK("Render4BuildInSceneView")
-		// 绘制SceneView Path
-		auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
+			EASY_BLOCK("Render4BuildInSceneView")
+			// 绘制SceneView Path
+			auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath)
 		{
 			rendererPath->UpdateRenderableGameObject();
@@ -336,23 +337,23 @@ namespace LitchiRuntime
 		}
 		EASY_END_BLOCK
 
-		// blit to back buffer when in full screen
-		if (ApplicationBase::Instance()->window->IsFullscreen())
-		{
-			cmd_current->BeginMarker("copy_to_back_buffer");
-			cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
-			cmd_current->EndMarker();
-		}
+			// blit to back buffer when in full screen
+			if (ApplicationBase::Instance()->window->IsFullscreen())
+			{
+				cmd_current->BeginMarker("copy_to_back_buffer");
+				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+				cmd_current->EndMarker();
+			}
 
 		OnFrameEnd(cmd_current);
 		EASY_BLOCK("CommandList::Submit")
-		// submit
-		cmd_current->End();
+			// submit
+			cmd_current->End();
 		cmd_current->Submit();
 		EASY_END_BLOCK
 
 			// track frame
-		LitchiRuntime::frame_num++;
+			LitchiRuntime::frame_num++;
 	}
 
 	void Renderer::Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
@@ -611,6 +612,44 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
 	}
 
+	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RenderCamera* renderCamera)
+	{
+		// GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->ResetOffset();
+
+		m_cb_light_arr_cpu.lightCount = lightCount;
+
+		for (int index = 0; index < lightCount; index++)
+		{
+			const auto light = lightArr[index];
+
+			for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
+			{
+				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = light->GetViewMatrix(i) * light->GetProjectionMatrix(i);
+			}
+
+			m_cb_light_arr_cpu.lightArr[index].intensity_range_angle_bias = Vector4
+			(
+				light->GetIntensityWatt(renderCamera),
+				light->GetRange(), light->GetAngle(),
+				light->GetBias()
+			);
+
+			m_cb_light_arr_cpu.lightArr[index].color = light->GetColor();
+			m_cb_light_arr_cpu.lightArr[index].normal_bias = light->GetNormalBias();
+			m_cb_light_arr_cpu.lightArr[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+			m_cb_light_arr_cpu.lightArr[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+			m_cb_light_arr_cpu.lightArr[index].options = 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetShadowsEnabled() ? (1 << 3) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= light->GetVolumetricEnabled() ? (1 << 5) : 0;
+		}
+
+		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
+	}
+
 	void Renderer::UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material)
 	{
 		// Set
@@ -653,15 +692,15 @@ namespace LitchiRuntime
 	void Renderer::UpdateMaterial(RHI_CommandList* cmd_list, Material* material)
 	{
 		EASY_BLOCK("SetMaterialGlobalBuffer")
-		// todo: if material state change, maybe not update to shader !
-		uint32_t size;
+			// todo: if material state change, maybe not update to shader !
+			uint32_t size;
 		auto cbuffer = material->GetValuesCBuffer().get();
 		cbuffer->UpdateWithReset(material->GetValues4DescriptorSet(size));
 		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
 		EASY_END_BLOCK
 
-		EASY_BLOCK("SetTextures")
-		auto textureMap = material->GetTextures4DescriptorSet();
+			EASY_BLOCK("SetTextures")
+			auto textureMap = material->GetTextures4DescriptorSet();
 		for (auto texture_map : textureMap)
 		{
 			cmd_list->SetTexture(texture_map.first, texture_map.second);
