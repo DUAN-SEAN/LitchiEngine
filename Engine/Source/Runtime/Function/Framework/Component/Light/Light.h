@@ -5,7 +5,6 @@
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
-#include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 
 namespace LitchiRuntime
@@ -61,19 +60,19 @@ namespace LitchiRuntime
         Light();
         ~Light();
 
-		const LightType GetLightType() const { return m_light_type; }
+		LightType GetLightType() { return m_light_type; }
         void SetLightType(LightType type);
 
         // Color
         void SetTemperature(const float temperature_kelvin);
         float GetTemperature() const { return m_temperature_kelvin; }
-        void SetColor(const Color& rgb);
-        const Color& GetColor() const { return m_color_rgb; }
+        void SetColor(Color rgb);
+		Color GetColor() { return m_color_rgb; }
 
         // Intensity
-        void SetIntensityLumens(const float lumens);
+        void SetIntensityLumens(float lumens);
         void SetIntensity(const LightIntensity lumens);
-        float GetIntensityLumens() const { return m_intensity_lumens; }
+        float GetIntensityLumens() { return m_intensity_lumens; }
         LightIntensity GetIntensity() const { return m_intensity; }
         float GetIntensityWatt(RenderCamera* camera) const;
 

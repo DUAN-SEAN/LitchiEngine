@@ -550,7 +550,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 			{
 				auto localRotation = property_field.GetValue().get_value<Quaternion>();
 				auto localRotation4Euler = localRotation.ToEulerAngles();
-				auto localRotation4DegreesEuler = Vector3(Math::Helper::RadiansToDegrees(localRotation4Euler.x), Math::Helper::RadiansToDegrees(localRotation4Euler.y), Math::Helper::RadiansToDegrees(localRotation4Euler.z));
+				auto localRotation4DegreesEuler = Vector3((localRotation4Euler.x), (localRotation4Euler.y), (localRotation4Euler.z));
 				return localRotation4DegreesEuler;
 			};
 			auto setVec3 = [property_field](Vector3 eulerVec3)
@@ -567,7 +567,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 				}
 				
 				//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
-				bool result = property_field.SetValue(Quaternion::FromEulerAngles(Math::Helper::DegreesToRadians(eulerVec3.x), Math::Helper::DegreesToRadians(eulerVec3.y), Math::Helper::DegreesToRadians(eulerVec3.z)));
+				bool result = property_field.SetValue(Quaternion::FromEulerAngles((eulerVec3.x), (eulerVec3.y), (eulerVec3.z)));
 				if (!result)
 				{
 					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");

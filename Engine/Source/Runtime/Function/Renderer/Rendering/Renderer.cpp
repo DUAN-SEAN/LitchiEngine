@@ -580,7 +580,7 @@ namespace LitchiRuntime
 		cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, const Light* light, RenderCamera* renderCamera)
+	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RenderCamera* renderCamera)
 	{
 		for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
 		{

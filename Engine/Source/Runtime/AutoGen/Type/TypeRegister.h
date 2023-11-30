@@ -30,7 +30,6 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-#include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Resource/ConfigManager.h"
 
@@ -90,6 +89,14 @@ RTTR_REGISTRATION //注册反射
 		.property("y", &Quaternion::y)
 		.property("z", &Quaternion::z)
 		.property("w", &Quaternion::w);
+
+
+	registration::class_<Color>("Color")
+		.constructor()
+		.property("r", &Color::r)
+		.property("g", &Color::g)
+		.property("b", &Color::b)
+		.property("a", &Color::a);
 
 
 	registration::class_<Object>("Object")
@@ -262,7 +269,9 @@ RTTR_REGISTRATION //注册反射
 
 	// Camera
 	registration::class_<Camera>("Camera")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("aperture", &Camera::GetAperture, &Camera::SetAperture)
+		.property("shutter speed", &Camera::GetShutterSpeed, &Camera::SetShutterSpeed);
 
 	// Camera
 	registration::class_<Animator>("Animator")
@@ -303,8 +312,12 @@ RTTR_REGISTRATION //注册反射
 		.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
 	// Light Base Component
-	registration::class_<Light>("LightComponent")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+	registration::class_<Light>("Light")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("color", &Light::GetColor, &Light::SetColor)
+		.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
+		.property("angle", &Light::GetAngle, &Light::SetAngle)
+		.property("bias", &Light::GetBias, &Light::SetBias);
 		// .property("light", &Light::GetLight, &Light::SetLight);
 	
 	// RigidActor
