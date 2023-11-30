@@ -81,6 +81,24 @@ float3 BilinnPhong(float3 viewDir, float3 normal, float3 diffuseTex, float3 spec
     (lightColor * specularTex.rgb * specularCoefficient * luminosity) : float3(0, 0, 0));
 }
 
+float3 CalcPointLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data)
+{
+    float3 lightPosition = light_buffer_data.position.xyz;
+    float3 lightDir = light_buffer_data.direction.xyz;
+    float3 lightColor = light_buffer_data.color.rgb;
+    float luminosity = light_buffer_data.intensity_range_angle_bias[0];
+
+
+    return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, lightDir, lightColor, luminosity);
+}
+
+
+float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data,float luminosity)
+{
+    return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, light_buffer_data.direction.xyz, light_buffer_data.color.rgb, luminosity);
+}
+
+
 // return shadow ratio
 float ShadowCalculation(float4 fragPosLightSpace)
 {
