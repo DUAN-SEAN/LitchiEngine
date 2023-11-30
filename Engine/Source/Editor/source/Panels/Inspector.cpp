@@ -376,8 +376,14 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			{
 				property_field.SetValue(value);
 			};
-
-			GUIDrawer::DrawString(propertyRoot, propertyName.to_string(), getString, setString);
+			enumeration enum_align = t.get_enumeration();
+			std::vector<std::string> enumValueList;
+			for (auto enumName : enum_align.get_names())
+			{
+				enumValueList.push_back(enumName.to_string());
+			}
+			GUIDrawer::DrawEnum(propertyRoot, propertyName.to_string(), enumValueList, getString, setString);
+		
 		}
 		else
 		{
@@ -474,7 +480,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 	auto value_type = var.get_type();
 	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
 	bool is_wrapper = wrapped_type != value_type;
-
+	
 	if (DrawAtomicTypeObject(p_root, is_wrapper ? wrapped_type : value_type,
 		is_wrapper ? var.extract_wrapped_value() : var, propertyName, obj, propertyPathList))
 	{

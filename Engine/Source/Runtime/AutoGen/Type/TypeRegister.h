@@ -101,8 +101,8 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<Object>("Object")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("Id", &Object::GetObjectId, &Object::SetObjectId)
-		.property("Name", &Object::GetObjectName, &Object::SetObjectName);
+		.property("Id", &Object::GetObjectId, &Object::SetObjectId)(rttr::metadata("NO_SERIALIZE", true))
+		.property("Name", &Object::GetObjectName, &Object::SetObjectName)(rttr::metadata("NO_SERIALIZE", true));
 
 
 	registration::class_<ScriptObject>("ScriptObject")
@@ -311,9 +311,16 @@ RTTR_REGISTRATION //注册反射
 			)
 		.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
+	registration::enumeration<LightType>("LightType")(
+		value("Directional", LightType::Directional),
+		value("Spot", LightType::Spot),
+		value("Point", LightType::Point)
+		);
+
 	// Light Base Component
 	registration::class_<Light>("Light")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("lightType", &Light::GetLightType, &Light::SetLightType)
 		.property("color", &Light::GetColor, &Light::SetColor)
 		.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
 		.property("angle", &Light::GetAngle, &Light::SetAngle)

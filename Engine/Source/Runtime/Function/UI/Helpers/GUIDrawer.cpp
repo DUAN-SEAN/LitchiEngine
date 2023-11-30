@@ -17,6 +17,8 @@
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
 #include "Runtime/Function/UI/Widgets/Layout/Group.h"
+#include "Runtime/Function/UI/Widgets/Menu/MenuItem.h"
+#include "Runtime/Function/UI/Widgets/Menu/MenuList.h"
 #include "Runtime/Function/UI/Widgets/Selection/CheckBox.h"
 #include "Runtime/Function/UI/Widgets/Selection/ColorEdit.h"
 #include "Runtime/Function/UI/Widgets/Texts/TextColored.h"
@@ -496,4 +498,28 @@ void LitchiRuntime::GUIDrawer::DrawInputField4Double(WidgetContainer& p_root, co
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<double>>();
 	dispatcher.RegisterGatherer(p_gatherer);
 	dispatcher.RegisterProvider(p_provider);
+}
+
+void LitchiRuntime::GUIDrawer::DrawEnum(WidgetContainer& p_root, const std::string& p_name, std::vector<std::string> enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider)
+{
+	CreateTitle(p_root, p_name);
+	auto currName = p_gatherer();
+	auto& widget = p_root.CreateWidget<MenuList>(currName);
+	for (auto enumName : enumValueList)
+	{
+		bool isSelect = enumName == currName;
+		auto& menuItem = widget.CreateWidget<MenuItem>(enumName,"",false,isSelect);
+	/*	auto& dispatcher = menuItem.AddPlugin<DataDispatcher<std::string>>();
+		dispatcher.RegisterGatherer(p_gatherer);
+		dispatcher.RegisterProvider(p_provider);*/
+		menuItem.ClickedEvent += [&widget,p_provider, enumName]
+		{
+			widget.name = enumName;
+			p_provider(enumName);
+		};
+		//auto& dispatcher = widget.AddPlugin<DataDispatcher<std::string>>();
+		//dispatcher.RegisterGatherer(p_gatherer);
+		//dispatcher.RegisterProvider(p_provider);
+	}
+
 }
