@@ -52,8 +52,8 @@ Pixel mainVS(Vertex_PosUvNorTan input)
     vertex_out.fragPos = mul(input.position, buffer_pass.transform).xyz;
     output.position = mul(input.position, buffer_pass.transform);
     output.position = mul(output.position, buffer_frame.view_projection_unjittered);
-    output.normal = mul(float4(input.normal,0), buffer_pass.transform).xyz;
-    output.tangent = mul(float4(input.tangent,0), buffer_pass.transform).xyz;
+    output.normal = mul(float4(input.normal, 0), buffer_pass.transform).xyz;
+    output.tangent = mul(float4(input.tangent, 0), buffer_pass.transform).xyz;
     output.uv = input.uv;
 
     return output;
@@ -93,7 +93,7 @@ float3 CalcPointLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 s
 }
 
 
-float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data,float luminosity)
+float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data, float luminosity)
 {
     return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, light_buffer_data.direction.xyz, light_buffer_data.color.rgb, luminosity);
 }
@@ -129,12 +129,12 @@ float4 mainPS(Pixel input) : SV_Target
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
     float3 normal = normalize(input.normal);
 
-    // int lightCount = light_buffer_data_arr.lightCount;
-    int lightCount = 2;
-    float3 lightSum = float3(0,0,0);
-    for (int index = 0; index < lightCount;index++)
+    int lightCount = light_buffer_data_arr.lightCount;
+    // int lightCount = 2;
+    float3 lightSum = float3(0, 0, 0);
+    for (int index = 0; index < lightCount; index++)
     {
-    	lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
+        lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
 				materialData.u_shininess, -light_buffer_data_arr.lightBufferDataArr[index].direction.xyz, light_buffer_data_arr.lightBufferDataArr[index].color.xyz, light_buffer_data_arr.lightBufferDataArr[index].intensity_range_angle_bias[0]);
     }
 

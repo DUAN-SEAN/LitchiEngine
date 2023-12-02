@@ -247,16 +247,16 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("UpdateConstantBufferLight")
 		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
+		std::vector<Light*> lightArr;
+		size_t lightCount = lightEntities.size();
 		if (!lightEntities.empty())
 		{
-			size_t lightCount = lightEntities.size();
 			if (lightCount > MaxLightCount)
 			{
 				lightCount = MaxLightCount;
 				DEBUG_LOG_WARN("Light Count Limit Count, lightCount:{}, MaxLightCount:{}", lightCount, MaxLightCount);
 			}
 
-			std::vector<Light*> lightArr;
 			for (size_t index = 0; index < lightCount; index++)
 			{
 				auto lightGameObject = lightEntities[index];
@@ -264,12 +264,12 @@ namespace LitchiRuntime
 				lightArr.push_back(mainLight);
 			}
 
-			UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
-
 			/*		auto lightGameObject = lightEntities[0];
 					auto mainLight = lightGameObject->GetComponent<Light>();
 					UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());*/
 		}
+		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
+
 		EASY_END_BLOCK
 
 		EASY_BLOCK("Render Entities")

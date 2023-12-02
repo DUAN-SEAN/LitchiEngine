@@ -233,6 +233,7 @@ GameObject* LitchiEditor::Inspector::GetTargetActor() const
 
 void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 {
+	if (!p_target) { return; }
 	auto& components = p_target->GetComponents();
 
 	for (auto component : components)

@@ -489,7 +489,7 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_
 {
     const auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
 	auto* instance = currentScene->CreateGameObject(p_name.empty() ? "Empty Object" : p_name);
-	auto* transform = instance->AddComponent<Transform>();
+	auto* transform = instance->GetComponent<Transform>();
 
 	if (p_parent)
 		instance->SetParent(p_parent);
@@ -500,7 +500,12 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_
 	if (p_focusOnCreation)
 		SelectActor(instance);
 
-	ApplicationEditor::Instance()->m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(instance);
+	EDITOR_PANEL(Hierarchy, "Hierarchy").AddActorByInstance(instance);
+	EDITOR_PANEL(Hierarchy, "Hierarchy").AttachActorToParent(instance);
+	EDITOR_PANEL(Hierarchy, "Hierarchy").SelectActorByInstance(instance);
+
+	if (p_focusOnCreation)
+		SelectActor(instance);
 
 	DEBUG_LOG_INFO("Actor created");
 
@@ -513,24 +518,42 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 
 	auto meshRenderer = instance->AddComponent<MeshRenderer>();
 	auto meshFilter = instance->AddComponent<MeshFilter>();
-	
+	/*
 	meshFilter->modelPath = p_path;
 	meshFilter->meshIndex = 0;
-	meshFilter->PostResourceLoaded();
-
-	meshRenderer->materialPath = "Engine\\Materials\\Default.mat";
+	meshFilter->PostResourceLoaded();meshRenderer->materialPath = "Engine\\Materials\\Standard4Phong.mat";
 	meshRenderer->PostResourceLoaded();
+	*/
+
+	// todo temp, need copy in mesh gameObject (prefab)
+	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(p_path);
+	meshFilter->SetGeometry(mesh);
+
+	auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+	meshRenderer->SetMaterial(material);
 	
 	if (p_focusOnCreation)
 		SelectActor(instance);
+
+	DEBUG_LOG_INFO("Actor created");
 
 	return instance;
 }
 
 bool LitchiEditor::EditorActions::DestroyActor(LitchiRuntime::GameObject* p_actor)
 {
-	/*p_actor.MarkAsDestroy();
-	DEBUG_LOG_INFO("Actor destroyed");*/
+	auto inspectorActor =
+		EDITOR_PANEL(Inspector, "Inspector").GetTargetActor();
+	if (inspectorActor == p_actor && inspectorActor != nullptr)
+	{
+		EDITOR_PANEL(Inspector, "Inspector").UnFocus();
+	}
+	EDITOR_PANEL(Hierarchy, "Hierarchy").DeleteActorByInstance(p_actor);
+
+	p_actor->GetScene()->RemoveGameObject(p_actor);
+
+	/*p_actor.MarkAsDestroy();*/
+	DEBUG_LOG_INFO("Actor destroyed");
 	return true;
 }
 

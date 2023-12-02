@@ -9,9 +9,10 @@
 #include "Runtime/Function/UI/Plugins/DDSource.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
+#include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
-using namespace LitchiEditor;
 
+using namespace LitchiEditor;
 using namespace LitchiRuntime;
 
 class HierarchyContextualMenu : public LitchiRuntime::ContextualMenu
@@ -21,30 +22,30 @@ public:
 		m_target(p_target),
 		m_treeNode(p_treeNode)
 	{
-		// todo:
-		 //if (m_target)
-		 //{
-			// auto& focusButton = CreateWidget<MenuItem>("Focus");
-			// focusButton.ClickedEvent += [this]
-			// {
-			//	  ApplicationEditor::Instance()->MoveToTarget(m_target);
-			// };
+		 // todo:
+		 if (m_target)
+		 {
+			 auto& focusButton = CreateWidget<MenuItem>("Focus");
+			 focusButton.ClickedEvent += [this]
+			 {
+				  ApplicationEditor::Instance()->MoveToTarget(m_target);
+			 };
 
-			// /*auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
-			// duplicateButton.ClickedEvent += [this]
-			// {
-			//	 EDITOR_EXEC(DelayAction(EDITOR_BIND(DuplicateActor, std::ref(*m_target), nullptr, true), 0));
-			// };
+			 auto& duplicateButton = CreateWidget<MenuItem>("Duplicate");
+			 duplicateButton.ClickedEvent += [this]
+			 {
+				 EDITOR_EXEC(DelayAction(EDITOR_BIND(DuplicateActor, m_target, nullptr, true), 0));
+			 };
 
-			// auto& deleteButton = CreateWidget<MenuItem>("Delete");
-			// deleteButton.ClickedEvent += [this]
-			// {
-			//	 EDITOR_EXEC(DestroyActor(std::ref(*m_target)));
-			// };*/
-		 //}
+			 auto& deleteButton = CreateWidget<MenuItem>("Delete");
+			 deleteButton.ClickedEvent += [this]
+			 {
+				 EDITOR_EXEC(DestroyActor(m_target));
+			 };
+		 }
 
-		 //auto& createActor = CreateWidget<MenuList>("Create...");
-		 //ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));
+		 auto& createActor = CreateWidget<MenuList>("Create...");
+		 ActorCreationMenu::GenerateActorCreationMenu(createActor, m_target, std::bind(&TreeNode::Open, &m_treeNode));
 	}
 
 	virtual void Execute() override

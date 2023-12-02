@@ -99,6 +99,10 @@ namespace LitchiRuntime
 
 		// clear previous state
 		m_renderables.clear();
+		m_renderables[Renderer_Entity::Geometry];
+		m_renderables[Renderer_Entity::GeometryTransparent];
+		m_renderables[Renderer_Entity::Camera];
+		m_renderables[Renderer_Entity::Light];
 
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
