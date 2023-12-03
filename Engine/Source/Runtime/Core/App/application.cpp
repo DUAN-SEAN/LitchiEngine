@@ -11,7 +11,7 @@ namespace LitchiRuntime
     }
 
     const std::string& Application::GetDataPath() {
-        return s_instance->GetDataPath();
+        return s_instance->GetProjectPath();
     }
 
     void Application::Run() {

@@ -22,11 +22,10 @@ namespace LitchiRuntime
 
         void SetTitle(std::string title) { m_title = title; }
 
-        const std::string& GetDataPath() { return m_dataPath; }
-        void SetDataPath(std::string data_path)
+        const std::string& GetProjectPath() { return m_projectPath; }
+        void SetProjectPath(std::string project_path)
         {
-            m_dataPath = data_path;
-            // data_path_= "D:/WorkSpace/LitchiEngineGit/LitchiEngineGithub/LitchiEngine/build/Engine/Source/Assets/";
+            m_projectPath = project_path;
         }
 
         /// 初始化
@@ -82,7 +81,7 @@ namespace LitchiRuntime
     protected:
         std::string m_title;//标题栏显示
 
-        std::string m_dataPath;//资源目录
+        std::string m_projectPath;//project dir
 
     };
 }

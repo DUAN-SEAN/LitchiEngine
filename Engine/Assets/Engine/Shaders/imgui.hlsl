@@ -1,6 +1,6 @@
 
 //= INCLUDES =========
-#include "common.hlsl"
+#include "Common/common.hlsl"
 //====================
 
 Pixel_PosColUv mainVS(Vertex_Pos2dUvColor input)

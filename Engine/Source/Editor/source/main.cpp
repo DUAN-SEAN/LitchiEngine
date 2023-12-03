@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 	projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
 
-	application_standalone->SetDataPath(filePath + "/../../");
+	application_standalone->SetProjectPath(filePath + "\\Project\\");
 
 	delete projectPath;
 

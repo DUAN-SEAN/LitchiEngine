@@ -23,7 +23,7 @@ namespace LitchiRuntime
     class SP_CLASS ResourceCache
     {
     public:
-        static void Initialize();
+        static void Initialize(std::string projectAssetPath);
         static void Shutdown();
 
         // Get by name

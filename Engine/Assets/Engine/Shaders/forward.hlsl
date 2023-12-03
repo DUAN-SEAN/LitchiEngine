@@ -1,6 +1,6 @@
 
 //= INCLUDES =========
-#include "common.hlsl"
+#include "Common/common.hlsl"
 //====================
 
 Pixel_PosUvNorTan mainVS(Vertex_PosUvNorTan input)

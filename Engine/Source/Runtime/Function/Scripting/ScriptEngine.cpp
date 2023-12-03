@@ -339,7 +339,7 @@ namespace LitchiRuntime
 		InitMono(monoDllPath);
 
 		// 加载引擎核心程序集 路径写死
-		std::string scriptCoreDllPath = dataPath + "ScriptCore/Debug/LitchiScriptCore.dll";
+		std::string scriptCoreDllPath = dataPath + "../../../ScriptCore/Debug/LitchiScriptCore.dll";
 		// std::string scriptCoreDllPath = dataPath + "ScriptCore/Debug/Hazel-ScriptCore.dll";
 		bool status = LoadCoreAssembly(scriptCoreDllPath);
 		if (!status)

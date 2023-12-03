@@ -5,7 +5,7 @@ file(GLOB_RECURSE EDITOR_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 
 # dest build/****/Assets 和Editor目录平级
-file(COPY "../../Assets/" DESTINATION "../Assets/")
+file(COPY "../../Assets/" DESTINATION "Debug/Project/Assets/")
 
 
 # file(GLOB_RECURSE imgui_src "../../ThridParty/imgui/backends/*.cpp")

@@ -475,12 +475,7 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 	}
 	
 	// todo Inspector Ñ¡Ôñ
-
-	auto& inspector = m_panelsManager.GetPanelAs<Inspector>("Inspector");
-	inspector.FocusActor(p_target);
-
-	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").SelectActorByInstance(p_target);
-	m_panelsManager.GetPanelAs<SceneView>("Scene View").GetCamera()->SetSelectedEntity(p_target);
+	EDITOR_EXEC(SelectActor(p_target));
 }
 
 void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)
