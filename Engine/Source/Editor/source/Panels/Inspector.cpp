@@ -101,6 +101,7 @@ LitchiEditor::Inspector::Inspector
 				addComponentButton.idleBackgroundColor = !p_componentExists ? Color{ 0.7f, 0.5f, 0.f } : Color{ 0.1f, 0.1f, 0.1f };
 			};
 
+			if (GetTargetActor() == nullptr) { return; }
 			switch (p_value)
 			{
 			case 0: defineButtonsStates(GetTargetActor()->GetComponent<MeshRenderer>());		return;

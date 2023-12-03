@@ -236,6 +236,12 @@ namespace LitchiRuntime
         // Assign the new parent.
         m_parent = new_parent ? new_parent : nullptr;
         m_is_dirty = true;
+
+        // update transform
+        if(m_parent)
+        {
+            UpdateTransform();
+        }
     }
 
     void Transform::AddChild(Transform* child)

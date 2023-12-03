@@ -263,10 +263,6 @@ namespace LitchiRuntime
 				auto mainLight = lightGameObject->GetComponent<Light>();
 				lightArr.push_back(mainLight);
 			}
-
-			/*		auto lightGameObject = lightEntities[0];
-					auto mainLight = lightGameObject->GetComponent<Light>();
-					UpdateConstantBufferLight(cmd_list, mainLight, rendererPath->GetRenderCamera());*/
 		}
 		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
 

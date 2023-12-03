@@ -502,7 +502,6 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_
 
 	EDITOR_PANEL(Hierarchy, "Hierarchy").AddActorByInstance(instance);
 	EDITOR_PANEL(Hierarchy, "Hierarchy").AttachActorToParent(instance);
-	EDITOR_PANEL(Hierarchy, "Hierarchy").SelectActorByInstance(instance);
 
 	if (p_focusOnCreation)
 		SelectActor(instance);
@@ -612,6 +611,8 @@ void LitchiEditor::EditorActions::DuplicateActor(LitchiRuntime::GameObject* p_to
 void LitchiEditor::EditorActions::SelectActor(LitchiRuntime::GameObject* p_target)
 {
 	EDITOR_PANEL(Inspector, "Inspector").FocusActor(p_target);
+	EDITOR_PANEL(SceneView, "Scene View").GetCamera()->SetSelectedEntity(p_target);
+	EDITOR_PANEL(Hierarchy, "Hierarchy").SelectActorByInstance(p_target);
 }
 
 void LitchiEditor::EditorActions::UnselectActor()

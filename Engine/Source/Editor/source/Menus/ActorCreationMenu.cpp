@@ -44,24 +44,24 @@ void LitchiEditor::ActorCreationMenu::GenerateActorCreationMenu(LitchiRuntime::M
     auto& others = p_menuList.CreateWidget<LitchiRuntime::MenuList>("Others");
 
     primitives.CreateWidget<LitchiRuntime::MenuItem>("Cube").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Cube", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Sphere").ClickedEvent            += ActorWithModelComponentCreationHandler(p_parent, "Sphere", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Cone").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Cone", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Cylinder").ClickedEvent          += ActorWithModelComponentCreationHandler(p_parent, "Cylinder", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Plane").ClickedEvent             += ActorWithModelComponentCreationHandler(p_parent, "Plane", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Gear").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Gear", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Helix").ClickedEvent             += ActorWithModelComponentCreationHandler(p_parent, "Helix", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Pipe").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Pipe", p_onItemClicked);
-    primitives.CreateWidget<LitchiRuntime::MenuList>("Pyramid").ClickedEvent           += ActorWithModelComponentCreationHandler(p_parent, "Pyramid", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Sphere").ClickedEvent            += ActorWithModelComponentCreationHandler(p_parent, "Sphere", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Cone").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Cone", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Cylinder").ClickedEvent          += ActorWithModelComponentCreationHandler(p_parent, "Cylinder", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Plane").ClickedEvent             += ActorWithModelComponentCreationHandler(p_parent, "Plane", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Gear").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Gear", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Helix").ClickedEvent             += ActorWithModelComponentCreationHandler(p_parent, "Helix", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Pipe").ClickedEvent              += ActorWithModelComponentCreationHandler(p_parent, "Pipe", p_onItemClicked);
+    primitives.CreateWidget<LitchiRuntime::MenuItem>("Pyramid").ClickedEvent           += ActorWithModelComponentCreationHandler(p_parent, "Pyramid", p_onItemClicked);
    /* primitives.CreateWidget<LitchiRuntime::MenuList>("Torus").ClickedEvent             += ActorWithModelComponentCreationHandler(p_parent, "Torus", p_onItemClicked);
     physicals.CreateWidget<LitchiRuntime::MenuList>("Physical Box").ClickedEvent       += ActorWithComponentCreationHandler<CPhysicalBox>(p_parent, p_onItemClicked);
     physicals.CreateWidget<LitchiRuntime::MenuList>("Physical Sphere").ClickedEvent    += ActorWithComponentCreationHandler<CPhysicalSphere>(p_parent, p_onItemClicked);
     physicals.CreateWidget<LitchiRuntime::MenuList>("Physical Capsule").ClickedEvent   += ActorWithComponentCreationHandler<CPhysicalCapsule>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Point").ClickedEvent                 += ActorWithComponentCreationHandler<CPointLight>(p_parent, p_onItemClicked);*/
-    lights.CreateWidget<LitchiRuntime::MenuList>("Light").ClickedEvent           += ActorWithComponentCreationHandler<LitchiRuntime::Light>(p_parent, p_onItemClicked);
+    lights.CreateWidget<LitchiRuntime::MenuItem>("Light").ClickedEvent           += ActorWithComponentCreationHandler<LitchiRuntime::Light>(p_parent, p_onItemClicked);
   /*  lights.CreateWidget<LitchiRuntime::MenuList>("Spot").ClickedEvent                  += ActorWithComponentCreationHandler<CSpotLight>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Ambient Box").ClickedEvent           += ActorWithComponentCreationHandler<CAmbientBoxLight>(p_parent, p_onItemClicked);
     lights.CreateWidget<LitchiRuntime::MenuList>("Ambient Sphere").ClickedEvent        += ActorWithComponentCreationHandler<CAmbientSphereLight>(p_parent, p_onItemClicked);
     audio.CreateWidget<LitchiRuntime::MenuList>("Audio Source").ClickedEvent           += ActorWithComponentCreationHandler<CAudioSource>(p_parent, p_onItemClicked);
     audio.CreateWidget<LitchiRuntime::MenuList>("Audio Listener").ClickedEvent         += ActorWithComponentCreationHandler<CAudioListener>(p_parent, p_onItemClicked);*/
-    others.CreateWidget<LitchiRuntime::MenuList>("Camera").ClickedEvent                += ActorWithComponentCreationHandler<LitchiRuntime::Camera>(p_parent, p_onItemClicked);
+    others.CreateWidget<LitchiRuntime::MenuItem>("Camera").ClickedEvent                += ActorWithComponentCreationHandler<LitchiRuntime::Camera>(p_parent, p_onItemClicked);
 }

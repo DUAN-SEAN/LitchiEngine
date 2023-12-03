@@ -152,7 +152,7 @@ LitchiEditor::Hierarchy::Hierarchy
 
 		m_sceneRoot->ConsiderWidget(*p_element.second);
 
-		// p_element.first->DetachFromParent();
+		p_element.first->SetParent(nullptr);
 	};
 
 	m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
@@ -241,6 +241,9 @@ void LitchiEditor::Hierarchy::AttachActorToParent(GameObject* p_actor)
 			auto parentWidget = m_widgetActorLink.at(p_actor->GetParent());
 			parentWidget->leaf = false;
 			parentWidget->ConsiderWidget(*widget);
+		}else
+		{
+			m_sceneRoot->ConsiderWidget(*widget);
 		}
 	}
 }

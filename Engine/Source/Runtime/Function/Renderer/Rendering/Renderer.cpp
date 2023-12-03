@@ -435,7 +435,12 @@ namespace LitchiRuntime
 
 			// opaque
 
+
 			bool is_transparent_pass = false;
+			EASY_BLOCK("Pass_ShadowMaps")
+			// Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
+			EASY_END_BLOCK
+
 			EASY_BLOCK("Pass_ForwardPass")
 			Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK

@@ -463,19 +463,24 @@ void LitchiEditor::ApplicationEditor::RenderUI()
 
 void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
-	auto name = p_target->GetName();
-	auto transform = p_target->GetComponent<Transform>();
-	auto position = transform->GetPosition();
-	auto rotation = transform->GetRotation();
-	auto rotationEuler = rotation.ToEulerAngles();
-	DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
-
+	// debug
+	if(p_target!=nullptr)
+	{
+		auto name = p_target->GetName();
+		auto transform = p_target->GetComponent<Transform>();
+		auto position = transform->GetPosition();
+		auto rotation = transform->GetRotation();
+		auto rotationEuler = rotation.ToEulerAngles();
+		DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
+	}
+	
 	// todo Inspector Ñ¡Ôñ
 
 	auto& inspector = m_panelsManager.GetPanelAs<Inspector>("Inspector");
 	inspector.FocusActor(p_target);
 
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").SelectActorByInstance(p_target);
+	m_panelsManager.GetPanelAs<SceneView>("Scene View").GetCamera()->SetSelectedEntity(p_target);
 }
 
 void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)

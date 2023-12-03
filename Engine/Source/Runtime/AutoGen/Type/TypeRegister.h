@@ -323,7 +323,8 @@ RTTR_REGISTRATION //注册反射
 		.property("lightType", &Light::GetLightType, &Light::SetLightType)
 		.property("color", &Light::GetColor, &Light::SetColor)
 		.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
-		.property("angle", &Light::GetAngle, &Light::SetAngle)
+		.property("shadowsEnabled", &Light::GetShadowsEnabled, &Light::SetShadowsEnabled)
+		.property("shadowsTransparentEnabled", &Light::GetShadowsTransparentEnabled, &Light::SetShadowsTransparentEnabled)
 		.property("bias", &Light::GetBias, &Light::SetBias);
 		// .property("light", &Light::GetLight, &Light::SetLight);
 	

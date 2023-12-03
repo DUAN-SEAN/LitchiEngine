@@ -1,5 +1,7 @@
 ﻿
 #include "Editor/include/Panels/SceneView.h"
+
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
@@ -51,6 +53,8 @@ void LitchiEditor::SceneView::OnDraw()
 		if (auto camera = m_camera)
 		{
 			camera->Pick();
+			auto selectedGO= camera->GetSelectedEntity();
+			ApplicationEditor::Instance()->SelectActor(selectedGO);// temp
 		}
 	}
 

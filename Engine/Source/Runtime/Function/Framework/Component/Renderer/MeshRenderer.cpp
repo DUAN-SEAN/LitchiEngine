@@ -100,16 +100,12 @@ namespace LitchiRuntime
 
 		// todo
 
-		/*if(materialPath.empty())
+		if(materialPath.empty())
 		{
 			return;
 		}
 
-		material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
-		if(material != nullptr)
-		{
-			material->PostResourceLoaded();
-		}*/
+		m_material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
 	}
 	void MeshRenderer::PostResourceModify()
 	{
@@ -117,16 +113,12 @@ namespace LitchiRuntime
 
 		// todo
 
-		/*if (materialPath.empty())
+		if (materialPath.empty())
 		{
 			return;
 		}
 
-		material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
-		if (material != nullptr)
-		{
-			material->PostResourceModify();
-		}*/
+		m_material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
 	}
 
 	// all functions (set/load) resolve to this
