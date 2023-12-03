@@ -14,12 +14,12 @@
     {
       "Type": "UniformInfoTexture",
       "name": "u_specularMap",
-      "path": "data/textures/white.png"
+      "path": "Engine/Textures/white.png"
     },
     {
       "Type": "UniformInfoTexture",
       "name": "u_heightMap",
-      "path": "data/textures/white.png"
+      "path": "Engine/Textures/white.png"
     },
     {
       "Type": "UniformInfoTexture",

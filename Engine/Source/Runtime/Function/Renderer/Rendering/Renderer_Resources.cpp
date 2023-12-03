@@ -280,14 +280,14 @@ namespace LitchiRuntime
         //    shader(Renderer_Shader::depth_prepass_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_prepass.hlsl", async);
         //}
 
-        //// Depth light
-        //{
-        //    shader(Renderer_Shader::depth_light_V) = make_shared<RHI_Shader>();
-        //    shader(Renderer_Shader::depth_light_V)->Compile(RHI_Shader_Vertex, shader_dir + "depth_light.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        // Depth light
+        {
+            shader(Renderer_Shader::depth_light_V) = make_shared<RHI_Shader>();
+            shader(Renderer_Shader::depth_light_V)->Compile(RHI_Shader_Vertex, shader_dir + "depth_light.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
 
-        //    shader(Renderer_Shader::depth_light_p) = make_shared<RHI_Shader>();
-        //    shader(Renderer_Shader::depth_light_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light.hlsl", async);
-        //}
+            shader(Renderer_Shader::depth_light_p) = make_shared<RHI_Shader>();
+            shader(Renderer_Shader::depth_light_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light.hlsl", async);
+        }
 
         //// Font
         //shader(Renderer_Shader::font_v) = make_shared<RHI_Shader>();

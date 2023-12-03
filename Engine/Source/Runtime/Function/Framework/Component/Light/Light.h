@@ -60,6 +60,8 @@ namespace LitchiRuntime
         Light();
         ~Light();
 
+        void Update() override;
+
 		LightType GetLightType() { return m_light_type; }
         void SetLightType(LightType type);
 
@@ -112,7 +114,7 @@ namespace LitchiRuntime
     private:
         void ComputeViewMatrix();
         void ComputeProjectionMatrix(uint32_t index = 0);
-        // void ComputeCascadeSplits();
+        void ComputeCascadeSplits();
 
         // Intensity
         LightIntensity m_intensity = LightIntensity::bulb_500_watt;

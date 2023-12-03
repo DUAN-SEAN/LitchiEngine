@@ -77,20 +77,22 @@ public:
 	void SetPath(const std::string& p_path)
 	{
 		// todo:
-		// texture = LitchiEditor::ApplicationEditor::Instance()->textureManager->GetResource(p_path);
+		texture = LitchiEditor::ApplicationEditor::Instance()->textureManager->GetResource(p_path);
 	}
 
 	virtual void Execute() override
 	{
-		/*if (ImGui::IsItemHovered())
+		if (ImGui::IsItemHovered())
 		{
 			if (texture)
-				image.textureID.id = texture->id;
+			{
+				image.renderTarget = texture;
+			}
 
 			ImGui::BeginTooltip();
 			image.Draw();
 			ImGui::EndTooltip();
-		}*/
+		}
 	}
 
 	LitchiRuntime::RHI_Texture* texture = nullptr;
@@ -130,9 +132,9 @@ public:
 
 				/* Clean the name (Remove special chars) */
 				p_newName.erase(std::remove_if(p_newName.begin(), p_newName.end(), [](auto& c)
-				{
-					return std::find(FILENAMES_CHARS.begin(), FILENAMES_CHARS.end(), c) == FILENAMES_CHARS.end();
-				}), p_newName.end());
+					{
+						return std::find(FILENAMES_CHARS.begin(), FILENAMES_CHARS.end(), c) == FILENAMES_CHARS.end();
+					}), p_newName.end());
 
 				std::string containingFolderPath = PathParser::GetContainingFolder(filePath);
 				std::string newPath = containingFolderPath + p_newName;
@@ -338,7 +340,7 @@ public:
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
-			
+
 			createEmptyMaterial.EnterPressedEvent += [this](std::string materialName)
 			{
 				//size_t fails = 0;
@@ -521,7 +523,7 @@ public:
 	void CreateScript(const std::string& p_name, const std::string& p_path)
 	{
 		std::string fileContent = "local " + p_name + " =\n{\n}\n\nfunction " + p_name + ":OnStart()\nend\n\nfunction " + p_name + ":OnUpdate(deltaTime)\nend\n\nreturn " + p_name;
-		
+
 		std::ofstream outfile(p_path);
 		outfile << fileContent << std::endl; // Empty scene content
 
@@ -545,9 +547,9 @@ public:
 		{
 			/* Clean the name (Remove special chars) */
 			p_newName.erase(std::remove_if(p_newName.begin(), p_newName.end(), [](auto& c)
-			{
-				return std::find(FILENAMES_CHARS.begin(), FILENAMES_CHARS.end(), c) == FILENAMES_CHARS.end();
-			}), p_newName.end());
+				{
+					return std::find(FILENAMES_CHARS.begin(), FILENAMES_CHARS.end(), c) == FILENAMES_CHARS.end();
+				}), p_newName.end());
 
 			std::string newPath = filePath + p_newName + ".lua";
 
@@ -586,12 +588,12 @@ public:
 
 				std::string extension = "." + PathParser::GetExtension(filePath);
 
-                auto filenameAvailable = [&extension](const std::string& target)
-                {
-                    return !std::filesystem::exists(target + extension);
-                };
+				auto filenameAvailable = [&extension](const std::string& target)
+				{
+					return !std::filesystem::exists(target + extension);
+				};
 
-                const auto newNameWithoutExtension = String::GenerateUnique(filePathWithoutExtension, filenameAvailable);
+				const auto newNameWithoutExtension = String::GenerateUnique(filePathWithoutExtension, filenameAvailable);
 
 				std::string finalPath = newNameWithoutExtension + extension;
 				std::filesystem::copy(filePath, finalPath);
@@ -603,16 +605,16 @@ public:
 		BrowserItemContextualMenu::CreateList();
 
 
-        auto& editMetadata = CreateWidget<MenuItem>("Properties");
+		auto& editMetadata = CreateWidget<MenuItem>("Properties");
 
-        editMetadata.ClickedEvent += [this]
-        {
-           /* auto& panel = EDITOR_PANEL(LitchiEditor::AssetProperties, "Asset Properties");
-            std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
-            panel.SetTarget(resourcePath);
-            panel.Open();
-            panel.Focus();*/
-        };
+		editMetadata.ClickedEvent += [this]
+		{
+			/* auto& panel = EDITOR_PANEL(LitchiEditor::AssetProperties, "Asset Properties");
+			 std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			 panel.SetTarget(resourcePath);
+			 panel.Open();
+			 panel.Focus();*/
+		};
 	}
 
 	virtual void DeleteItem() override
@@ -893,7 +895,7 @@ public:
 				materialEditor.SetTarget(material);
 				materialEditor.Open();
 				materialEditor.Focus();
-				
+
 				Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
 				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
 				assetView.SetResource(resource);
@@ -991,7 +993,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 	bool isDirectory = p_entry.is_directory();
 	std::string itemname = PathParser::GetElementName(p_entry.path().string());
 	std::string path = p_entry.path().string();
-	if (isDirectory && path.back() != '\\'&& path.back() != '/') // Add '\\' if is directory and backslash is missing
+	if (isDirectory && path.back() != '\\' && path.back() != '/') // Add '\\' if is directory and backslash is missing
 		path += '\\';
 	std::string resourceFormatPath = EDITOR_EXEC(GetResourcePath(path, p_isEngineItem));
 	bool protectedItem = !p_root || p_isEngineItem;
@@ -1023,14 +1025,14 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			treeNode.Open();
 
 		auto& ddSource = treeNode.AddPlugin<DDSource<std::pair<std::string, Group*>>>("Folder", resourceFormatPath, std::make_pair(resourceFormatPath, &itemGroup));
-		
+
 		if (!p_root || p_scriptFolder)
 			treeNode.RemoveAllPlugins();
 
 		auto& contextMenu = !p_scriptFolder ? treeNode.AddPlugin<FolderContextualMenu>(path, protectedItem && resourceFormatPath != "") : treeNode.AddPlugin<ScriptFolderContextualMenu>(path, protectedItem && resourceFormatPath != "");
 		contextMenu.userData = static_cast<void*>(&treeNode);
 
-		contextMenu.ItemAddedEvent += [this, &treeNode, path, p_isEngineItem, p_scriptFolder] (std::string p_string)
+		contextMenu.ItemAddedEvent += [this, &treeNode, path, p_isEngineItem, p_scriptFolder](std::string p_string)
 		{
 			treeNode.Open();
 			treeNode.RemoveAllWidgets();
@@ -1164,7 +1166,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			};
 
 		}
-		
+
 		contextMenu.CreateList();
 
 		treeNode.OpenedEvent += [this, &treeNode, path, p_isEngineItem, p_scriptFolder]
@@ -1187,10 +1189,10 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 
 		switch (fileType)
 		{
-		 case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
-		 case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
-		 case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
-		 case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
+		case PathParser::EFileType::MODEL:		contextMenu = &clickableText.AddPlugin<ModelContextualMenu>(path, protectedItem);		break;
+		case PathParser::EFileType::TEXTURE:	contextMenu = &clickableText.AddPlugin<TextureContextualMenu>(path, protectedItem); 	break; // todo: 
+		case PathParser::EFileType::SHADER:		contextMenu = &clickableText.AddPlugin<ShaderContextualMenu>(path, protectedItem);		break;
+		case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
 		case PathParser::EFileType::SCENE:		contextMenu = &clickableText.AddPlugin<SceneContextualMenu>(path, protectedItem);		break;
 		default: contextMenu = &clickableText.AddPlugin<FileContextualMenu>(path, protectedItem); break;
 		}
@@ -1206,11 +1208,11 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 		};
 
 		auto& ddSource = clickableText.AddPlugin<DDSource<std::pair<std::string, Group*>>>
-		(
-			"File",
-			resourceFormatPath,
-			std::make_pair(resourceFormatPath, &itemGroup)
-		);
+			(
+				"File",
+				resourceFormatPath,
+				std::make_pair(resourceFormatPath, &itemGroup)
+			);
 
 		contextMenu->RenamedEvent += [&ddSource, &clickableText, p_scriptFolder](std::string p_prev, std::string p_newPath)
 		{
@@ -1242,7 +1244,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			}
 		};
 
-		contextMenu->DuplicateEvent += [this, &clickableText, p_root, path, p_isEngineItem] (std::string newItem)
+		contextMenu->DuplicateEvent += [this, &clickableText, p_root, path, p_isEngineItem](std::string newItem)
 		{
 			EDITOR_EXEC(DelayAction(std::bind(&AssetBrowser::ConsiderItem, this, p_root, std::filesystem::directory_entry{ newItem }, p_isEngineItem, false, false), 0));
 		};

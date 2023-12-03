@@ -30,7 +30,10 @@ namespace LitchiRuntime
 	void GameObject::SetActive(bool active)
 	{
 		m_active = active;
-		m_scene->Resolve();
+		if(m_scene)
+		{
+			m_scene->Resolve();
+		}
 	}
 
 	bool GameObject::SetParent(GameObject* parent) {

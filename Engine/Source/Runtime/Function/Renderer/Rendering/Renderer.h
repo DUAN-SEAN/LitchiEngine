@@ -120,6 +120,7 @@ namespace LitchiRuntime
 
 		// RendererPath
 		static void UpdateRendererPath(RendererPathType rendererPathType, RendererPath* rendererPath);
+		static RenderCamera* GetMainCamera();
 
 	private:
 		// Constant buffers
@@ -172,6 +173,7 @@ namespace LitchiRuntime
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
+		static RenderCamera* m_main_camera;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_lines;
 		static std::unique_ptr<Font> m_font;
 		static std::unique_ptr<Grid> m_world_grid;

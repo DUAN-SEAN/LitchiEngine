@@ -38,6 +38,7 @@ namespace LitchiRuntime
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 	Cb_Material Renderer::m_cb_material_cpu;
+	RenderCamera* Renderer::m_main_camera;
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	unique_ptr<Font> Renderer::m_font;
 	unique_ptr<Grid> Renderer::m_world_grid;
@@ -332,6 +333,7 @@ namespace LitchiRuntime
 			auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath)
 		{
+			m_main_camera = rendererPath->GetRenderCamera();
 			rendererPath->UpdateRenderableGameObject();
 			Render4BuildInSceneView(cmd_current, rendererPath);
 		}
@@ -360,6 +362,9 @@ namespace LitchiRuntime
 	{
 		auto camera = rendererPath->GetRenderCamera();
 		auto rendererables = rendererPath->GetRenderables();
+
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),0, 0, false, camera->GetClearColor());
+
 		EASY_BLOCK("Build cb_frame")
 			if (camera)
 			{
@@ -419,7 +424,6 @@ namespace LitchiRuntime
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
 		if (camera)
 		{
-
 			// determine if a transparent pass is required
 			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
 
@@ -438,7 +442,7 @@ namespace LitchiRuntime
 
 			bool is_transparent_pass = false;
 			EASY_BLOCK("Pass_ShadowMaps")
-			// Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
+			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK
 
 			EASY_BLOCK("Pass_ForwardPass")
@@ -1011,5 +1015,10 @@ namespace LitchiRuntime
 	void Renderer::UpdateRendererPath(RendererPathType rendererPathType, RendererPath* rendererPath)
 	{
 		m_rendererPaths[rendererPathType] = rendererPath;
+	}
+
+	RenderCamera* Renderer::GetMainCamera()
+	{
+		return m_main_camera;
 	}
 }

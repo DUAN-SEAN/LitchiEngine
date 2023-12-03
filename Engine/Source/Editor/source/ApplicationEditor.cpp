@@ -412,15 +412,15 @@ void LitchiEditor::ApplicationEditor::Update()
 	InputManager::Tick();
 
 	auto scene = this->sceneManager->GetCurrentScene();
-
-	// Update
-	/*for (auto* entity : scene->GetAllGameObjectList())
-	{
-		for (auto* comp : entity->GetComponents())
-		{
-			comp->Update();
-		}
-	}*/
+	scene->Tick();
+	//// Update
+	//for (auto* entity : scene->GetAllGameObjectList())
+	//{
+	//	for (auto* comp : entity->GetComponents())
+	//	{
+	//		comp->Update();
+	//	}
+	//}
 
 	// 默认每帧都更新渲染对象
 	// Renderer::OnSceneResolved(scene->GetAllGameObjectList());

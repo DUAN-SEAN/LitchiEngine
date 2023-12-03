@@ -549,7 +549,10 @@ bool LitchiEditor::EditorActions::DestroyActor(LitchiRuntime::GameObject* p_acto
 	}
 	EDITOR_PANEL(Hierarchy, "Hierarchy").DeleteActorByInstance(p_actor);
 
-	p_actor->GetScene()->RemoveGameObject(p_actor);
+	if(p_actor->GetScene())
+	{
+		p_actor->GetScene()->RemoveGameObject(p_actor);
+	}
 
 	/*p_actor.MarkAsDestroy();*/
 	DEBUG_LOG_INFO("Actor destroyed");

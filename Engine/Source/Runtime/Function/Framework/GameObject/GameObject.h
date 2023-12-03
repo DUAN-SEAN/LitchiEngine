@@ -129,7 +129,7 @@ namespace LitchiRuntime
 		// 将物体分不同的层，用于相机分层、物理碰撞分层等。
 		unsigned char m_layer;
 		// 场景
-		Scene* m_scene;
+		Scene* m_scene = nullptr;
 		// 是否激活
 		bool m_active = true;
 	};

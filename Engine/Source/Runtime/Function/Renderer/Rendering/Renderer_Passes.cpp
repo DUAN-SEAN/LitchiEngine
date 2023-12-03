@@ -199,16 +199,6 @@ namespace LitchiRuntime
 
 	void Renderer::Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
-		// acquire shaderer
-		RHI_Shader* shader_v = GetShader(Renderer_Shader::forward_v).get();
-		RHI_Shader* shader_p = GetShader(Renderer_Shader::forward_p).get();
-
-		if (!shader_v->IsCompiled() || !shader_p->IsCompiled())
-		{
-			DEBUG_LOG_ERROR("Pass_ForwardPass Shader not Compiled !");
-			return;
-		}
-
 		auto camera = rendererPath->GetRenderCamera();
 
 		// acquire entities
@@ -225,19 +215,17 @@ namespace LitchiRuntime
 		// define PipelineState
 		static RHI_PipelineState pso;
 		pso.name = !is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent";
-		pso.shader_vertex = shader_v;
-		pso.shader_pixel = shader_p;
+		//pso.shader_vertex = shader_v;
+		//pso.shader_pixel = shader_p; // 
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
-
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
-
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
-		pso.clear_color[0] = Color::standard_blue; // reverse-z
+		pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 
 		// begin render pass
