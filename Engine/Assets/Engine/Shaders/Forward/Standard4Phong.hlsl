@@ -24,20 +24,12 @@ cbuffer Material : register(b10)
 struct Pixel
 {
     float4 position : SV_POSITION;
+    float3 fragPos: POSITION;
     float2 uv : TEXCOORD;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
 };
 
-struct VertexOut
-{
-    float3 fragPos;
-};
-static VertexOut vertex_out;
-
-
-
-Texture2D u_shadowMap : register(t100);
 Texture2D u_normalMap : register(t101);
 Texture2D u_diffuseMap : register(t102);
 Texture2D u_specularMap : register(t103);
@@ -49,7 +41,7 @@ Pixel mainVS(Vertex_PosUvNorTan input)
     Pixel output;
 
     input.position.w = 1.0f;
-    vertex_out.fragPos = mul(input.position, buffer_pass.transform).xyz;
+    output.fragPos = mul(input.position, buffer_pass.transform).xyz;
     output.position = mul(input.position, buffer_pass.transform);
     output.position = mul(output.position, buffer_frame.view_projection_unjittered);
     output.normal = mul(float4(input.normal, 0), buffer_pass.transform).xyz;
@@ -100,19 +92,30 @@ float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, fl
 
 
 // return shadow ratio
-float ShadowCalculation(float4 fragPosLightSpace)
+float ShadowCalculation(float3 fragWorldPos)
 {
-    // 执行透视除法
-    float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
-    // 变换到[0,1]的范围
-    projCoords = projCoords * 0.5 + 0.5;
+    // todo 只使用0
+
+	// project into light space
+    int shadowIndex = 0;
+    int subIndex = 0;
+    float3 pos_ndc = world_to_ndc(fragWorldPos, light_buffer_data_arr.lightBufferDataArr[shadowIndex].view_projection[subIndex]);
+	float2 pos_uv = ndc_to_uv(pos_ndc);
+    // float2 pos_uv = pos_ndc * 0.5 + 0.5;
+
+    //// 执行透视除法
+    //float3 projCoords = fragPosLightSpace.xyz / fragPosLightSpace.w;
+    //// 变换到[0,1]的范围
+    //projCoords = projCoords * 0.5 + 0.5;
+
     // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
-    float closestDepth = u_shadowMap.Sample(samplers[sampler_point_wrap], projCoords.x).r;
+    float closestDepth = tex_light_directional_depth.SampleLevel(samplers[sampler_point_clamp], float3(pos_uv, subIndex), 0).r;
     // 取得当前片段在光源视角下的深度
-    float currentDepth = projCoords.z;
+    //float currentDepth = projCoords.z;
+    float currentDepth = pos_ndc.z;
     // 检查当前片段是否在阴影中
-    float bias = 0.05;
-    float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+    float bias = 0.00;
+    float shadow = currentDepth - bias < closestDepth ? 1.0 : 0.0;
 
     return shadow;
 }
@@ -122,9 +125,9 @@ float4 mainPS(Pixel input) : SV_Target
 {
     float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
 
-    // todo: float shadow = ShadowCalculation(input.ShadowCoord);
+    float shadow = ShadowCalculation(input.fragPos);
 
-    float3 viewDir = normalize(buffer_frame.camera_position - vertex_out.fragPos);
+    float3 viewDir = normalize(buffer_frame.camera_position - input.fragPos);
     float4 diffuseTexel = u_diffuseMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * materialData.u_diffuse;
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
     float3 normal = normalize(input.normal);
@@ -140,7 +143,15 @@ float4 mainPS(Pixel input) : SV_Target
 
     // float4 color = float4(lightSum, light_buffer_data_arr.lightCount);
     // float4 color = diffuseTexel;
-    float4 color = float4(lightSum, diffuseTexel.a);
-    
+
+    float3 shadowedColor = (1.0f - shadow) * lightSum;
+    float4 color = float4(shadowedColor, diffuseTexel.a);
     return color;
+
+    //float3 pos_ndc = world_to_ndc(input.fragPos, light_buffer_data_arr.lightBufferDataArr[0].view_projection[0]);
+    //float2 pos_uv = ndc_to_uv(pos_ndc);
+    //float closestDepth = tex_light_directional_depth.SampleLevel(samplers[sampler_point_clamp], float3(pos_uv, 0), 0).r;
+    //// return float4(pos_uv, 1.0f, diffuseTexel.a);
+    //return float4(input.fragPos, diffuseTexel.a);
+
 }

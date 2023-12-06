@@ -251,12 +251,19 @@ namespace LitchiRuntime
 				auto mainLight = lightGameObject->GetComponent<Light>();
 				lightArr.push_back(mainLight);
 			}
+
+			// 暂时只支持一个平行光绘制阴影
+			auto mainLightObj = lightEntities[0];
+			auto mainLight = mainLightObj->GetComponent<Light>();
+			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
+
 		}
 		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
 
 		EASY_END_BLOCK
 
 		EASY_BLOCK("Render Entities")
+
 		// 绘制所有的实体
 		for (GameObject* entity : entities)
 		{
@@ -314,6 +321,12 @@ namespace LitchiRuntime
 			EASY_BLOCK("UpdateMaterial")
 			UpdateMaterial(cmd_list, material);
 			EASY_END_BLOCK
+
+
+			// 暂时只支持一个平行光绘制阴影
+			auto mainLightObj = lightEntities[0];
+			auto mainLight = mainLightObj->GetComponent<Light>();
+			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
 
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform

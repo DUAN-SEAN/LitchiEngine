@@ -336,7 +336,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	cubeMeshRenderer->SetMaterial(textMat);
 
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(20, 0, 0));
-	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(160, 0, 0));
+	// CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(160, 0, 0));
 	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
 
 
