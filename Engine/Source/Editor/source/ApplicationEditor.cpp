@@ -325,25 +325,16 @@ void LitchiEditor::ApplicationEditor::Init()
 	//transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
 	//transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
-	auto cube = CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3::One);
-
-	// CreateCube(scene, "Cube02", Vector3(4.0f, 0.0f, 0.0f), Quaternion::Identity, Vector3::One);
-
-	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 6.0f, 0.0f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
-
+	auto cube = CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f));
+	auto cube2 = CreateCube(scene, "Cube01", Vector3(0.0f, 4.5f, -1.0f), Quaternion::Identity, Vector3::One);
 	auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
-
-	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(20, 0, 0));
-	// CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(160, 0, 0));
-	// auto cube= CreateCube(scene, "Cube02", Vector3(0.0f, 0.0f, 4.0f), Quaternion::Identity, Vector3::One);
-
-
-	//Mesh* mesh = new Mesh();
-	//mesh->LoadFromFile(projectAssetsPath+"Engine\\Models\\Cube.fbx");
-	/*mesh = new Mesh();
-	mesh->LoadFromFile(projectAssetsPath + "Engine\\Models\\LadyCat.fbx");*/
+	cubeMeshRenderer = cube2->GetComponent<MeshRenderer>();
+	cubeMeshRenderer->SetMaterial(textMat);
+	
+	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
+	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
 
 	// Setup UI
 	SetupUI();

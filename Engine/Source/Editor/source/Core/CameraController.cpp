@@ -24,9 +24,9 @@ LitchiEditor::CameraController::CameraController
 	m_camera(p_camera)
 {
 	// 设置相机默认的位置和姿态
-	auto cameraPosition = Vector3(10.0f, 5.0f, -10.0f);
+	auto cameraPosition = Vector3(0.0f, 5.0f, -10.0f);
 	
-	auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(-45.0f), Math::Helper::DegreesToRadians(45.0f), 0.0f)));
+	auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
 
 	m_camera->SetFovHorizontalDeg(60.0f);
 	m_camera->SetPosition(cameraPosition);
