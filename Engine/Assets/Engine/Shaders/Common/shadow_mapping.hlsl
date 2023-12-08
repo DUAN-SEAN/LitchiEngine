@@ -9,7 +9,7 @@
     SETTINGS
 ------------------------------------------------------------------------------*/
 // technique
-//#define SampleShadowMap Technique_Vogel
+#define SampleShadowMap Technique_Vogel
 
 // technique - all
 static const uint   g_shadow_samples                 = 3;
@@ -151,23 +151,25 @@ float compute_penumbra(float vogel_angle, float3 uv, float compare)
 ///*------------------------------------------------------------------------------
 //    TECHNIQUE - VOGEL
 //------------------------------------------------------------------------------*/
-//float Technique_Vogel(Surface surface, float3 uv, float compare)
-//{
-//    float shadow          = 0.0f;
-//    float temporal_offset = get_noise_interleaved_gradient(surface.uv * pass_get_resolution_out(), true, false);
-//    float temporal_angle  = temporal_offset * PI2;
-//    float penumbra        = light_is_directional() ? 1.0f : compute_penumbra(temporal_angle, uv, compare);
+float Technique_Vogel(float3 uv, float compare)
+{
+    float shadow = 0.0f;
+    // float temporal_offset = get_noise_interleaved_gradient(surface.uv * pass_get_resolution_out(), true, false);
+    // float temporal_angle = temporal_offset * PI2;
+    float temporal_angle = PI2;
+    float penumbra = light_is_directional() ? 1.0f : compute_penumbra(temporal_angle, uv, compare);
 
-//    // todo: in the case of the point light, the uv is the direction, filtering works ok but I could improved it.
+    // todo: in the case of the point light, the uv is the direction, filtering works ok but I could improved it.
 
-//    for (uint i = 0; i < g_shadow_samples; i++)
-//    {
-//        float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * get_shadow_texel_size() * g_shadow_filter_size * penumbra;
-//        shadow        += shadow_compare_depth(uv + float3(offset, 0.0f), compare);
-//    } 
+    for (uint i = 0; i < g_shadow_samples; i++)
+    {
+        // float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * get_shadow_texel_size() * g_shadow_filter_size * penumbra;
+        // shadow += shadow_compare_depth(uv + float3(0.0f,0.0f, 0.0f), compare);
+        shadow += tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
+    }
 
-//    return shadow * g_shadow_samples_rpc;
-//}
+    return shadow * g_shadow_samples_rpc;
+}
 
 //float3 Technique_Vogel_Color(Surface surface, float3 uv)
 //{
@@ -312,6 +314,28 @@ static const float2 poisson_disk[64] =
 //    // Apply bias
 //    position.z += fixed_factor * slope_factor * light.bias * (bias_mul + 1.0f);
 //}
+/*------------------------------------------------------------------------------
+    BIAS
+------------------------------------------------------------------------------*/
+inline void auto_bias(inout float3 position,float light_n_dot_l = 0.0f,float light_bias = 0.005f ,float bias_mul = 1.0f)
+{
+    //// Receiver plane bias (slope scaled basically)
+    //float3 du                   = ddx(position);
+    //float3 dv                   = ddy(position);
+    //float2 receiver_plane_bias  = mul(transpose(float2x2(du.xy, dv.xy)), float2(du.z, dv.z));
+    
+    //// Static depth biasing to make up for incorrect fractional sampling on the shadow map grid
+    //float sampling_error = min(2.0f * dot(g_shadow_texel_size, abs(receiver_plane_bias)), 0.01f);
+
+    // Scale down as the user is interacting with much bigger, non-fractional values (just a UX approach)
+    float fixed_factor = 0.0001f;
+    
+    // Slope scaling
+    float slope_factor = (1.0f - saturate(light_n_dot_l));
+
+    // Apply bias
+    position.z += fixed_factor * slope_factor * light_bias * (bias_mul + 1.0f);
+}
 
 //inline float3 bias_normal_offset(Surface surface, Light light, float3 normal)
 //{
