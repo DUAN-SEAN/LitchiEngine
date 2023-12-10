@@ -9,6 +9,7 @@
 namespace LitchiRuntime
 {
     struct RHI_Vertex_PosTexNorTan;
+    struct RHI_Vertex_PosTexNorTanBone;
 
    /* namespace Math
     {*/
@@ -28,6 +29,7 @@ namespace LitchiRuntime
 
             // Construct from vertices
             BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
+            BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count);
 
             ~BoundingBox() = default;
 

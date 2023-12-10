@@ -55,6 +55,23 @@ namespace LitchiRuntime
         }
     }
 
+    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count)
+    {
+        m_min = Vector3::Infinity;
+        m_max = Vector3::InfinityNeg;
+
+        for (uint32_t i = 0; i < vertex_count; i++)
+        {
+            m_max.x = Math::Helper::Max(m_max.x, vertices[i].pos[0]);
+            m_max.y = Math::Helper::Max(m_max.y, vertices[i].pos[1]);
+            m_max.z = Math::Helper::Max(m_max.z, vertices[i].pos[2]);
+
+            m_min.x = Math::Helper::Min(m_min.x, vertices[i].pos[0]);
+            m_min.y = Math::Helper::Min(m_min.y, vertices[i].pos[1]);
+            m_min.z = Math::Helper::Min(m_min.z, vertices[i].pos[2]);
+        }
+    }
+
     Intersection BoundingBox::IsInside(const Vector3& point) const
     {
         if (point.x < m_min.x || point.x > m_max.x ||

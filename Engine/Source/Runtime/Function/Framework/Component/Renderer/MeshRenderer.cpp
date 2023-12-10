@@ -186,7 +186,7 @@ namespace LitchiRuntime
 		//SetMaterial(material);
 		//m_material_default = true;
 
-		m_material = new Material();
+		m_material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 
 		m_material_default = true;
 	}

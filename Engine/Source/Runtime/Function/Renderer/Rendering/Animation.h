@@ -41,6 +41,49 @@ namespace LitchiRuntime
         std::vector<KeyVector> scaleFrames;
     };
 
+    struct VectorKey {
+        float timePos;
+        LitchiRuntime::Vector3 value;
+    };
+
+    struct QuatKey {
+        float timePos;
+        LitchiRuntime::Quaternion value;
+    };
+
+    class BoneAnimation {
+    public:
+        float GetStartTime()const;
+        float GetEndTime()const;
+        void Interpolate(float t, LitchiRuntime::Matrix& M);
+
+        std::vector<VectorKey> translation;
+        std::vector<VectorKey> scale;
+        std::vector<QuatKey> rotationQuat;
+
+        LitchiRuntime::Matrix defaultTransform;
+
+    private:
+        LitchiRuntime::Vector3 LerpKeys(float t, const std::vector<VectorKey>& keys);
+        LitchiRuntime::Quaternion LerpKeys(float t, const std::vector<QuatKey>& keys);
+    };
+
+    class AnimationClip {
+    public:
+        float GetClipStartTime()const;
+        float GetClipEndTime()const;
+        void Interpolate(float t, std::vector<LitchiRuntime::Matrix>& boneTransform);
+
+        std::vector<BoneAnimation> boneAnimations;
+    };
+
+    struct BoneInfo {
+        bool isSkinned = false;
+        Matrix boneOffset;// 骨骼空间到模型空间的转变矩阵 逆Bind Pose矩阵
+        Matrix defaultOffset;// 到父骨骼的变换矩阵
+        int parentIndex;
+    };
+
     class SP_CLASS Animation : public IResource
     {
     public:

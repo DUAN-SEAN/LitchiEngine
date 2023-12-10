@@ -1,6 +1,7 @@
 
 #include "Runtime/Core/Time/time.h"
 #include "animator.h"
+#include "Runtime/Function/Renderer/Rendering/Animation.h"
 
 using namespace LitchiRuntime;
 

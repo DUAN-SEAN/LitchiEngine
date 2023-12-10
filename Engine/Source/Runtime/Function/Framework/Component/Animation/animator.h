@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Renderer/Rendering/Animation.h"
 #include "Runtime/Function/Renderer/Resources/SkinnedData.h"
 
 

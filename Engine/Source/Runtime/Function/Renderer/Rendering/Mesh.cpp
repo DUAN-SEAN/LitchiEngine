@@ -39,8 +39,16 @@ namespace LitchiRuntime
         m_indices.clear();
         m_indices.shrink_to_fit();
 
-        m_vertices.clear();
-        m_vertices.shrink_to_fit();
+        if(m_model_is_animation)
+        {
+            m_verticesWithBone.clear();
+            m_verticesWithBone.shrink_to_fit();
+        }
+        else
+        {
+            m_vertices.clear();
+            m_vertices.shrink_to_fit();
+        }
     }
 
     bool Mesh::LoadFromFile(const string& file_path)
@@ -117,8 +125,15 @@ namespace LitchiRuntime
     {
         uint32_t size = 0;
         size += uint32_t(m_indices.size()  * sizeof(uint32_t));
-        size += uint32_t(m_vertices.size() * sizeof(RHI_Vertex_PosTexNorTan));
 
+        if(m_model_is_animation)
+        {
+            size += uint32_t(m_verticesWithBone.size() * sizeof(RHI_Vertex_PosTexNorTanBone));
+        }else
+        {
+            size += uint32_t(m_vertices.size() * sizeof(RHI_Vertex_PosTexNorTan));
+        }
+        
         return size;
     }
 
@@ -145,6 +160,29 @@ namespace LitchiRuntime
         }
     }
 
+	void Mesh::GetGeometry(uint32_t index_offset, uint32_t index_count, uint32_t vertex_offset, uint32_t vertex_count, vector<uint32_t>* indices, vector<RHI_Vertex_PosTexNorTanBone>* vertices)
+    {
+        SP_ASSERT_MSG(indices != nullptr || vertices != nullptr, "Indices and vertices vectors can't both be null");
+
+        if (indices)
+        {
+            SP_ASSERT_MSG(index_count != 0, "Index count can't be 0");
+
+            const auto index_first = m_indices.begin() + index_offset;
+            const auto index_last = m_indices.begin() + index_offset + index_count;
+            *indices = vector<uint32_t>(index_first, index_last);
+        }
+
+        if (vertices)
+        {
+            SP_ASSERT_MSG(vertex_count != 0, "Index count can't be 0");
+
+            const auto vertex_first = m_verticesWithBone.begin() + vertex_offset;
+            const auto vertex_last = m_verticesWithBone.begin() + vertex_offset + vertex_count;
+            *vertices = vector<RHI_Vertex_PosTexNorTanBone>(vertex_first, vertex_last);
+        }
+    }
+
     void Mesh::AddVertices(const vector<RHI_Vertex_PosTexNorTan>& vertices, uint32_t* vertex_offset_out /*= nullptr*/)
     {
         lock_guard lock(m_mutex_vertices);
@@ -155,6 +193,18 @@ namespace LitchiRuntime
         }
 
         m_vertices.insert(m_vertices.end(), vertices.begin(), vertices.end());
+    }
+
+    void Mesh::AddVertices(const std::vector<RHI_Vertex_PosTexNorTanBone>& vertices, uint32_t* vertex_offset_out /*= nullptr*/)
+    {
+        lock_guard lock(m_mutex_vertices);
+
+        if (vertex_offset_out)
+        {
+            *vertex_offset_out = static_cast<uint32_t>(m_verticesWithBone.size());
+        }
+
+        m_verticesWithBone.insert(m_verticesWithBone.end(), vertices.begin(), vertices.end());
     }
 
     void Mesh::AddIndices(const vector<uint32_t>& indices, uint32_t* index_offset_out /*= nullptr*/)
@@ -171,7 +221,13 @@ namespace LitchiRuntime
 
     uint32_t Mesh::GetVertexCount() const
     {
-        return static_cast<uint32_t>(m_vertices.size());
+        if(m_model_is_animation)
+        {
+            return static_cast<uint32_t>(m_verticesWithBone.size());
+        }else
+        {
+            return static_cast<uint32_t>(m_vertices.size());
+        }
     }
 
     uint32_t Mesh::GetIndexCount() const
@@ -181,9 +237,15 @@ namespace LitchiRuntime
 
     void Mesh::ComputeAabb()
     {
-        SP_ASSERT_MSG(m_vertices.size() != 0, "There are no vertices");
-
-        m_aabb = BoundingBox(m_vertices.data(), static_cast<uint32_t>(m_vertices.size()));
+        if (m_model_is_animation)
+        {
+            SP_ASSERT_MSG(m_verticesWithBone.size() != 0, "There are no vertices");
+            m_aabb = BoundingBox(m_verticesWithBone.data(), static_cast<uint32_t>(m_verticesWithBone.size()));
+        }else
+        {
+            SP_ASSERT_MSG(m_vertices.size() != 0, "There are no vertices");
+            m_aabb = BoundingBox(m_vertices.data(), static_cast<uint32_t>(m_vertices.size()));
+        }
     }
 
     uint32_t Mesh::GetDefaultFlags()
@@ -246,9 +308,17 @@ namespace LitchiRuntime
         m_index_buffer = make_shared<RHI_IndexBuffer>(false, (string("mesh_index_buffer_") + m_object_name).c_str());
         m_index_buffer->Create(m_indices);
 
-        SP_ASSERT_MSG(!m_vertices.empty(), "There are no vertices");
-        m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
-        m_vertex_buffer->Create(m_vertices);
+        if(m_model_is_animation)
+        {
+            SP_ASSERT_MSG(!m_verticesWithBone.empty(), "There are no vertices");
+            m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
+            m_vertex_buffer->Create(m_verticesWithBone);
+        }else
+        {
+            SP_ASSERT_MSG(!m_vertices.empty(), "There are no vertices");
+            m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
+            m_vertex_buffer->Create(m_vertices);
+        }
     }
 
     void Mesh::AddMaterial(Material* material, GameObject* entity) const
