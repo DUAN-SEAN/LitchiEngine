@@ -46,9 +46,9 @@ namespace LitchiRuntime
 
 	void Component::PostResourceLoaded()
 	{
-		const auto typeName = get_type().get_name().to_string();
+	/*	const auto typeName = get_type().get_name().to_string();
 		const auto gameObjectUnmanagedId = m_gameObject->GetUnmanagedId();
-		m_unmanagedId = ScriptEngine::CreateComponent(gameObjectUnmanagedId, typeName);
+		m_unmanagedId = ScriptEngine::CreateComponent(gameObjectUnmanagedId, typeName);*/
 	}
 
 	void Component::PostResourceModify()

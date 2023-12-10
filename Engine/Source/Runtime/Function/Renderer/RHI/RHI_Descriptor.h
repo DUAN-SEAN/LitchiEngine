@@ -87,7 +87,7 @@ namespace LitchiRuntime
         // global var 
         bool isMaterial;
         // only in material shader
-        std::vector<ShaderUniform>* uniformList;
+        std::vector<ShaderUniform>* uniformList = nullptr;
 
     private:
         uint64_t m_hash = 0;

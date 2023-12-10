@@ -852,12 +852,7 @@ namespace LitchiRuntime
 
 			if (!mesh->GetBones()[boneIndex].isSkinned) {
 				aiMatrix4x4 offsetMatrix = assimp_mesh->mBones[i]->mOffsetMatrix;
-				mesh->GetBones()[boneIndex].boneOffset = {
-					offsetMatrix.a1, offsetMatrix.b1, offsetMatrix.c1, offsetMatrix.d1,
-					offsetMatrix.a2, offsetMatrix.b2, offsetMatrix.c2, offsetMatrix.d2,
-					offsetMatrix.a3, offsetMatrix.b3, offsetMatrix.c3, offsetMatrix.d3,
-					offsetMatrix.a4, offsetMatrix.b4, offsetMatrix.c4, offsetMatrix.d4
-				};
+				mesh->GetBones()[boneIndex].boneOffset = convert_matrix(offsetMatrix);
 				mesh->GetBones()[boneIndex].isSkinned = true;
 			}
 

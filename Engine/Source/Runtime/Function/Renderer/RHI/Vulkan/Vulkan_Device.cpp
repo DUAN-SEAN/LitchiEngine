@@ -420,7 +420,7 @@ namespace LitchiRuntime
 			SP_ASSERT(pipeline_state.IsValid());
 
 			EASY_BLOCK("Build Descriptors")
-				descriptors.clear();
+			// descriptors.clear();
 			bool isNeedSort = false;
 			if (pipeline_state.IsCompute())
 			{
