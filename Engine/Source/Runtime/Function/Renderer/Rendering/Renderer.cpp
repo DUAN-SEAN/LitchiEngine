@@ -708,8 +708,8 @@ namespace LitchiRuntime
 		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
 		EASY_END_BLOCK
 
-			EASY_BLOCK("SetTextures")
-			auto textureMap = material->GetTextures4DescriptorSet();
+		EASY_BLOCK("SetTextures")
+		auto textureMap = material->GetTextures4DescriptorSet();
 		for (auto texture_map : textureMap)
 		{
 			cmd_list->SetTexture(texture_map.first, texture_map.second);

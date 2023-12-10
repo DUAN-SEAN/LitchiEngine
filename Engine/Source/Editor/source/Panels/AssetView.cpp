@@ -21,7 +21,6 @@ LitchiEditor::AssetView::AssetView
 ) : AViewControllable(p_title, p_opened, p_windowSettings, rendererPath)
 {
 	m_camera->SetClearColor({ 0.098f, 0.098f, 0.098f });
-	m_camera->SetFarPlane(5000.0f);
 
 	// m_resource = static_cast<ViewableResource*>(nullptr);
 	m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)

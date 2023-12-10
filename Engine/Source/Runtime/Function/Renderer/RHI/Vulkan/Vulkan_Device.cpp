@@ -429,36 +429,45 @@ namespace LitchiRuntime
 			}
 			else if (pipeline_state.IsGraphics())
 			{
-				SP_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-				descriptors = pipeline_state.shader_vertex->GetDescriptors();
-
-				// If there is a pixel shader, merge it's resources into our map as well
-				if (pipeline_state.shader_pixel)
+				if(pipeline_state.material_shader)
 				{
-					SP_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
+				}else
+				{
+					SP_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					descriptors = pipeline_state.shader_vertex->GetDescriptors();
 
-					for (const RHI_Descriptor& descriptor_pixel : pipeline_state.shader_pixel->GetDescriptors())
+					// If there is a pixel shader, merge it's resources into our map as well
+					if (pipeline_state.shader_pixel)
 					{
-						// Assume that the descriptor has been created in the vertex shader and only try to update it's shader stage
-						bool updated_existing = false;
-						for (RHI_Descriptor& descriptor_vertex : descriptors)
+						SP_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+
+						for (const RHI_Descriptor& descriptor_pixel : pipeline_state.shader_pixel->GetDescriptors())
 						{
-							if (descriptor_vertex.slot == descriptor_pixel.slot)
+							// Assume that the descriptor has been created in the vertex shader and only try to update it's shader stage
+							bool updated_existing = false;
+							for (RHI_Descriptor& descriptor_vertex : descriptors)
 							{
-								descriptor_vertex.stage |= descriptor_pixel.stage;
-								updated_existing = true;
-								break;
+								if (descriptor_vertex.slot == descriptor_pixel.slot)
+								{
+									descriptor_vertex.stage |= descriptor_pixel.stage;
+									updated_existing = true;
+									break;
+								}
+							}
+
+							// If no updating took place, this a pixel shader only resource, add it
+							if (!updated_existing)
+							{
+								isNeedSort = true;
+								descriptors.emplace_back(descriptor_pixel);
 							}
 						}
-
-						// If no updating took place, this a pixel shader only resource, add it
-						if (!updated_existing)
-						{
-							isNeedSort = true;
-							descriptors.emplace_back(descriptor_pixel);
-						}
 					}
+					
 				}
+
+			
 			}
 			EASY_END_BLOCK
 

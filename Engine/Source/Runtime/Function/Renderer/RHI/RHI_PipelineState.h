@@ -4,6 +4,9 @@
 //= INCLUDES ===============
 #include "RHI_Definitions.h"
 #include <array>
+
+#include "Runtime/Function/Renderer/Rendering/MaterialShader.h"
+#include "spdlog/fmt/bundled/chrono.h"
 //==========================
 
 namespace LitchiRuntime
@@ -24,6 +27,7 @@ namespace LitchiRuntime
         bool IsCompute()      const { return shader_compute != nullptr && !IsGraphics(); }
         
         //= STATIC - Can cause PSO generation ================================================
+        MaterialShader* material_shader = nullptr;
         RHI_Shader* shader_vertex                     = nullptr;
         RHI_Shader* shader_pixel                      = nullptr;
         RHI_Shader* shader_compute                    = nullptr;

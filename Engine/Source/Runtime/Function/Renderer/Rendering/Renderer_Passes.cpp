@@ -300,6 +300,7 @@ namespace LitchiRuntime
 			EASY_BLOCK("SetPipelineState")
 			pso.shader_vertex = material->GetVertexShader();
 			pso.shader_pixel = material->GetPixelShader();
+			pso.material_shader = material->GetShader();
 			cmd_list->SetPipelineState(pso);
 			EASY_END_BLOCK
 

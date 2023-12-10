@@ -21,10 +21,10 @@ namespace LitchiRuntime
 {
 	namespace
 	{
-		vector<ShaderUniform> spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler, const SPIRType parentType)
+		vector<ShaderUniform>* spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler, const SPIRType parentType)
 		{
-			vector<ShaderUniform> uniformList;
-			uniformList.resize(0);
+			vector<ShaderUniform>* uniformList = new vector<ShaderUniform>();
+			uniformList->resize(0);
 			unsigned member_count = parentType.member_types.size();
 
 			for (unsigned i = 0; i < member_count; i++)
@@ -130,7 +130,7 @@ namespace LitchiRuntime
 					uniformInfo.memberUniform = spirv_constantBuffer_struct_uniformList(compiler, member_type);
 				}
 
-				uniformList.push_back(uniformInfo);
+				uniformList->push_back(uniformInfo);
 				//if (!member_type.array.empty())
 				//{
 				//    // Get array stride, e.g. float4 foo[]; Will have array stride of 16 bytes.
@@ -180,7 +180,7 @@ namespace LitchiRuntime
 				auto name = compiler.get_name(resource.id);
 
 				SPIRType type = compiler.get_type(resource.type_id);
-				vector<ShaderUniform> uniformList;
+				vector<ShaderUniform>* uniformList;
 				// check is material
 				bool isMaterial = CheckIsMaterialDescriptor(compiler, resource);
 				if (isMaterial && type.basetype == SPIRType::Struct)

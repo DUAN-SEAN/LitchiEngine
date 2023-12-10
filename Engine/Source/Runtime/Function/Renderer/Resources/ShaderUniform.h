@@ -17,6 +17,6 @@ namespace LitchiRuntime
 		std::string		name;
 		uint32_t		location;
 		int size;
-		std::vector<ShaderUniform> memberUniform;
+		std::vector<ShaderUniform>* memberUniform;
 	};
 }

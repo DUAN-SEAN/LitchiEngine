@@ -66,7 +66,7 @@ namespace LitchiRuntime
 			}
 			m_materialRes->uniformInfoList.clear();
 
-			for (auto& [name, value] : m_uniformsData)
+			for (auto& [name, value] : m_uniformDataList)
 			{
 				auto shaderUniform = m_shader->GetGlobalUniformInfo(name);
 
@@ -187,9 +187,9 @@ namespace LitchiRuntime
 
 	void Material::SetTexture(const std::string& name, RHI_Texture* texture)
 	{
-		if (m_uniformsData.find(name) != m_uniformsData.end())
+		if (m_uniformDataList.find(name) != m_uniformDataList.end())
 		{
-			m_uniformsData[name] = std::make_any<RHI_Texture*>(texture);
+			m_uniformDataList[name] = std::make_any<RHI_Texture*>(texture);
 		}
 	}
 
@@ -214,11 +214,16 @@ namespace LitchiRuntime
 
 	void* Material::GetValues4DescriptorSet(uint32_t& size)
 	{
-		for (auto& uniform : m_uniformsData)
+		if(m_isValueDirty)
 		{
-			UpdateValue(uniform.first);
+			// todo: 每帧只用更新一次
+			EASY_FUNCTION(profiler::colors::Brown200)
+			for (auto& uniform : m_uniformDataList)
+			{
+				UpdateValue(uniform.first);
+			}
+			m_isValueDirty = false;
 		}
-
 		size = m_valueSize;
 
 		return m_value;
@@ -227,7 +232,7 @@ namespace LitchiRuntime
 	std::map<int, RHI_Texture*> Material::GetTextures4DescriptorSet()
 	{
 		std::map<int, RHI_Texture*> textureMap;
-		for (auto& uniform : m_uniformsData)
+		for (auto& uniform : m_uniformDataList)
 		{
 			auto name = uniform.first;
 			auto& descriptor = m_shader->GetTextureDescriptor(name);
@@ -263,24 +268,24 @@ namespace LitchiRuntime
 		}
 
 		// fill uniformDatas by shader
-		m_uniformsData.clear();
+		m_uniformDataList.clear();
 		auto uniformInfoList = m_materialRes->uniformInfoList;
-		auto shaderUniformList = m_shader->GetGlobalShaderUniformList();
-		auto textureDescriptorList = m_shader->GetTextureDescriptorList();
-		for (const ShaderUniform& element : shaderUniformList)
+		auto& shaderUniformDict = m_shader->GetGlobalShaderUniformDict();
+		auto textureDescriptorDict = m_shader->GetTextureDescriptorDict();
+		for (const auto& element : shaderUniformDict)
 		{
-			m_uniformsData.emplace(element.name, std::any());
+			m_uniformDataList.emplace(element.first, std::any());
 		}
-		for (const auto& element : textureDescriptorList)
+		for (const auto& element : textureDescriptorDict)
 		{
-			m_uniformsData.emplace(element.name, std::any());
+			m_uniformDataList.emplace(element.first, std::any());
 		}
 
 		// load value and texuture from material
 		for (auto uniformInfo : uniformInfoList)
 		{
-			auto& uniformData = m_uniformsData.find(uniformInfo->name);
-			if (uniformData == m_uniformsData.end())
+			auto& uniformData = m_uniformDataList.find(uniformInfo->name);
+			if (uniformData == m_uniformDataList.end())
 			{
 				DEBUG_LOG_ERROR("Material::PostResourceLoaded Not Found Uniform uniformName:{}", uniformInfo->name);
 				continue;
@@ -347,9 +352,15 @@ namespace LitchiRuntime
 		m_valueConstantBuffer->ResetOffset();
 		m_valueConstantBuffer->Update(value);
 	}
+
+	void Material::Tick()
+	{
+		m_isValueDirty = true;
+	}
 	
 	void Material::UpdateValue(const std::string& name)
 	{
+		EASY_FUNCTION(profiler::colors::Brown200)
 		// malloc value 
 		if (m_value == nullptr)
 		{
@@ -362,12 +373,12 @@ namespace LitchiRuntime
 		}
 
 		// check name is valid 
-		if (m_uniformsData.find(name) == m_uniformsData.end())
+		if (m_uniformDataList.find(name) == m_uniformDataList.end())
 		{
 			return;
 		}
 
-		const auto& value = m_uniformsData[name];
+		const auto& value = m_uniformDataList[name];
 		if (!value.has_value())
 		{
 			return;

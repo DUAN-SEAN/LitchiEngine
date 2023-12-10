@@ -1,4 +1,4 @@
-
+ 
 #pragma once
 
 //= INCLUDES ===============
@@ -36,7 +36,7 @@ namespace LitchiRuntime
             const uint32_t stage,
             const uint32_t struct_size,
             const uint32_t isMaterial,
-            const std::vector<ShaderUniform> uniformList
+            std::vector<ShaderUniform>* uniformList
         )
         {
             this->type         = type;
@@ -87,7 +87,7 @@ namespace LitchiRuntime
         // global var 
         bool isMaterial;
         // only in material shader
-        std::vector<ShaderUniform> uniformList;
+        std::vector<ShaderUniform>* uniformList;
 
     private:
         uint64_t m_hash = 0;

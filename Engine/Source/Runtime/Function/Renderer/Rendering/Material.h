@@ -200,7 +200,7 @@ namespace LitchiRuntime
 		RHI_Shader* GetPixelShader() { return m_shader->m_pixel_shader; }
 		void SetShader(MaterialShader* shader);
 		MaterialShader* GetShader() { return m_shader; }
-		std::map<std::string, std::any>& GetUniformsData() { return m_uniformsData; }
+		std::map<std::string, std::any>& GetUniformsData() { return m_uniformDataList; }
 
 		void* GetValues4DescriptorSet(uint32_t& size);
 		std::shared_ptr<RHI_ConstantBuffer> GetValuesCBuffer() { return m_valueConstantBuffer; }
@@ -208,6 +208,8 @@ namespace LitchiRuntime
 
 		void PostResourceModify() override;
 		void PostResourceLoaded() override;
+
+		void Tick();
 
 	private:
 
@@ -220,11 +222,13 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_ConstantBuffer> m_valueConstantBuffer;
 
 		/* material resource */
-		std::map<std::string, std::any> m_uniformsData;
+		std::map<std::string, std::any> m_uniformDataList;
 
 		/* global cbuffer */
 		void* m_value = nullptr;
 		int m_valueSize = 0;
+
+		bool m_isValueDirty = true;
 
 	private:
 
@@ -236,9 +240,9 @@ namespace LitchiRuntime
 	template<typename T>
 	inline void Material::SetValue(const std::string& name, const T& value)
 	{
-		if (m_uniformsData.find(name) != m_uniformsData.end())
+		if (m_uniformDataList.find(name) != m_uniformDataList.end())
 		{
-			m_uniformsData[name] = std::any(value);
+			m_uniformDataList[name] = std::any(value);
 			UpdateValue(name);
 		}
 	}
@@ -246,10 +250,10 @@ namespace LitchiRuntime
 	template<typename T>
 	inline const T& Material::GetValue(const std::string p_key)
 	{
-		if (m_uniformsData.find(p_key) != m_uniformsData.end())
+		if (m_uniformDataList.find(p_key) != m_uniformDataList.end())
 			return T();
 		else
-			return std::any_cast<T>(m_uniformsData.at(p_key));
+			return std::any_cast<T>(m_uniformDataList.at(p_key));
 	}
 
 	/*

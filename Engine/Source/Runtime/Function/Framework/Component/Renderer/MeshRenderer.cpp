@@ -58,6 +58,14 @@ namespace LitchiRuntime
 
 	//}
 
+	void MeshRenderer::Update()
+	{
+		if (m_material != nullptr)
+		{
+			m_material->Tick();
+		}
+	}
+
 	void MeshRenderer::RenderShadowMap()
 	{
 		//// 通过MeshFilter获取当前的Mesh
@@ -100,7 +108,7 @@ namespace LitchiRuntime
 
 		// todo
 
-		if(materialPath.empty())
+		if (materialPath.empty())
 		{
 			return;
 		}
