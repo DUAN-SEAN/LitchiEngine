@@ -160,8 +160,8 @@ namespace LitchiRuntime
 
 	void Scene::PostResourceLoaded()
 	{
-		// 创建非托管对象
-		m_unmanagedId = ScriptEngine::CreateScene();
+		//// 创建非托管对象
+		//m_unmanagedId = ScriptEngine::CreateScene();
 
 		for (auto go : m_gameObjectList)
 		{

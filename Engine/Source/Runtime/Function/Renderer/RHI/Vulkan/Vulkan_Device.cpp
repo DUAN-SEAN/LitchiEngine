@@ -1232,7 +1232,7 @@ namespace LitchiRuntime
 
 	bool RHI_Device::DeletionQueueNeedsToParse()
 	{
-		return deletion_queue.size() > 5;
+		return deletion_queue.size() > 0;
 	}
 
 	// descriptors

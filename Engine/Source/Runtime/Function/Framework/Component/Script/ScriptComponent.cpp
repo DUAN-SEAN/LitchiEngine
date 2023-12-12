@@ -9,18 +9,18 @@ namespace LitchiRuntime
 
 	void LitchiRuntime::ScriptComponent::PostResourceLoaded()
 	{
-		// 通知ScriptEngine 创建托管脚本
-		auto& className = m_className;
+		//// 通知ScriptEngine 创建托管脚本
+		//auto& className = m_className;
 
-		// 通过class名创建脚本组件
-		uint64_t unmanagedId = ScriptEngine::CreateScriptComponent(GetGameObject()->GetUnmanagedId(),className);
-		if(unmanagedId == 0)
-		{
-			DEBUG_LOG_ERROR("CreateScriptComponent Fail className:{}", className);
-		}else
-		{
-			m_unmanagedId = unmanagedId;
-		}
+		//// 通过class名创建脚本组件
+		//uint64_t unmanagedId = ScriptEngine::CreateScriptComponent(GetGameObject()->GetUnmanagedId(),className);
+		//if(unmanagedId == 0)
+		//{
+		//	DEBUG_LOG_ERROR("CreateScriptComponent Fail className:{}", className);
+		//}else
+		//{
+		//	m_unmanagedId = unmanagedId;
+		//}
 
 	}
 
@@ -37,10 +37,10 @@ namespace LitchiRuntime
 
 	void LitchiRuntime::ScriptComponent::Update()
 	{
-		// 通知脚本引擎 执行回调Update
-		auto& unmanagedId = m_unmanagedId;
+		//// 通知脚本引擎 执行回调Update
+		//auto& unmanagedId = m_unmanagedId;
 
-		float deltaTime = Time::delta_time();
-		ScriptEngine::InvokeMethod(unmanagedId, "OnUpdate",&deltaTime);
+		//float deltaTime = Time::delta_time();
+		//ScriptEngine::InvokeMethod(unmanagedId, "OnUpdate",&deltaTime);
 	}
 }

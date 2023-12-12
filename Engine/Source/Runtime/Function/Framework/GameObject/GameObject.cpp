@@ -69,8 +69,8 @@ namespace LitchiRuntime
 	}
 	void GameObject::PostResourceLoaded()
 	{
-		// 创建非托管对象
-		m_unmanagedId = ScriptEngine::CreateGameObject(m_scene->GetUnmanagedId());
+		//// 创建非托管对象
+		//m_unmanagedId = ScriptEngine::CreateGameObject(m_scene->GetUnmanagedId());
 
 		// 重置parent
 		SetParent(nullptr);

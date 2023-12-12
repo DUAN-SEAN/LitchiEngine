@@ -101,7 +101,7 @@ namespace LitchiRuntime
 		//初始化物理引擎
 		Physics::Init();
 
-		ScriptEngine::Init(m_projectPath);
+		// ScriptEngine::Init(m_projectPath);
 
 		// 初始化ResourceManager
 		//modelManager = std::make_unique<ModelManager>();
