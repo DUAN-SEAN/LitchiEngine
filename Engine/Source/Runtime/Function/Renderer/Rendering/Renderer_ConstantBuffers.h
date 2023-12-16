@@ -175,6 +175,15 @@ namespace LitchiRuntime
 		}
 	};
 
+	const static int MaxBoneCount = 250;
+
+	struct Cb_Bone_Arr
+	{
+		int boneCount;
+		int padding[3];
+		Matrix boneArr[MaxBoneCount];
+	};
+
 	// 128 byte push constant buffer - updates per pass/draw
 	struct Pcb_Pass
 	{

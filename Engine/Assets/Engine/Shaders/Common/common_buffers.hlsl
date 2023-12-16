@@ -77,10 +77,19 @@ struct LightBufferDataArr
     LightBufferData lightBufferDataArr[MaxLight];
 };
 
+const static int MaxBone = 250;
+struct BoneDataArr
+{
+    int boneCount;
+    int3 padding;
+    matrix boneTransformArr[MaxBone];
+};
+
 cbuffer BufferFrame    : register(b0) { FrameBufferData buffer_frame;       }; // low frequency    - updates once per frame
 cbuffer BufferLight    : register(b1) { LightBufferData buffer_light;       }; // medium frequency - updates per light
 cbuffer BufferMaterial : register(b2) { MaterialBufferData buffer_material; }; // medium frequency - updates per material during the g-buffer pass
 cbuffer BufferLightArr : register(b3) { LightBufferDataArr light_buffer_data_arr; }
+cbuffer BoneDataArr : register(b4) {BoneDataArr bone_data_arr;}
 
 struct PassBufferData
 {

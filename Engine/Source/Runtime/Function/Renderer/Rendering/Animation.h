@@ -80,7 +80,7 @@ namespace LitchiRuntime
     struct BoneInfo {
         bool isSkinned = false;
         Matrix boneOffset;// 骨骼空间到模型空间的转变矩阵 逆Bind Pose矩阵
-        Matrix defaultOffset;// 到父骨骼的变换矩阵
+        Matrix defaultOffset;// 默认 到父骨骼的变换矩阵
         int parentIndex;
     };
 

@@ -35,6 +35,16 @@ struct Vertex_PosUvNorTan
     #endif
 };
 
+struct Vertex_PosUvNorTanBone
+{
+    float4 position : POSITION0;
+    float2 uv : TEXCOORD0;
+    float3 normal : NORMAL0;
+    float3 tangent : TANGENT0;
+    float4 boneIndices : BLENDINDEX;
+    float3 boneWeights : BLENDWEIGHT;
+};
+
 // Pixel
 struct Pixel_Pos
 {

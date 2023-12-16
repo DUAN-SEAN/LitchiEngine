@@ -6,7 +6,7 @@
 
 namespace LitchiRuntime
 {
-	class SkinnedMeshRenderer :public MeshRenderer
+	class SkinnedMeshRenderer : public MeshRenderer
 	{
 	public:
 
@@ -14,14 +14,6 @@ namespace LitchiRuntime
 		~SkinnedMeshRenderer();
 
 		void Update() override;
-		/*void Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO) override;
-		void RenderShadowMap() override;*/
-
-		std::vector<Matrix>& GetCurrentFinalTransformCacheArr()
-		{
-			return m_finalTransformCacheArr;
-		}
-
 	public:
 
 		RTTR_ENABLE(MeshRenderer)
@@ -36,12 +28,14 @@ namespace LitchiRuntime
 		* \param boneOffsets T-Pose 矩阵, 用于将顶点转换到骨骼空间
 		* \param finalTransforms 输出顶点的最终变换矩阵
 		*/
-		void CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets, std::vector<Matrix>& finalTransforms);
+		void CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets);
 
-		/**
-		 * \brief 缓存当前帧骨骼的最终变换 (顶点*final = final Pos in Model Space)
-		 */
-		std::vector<Matrix> m_finalTransformCacheArr;
+		void CreateBoneBuffer();
+
+		bool m_isDirty = true;
+
+		Cb_Bone_Arr m_bone_arr;
+		std::shared_ptr<RHI_ConstantBuffer> m_bone_constant_buffer;
 	};
 
 }

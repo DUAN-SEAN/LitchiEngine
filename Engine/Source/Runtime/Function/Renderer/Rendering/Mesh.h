@@ -98,6 +98,25 @@ namespace LitchiRuntime
         std::unordered_map<std::string, uint32_t>& GetBoneMap() { return m_boneMap; }
         std::unordered_map<std::string, AnimationClip>& GetAnimationClipMap() { return m_animationClipMap; }
 
+    	void GetBoneMapping(std::unordered_map<std::string, uint32_t>& boneMapping) {
+            boneMapping = this->m_boneMap;
+        }
+        void GetBoneOffsets(std::vector<Matrix>& boneOffsets) {
+            for (size_t i = 0; i < m_boneInfoArr.size(); i++)
+                boneOffsets.push_back(m_boneInfoArr[i].boneOffset);
+        }
+        void GetNodeOffsets(std::vector<Matrix>& nodeOffsets) {
+            for (size_t i = 0; i < m_boneInfoArr.size(); i++)
+                nodeOffsets.push_back(m_boneInfoArr[i].defaultOffset);
+        }
+        void GetBoneHierarchy(std::vector<int>& boneHierarchy) {
+            for (size_t i = 0; i < m_boneInfoArr.size(); i++)
+                boneHierarchy.push_back(m_boneInfoArr[i].parentIndex);
+        }
+        void GetAnimations(std::unordered_map<std::string, AnimationClip>& animations) {
+            animations.insert(this->m_animationClipMap.begin(), this->m_animationClipMap.end());
+        }
+
     private:
 
         bool m_model_is_animation = false;

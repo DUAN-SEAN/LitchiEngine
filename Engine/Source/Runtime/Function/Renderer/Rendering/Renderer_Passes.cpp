@@ -323,6 +323,9 @@ namespace LitchiRuntime
 			UpdateMaterial(cmd_list, material);
 			EASY_END_BLOCK
 
+			// 如果是skinnedMesh 更新蒙皮数据
+
+
 
 			// 暂时只支持一个平行光绘制阴影
 			auto mainLightObj = lightEntities[0];

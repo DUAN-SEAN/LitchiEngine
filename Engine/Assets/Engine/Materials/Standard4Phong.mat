@@ -1,5 +1,5 @@
 {
-  "shaderPath": "Engine/Shaders/Forward/Standard4Phong.hlsl",
+  "shaderPath": "Engine/Shaders/Forward/Standard.hlsl",
   "uniformInfoList": [
     {
       "Type": "UniformInfoTexture",

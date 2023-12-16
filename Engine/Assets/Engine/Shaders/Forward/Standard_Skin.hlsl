@@ -3,9 +3,6 @@
 #include "../Common/common_light.hlsl"
 //====================
 
-// texture must > 100
-// material must equal b10
-
 struct MaterialData
 {
 	// Global Var
@@ -39,16 +36,27 @@ Texture2D u_specularMap : register(t103);
 Texture2D u_heightMap : register(t104);
 Texture2D u_maskMap : register(t105);
 
-Pixel mainVS(Vertex_PosUvNorTan input)
+Pixel mainVS(Vertex_PosUvNorTanBone input)
 {
     Pixel output;
 
+    float4 weights = float4(input.boneWeights.x, input.boneWeights.y, input.boneWeights.z,
+    1.0f - input.boneWeights.x - input.boneWeights.y - input.boneWeights.z);
+    matrix boneTransform = bone_data_arr.boneTransformArr[input.boneIndices[0]] * weights[0];
+    boneTransform += bone_data_arr.boneTransformArr[input.boneIndices[1]] * weights[1];
+    boneTransform += bone_data_arr.boneTransformArr[input.boneIndices[2]] * weights[2];
+    boneTransform += bone_data_arr.boneTransformArr[input.boneIndices[3]] * weights[3];
+    
     input.position.w = 1.0f;
-    output.fragPos = mul(input.position, buffer_pass.transform).xyz;
-    output.position = mul(input.position, buffer_pass.transform);
+    float4 posL = mul(input.position, boneTransform);
+    float4 normalL = mul(float4(input.normal, 0), boneTransform);
+    float4 tangentL = mul(float4(input.tangent, 0), boneTransform);
+
+    output.fragPos = mul(posL, buffer_pass.transform).xyz;
+    output.position = mul(posL, buffer_pass.transform);
     output.position = mul(output.position, buffer_frame.view_projection_unjittered);
-    output.normal = mul(float4(input.normal, 0), buffer_pass.transform).xyz;
-    output.tangent = mul(float4(input.tangent, 0), buffer_pass.transform).xyz;
+    output.normal = mul(normalL, buffer_pass.transform).xyz;
+    output.tangent = mul(tangentL, buffer_pass.transform).xyz;
     output.uv = input.uv;
 
     return output;
