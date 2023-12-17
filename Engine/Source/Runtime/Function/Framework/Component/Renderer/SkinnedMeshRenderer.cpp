@@ -93,7 +93,8 @@ void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip,
 
 	// 
 	for (uint32_t i = 0; i < numBones; i++) {
-		m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
+		// m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
+		m_bone_arr.boneArr[i] = Matrix::Identity;
 	}
 
 }
