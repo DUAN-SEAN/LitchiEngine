@@ -10,6 +10,7 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/SceneManager.h"
@@ -625,12 +626,21 @@ namespace LitchiRuntime
 			ParseMeshWithoutBone(assimp_mesh, entity_parent);
 		}
 
-		MeshRenderer* meshRenderer = nullptr;
-		// if(model_has_animation)
+		// todo temp
+		if (!model_has_animation)
 		{
-			meshRenderer = entity_parent->AddComponent<MeshRenderer>();
+			// Create a Renderable and pass the material to it
+
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+			entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
 		}
-		meshRenderer->SetDefaultMaterial();
+		else
+		{
+			// Create a Renderable and pass the material to it
+
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\StandardSkinn4Phong.mat");
+			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
+		}
 
 		// material
 		if (scene->HasMaterials())
@@ -645,8 +655,7 @@ namespace LitchiRuntime
 
 			//mesh->AddMaterial(material, entity_parent);
 
-
-			MeshRenderer* meshRenderer = entity_parent->AddComponent<MeshRenderer>();
+			
 		}
 
 	}

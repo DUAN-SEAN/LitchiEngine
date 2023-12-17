@@ -28,6 +28,7 @@ struct Pixel
     float2 uv : TEXCOORD;
     float3 normal : NORMAL;
     float3 tangent : TANGENT;
+    int4 indexs : POSITION2;
 };
 
 Texture2D u_normalMap : register(t101);
@@ -46,7 +47,12 @@ Pixel mainVS(Vertex_PosUvNorTanBone input)
     boneTransform += bone_data_arr.boneTransformArr[(int) input.boneIndices[1]] * weights[1];
     boneTransform += bone_data_arr.boneTransformArr[(int) input.boneIndices[2]] * weights[2];
     boneTransform += bone_data_arr.boneTransformArr[(int) input.boneIndices[3]] * weights[3];
-    
+
+    output.indexs[0] = (int) input.boneIndices[0];
+    output.indexs[1] = (int) input.boneIndices[1];
+    output.indexs[2] = (int) input.boneIndices[2];
+    output.indexs[3] = (int) input.boneIndices[3];
+
     input.position.w = 1.0f;
     float4 posL = mul(input.position, boneTransform);
     float4 normalL = mul(float4(input.normal, 0), boneTransform);

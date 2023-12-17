@@ -10,6 +10,7 @@
 #include "../Resource/ResourceCache.h"
 #include "../Resource/Import/ModelImporter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 SP_WARNINGS_OFF
 #include "meshoptimizer/meshoptimizer.h"
@@ -330,8 +331,15 @@ namespace LitchiRuntime
         const string spartan_asset_path = FileSystem::GetDirectoryFromFilePath(GetResourceFilePathNative()) + material->GetObjectName() + EXTENSION_MATERIAL;
         material->SetResourceFilePath(spartan_asset_path);
 
-        // Create a Renderable and pass the material to it
-        entity->AddComponent<MeshRenderer>()->SetMaterial(material);
+        if(!m_model_is_animation)
+        {
+            // Create a Renderable and pass the material to it
+            entity->AddComponent<MeshRenderer>()->SetMaterial(material);
+        }else
+        {
+            // Create a Renderable and pass the material to it
+            entity->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
+        }
     }
 
     void Mesh::AddTexture(Material* material, const MaterialTexture texture_type, const string& file_path, bool is_gltf)

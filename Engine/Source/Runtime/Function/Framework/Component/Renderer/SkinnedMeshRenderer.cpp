@@ -26,18 +26,18 @@ void SkinnedMeshRenderer::Update()
 		m_isFirstTick = false;
 	}
 
+	if (m_isDirty)
+	{
+		CreateBoneBuffer();
+		m_isDirty = false;
+	}
+
 	// 通过MeshFilter获取当前的Mesh
 	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
 	auto animator = GetGameObject()->GetComponent<Animator>();
 	if (meshFilter == nullptr || animator == nullptr)
 	{
 		return;
-	}
-
-	if (m_isDirty)
-	{
-		CreateBoneBuffer();
-		m_isDirty = false;
 	}
 
 	// get mesh
@@ -104,7 +104,6 @@ void LitchiRuntime::SkinnedMeshRenderer::CreateBoneBuffer()
 	m_bone_constant_buffer->Create<Cb_Bone_Arr>(1);
 
 	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-	auto animator = GetGameObject()->GetComponent<Animator>();
 
 	auto mesh = meshFilter->GetMesh();
 	auto& bones = mesh->GetBones();
@@ -115,6 +114,6 @@ void LitchiRuntime::SkinnedMeshRenderer::CreateBoneBuffer()
 		return;
 	}
 
-	m_bone_arr.boneCount = bones.size();
+	// m_bone_arr.boneCount = bones.size();
 
 }

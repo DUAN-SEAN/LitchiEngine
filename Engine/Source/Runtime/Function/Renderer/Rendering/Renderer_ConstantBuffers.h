@@ -179,8 +179,8 @@ namespace LitchiRuntime
 
 	struct Cb_Bone_Arr
 	{
-		int boneCount;
-		int padding[3];
+		/*int boneCount;
+		int padding[3];*/
 		Matrix boneArr[MaxBoneCount];
 	};
 

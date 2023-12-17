@@ -80,8 +80,8 @@ struct LightBufferDataArr
 const static int MaxBone = 250;
 struct BoneDataArr
 {
-    int boneCount;
-    int3 padding;
+    //int boneCount;
+    //int3 padding;
     matrix boneTransformArr[MaxBone];
 };
 
