@@ -7,6 +7,7 @@
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
@@ -107,6 +108,23 @@ namespace LitchiRuntime
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
 			if (auto renderable = entity->GetComponent<MeshRenderer>())
+			{
+				bool is_transparent = false;
+				bool is_visible = true;
+
+				/*if (const Material* material = renderable->GetMaterial())
+				{
+					is_transparent = material->GetProperty(MaterialProperty::ColorA) < 1.0f;
+					is_visible = material->GetProperty(MaterialProperty::ColorA) != 0.0f;
+				}*/
+
+				if (is_visible)
+				{
+					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
+				}
+			}
+
+			if (auto renderable = entity->GetComponent<SkinnedMeshRenderer>())
 			{
 				bool is_transparent = false;
 				bool is_visible = true;

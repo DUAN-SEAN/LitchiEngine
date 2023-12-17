@@ -55,7 +55,7 @@ namespace LitchiRuntime
 		 * \brief 材质名称
 		 */
 		std::string materialPath;
-	private:
+	protected:
 
 		// material
 		bool m_material_default = false;

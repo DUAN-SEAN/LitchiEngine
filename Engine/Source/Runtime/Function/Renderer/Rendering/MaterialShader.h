@@ -30,6 +30,9 @@ namespace LitchiRuntime
 		bool SaveToFile(const std::string& file_path);
 		void LoadMaterialDescriptors();
 
+		// default type=PosUvNorTan
+		void ChangeVertexType(RHI_Vertex_Type vertexType);
+
 		/* Global Uniform  */
 		const ShaderUniform& GetGlobalUniformInfo(std::string name);
 		const std::unordered_map<std::string, ShaderUniform>& GetGlobalShaderUniformDict();

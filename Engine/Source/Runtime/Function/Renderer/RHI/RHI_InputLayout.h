@@ -37,6 +37,7 @@ namespace LitchiRuntime
 
         void Create(const RHI_Vertex_Type vertex_type, void* vertex_shader_blob = nullptr)
         {
+            m_vertex_type = vertex_type;
             const uint32_t binding = 0;
 
             if (vertex_type == RHI_Vertex_Type::Undefined)
@@ -96,6 +97,19 @@ namespace LitchiRuntime
                 };
 
                 m_vertex_size = sizeof(RHI_Vertex_PosTexNorTan);
+            }
+        	else if(vertex_type == RHI_Vertex_Type::PosUvNorTanBone)
+            {
+                m_vertex_attributes =
+                {
+                    { "POSITION", 0, binding, RHI_Format::R32G32B32_Float, offsetof(RHI_Vertex_PosTexNorTanBone, pos) },
+                    { "TEXCOORD", 1, binding, RHI_Format::R32G32_Float,    offsetof(RHI_Vertex_PosTexNorTanBone, tex) },
+                    { "NORMAL",   2, binding, RHI_Format::R32G32B32_Float, offsetof(RHI_Vertex_PosTexNorTanBone, nor) },
+                    { "TANGENT",  3, binding, RHI_Format::R32G32B32_Float, offsetof(RHI_Vertex_PosTexNorTanBone, tan) },
+                    { "BONEINDICES",  4, binding, RHI_Format::R32G32B32A32_Float, offsetof(RHI_Vertex_PosTexNorTanBone, boneIndices) },
+                    { "BONEWEIGHTS",  5, binding, RHI_Format::R32G32B32_Float, offsetof(RHI_Vertex_PosTexNorTanBone, boneWeights) }
+                };
+                m_vertex_size = sizeof(RHI_Vertex_PosTexNorTanBone);
             }
         }
 

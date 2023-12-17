@@ -148,7 +148,7 @@ namespace LitchiRuntime
         float nor[3] = { 0, 0, 0 };
         float tan[3] = { 0, 0, 0 };
         
-        int32_t boneIndices[4] = { 0, 0, 0 ,0};
+        float boneIndices[4] = { 0, 0, 0 ,0};
         float boneWeights[3] = { 0, 0, 0 };
     };
 

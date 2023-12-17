@@ -107,13 +107,22 @@ GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quater
 	transform4Cube->SetScaleLocal(scale);
 
 	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
+	auto meshRenderer4Cube = gameObject4Cube->AddComponent<SkinnedMeshRenderer>();
+	auto animator = gameObject4Cube->AddComponent<Animator>();
 
 	auto material = ApplicationBase::Instance()->materialManager->LoadResource(materialPath);
 
 	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
 	meshFilter4Cube->SetGeometry(mesh);
 	meshRenderer4Cube->SetMaterial(material);
+
+	// ≥ı ºªØanimator
+	std::unordered_map<std::string, AnimationClip> animations;
+	mesh->GetAnimations(animations);
+	auto firstClipName = animations.begin()->first;
+	animator->SetAnimationClipMap(animations);
+	animator->Play(firstClipName);
+
 
 	return gameObject4Cube;
 }

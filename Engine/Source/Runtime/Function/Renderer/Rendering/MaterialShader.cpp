@@ -2,6 +2,7 @@
 //= INCLUDES =========================
 #include "MaterialShader.h"
 #include "Runtime/Core/pch.h"
+#include "Runtime/Function/Renderer/RHI/RHI_InputLayout.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 //====================================
 
@@ -90,6 +91,14 @@ namespace LitchiRuntime
 				});
 		}
 	}
+	void MaterialShader::ChangeVertexType(RHI_Vertex_Type vertexType)
+	{
+		if(m_vertex_shader)
+		{
+			m_vertex_shader->GetInputLayout()->Create(vertexType);
+		}
+	}
+
 	const ShaderUniform& MaterialShader::GetGlobalUniformInfo(std::string name)
 	{
 		return m_globalUniformDict[name];

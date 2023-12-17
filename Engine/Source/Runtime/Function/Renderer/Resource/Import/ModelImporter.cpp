@@ -705,7 +705,7 @@ namespace LitchiRuntime
 				vertex.boneWeights[2] = vertexBoneData[i].weights[2];
 
 				for (size_t j = 0; j < NUM_BONES_PER_VERTEX; j++)
-					vertex.boneIndices[j] = static_cast<int32_t>(vertexBoneData[i].boneIndex[j]);
+					vertex.boneIndices[j] = static_cast<float>(static_cast<int32_t>(vertexBoneData[i].boneIndex[j]));
 			}
 		}
 

@@ -212,6 +212,7 @@ namespace LitchiRuntime
         PosUv,
         PosUvNorTan,
         Pos2dUvCol8,
+        PosUvNorTanBone,
         Undefined
     };
 

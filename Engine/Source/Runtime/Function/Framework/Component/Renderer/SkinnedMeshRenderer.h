@@ -14,6 +14,9 @@ namespace LitchiRuntime
 		~SkinnedMeshRenderer();
 
 		void Update() override;
+
+		std::shared_ptr<RHI_ConstantBuffer> GetBoneConstantBuffer() { return m_bone_constant_buffer; }
+
 	public:
 
 		RTTR_ENABLE(MeshRenderer)
@@ -33,6 +36,7 @@ namespace LitchiRuntime
 		void CreateBoneBuffer();
 
 		bool m_isDirty = true;
+		bool m_isFirstTick = true;
 
 		Cb_Bone_Arr m_bone_arr;
 		std::shared_ptr<RHI_ConstantBuffer> m_bone_constant_buffer;

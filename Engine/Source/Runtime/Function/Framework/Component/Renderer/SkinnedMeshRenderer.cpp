@@ -17,6 +17,15 @@ LitchiRuntime::SkinnedMeshRenderer::~SkinnedMeshRenderer()
 
 void SkinnedMeshRenderer::Update()
 {
+	MeshRenderer::Update();
+
+	if (m_isFirstTick && m_material!= nullptr)
+	{
+		m_material->GetShader()->ChangeVertexType(RHI_Vertex_Type::PosUvNorTanBone);
+
+		m_isFirstTick = false;
+	}
+
 	// 通过MeshFilter获取当前的Mesh
 	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
 	auto animator = GetGameObject()->GetComponent<Animator>();

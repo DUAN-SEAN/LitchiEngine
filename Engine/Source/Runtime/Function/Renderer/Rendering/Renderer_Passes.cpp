@@ -11,6 +11,7 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 //==============================================
 
@@ -271,9 +272,17 @@ namespace LitchiRuntime
 			EASY_BLOCK("Prevoius SetPSO")
 			// Acquire renderable component
 			MeshFilter* renderable = entity->GetComponent<MeshFilter>();
+			SkinnedMeshRenderer* skinnedMeshRenderer = entity->GetComponent<SkinnedMeshRenderer>();
 			MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
+
+			if (skinnedMeshRenderer)
+			{
+				meshRenderer = skinnedMeshRenderer;
+			}
+
 			if (!meshRenderer)
 				continue;
+
 
 			// Skip meshes that don't cast shadows
 			if (!meshRenderer->GetCastShadows())
@@ -324,8 +333,11 @@ namespace LitchiRuntime
 			EASY_END_BLOCK
 
 			// 如果是skinnedMesh 更新蒙皮数据
-
-
+			if(skinnedMeshRenderer)
+			{
+				auto boneCbuffer = skinnedMeshRenderer->GetBoneConstantBuffer();
+				cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
+			}
 
 			// 暂时只支持一个平行光绘制阴影
 			auto mainLightObj = lightEntities[0];
