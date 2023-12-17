@@ -63,6 +63,16 @@ void SkinnedMeshRenderer::Update()
 	// calc bone trans to m_bone_arr
 	CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets);
 
+	//uint32_t numBones = boneOffsets.size();
+	//std::vector<Matrix> toRootTransforms(numBones);
+	//toRootTransforms[0] = animationClip->boneAnimations[0].defaultTransform;
+	//// 计算所有骨骼到root的变换矩阵
+	//for (uint32_t i = 1; i < numBones; i++) {
+	//	int parentIndex = boneHierarchy[i];
+	//	toRootTransforms[i] = toRootTransforms[parentIndex] * animationClip->boneAnimations[i].defaultTransform;
+	//	m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
+	//}
+	//
 	// updat cbuffer
 	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
 }
@@ -88,13 +98,14 @@ void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip,
 	// 计算所有骨骼到root的变换矩阵
 	for (uint32_t i = 1; i < numBones; i++) {
 		int parentIndex = boneHierarchy[i];
-		toRootTransforms[i] = toRootTransforms[parentIndex] * toParentTransforms[i];
+		toRootTransforms[i] = toParentTransforms[i] *toRootTransforms[parentIndex];
 	}
 
 	// 
 	for (uint32_t i = 0; i < numBones; i++) {
 		// m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
-		m_bone_arr.boneArr[i] = Matrix::Identity;
+		m_bone_arr.boneArr[i] = boneOffsets[i]* toRootTransforms[i];
+		// m_bone_arr.boneArr[i] = Matrix::Identity;
 	}
 
 }
