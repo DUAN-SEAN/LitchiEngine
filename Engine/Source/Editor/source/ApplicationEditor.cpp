@@ -324,7 +324,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	}
 
 	auto scene = sceneManager->CreateScene("Default");
-	m_rendererPath4SceneView->SetScene(ApplicationBase::Instance()->sceneManager->GetCurrentScene());
+	m_rendererPath4SceneView->SetScene(scene);
 
 	//Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
 	//Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
@@ -357,7 +357,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
 
-
+	sceneManager->SetCurrentScene(scene);
 	ServiceLocator::Provide(*shaderManager.get());
 	ServiceLocator::Provide(*modelManager.get());
 	ServiceLocator::Provide(*materialManager.get());

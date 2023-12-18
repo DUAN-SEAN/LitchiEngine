@@ -27,12 +27,14 @@ namespace LitchiRuntime
     Mesh::Mesh() : IResource(ResourceType::Mesh)
     {
         m_flags = GetDefaultFlags();
+        m_model_scene = ApplicationBase::Instance()->sceneManager->CreateScene("Model Scene");
     }
 
     Mesh::~Mesh()
     {
         m_index_buffer  = nullptr;
         m_vertex_buffer = nullptr;
+        ApplicationBase::Instance()->sceneManager->DestroyScene(m_model_scene);
     }
 
     void Mesh::Clear()

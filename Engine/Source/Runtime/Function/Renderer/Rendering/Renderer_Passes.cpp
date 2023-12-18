@@ -256,7 +256,11 @@ namespace LitchiRuntime
 			// 暂时只支持一个平行光绘制阴影
 			auto mainLightObj = lightEntities[0];
 			auto mainLight = mainLightObj->GetComponent<Light>();
-			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
+			auto depthTexture = mainLight->GetDepthTexture();
+			if(depthTexture!=nullptr)
+			{
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
+			}
 
 		}
 		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
