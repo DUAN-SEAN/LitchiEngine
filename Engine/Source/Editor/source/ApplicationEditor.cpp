@@ -346,6 +346,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	auto model0 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
 	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
 	auto model2 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
+	auto model3 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
 
 	// Setup UI
 	SetupUI();
