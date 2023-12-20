@@ -155,6 +155,13 @@ LitchiEditor::Hierarchy::Hierarchy
 		p_element.first->SetParent(nullptr);
 	};
 
+	m_sceneRoot->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [](auto p_receivedData)
+	{
+		// todo: copy model instance to scene 
+		// 1. check path type
+		// 2. deep copy mesh entry object
+	};
+
 	m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
 
 	/*EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
