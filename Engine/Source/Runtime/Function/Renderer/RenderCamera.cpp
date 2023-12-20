@@ -82,7 +82,7 @@ namespace LitchiRuntime
     bool RenderCamera::IsInViewFrustum(MeshFilter* renderable) const
     {
         EASY_FUNCTION(profiler::colors::Blue600)
-        const BoundingBox& box = renderable->GetAabb();
+        const BoundingBox& box = renderable->GetAAbb();
         const Vector3 center = box.GetCenter();
         const Vector3 extents = box.GetExtents();
 
@@ -125,7 +125,7 @@ namespace LitchiRuntime
                     continue;
 
                 // Get object oriented bounding box
-                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetAabb();
+                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetAAbb();
 
                 // Compute hit distance
                 float distance = m_ray.HitDistance(aabb);
@@ -154,46 +154,46 @@ namespace LitchiRuntime
         }
 
         // If there is a single hit, return that
-        if (hits.size() == 1)
+        if (hits.size() >= 1)
         {
             m_selected_entity = hits.front().m_entity;
             return;
         }
 
-        // If there are more hits, perform triangle intersection
-        float distance_min = std::numeric_limits<float>::max();
-        for (RayHit& hit : hits)
-        {
-            // Get entity geometry
-            auto renderable = hit.m_entity->GetComponent<MeshFilter>();
-            std::vector<uint32_t> indicies;
-            std::vector<RHI_Vertex_PosTexNorTan> vertices;
-            renderable->GetGeometry(&indicies, &vertices);
-            if (indicies.empty() || vertices.empty())
-            {
-                DEBUG_LOG_ERROR("Failed to get geometry of entity %s, skipping intersection test.");
-                continue;
-            }
+        //// If there are more hits, perform triangle intersection
+        //float distance_min = std::numeric_limits<float>::max();
+        //for (RayHit& hit : hits)
+        //{
+        //    // Get entity geometry
+        //    auto renderable = hit.m_entity->GetComponent<MeshFilter>();
+        //    std::vector<uint32_t> indicies;
+        //    std::vector<RHI_Vertex_PosTexNorTan> vertices;
+        //    renderable->GetGeometry(&indicies, &vertices);
+        //    if (indicies.empty() || vertices.empty())
+        //    {
+        //        DEBUG_LOG_ERROR("Failed to get geometry of entity %s, skipping intersection test.");
+        //        continue;
+        //    }
 
-            // Compute matrix which can transform vertices to view space
-            Matrix vertex_transform = hit.m_entity->GetComponent<Transform>()->GetMatrix();
+        //    // Compute matrix which can transform vertices to view space
+        //    Matrix vertex_transform = hit.m_entity->GetComponent<Transform>()->GetMatrix();
 
-            // Go through each face
-            for (uint32_t i = 0; i < indicies.size(); i += 3)
-            {
-                Vector3 p1_world = Vector3(vertices[indicies[i]].pos) * vertex_transform;
-                Vector3 p2_world = Vector3(vertices[indicies[i + 1]].pos) * vertex_transform;
-                Vector3 p3_world = Vector3(vertices[indicies[i + 2]].pos) * vertex_transform;
+        //    // Go through each face
+        //    for (uint32_t i = 0; i < indicies.size(); i += 3)
+        //    {
+        //        Vector3 p1_world = Vector3(vertices[indicies[i]].pos) * vertex_transform;
+        //        Vector3 p2_world = Vector3(vertices[indicies[i + 1]].pos) * vertex_transform;
+        //        Vector3 p3_world = Vector3(vertices[indicies[i + 2]].pos) * vertex_transform;
 
-                float distance = m_ray.HitDistance(p1_world, p2_world, p3_world);
+        //        float distance = m_ray.HitDistance(p1_world, p2_world, p3_world);
 
-                if (distance < distance_min)
-                {
-                    m_selected_entity = hit.m_entity;
-                    distance_min = distance;
-                }
-            }
-        }
+        //        if (distance < distance_min)
+        //        {
+        //            m_selected_entity = hit.m_entity;
+        //            distance_min = distance;
+        //        }
+        //    }
+        //}
     }
 
     Vector2 RenderCamera::WorldToScreenCoordinates(const Vector3& position_world) const

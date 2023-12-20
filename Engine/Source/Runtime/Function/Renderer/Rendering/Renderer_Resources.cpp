@@ -43,7 +43,6 @@ namespace LitchiRuntime
 
         // asset resources
         array<shared_ptr<RHI_Texture>, 10> m_standard_textures;
-        array<shared_ptr<Mesh>, 6>         m_standard_meshes;
     }
 
     void Renderer::CreateConstantBuffers()
@@ -446,54 +445,6 @@ namespace LitchiRuntime
 
     void Renderer::CreateStandardMeshes()
     {
-        auto create_mesh = [](const Renderer_MeshType type)
-        {
-            const string project_directory = ResourceCache::GetProjectDirectory();
-            shared_ptr<Mesh> mesh = make_shared<Mesh>();
-            vector<RHI_Vertex_PosTexNorTan> vertices;
-            vector<uint32_t> indices;
-
-            if (type == Renderer_MeshType::Cube)
-            {
-                Geometry::CreateCube(&vertices, &indices);
-                mesh->SetResourceFilePath(project_directory + "standard_cube" + EXTENSION_MODEL);
-            }
-            else if (type == Renderer_MeshType::Quad)
-            {
-                Geometry::CreateQuad(&vertices, &indices);
-                mesh->SetResourceFilePath(project_directory + "standard_quad" + EXTENSION_MODEL);
-            }
-            else if (type == Renderer_MeshType::Sphere)
-            {
-                Geometry::CreateSphere(&vertices, &indices);
-                mesh->SetResourceFilePath(project_directory + "standard_sphere" + EXTENSION_MODEL);
-            }
-            else if (type == Renderer_MeshType::Cylinder)
-            {
-                Geometry::CreateCylinder(&vertices, &indices);
-                mesh->SetResourceFilePath(project_directory + "standard_cylinder" + EXTENSION_MODEL);
-            }
-            else if (type == Renderer_MeshType::Cone)
-            {
-                Geometry::CreateCone(&vertices, &indices);
-                mesh->SetResourceFilePath(project_directory + "standard_cone" + EXTENSION_MODEL);
-            }
-
-            mesh->AddIndices(indices);
-            mesh->AddVertices(vertices);
-            mesh->ComputeAabb();
-            mesh->ComputeNormalizedScale();
-            mesh->CreateGpuBuffers();
-
-            m_standard_meshes[static_cast<uint8_t>(type)] = mesh;
-        };
-
-        create_mesh(Renderer_MeshType::Cube);
-        create_mesh(Renderer_MeshType::Quad);
-        create_mesh(Renderer_MeshType::Sphere);
-        create_mesh(Renderer_MeshType::Cylinder);
-        create_mesh(Renderer_MeshType::Cone);
-
         // misc
         m_vertex_buffer_lines = make_shared<RHI_VertexBuffer>(true, "lines");
         m_world_grid          = make_unique<Grid>();
@@ -550,7 +501,6 @@ namespace LitchiRuntime
         m_shaders.fill(nullptr);
         m_samplers.fill(nullptr);
         m_standard_textures.fill(nullptr);
-        m_standard_meshes.fill(nullptr);
         m_constant_buffers.fill(nullptr);
         m_structured_buffer = nullptr;
     }
@@ -613,10 +563,5 @@ namespace LitchiRuntime
     shared_ptr<RHI_Texture> Renderer::GetStandardTexture(const Renderer_StandardTexture type)
     {
         return m_standard_textures[static_cast<uint8_t>(type)];
-    }
-
-    shared_ptr<Mesh> Renderer::GetStandardMesh(const Renderer_MeshType type)
-    {
-        return m_standard_meshes[static_cast<uint8_t>(type)];
     }
 }

@@ -365,4 +365,22 @@ namespace LitchiRuntime
         //    material->SetTexture(texture_type, texture);
         //}
     }
+
+    void Mesh::AddSubMesh(SubMesh subMesh,int& subMeshIndex)
+    {
+        subMeshIndex = m_subMeshArr.size();
+        m_subMeshArr.push_back(subMesh);
+    }
+
+    SubMesh Mesh::GetSubMesh(int index,bool& result)
+    {
+        if(index>=m_subMeshArr.size() || index<0)
+        {
+            result = false;
+            return SubMesh();
+        }
+
+        result = true;
+        return m_subMeshArr[index];
+    }
 }

@@ -25,7 +25,7 @@ namespace LitchiRuntime
 			if (!renderable)
 				return 0.0f;
 
-			return (renderable->GetAabb().GetCenter() - camera->GetPosition()).LengthSquared();
+			return (renderable->GetAAbb().GetCenter() - camera->GetPosition()).LengthSquared();
 		};
 
 		// sort by depth

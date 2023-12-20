@@ -591,6 +591,10 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 			PropertyField property_field(obj, propertyPathList);
 			auto path = property_field.GetValue().get_value<std::string>();
 			p_root.CreateWidget<TextColored>(name.to_string(), GUIDrawer::TitleColor);
+			if(path.empty())
+			{
+				path = "Empty";
+			}
 			auto& widget = p_root.CreateWidget<Text>(path);
 			widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType,&widget, property_field](auto p_receivedData)
 			{

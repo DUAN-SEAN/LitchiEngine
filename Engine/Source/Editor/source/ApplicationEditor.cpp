@@ -83,7 +83,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	FontImporter::Shutdown();
 }
 
-GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale)
+GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string modelPath)
 {
 	auto gameObject4Cube = scene->CreateGameObject("Cube");
 	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
@@ -92,13 +92,14 @@ GameObject* CreateCube(Scene* scene, std::string name, Vector3 position, Quatern
 	transform4Cube->SetScaleLocal(scale);
 	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
 	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
-	meshFilter4Cube->SetGeometry(Renderer::GetStandardMesh(Renderer_MeshType::Cube).get());
+	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
+	meshFilter4Cube->SetGeometry(mesh);
 	meshRenderer4Cube->SetDefaultMaterial();
 
 	return gameObject4Cube;
 }
 
-GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string materialPath, std::string modelPath)
+GameObject* CreateSkinnedModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string materialPath, std::string modelPath)
 {
 	auto gameObject4Cube = scene->CreateGameObject(name);
 	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
@@ -125,81 +126,6 @@ GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quater
 
 
 	return gameObject4Cube;
-}
-
-GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal((0.0f, y, z));
-	transform->PostResourceLoaded();
-
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->modelPath = modelPath;
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->materialPath = materialPath;
-	mesh_renderer->PostResourceLoaded();
-	go->SetLayer(0x01);
-
-	return go;
-}
-
-GameObject* CreateDefaultObject4Skinned(Scene* scene, std::string name, std::string modelPath, std::string materialPath, float y, float z)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal({ 0.0, y, z });
-	transform->PostResourceLoaded();
-
-	auto animator = go->AddComponent<Animator>();
-
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->modelPath = modelPath;
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<SkinnedMeshRenderer>();
-	mesh_renderer->materialPath = materialPath;
-	mesh_renderer->PostResourceLoaded();
-	go->SetLayer(0x01);
-
-	// ³õÊ¼»¯animator todo:
-	/*auto* model = mesh_filter->GetModel();
-	std::unordered_map<std::string, AnimationClip> animations;
-	model->GetAnimations(animations);
-	auto firstClipName = animations.begin()->first;
-	animator->SetAnimationClipMap(animations);
-	animator->Play(firstClipName);*/
-
-	return go;
-}
-
-GameObject* CreateDefaultObject(Scene* scene, std::string name, std::string modelPath, std::string materialPath, Vector3 position, Quaternion rotation, Vector3 scale)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal(Vector3(position.x, position.y, position.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->SetScaleLocal(Vector3(scale.x, scale.y, scale.z));
-	transform->PostResourceLoaded();
-
-	auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->modelPath = modelPath;
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->materialPath = materialPath;
-	mesh_renderer->PostResourceLoaded();
-	go->SetLayer(0x01);
-
-	return go;
 }
 
 GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation)
@@ -334,8 +260,8 @@ void LitchiEditor::ApplicationEditor::Init()
 	//transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
 	//transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
-	auto cube = CreateCube(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f));
-	auto cube2 = CreateCube(scene, "Cube01", Vector3(0.0f, 4.5f, -1.0f), Quaternion::Identity, Vector3::One);
+	auto cube = CreateModel(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f),"Engine\\Models\\Cube.fbx");
+	auto cube2 = CreateModel(scene, "Cube01", Vector3(0.0f, 4.5f, -1.0f), Quaternion::Identity, Vector3::One, "Engine\\Models\\Cube.fbx");
 	auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
@@ -343,9 +269,9 @@ void LitchiEditor::ApplicationEditor::Init()
 	cubeMeshRenderer->SetMaterial(textMat);
 	
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-	auto model0 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
-	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	auto model2 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
+	auto model0 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
+	auto model1 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	auto model2 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
 
 	// Setup UI
 	SetupUI();

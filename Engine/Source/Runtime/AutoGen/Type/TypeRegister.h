@@ -290,10 +290,14 @@ RTTR_REGISTRATION //注册反射
 
 	// MeshFilter
 	registration::class_<MeshFilter>("MeshFilter")
+		(
+		rttr::metadata("Serializable", true),
+		rttr::metadata("Polymorphic", true)
+		)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("modelPath",&MeshFilter::modelPath)
+		.property("MeshPath",&MeshFilter::GetMeshPath, &MeshFilter::SetMeshPath)
 			(rttr::metadata("AssetPath", true), rttr::metadata("AssetType", PathParser::EFileType::MODEL))
-		.property("meshIndex",&MeshFilter::meshIndex);
+		.property("SubMeshIndex",&MeshFilter::GetSubMeshIndex, &MeshFilter::SetSubMeshIndex);
 
 	// Transform
 	registration::class_<Transform>("Transform")

@@ -467,7 +467,7 @@ void Light::CreateShadowMap()
 
 bool Light::IsInViewFrustum(MeshFilter* renderable, uint32_t index) const
 {
-    const auto box = renderable->GetAabb();
+    const auto box = renderable->GetAAbb();
     const auto center = box.GetCenter();
     const auto extents = box.GetExtents();
 

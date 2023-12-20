@@ -526,7 +526,7 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 
 	// todo temp, need copy in mesh gameObject (prefab)
 	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(p_path);
-	meshFilter->SetGeometry(mesh);
+	meshFilter->SetGeometry(mesh,0);
 
 	auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	meshRenderer->SetMaterial(material);

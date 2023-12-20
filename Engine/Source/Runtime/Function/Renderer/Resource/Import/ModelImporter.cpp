@@ -741,19 +741,18 @@ namespace LitchiRuntime
 		uint32_t vertex_offset = 0;
 		mesh->AddIndices(indices, &index_offset);
 		mesh->AddVertices(vertices, &vertex_offset);
+		SubMesh subMesh;
+		subMesh.m_geometry_index_offset = index_offset;
+		subMesh.m_geometry_index_count = indices.size();
+		subMesh.m_geometry_vertex_offset = vertex_offset;
+		subMesh.m_geometry_vertex_count = vertices.size();
+		int subMeshIndex;
+		mesh->AddSubMesh(subMesh, subMeshIndex);
 		// add a renderable component to this entity
 		MeshFilter* renderable  = entity_parent->AddComponent<MeshFilter>();
 
 		// set the geometry
-		renderable->SetGeometry(
-			mesh,
-			aabb,
-			index_offset,
-			static_cast<uint32_t>(indices.size()),
-			vertex_offset,
-			static_cast<uint32_t>(vertices.size())
-		);
-
+		renderable->SetGeometry(mesh, subMeshIndex, aabb);
 	}
 
 	void ModelImporter::ParseMeshWithoutBone(aiMesh* assimp_mesh, GameObject* entity_parent)
@@ -825,6 +824,13 @@ namespace LitchiRuntime
 		uint32_t vertex_offset = 0;
 		mesh->AddIndices(indices, &index_offset);
 		mesh->AddVertices(vertices, &vertex_offset);
+		SubMesh subMesh;
+		subMesh.m_geometry_index_offset = index_offset;
+		subMesh.m_geometry_index_count = indices.size();
+		subMesh.m_geometry_vertex_offset = vertex_offset;
+		subMesh.m_geometry_vertex_count = vertices.size();
+		int subMeshIndex;
+		mesh->AddSubMesh(subMesh, subMeshIndex);
 		// add a renderable component to this entity
 		MeshFilter* renderable = nullptr;
 		//if(model_has_animation)
@@ -833,14 +839,7 @@ namespace LitchiRuntime
 		}
 
 		// set the geometry
-		renderable->SetGeometry(
-			mesh,
-			aabb,
-			index_offset,
-			static_cast<uint32_t>(indices.size()),
-			vertex_offset,
-			static_cast<uint32_t>(vertices.size())
-		);
+		renderable->SetGeometry(mesh, subMeshIndex, aabb);
 
 	}
 

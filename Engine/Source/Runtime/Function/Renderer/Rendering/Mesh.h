@@ -24,6 +24,14 @@ namespace LitchiRuntime
         OptimizeOverdraw          = 1 << 6,
     };
 
+    struct SubMesh
+    {
+        uint32_t m_geometry_index_offset = 0;
+        uint32_t m_geometry_index_count = 0;
+        uint32_t m_geometry_vertex_offset = 0;
+        uint32_t m_geometry_vertex_count = 0;
+    };
+
     class Mesh : public IResource
     {
     public:
@@ -86,6 +94,15 @@ namespace LitchiRuntime
         GameObject* GetRootEntity() { return m_root_entity; }
         void SetRootEntity(GameObject* entity) { m_root_entity = entity; }
 
+        // SubMesh
+        void AddSubMesh(SubMesh subMesh, int& subMeshIndex);
+        SubMesh GetSubMesh(int index, bool& result);
+
+        // Bone
+        std::vector<BoneInfo>& GetBones() { return m_boneInfoArr; }
+        std::unordered_map<std::string, uint32_t>& GetBoneMap() { return m_boneMap; }
+        std::unordered_map<std::string, AnimationClip>& GetAnimationClipMap() { return m_animationClipMap; }
+
         // Misc
         uint32_t GetFlags() const { return m_flags; }
         static uint32_t GetDefaultFlags();
@@ -93,11 +110,7 @@ namespace LitchiRuntime
         void Optimize();
         void AddMaterial(Material* material, GameObject* entity) const;
         void AddTexture(Material* material, MaterialTexture texture_type, const std::string& file_path, bool is_gltf);
-
-        std::vector<BoneInfo>& GetBones() { return m_boneInfoArr; }
-        std::unordered_map<std::string, uint32_t>& GetBoneMap() { return m_boneMap; }
-        std::unordered_map<std::string, AnimationClip>& GetAnimationClipMap() { return m_animationClipMap; }
-
+       
     	void GetBoneMapping(std::unordered_map<std::string, uint32_t>& boneMapping) {
             boneMapping = this->m_boneMap;
         }
@@ -132,6 +145,9 @@ namespace LitchiRuntime
 
         // AABB
         BoundingBox m_aabb;
+
+        // sub Mesh collection
+        std::vector<SubMesh> m_subMeshArr;
 
 
         //Bone/Animation Information

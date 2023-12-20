@@ -1,8 +1,6 @@
 ﻿
 #include "MeshFilter.h"
 
-#include <fstream>
-#include "Runtime/Core/App/application.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -15,7 +13,7 @@ namespace LitchiRuntime
 {
 
     MeshFilter::MeshFilter()
-        :meshIndex(0) {
+        :m_sub_mesh_index(0) {
 
     }
 
@@ -48,58 +46,53 @@ namespace LitchiRuntime
 
     void MeshFilter::PostResourceModify()
     {
-        //// 资源加载后
-        //if (modelPath.empty())
-        //{
-        //    return;
-        //}
+        // 资源加载后
+        if (m_mesh_Path.empty() || m_mesh_Path == "Empty")
+        {
+            return;
+        }
 
-        //// 通过路径加载模型资源
-        //m_model = ApplicationBase::Instance()->modelManager->GetResource(modelPath);
+        // 通过路径加载模型资源
+        auto mesh  = ApplicationBase::Instance()->modelManager->GetResource(m_mesh_Path);
+        m_mesh = mesh;
+        if (m_mesh == nullptr)
+        {
+            return;
+        }
+
+        bool result;
+        auto _ = m_mesh->GetSubMesh(m_sub_mesh_index, result);
+        if(!result)
+        {
+            return;
+        }
+
+        SetGeometry(mesh, m_sub_mesh_index);
     }
 
+    void MeshFilter::SetGeometry(Mesh* mesh, int subMeshIndex /* = 0,*/, const BoundingBox aabb /* = BoundingBox::Undefined*/)
+    {
+        m_mesh = mesh;
+        m_sub_mesh_index = subMeshIndex;
+        m_mesh_Path = m_mesh->GetResourceFilePathAsset();
+        bool result;
+        m_sub_mesh = m_mesh->GetSubMesh(subMeshIndex, result);
 
-	void MeshFilter::SetGeometry(
-		Mesh* mesh,
-		const BoundingBox aabb /*= Math::BoundingBox::Undefined*/,
-		uint32_t index_offset  /*= 0*/, uint32_t index_count  /*= 0*/,
-		uint32_t vertex_offset /*= 0*/, uint32_t vertex_count /*= 0 */
-	)
-	{
-		m_mesh = mesh;
-		m_bounding_box = aabb;
-		m_geometry_index_offset = index_offset;
-		m_geometry_index_count = index_count;
-		m_geometry_vertex_offset = vertex_offset;
-		m_geometry_vertex_count = vertex_count;
-
-		if (m_geometry_index_count == 0)
-		{
-			m_geometry_index_count = m_mesh->GetIndexCount();
-		}
-
-		if (m_geometry_vertex_count == 0)
-		{
-			m_geometry_vertex_count = m_mesh->GetVertexCount();
-		}
-
-		if (m_bounding_box == BoundingBox::Undefined)
-		{
-			m_bounding_box = m_mesh->GetAabb();
-		}
-
-		/*SP_ASSERT(m_geometry_index_count != 0);
-		SP_ASSERT(m_geometry_vertex_count != 0);
-		SP_ASSERT(m_bounding_box != BoundingBox::Undefined);*/
-	}
+        m_bounding_box = aabb;
+        if (m_bounding_box == BoundingBox::Undefined)
+        {
+            m_bounding_box = m_mesh->GetAabb();
+        }
+    }
 
 	void MeshFilter::GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const
 	{
 		SP_ASSERT_MSG(m_mesh != nullptr, "Invalid mesh");
-		m_mesh->GetGeometry(m_geometry_index_offset, m_geometry_index_count, m_geometry_vertex_offset, m_geometry_vertex_count, indices, vertices);
+
+		m_mesh->GetGeometry(m_sub_mesh.m_geometry_index_offset, m_sub_mesh.m_geometry_index_count, m_sub_mesh.m_geometry_vertex_offset, m_sub_mesh.m_geometry_vertex_count, indices, vertices);
 	}
 
-	const BoundingBox& MeshFilter::GetAabb()
+	const BoundingBox& MeshFilter::GetAAbb()
 	{
 		// update if dirty
 		if (m_last_transform != GetGameObject()->GetComponent<Transform>()->GetMatrix() || m_bounding_box_transformed == BoundingBox::Undefined)
