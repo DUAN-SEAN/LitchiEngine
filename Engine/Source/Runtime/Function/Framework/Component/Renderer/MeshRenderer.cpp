@@ -12,52 +12,7 @@ namespace LitchiRuntime
 	MeshRenderer::~MeshRenderer() {
 
 	}
-
-	//void MeshRenderer::Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO)
-	//{
-	//	// 通过MeshFilter获取当前的Mesh
-	//	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-	//	if(meshFilter==nullptr)
-	//	{
-	//		return;
-	//	}
-
-	//	// 计算模型矩阵
-	//	auto transform = GetGameObject()->GetComponent<Transform>();
-	//	Matrix modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
-
-	//	auto* extraMesh =meshFilter->GetExtraMesh();
-	//	if(extraMesh != nullptr)
-	//	{
-	//		ApplicationBase::Instance()->renderer->DrawMesh(*extraMesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
-	//	}else
-	//	{
-	//		auto model = meshFilter->GetModel();
-	//		if (model == nullptr)
-	//		{
-	//			return;
-	//		}
-
-	//		if (model->GetMeshes().size() <= meshFilter->GetMeshIndex())
-	//		{
-	//			return;
-	//		}
-
-	//		auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
-	//		if (mesh == nullptr)
-	//		{
-	//			return;
-	//		}
-
-	//		// vp矩阵绑定？
-
-	//		// 调用Draw执行绘制
-	//		// 内部将设置模型矩阵到UBO中
-	//		ApplicationBase::Instance()->renderer->DrawMesh(*mesh, *material, &modelMatrix, lightVPMat, shadowMapFBO);
-	//	}
-
-	//}
-
+	
 	void MeshRenderer::Update()
 	{
 		if (m_material != nullptr)
@@ -65,43 +20,7 @@ namespace LitchiRuntime
 			m_material->Tick();
 		}
 	}
-
-	void MeshRenderer::RenderShadowMap()
-	{
-		//// 通过MeshFilter获取当前的Mesh
-		//auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-		//if (meshFilter == nullptr)
-		//{
-		//	return;
-		//}
-		//auto model = meshFilter->GetModel();
-		//if (model == nullptr)
-		//{
-		//	return;
-		//}
-
-		//if(model->GetMeshes().size() <= meshFilter->GetMeshIndex())
-		//{
-		//	return;
-		//}
-
-		//auto mesh = model->GetMeshes().at(meshFilter->GetMeshIndex());
-		//if (mesh == nullptr)
-		//{
-		//	return;
-		//}
-
-		//// 计算模型矩阵
-		//auto transform = GetGameObject()->GetComponent<Transform>();
-		//Matrix modelMatrix = transform->GetWorldMatrix();// 旋转->缩放->平移 TRS
-		//
-		//ApplicationBase::Instance()->engineUBO->SetSubData(modelMatrix, 0);
-
-		//// 调用Draw执行绘制
-		//// 内部将设置模型矩阵到UBO中
-		//ApplicationBase::Instance()->renderer->Draw(*mesh);
-	}
-
+	
 	void MeshRenderer::PostResourceLoaded()
 	{
 		DEBUG_LOG_INFO("PostResourceLoaded Path {}", materialPath);

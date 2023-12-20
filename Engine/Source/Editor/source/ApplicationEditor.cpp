@@ -282,9 +282,8 @@ void LitchiEditor::ApplicationEditor::Init()
 		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
 	}
 
-	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
-
 	sceneManager->SetCurrentScene(scene);
+	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
 	ServiceLocator::Provide(*shaderManager.get());
 	ServiceLocator::Provide(*modelManager.get());
 	ServiceLocator::Provide(*materialManager.get());
