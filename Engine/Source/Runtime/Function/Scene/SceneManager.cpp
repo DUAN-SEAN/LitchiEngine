@@ -182,12 +182,12 @@ namespace LitchiRuntime
 
 	SceneManager::~SceneManager()
 	{
-		for (auto m_scene_map : m_sceneMap)
+		for (auto m_scene_map : m_sceneList)
 		{
-			delete m_scene_map.second;
+			delete m_scene_map;
 		}
 
-		m_sceneMap.clear();
+		m_sceneList.clear();
 	}
 
 	bool SceneManager::LoadScene(std::string path)
@@ -202,7 +202,7 @@ namespace LitchiRuntime
 		scene->PostResourceLoaded();
 
 		// 将scene添加到map中
-		m_sceneMap[scene->GetName()] = scene;
+		m_sceneList.push_back(scene);
 
 		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
 		SetCurrentSceneSourcePath(completePath);
@@ -228,7 +228,7 @@ namespace LitchiRuntime
 		scene->PostResourceLoaded();
 
 		// 将scene添加到map中
-		m_sceneMap[sceneName] = scene;
+		m_sceneList.push_back(scene);
 
 		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
 		SetCurrentSceneSourcePath("");
@@ -237,19 +237,24 @@ namespace LitchiRuntime
 		return scene;
 	}
 
-	bool SceneManager::DestroyScene(std::string sceneName)
+	bool SceneManager::DestroyScene(Scene* scene)
 	{
-		auto scene = m_sceneMap[sceneName];
-		m_sceneMap.erase(sceneName);
-		delete scene;
+		for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
+			if(*iter == scene)
+			{
+				m_sceneList.erase(iter);
+				delete scene;
+				return true;
+			}
+		}
 
-		return true;
+		return false;
 	}
 
 	void SceneManager::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		for (auto iter = m_sceneMap.begin(); iter != m_sceneMap.end(); iter++) {
-			Scene* scene = iter->second;
+		for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
+			Scene* scene = *iter;
 			scene->Foreach(func);
 			//current_camera_->CheckCancelRenderToTexture();
 		}

@@ -487,7 +487,7 @@ namespace LitchiRuntime
 	void ModelImporter::ParseNode(const aiNode* node, GameObject* parent_entity)
 	{
 		// Create an entity that will match this node.
-		GameObject* entity = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->CreateGameObject("Default");
+		GameObject* entity = mesh->GetModelScene()->CreateGameObject("Default");
 
 		// Set root entity to mesh
 		bool is_root_node = parent_entity == nullptr;
@@ -552,7 +552,7 @@ namespace LitchiRuntime
 			if (assimp_node->mNumMeshes > 1)
 			{
 				// Create entity
-				entity = ApplicationBase::Instance()->sceneManager->GetCurrentScene()->CreateGameObject("Node");
+				entity = mesh->GetModelScene()->CreateGameObject("Node");
 
 				// Set parent
 				entity->GetComponent<Transform>()->SetParent(node_entity->GetComponent<Transform>());

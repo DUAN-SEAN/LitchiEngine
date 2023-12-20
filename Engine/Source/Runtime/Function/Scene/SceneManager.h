@@ -90,13 +90,8 @@ namespace LitchiRuntime
 
 		Scene* CreateScene(std::string sceneName);
 
-		bool DestroyScene(std::string sceneName);
-
-		Scene* GetScene(std::string sceneName)
-		{
-			return m_sceneMap[sceneName];
-		}
-
+		bool DestroyScene(Scene* scene);
+		
 		void SetCurrentScene(Scene* scene)
 		{
 			m_currScene = scene;
@@ -140,7 +135,7 @@ namespace LitchiRuntime
 
 	private:
 		
-		std::map<std::string, Scene*> m_sceneMap;
+		std::vector<Scene*> m_sceneList;
 		Scene* m_currScene = nullptr;
 		bool m_currentSceneLoadedFromPath = false;
 		std::string m_currentSceneSourcePath = "";

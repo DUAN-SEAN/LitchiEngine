@@ -250,7 +250,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	}
 
 	auto scene = sceneManager->CreateScene("Default");
-	m_rendererPath4SceneView->SetScene(ApplicationBase::Instance()->sceneManager->GetCurrentScene());
+	m_rendererPath4SceneView->SetScene(scene);
 
 	//Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
 	//Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
@@ -269,9 +269,10 @@ void LitchiEditor::ApplicationEditor::Init()
 	cubeMeshRenderer->SetMaterial(textMat);
 	
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-	auto model0 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
-	auto model1 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	auto model2 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
+	auto model0 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
+	auto model1 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	auto model2 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
+	auto model3 = CreateModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
 
 	// Setup UI
 	SetupUI();
@@ -283,7 +284,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
 
-
+	sceneManager->SetCurrentScene(scene);
 	ServiceLocator::Provide(*shaderManager.get());
 	ServiceLocator::Provide(*modelManager.get());
 	ServiceLocator::Provide(*materialManager.get());

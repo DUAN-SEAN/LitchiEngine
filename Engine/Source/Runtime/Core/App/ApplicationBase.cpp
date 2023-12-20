@@ -47,6 +47,14 @@ namespace LitchiRuntime
 		MaterialManager::ProvideAssetPaths(projectAssetsPath);
 		FontManager::ProvideAssetPaths(projectAssetsPath);
 
+		// 初始化场景 如果没有场景则构建默认场景
+		sceneManager = std::make_unique<SceneManager>();
+		shaderManager = std::make_unique<ShaderManager>();
+		materialManager = std::make_unique<MaterialManager>();
+		fontManager = std::make_unique<FontManager>();
+		textureManager = std::make_unique<TextureManager>();
+		modelManager = std::make_unique<ModelManager>();
+
 		/*ModelManager::ProvideAssetPaths(projectAssetsPath);
 		ShaderManager::ProvideAssetPaths(projectAssetsPath); */
 
@@ -111,14 +119,6 @@ namespace LitchiRuntime
 		//ServiceLocator::Provide<ModelManager>(*modelManager);
 		// LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
 		// ServiceLocator::Provide<ShaderManager>(*shaderManager);
-
-		// 初始化场景 如果没有场景则构建默认场景
-		sceneManager = std::make_unique<SceneManager>();
-		shaderManager = std::make_unique<ShaderManager>();
-		materialManager = std::make_unique<MaterialManager>();
-		fontManager = std::make_unique<FontManager>();
-		textureManager = std::make_unique<TextureManager>();
-		modelManager = std::make_unique<ModelManager>();
 	}
 
 	/// 初始化图形库，例如glfw

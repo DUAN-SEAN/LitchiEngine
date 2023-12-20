@@ -34,7 +34,7 @@ namespace LitchiRuntime
                     }
                 }
                 //insert error program
-                DEBUG_LOG_ERROR("bone index out of size");
+                // DEBUG_LOG_ERROR("bone index out of size");
             }
         };
 
