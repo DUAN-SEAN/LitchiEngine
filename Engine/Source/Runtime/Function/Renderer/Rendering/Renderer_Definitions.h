@@ -151,6 +151,8 @@ namespace LitchiRuntime
         depth_prepass_p,
         depth_light_V,
         depth_light_p,
+        depth_light_skin_V,
+        depth_light_skin_p,
         fullscreen_triangle_v,
         quad_v,
         quad_p,

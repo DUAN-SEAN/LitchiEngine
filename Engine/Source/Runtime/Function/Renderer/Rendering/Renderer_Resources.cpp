@@ -286,6 +286,12 @@ namespace LitchiRuntime
 
             shader(Renderer_Shader::depth_light_p) = make_shared<RHI_Shader>();
             shader(Renderer_Shader::depth_light_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light.hlsl", async);
+
+            shader(Renderer_Shader::depth_light_skin_V) = make_shared<RHI_Shader>();
+            shader(Renderer_Shader::depth_light_skin_V)->Compile(RHI_Shader_Vertex, shader_dir + "depth_light_skin.hlsl", async, RHI_Vertex_Type::PosUvNorTanBone);
+
+            shader(Renderer_Shader::depth_light_skin_p) = make_shared<RHI_Shader>();
+            shader(Renderer_Shader::depth_light_skin_p)->Compile(RHI_Shader_Pixel, shader_dir + "depth_light_skin.hlsl", async);
         }
 
         //// Font

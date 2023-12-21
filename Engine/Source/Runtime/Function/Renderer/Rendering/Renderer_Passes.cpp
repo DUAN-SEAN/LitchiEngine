@@ -57,6 +57,10 @@ namespace LitchiRuntime
 		// Acquire shaders
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::depth_light_V).get();
 		RHI_Shader* shader_p = GetShader(Renderer_Shader::depth_light_p).get();
+
+		RHI_Shader* shader_skin_v = GetShader(Renderer_Shader::depth_light_skin_V).get();
+		RHI_Shader* shader_skin_p = GetShader(Renderer_Shader::depth_light_skin_p).get();
+
 		if (!shader_v->IsCompiled() || !shader_p->IsCompiled())
 			return;
 
@@ -128,7 +132,7 @@ namespace LitchiRuntime
 				}
 
 				// Set pipeline state
-				cmd_list->SetPipelineState(pso);
+				// cmd_list->SetPipelineState(pso);
 
 				// State tracking
 				bool render_pass_active = false;
@@ -138,6 +142,13 @@ namespace LitchiRuntime
 					// Acquire renderable component
 					MeshFilter* renderable = entity->GetComponent<MeshFilter>();
 					MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
+					SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>();
+
+					if (skinned_mesh_renderer)
+					{
+						meshRenderer = skinned_mesh_renderer;
+					}
+
 					if (!meshRenderer)
 						continue;
 
@@ -158,6 +169,20 @@ namespace LitchiRuntime
 					// Skip objects outside of the view frustum
 					if (!light->IsInViewFrustum(renderable, array_index))
 						continue;
+
+					if (skinned_mesh_renderer)
+					{
+						pso.shader_vertex = shader_skin_v;
+						pso.shader_pixel = is_transparent_pass ? shader_skin_p : nullptr;
+
+					}
+					else
+					{
+						pso.shader_vertex = shader_v;
+						pso.shader_pixel = is_transparent_pass ? shader_p : nullptr;
+					}
+
+					cmd_list->SetPipelineState(pso);
 
 					if (!render_pass_active)
 					{
