@@ -281,7 +281,7 @@ RTTR_REGISTRATION //注册反射
 	// MeshRenderer
 	registration::class_<MeshRenderer>("MeshRenderer")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		.property("materialPath",&MeshRenderer::materialPath)
+		.property("materialPath",&MeshRenderer::GetMaterialPath, &MeshRenderer::SetMaterialPath)
 			(rttr::metadata("AssetPath",true), rttr::metadata("AssetType", PathParser::EFileType::MATERIAL));
 
 	// SkinnedMeshRenderer

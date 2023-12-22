@@ -23,29 +23,33 @@ namespace LitchiRuntime
 	
 	void MeshRenderer::PostResourceLoaded()
 	{
-		DEBUG_LOG_INFO("PostResourceLoaded Path {}", materialPath);
-
-		// todo
-
-		if (materialPath.empty())
+		if (m_material_path.empty() || m_material_path == "Empty")
 		{
 			return;
 		}
 
-		m_material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
+		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
+		if (!material)
+		{
+			DEBUG_LOG_WARN("Failed to load material from \"{}\"", m_material_path);
+			return;
+		}
+		SetMaterial(material);
 	}
 	void MeshRenderer::PostResourceModify()
 	{
-		DEBUG_LOG_INFO("PostResourceModify Path {}", materialPath);
-
-		// todo
-
-		if (materialPath.empty())
+		if (m_material_path.empty() || m_material_path == "Empty")
 		{
 			return;
 		}
 
-		m_material = ApplicationBase::Instance()->materialManager->GetResource(materialPath);
+		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
+		if (!material)
+		{
+			DEBUG_LOG_WARN("Failed to load material from \"{}\"", m_material_path);
+			return;
+		}
+		SetMaterial(material);
 	}
 
 	// all functions (set/load) resolve to this
@@ -61,6 +65,8 @@ namespace LitchiRuntime
 		// set to false otherwise material won't serialize/deserialize
 		m_material_default = false;
 
+		m_material_path = material->GetResourceFilePathAsset();
+
 		return material;
 	}
 
@@ -68,8 +74,8 @@ namespace LitchiRuntime
 	{
 		// load the material
 		//auto material = make_shared<Material>();
-		auto material = new Material();
-		if (!material->LoadFromFile(file_path))
+		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
+		if (!material)
 		{
 			DEBUG_LOG_WARN("Failed to load material from \"{}\"", file_path.c_str());
 			return nullptr;
@@ -81,32 +87,8 @@ namespace LitchiRuntime
 
 	void MeshRenderer::SetDefaultMaterial()
 	{
-		// todo:
-
-		//m_material_default = true;
-		//const string data_dir = ResourceCache::GetDataDirectory() + "\\";
-		//FileSystem::CreateDirectory(data_dir);
-
-		//// create material
-		//shared_ptr<Material> material = make_shared<Material>();
-		//material->SetResourceFilePath(ResourceCache::GetProjectDirectory() + "standard" + EXTENSION_MATERIAL); // Set resource file path so it can be used by the resource cache
-		//material->SetProperty(MaterialProperty::CanBeEdited, 0.0f);
-		//material->SetProperty(MaterialProperty::UvTilingX, 10.0f);
-		//material->SetProperty(MaterialProperty::UvTilingY, 10.0f);
-		//material->SetProperty(MaterialProperty::ColorR, 1.0f);
-		//material->SetProperty(MaterialProperty::ColorG, 1.0f);
-		//material->SetProperty(MaterialProperty::ColorB, 1.0f);
-		//material->SetProperty(MaterialProperty::ColorA, 1.0f);
-
-		//// set default texture
-		//material->SetTexture(MaterialTexture::Color, Renderer::GetStandardTexture(Renderer_StandardTexture::Checkerboard));
-
-		//// set material
-		//SetMaterial(material);
-		//m_material_default = true;
-
-		m_material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
-
+		auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+		SetMaterial(material);
 		m_material_default = true;
 	}
 

@@ -22,6 +22,9 @@ namespace LitchiRuntime
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;
 
+		void SetMaterialPath(std::string materialPath) { m_material_path = materialPath; }
+		std::string GetMaterialPath() {	return m_material_path;}
+
 		RTTR_ENABLE(Component)
 
 	public:
@@ -50,11 +53,12 @@ namespace LitchiRuntime
 
 	public:
 
+	protected:
+
 		/**
 		 * \brief 材质名称
 		 */
-		std::string materialPath;
-	protected:
+		std::string m_material_path;
 
 		// material
 		bool m_material_default = false;
