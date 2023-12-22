@@ -132,7 +132,7 @@ namespace LitchiRuntime
 				}
 
 				// Set pipeline state
-				// cmd_list->SetPipelineState(pso);
+				//cmd_list->SetPipelineState(pso);
 
 				// State tracking
 				bool render_pass_active = false;
@@ -183,6 +183,7 @@ namespace LitchiRuntime
 					}
 
 					cmd_list->SetPipelineState(pso);
+					auto hash = pso.ComputeHash();
 
 					if (!render_pass_active)
 					{
@@ -205,6 +206,13 @@ namespace LitchiRuntime
 					// Bind geometry
 					cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
 					cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
+
+					// 如果是skinnedMesh 更新蒙皮数据
+					if (skinned_mesh_renderer)
+					{
+						auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();
+						cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
+					}
 
 					// Set pass constants with cascade transform
 					m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
