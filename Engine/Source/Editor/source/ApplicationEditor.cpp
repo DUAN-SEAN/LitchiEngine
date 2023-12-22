@@ -293,16 +293,6 @@ void LitchiEditor::ApplicationEditor::Init()
 
 void LitchiEditor::ApplicationEditor::Run()
 {
-#if DEBUG
-	printf("DEBUG set\n");
-#else
-	printf("DEBUG clear\n");
-#endif
-#if _DEBUG
-	printf("_DEBUG set\n");
-#else
-	printf("_DEBUG clear\n");
-#endif
 	while (IsRunning())
 	{
 		EASY_BLOCK("Frame") {

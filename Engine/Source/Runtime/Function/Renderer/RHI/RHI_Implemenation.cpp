@@ -50,7 +50,7 @@ namespace LitchiRuntime
             // hardware capability viewer: https://vulkan.gpuinfo.org/
         #endif
         
-        #ifdef DEBUG
+        #ifdef _DEBUG
             validation    = true;
             gpu_markers   = true;
             gpu_profiling = true;
@@ -60,11 +60,6 @@ namespace LitchiRuntime
             gpu_markers   = false;
             gpu_profiling = true;
             renderdoc     = false;
-
-          /*  validation = true;
-            gpu_markers = true;
-            gpu_profiling = true;
-            renderdoc = false;*/
         #endif
     } 
 }
