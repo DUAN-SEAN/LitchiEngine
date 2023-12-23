@@ -16,7 +16,10 @@ namespace LitchiRuntime
     }
 
     Collider::~Collider() {
-
+        if (m_pxShape !=nullptr)
+        {
+            Physics::ReleaseShape(m_pxShape);
+        }
     }
 
     void Collider::Awake() {

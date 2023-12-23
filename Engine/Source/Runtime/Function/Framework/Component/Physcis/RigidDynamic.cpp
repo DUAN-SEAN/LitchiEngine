@@ -15,7 +15,6 @@ namespace LitchiRuntime
     }
 
     RigidDynamic::~RigidDynamic() {
-
     }
 
     void RigidDynamic::UpdateCCDState() {

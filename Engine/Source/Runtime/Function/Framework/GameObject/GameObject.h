@@ -75,6 +75,21 @@ namespace LitchiRuntime
 					return dynamic_cast<T*>(*iter);
 				}
 			}
+
+			// Find Drived Class
+			auto derived_classes = t.get_derived_classes();
+			for (auto derived_class : derived_classes) {
+				std::string derived_class_type_name = derived_class.get_name().to_string();
+
+				for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
+				{
+					if ((*iter)->get_type().get_name() == derived_class_type_name)
+					{
+						return dynamic_cast<T*>(*iter);
+					}
+				}
+			}
+
 			return nullptr;
 		}
 		
@@ -92,6 +107,22 @@ namespace LitchiRuntime
 					return dynamic_cast<T*>(*iter);
 				}
 			}
+
+			// Find Drived Class
+			auto derived_classes = t.get_derived_classes();
+			for (auto derived_class : derived_classes) {
+				std::string derived_class_type_name = derived_class.get_name().to_string();
+
+				for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
+				{
+					if ((*iter)->get_type().get_name() == derived_class_type_name && (*iter)->GetUnmanagedId() == unmanagedId)
+					{
+						return dynamic_cast<T*>(*iter);
+					}
+				}
+			}
+
+
 			return nullptr;
 		}
 

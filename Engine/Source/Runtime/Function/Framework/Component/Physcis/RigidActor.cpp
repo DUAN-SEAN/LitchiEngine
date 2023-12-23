@@ -16,6 +16,10 @@ namespace LitchiRuntime
 
     RigidActor::~RigidActor() {
 
+        if (m_pxRigidActor != nullptr)
+        {
+            Physics::ReleaseRigidActor(m_pxRigidActor);
+        }
     }
 
     void RigidActor::Awake() {
@@ -32,7 +36,6 @@ namespace LitchiRuntime
         }
         PxShape* px_shape = collider->px_shape();
         Physics::AttachShape(m_pxRigidActor, px_shape);
-        px_shape->release();
         //    DEBUG_LOG_INFO("px_shape refCount: {}",px_shape->getReferenceCount());
     }
 
