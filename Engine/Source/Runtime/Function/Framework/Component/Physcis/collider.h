@@ -3,6 +3,7 @@
 
 #include "rttr/registration"
 #include "PxPhysicsAPI.h"
+#include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 
 using namespace rttr;
@@ -76,20 +77,23 @@ namespace LitchiRuntime
         virtual void RegisterToRigidActor();
         virtual void UnRegisterToRigidActor();
 
+    	void PostResourceModify() override;
+    protected:
+        void UpdateShape();
+
     private:
         RigidActor* GetRigidActor();
 
     protected:
         PxShape* m_pxShape;
         PxMaterial* m_pxMaterial;
-        bool m_isTrigger;//是触发器，触发器只检测碰撞，而不进行物理模拟。
+        bool m_isTrigger;// trigger collider not simulation
+        Vector3 m_offset;// relative local transform
 
     private:
         RigidActor* m_rigidActor;
-
-    private:
         PhysicMaterialRes m_physicMaterial;
-   
+
         RTTR_ENABLE(Component);
     };
 }

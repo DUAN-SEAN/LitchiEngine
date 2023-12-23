@@ -81,4 +81,40 @@ namespace LitchiRuntime
             }
         }
     };
+
+
+    // 细检测前的过滤类型
+    class SimulationFilterCallback :public PxSimulationFilterCallback
+    {
+    public:
+        PxFilterFlags	pairFound(PxU32 pairID,
+            PxFilterObjectAttributes attributes0, PxFilterData filterData0, const PxActor* a0, const PxShape* s0,
+            PxFilterObjectAttributes attributes1, PxFilterData filterData1, const PxActor* a1, const PxShape* s1,
+            PxPairFlags& pairFlags)
+        {
+            // 如果是Trigger 且 shape层级相同时就可以不走后续检测
+
+            //printf("pairFound\n");
+            return PxFilterFlag::eNOTIFY;
+        }
+
+
+        void pairLost(PxU32 pairID,
+            PxFilterObjectAttributes attributes0,
+            PxFilterData filterData0,
+            PxFilterObjectAttributes attributes1,
+            PxFilterData filterData1,
+            bool objectRemoved)
+        {
+            //printf("pairLost\n");
+        }
+
+
+        bool statusChange(PxU32& pairID, PxPairFlags& pairFlags, PxFilterFlags& filterFlags)
+        {
+            //printf("statusChange\n");
+            return false;
+        }
+
+    };
 }

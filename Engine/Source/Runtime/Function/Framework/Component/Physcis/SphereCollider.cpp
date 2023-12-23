@@ -16,15 +16,13 @@ namespace LitchiRuntime
 
     void SphereCollider::UpdateRadius(float radius)
     {
-        if(m_pxShape)
-        {
-            Physics::UpdateSphereShapeSize(m_pxShape, radius);
-        }
+        m_radius = radius;
+        UpdateShape();
     }
 
     void SphereCollider::CreateShape() {
         if (m_pxShape == nullptr) {
-            m_pxShape = Physics::CreateSphereShape(m_radius, m_pxMaterial);
+            m_pxShape = Physics::CreateSphereShape(m_radius, m_pxMaterial, m_offset, Quaternion::Identity);
         }
     }
 }

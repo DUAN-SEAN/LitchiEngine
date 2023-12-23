@@ -450,7 +450,6 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
-	//m_panelsManager.CreatePanel<HardwareInfo>("Hardware Info", false, settings, 0.2f, 50);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);

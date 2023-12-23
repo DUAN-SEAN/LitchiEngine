@@ -10,11 +10,16 @@
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidActor.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
+#include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
+#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
@@ -61,14 +66,15 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(0, "MeshRenderer");
 		componentSelectorWidget.choices.emplace(1, "MeshFilter");
 		componentSelectorWidget.choices.emplace(2, "Camera");
-		componentSelectorWidget.choices.emplace(3, "Collider");
-		componentSelectorWidget.choices.emplace(4, "RigidActor");
-		componentSelectorWidget.choices.emplace(5, "DirectionalLight");
-		componentSelectorWidget.choices.emplace(6, "PointLight");
-		componentSelectorWidget.choices.emplace(7, "SpotLight");
+		componentSelectorWidget.choices.emplace(3, "SkinnedMeshRenderer");
+		componentSelectorWidget.choices.emplace(5, "Light");
 		componentSelectorWidget.choices.emplace(8, "Animator");
 		componentSelectorWidget.choices.emplace(9, "UIText");
 		componentSelectorWidget.choices.emplace(10, "UIImage");
+		componentSelectorWidget.choices.emplace(11, "RigidStatic");
+		componentSelectorWidget.choices.emplace(12, "RigidDynamic");
+		componentSelectorWidget.choices.emplace(13, "BoxCollider");
+		componentSelectorWidget.choices.emplace(14, "SphereCollider");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f ));
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -80,12 +86,15 @@ LitchiEditor::Inspector::Inspector
 			case 0: GetTargetActor()->AddComponent<MeshRenderer>(); break;
 			case 1: GetTargetActor()->AddComponent<MeshFilter>(); break;
 			case 2: GetTargetActor()->AddComponent<Camera>();				break;
-			case 3: GetTargetActor()->AddComponent<Collider>();				break;
-			case 4: GetTargetActor()->AddComponent<RigidActor>();				break;
+			case 3: GetTargetActor()->AddComponent<SkinnedMeshRenderer>();				break;
 			case 5: GetTargetActor()->AddComponent<Light>();				break;
 			case 8: GetTargetActor()->AddComponent<Animator>();				break;
 			case 9: GetTargetActor()->AddComponent<UIText>();				break;
 			case 10: GetTargetActor()->AddComponent<UIImage>();				break;
+			case 11: GetTargetActor()->AddComponent<RigidStatic>();				break;
+			case 12: GetTargetActor()->AddComponent<RigidDynamic>();				break;
+			case 13: GetTargetActor()->AddComponent<BoxCollider>();				break;
+			case 14: GetTargetActor()->AddComponent<SphereCollider>();				break;
 			}
 
 			Refresh();
@@ -107,12 +116,15 @@ LitchiEditor::Inspector::Inspector
 			case 0: defineButtonsStates(GetTargetActor()->GetComponent<MeshRenderer>());		return;
 			case 1: defineButtonsStates(GetTargetActor()->GetComponent<MeshFilter>());				return;
 			case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
-			case 3: defineButtonsStates(GetTargetActor()->GetComponent<Collider>());		return;
-			case 4: defineButtonsStates(GetTargetActor()->GetComponent<RigidActor>());		return;
+			case 3: defineButtonsStates(GetTargetActor()->GetComponent<SkinnedMeshRenderer>());		return;
 			case 5: defineButtonsStates(GetTargetActor()->GetComponent<Light>());		return;
 			case 8: defineButtonsStates(GetTargetActor()->GetComponent<Animator>());		return;
 			case 9: defineButtonsStates(GetTargetActor()->GetComponent<UIText>());		return;
 			case 10: defineButtonsStates(GetTargetActor()->GetComponent<UIImage>());		return;
+			case 11: defineButtonsStates(GetTargetActor()->GetComponent<RigidStatic>());		return;
+			case 12: defineButtonsStates(GetTargetActor()->GetComponent<RigidDynamic>());		return;
+			case 13: defineButtonsStates(GetTargetActor()->GetComponent<BoxCollider>());		return;
+			case 14: defineButtonsStates(GetTargetActor()->GetComponent<SphereCollider>());		return;
 			}
 		};
 

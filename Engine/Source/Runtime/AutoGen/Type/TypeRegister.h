@@ -351,7 +351,8 @@ RTTR_REGISTRATION //注册反射
 
 	// BoxCollider
 	registration::class_<BoxCollider>("BoxCollider")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("Size", &BoxCollider::GetSize, &BoxCollider::SetSize);
 
 	// SphereCollider
 	registration::class_<SphereCollider>("SphereCollider")

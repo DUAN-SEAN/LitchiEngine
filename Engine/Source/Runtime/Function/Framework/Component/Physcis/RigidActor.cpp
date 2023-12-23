@@ -6,6 +6,7 @@
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Core/Log/debug.h"
 #include "collider.h"
+#include "Runtime/Function/Physics/physics.h"
 
 namespace LitchiRuntime
 {
@@ -30,7 +31,7 @@ namespace LitchiRuntime
             return;
         }
         PxShape* px_shape = collider->px_shape();
-        m_pxRigidActor->attachShape(*px_shape);
+        Physics::AttachShape(m_pxRigidActor, px_shape);
         px_shape->release();
         //    DEBUG_LOG_INFO("px_shape refCount: {}",px_shape->getReferenceCount());
     }
@@ -40,6 +41,6 @@ namespace LitchiRuntime
             return;
         }
         PxShape* px_shape = collider->px_shape();
-        m_pxRigidActor->detachShape(*px_shape);//detach后px_shape refCount==0，自动释放。
+        Physics::DetachShape(m_pxRigidActor, px_shape);
     }
 }

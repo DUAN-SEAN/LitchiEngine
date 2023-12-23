@@ -17,7 +17,14 @@ namespace LitchiRuntime
             return m_size;
         }
 
+        void SetSize(Vector3 size)
+        {
+            m_size = size;
+        }
+
         void UpdateSize(const Vector3& size);
+
+        void PostResourceModify() override;
 
     protected:
         void CreateShape() override;

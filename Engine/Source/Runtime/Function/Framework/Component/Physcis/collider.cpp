@@ -11,7 +11,7 @@
 
 namespace LitchiRuntime
 {
-    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_rigidActor(nullptr), m_isTrigger(false) {
+    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_rigidActor(nullptr), m_isTrigger(false) , m_offset(0.0f){
 
     }
 
@@ -63,6 +63,24 @@ namespace LitchiRuntime
         }
         m_rigidActor->DeAttachColliderShape(this);
         m_pxShape = nullptr;
+    }
+
+    void Collider::PostResourceModify()
+    {
+        // todo:
+    }
+
+    void Collider::UpdateShape()
+    {
+        auto rigidActor = GetRigidActor();
+        if(rigidActor!=nullptr)
+        {
+            UnRegisterToRigidActor();
+        }
+
+        CreateShape();
+        UpdateTriggerState();
+        RegisterToRigidActor();
     }
 
     RigidActor* Collider::GetRigidActor() {
