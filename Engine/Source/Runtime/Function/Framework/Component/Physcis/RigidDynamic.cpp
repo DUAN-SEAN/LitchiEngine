@@ -44,6 +44,6 @@ namespace LitchiRuntime
         //PxRigidBody受Physx物理模拟驱动，位置被改变。获取最新的位置，去更新Transform。
         PxTransform px_transform = m_pxRigidActor->getGlobalPose();
         Transform* transform = GetGameObject()->GetComponent<Transform>();
-        transform->SetPositionLocal(Vector3(px_transform.p.x, px_transform.p.y, px_transform.p.z));
+        transform->SetPosition(Vector3(px_transform.p.x, px_transform.p.y, px_transform.p.z));
     }
 }

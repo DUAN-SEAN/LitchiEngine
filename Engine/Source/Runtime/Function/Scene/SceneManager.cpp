@@ -135,7 +135,7 @@ namespace LitchiRuntime
 		return root_entities;
 	}
 
-	void Scene::Tick()
+	void Scene::Update()
 	{
 		// Start
 
@@ -146,6 +146,17 @@ namespace LitchiRuntime
 			for (auto* comp :entity->GetComponents())
 			{
 				comp->Update();
+			}
+		}
+	}
+
+	void Scene::FixedUpdate()
+	{
+		for (auto* entity : m_gameObjectList)
+		{
+			for (auto* comp : entity->GetComponents())
+			{
+				comp->FixedUpdate();
 			}
 		}
 	}

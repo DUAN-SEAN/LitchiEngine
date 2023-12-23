@@ -76,6 +76,8 @@ namespace LitchiEditor
 
 	private:
 
+		float m_restFixedTime = 0.0f;
+
 		uint64_t m_elapsedFrames = 0;
 		Canvas			m_canvas;
 		static ApplicationEditor* instance_;

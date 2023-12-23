@@ -29,6 +29,9 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/Camera/Camera.h";
+#include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
+#include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
 
@@ -261,7 +264,14 @@ void LitchiEditor::ApplicationEditor::Init()
 	//transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
 
 	auto cube = CreateModel(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f),"Engine\\Models\\Cube.fbx");
-	auto cube2 = CreateModel(scene, "Cube01", Vector3(0.0f, 4.5f, -1.0f), Quaternion::Identity, Vector3::One, "Engine\\Models\\Cube.fbx");
+	auto rigidStatic = cube->AddComponent<RigidStatic>();
+	auto cubeBoxCollider =  cube->AddComponent<BoxCollider>();
+	cubeBoxCollider->UpdateSize(Vector3(5.5f, 1.0f, 10.5f));
+
+	auto cube2 = CreateModel(scene, "Cube01", Vector3(0.0f, 10.0f, -1.0f), Quaternion::Identity, Vector3::One, "Engine\\Models\\Cube.fbx");
+	auto rigidDynamic = cube2->AddComponent<RigidDynamic>();
+	auto cubeBoxCollider2 = cube2->AddComponent<BoxCollider>();
+
 	auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
 	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
 	cubeMeshRenderer->SetMaterial(textMat);
@@ -336,11 +346,24 @@ void LitchiEditor::ApplicationEditor::Update()
 	// EASY_FUNCTION(profiler::colors::Magenta);
 	Time::Update();
 	UpdateScreenSize();
-
 	InputManager::Tick();
 
 	auto scene = this->sceneManager->GetCurrentScene();
-	scene->Tick();
+
+	// Physics Tick
+	m_restFixedTime += Time::delta_time();
+	float fixedDeltaTime = Time::fixed_update_time();
+	while (m_restFixedTime > fixedDeltaTime)
+	{
+		Physics::FixedUpdate(fixedDeltaTime);
+
+		scene->FixedUpdate();
+
+		m_restFixedTime -= fixedDeltaTime;
+	}
+
+	scene->Update();
+
 	//// Update
 	//for (auto* entity : scene->GetAllGameObjectList())
 	//{

@@ -15,6 +15,8 @@ namespace LitchiRuntime
         {
             return m_radius;
         }
+
+        void UpdateRadius(float radius);
     protected:
         void CreateShape() override;
 

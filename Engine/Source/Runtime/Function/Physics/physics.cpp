@@ -21,7 +21,13 @@ namespace LitchiRuntime
 
         //~zh eNOTIFY_TOUCH_FOUND:当碰撞发生时处理回调。 eNOTIFY_TOUCH_LOST:当碰撞结束时处理回调。
         //~en eNOTIFY_TOUCH_FOUND:When collision occurs,process callback. eNOTIFY_TOUCH_LOST:When collision ends,process callback.
-        pairFlags = PxPairFlag::eSOLVE_CONTACT | PxPairFlag::eDETECT_DISCRETE_CONTACT | PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
+        pairFlags = PxPairFlag::eSOLVE_CONTACT
+            |PxPairFlag::eDETECT_DISCRETE_CONTACT
+            |PxPairFlag::eNOTIFY_TOUCH_FOUND
+            |PxPairFlag::eNOTIFY_TOUCH_LOST
+            | PxPairFlag::eNOTIFY_TOUCH_PERSISTS // 会持续性的报告接触
+    		| PxPairFlag::eNOTIFY_CONTACT_POINTS // 提供对接触点的报告;
+    		| PxPairFlag::eMODIFY_CONTACTS; // 提供对接触点的报告;
 
         //~zh Trigger的意思就是不处理物理碰撞，只是触发一个回调函数。
         //~en Trigger means that the physical collision is not processed,only a callback function is triggered.
@@ -35,7 +41,7 @@ namespace LitchiRuntime
             //~en When the scene is enabled CCD, you need to specify the collision to use CCD and handle the callback.
             pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT | PxPairFlag::eNOTIFY_TOUCH_CCD;
         }
-        return PxFilterFlags();
+        return PxFilterFlag::eNOTIFY;
     }
 
 
@@ -57,12 +63,12 @@ namespace LitchiRuntime
         px_scene_ = CreatePxScene();
     }
 
-    void Physics::FixedUpdate() {
+    void Physics::FixedUpdate(float fixedDeltaTime) {
         if (px_scene_ == nullptr) {
             DEBUG_LOG_ERROR("px_scene_==nullptr,please call Physics::CreatePxScene() first");
             return;
         }
-        px_scene_->simulate(1.0f / 60.0f);
+        px_scene_->simulate(fixedDeltaTime);
         px_scene_->fetchResults(true);
     }
 
@@ -127,6 +133,16 @@ namespace LitchiRuntime
     PxShape* Physics::CreateBoxShape(const Vector3& size, PxMaterial* material) {
         PxShape* shape = px_physics_->createShape(PxBoxGeometry(size.x / 2, size.y / 2, size.z / 2), *material);
         return shape;
+    }
+
+    void Physics::UpdateBoxShapeSize(PxShape* shape,const Vector3& size)
+    {
+        shape->setGeometry(PxBoxGeometry(size.x / 2, size.y / 2, size.z / 2));
+    }
+
+    void Physics::UpdateSphereShapeSize(PxShape* shape,float radius)
+    {
+        shape->setGeometry(PxSphereGeometry(radius));
     }
 
     bool Physics::RaycastSingle(Vector3& origin, Vector3& dir, float distance, RaycastHit* raycast_hit) {

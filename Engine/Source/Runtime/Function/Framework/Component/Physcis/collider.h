@@ -25,9 +25,9 @@ namespace LitchiRuntime
         void SetRestitution(float restitution) { m_restitution = restitution; }
 
     private:
-        float m_staticFriction;
-        float m_dynamicFriction;
-        float m_restitution;
+        float m_staticFriction = 0.6f;
+        float m_dynamicFriction = 0.6f;
+        float m_restitution = 0.1f;
     };
 
     class RigidActor;

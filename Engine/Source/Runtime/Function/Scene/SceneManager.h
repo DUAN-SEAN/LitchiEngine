@@ -30,7 +30,8 @@ namespace LitchiRuntime
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
 
-		void Tick();
+		void Update();
+		void FixedUpdate();
 
 		void Resolve() { m_resolve = true; }
 		bool IsNeedResolve() { return m_resolve; }

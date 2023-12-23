@@ -18,7 +18,7 @@ namespace LitchiRuntime
         static void Init();
 
         /// 驱动物理模拟
-        static void FixedUpdate();
+        static void FixedUpdate(float fixedDeltaTime);
 
         /// 创建物理模拟的场景单元
         /// \return 创建的物理场景单元
@@ -33,6 +33,9 @@ namespace LitchiRuntime
         static PxShape* CreateSphereShape(float radius, PxMaterial* material);
 
         static PxShape* CreateBoxShape(const Vector3& size, PxMaterial* material);
+
+        static void UpdateBoxShapeSize(PxShape* shape,const Vector3& size);
+        static void UpdateSphereShapeSize(PxShape* shape,float radius);
 
         static bool enable_ccd() { return enable_ccd_; }
         static void set_enable_ccd(bool enable_ccd) { enable_ccd_ = enable_ccd; }

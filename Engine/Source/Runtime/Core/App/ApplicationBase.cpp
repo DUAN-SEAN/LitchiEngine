@@ -145,7 +145,7 @@ namespace LitchiRuntime
 		auto scene = this->sceneManager->GetCurrentScene();
 		if (scene)
 		{
-			scene->Tick();
+			scene->Update();
 		}
 
 		// Input::Update();
