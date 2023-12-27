@@ -36,6 +36,7 @@
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
 
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
+#include "Runtime/Resource/AssetManager.h"
 #include "Runtime/Resource/FontManager.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
@@ -252,37 +253,33 @@ void LitchiEditor::ApplicationEditor::Init()
 		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
 	}
 
-	auto scene = sceneManager->CreateScene("Default");
-	m_rendererPath4SceneView->SetScene(scene);
+	//auto scene = sceneManager->CreateScene("Default");
+	//m_rendererPath4SceneView->SetScene(scene);
+	//
+	//auto cube = CreateModel(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f),"Engine\\Models\\Cube.fbx");
+	//auto rigidStatic = cube->AddComponent<RigidStatic>();
+	//auto cubeBoxCollider =  cube->AddComponent<BoxCollider>();
+	//cubeBoxCollider->UpdateSize(Vector3(5.5f, 1.0f, 10.5f));
 
-	//Vector3& camera_position = Vector3(0.0f, 0.0f, -10.0f);
-	//Vector3& camera_rotation = Vector3(0.0f, 0.0, 0.0f);
-	//auto camerGo = scene->CreateGameObject("Camera");
-	//auto camera = camerGo->AddComponent<Camera>();
-	//auto transform4Camera = camerGo->GetComponent<Transform>();
-	//transform4Camera->SetPositionLocal(camera_position); // place it at the top of the capsule
-	//transform4Camera->SetRotation(Quaternion::FromEulerAngles(camera_rotation));
+	//auto cube2 = CreateModel(scene, "Cube01", Vector3(0.0f, 10.0f, -1.0f), Quaternion::Identity, Vector3::One, "Engine\\Models\\Cube.fbx");
+	//auto rigidDynamic = cube2->AddComponent<RigidDynamic>();
+	//auto cubeBoxCollider2 = cube2->AddComponent<BoxCollider>();
 
-	auto cube = CreateModel(scene, "Cube01", Vector3(0.0f, 4.0f, 0.0f), Quaternion::Identity, Vector3(5.5f, 1.0f, 10.5f),"Engine\\Models\\Cube.fbx");
-	auto rigidStatic = cube->AddComponent<RigidStatic>();
-	auto cubeBoxCollider =  cube->AddComponent<BoxCollider>();
-	cubeBoxCollider->UpdateSize(Vector3(5.5f, 1.0f, 10.5f));
+	//auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+	//auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
+	//cubeMeshRenderer->SetMaterial(textMat);
+	//cubeMeshRenderer = cube2->GetComponent<MeshRenderer>();
+	//cubeMeshRenderer->SetMaterial(textMat);
+	//
+	//CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
+	//auto model0 = CreateSkinnedModel(scene, "rp_sophia", Vector3(-2.0f, 4.5f, -4.5f), Quaternion::FromEulerAngles(90.0f,0.0f,0.0f), Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
+	//auto model1 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	//auto model2 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
+	//auto model3 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
 
-	auto cube2 = CreateModel(scene, "Cube01", Vector3(0.0f, 10.0f, -1.0f), Quaternion::Identity, Vector3::One, "Engine\\Models\\Cube.fbx");
-	auto rigidDynamic = cube2->AddComponent<RigidDynamic>();
-	auto cubeBoxCollider2 = cube2->AddComponent<BoxCollider>();
-
-	auto textMat = materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
-	auto cubeMeshRenderer = cube->GetComponent<MeshRenderer>();
-	cubeMeshRenderer->SetMaterial(textMat);
-	cubeMeshRenderer = cube2->GetComponent<MeshRenderer>();
-	cubeMeshRenderer->SetMaterial(textMat);
-	
-	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-	auto model0 = CreateSkinnedModel(scene, "rp_sophia", Vector3(-2.0f, 4.5f, -4.5f), Quaternion::FromEulerAngles(90.0f,0.0f,0.0f), Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\rp_sophia_animated_003_idling.fbx");
-	auto model1 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	auto model2 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
-	auto model3 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
+	// AssetManager::SaveAsset(scene, projectAssetsPath + "Scenes\\New Scene3.scene");
+	Scene* scene = new Scene();
+	AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
 
 	// Setup UI
 	SetupUI();
@@ -291,6 +288,8 @@ void LitchiEditor::ApplicationEditor::Init()
 	{
 		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
 	}
+
+	// AssetManager::SaveAsset(scene, projectAssetsPath +"Scenes\\New Scene3.scene");
 
 	sceneManager->SetCurrentScene(scene);
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();

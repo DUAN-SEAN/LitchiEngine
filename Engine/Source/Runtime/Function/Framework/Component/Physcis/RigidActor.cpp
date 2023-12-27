@@ -18,6 +18,7 @@ namespace LitchiRuntime
 
         if (m_pxRigidActor != nullptr)
         {
+            // if attach shape, internal release shape ref count, if shape ref = 0 shape will be released
             Physics::ReleaseRigidActor(m_pxRigidActor);
         }
     }
@@ -39,7 +40,7 @@ namespace LitchiRuntime
         //    DEBUG_LOG_INFO("px_shape refCount: {}",px_shape->getReferenceCount());
     }
 
-    void RigidActor::DeAttachColliderShape(Collider* collider) {
+    void RigidActor::DetachColliderShape(Collider* collider) {
         if (collider == nullptr) {
             return;
         }

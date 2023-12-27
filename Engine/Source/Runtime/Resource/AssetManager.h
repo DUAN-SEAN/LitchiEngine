@@ -42,11 +42,14 @@ namespace LitchiRuntime
         {
             // std::ofstream asset_json_file(GetFullPath(asset_url));
             std::ofstream asset_json_file(asset_url);
-            if (!asset_json_file)
+           /* if (!asset_json_file)
             {
-                DEBUG_LOG_ERROR("open file {} failed!", asset_url);
-                return false;
-            }
+                if(!std::filesystem::create_directory(asset_url))
+                {
+                    DEBUG_LOG_ERROR("open file {} failed!", asset_url);
+                	return false;
+                }
+            }*/
 
             // write to json object and dump to string
           /*  auto&&        asset_json      = SerializerManager::SerializeToJson(out_asset);
@@ -57,6 +60,7 @@ namespace LitchiRuntime
             // write to file
             asset_json_file << asset_json_text;
             asset_json_file.flush();
+            asset_json_file.close();
 
             return true;
         }

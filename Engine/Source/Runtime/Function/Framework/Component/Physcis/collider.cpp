@@ -11,7 +11,7 @@
 
 namespace LitchiRuntime
 {
-    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_rigidActor(nullptr), m_isTrigger(false) , m_offset(0.0f){
+    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_isTrigger(false), m_offset(0.0f) , m_rigidActor(nullptr){
 
     }
 
@@ -64,7 +64,7 @@ namespace LitchiRuntime
             DEBUG_LOG_ERROR("rigid_actor_ is nullptr,Collider need to be attached to a rigid_actor");
             return;
         }
-        m_rigidActor->DeAttachColliderShape(this);
+        m_rigidActor->DetachColliderShape(this);
         m_pxShape = nullptr;
     }
 
@@ -79,6 +79,11 @@ namespace LitchiRuntime
         if(rigidActor!=nullptr)
         {
             UnRegisterToRigidActor();
+        }
+
+        if(m_pxShape)
+        {
+            Physics::ReleaseShape(m_pxShape);
         }
 
         CreateShape();

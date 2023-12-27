@@ -45,10 +45,7 @@ namespace LitchiRuntime
                 return;
             }
             m_isTrigger = is_trigger;
-            UnRegisterToRigidActor();
-            CreateShape();
-            UpdateTriggerState();
-            RegisterToRigidActor();
+            UpdateShape();
         }
 
     public:
@@ -71,14 +68,14 @@ namespace LitchiRuntime
         void FixedUpdate() override;
 
         virtual void CreatePhysicMaterial();
+    	void PostResourceModify() override;
+    protected:
         virtual void CreateShape();
         /// 更新Shape 触发器 Filter
         virtual void UpdateTriggerState();
         virtual void RegisterToRigidActor();
         virtual void UnRegisterToRigidActor();
 
-    	void PostResourceModify() override;
-    protected:
         void UpdateShape();
 
     private:

@@ -13,7 +13,7 @@ namespace LitchiRuntime
         ~RigidActor();
 
         virtual void AttachColliderShape(Collider* collider);
-        virtual void DeAttachColliderShape(Collider* collider);
+        virtual void DetachColliderShape(Collider* collider);
 
     public:
         void Awake() override;
