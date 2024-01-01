@@ -5,11 +5,6 @@
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Core/Math/Matrix.h"
 #include "Runtime/Core/Math/Quaternion.h"
-//#include "Runtime/Core/Math/FTransform.h"
-//
-//#include <gtc/matrix_transform.hpp>
-//#include <gtx/transform2.hpp>
-//#include "gtx/quaternion.hpp"
 
 namespace LitchiRuntime
 {
@@ -18,34 +13,9 @@ namespace LitchiRuntime
         Transform();
         ~Transform();
 
-        //Vector3 GetLocalPosition() const { return m_transform.GetLocalPosition(); }
-        //Quaternion GetLocalRotation() const { return m_transform.GetLocalRotation(); }
-        //Vector3 GetLocalScale() const { return m_transform.GetLocalScale(); }
-        //Matrix GetWorldMatrix() const
-        //{
-
-        //    Matrix trans = glm::translate(m_transform.GetWorldPosition());
-        //    Matrix rotation = glm::toMat4(m_transform.GetWorldRotation());
-        //    Matrix scale = glm::scale(m_transform.GetWorldScale()); //缩放;
-        //    return trans * rotation * scale;
-        //}
-
-        //void SetLocalPosition(Vector3 position) { m_transform.SetLocalPosition(position); }
-        //void SetLocalRotation(Quaternion rotation) { m_transform.SetLocalRotation(rotation); }
-        //void SetLocalScale(Vector3 scale) { m_transform.SetLocalScale(scale); }
-
-
-        //Vector3 GetWorldPosition() const { return m_transform.GetWorldPosition(); }
-        //Quaternion GetWorldRotation() const { return m_transform.GetWorldRotation(); }
-        //Vector3 GetWorldScale() const { return m_transform.GetWorldScale(); }
-        //FTransform& GetTransform() { return m_transform; }
-
-
          //= ICOMPONENT ===============================
         //void OnInitialize() override;
         //void OnTick() override;
-        //void Serialize(FileStream* stream) override;
-        //void Deserialize(FileStream* stream) override;
         //============================================
 
         //= POSITION ======================================================================

@@ -77,6 +77,16 @@ void SkinnedMeshRenderer::Update()
 	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
 }
 
+void LitchiRuntime::SkinnedMeshRenderer::PostResourceLoaded()
+{
+	MeshRenderer::PostResourceLoaded();
+}
+
+void LitchiRuntime::SkinnedMeshRenderer::PostResourceModify()
+{
+	MeshRenderer::PostResourceModify();
+}
+
 /**
  * \brief 计算骨骼在当前帧的最终变换
  * \param timePos 当前时间偏移

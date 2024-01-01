@@ -1,7 +1,9 @@
 ﻿
 #include "MeshRenderer.h"
 #include "MeshFilter.h"
+#include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 
 namespace LitchiRuntime
 {
@@ -23,18 +25,7 @@ namespace LitchiRuntime
 	
 	void MeshRenderer::PostResourceLoaded()
 	{
-		if (m_material_path.empty() || m_material_path == "Empty")
-		{
-			return;
-		}
-
-		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
-		if (!material)
-		{
-			DEBUG_LOG_WARN("Failed to load material from \"{}\"", m_material_path);
-			return;
-		}
-		SetMaterial(material);
+		PostResourceModify();
 	}
 	void MeshRenderer::PostResourceModify()
 	{

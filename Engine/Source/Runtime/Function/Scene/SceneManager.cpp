@@ -176,7 +176,15 @@ namespace LitchiRuntime
 
 		for (auto go : m_gameObjectList)
 		{
+			go->SetScene(this);
 			go->PostResourceLoaded();
+		}
+
+		for (auto go : m_gameObjectList)
+		{
+			go->ForeachComponent([](Component* comp){
+				comp->Awake();
+			});
 		}
 
 		for (auto go : m_gameObjectList)

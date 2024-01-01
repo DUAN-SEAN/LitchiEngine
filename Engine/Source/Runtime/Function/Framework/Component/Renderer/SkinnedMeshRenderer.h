@@ -15,6 +15,9 @@ namespace LitchiRuntime
 
 		void Update() override;
 
+		void PostResourceLoaded() override;
+		void PostResourceModify() override;
+
 		std::shared_ptr<RHI_ConstantBuffer> GetBoneConstantBuffer() { return m_bone_constant_buffer; }
 
 	public:

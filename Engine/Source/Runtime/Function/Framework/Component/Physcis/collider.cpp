@@ -68,6 +68,10 @@ namespace LitchiRuntime
         m_pxShape = nullptr;
     }
 
+    void Collider::PostResourceLoaded()
+    {
+    }
+
     void Collider::PostResourceModify()
     {
         // todo:

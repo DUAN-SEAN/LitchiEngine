@@ -54,4 +54,12 @@ void LitchiRuntime::Animator::SetAnimationClipMap(std::unordered_map<std::string
 	m_animationClipMap = clipMap;
 }
 
+void LitchiRuntime::Animator::PostResourceLoaded()
+{
+}
+
+void LitchiRuntime::Animator::PostResourceModify()
+{
+}
+
 

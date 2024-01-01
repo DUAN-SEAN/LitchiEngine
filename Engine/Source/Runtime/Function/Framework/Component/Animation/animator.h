@@ -44,6 +44,9 @@ namespace LitchiRuntime
 
 	public:
 
+		void PostResourceLoaded() override;
+		void PostResourceModify() override;
+
 		RTTR_ENABLE(Component)
 
 	private:

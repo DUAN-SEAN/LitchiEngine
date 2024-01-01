@@ -68,6 +68,8 @@ namespace LitchiRuntime
         void FixedUpdate() override;
 
         virtual void CreatePhysicMaterial();
+
+        void PostResourceLoaded() override;
     	void PostResourceModify() override;
     protected:
         virtual void CreateShape();

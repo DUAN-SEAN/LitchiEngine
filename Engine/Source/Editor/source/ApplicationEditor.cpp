@@ -276,10 +276,13 @@ void LitchiEditor::ApplicationEditor::Init()
 	//auto model1 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
 	//auto model2 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\Standing Torch Walk Left.fbx");
 	//auto model3 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
-
 	// AssetManager::SaveAsset(scene, projectAssetsPath + "Scenes\\New Scene3.scene");
+
 	Scene* scene = new Scene();
 	AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+	scene->PostResourceLoaded();
+	scene->Resolve();
+	m_rendererPath4SceneView->SetScene(scene);
 
 	// Setup UI
 	SetupUI();

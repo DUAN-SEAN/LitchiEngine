@@ -14,6 +14,17 @@ namespace LitchiRuntime
 
     }
 
+    void SphereCollider::PostResourceLoaded()
+    {
+        // do nothing init in Awake
+    }
+
+    void SphereCollider::PostResourceModify()
+    {
+        Collider::PostResourceLoaded();
+        UpdateRadius(m_radius);
+    }
+
     void SphereCollider::UpdateRadius(float radius)
     {
         m_radius = radius;

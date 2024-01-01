@@ -251,6 +251,7 @@ RTTR_REGISTRATION //注册反射
 		.property("id", &GameObject::m_id)
 		.property("parentId", &GameObject::m_parentId)
 		.property("layer", &GameObject::GetLayer,&GameObject::SetLayer)
+		.property("name", &GameObject::GetName,&GameObject::SetName)
 		.property("componentList", &GameObject::m_componentList);
 
 	registration::class_<Scene>("Scene")

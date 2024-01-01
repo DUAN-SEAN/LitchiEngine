@@ -2,6 +2,7 @@
 #include "MeshFilter.h"
 
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Resource/ModelManager.h"
@@ -34,14 +35,19 @@ namespace LitchiRuntime
 
     void MeshFilter::PostResourceLoaded()
     {
-        //// 资源加载后
-        //if(modelPath.empty())
-        //{
-        //    return;
-        //}
+        PostResourceModify();
 
-        //// 通过路径加载模型资源
-        //m_model = ApplicationBase::Instance()->modelManager->GetResource(modelPath);
+        auto animator = GetGameObject()->GetComponent<Animator>();
+        if (m_mesh && animator)
+        {
+            std::unordered_map<std::string, AnimationClip> animations;
+            m_mesh->GetAnimations(animations);
+            animator->SetAnimationClipMap(animations);
+
+            // todo temp
+            auto firstClipName = animations.begin()->first;
+            animator->Play(firstClipName);
+        }
     }
 
     void MeshFilter::PostResourceModify()
