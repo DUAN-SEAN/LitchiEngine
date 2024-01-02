@@ -68,6 +68,8 @@ namespace LitchiRuntime
         std::unique_ptr<Window> window;
         std::unique_ptr<SceneManager> sceneManager;
 
+        std::unique_ptr<PrefabManager> prefabManager;
+
         static ApplicationBase* Instance() { return s_instance; }
         static ApplicationBase* s_instance;
 

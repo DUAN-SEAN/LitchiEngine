@@ -9,6 +9,7 @@
 #include "../Resource/IResource.h"
 #include "Runtime/Core/Math/BoundingBox.h"
 #include "../RHI/RHI_Vertex.h"
+#include "Runtime/Function/Prefab/Prefab.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 //================================
 
@@ -92,7 +93,7 @@ namespace LitchiRuntime
         RHI_VertexBuffer* GetVertexBuffer() { return m_vertex_buffer.get(); }
 
         // Root entity
-        Scene* GetModelScene() { return m_model_scene; }
+        Prefab* GetModelScene() { return m_model_scene; }
         GameObject* GetRootEntity() { return m_root_entity; }
         void SetRootEntity(GameObject* entity) { m_root_entity = entity; }
 
@@ -162,7 +163,7 @@ namespace LitchiRuntime
         std::mutex m_mutex_vertices;
 
         // Misc Model GameObject in Model Scene
-        Scene* m_model_scene;
+        Prefab* m_model_scene;
         GameObject* m_root_entity;
     };
 }

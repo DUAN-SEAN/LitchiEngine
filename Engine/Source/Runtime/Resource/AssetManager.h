@@ -65,6 +65,19 @@ namespace LitchiRuntime
             return true;
         }
 
+        template<typename AssetType>
+        static bool Deserialize(const std::string& data, AssetType& out_asset)
+        {
+            return SerializerManager::DeserializeFromJson(data, out_asset);
+        }
+
+        template<typename AssetType>
+        static std::string Serialize(const AssetType& out_asset)
+        {
+            auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
+            return asset_json_text;
+        }
+
         static std::filesystem::path GetFullPath(const std::string& relative_path);
 
     };

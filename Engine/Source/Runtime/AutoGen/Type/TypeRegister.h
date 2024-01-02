@@ -30,6 +30,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Prefab/Prefab.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Resource/ConfigManager.h"
 
@@ -258,6 +259,11 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("availableID", &Scene::m_availableID)
 		.property("gameObjects", &Scene::m_gameObjectList);
+
+	registration::class_<Prefab>("Prefab")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("availableID", &Prefab::m_availableID)
+		.property("gameObjects", &Prefab::m_gameObjectList);
 
 	// 组件
 	// Componet

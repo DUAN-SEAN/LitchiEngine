@@ -279,7 +279,17 @@ void LitchiEditor::ApplicationEditor::Init()
 	// AssetManager::SaveAsset(scene, projectAssetsPath + "Scenes\\New Scene3.scene");
 
 	Scene* scene = new Scene();
-	AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+
+
+	auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	auto mesh_scene = mesh->GetModelScene();
+	auto mesh_scene_data = AssetManager::Serialize(mesh_scene);
+
+	auto load_scene = new Scene();
+	AssetManager::Deserialize(mesh_scene_data, load_scene);
+	scene = load_scene;
+
 	scene->PostResourceLoaded();
 	scene->Resolve();
 	m_rendererPath4SceneView->SetScene(scene);
@@ -291,8 +301,6 @@ void LitchiEditor::ApplicationEditor::Init()
 	{
 		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
 	}
-
-	// AssetManager::SaveAsset(scene, projectAssetsPath +"Scenes\\New Scene3.scene");
 
 	sceneManager->SetCurrentScene(scene);
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
