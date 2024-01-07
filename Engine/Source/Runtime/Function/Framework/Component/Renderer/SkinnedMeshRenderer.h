@@ -13,6 +13,8 @@ namespace LitchiRuntime
 		SkinnedMeshRenderer();
 		~SkinnedMeshRenderer();
 
+		void Awake() override;
+
 		void Update() override;
 
 		void PostResourceLoaded() override;
@@ -25,6 +27,8 @@ namespace LitchiRuntime
 		RTTR_ENABLE(MeshRenderer)
 
 	private:
+
+		void CalcDefaultFinalTransform(std::vector<int>& boneHierarchy, std::vector<Matrix>& nodelDefaultTransforms);
 
 		/**
 		* \brief 计算骨骼在当前帧的最终变换

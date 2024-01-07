@@ -1,5 +1,7 @@
 ﻿#include "SceneManager.h"
 
+#include <stack>
+
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -76,6 +78,54 @@ namespace LitchiRuntime
 		}
 
 		m_resolve = true;
+	}
+
+	GameObject* Scene::InstantiatePrefab(Prefab* prefab)
+	{
+		auto prefab_data = AssetManager::Serialize(prefab);
+
+		auto deep_copy_prefab = new Prefab();
+		AssetManager::Deserialize(prefab_data, deep_copy_prefab);
+		deep_copy_prefab->PostResourceLoaded();
+
+		// move deep copy prefab gameObjects to scene
+		// dfs in root entity
+		auto rootObject = deep_copy_prefab->GetRootEntity();
+		std::stack<GameObject*> stack;
+		stack.push(rootObject);
+		while (stack.size() > 0)
+		{
+			auto root = stack.top();
+			if(root==nullptr)
+			{
+				break;
+			}
+			stack.pop();
+
+			auto newId = m_availableID++;
+			root->m_id = newId;
+			root->SetScene(this);
+			m_gameObjectList.push_back(root);
+
+			if(root->GetChildren().empty())
+			{
+				continue;
+			}
+
+			auto childs = root->GetChildren();
+			for (auto data : childs)
+			{
+				data->m_parentId = newId;
+				stack.push(data);
+			}
+		}
+		deep_copy_prefab->OnlyClearOnDeepCopy();
+		delete deep_copy_prefab;
+
+		m_resolve = true;
+
+		// return root entity
+		return rootObject;
 	}
 
 	void Scene::Foreach(std::function<void(GameObject* game_object)> func)

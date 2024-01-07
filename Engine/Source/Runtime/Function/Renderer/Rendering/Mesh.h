@@ -93,9 +93,13 @@ namespace LitchiRuntime
         RHI_VertexBuffer* GetVertexBuffer() { return m_vertex_buffer.get(); }
 
         // Root entity
-        Prefab* GetModelScene() { return m_model_scene; }
+        Prefab* GetModelPrefab() { return m_model_prefab; }
         GameObject* GetRootEntity() { return m_root_entity; }
-        void SetRootEntity(GameObject* entity) { m_root_entity = entity; }
+        void SetRootEntity(GameObject* entity)
+        {
+	        m_root_entity = entity;
+            m_model_prefab->SetRootEntity(entity);
+        }
 
         // SubMesh
         void AddSubMesh(SubMesh subMesh, int& subMeshIndex);
@@ -163,7 +167,7 @@ namespace LitchiRuntime
         std::mutex m_mutex_vertices;
 
         // Misc Model GameObject in Model Scene
-        Prefab* m_model_scene;
+        Prefab* m_model_prefab;
         GameObject* m_root_entity;
     };
 }

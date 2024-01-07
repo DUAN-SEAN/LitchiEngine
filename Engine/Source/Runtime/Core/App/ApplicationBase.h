@@ -9,6 +9,7 @@
 #include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Resource/FontManager.h"
+#include "Runtime/Resource/PrefabManager.h"
 #include "Runtime/Resource/TextureManager.h"
 
 namespace LitchiRuntime

@@ -161,7 +161,7 @@ namespace LitchiRuntime
     {
         return GetRotation() * Vector3::Left;
     }
-
+    
     Transform* Transform::GetChildByIndex(const uint32_t index)
     {
         if (!HasChildren())

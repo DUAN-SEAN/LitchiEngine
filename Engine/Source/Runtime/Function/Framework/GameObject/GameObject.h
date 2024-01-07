@@ -32,7 +32,7 @@ namespace LitchiRuntime
 		bool SetParent(GameObject* parent);
 		bool HasParent();
 		GameObject* GetParent();
-		std::list<GameObject*>& GetChildren();
+		std::list<GameObject*> GetChildren();
 
 		virtual void PostResourceLoaded() override;
 

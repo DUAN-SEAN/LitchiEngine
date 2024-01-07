@@ -45,6 +45,11 @@ namespace LitchiRuntime
 		return true;
 	}
 
+	void Prefab::OnlyClearOnDeepCopy()
+	{
+		m_gameObjectList.clear();
+	}
+
 	GameObject* Prefab::CreateGameObject(std::string name)
 	{
 		auto* game_object = new GameObject(name, m_availableID++);
@@ -139,5 +144,31 @@ namespace LitchiRuntime
 		}
 
 		return root_entities;
+	}
+
+	void Prefab::PostResourceLoaded()
+	{
+		// todo:
+		// find root entity
+		auto rootEntity = Find(m_root_entity_id);
+		if(!rootEntity)
+		{
+			DEBUG_LOG_ERROR("Cant Find Root Entity");
+			return;
+		}
+
+		m_root_entity = rootEntity;
+
+		for (auto go : m_gameObjectList)
+		{
+			go->SetScene(nullptr);
+			go->PostResourceLoaded();
+		}
+		//
+		for (auto go : m_gameObjectList)
+		{
+			auto* parentGO = Find(go->m_parentId);
+			go->SetParent(parentGO);
+		}
 	}
 }

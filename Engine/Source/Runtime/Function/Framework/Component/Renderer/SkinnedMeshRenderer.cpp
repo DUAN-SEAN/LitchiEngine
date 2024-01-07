@@ -7,12 +7,42 @@
 
 using namespace LitchiRuntime;
 
-LitchiRuntime::SkinnedMeshRenderer::SkinnedMeshRenderer()
+SkinnedMeshRenderer::SkinnedMeshRenderer()
 {
 }
 
-LitchiRuntime::SkinnedMeshRenderer::~SkinnedMeshRenderer()
+SkinnedMeshRenderer::~SkinnedMeshRenderer()
 {
+}
+
+void SkinnedMeshRenderer::Awake()
+{
+	// 通过MeshFilter获取当前的Mesh
+	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+	if (meshFilter == nullptr)
+	{
+		return;
+	}
+
+	if (m_isDirty)
+	{
+		CreateBoneBuffer();
+		m_isDirty = false;
+	}
+
+	// get mesh
+	auto model = meshFilter->GetMesh();
+
+	// get bone data
+	std::vector<int> boneHierarchy;
+	std::vector<Matrix> defaultTransform;
+	model->GetBoneHierarchy(boneHierarchy);
+	model->GetNodeOffsets(defaultTransform);
+
+	CalcDefaultFinalTransform(boneHierarchy, defaultTransform);
+	// updat cbuffer
+	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
+
 }
 
 void SkinnedMeshRenderer::Update()
@@ -77,14 +107,23 @@ void SkinnedMeshRenderer::Update()
 	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
 }
 
-void LitchiRuntime::SkinnedMeshRenderer::PostResourceLoaded()
+void SkinnedMeshRenderer::PostResourceLoaded()
 {
 	MeshRenderer::PostResourceLoaded();
 }
 
-void LitchiRuntime::SkinnedMeshRenderer::PostResourceModify()
+void SkinnedMeshRenderer::PostResourceModify()
 {
 	MeshRenderer::PostResourceModify();
+}
+
+void SkinnedMeshRenderer::CalcDefaultFinalTransform(std::vector<int>& boneHierarchy, std::vector<Matrix>& nodelDefaultTransforms)
+{
+	uint32_t numBones = nodelDefaultTransforms.size();
+	// 
+	for (uint32_t i = 0; i < numBones; i++) {
+		m_bone_arr.boneArr[i] = nodelDefaultTransforms[i];
+	}
 }
 
 /**
@@ -113,9 +152,7 @@ void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip,
 
 	// 
 	for (uint32_t i = 0; i < numBones; i++) {
-		// m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
 		m_bone_arr.boneArr[i] = boneOffsets[i]* toRootTransforms[i];
-		// m_bone_arr.boneArr[i] = Matrix::Identity;
 	}
 
 }

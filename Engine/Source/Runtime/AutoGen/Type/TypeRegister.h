@@ -263,6 +263,7 @@ RTTR_REGISTRATION //注册反射
 	registration::class_<Prefab>("Prefab")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("availableID", &Prefab::m_availableID)
+		.property("rootEntityId", &Prefab::m_root_entity_id)
 		.property("gameObjects", &Prefab::m_gameObjectList);
 
 	// 组件

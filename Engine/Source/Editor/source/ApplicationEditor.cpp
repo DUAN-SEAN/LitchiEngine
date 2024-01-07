@@ -283,16 +283,13 @@ void LitchiEditor::ApplicationEditor::Init()
 
 
 	auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	auto mesh_scene = mesh->GetModelScene();
-	auto mesh_scene_data = AssetManager::Serialize(mesh_scene);
-
-	auto load_scene = new Scene();
-	AssetManager::Deserialize(mesh_scene_data, load_scene);
-	scene = load_scene;
+	auto mesh_prefab = mesh->GetModelPrefab();
+	auto instantiateGo = scene->InstantiatePrefab(mesh_prefab);
 
 	scene->PostResourceLoaded();
 	scene->Resolve();
 	m_rendererPath4SceneView->SetScene(scene);
+	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
 
 	// Setup UI
 	SetupUI();

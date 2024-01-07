@@ -5,6 +5,8 @@
 namespace LitchiRuntime
 {
 	class GameObject;
+
+	// Prefab, A Tree of GameObjects. Use For Mesh and Scene
 	class Prefab :public ScriptObject
 	{
 	public:
@@ -17,6 +19,8 @@ namespace LitchiRuntime
 
 		std::string GetName() { return m_name; }
 		void SetName(std::string name) { m_name = name; }
+
+		void OnlyClearOnDeepCopy();
 
 		/**
 		 * 创建GameObject
@@ -47,6 +51,21 @@ namespace LitchiRuntime
 			return m_gameObjectList;
 		}
 
+		// get root entity
+		void SetRootEntity(GameObject* entity)
+		{
+			if(GameObject* go = Find(entity->m_id))
+			{
+				if(go == entity)
+				{
+					m_root_entity = entity;
+					m_root_entity_id = m_root_entity->m_id;
+				}
+			}
+			
+		}
+		GameObject* GetRootEntity() { return m_root_entity; }
+
 	public:
 
 		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。
@@ -56,11 +75,14 @@ namespace LitchiRuntime
 		 */
 		int64_t m_availableID = 1;
 
+		// root game object id
+		int64_t m_root_entity_id;
+
 		void PostResourceLoaded() override;
 
 	private:
+		GameObject* m_root_entity;
 		std::string m_name;
-
 	};
 
 

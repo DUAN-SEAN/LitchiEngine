@@ -1,6 +1,8 @@
 
 #include "Runtime/Core/Time/time.h"
 #include "animator.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
+#include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Rendering/Animation.h"
 
 using namespace LitchiRuntime;
@@ -17,6 +19,18 @@ LitchiRuntime::Animator::~Animator()
 void LitchiRuntime::Animator::Awake()
 {
 	// todo 实例化时可以做一些事情
+	// get default clip map
+
+	if(m_animationClipMap.empty())
+	{
+		auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+		auto mesh = meshFilter->GetMesh();
+		std::unordered_map<std::string, AnimationClip> animations;
+		mesh->GetAnimations(animations);
+		auto firstClipName = animations.begin()->first;
+		SetAnimationClipMap(animations);
+		Play(firstClipName);
+	}
 }
 
 void Animator::Update()

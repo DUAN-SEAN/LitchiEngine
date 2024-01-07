@@ -29,5 +29,7 @@ namespace LitchiRuntime
 		* @param p_path
 		*/
 		virtual void ReloadResource(Prefab* p_resource, const std::string& p_path) override;
+	public:
+		Prefab* CreatePrefab(const std::string& p_path);
 	};
 }

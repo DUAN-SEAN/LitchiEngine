@@ -9,6 +9,7 @@
 #include "../RHI/RHI_Texture2D.h"
 #include "../Resource/ResourceCache.h"
 #include "../Resource/Import/ModelImporter.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -24,17 +25,19 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-    Mesh::Mesh() : IResource(ResourceType::Mesh)
+    Mesh::Mesh() : IResource(ResourceType::Mesh), m_model_prefab(nullptr)
     {
         m_flags = GetDefaultFlags();
-        m_model_scene = ApplicationBase::Instance()->sceneManager->CreateScene("Model Scene");
     }
 
     Mesh::~Mesh()
     {
         m_index_buffer  = nullptr;
         m_vertex_buffer = nullptr;
-        ApplicationBase::Instance()->sceneManager->DestroyScene(m_model_scene);
+        if(m_model_prefab)
+        {
+            ApplicationBase::Instance()->prefabManager->DestroyResource(m_model_prefab);
+        }
     }
 
     void Mesh::Clear()
@@ -63,6 +66,13 @@ namespace LitchiRuntime
             DEBUG_LOG_WARN("Invalid file path");
             return false;
         }
+
+        if(m_model_prefab)
+        {
+            ApplicationBase::Instance()->prefabManager->DestroyResource(m_model_prefab);
+            m_model_prefab = nullptr;
+        }
+        m_model_prefab = ApplicationBase::Instance()->prefabManager->CreatePrefab(file_path);
 
         //// load engine format todo:
         //if (FileSystem::GetExtensionFromFilePath(file_path) == EXTENSION_MODEL)

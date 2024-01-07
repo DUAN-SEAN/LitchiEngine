@@ -454,7 +454,7 @@ namespace LitchiRuntime
 
 			// make the root entity active since it's now thread-safe
 			mesh->GetRootEntity()->SetActive(true);
-			ApplicationBase::Instance()->sceneManager->GetCurrentScene()->Resolve();
+			// mesh->GetModelPrefab()->Resolve();
 		}
 		else
 		{
@@ -487,7 +487,7 @@ namespace LitchiRuntime
 	void ModelImporter::ParseNode(const aiNode* node, GameObject* parent_entity)
 	{
 		// Create an entity that will match this node.
-		GameObject* entity = mesh->GetModelScene()->CreateGameObject("Default");
+		GameObject* entity = mesh->GetModelPrefab()->CreateGameObject("Default");
 
 		// Set root entity to mesh
 		bool is_root_node = parent_entity == nullptr;
@@ -508,7 +508,7 @@ namespace LitchiRuntime
 
 		// Set the transform of parent_node as the parent of the new_entity's transform
 		Transform* parent_trans = parent_entity ? parent_entity->GetComponent<Transform>() : nullptr;
-		entity->GetComponent<Transform>()->SetParent(parent_trans);
+		entity->SetParent(parent_entity);
 
 		// Apply node transformation
 		set_entity_transform(node, entity);
@@ -552,10 +552,10 @@ namespace LitchiRuntime
 			if (assimp_node->mNumMeshes > 1)
 			{
 				// Create entity
-				entity = mesh->GetModelScene()->CreateGameObject("Node");
+				entity = mesh->GetModelPrefab()->CreateGameObject("Node");
 
 				// Set parent
-				entity->GetComponent<Transform>()->SetParent(node_entity->GetComponent<Transform>());
+				entity->SetParent(node_entity);
 
 				// Set name
 				node_name += "_" + to_string(i + 1); // set name

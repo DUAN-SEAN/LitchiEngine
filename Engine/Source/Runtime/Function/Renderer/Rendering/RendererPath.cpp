@@ -107,23 +107,6 @@ namespace LitchiRuntime
 
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
-			if (auto renderable = entity->GetComponent<MeshRenderer>())
-			{
-				bool is_transparent = false;
-				bool is_visible = true;
-
-				/*if (const Material* material = renderable->GetMaterial())
-				{
-					is_transparent = material->GetProperty(MaterialProperty::ColorA) < 1.0f;
-					is_visible = material->GetProperty(MaterialProperty::ColorA) != 0.0f;
-				}*/
-
-				if (is_visible)
-				{
-					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
-				}
-			}
-
 			if (auto renderable = entity->GetComponent<SkinnedMeshRenderer>())
 			{
 				bool is_transparent = false;
@@ -139,8 +122,27 @@ namespace LitchiRuntime
 				{
 					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
 				}
+			}else
+			{
+				if (auto renderable = entity->GetComponent<MeshRenderer>())
+				{
+					bool is_transparent = false;
+					bool is_visible = true;
+
+					/*if (const Material* material = renderable->GetMaterial())
+					{
+						is_transparent = material->GetProperty(MaterialProperty::ColorA) < 1.0f;
+						is_visible = material->GetProperty(MaterialProperty::ColorA) != 0.0f;
+					}*/
+
+					if (is_visible)
+					{
+						m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
+					}
+				}
 			}
 
+		
 			if (auto light = entity->GetComponent<Light>())
 			{
 				m_renderables[Renderer_Entity::Light].emplace_back(entity);

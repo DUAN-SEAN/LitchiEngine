@@ -3,6 +3,8 @@
 
 #include <map>
 #include <string>
+
+#include "Runtime/Function/Prefab/Prefab.h"
 #include "Runtime/Function/Scripting/ScriptObject.h"
 
 namespace LitchiRuntime
@@ -25,7 +27,10 @@ namespace LitchiRuntime
 		 */
 		GameObject* CreateGameObject(std::string name);
 		void RemoveGameObject(GameObject* go);
-		
+
+		// Prefab
+		GameObject* InstantiatePrefab(Prefab* prefab);
+
 		/// 遍历GameObject
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
@@ -58,8 +63,6 @@ namespace LitchiRuntime
 		{
 			return m_gameObjectList;
 		}
-
-
 
 
 	public:

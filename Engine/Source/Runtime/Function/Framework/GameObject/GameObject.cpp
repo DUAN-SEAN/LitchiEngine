@@ -36,10 +36,20 @@ namespace LitchiRuntime
 		}
 	}
 
-	bool GameObject::SetParent(GameObject* parent) {
+	bool GameObject::SetParent(GameObject* parent)
+	{
+		// remove old parent
+		auto oldParent = GetComponent<Transform>()->GetParent();
+		if(oldParent)
+		{
+			// m_parentId = 0;
+			oldParent->RemoveChild(GetComponent<Transform>());
+		}
 
+		// add new parent
 		if(parent)
 		{
+			m_parentId = parent->m_id;
 			GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
 		}else
 		{
@@ -58,7 +68,7 @@ namespace LitchiRuntime
 		return GetComponent<Transform>()->GetParent()->GetGameObject();
 	}
 
-	std::list<GameObject*>& GameObject::GetChildren()
+	std::list<GameObject*> GameObject::GetChildren()
 	{
 		std::list<GameObject*> dadList;
 		for (auto a : GetComponent<Transform>()->GetChildren()) {
