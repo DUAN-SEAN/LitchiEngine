@@ -22,7 +22,8 @@ namespace LitchiRuntime
 			SOUND,
 			SCENE,
 			SCRIPT,
-			FONT
+			FONT,
+			PREFAB
 		};
 
 		/**

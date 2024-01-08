@@ -284,7 +284,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
 	auto mesh_prefab = mesh->GetModelPrefab();
-	auto instantiateGo = scene->InstantiatePrefab(mesh_prefab);
+	auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
 
 	scene->PostResourceLoaded();
 	scene->Resolve();

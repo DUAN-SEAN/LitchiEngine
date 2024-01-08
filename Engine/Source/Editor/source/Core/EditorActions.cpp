@@ -12,6 +12,8 @@
 
 #include "Editor/include/Core/EditorActions.h"
 
+#include <stack>
+
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Window/Dialogs/MessageBox.h"
@@ -104,6 +106,50 @@ void LitchiEditor::EditorActions::SaveAs()
 		SaveCurrentSceneTo(dialog.GetSelectedFilePath());
 		DEBUG_LOG_INFO("Current scene saved to: " + dialog.GetSelectedFilePath());
 	}
+}
+
+void LitchiEditor::EditorActions::CreatePrefab(Scene* scene, GameObject* root, std::string path)
+{
+	if(!scene||!root)
+	{
+		return;
+	}
+
+	auto prefab = ApplicationBase::Instance()->prefabManager->CreatePrefab(path);
+	
+	// move deep copy prefab gameObjects to scene
+	std::stack<GameObject*> stack;
+	stack.push(root);
+	while (stack.size() > 0)
+	{
+		auto root = stack.top();
+		if (root == nullptr)
+		{
+			break;
+		}
+		stack.pop();
+
+		prefab->m_gameObjectList.push_back(root);
+
+		if (root->GetChildren().empty())
+		{
+			continue;
+		}
+
+		auto childs = root->GetChildren();
+		for (auto data : childs)
+		{
+			stack.push(data);
+		}
+	}
+
+	prefab->m_root_entity_id = root->m_id;
+	prefab->SaveToFile(path);
+}
+
+void LitchiEditor::EditorActions::LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab)
+{
+	scene->InstantiatePrefab(prefab, root);
 }
 
 void LitchiEditor::EditorActions::RefreshScripts()

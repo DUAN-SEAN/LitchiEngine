@@ -80,7 +80,7 @@ namespace LitchiRuntime
 		m_resolve = true;
 	}
 
-	GameObject* Scene::InstantiatePrefab(Prefab* prefab)
+	GameObject* Scene::InstantiatePrefab(Prefab* prefab, GameObject* root)
 	{
 		auto prefab_data = AssetManager::Serialize(prefab);
 
@@ -91,6 +91,10 @@ namespace LitchiRuntime
 		// move deep copy prefab gameObjects to scene
 		// dfs in root entity
 		auto rootObject = deep_copy_prefab->GetRootEntity();
+		if(root!=nullptr)
+		{
+			rootObject->SetParent(root);
+		}
 		std::stack<GameObject*> stack;
 		stack.push(rootObject);
 		while (stack.size() > 0)
@@ -106,6 +110,10 @@ namespace LitchiRuntime
 			root->m_id = newId;
 			root->SetScene(this);
 			m_gameObjectList.push_back(root);
+
+			root->ForeachComponent([](Component* comp) {
+				comp->Awake();
+				});
 
 			if(root->GetChildren().empty())
 			{
@@ -228,13 +236,6 @@ namespace LitchiRuntime
 		{
 			go->SetScene(this);
 			go->PostResourceLoaded();
-		}
-
-		for (auto go : m_gameObjectList)
-		{
-			go->ForeachComponent([](Component* comp){
-				comp->Awake();
-			});
 		}
 
 		for (auto go : m_gameObjectList)

@@ -6,6 +6,7 @@
 #include "PanelsManager.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Prefab/Prefab.h"
 
 #define EDITOR_EXEC(action)					LitchiRuntime::ServiceLocator::Get<LitchiEditor::EditorActions>().action
 #define EDITOR_BIND(method, ...)			std::bind(&LitchiEditor::EditorActions::method, &LitchiRuntime::ServiceLocator::Get<LitchiEditor::EditorActions>(), ##__VA_ARGS__)
@@ -32,7 +33,7 @@ namespace LitchiEditor
 		* Returns the panels manager
 		*/
 		PanelsManager& GetPanelsManager();
-		#pragma endregion
+#pragma endregion
 
 		#pragma region SETTINGS
 		/**
@@ -317,6 +318,13 @@ namespace LitchiEditor
 		*/
 		void SaveAs();
 		#pragma endregion
+
+		#pragma region Prefab
+
+		void CreatePrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, std::string path);
+		void LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab);
+
+		#pragma endregion 
 
 		#pragma region SCRIPTING
 		/**

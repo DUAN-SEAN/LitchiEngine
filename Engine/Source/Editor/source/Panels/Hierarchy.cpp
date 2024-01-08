@@ -162,6 +162,16 @@ LitchiEditor::Hierarchy::Hierarchy
 		// 2. deep copy mesh entry object
 	};
 
+	m_sceneRoot->AddPlugin<DDTarget<Prefab*>>("LoadPrefab").DataReceivedEvent += [this](Prefab* p_receivedData)
+	{
+		// 先构建所有的叶子
+		auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+
+		EDITOR_EXEC(LoadPrefab(scene,nullptr,p_receivedData));
+
+		Refresh();
+	};
+
 	m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
 
 	/*EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
@@ -318,5 +328,5 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 		ApplicationEditor::Instance()->MoveToTarget(p_actor);
 	};// 将相机对焦到物体
 
-	textSelectable.AddPlugin<DDSource<std::pair<Scene*, GameObject*>>>("Prefab", "Create Prefab...", std::make_pair(p_actor->GetScene(), p_actor));
+	textSelectable.AddPlugin<DDSource<std::pair<Scene*, GameObject*>>>("CreatePrefab", "Create Prefab...", std::make_pair(p_actor->GetScene(), p_actor));
 }

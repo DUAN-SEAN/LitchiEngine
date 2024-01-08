@@ -89,6 +89,7 @@ std::string LitchiRuntime::PathParser::FileTypeToString(EFileType p_fileType)
 	case LitchiRuntime::PathParser::EFileType::SCENE:		return "Scene";
 	case LitchiRuntime::PathParser::EFileType::SCRIPT:		return "Script";
 	case LitchiRuntime::PathParser::EFileType::FONT:		return "Font";
+	case LitchiRuntime::PathParser::EFileType::PREFAB:		return "Prefab";
 	}
 
 	return "Unknown";
@@ -107,6 +108,7 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 	else if (ext == "scene")													return EFileType::SCENE;
 	else if (ext == "cs")														return EFileType::SCRIPT;
 	else if (ext == "ttf")														return EFileType::FONT;
+	else if (ext == "prefab")														return EFileType::PREFAB;
 
 	return EFileType::UNKNOWN;
 }

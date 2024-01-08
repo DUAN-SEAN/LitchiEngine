@@ -1132,10 +1132,12 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 					}
 				};
 
-				treeNode.AddPlugin<DDTarget<std::pair<Scene*, GameObject*>>>("Prefab").DataReceivedEvent += [this, &treeNode, path, p_isEngineItem](std::pair<Scene*, GameObject*> p_data)
+				treeNode.AddPlugin<DDTarget<std::pair<Scene*, GameObject*>>>("CreatePrefab").DataReceivedEvent += [this, &treeNode, path, p_isEngineItem](std::pair<Scene*, GameObject*> p_data)
 				{
 					auto scene = p_data.first;
 					auto rootGameObject = p_data.second;
+
+					EDITOR_EXEC(CreatePrefab(scene, rootGameObject, path + rootGameObject->GetName() + ".prefab"));
 				};
 
 			}
@@ -1202,6 +1204,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 		case PathParser::EFileType::MATERIAL:	contextMenu = &clickableText.AddPlugin<MaterialContextualMenu>(path, protectedItem);	break;
 		case PathParser::EFileType::SCENE:		contextMenu = &clickableText.AddPlugin<SceneContextualMenu>(path, protectedItem);		break;
 		default: contextMenu = &clickableText.AddPlugin<FileContextualMenu>(path, protectedItem); break;
+        // todo: prefab
 		}
 
 		contextMenu->CreateList();
@@ -1260,6 +1263,13 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 		{
 			auto& texturePreview = clickableText.AddPlugin<TexturePreview>();
 			texturePreview.SetPath(resourceFormatPath);
+		}
+
+		if(fileType == PathParser::EFileType::PREFAB)
+		{
+			auto prefab = ApplicationBase::Instance()->prefabManager->LoadResource(resourceFormatPath);
+			prefab->PostResourceLoaded();
+			clickableText.AddPlugin<DDSource<Prefab*>>("LoadPrefab", resourceFormatPath,prefab);
 		}
 	}
 }

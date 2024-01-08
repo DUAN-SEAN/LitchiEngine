@@ -29,7 +29,7 @@ namespace LitchiRuntime
 		void RemoveGameObject(GameObject* go);
 
 		// Prefab
-		GameObject* InstantiatePrefab(Prefab* prefab);
+		GameObject* InstantiatePrefab(Prefab* prefab,GameObject* root);
 
 		/// 遍历GameObject
 		/// \param func
