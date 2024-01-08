@@ -1131,6 +1131,13 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 						}
 					}
 				};
+
+				treeNode.AddPlugin<DDTarget<std::pair<Scene*, GameObject*>>>("Prefab").DataReceivedEvent += [this, &treeNode, path, p_isEngineItem](std::pair<Scene*, GameObject*> p_data)
+				{
+					auto scene = p_data.first;
+					auto rootGameObject = p_data.second;
+				};
+
 			}
 
 			contextMenu.DestroyedEvent += [&itemGroup](std::string p_deletedPath) { itemGroup.Destroy(); };

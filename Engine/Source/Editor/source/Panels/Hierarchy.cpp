@@ -317,4 +317,6 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 	{
 		ApplicationEditor::Instance()->MoveToTarget(p_actor);
 	};// 将相机对焦到物体
+
+	textSelectable.AddPlugin<DDSource<std::pair<Scene*, GameObject*>>>("Prefab", "Create Prefab...", std::make_pair(p_actor->GetScene(), p_actor));
 }
