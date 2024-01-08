@@ -1271,5 +1271,12 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			prefab->PostResourceLoaded();
 			clickableText.AddPlugin<DDSource<Prefab*>>("LoadPrefab", resourceFormatPath,prefab);
 		}
+
+		if(fileType == PathParser::EFileType::MODEL)
+		{
+			auto model = ApplicationBase::Instance()->modelManager->LoadResource(resourceFormatPath);
+			auto prefab = model->GetModelPrefab();
+			clickableText.AddPlugin<DDSource<Prefab*>>("LoadPrefab", resourceFormatPath, prefab);
+		}
 	}
 }
