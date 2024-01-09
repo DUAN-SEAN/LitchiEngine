@@ -278,6 +278,9 @@ void LitchiEditor::ApplicationEditor::Init()
 	//auto model3 = CreateSkinnedModel(scene, "rp_sophia", Vector3(0.0f, 4.5f, -4.5f), Quaternion::Identity, Vector3::One * 0.01f, "Engine\\Materials\\rp_sophia.mat", "Engine\\Models\\OrangeSpider.fbx");
 	// AssetManager::SaveAsset(scene, projectAssetsPath + "Scenes\\New Scene3.scene");
 
+	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
+	font->AddText("Hello World",Vector2::Zero);
+
 	Scene* scene = new Scene();
 	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
 

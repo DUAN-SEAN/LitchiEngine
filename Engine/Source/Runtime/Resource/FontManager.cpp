@@ -23,6 +23,11 @@ LitchiRuntime::Font* LitchiRuntime::FontManager::CreateResource(const std::strin
 
 	auto color = Color::Black;
 	auto font = new Font(realPath,fontSize,{color.r,color.g,color.b,color.a});
+	if(!font->LoadFromFile(realPath))
+	{
+		delete font;
+		return nullptr;
+	}
 
 	return font;
 }
