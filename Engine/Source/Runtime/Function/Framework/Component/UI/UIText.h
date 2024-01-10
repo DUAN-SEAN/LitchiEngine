@@ -16,11 +16,7 @@ namespace LitchiRuntime
 
 		std::string GetFontPath()
 		{
-			if (m_font != nullptr)
-			{
-				return m_font->GetResourceFilePath();
-			}
-			return "";
+			return m_font_path;
 		}
 		void SetFont(Font* font) { m_font = font; }
 		Font* GetFont() { return m_font; }
@@ -36,15 +32,23 @@ namespace LitchiRuntime
 		void OnPreRender() override;
 
 		void OnPostRender() override;
+		
+		std::string m_font_path;
+	private:
+
+		void CreateTextBuffer();
 
 	private:
-		Font* m_font{};
-		std::string m_text;
-		bool m_dirty{};//是否变化需要重新生成Mesh
-		Vector4 m_color;//字体颜色
+		Font* m_font{};// font
+		std::string m_text;// text
+		bool m_dirty{};// is need generate new text
+		Vector4 m_color;// text color
 
-	public:
+		std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer;
+		std::shared_ptr<RHI_IndexBuffer> m_index_buffer;
+
 		RTTR_ENABLE(Component)
+
 	};
 
 
