@@ -11,6 +11,8 @@
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
+#include "Runtime/Function/UI/Widgets/Texts/Text.h"
+#include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 namespace LitchiRuntime
 {
@@ -29,7 +31,7 @@ namespace LitchiRuntime
 		};
 
 		// sort by depth
-		sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
+		sort(renderables->begin(),  renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
 			{
 				if (are_transparent)
 				{
@@ -104,6 +106,7 @@ namespace LitchiRuntime
 		m_renderables[Renderer_Entity::GeometryTransparent];
 		m_renderables[Renderer_Entity::Camera];
 		m_renderables[Renderer_Entity::Light];
+		m_renderables[Renderer_Entity::UI];
 
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
@@ -152,6 +155,16 @@ namespace LitchiRuntime
 			if (auto camera = entity->GetComponent<Camera>())
 			{
 				m_renderables[Renderer_Entity::Camera].emplace_back(entity);
+			}
+
+			if(auto text = entity->GetComponent<Text>())
+			{
+				m_renderables[Renderer_Entity::UI].emplace_back(entity);
+			}
+
+			if (auto image = entity->GetComponent<Image>())
+			{
+				m_renderables[Renderer_Entity::UI].emplace_back(entity);
 			}
 
 			/* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())

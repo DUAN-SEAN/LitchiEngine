@@ -13,6 +13,8 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/UI/Widgets/Texts/Text.h"
+#include "Runtime/Function/UI/Widgets/Visual/Image.h"
 //==============================================
 
 //= NAMESPACES ===============
@@ -403,6 +405,25 @@ namespace LitchiRuntime
 		}
 
 		cmd_list->EndTimeblock();
+	}
+
+	void Renderer::Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		// get common shader todo: temp not use material
+
+		auto shader_v_font = GetShader(Renderer_Shader::font_v).get();
+		auto shader_p_font = GetShader(Renderer_Shader::font_p).get();
+
+		// todo image shader
+
+		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::UI);
+		for (auto entity : entities)
+		{
+			auto text = entity->GetComponent<Text>();
+			auto image = entity->GetComponent<Image>();
+
+			// todo: use Rect Transform ?
+		}
 	}
 
 	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)

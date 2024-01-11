@@ -233,7 +233,8 @@ namespace LitchiRuntime
         Light,
         Camera,
         ReflectionProbe,
-        AudioSource
+        AudioSource,
+        UI
     };
 
     enum class Renderer_Sampler

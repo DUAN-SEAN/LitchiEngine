@@ -50,6 +50,9 @@ namespace LitchiRuntime
         void AddText(const std::string& text, const Vector2& position_screen_percentage);
         bool HasText() const;
 
+        // Text Data
+        TextData GetTextData(const std::string& text);
+
         // color
         const Vector4& GetColor() const { return m_color; }
         void SetColor(const Vector4& color) { m_color = color; }

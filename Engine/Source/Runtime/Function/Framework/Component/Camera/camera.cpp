@@ -28,7 +28,7 @@ namespace LitchiRuntime
     void Camera::Update()
     {
         // 默认editor状态不执行
-        const auto& current_viewport = Renderer::GetViewport();
+        const auto& current_viewport = m_renderCamera->GetViewport();
         if (m_last_known_viewport != current_viewport)
         {
             m_last_known_viewport = current_viewport;

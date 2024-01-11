@@ -151,6 +151,70 @@ namespace LitchiRuntime
         return !m_text_data.empty();
     }
 
+    TextData Font::GetTextData(const std::string& text)
+    {
+        // convert the adjusted screen percentage position to actual screen coordinates
+        Vector2 position = Vector2::Zero;
+
+        // i don't yet understand why this is needed, but it corrects a slightly y offset
+        position.y -= m_char_max_height * 1.5f;
+
+        // set the cursor to the starting position
+        Vector2 cursor = position;
+        float starting_pos_x = cursor.x;
+
+        // generate vertices - draw each latter onto a quad
+        vector<RHI_Vertex_PosTex> vertices;
+        for (char character : text)
+        {
+            Glyph& glyph = m_glyphs[character];
+
+            if (character == ASCII_TAB)
+            {
+                const uint32_t space_offset = m_glyphs[ASCII_SPACE].horizontal_advance;
+                const uint32_t space_count = 4; // spaces in a typical editor
+                const uint32_t tab_spacing = space_offset * space_count;
+                const uint32_t offset_from_start = static_cast<uint32_t>(Math::Helper::Abs(cursor.x - starting_pos_x));
+                const uint32_t next_column_index = (offset_from_start / tab_spacing) + 1;
+                const uint32_t offset_to_column = (next_column_index * tab_spacing) - offset_from_start;
+                cursor.x += offset_to_column;
+            }
+            else if (character == ASCII_NEW_LINE)
+            {
+                cursor.y -= m_char_max_height;
+                cursor.x = starting_pos_x;
+            }
+            else if (character == ASCII_SPACE)
+            {
+                cursor.x += glyph.horizontal_advance;
+            }
+            else
+            {
+                // first triangle in quad.    
+                vertices.emplace_back(cursor.x + glyph.offset_x, cursor.y + glyph.offset_y, 0.0f, glyph.uv_x_left, glyph.uv_y_top);    // top left
+                vertices.emplace_back(cursor.x + glyph.offset_x + glyph.width, cursor.y + glyph.offset_y - glyph.height, 0.0f, glyph.uv_x_right, glyph.uv_y_bottom); // bottom right
+                vertices.emplace_back(cursor.x + glyph.offset_x, cursor.y + glyph.offset_y - glyph.height, 0.0f, glyph.uv_x_left, glyph.uv_y_bottom); // bottom left
+
+                // second triangle in quad
+                vertices.emplace_back(cursor.x + glyph.offset_x, cursor.y + glyph.offset_y, 0.0f, glyph.uv_x_left, glyph.uv_y_top);    // top left
+                vertices.emplace_back(cursor.x + glyph.offset_x + glyph.width, cursor.y + glyph.offset_y, 0.0f, glyph.uv_x_right, glyph.uv_y_top);    // top right
+                vertices.emplace_back(cursor.x + glyph.offset_x + glyph.width, cursor.y + glyph.offset_y - glyph.height, 0.0f, glyph.uv_x_right, glyph.uv_y_bottom); // bottom right
+
+                // advance
+                cursor.x += glyph.horizontal_advance;
+            }
+        }
+
+        // generate indices
+        vector<uint32_t> indices;
+        for (uint32_t i = 0; i < static_cast<uint32_t>(vertices.size()); i++)
+        {
+            indices.emplace_back(i);
+        }
+
+        return TextData{ vertices, indices, position };
+    }
+
     void Font::SetSize(const uint32_t size)
     {
         m_font_size = Helper::Clamp<uint32_t>(size, 8, 50);
