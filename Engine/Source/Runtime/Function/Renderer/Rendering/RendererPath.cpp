@@ -8,11 +8,11 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/UI/UIImage.h"
+#include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
-#include "Runtime/Function/UI/Widgets/Texts/Text.h"
-#include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 namespace LitchiRuntime
 {
@@ -157,12 +157,12 @@ namespace LitchiRuntime
 				m_renderables[Renderer_Entity::Camera].emplace_back(entity);
 			}
 
-			if(auto text = entity->GetComponent<Text>())
+			if(auto text = entity->GetComponent<UIText>())
 			{
 				m_renderables[Renderer_Entity::UI].emplace_back(entity);
 			}
 
-			if (auto image = entity->GetComponent<Image>())
+			if (auto image = entity->GetComponent<UIImage>())
 			{
 				m_renderables[Renderer_Entity::UI].emplace_back(entity);
 			}

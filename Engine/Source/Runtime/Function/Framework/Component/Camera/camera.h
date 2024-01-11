@@ -94,7 +94,7 @@ namespace LitchiRuntime
         void SetFirstPersonControlEnabled(const bool enabled) { m_first_person_control_enabled = enabled; }
         bool IsControledInFirstPerson() const;
 
-        // Misc
+        // Misc todo: will be remove
         void MakeDirty() { m_is_dirty = true; }
         void SetSelectedEntity(GameObject* entity) { m_selected_entity = entity; }
         GameObject* GetSelectedEntity() { return m_selected_entity; }

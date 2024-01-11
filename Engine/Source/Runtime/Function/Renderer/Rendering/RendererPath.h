@@ -52,6 +52,9 @@ namespace LitchiRuntime
 		RenderCamera* m_renderCamera = nullptr;
 		Scene* m_renderScene = nullptr;
 
+		// UI provide Camera
+		RenderCamera* m_renderCamera4UI;
+
 		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
 		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
 

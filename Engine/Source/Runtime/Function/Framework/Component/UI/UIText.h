@@ -27,6 +27,7 @@ namespace LitchiRuntime
 		void SetColor(Vector4 color) { m_color = color; }
 		Vector4 GetColor() { return m_color; }
 	public:
+		void Awake() override;
 		void Update() override;
 		/// 渲染之前
 		void OnPreRender() override;

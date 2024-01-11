@@ -12,6 +12,8 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/UI/UIImage.h"
+#include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -419,8 +421,8 @@ namespace LitchiRuntime
 		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::UI);
 		for (auto entity : entities)
 		{
-			auto text = entity->GetComponent<Text>();
-			auto image = entity->GetComponent<Image>();
+			auto text = entity->GetComponent<UIText>();
+			auto image = entity->GetComponent<UIImage>();
 
 			// todo: use Rect Transform ?
 		}
