@@ -27,7 +27,7 @@ namespace LitchiRuntime
         void InitCanvasTransform();
 
         Vector2 m_resolution;
-        RenderCamera* m_canvasCamera;
+        RenderCamera* m_canvasCamera = nullptr;
 
     private:
 
