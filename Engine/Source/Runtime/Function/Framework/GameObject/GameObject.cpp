@@ -24,7 +24,6 @@ namespace LitchiRuntime
 
 	void GameObject::Initialize()
 	{
-		AddComponent<Transform>();
 	}
 
 	void GameObject::SetActive(bool active)

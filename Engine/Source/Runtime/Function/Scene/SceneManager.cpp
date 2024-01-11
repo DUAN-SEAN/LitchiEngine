@@ -4,6 +4,7 @@
 
 #include "Runtime/Core/Meta/Serializer/serializer.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Framework/Component/UI/RectTransform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
@@ -28,9 +29,17 @@ namespace LitchiRuntime
 		m_gameObjectList.clear();
 	}
 
-	GameObject* Scene::CreateGameObject(std::string name)
+	GameObject* Scene::CreateGameObject(std::string name, bool isUI)
 	{
 		auto* game_object = new GameObject(name, m_availableID++);
+		if(!isUI)
+		{
+			game_object->AddComponent<Transform>();
+		}else
+		{
+			game_object->AddComponent<RectTransform>();
+		}
+			
 		game_object->SetScene(this);
 
 		// 将go添加到game_object_vec_中

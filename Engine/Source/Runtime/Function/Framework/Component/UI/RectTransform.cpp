@@ -4,11 +4,60 @@
 
 namespace LitchiRuntime
 {
+	RectTransform::RectTransform() :Transform(),m_pos(Vector3::Zero), m_size(10.0f, 10.0f)
+	{
+	}
+	RectTransform::~RectTransform()
+	{
+	}
 	void RectTransform::Awake()
 	{
-		m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+		if(m_canvas)
+		{
+			m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+		}
+	}
 
+	void RectTransform::Update()
+	{
+		
+	}
 
+	void RectTransform::PostResourceLoaded()
+	{
+		if (m_canvas)
+		{
+			m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+		}
+
+		UpdateTransform();
+	}
+
+	void RectTransform::PostResourceModify()
+	{
+		UpdateTransform();
+	}
+
+	void RectTransform::UpdateTransform()
+	{
+		if (m_canvas)
+		{
+			// get canvas transform
+			const auto canvasTrans = m_canvas->GetGameObject()->GetComponent<Transform>();
+			const auto resolution = m_canvas->GetResolution();
+
+			// calc rect pos relative by canvas
+			const auto rectCanvasPos = Vector3(resolution.x - m_pos.x, m_pos.y, m_pos.z);
+
+			// calc world pos 
+			const auto canvasCenterPos = Vector3(resolution.x / 2, resolution.y / 2, 0.0f);
+			const auto canvasOffsetPos = canvasTrans->GetPosition() - canvasCenterPos;
+			const auto rectTransWorldPos = rectCanvasPos + canvasOffsetPos;
+
+			// todo: rotation
+
+			SetPosition(rectTransWorldPos);
+		}
 	}
 
 

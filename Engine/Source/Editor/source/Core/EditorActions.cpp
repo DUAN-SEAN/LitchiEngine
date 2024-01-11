@@ -531,10 +531,10 @@ LitchiRuntime::Vector3 LitchiEditor::EditorActions::CalculateActorSpawnPoint(flo
 	return Vector3(pointGlm.x, pointGlm.y, pointGlm.z);
 }
 
-LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name)
+LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_focusOnCreation, LitchiRuntime::GameObject* p_parent, const std::string& p_name, bool isUI)
 {
     const auto currentScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-	auto* instance = currentScene->CreateGameObject(p_name.empty() ? "Empty Object" : p_name);
+	auto* instance = currentScene->CreateGameObject(p_name.empty() ? "Empty Object" : p_name, isUI);
 	auto* transform = instance->GetComponent<Transform>();
 
 	if (p_parent)

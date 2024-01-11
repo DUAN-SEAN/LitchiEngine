@@ -149,8 +149,8 @@ namespace LitchiEditor
 		* @param p_parent
         * @param p_name
 		*/
-		LitchiRuntime::GameObject*	CreateEmptyActor(bool p_focusOnCreation = true, LitchiRuntime::GameObject* p_parent = nullptr, const std::string& p_name = "");
-
+		LitchiRuntime::GameObject*	CreateEmptyActor(bool p_focusOnCreation = true, LitchiRuntime::GameObject* p_parent = nullptr, const std::string& p_name = "",bool isUI = false);
+		
 		/**
 		* Create an actor with a model renderer and a material renderer. The model renderer with use the model identified
 		* by the given path
@@ -160,6 +160,13 @@ namespace LitchiEditor
         * @param p_name
 		*/
 		LitchiRuntime::GameObject* CreateActorWithModel(const std::string& p_path, bool p_focusOnCreation = true, LitchiRuntime::GameObject* p_parent = nullptr, const std::string& p_name = "");
+
+		/**
+		* Create an actor with the given component type
+		* @param p_focusOnCreation
+		* @param p_parent
+		*/
+		template<typename T> LitchiRuntime::GameObject* CreateUIActor(bool p_focusOnCreation = true, LitchiRuntime::GameObject* p_parent = nullptr);
 
 		/**
 		* Destroy an actor from his scene
