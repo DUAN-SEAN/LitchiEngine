@@ -3,6 +3,7 @@
 
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Framework/Component/UI/RectTransform.h"
 #include "Runtime/Resource/AssetManager.h"
 
 namespace LitchiRuntime
@@ -50,10 +51,17 @@ namespace LitchiRuntime
 		m_gameObjectList.clear();
 	}
 
-	GameObject* Prefab::CreateGameObject(std::string name)
+	GameObject* Prefab::CreateGameObject(std::string name, bool isUI)
 	{
 		auto* game_object = new GameObject(name, m_availableID++);
-
+		if (!isUI)
+		{
+			game_object->AddComponent<Transform>();
+		}
+		else
+		{
+			game_object->AddComponent<RectTransform>();
+		}
 		// 将go添加到game_object_vec_中
 		m_gameObjectList.push_back(game_object);
 		

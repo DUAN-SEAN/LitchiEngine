@@ -27,6 +27,8 @@
 #include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
+#include "Runtime/Function/Framework/Component/UI/RectTransform.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -98,6 +100,12 @@ RTTR_REGISTRATION //注册反射
 		.property("g", &Color::g)
 		.property("b", &Color::b)
 		.property("a", &Color::a);
+
+	registration::enumeration<LightType>("LightType")(
+		value("Directional", LightType::Directional),
+		value("Spot", LightType::Spot),
+		value("Point", LightType::Point)
+		);
 
 
 	registration::class_<Object>("Object")
@@ -310,7 +318,8 @@ RTTR_REGISTRATION //注册反射
 	// Transform
 	registration::class_<Transform>("Transform")
 		(
-			rttr::metadata("Serializable", true)
+			rttr::metadata("Serializable", true),
+			rttr::metadata("Polymorphic", true)
 			)
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 		.property("localPosition", &Transform::GetPositionLocal, &Transform::SetPositionLocal)
@@ -323,11 +332,39 @@ RTTR_REGISTRATION //注册反射
 			)
 		.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
-	registration::enumeration<LightType>("LightType")(
-		value("Directional", LightType::Directional),
-		value("Spot", LightType::Spot),
-		value("Point", LightType::Point)
-		);
+	// Rect Transform
+	registration::class_<RectTransform>("RectTransform")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("rectPos", &RectTransform::GetPos, &RectTransform::SetPos)
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.property("rectSize", &RectTransform::GetSize, &RectTransform::SetSize)
+		(
+			rttr::metadata("QuatToEuler", true)
+			);
+
+	// Rect Transform
+	registration::class_<UICanvas>("UICanvas")
+		(
+			rttr::metadata("Serializable", true)
+			)
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("resolution", &UICanvas::GetResolution, &UICanvas::SetResolution);
+
+	registration::class_<UIText>("UIText")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		// .property("FontPath", &UIText::GetFontPath)
+		.property("Text", &UIText::GetText, &UIText::SetText)
+		.property("Color", &UIText::GetColor, &UIText::SetColor);
+
+
+	registration::class_<UIImage>("UIImage")
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
 
 	// Light Base Component
 	registration::class_<Light>("Light")
@@ -365,20 +402,6 @@ RTTR_REGISTRATION //注册反射
 	// SphereCollider
 	registration::class_<SphereCollider>("SphereCollider")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-
-	registration::class_<UIText>("UIText")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		// .property("FontPath", &UIText::GetFontPath)
-		.property("Text", &UIText::GetText, &UIText::SetText)
-		.property("Color", &UIText::GetColor, &UIText::SetColor);
-
-
-	registration::class_<UIImage>("UIImage")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
-		// .property("ImagePath", &UIImage::GetTexturePath)
-		/*.property("Width", &UIImage::GetWidth)
-		.property("Height", &UIImage::GetHeight);*/
-
 
 	registration::class_<ScriptComponent>("ScriptComponent")
 		.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName)

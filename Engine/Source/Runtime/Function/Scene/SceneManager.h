@@ -25,7 +25,7 @@ namespace LitchiRuntime
 		 * \param name go的名字
 		 * \return go
 		 */
-		GameObject* CreateGameObject(std::string name);
+		GameObject* CreateGameObject(std::string name,bool isUI = false);
 		void RemoveGameObject(GameObject* go);
 
 		// Prefab

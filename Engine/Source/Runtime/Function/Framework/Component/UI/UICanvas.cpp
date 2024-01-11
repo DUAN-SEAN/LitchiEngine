@@ -5,7 +5,7 @@
 
 namespace LitchiRuntime
 {
-	UICanvas::UICanvas():m_resolution(1920,1080)
+	UICanvas::UICanvas():Component(),m_resolution(1920,1080)
 	{
 	}
 	UICanvas::~UICanvas()

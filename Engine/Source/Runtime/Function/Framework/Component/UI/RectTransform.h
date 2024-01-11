@@ -15,6 +15,7 @@ namespace LitchiRuntime
         ~RectTransform();
 
         void Awake() override;
+        void Update() override;
 
         // Pos
         void SetPos(Vector3 pos) { m_pos = pos; }
@@ -24,20 +25,25 @@ namespace LitchiRuntime
         void SetSize(Vector2 size) { m_size = size; }
         Vector2 GetSize() { return m_size; }
 
+    public:
+        void PostResourceLoaded() override;
+        void PostResourceModify() override;
     private:
+
+        void UpdateTransform();
 
         // Canvas
         UICanvas* m_canvas;
 
         // transform
-        Vector3 m_pos;
-        Vector2 m_size;
+        Vector3 m_pos;// ui resolution pos, if (0,0) is top-left 
+        Vector2 m_size;// ui resolution size if(10,10) is 10 pixel width and height
         Matrix m_rectTransformMatrix;
 
     private:
 
 
 
-        RTTR_ENABLE(Component)
+        RTTR_ENABLE(Transform)
     };
 }

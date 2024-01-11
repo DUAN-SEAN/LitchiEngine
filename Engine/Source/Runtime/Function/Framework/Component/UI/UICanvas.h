@@ -33,6 +33,6 @@ namespace LitchiRuntime
 
         // FTransform m_transform;
 
-        RTTR_ENABLE(UICanvas)
+        RTTR_ENABLE(Component)
     };
 }
