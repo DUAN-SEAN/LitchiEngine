@@ -449,7 +449,7 @@ namespace LitchiRuntime
 
 				auto vertexBuffer = text->GetVertexBuffer().get();
 				auto indexBuffer = text->GetIndexBuffer().get();
-				if(!vertexBuffer||!indexBuffer)
+				if(!vertexBuffer||!indexBuffer || indexBuffer->GetIndexCount()==0)
 				{
 					continue;
 				}
