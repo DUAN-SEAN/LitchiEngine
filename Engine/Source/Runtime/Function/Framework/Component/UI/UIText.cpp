@@ -80,6 +80,20 @@ void UIText::OnPostRender() {
     Component::OnPostRender();
 }
 
+void UIText::PostResourceLoaded()
+{
+    // default
+    PostResourceModify();
+}
+
+void UIText::PostResourceModify()
+{
+    if(!m_font_path.empty())
+    {
+        m_font = ApplicationBase::Instance()->fontManager->LoadResource(m_font_path);
+    }
+}
+
 UIText::~UIText() {
 
 }

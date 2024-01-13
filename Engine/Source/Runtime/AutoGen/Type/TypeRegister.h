@@ -357,7 +357,8 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<UIText>("UIText")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-		// .property("FontPath", &UIText::GetFontPath)
+		 .property("FontPath", &UIText::GetFontPath,&UIText::SetFontPath)
+		(rttr::metadata("AssetPath", true), rttr::metadata("AssetType", PathParser::EFileType::FONT))
 		.property("Text", &UIText::GetText, &UIText::SetText)
 		.property("Color", &UIText::GetColor, &UIText::SetColor);
 

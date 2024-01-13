@@ -12,15 +12,26 @@ namespace LitchiRuntime
 	}
 	void RectTransform::Awake()
 	{
-		if(m_canvas)
+		if(!m_canvas)
 		{
-			m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+			if (GetGameObject()->HasParent())
+			{
+				m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+			}
 		}
 	}
 
 	void RectTransform::Update()
 	{
-		
+		if (!m_canvas)
+		{
+			if (GetGameObject()->HasParent())
+			{
+				m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+			}
+		}
+
+		UpdateTransform();
 	}
 
 	void RectTransform::PostResourceLoaded()
@@ -47,7 +58,7 @@ namespace LitchiRuntime
 			const auto resolution = m_canvas->GetResolution();
 
 			// calc rect pos relative by canvas
-			const auto rectCanvasPos = Vector3(resolution.x - m_pos.x, m_pos.y, m_pos.z);
+			const auto rectCanvasPos = Vector3(m_pos.x, resolution.y-m_pos.y, m_pos.z);
 
 			// calc world pos 
 			const auto canvasCenterPos = Vector3(resolution.x / 2, resolution.y / 2, 0.0f);

@@ -18,6 +18,10 @@ namespace LitchiRuntime
 		{
 			return m_font_path;
 		}
+		void SetFontPath(std::string fontPath)
+		{
+			m_font_path = fontPath;
+		}
 		void SetFont(Font* font) { m_font = font; }
 		Font* GetFont() { return m_font; }
 
@@ -31,8 +35,10 @@ namespace LitchiRuntime
 		void Update() override;
 		/// 渲染之前
 		void OnPreRender() override;
-
 		void OnPostRender() override;
+
+		void PostResourceLoaded() override;
+		void PostResourceModify() override;
 		
 		std::string m_font_path;
 	private:

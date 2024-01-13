@@ -33,7 +33,7 @@ namespace LitchiRuntime
         void UpdateTransform();
 
         // Canvas
-        UICanvas* m_canvas;
+        UICanvas* m_canvas = nullptr;
 
         // transform
         Vector3 m_pos;// ui resolution pos, if (0,0) is top-left 
