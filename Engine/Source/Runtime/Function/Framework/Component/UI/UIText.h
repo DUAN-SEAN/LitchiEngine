@@ -30,6 +30,10 @@ namespace LitchiRuntime
 
 		void SetColor(Vector4 color) { m_color = color; }
 		Vector4 GetColor() { return m_color; }
+
+		std::shared_ptr<RHI_VertexBuffer> GetVertexBuffer(){ return m_vertex_buffer; }
+		std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; };
+
 	public:
 		void Awake() override;
 		void Update() override;

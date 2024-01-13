@@ -449,6 +449,10 @@ namespace LitchiRuntime
 			Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK
 
+			EASY_BLOCK("Pass_ForwardPass")
+			Pass_UIPass(cmd_list, rendererPath);
+			EASY_END_BLOCK
+
 			EASY_BLOCK("Pass_DebugGridPass")
 			Pass_DebugGridPass(cmd_list, rendererPath);
 			EASY_END_BLOCK

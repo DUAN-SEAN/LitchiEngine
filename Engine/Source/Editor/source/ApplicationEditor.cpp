@@ -32,6 +32,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
 
@@ -294,6 +295,9 @@ void LitchiEditor::ApplicationEditor::Init()
 	m_rendererPath4SceneView->SetScene(scene);
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
 
+
+	sceneManager->SetCurrentScene(scene);
+
 	// Setup UI
 	SetupUI();
 
@@ -301,9 +305,17 @@ void LitchiEditor::ApplicationEditor::Init()
 	{
 		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
 	}
-
-	sceneManager->SetCurrentScene(scene);
 	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
+
+	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
+	canvas->SetName("Canvas");
+	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
+	text->SetName("Text");
+	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
+	text->GetComponent<UIText>()->SetText("Hello World !");
+	text->GetComponent<UIText>()->PostResourceModify();
+
+
 	ServiceLocator::Provide(*shaderManager.get());
 	ServiceLocator::Provide(*modelManager.get());
 	ServiceLocator::Provide(*materialManager.get());

@@ -15,6 +15,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/RHI/RHI_IndexBuffer.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 //==============================================
@@ -415,8 +416,26 @@ namespace LitchiRuntime
 
 		auto shader_v_font = GetShader(Renderer_Shader::font_v).get();
 		auto shader_p_font = GetShader(Renderer_Shader::font_p).get();
+		if (!shader_v_font || !shader_v_font->IsCompiled() || !shader_p_font || !shader_p_font->IsCompiled())
+			return;
 
 		// todo image shader
+
+		cmd_list->BeginMarker("text");
+
+		// define pipeline state
+		static RHI_PipelineState pso;
+		pso.shader_vertex = shader_v_font;
+		pso.shader_pixel = shader_p_font;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Off).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.name = "Pass_Text";
+
+		cmd_list->SetPipelineState(pso);
+		cmd_list->BeginRenderPass();
 
 		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::UI);
 		for (auto entity : entities)
@@ -424,8 +443,37 @@ namespace LitchiRuntime
 			auto text = entity->GetComponent<UIText>();
 			auto image = entity->GetComponent<UIImage>();
 
+			if(text)
+			{
+				auto font = text->GetFont();
+
+				auto vertexBuffer = text->GetVertexBuffer().get();
+				auto indexBuffer = text->GetIndexBuffer().get();
+				if(!vertexBuffer||!indexBuffer)
+				{
+					continue;
+				}
+				
+				// set pass constants
+				// m_cb_pass_cpu.transform  UI Transform
+
+				//m_cb_pass_cpu.set_resolution_out(tex_out);
+				m_cb_pass_cpu.set_f4_value(text->GetColor());
+				PushPassConstants(cmd_list);
+
+				cmd_list->SetBufferVertex(vertexBuffer);
+				cmd_list->SetBufferIndex(indexBuffer);
+				cmd_list->SetTexture(Renderer_BindingsSrv::font_atlas, font->GetAtlas());
+				cmd_list->DrawIndexed(indexBuffer->GetIndexCount());
+			}
+
+
 			// todo: use Rect Transform ?
 		}
+
+		cmd_list->EndRenderPass();
+
+		cmd_list->EndMarker();
 	}
 
 	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
