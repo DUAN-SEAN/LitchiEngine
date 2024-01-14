@@ -456,6 +456,7 @@ namespace LitchiRuntime
 				
 				// set pass constants
 				// m_cb_pass_cpu.transform  UI Transform
+				m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 
 				//m_cb_pass_cpu.set_resolution_out(tex_out);
 				m_cb_pass_cpu.set_f4_value(text->GetColor());

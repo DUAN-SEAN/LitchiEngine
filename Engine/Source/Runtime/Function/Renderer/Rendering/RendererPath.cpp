@@ -8,6 +8,7 @@
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -107,6 +108,7 @@ namespace LitchiRuntime
 		m_renderables[Renderer_Entity::Camera];
 		m_renderables[Renderer_Entity::Light];
 		m_renderables[Renderer_Entity::UI];
+		m_renderables[Renderer_Entity::Canvas];
 
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
@@ -165,6 +167,11 @@ namespace LitchiRuntime
 			if (auto image = entity->GetComponent<UIImage>())
 			{
 				m_renderables[Renderer_Entity::UI].emplace_back(entity);
+			}
+
+			if (auto canvas = entity->GetComponent<UICanvas>())
+			{
+				m_renderables[Renderer_Entity::Canvas].emplace_back(entity);
 			}
 
 			/* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())

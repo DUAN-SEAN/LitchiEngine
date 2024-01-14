@@ -22,6 +22,7 @@
 #include "Runtime/Core/Window/Window.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 //==============================================
 
@@ -277,24 +278,24 @@ namespace LitchiRuntime
 		}
 
 		EASY_BLOCK("Renderer::Flush")
-			// happens when core resources are created/destroyed
-			if (flush_requested)
-			{
-				Flush();
-			}
+		// happens when core resources are created/destroyed
+		if (flush_requested)
+		{
+			Flush();
+		}
 		EASY_END_BLOCK;
 
 		if (!is_rendering_allowed)
 			return;
 
 		EASY_BLOCK("Device::DeletionQueueParse")
-			// delete any RHI resources that have accumulated
-			if (RHI_Device::DeletionQueueNeedsToParse())
-			{
-				RHI_Device::QueueWaitAll();
-				RHI_Device::DeletionQueueParse();
-				DEBUG_LOG_INFO("Parsed deletion queue");
-			}
+		// delete any RHI resources that have accumulated
+		if (RHI_Device::DeletionQueueNeedsToParse())
+		{
+			RHI_Device::QueueWaitAll();
+			RHI_Device::DeletionQueueParse();
+			DEBUG_LOG_INFO("Parsed deletion queue");
+		}
 		EASY_END_BLOCK;
 
 		// reset buffer offsets
@@ -314,23 +315,23 @@ namespace LitchiRuntime
 		}
 
 		EASY_BLOCK("Device::Tick")
-			RHI_Device::Tick(LitchiRuntime::frame_num);
+		RHI_Device::Tick(LitchiRuntime::frame_num);
 		EASY_END_BLOCK
 
-			EASY_BLOCK("Begin CommandList")
-			// begin
-			m_cmd_pool->Tick();
+		EASY_BLOCK("Begin CommandList")
+		// begin
+		m_cmd_pool->Tick();
 		cmd_current = m_cmd_pool->GetCurrentCommandList();
 		cmd_current->Begin();
 		EASY_END_BLOCK
 
-			EASY_BLOCK("OnFrameStart")
-			OnFrameStart(cmd_current);
+		EASY_BLOCK("OnFrameStart")
+		OnFrameStart(cmd_current);
 		EASY_END_BLOCK
 
-			EASY_BLOCK("Render4BuildInSceneView")
-			// 绘制SceneView Path
-			auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
+		EASY_BLOCK("Render4BuildInSceneView")
+		// 绘制SceneView Path
+		auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath)
 		{
 			m_main_camera = rendererPath->GetRenderCamera();
@@ -339,23 +340,23 @@ namespace LitchiRuntime
 		}
 		EASY_END_BLOCK
 
-			// blit to back buffer when in full screen
-			if (ApplicationBase::Instance()->window->IsFullscreen())
-			{
-				cmd_current->BeginMarker("copy_to_back_buffer");
-				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
-				cmd_current->EndMarker();
-			}
+		// blit to back buffer when in full screen
+		if (ApplicationBase::Instance()->window->IsFullscreen())
+		{
+			cmd_current->BeginMarker("copy_to_back_buffer");
+			cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+			cmd_current->EndMarker();
+		}
 
 		OnFrameEnd(cmd_current);
 		EASY_BLOCK("CommandList::Submit")
-			// submit
-			cmd_current->End();
+		// submit
+		cmd_current->End();
 		cmd_current->Submit();
 		EASY_END_BLOCK
 
-			// track frame
-			LitchiRuntime::frame_num++;
+		// track frame
+		LitchiRuntime::frame_num++;
 	}
 
 	void Renderer::Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
@@ -366,27 +367,36 @@ namespace LitchiRuntime
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),0, 0, false, camera->GetClearColor());
 
 		EASY_BLOCK("Build cb_frame")
-			if (camera)
+		if (camera)
+		{
+			if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
 			{
-				if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
-				{
-					near_plane = camera->GetNearPlane();
-					far_plane = camera->GetFarPlane();
-					dirty_orthographic_projection = true;
-				}
-
-				m_cb_frame_cpu.view = camera->GetViewMatrix();
-				m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
+				near_plane = camera->GetNearPlane();
+				far_plane = camera->GetFarPlane();
+				dirty_orthographic_projection = true;
 			}
 
-		if (dirty_orthographic_projection)
-		{
-			// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
-			Matrix projection_ortho = Matrix::CreateOrthographicLH(m_viewport.width, m_viewport.height, 0.0f, far_plane);
-			m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
-			dirty_orthographic_projection = false;
+			m_cb_frame_cpu.view = camera->GetViewMatrix();
+			m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
 		}
 
+		// todo get canvas resolution
+		auto canvass = rendererPath->GetRenderables().at(Renderer_Entity::Canvas);
+		if(canvass.size()>0)
+		{
+			auto canvas = canvass[0]->GetComponent<UICanvas>();
+			// if (dirty_orthographic_projection)
+			{
+				float canvasResolutionWidth = canvas->GetResolution().x;
+				float canvasResolutionHeight = canvas->GetResolution().y;
+
+				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
+				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
+				m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
+				dirty_orthographic_projection = false;
+			}
+
+		}
 
 		// update the remaining of the frame buffer
 		m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;

@@ -8,7 +8,8 @@ Pixel_PosUv mainVS(Vertex_PosUv input)
     Pixel_PosUv output;
 
     input.position.w = 1.0f;
-    output.position = mul(input.position, buffer_frame.view_projection_orthographic);
+    output.position = mul(input.position, buffer_pass.transform);
+    output.position = mul(output.position, buffer_frame.view_projection_orthographic);
     output.uv = input.uv;
 
     return output;
