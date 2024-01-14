@@ -5,7 +5,6 @@
 
 #include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Tools/Utils/PathParser.h"
-#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
 #include "Runtime/Function/UI/Widgets/Buttons/ButtonSmall.h"
@@ -101,12 +100,12 @@ void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::st
 	dispatcher.RegisterReference(p_color);
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Model *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Mesh*& p_data, Event<>* p_updateNotifier)
 {
 	// TODO:
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->path : std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->GetResourceFilePathAsset() : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);

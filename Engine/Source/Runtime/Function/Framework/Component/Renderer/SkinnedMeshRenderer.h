@@ -2,7 +2,6 @@
 #pragma once
 
 #include "MeshRenderer.h"
-#include "Runtime/Function/Renderer/Resources/SkinnedData.h"
 
 namespace LitchiRuntime
 {

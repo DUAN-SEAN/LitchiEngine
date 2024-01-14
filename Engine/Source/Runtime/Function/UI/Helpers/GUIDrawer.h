@@ -1,13 +1,12 @@
 
 #pragma once
 
-#include "Runtime/Function/Renderer/Resources/Material.h"
-#include "Runtime/Function/Renderer/Resources/Model.h"
-#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include  "Runtime/Function/Renderer/Rendering/Color.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 #include "Runtime/Core/Tools/Eventing/Event.h"
+#include "Runtime/Function/Renderer/Rendering/Material.h"
+#include "Runtime/Function/Renderer/Rendering/Mesh.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 
@@ -47,7 +46,7 @@ namespace LitchiRuntime
 		static void DrawQuat(WidgetContainer& p_root, const std::string& p_name, Quaternion& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
 		static void DrawString(WidgetContainer& p_root, const std::string& p_name, std::string& p_data);
 		static void DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha = false);
-		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, Model*& p_data, Event<>* p_updateNotifier = nullptr);
+		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, Mesh*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Image& DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Text& DrawShader(WidgetContainer& p_root, const std::string& p_name, MaterialShader*& p_data, Event<>* p_updateNotifier = nullptr);
 		static Text& DrawMaterial(WidgetContainer& p_root, const std::string& p_name, Material*& p_data, Event<>* p_updateNotifier = nullptr);

@@ -3,9 +3,6 @@
 
 #include <variant>
 #include "AViewControllable.h"
-#include "Runtime/Function/Renderer/Resources/Material.h"
-#include "Runtime/Function/Renderer/Resources/Model.h"
-#include "Runtime/Function/Renderer/Resources/Texture.h"
 
 namespace LitchiEditor
 {

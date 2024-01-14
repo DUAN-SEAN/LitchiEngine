@@ -5,7 +5,6 @@
 
 #include "Runtime/Core/Math/Quaternion.h"
 #include "Runtime/Function/Renderer/Rendering/RendererPath.h"
-#include "Runtime/Function/Renderer/Resources/Shader.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"

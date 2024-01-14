@@ -7,7 +7,6 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
-#include "Runtime/Function/Renderer/Resources/Material.h"
 
 namespace LitchiEditor
 {
