@@ -17,13 +17,8 @@ Pixel_PosUv mainVS(Vertex_PosUv input)
 
 float4 mainPS(Pixel_PosUv input) : SV_TARGET
 {
-    float4 color = float4(0.0f, 0.0f, 0.0f, 1.0f);
-    
     // Sample text from texture atlas
-    color.r = tex.Sample(samplers[sampler_bilinear_clamp], input.uv).r;
-    color.g = color.r;
-    color.b = color.r;
-    color.a = color.r;
+    float4 color = tex.Sample(samplers[sampler_bilinear_clamp], input.uv);
 
     // Color it
     color *= float4(pass_get_f4_value().rgb, 1.0f);

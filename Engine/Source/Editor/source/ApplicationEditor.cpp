@@ -320,6 +320,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	image->SetName("Text");
 	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
 	image->GetComponent<UIImage>()->PostResourceModify();
+	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
 	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
 
 
