@@ -1,6 +1,5 @@
 
 #include "ShaderManager.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 
 LitchiRuntime::MaterialShader* LitchiRuntime::ShaderManager::CreateResource(const std::string & p_path)
 {

@@ -6,7 +6,7 @@
 #include "../RHI_Shader.h"
 #include "../RHI_InputLayout.h"
 #include "../RHI_DirectXShaderCompiler.h"
-#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
+#include "Runtime/Function/Renderer/Rendering/ShaderUniform.h"
 SP_WARNINGS_OFF
 #include <spirv_cross/spirv_hlsl.hpp>
 SP_WARNINGS_ON

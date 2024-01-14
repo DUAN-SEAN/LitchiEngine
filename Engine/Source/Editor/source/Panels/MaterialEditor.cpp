@@ -12,7 +12,6 @@
 #include "Runtime/Function/UI/Widgets/Selection/ColorEdit.h"
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
 #include "Runtime/Resource/MaterialManager.h"
 

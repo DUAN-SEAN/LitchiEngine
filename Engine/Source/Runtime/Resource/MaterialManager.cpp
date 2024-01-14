@@ -1,8 +1,6 @@
 
 #include "MaterialManager.h"
 
-#include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
-
 namespace LitchiRuntime
 {
 	Material* MaterialManager::CreateResource(const std::string& p_path)

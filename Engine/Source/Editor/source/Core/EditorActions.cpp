@@ -21,8 +21,6 @@
 #include "Runtime/Core/Window/Dialogs/SaveFileDialog.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/MaterialLoader.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 
 LitchiEditor::EditorActions::EditorActions(PanelsManager& p_panelsManager) :
 	m_panelsManager(p_panelsManager)

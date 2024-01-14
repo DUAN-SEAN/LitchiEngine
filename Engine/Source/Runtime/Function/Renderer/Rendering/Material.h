@@ -9,12 +9,12 @@
 #include "MaterialShader.h"
 #include "../RHI/RHI_Definitions.h"
 #include "../Resource/IResource.h"
-#include "Runtime/Function/Renderer/Resources/UniformType.h"
+#include "UniformType.h"
 #include "Runtime/Core/Math/Vector2.h"
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Core/Math/Vector4.h"
 #include "Runtime/Core/Math/Matrix.h"
-#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
+#include "ShaderUniform.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Descriptor.h"
 //=================================
 

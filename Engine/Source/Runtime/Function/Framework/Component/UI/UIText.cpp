@@ -8,8 +8,6 @@
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
-#include "Runtime/Function/Renderer/Resources/Material.h"
-#include "Runtime/Function/Renderer/Font/font.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_IndexBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_VertexBuffer.h"

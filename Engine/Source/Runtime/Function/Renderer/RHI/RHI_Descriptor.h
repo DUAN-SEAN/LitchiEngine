@@ -3,7 +3,7 @@
 
 //= INCLUDES ===============
 #include "RHI_Definitions.h"
-#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
+#include "Runtime/Function/Renderer/Rendering/ShaderUniform.h"
 //==========================
 
 namespace LitchiRuntime

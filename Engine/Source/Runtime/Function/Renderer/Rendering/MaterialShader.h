@@ -4,7 +4,7 @@
 //= INCLUDES ======================
 #include "../RHI/RHI_Definitions.h"
 #include "../Resource/IResource.h"
-#include "Runtime/Function/Renderer/Resources/ShaderUniform.h"
+#include "ShaderUniform.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Descriptor.h"
 //=================================
 
