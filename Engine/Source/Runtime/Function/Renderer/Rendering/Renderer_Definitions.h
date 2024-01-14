@@ -191,7 +191,9 @@ namespace LitchiRuntime
         reflection_probe_v,
         reflection_probe_p,
         ffx_cas_c,
-        ffx_spd_c
+        ffx_spd_c,
+        ui_image_v,
+        ui_image_p = 50,
     };
     
     enum class Renderer_RenderTexture : uint8_t

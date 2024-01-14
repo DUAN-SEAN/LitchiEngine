@@ -20,6 +20,7 @@ namespace LitchiRuntime
 
     public:
         virtual void OnEnable();
+        virtual void OnCreate();
         virtual void Awake();
         virtual void Update();
         virtual void FixedUpdate();

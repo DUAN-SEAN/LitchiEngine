@@ -102,7 +102,7 @@ namespace LitchiRuntime
 
 		// Get all
 		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
-		static std::array<std::shared_ptr<RHI_Shader>, 45>& GetShaders();
+		static std::array<std::shared_ptr<RHI_Shader>, 51>& GetShaders();
 		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 4>& GetConstantBuffers();
 
 		// Get individual

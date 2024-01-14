@@ -416,27 +416,28 @@ namespace LitchiRuntime
 
 		auto shader_v_font = GetShader(Renderer_Shader::font_v).get();
 		auto shader_p_font = GetShader(Renderer_Shader::font_p).get();
+		auto shader_v_image = GetShader(Renderer_Shader::ui_image_v).get();
+		auto shader_p_image = GetShader(Renderer_Shader::ui_image_p).get();
 		if (!shader_v_font || !shader_v_font->IsCompiled() || !shader_p_font || !shader_p_font->IsCompiled())
+			return;
+		if (!shader_v_image || !shader_v_image->IsCompiled() || !shader_p_image || !shader_p_image->IsCompiled())
 			return;
 
 		// todo image shader
 
-		cmd_list->BeginMarker("text");
+		cmd_list->BeginMarker("UI");
 
 		// define pipeline state
 		static RHI_PipelineState pso;
-		pso.shader_vertex = shader_v_font;
-		pso.shader_pixel = shader_p_font;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Off).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
-		pso.name = "Pass_Text";
+		pso.name = "Pass_UI";
 
-		cmd_list->SetPipelineState(pso);
-		cmd_list->BeginRenderPass();
 
+		bool isBeginRenderPass = false;
 		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::UI);
 		for (auto entity : entities)
 		{
@@ -453,7 +454,16 @@ namespace LitchiRuntime
 				{
 					continue;
 				}
-				
+
+				pso.shader_vertex = shader_v_font;
+				pso.shader_pixel = shader_p_font;
+				cmd_list->SetPipelineState(pso);
+				if(!isBeginRenderPass)
+				{
+					cmd_list->BeginRenderPass();
+					isBeginRenderPass = true;
+				}
+
 				// set pass constants
 				// m_cb_pass_cpu.transform  UI Transform
 				m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
@@ -468,11 +478,43 @@ namespace LitchiRuntime
 				cmd_list->DrawIndexed(indexBuffer->GetIndexCount());
 			}
 
+			if(image)
+			{
+				auto vertexBuffer = image->GetVertexBuffer().get();
+				auto indexBuffer = image->GetIndexBuffer().get();
+				if (!vertexBuffer || !indexBuffer || indexBuffer->GetIndexCount() == 0)
+				{
+					continue;
+				}
 
-			// todo: use Rect Transform ?
+				pso.shader_vertex = shader_v_image;
+				pso.shader_pixel = shader_p_image;
+				cmd_list->SetPipelineState(pso);
+				if (!isBeginRenderPass)
+				{
+					cmd_list->BeginRenderPass();
+					isBeginRenderPass = true;
+				}
+
+				// set pass constants
+				// m_cb_pass_cpu.transform  UI Transform
+				m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
+
+				//m_cb_pass_cpu.set_resolution_out(tex_out);
+				m_cb_pass_cpu.set_f4_value(image->GetColor());
+				PushPassConstants(cmd_list);
+
+				cmd_list->SetBufferVertex(vertexBuffer);
+				cmd_list->SetBufferIndex(indexBuffer);
+				cmd_list->SetTexture(Renderer_BindingsSrv::tex, image->GetTexture());
+				cmd_list->DrawIndexed(indexBuffer->GetIndexCount());
+			}
 		}
 
-		cmd_list->EndRenderPass();
+		if(isBeginRenderPass)
+		{
+			cmd_list->EndRenderPass();
+		}
 
 		cmd_list->EndMarker();
 	}

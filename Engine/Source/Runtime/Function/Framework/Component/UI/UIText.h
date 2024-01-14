@@ -32,7 +32,7 @@ namespace LitchiRuntime
 		Vector4 GetColor() { return m_color; }
 
 		std::shared_ptr<RHI_VertexBuffer> GetVertexBuffer(){ return m_vertex_buffer; }
-		std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; };
+		std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; }
 
 	public:
 		void Awake() override;
@@ -44,12 +44,12 @@ namespace LitchiRuntime
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;
 		
-		std::string m_font_path;
 	private:
 
 		void CreateTextBuffer();
 
 	private:
+		std::string m_font_path;
 		Font* m_font{};// font
 		std::string m_text;// text
 		bool m_dirty{};// is need generate new text

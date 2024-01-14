@@ -36,7 +36,7 @@ namespace LitchiRuntime
 
         // renderer resources
         array<shared_ptr<RHI_Texture>, 28>       m_render_targets;
-        array<shared_ptr<RHI_Shader>, 45>        m_shaders;
+        array<shared_ptr<RHI_Shader>, 51>        m_shaders;
         array<shared_ptr<RHI_Sampler>, 7>        m_samplers;
         array<shared_ptr<RHI_ConstantBuffer>, 4> m_constant_buffers;
         shared_ptr<RHI_StructuredBuffer>         m_structured_buffer;
@@ -300,6 +300,12 @@ namespace LitchiRuntime
         shader(Renderer_Shader::font_p) = make_shared<RHI_Shader>();
         shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward\\Standard_Text.hlsl", async);
 
+        // Image
+        shader(Renderer_Shader::ui_image_v) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::ui_image_v)->Compile(RHI_Shader_Vertex, shader_dir + "Forward\\Standard_Image.hlsl", async, RHI_Vertex_Type::PosUv);
+        shader(Renderer_Shader::ui_image_p) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::ui_image_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward\\Standard_Image.hlsl", async);
+
         // Line
         shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
         shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
@@ -516,7 +522,7 @@ namespace LitchiRuntime
         return m_render_targets;
     }
 
-    array<shared_ptr<RHI_Shader>, 45>& Renderer::GetShaders()
+    array<shared_ptr<RHI_Shader>, 51>& Renderer::GetShaders()
     {
         return m_shaders;
     }

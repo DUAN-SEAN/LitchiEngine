@@ -7,11 +7,13 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/RHI/RHI_IndexBuffer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_VertexBuffer.h"
 
 using namespace rttr;
 using namespace LitchiRuntime;
 
-UIImage::UIImage():Component(),m_texture2D(nullptr),m_width(0),m_height(0) {
+UIImage::UIImage():Component(),m_texture2D(nullptr), m_color({ 1,1,1,1 }) {
 
 }
 
@@ -19,58 +21,80 @@ UIImage::~UIImage() {
 
 }
 
+void UIImage::OnCreate()
+{
+    if(m_vertex_buffer==nullptr)
+    {
+        CreateBuffer();
+    }
+}
+
+void UIImage::Awake()
+{
+    // if runtime oncreate maybe not call awake
+    if (m_vertex_buffer == nullptr)
+    {
+        CreateBuffer();
+    }
+}
+
 void UIImage::Update() {
-    // todo:
-    //Component::Update();
-    //if(m_texture2D== nullptr){
-    //    return;
-    //}
-    //MeshFilter* mesh_filter=GetGameObject()->GetComponent<MeshFilter>();
-    //if(mesh_filter== nullptr){
-
-    //    Vertex v00{ {0.f, 0.0f, 0.0f},{0.f, 0.f},{1.0f,1.0f,1.0f},{},{},{},{},{1.0f,1.0f,1.0f,1.0f} };
-    //    Vertex v10{ {(float)m_texture2D->width, 0.0f, 0.0f},{1.f, 0.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
-    //    Vertex v11{ {(float)m_texture2D->width,  (float)m_texture2D->height, 0.0f},{1.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
-    //    Vertex v01{ {0.f,  (float)m_texture2D->height, 0.0f},{0.f, 1.f},{1.0f,1.0f,1.0f},{},{} ,{},{},{1.0f,1.0f,1.0f,1.0f} };
-
-    //    //创建 MeshFilter
-    //    /*std::vector<Vertex> vertex_vector={
-    //            { {0.f, 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 0.f} },
-    //            { {texture2D_->width(), 0.0f, 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 0.f} },
-    //            { {texture2D_->width(),  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {1.f, 1.f} },
-    //            { {0.f,  texture2D_->height(), 0.0f}, {1.0f,1.0f,1.0f,1.0f},   {0.f, 1.f} }
-    //    };*/
-    //	std::vector<Vertex> vertex_vector={
-    //        v00,v10,v11,v01
-    //    };
-    //    std::vector<unsigned int> index_vector={
-    //            0,1,2,
-    //            0,2,3
-    //    };
-    //    mesh_filter=GetGameObject()->AddComponent<MeshFilter>();
-    //    mesh_filter->CreateUIMesh(vertex_vector,index_vector);
-
-    //    //挂上 MeshRenderer 组件
-    //    auto mesh_renderer = GetGameObject()->AddComponent<MeshRenderer>();
-    //    mesh_renderer->materialPath = "Engine\\Materials\\UIImage.mat";
-    //    mesh_renderer->PostResourceLoaded();
-
-    //    //创建 Material
-    //    auto material = mesh_renderer->GetMaterial();
-    //    //使用贴图
-    //    material->Set("u_DiffuseMap", m_texture2D);
-
-    //}
+    
 }
 
-void UIImage::OnPreRender() {
-    Component::OnPreRender();
-    //glStencilFunc(GL_EQUAL, 0x1, 0xFF);//等于1 通过测试 ,就是上次绘制的图 的范围 才通过测试。
-    //glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);//没有通过测试的，保留原来的，也就是保留上一次的值。
+void UIImage::PostResourceLoaded()
+{
+    PostResourceModify();
 }
 
-void UIImage::OnPostRender() {
-    Component::OnPostRender();
-    //RenderDevice::instance()->Disable(RenderDevice::STENCIL_TEST);
+void UIImage::PostResourceModify()
+{
+    if(!m_image_path.empty())
+    {
+        m_texture2D = ApplicationBase::Instance()->textureManager->LoadResource(m_image_path);
+        if(m_texture2D == nullptr)
+        {
+            m_image_path = "";
+        }
+    }
+	else
+    {
+        m_texture2D = nullptr;
+    }
+}
+
+void UIImage::CreateBuffer()
+{
+    // create buffer
+    m_vertex_buffer = std::make_shared<RHI_VertexBuffer>(true, "image");
+    m_index_buffer = std::make_shared<RHI_IndexBuffer>(true, "image");
+
+    RHI_Vertex_PosTex left_top{ {0.f, 1.0f, 0.0f},{0.f, 0.f} };
+    RHI_Vertex_PosTex right_bottom{ {1.f,  0.0f, 0.0f},{1.f, 1.f} };
+    RHI_Vertex_PosTex left_bottom{ {0.0f,  0.0f, 0.0f},{0.f, 1.f} };
+    RHI_Vertex_PosTex right_top{ {1.0, 1.0f, 0.0f},{1.f, 0.f} };
+    std::vector<RHI_Vertex_PosTex> vertex_vector;
+    vertex_vector.emplace_back(left_top);
+    vertex_vector.emplace_back(right_bottom);
+    vertex_vector.emplace_back(left_bottom);
+    vertex_vector.emplace_back(right_top);
+    std::vector<unsigned int> index_vector = { 0,1,2,0,3,1 };
+
+    //创建 Mesh
+    m_vertex_buffer->CreateDynamic<RHI_Vertex_PosTex>(static_cast<uint32_t>(vertex_vector.size()));
+    m_index_buffer->CreateDynamic<uint32_t>(static_cast<uint32_t>(index_vector.size()));
+
+    // copy the data over to the gpu
+    {
+        if (RHI_Vertex_PosTex* vertex_buffer = static_cast<RHI_Vertex_PosTex*>(m_vertex_buffer->GetMappedData()))
+        {
+            std::copy(vertex_vector.begin(), vertex_vector.end(), vertex_buffer);
+        }
+
+        if (uint32_t* index_buffer = static_cast<uint32_t*>(m_index_buffer->GetMappedData()))
+        {
+            std::copy(index_vector.begin(), index_vector.end(), index_buffer);
+        }
+    }
 }
 

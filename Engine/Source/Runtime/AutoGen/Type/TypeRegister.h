@@ -342,10 +342,7 @@ RTTR_REGISTRATION //注册反射
 		(
 			rttr::metadata("Serializable", true)
 			)
-		.property("rectSize", &RectTransform::GetSize, &RectTransform::SetSize)
-		(
-			rttr::metadata("QuatToEuler", true)
-			);
+		.property("rectSize", &RectTransform::GetSize, &RectTransform::SetSize);
 
 	// Rect Transform
 	registration::class_<UICanvas>("UICanvas")
@@ -364,7 +361,10 @@ RTTR_REGISTRATION //注册反射
 
 
 	registration::class_<UIImage>("UIImage")
-		.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("ImagePath", &UIImage::GetImagePath, &UIImage::SetImagePath)
+		(rttr::metadata("AssetPath", true), rttr::metadata("AssetType", PathParser::EFileType::TEXTURE))
+		.property("Color", &UIImage::GetColor, &UIImage::SetColor);
 
 
 	// Light Base Component

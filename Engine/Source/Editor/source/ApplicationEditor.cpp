@@ -32,6 +32,7 @@
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
+#include "Runtime/Function/Framework/Component/UI/RectTransform.h"
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
@@ -314,6 +315,12 @@ void LitchiEditor::ApplicationEditor::Init()
 	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
 	text->GetComponent<UIText>()->SetText("Hello World !");
 	text->GetComponent<UIText>()->PostResourceModify();
+
+	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
+	image->SetName("Text");
+	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
+	image->GetComponent<UIImage>()->PostResourceModify();
+	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
 
 
 	ServiceLocator::Provide(*shaderManager.get());

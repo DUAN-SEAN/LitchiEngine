@@ -66,7 +66,7 @@ namespace LitchiRuntime
 			const auto rectTransWorldPos = rectCanvasPos + canvasOffsetPos;
 
 			// todo: rotation
-
+			SetScale(Vector3(m_size.x, m_size.y,1.0f));
 			SetPosition(rectTransWorldPos);
 		}
 	}
