@@ -561,8 +561,88 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
 
 		propertyPathList.push_back(name.to_string());
+		if(prop.get_type() == type::get_by_name("Vector2"))
+		{
+			// 绘制rotation
+			PropertyField property_field(obj, propertyPathList);
+			auto getVec = [prop_value, property_field]
+				{
+					auto vec = property_field.GetValue().get_value<Vector2>();
+					return vec;
+				};
+			auto setVec = [property_field](Vector2 vec)
+				{
+					bool result = property_field.SetValue(vec);
+					if (!result)
+					{
+						DEBUG_LOG_ERROR("Vector2 Write Fail!");
+					}
+				};
+
+			GUIDrawer::DrawVec2(p_root, name.to_string(), getVec, setVec);
+		}
+		else if(prop.get_type() == type::get_by_name("Vector3"))
+		{
+			// 绘制rotation
+			PropertyField property_field(obj, propertyPathList);
+			auto getVec = [prop_value, property_field]
+				{
+					auto vec = property_field.GetValue().get_value<Vector3>();
+					return vec;
+				};
+			auto setVec = [property_field](Vector3 vec)
+				{
+					bool result = property_field.SetValue(vec);
+					if (!result)
+					{
+						DEBUG_LOG_ERROR("Vector3 Write Fail!");
+					}
+				};
+
+			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec, setVec);
+		}
+		else if(prop.get_type() == type::get_by_name("Vector4"))
+		{
+			// 绘制rotation
+			PropertyField property_field(obj, propertyPathList);
+			auto getVec = [prop_value, property_field]
+				{
+					auto vec = property_field.GetValue().get_value<Vector4>();
+					return vec;
+				};
+			auto setVec = [property_field](Vector4 vec)
+				{
+					bool result = property_field.SetValue(vec);
+					if (!result)
+					{
+						DEBUG_LOG_ERROR("Vector4 Write Fail!");
+					}
+				};
+
+			GUIDrawer::DrawVec4(p_root, name.to_string(), getVec, setVec);
+		}
+		else if(prop.get_type() == type::get_by_name("Color"))
+		{
+			// 绘制rotation
+			PropertyField property_field(obj, propertyPathList);
+			auto getVec = [prop_value, property_field]
+				{
+					auto vec = property_field.GetValue().get_value<Color>();
+					return vec;
+				};
+			auto setVec = [property_field](Color vec)
+				{
+					bool result = property_field.SetValue(vec);
+					if (!result)
+					{
+						DEBUG_LOG_ERROR("Color Write Fail!");
+					}
+				};
+
+			GUIDrawer::DrawColor(p_root, name.to_string(), getVec, setVec);
+		}
 		// property 特殊绘制
-		if (prop.get_metadata("QuatToEuler"))
+		else if (prop.get_metadata("QuatToEuler"))
 		{
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
