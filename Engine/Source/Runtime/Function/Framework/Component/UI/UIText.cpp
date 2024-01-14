@@ -50,7 +50,7 @@ void UIText::Update() {
         TextData text_data = m_font->GetTextData(m_text);
 
         // create/grow buffers
-        if (text_data.vertices.size() > m_vertex_buffer->GetVertexCount())
+    	if (text_data.vertices.size() != m_vertex_buffer->GetVertexCount())
         {
             m_vertex_buffer->CreateDynamic<RHI_Vertex_PosTex>(static_cast<uint32_t>(text_data.vertices.size()));
             m_index_buffer->CreateDynamic<uint32_t>(static_cast<uint32_t>(text_data.indices.size()));

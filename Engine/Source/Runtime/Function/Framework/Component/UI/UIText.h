@@ -28,8 +28,8 @@ namespace LitchiRuntime
 		void SetText(std::string text);
 		std::string GetText() { return m_text; }
 
-		void SetColor(Vector4 color) { m_color = color; }
-		Vector4 GetColor() { return m_color; }
+		void SetColor(Color color) { m_color = color; }
+		Color GetColor() { return m_color; }
 
 		std::shared_ptr<RHI_VertexBuffer> GetVertexBuffer(){ return m_vertex_buffer; }
 		std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; }
@@ -53,7 +53,7 @@ namespace LitchiRuntime
 		Font* m_font{};// font
 		std::string m_text;// text
 		bool m_dirty{};// is need generate new text
-		Vector4 m_color;// text color
+		Color m_color;// text color
 
 		std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer;
 		std::shared_ptr<RHI_IndexBuffer> m_index_buffer;

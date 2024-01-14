@@ -249,6 +249,14 @@ namespace LitchiRuntime
 			m_value.m13 = color.w;
 		};
 
+		void set_f4_value(const Color& color)
+		{
+			m_value.m10 = color.r;
+			m_value.m11 = color.g;
+			m_value.m12 = color.b;
+			m_value.m13 = color.a;
+		};
+
 		void set_f4_value(const float x, const float y, const float z, const float w)
 		{
 			m_value.m10 = x;

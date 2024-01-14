@@ -201,7 +201,7 @@ GameObject* CreateUITextObject(Scene* scene, std::string name, Vector3 pos, Quat
 	auto uiText = go->AddComponent<UIText>();
 	uiText->SetFont(font);
 	uiText->SetText("EF");
-	uiText->SetColor(Vector4(1));
+	uiText->SetColor(Color::White);
 
 	return go;
 }
@@ -317,7 +317,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	text->GetComponent<UIText>()->PostResourceModify();
 
 	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
-	image->SetName("Text");
+	image->SetName("Image");
 	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
 	image->GetComponent<UIImage>()->PostResourceModify();
 	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });

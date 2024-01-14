@@ -26,8 +26,8 @@ namespace LitchiRuntime
             m_image_path = texture2D->GetResourceFilePathAsset();
         }
 
-        void SetColor(Vector4 color) { m_color = color; }
-        Vector4 GetColor() { return m_color; }
+        void SetColor(Color color) { m_color = color; }
+        Color GetColor() { return m_color; }
 
         std::shared_ptr<RHI_VertexBuffer> GetVertexBuffer() { return m_vertex_buffer; }
         std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; };
@@ -45,7 +45,7 @@ namespace LitchiRuntime
         std::string m_image_path;
 
         RHI_Texture* m_texture2D;//Texture
-        Vector4 m_color;// text color
+        Color m_color;// text color
 
         std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer;
         std::shared_ptr<RHI_IndexBuffer> m_index_buffer;
