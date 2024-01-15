@@ -18,19 +18,6 @@ LitchiRuntime::Animator::~Animator()
 
 void LitchiRuntime::Animator::Awake()
 {
-	// todo 实例化时可以做一些事情
-	// get default clip map
-
-	if(m_animationClipMap.empty())
-	{
-		auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-		auto mesh = meshFilter->GetMesh();
-		std::unordered_map<std::string, AnimationClip> animations;
-		mesh->GetAnimations(animations);
-		auto firstClipName = animations.begin()->first;
-		SetAnimationClipMap(animations);
-		Play(firstClipName);
-	}
 }
 
 void Animator::Update()
@@ -70,6 +57,19 @@ void LitchiRuntime::Animator::SetAnimationClipMap(std::unordered_map<std::string
 
 void LitchiRuntime::Animator::PostResourceLoaded()
 {
+	// todo 实例化时可以做一些事情
+	// get default clip map
+
+	if (m_animationClipMap.empty())
+	{
+		auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
+		auto mesh = meshFilter->GetMesh();
+		std::unordered_map<std::string, AnimationClip> animations;
+		mesh->GetAnimations(animations);
+		auto firstClipName = animations.begin()->first;
+		SetAnimationClipMap(animations);
+		Play(firstClipName);
+	}
 }
 
 void LitchiRuntime::Animator::PostResourceModify()

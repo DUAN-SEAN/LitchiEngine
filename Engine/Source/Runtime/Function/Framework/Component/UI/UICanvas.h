@@ -17,6 +17,8 @@ namespace LitchiRuntime
         void Awake() override;
         void Update() override;
 
+        void PostResourceLoaded() override;
+
         void SetResolution(Vector2 resolution) { m_resolution = resolution; }
         Vector2 GetResolution() { return m_resolution; }
 

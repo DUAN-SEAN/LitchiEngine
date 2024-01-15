@@ -13,17 +13,21 @@ namespace LitchiRuntime
 	}
 	void UICanvas::Awake()
 	{
-		// init RectTramsform
-		InitCanvasTransform();
-
-		// init camera
-		InitCanvasCamera();
 	}
 
 	void UICanvas::Update()
 	{
 		Transform* transform = GetGameObject()->GetComponent<Transform>();
 		transform->SetPosition(Vector3::Zero);
+	}
+
+	void UICanvas::PostResourceLoaded()
+	{
+		// init RectTramsform
+		InitCanvasTransform();
+
+		// init camera
+		InitCanvasCamera();
 	}
 
 	void UICanvas::InitCanvasCamera()

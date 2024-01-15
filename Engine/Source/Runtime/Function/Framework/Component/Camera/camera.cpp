@@ -13,6 +13,7 @@ namespace LitchiRuntime
 
 	Camera::Camera() :m_depth(0), m_culling_mask(0x01) {
         m_renderCamera = new RenderCamera();
+        m_renderCamera->Initialize();
 	}
 	
 	Camera::~Camera() {
@@ -22,7 +23,6 @@ namespace LitchiRuntime
 
     void Camera::Awake()
     {
-        m_renderCamera->Initialize();
     }
 
     void Camera::Update()

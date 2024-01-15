@@ -23,10 +23,6 @@ namespace LitchiRuntime
     }
 
     void Collider::Awake() {
-        CreatePhysicMaterial();
-        CreateShape();
-        UpdateTriggerState();
-        RegisterToRigidActor();
     }
 
     void Collider::CreatePhysicMaterial() {
@@ -70,6 +66,10 @@ namespace LitchiRuntime
 
     void Collider::PostResourceLoaded()
     {
+        CreatePhysicMaterial();
+        CreateShape();
+        UpdateTriggerState();
+        RegisterToRigidActor();
     }
 
     void Collider::PostResourceModify()

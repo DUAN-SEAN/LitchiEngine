@@ -29,9 +29,6 @@ void UIText::SetText(std::string text) {
 
 void LitchiRuntime::UIText::Awake()
 {
-    // create buffer
-    m_vertex_buffer = std::make_shared<RHI_VertexBuffer>(true, "font");
-    m_index_buffer = std::make_shared<RHI_IndexBuffer>(true, "font");
 }
 
 void UIText::Update() {
@@ -80,6 +77,7 @@ void UIText::OnPostRender() {
 
 void UIText::PostResourceLoaded()
 {
+    CreateTextBuffer();
     // default
     PostResourceModify();
 }
@@ -89,6 +87,16 @@ void UIText::PostResourceModify()
     if(!m_font_path.empty())
     {
         m_font = ApplicationBase::Instance()->fontManager->LoadResource(m_font_path);
+    }
+}
+
+void UIText::CreateTextBuffer()
+{
+    if(!m_vertex_buffer)
+    {
+        // create buffer
+        m_vertex_buffer = std::make_shared<RHI_VertexBuffer>(true, "font");
+        m_index_buffer = std::make_shared<RHI_IndexBuffer>(true, "font");
     }
 }
 

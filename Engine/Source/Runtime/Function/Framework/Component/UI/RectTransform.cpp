@@ -12,40 +12,23 @@ namespace LitchiRuntime
 	}
 	void RectTransform::Awake()
 	{
-		if(!m_canvas)
-		{
-			if (GetGameObject()->HasParent())
-			{
-				m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
-			}
-		}
 	}
 
 	void RectTransform::Update()
 	{
-		if (!m_canvas)
-		{
-			if (GetGameObject()->HasParent())
-			{
-				m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
-			}
-		}
 
 		UpdateTransform();
 	}
 
 	void RectTransform::PostResourceLoaded()
 	{
-		if (m_canvas)
-		{
-			m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
-		}
-
-		UpdateTransform();
+		PostResourceModify();
 	}
 
 	void RectTransform::PostResourceModify()
 	{
+		UpdateCanvas();
+
 		UpdateTransform();
 	}
 
@@ -68,6 +51,17 @@ namespace LitchiRuntime
 			// todo: rotation
 			SetScale(Vector3(m_size.x, m_size.y,1.0f));
 			SetPosition(rectTransWorldPos);
+		}
+	}
+
+	void RectTransform::UpdateCanvas()
+	{
+		if (!m_canvas)
+		{
+			if (GetGameObject()->HasParent())
+			{
+				m_canvas = GetGameObject()->GetParent()->GetComponent<UICanvas>();
+			}
 		}
 	}
 

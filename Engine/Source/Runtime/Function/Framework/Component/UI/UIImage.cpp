@@ -21,21 +21,8 @@ UIImage::~UIImage() {
 
 }
 
-void UIImage::OnCreate()
-{
-    if(m_vertex_buffer==nullptr)
-    {
-        CreateBuffer();
-    }
-}
-
 void UIImage::Awake()
 {
-    // if runtime oncreate maybe not call awake
-    if (m_vertex_buffer == nullptr)
-    {
-        CreateBuffer();
-    }
 }
 
 void UIImage::Update() {
@@ -44,6 +31,7 @@ void UIImage::Update() {
 
 void UIImage::PostResourceLoaded()
 {
+    CreateBuffer();
     PostResourceModify();
 }
 
@@ -65,6 +53,10 @@ void UIImage::PostResourceModify()
 
 void UIImage::CreateBuffer()
 {
+    if (m_vertex_buffer == nullptr)
+    {
+        return;
+    }
     // create buffer
     m_vertex_buffer = std::make_shared<RHI_VertexBuffer>(true, "image");
     m_index_buffer = std::make_shared<RHI_IndexBuffer>(true, "image");

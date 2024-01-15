@@ -31,6 +31,7 @@ namespace LitchiRuntime
     private:
 
         void UpdateTransform();
+        void UpdateCanvas();
 
         // Canvas
         UICanvas* m_canvas = nullptr;

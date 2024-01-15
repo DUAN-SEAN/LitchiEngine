@@ -2,7 +2,6 @@
 #include "TextureManager.h"
 
 #include "Runtime/Core/Tools/FileSystem/IniFile.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/TextureLoader.h"
 //
 //std::tuple<LitchiRuntime::ETextureFilteringMode, LitchiRuntime::ETextureFilteringMode, bool> GetAssetMetadata(const std::string& p_path)
 //{

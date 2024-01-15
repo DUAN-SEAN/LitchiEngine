@@ -26,7 +26,7 @@ namespace LitchiRuntime
 		RTTR_ENABLE(MeshRenderer)
 
 	private:
-
+		void CreateDefaultBoneBuffer();
 		void CalcDefaultFinalTransform(std::vector<int>& boneHierarchy, std::vector<Matrix>& nodelDefaultTransforms);
 
 		/**

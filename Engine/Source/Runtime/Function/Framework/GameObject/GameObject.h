@@ -43,8 +43,8 @@ namespace LitchiRuntime
 		template <class T = Component>
 		T* AddComponent() {
 			T* component = new T();
-			component->OnCreate();
 			AttachComponent(component);
+			component->PostResourceLoaded();
 			component->Awake();
 			return dynamic_cast<T*>(component);
 		}

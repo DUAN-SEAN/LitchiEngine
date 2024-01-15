@@ -4,7 +4,6 @@
 #include <iostream>
 
 #include "Runtime/Core/Log/debug.h"
-#include "Runtime/Function/Renderer/Resources/Texture.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 #include <Runtime/Function/UI/Widgets/InputFields/InputText.h>
@@ -25,7 +24,6 @@
 #include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/MaterialEditor.h"
 #include "Runtime/Core/Tools/Utils/String.h"
-#include "Runtime/Function/Renderer/Resources/Loaders/ShaderLoader.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Texts/TextClickable.h"
 
@@ -159,9 +157,14 @@ public:
 
 	virtual void DeleteItem() = 0;
 
+	std::string GetFileFullPath()
+	{
+		return filePath;
+	}
+
 public:
 	bool m_protected;
-	std::string filePath;
+	std::string filePath;// relative path
 	Event<std::string> DestroyedEvent;
 	Event<std::string, std::string> RenamedEvent;
 };
@@ -694,7 +697,7 @@ public:
 	}
 };
 
-class ModelContextualMenu : public PreviewableContextualMenu<Model, ModelManager>
+class ModelContextualMenu : public PreviewableContextualMenu<Mesh, ModelManager>
 {
 public:
 	ModelContextualMenu(const std::string& p_filePath, bool p_protected = false) : PreviewableContextualMenu(p_filePath, p_protected) {}
@@ -870,7 +873,7 @@ public:
 
 		editAction.ClickedEvent += [this]
 		{
-			EDITOR_EXEC(LoadSceneFromDisk(EDITOR_EXEC(GetResourcePath(filePath))));
+			EDITOR_EXEC(LoadSceneFromDisk(GetFileFullPath()));
 		};
 
 		FileContextualMenu::CreateList();

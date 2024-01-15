@@ -287,6 +287,7 @@ namespace LitchiRuntime
 		SetCurrentSceneSourcePath(completePath);
 		SetCurrentScene(scene);
 
+		// todo: is game play, need Awake all comp
 
 		// todo 将Scene注册到ScriptEngine中
 

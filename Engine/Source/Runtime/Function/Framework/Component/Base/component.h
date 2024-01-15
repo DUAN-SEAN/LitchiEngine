@@ -20,7 +20,8 @@ namespace LitchiRuntime
 
     public:
         virtual void OnEnable();
-        virtual void OnCreate();
+
+        // when 1. AddComponent 2. load scene on game play 
         virtual void Awake();
         virtual void Update();
         virtual void FixedUpdate();
@@ -38,6 +39,7 @@ namespace LitchiRuntime
 
         virtual void OnTriggerStay(GameObject* game_object);
 
+        // when 1. scene load on editor or game 、2. AddComponent will be call
         void PostResourceLoaded() override;
 
         /**

@@ -14,11 +14,7 @@ namespace LitchiRuntime
 
 	void Component::OnEnable() {
 	}
-
-	void Component::OnCreate()
-	{
-	}
-
+	
 	void Component::Awake() {
 	}
 
