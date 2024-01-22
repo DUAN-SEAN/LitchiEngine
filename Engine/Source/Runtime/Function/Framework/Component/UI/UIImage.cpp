@@ -53,7 +53,7 @@ void UIImage::PostResourceModify()
 
 void UIImage::CreateBuffer()
 {
-    if (m_vertex_buffer == nullptr)
+    if (m_vertex_buffer != nullptr)
     {
         return;
     }

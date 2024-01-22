@@ -17,6 +17,8 @@ namespace LitchiRuntime
 	void RectTransform::Update()
 	{
 
+		UpdateCanvas();
+
 		UpdateTransform();
 	}
 
