@@ -1,6 +1,7 @@
 
 #pragma once
 
+#include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
 
@@ -85,6 +86,8 @@ namespace LitchiEditor
 		Event<GameObject*> ActorUnselectedEvent;
 
 	private:
+		void LoadPrefabFromFile(Scene* scene, GameObject* root, std::string filePath);
+
 		TreeNode* m_sceneRoot;
 
 		std::unordered_map<GameObject*, TreeNode*> m_widgetActorLink;

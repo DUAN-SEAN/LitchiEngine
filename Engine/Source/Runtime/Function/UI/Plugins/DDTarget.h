@@ -43,7 +43,7 @@ namespace LitchiRuntime
 				
 				if (!showYellowRect)
 					target_flags |= ImGuiDragDropFlags_AcceptNoDrawDefaultRect; // Don't display the yellow rectangle
-
+				// DEBUG_LOG_INFO("DDTarget p_identifier:{}", identifier);
 				if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(identifier.c_str(), target_flags))
 				{
 					T data = *(T*)payload->Data;

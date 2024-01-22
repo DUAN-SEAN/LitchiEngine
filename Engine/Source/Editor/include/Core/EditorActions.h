@@ -329,7 +329,7 @@ namespace LitchiEditor
 		#pragma region Prefab
 
 		void CreatePrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, std::string path);
-		void LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab);
+		LitchiRuntime::GameObject* LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab);
 
 		#pragma endregion 
 

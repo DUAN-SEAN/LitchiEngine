@@ -1135,10 +1135,10 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 					}
 				};
 
-				treeNode.AddPlugin<DDTarget<std::pair<Scene*, GameObject*>>>("CreatePrefab").DataReceivedEvent += [this, &treeNode, path, p_isEngineItem](std::pair<Scene*, GameObject*> p_data)
+				treeNode.AddPlugin<DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [this, &treeNode, path, p_isEngineItem](std::pair<GameObject*, TreeNode*> p_data)
 				{
-					auto scene = p_data.first;
-					auto rootGameObject = p_data.second;
+					auto rootGameObject = p_data.first;
+					auto scene = rootGameObject->GetScene();
 
 					EDITOR_EXEC(CreatePrefab(scene, rootGameObject, path + rootGameObject->GetName() + ".prefab"));
 				};
@@ -1268,7 +1268,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			texturePreview.SetPath(resourceFormatPath);
 		}
 
-		if(fileType == PathParser::EFileType::PREFAB)
+		/*if(fileType == PathParser::EFileType::PREFAB)
 		{
 			auto prefab = ApplicationBase::Instance()->prefabManager->LoadResource(resourceFormatPath);
 			prefab->PostResourceLoaded();
@@ -1280,6 +1280,6 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 			auto model = ApplicationBase::Instance()->modelManager->LoadResource(resourceFormatPath);
 			auto prefab = model->GetModelPrefab();
 			clickableText.AddPlugin<DDSource<Prefab*>>("LoadPrefab", resourceFormatPath, prefab);
-		}
+		}*/
 	}
 }

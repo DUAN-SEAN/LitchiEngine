@@ -155,23 +155,13 @@ LitchiEditor::Hierarchy::Hierarchy
 		p_element.first->SetParent(nullptr);
 	};
 
-	m_sceneRoot->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [](auto p_receivedData)
-	{
-		// todo: copy model instance to scene 
-		// 1. check path type
-		// 2. deep copy mesh entry object
-	};
-
-	m_sceneRoot->AddPlugin<DDTarget<Prefab*>>("LoadPrefab").DataReceivedEvent += [this](Prefab* p_receivedData)
+	m_sceneRoot->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_receivedData)
 	{
 		// 先构建所有的叶子
 		auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-
-		EDITOR_EXEC(LoadPrefab(scene,nullptr,p_receivedData));
-
-		Refresh();
+		LoadPrefabFromFile(scene, nullptr, p_receivedData.first);
 	};
-
+	
 	m_sceneRoot->AddPlugin<HierarchyContextualMenu>(nullptr, *m_sceneRoot);
 
 	/*EDITOR_EVENT(ActorUnselectedEvent) += std::bind(&Hierarchy::UnselectActorsWidgets, this);
@@ -304,7 +294,8 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->GetName(), true);
 	textSelectable.leaf = true;
 	textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
-	textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", "Attach to...", std::make_pair(p_actor, &textSelectable));
+	// textSelectable.AddPlugin<DDSource<std::pair<Scene*, GameObject*>>>("CreatePrefab", "Create Prefab...", std::make_pair(p_actor->GetScene(), p_actor));// cant run source only one
+	textSelectable.AddPlugin<DDSource<std::pair<GameObject*, TreeNode*>>>("Actor", p_actor->GetName(), std::make_pair(p_actor, &textSelectable));
 	textSelectable.AddPlugin<DDTarget<std::pair<GameObject*, TreeNode*>>>("Actor").DataReceivedEvent += [p_actor, &textSelectable](std::pair<GameObject*, TreeNode*> p_element)
 	{
 		if (p_element.second->HasParent())
@@ -328,5 +319,44 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 		ApplicationEditor::Instance()->MoveToTarget(p_actor);
 	};// 将相机对焦到物体
 
-	textSelectable.AddPlugin<DDSource<std::pair<Scene*, GameObject*>>>("CreatePrefab", "Create Prefab...", std::make_pair(p_actor->GetScene(), p_actor));
+
+	textSelectable.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this,p_actor](auto p_receivedData)
+		{
+			// 先构建所有的叶子
+			auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+			LoadPrefabFromFile(scene,p_actor, p_receivedData.first);
+		
+		};
+
+}
+
+void LitchiEditor::Hierarchy::LoadPrefabFromFile(Scene* scene, GameObject* root, std::string filePath)
+{
+
+	std::string itemname = PathParser::GetElementName(filePath);
+	PathParser::EFileType fileType = PathParser::GetFileType(itemname);
+
+	Prefab* prefab = nullptr;
+	if (fileType == PathParser::EFileType::PREFAB)
+	{
+		prefab = ApplicationBase::Instance()->prefabManager->LoadResource(filePath);
+		prefab->PostResourceLoaded();
+	}
+
+	if (fileType == PathParser::EFileType::MODEL)
+	{
+		auto model = ApplicationBase::Instance()->modelManager->LoadResource(filePath);
+		prefab = model->GetModelPrefab();
+	}
+
+	if (prefab)
+	{
+		auto prefabObj = EDITOR_EXEC(LoadPrefab(scene, root, prefab));
+
+		AddActorByInstance(prefabObj);
+		AttachActorToParent(prefabObj);
+		EDITOR_EXEC(SelectActor(prefabObj));
+	}
+
+	//Refresh();
 }

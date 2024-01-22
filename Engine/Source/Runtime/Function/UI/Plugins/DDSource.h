@@ -44,7 +44,10 @@ namespace LitchiRuntime
 			if (ImGui::BeginDragDropSource(src_flags))
 			{
 				if (!m_isDragged)
+				{
+					// DEBUG_LOG_INFO("DDSource p_identifier:{}", identifier);
 					DragStartEvent.Invoke();
+				}
 
 				m_isDragged = true;
 

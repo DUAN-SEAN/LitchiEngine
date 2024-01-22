@@ -145,9 +145,9 @@ void LitchiEditor::EditorActions::CreatePrefab(Scene* scene, GameObject* root, s
 	prefab->SaveToFile(path);
 }
 
-void LitchiEditor::EditorActions::LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab)
+GameObject* LitchiEditor::EditorActions::LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab)
 {
-	scene->InstantiatePrefab(prefab, root);
+	return scene->InstantiatePrefab(prefab, root);
 }
 
 void LitchiEditor::EditorActions::RefreshScripts()
