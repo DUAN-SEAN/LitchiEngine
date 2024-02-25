@@ -25,6 +25,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
+#include "Editor/include/Panels/GameView.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/Camera/Camera.h";
@@ -481,7 +482,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
-	//m_panelsManager.CreatePanel<GameView>("Game View", true, settings);
+	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
