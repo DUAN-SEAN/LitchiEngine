@@ -60,9 +60,10 @@ namespace LitchiEditor
 		//std::unique_ptr<EditorRenderer> editorRenderer;
 
 		PanelsManager	m_panelsManager;
-
-		RenderCamera* m_renderCamera4SceneView = nullptr;
+		
 		RendererPath* m_rendererPath4SceneView = nullptr;
+		RendererPath* m_rendererPath4GameView = nullptr;
+		RendererPath* m_rendererPath4AssetView = nullptr;
 
 	public:
 		/**
@@ -73,6 +74,7 @@ namespace LitchiEditor
 		void MoveToTarget(GameObject* p_target);
 	private:
 		void SetupUI();
+		void SetupRendererPath();
 
 	private:
 

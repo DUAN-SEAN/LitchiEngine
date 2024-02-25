@@ -87,6 +87,9 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	// Profiler::Shutdown();
 	//ImageImporterExporter::Shutdown();
 	FontImporter::Shutdown();
+
+	delete m_rendererPath4SceneView;
+	delete m_rendererPath4GameView;
 }
 
 GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string modelPath)
@@ -241,19 +244,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
 		uiManager->ResetLayout(this->projectAssetsPath + "Config\\layout.ini");
 
-
-	// ³õÊ¼»¯Cameraf
-	m_renderCamera4SceneView = new RenderCamera();
-	m_renderCamera4SceneView->Initialize();
-
-	// prepare renderer path 
-	if (m_rendererPath4SceneView == nullptr)
-	{
-		m_rendererPath4SceneView = new RendererPath(RendererPathType_SceneView, m_renderCamera4SceneView);
-
-		// update renderer path
-		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
-	}
+	SetupRendererPath();
 
 	//auto scene = sceneManager->CreateScene("Default");
 	//m_rendererPath4SceneView->SetScene(scene);
@@ -425,6 +416,14 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 		sceneView.UpdateView(p_deltaTime);
 		sceneView.Render();
 	}
+
+	auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
+	if(gameView.IsOpened())
+	{
+		gameView.UpdateView(p_deltaTime);
+		gameView.Render();
+	}
+
 	/*auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
 	if (assetView.IsOpened())
 	{
@@ -482,7 +481,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
-	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4SceneView);
+	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
 	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
@@ -492,5 +491,26 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_canvas.MakeDockspace(true);
 	// 
 	uiManager->SetCanvas(m_canvas);
+
+}
+
+void LitchiEditor::ApplicationEditor::SetupRendererPath()
+{
+	// prepare renderer path 
+	if (m_rendererPath4SceneView == nullptr)
+	{
+		m_rendererPath4SceneView = new RendererPath(RendererPathType_SceneView);
+
+		// update renderer path
+		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
+	}
+
+	if (m_rendererPath4GameView == nullptr)
+	{
+		m_rendererPath4GameView = new RendererPath(RendererPathType_GameView);
+
+		// update renderer path
+		Renderer::UpdateRendererPath(RendererPathType_GameView, m_rendererPath4GameView);
+	}
 
 }

@@ -45,10 +45,14 @@ namespace LitchiRuntime
 			});
 	}
 
-	RendererPath::RendererPath(RendererPathType rendererPathType, RenderCamera* renderCamera)
+	RendererPath::RendererPath(RendererPathType rendererPathType)
 	{
+		// ³õÊ¼»¯Cameraf
+		auto renderCamera4SceneView = new RenderCamera();
+		renderCamera4SceneView->Initialize();
+
 		m_rendererPathType = rendererPathType;
-		m_renderCamera = renderCamera;
+		m_renderCamera = renderCamera4SceneView;
 
 		m_width = m_renderCamera->GetViewport().width;
 		m_height = m_renderCamera->GetViewport().height;
@@ -57,6 +61,11 @@ namespace LitchiRuntime
 
 		CreateColorRenderTarget();
 		CreateDepthRenderTarget();
+	}
+
+	RendererPath::~RendererPath()
+	{
+		delete m_renderCamera;
 	}
 
 	void RendererPath::UpdateRenderTarget(float width, float height)

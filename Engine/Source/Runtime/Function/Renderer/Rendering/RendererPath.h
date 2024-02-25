@@ -22,7 +22,8 @@ namespace LitchiRuntime
 	class RendererPath
 	{
 	public:
-		RendererPath(RendererPathType rendererPathType, RenderCamera* renderCamera);
+		RendererPath(RendererPathType rendererPathType);
+		~RendererPath();
 	public:
 		void UpdateRenderTarget(float width, float height);
 		void UpdateRenderableGameObject();
