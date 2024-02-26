@@ -55,15 +55,15 @@ namespace LitchiRuntime
 			auto renderCamera4SceneView = new RenderCamera();
 			renderCamera4SceneView->Initialize();
 			m_renderCamera = renderCamera4SceneView;
+
+			m_width = m_renderCamera->GetViewport().width;
+			m_height = m_renderCamera->GetViewport().height;
+
+			m_renderables.clear();
+
+			CreateColorRenderTarget();
+			CreateDepthRenderTarget();
 		}
-
-		m_width = m_renderCamera->GetViewport().width;
-		m_height = m_renderCamera->GetViewport().height;
-
-		m_renderables.clear();
-
-		CreateColorRenderTarget();
-		CreateDepthRenderTarget();
 	}
 
 	RendererPath::~RendererPath()
@@ -74,6 +74,25 @@ namespace LitchiRuntime
 			m_renderCamera = nullptr;
 		}
 	}
+
+
+	void RendererPath::UpdateRenderCamera(RenderCamera* camera)
+	{
+		if(!CheckIsBuildInRendererCamera())
+		{
+			return;
+		}
+
+		m_renderCamera = camera;
+		m_width = m_renderCamera->GetViewport().width;
+		m_height = m_renderCamera->GetViewport().height;
+
+		m_renderables.clear();
+
+		CreateColorRenderTarget();
+		CreateDepthRenderTarget();
+	}
+
 
 	void RendererPath::UpdateRenderTarget(float width, float height)
 	{
@@ -121,6 +140,11 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateRenderableGameObject()
 	{
+		if(!m_renderScene)
+		{
+			return;
+		}
+
 		// EASY_FUNCTION(profiler::colors::Magenta);
 		if (!m_renderScene->IsNeedResolve())
 		{
@@ -211,7 +235,8 @@ namespace LitchiRuntime
 			 }*/
 		}
 
-		m_renderScene->ResetResolve();
+		// TODO: TEST
+		// m_renderScene->ResetResolve();
 
 		// sort them by distance
 		sort_renderables(m_renderCamera, &m_renderables[Renderer_Entity::Geometry], false);

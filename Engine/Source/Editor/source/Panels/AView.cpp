@@ -38,7 +38,10 @@ void LitchiEditor::AView::UpdateView(float p_deltaTime)
 	// 
 
 	m_image->size = Vector2(static_cast<float>(winWidth), static_cast<float>(winHeight));
-	m_camera->Update();
+	if(m_camera)
+	{
+		m_camera->Update();
+	}
 }
 
 void LitchiEditor::AView::_Draw_Impl()

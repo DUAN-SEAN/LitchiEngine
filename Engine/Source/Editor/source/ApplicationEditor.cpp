@@ -26,6 +26,7 @@
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
 #include "Editor/include/Panels/GameView.h"
+#include "Editor/include/Panels/Toolbar.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/Camera/Camera.h";
@@ -285,6 +286,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	scene->PostResourceLoaded();
 	scene->Resolve();
 	m_rendererPath4SceneView->SetScene(scene);
+	m_rendererPath4GameView->SetScene(scene);
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
 
 
@@ -483,7 +485,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
-	//m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
+	m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
 	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);

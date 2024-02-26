@@ -28,10 +28,10 @@ namespace LitchiEditor
 	//CreateWidget<LitchiRuntime::Spacing>(0).lineBreak = false;
 	//auto& refreshButton	= CreateWidget<LitchiRuntime::ButtonImage>(EDITOR_CONTEXT(editorResources)->GetTexture("Button_Refresh")->id, LitchiRuntime::Vector2{ 20, 20 });
 
-	m_playButton = &CreateWidget<LitchiRuntime::Button>("Button_Play", LitchiRuntime::Vector2 { 20, 20 });
-	m_pauseButton = &CreateWidget<LitchiRuntime::Button>("Button_Pause", LitchiRuntime::Vector2 { 20, 20 });
-	m_stopButton = &CreateWidget<LitchiRuntime::Button>("Button_Stop", LitchiRuntime::Vector2 { 20, 20 });
-	m_nextButton = &CreateWidget<LitchiRuntime::Button>("Button_Next", LitchiRuntime::Vector2 { 20, 20 });
+	m_playButton = &CreateWidget<LitchiRuntime::Button>("Button_Play", LitchiRuntime::Vector2 { 200, 20 });
+	m_pauseButton = &CreateWidget<LitchiRuntime::Button>("Button_Pause", LitchiRuntime::Vector2 { 200, 20 });
+	m_stopButton = &CreateWidget<LitchiRuntime::Button>("Button_Stop", LitchiRuntime::Vector2 { 200, 20 });
+	m_nextButton = &CreateWidget<LitchiRuntime::Button>("Button_Next", LitchiRuntime::Vector2 { 200, 20 });
 
 	CreateWidget<LitchiRuntime::Spacing>(0).lineBreak = false;
 	auto& refreshButton = CreateWidget<LitchiRuntime::Button>("Button_Refresh", LitchiRuntime::Vector2 { 20, 20 });

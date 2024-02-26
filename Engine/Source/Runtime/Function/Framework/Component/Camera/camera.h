@@ -102,7 +102,7 @@ namespace LitchiRuntime
         void GoToCameraBookmark(int bookmark_index);
         void FocusOnSelectedEntity();
 
-        RenderCamera* GetRenderCamera() { m_renderCamera; }
+        RenderCamera* GetRenderCamera() { return m_renderCamera; }
 
     private:
         void ProcessInput();

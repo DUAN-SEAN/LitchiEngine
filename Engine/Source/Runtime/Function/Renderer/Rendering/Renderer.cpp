@@ -353,7 +353,7 @@ namespace LitchiRuntime
 			{
 				// Get First Camera
 				auto firstCamera = cameras[0]->GetComponent<Camera>()->GetRenderCamera();
-				rendererPath4GameView->SetRenderCamera(firstCamera);
+				rendererPath4GameView->UpdateRenderCamera(firstCamera);
 			}
 
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
@@ -503,6 +503,12 @@ namespace LitchiRuntime
 	void Renderer::Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		auto camera = rendererPath->GetRenderCamera();
+
+		if (!camera)
+		{
+			return;
+		}
+
 		auto rendererables = rendererPath->GetRenderables();
 
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
