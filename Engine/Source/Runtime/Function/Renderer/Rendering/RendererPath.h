@@ -31,6 +31,7 @@ namespace LitchiRuntime
 		RendererPathType GetRendererPathType(){	return m_rendererPathType;}
 
 		RenderCamera* GetRenderCamera(){return m_renderCamera;}
+		void SetRenderCamera(RenderCamera* camera){m_renderCamera = camera;}
 
 		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
 		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
@@ -45,6 +46,7 @@ namespace LitchiRuntime
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
 		std::string GetRenderPathName();
+		bool CheckIsBuildInRendererCamera();
 
 		float m_width;
 		float m_height;

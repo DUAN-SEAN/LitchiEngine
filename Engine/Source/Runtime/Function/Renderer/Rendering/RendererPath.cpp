@@ -23,16 +23,16 @@ namespace LitchiRuntime
 			return;
 
 		auto comparison_op = [camera](GameObject* entity)
-		{
-			auto renderable = entity->GetComponent<MeshFilter>();
-			if (!renderable)
-				return 0.0f;
+			{
+				auto renderable = entity->GetComponent<MeshFilter>();
+				if (!renderable)
+					return 0.0f;
 
-			return (renderable->GetAAbb().GetCenter() - camera->GetPosition()).LengthSquared();
-		};
+				return (renderable->GetAAbb().GetCenter() - camera->GetPosition()).LengthSquared();
+			};
 
 		// sort by depth
-		sort(renderables->begin(),  renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
+		sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
 			{
 				if (are_transparent)
 				{
@@ -47,12 +47,15 @@ namespace LitchiRuntime
 
 	RendererPath::RendererPath(RendererPathType rendererPathType)
 	{
-		// 初始化Cameraf
-		auto renderCamera4SceneView = new RenderCamera();
-		renderCamera4SceneView->Initialize();
-
 		m_rendererPathType = rendererPathType;
-		m_renderCamera = renderCamera4SceneView;
+
+		// 初始化Cameraf
+		if (CheckIsBuildInRendererCamera())
+		{
+			auto renderCamera4SceneView = new RenderCamera();
+			renderCamera4SceneView->Initialize();
+			m_renderCamera = renderCamera4SceneView;
+		}
 
 		m_width = m_renderCamera->GetViewport().width;
 		m_height = m_renderCamera->GetViewport().height;
@@ -65,7 +68,11 @@ namespace LitchiRuntime
 
 	RendererPath::~RendererPath()
 	{
-		delete m_renderCamera;
+		if (m_renderCamera && CheckIsBuildInRendererCamera())
+		{
+			delete m_renderCamera;
+			m_renderCamera = nullptr;
+		}
 	}
 
 	void RendererPath::UpdateRenderTarget(float width, float height)
@@ -98,8 +105,18 @@ namespace LitchiRuntime
 		case RendererPathType_SceneView: return "SceneView";
 		case RendererPathType_GameView: return "GameView";
 		case RendererPathType_Custom: return "Custom";
-		default: ;
+		default:;
 		}
+	}
+
+	bool RendererPath::CheckIsBuildInRendererCamera()
+	{
+		if (m_rendererPathType == RendererPathType_GameView || m_rendererPathType == RendererPathType_Custom)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	void RendererPath::UpdateRenderableGameObject()

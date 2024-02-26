@@ -331,14 +331,35 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("Render4BuildInSceneView")
 		// 绘制SceneView Path
-		auto rendererPath = m_rendererPaths[RendererPathType_SceneView];
-		if (rendererPath)
+		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
+		if (rendererPath4SceneView)
 		{
-			m_main_camera = rendererPath->GetRenderCamera();
-			rendererPath->UpdateRenderableGameObject();
-			Render4BuildInSceneView(cmd_current, rendererPath);
+			m_main_camera = rendererPath4SceneView->GetRenderCamera();
+			rendererPath4SceneView->UpdateRenderableGameObject();
+			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
 		}
 		EASY_END_BLOCK
+
+
+		EASY_BLOCK("Render4BuildInGameView")
+		// 绘制SceneView Path
+		auto rendererPath4GameView = m_rendererPaths[RendererPathType_GameView];
+		if (rendererPath4GameView)
+		{
+			m_main_camera = rendererPath4GameView->GetRenderCamera();
+			rendererPath4GameView->UpdateRenderableGameObject();
+			auto cameras = rendererPath4GameView->GetRenderables().at(Renderer_Entity::Camera);
+			if (cameras.size() > 0)
+			{
+				// Get First Camera
+				auto firstCamera = cameras[0]->GetComponent<Camera>()->GetRenderCamera();
+				rendererPath4GameView->SetRenderCamera(firstCamera);
+			}
+
+			Render4BuildInGameView(cmd_current, rendererPath4GameView);
+		}
+		EASY_END_BLOCK
+
 
 		// blit to back buffer when in full screen
 		if (ApplicationBase::Instance()->window->IsFullscreen())
@@ -467,6 +488,109 @@ namespace LitchiRuntime
 			Pass_DebugGridPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
+		}
+		else
+		{
+			// if there is no camera, clear to black and and render the performance metrics
+			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
+		}
+
+		// transition the render target to a readable state so it can be rendered
+		// within the viewport or copied to the swap chain back buffer
+		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+	}
+
+	void Renderer::Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		auto camera = rendererPath->GetRenderCamera();
+		auto rendererables = rendererPath->GetRenderables();
+
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
+
+		EASY_BLOCK("Build cb_frame")
+		if (camera)
+		{
+			if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
+			{
+				near_plane = camera->GetNearPlane();
+				far_plane = camera->GetFarPlane();
+				dirty_orthographic_projection = true;
+			}
+
+			m_cb_frame_cpu.view = camera->GetViewMatrix();
+			m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
+		}
+
+		// todo get canvas resolution
+		auto canvass = rendererPath->GetRenderables().at(Renderer_Entity::Canvas);
+		if (canvass.size() > 0)
+		{
+			auto canvas = canvass[0]->GetComponent<UICanvas>();
+			// if (dirty_orthographic_projection)
+			{
+				float canvasResolutionWidth = canvas->GetResolution().x;
+				float canvasResolutionHeight = canvas->GetResolution().y;
+
+				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
+				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
+				m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
+				dirty_orthographic_projection = false;
+			}
+
+		}
+
+		// update the remaining of the frame buffer
+		m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
+		m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
+		m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
+		if (camera)
+		{
+			m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * camera->GetProjectionMatrix();
+			m_cb_frame_cpu.camera_near = camera->GetNearPlane();
+			m_cb_frame_cpu.camera_far = camera->GetFarPlane();
+			m_cb_frame_cpu.camera_position = camera->GetPosition();
+			m_cb_frame_cpu.camera_direction = camera->GetForward();
+		}
+		m_cb_frame_cpu.resolution_output = m_resolution_output;
+		m_cb_frame_cpu.resolution_render = m_resolution_render;
+		m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
+		m_cb_frame_cpu.taa_jitter_current = jitter_offset;
+		m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
+		m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
+		m_cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
+
+		// These must match what Common_Buffer.hlsl is reading
+		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
+		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
+		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
+		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
+
+		EASY_END_BLOCK
+
+		// update frame constant buffer
+		EASY_BLOCK("Update cb_frame")
+		UpdateConstantBufferFrame(cmd_list, false);
+		EASY_END_BLOCK
+
+		auto rt_output = rendererPath->GetColorRenderTarget().get();
+		if (camera)
+		{
+			// determine if a transparent pass is required
+			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
+			
+			// opaque
+			bool is_transparent_pass = false;
+			EASY_BLOCK("Pass_ShadowMaps")
+			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
+			EASY_END_BLOCK
+
+			EASY_BLOCK("Pass_ForwardPass")
+			Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
+			EASY_END_BLOCK
+
+			EASY_BLOCK("Pass_ForwardPass")
+			Pass_UIPass(cmd_list, rendererPath);
+			EASY_END_BLOCK
 		}
 		else
 		{
