@@ -64,6 +64,8 @@ namespace LitchiRuntime
 			return m_gameObjectList;
 		}
 
+		void Play();
+
 
 	public:
 
@@ -90,6 +92,38 @@ namespace LitchiRuntime
 		SceneManager();
 		~SceneManager();
 
+		// new api
+		/**
+		* Load an empty scene in memory
+		*/
+		void LoadEmptyScene();
+
+
+		/**
+		* Load specific scene in memory
+		* @param p_scenePath
+		* @param p_absolute (If this setting is set to true, the scene loader will ignore the "SceneRootFolder" given on SceneManager construction)
+		*/
+		bool LoadScene(const std::string& p_path, bool p_absolute = false);
+
+		/**
+		* Load specific scene in memory
+		* @param p_scenePath
+		*/
+		bool LoadSceneFromMemory(std::string& p_doc);
+
+		/**
+		* Destroy current scene from memory
+		*/
+		void UnloadCurrentScene();
+
+
+		/**
+		* Return true if a scene is currently loaded
+		*/
+		bool HasCurrentScene() const;
+
+		// will delete api
 		bool LoadScene(std::string path);
 
 		Scene* CreateScene(std::string sceneName);

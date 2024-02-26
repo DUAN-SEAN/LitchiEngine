@@ -14,6 +14,7 @@
 
 #include <stack>
 
+#include "Editor/include/Panels/GameView.h"
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/SceneView.h"
 #include "Runtime/Core/Window/Dialogs/MessageBox.h"
@@ -461,20 +462,19 @@ void LitchiEditor::EditorActions::SetEditorMode(EEditorMode p_newEditorMode)
 
 void LitchiEditor::EditorActions::StartPlaying()
 {
-	/*if (m_editorMode == EEditorMode::EDIT)
+	if (m_editorMode == EEditorMode::EDIT)
 	{
-		LitchiEditor::ApplicationEditor::Instance()->scriptInterpreter->RefreshAll();
+	/*	LitchiEditor::ApplicationEditor::Instance()->scriptInterpreter->RefreshAll();*/
 		EDITOR_PANEL(Inspector, "Inspector").Refresh();
 
-		if (LitchiEditor::ApplicationEditor::Instance()->scriptInterpreter->IsOk())
+		//if (LitchiEditor::ApplicationEditor::Instance()->scriptInterpreter->IsOk())
 		{
 			PlayEvent.Invoke();
-			m_sceneBackup.Clear();
-			tinyxml2::XMLNode* node = m_sceneBackup.NewElement("root");
-			m_sceneBackup.InsertFirstChild(node);
-			LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene()->OnSerialize(m_sceneBackup, node);
+			
+			auto currScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+			
 			m_panelsManager.GetPanelAs<LitchiEditor::GameView>("Game View").Focus();
-			LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene()->Play();
+			currScene->Play();
 			SetEditorMode(EEditorMode::PLAY);
 		}
 	}
@@ -482,7 +482,7 @@ void LitchiEditor::EditorActions::StartPlaying()
 	{
 		LitchiEditor::ApplicationEditor::Instance()->audioEngine->Unsuspend();
 		SetEditorMode(EEditorMode::PLAY);
-	}*/
+	}
 }
 
 void LitchiEditor::EditorActions::PauseGame()
