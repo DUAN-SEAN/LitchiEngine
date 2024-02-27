@@ -40,7 +40,7 @@ void LitchiEditor::EditorActions::LoadEmptyScene()
 	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 		StopPlaying();
 
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager->CreateScene("Empty Scene");
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadEmptyScene();
 	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
 
 	DEBUG_LOG_INFO("New scene created");
@@ -480,7 +480,7 @@ void LitchiEditor::EditorActions::StartPlaying()
 	}
 	else
 	{
-		LitchiEditor::ApplicationEditor::Instance()->audioEngine->Unsuspend();
+		// LitchiEditor::ApplicationEditor::Instance()->audioEngine->Unsuspend();
 		SetEditorMode(EEditorMode::PLAY);
 	}
 }

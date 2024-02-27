@@ -275,7 +275,8 @@ void LitchiEditor::ApplicationEditor::Init()
 	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
 	font->AddText("Hello World",Vector2::Zero);
 
-	Scene* scene = new Scene();
+	sceneManager->LoadEmptyScene();
+	auto* scene = sceneManager->GetCurrentScene();
 	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
 
 
@@ -288,10 +289,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	m_rendererPath4SceneView->SetScene(scene);
 	m_rendererPath4GameView->SetScene(scene);
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-
-
-	sceneManager->SetCurrentScene(scene);
-
+	
 	// Setup UI
 	SetupUI();
 

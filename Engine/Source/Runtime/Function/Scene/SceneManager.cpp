@@ -202,6 +202,14 @@ namespace LitchiRuntime
 		return root_entities;
 	}
 
+	void Scene::Play()
+	{
+		m_isPlaying = true;
+
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->Awake(); }); });
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnEnable(); }); });
+	}
+
 	void Scene::Update()
 	{
 		// Start
@@ -254,90 +262,161 @@ namespace LitchiRuntime
 		}
 	}
 
-	SceneManager::SceneManager()
+	SceneManager::SceneManager(const std::string& projectAssetsPath)
 	{
-
+		m_projectAssetsPath = projectAssetsPath;
 	}
 
 	SceneManager::~SceneManager()
 	{
-		for (auto m_scene_map : m_sceneList)
-		{
-			delete m_scene_map;
-		}
+		//for (auto m_scene_map : m_sceneList)
+		//{
+		//	delete m_scene_map;
+		//}
 
-		m_sceneList.clear();
+		//m_sceneList.clear();
+		UnloadCurrentScene();
 	}
 
-	bool SceneManager::LoadScene(std::string path)
+	void SceneManager::LoadEmptyScene()
 	{
-		std::string completePath = path;
-		auto* scene = new Scene("Temp");
-		if (!AssetManager::LoadAsset(completePath, *scene))
+		UnloadCurrentScene();
+
+		m_currScene = new Scene("Empty Scene");
+
+		SceneLoadEvent.Invoke();
+	}
+
+	bool SceneManager::LoadScene(const std::string& p_path, bool p_absolute)
+	{
+		LoadEmptyScene();
+
+		if(!AssetManager::LoadAsset(p_absolute? p_path: m_projectAssetsPath+p_path, *m_currScene))
 		{
+			UnloadCurrentScene();
 			return false;
 		}
 
-		scene->PostResourceLoaded();
-
-		// 将scene添加到map中
-		m_sceneList.push_back(scene);
-
-		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
-		SetCurrentSceneSourcePath(completePath);
-		SetCurrentScene(scene);
-
-		// todo: is game play, need Awake all comp
-
-		// todo 将Scene注册到ScriptEngine中
+		StoreCurrentSceneSourcePath(p_path);
 
 		return true;
 	}
+
+	bool SceneManager::LoadSceneFromMemory(std::string& p_doc)
+	{
+		LoadEmptyScene();
+
+		if(!SerializerManager::DeserializeFromJson(p_doc,m_currScene))
+		{
+			UnloadCurrentScene();
+			return false;
+		}
+
+		return true;
+	}
+
+	void SceneManager::UnloadCurrentScene()
+	{
+		if(m_currScene)
+		{
+			delete m_currScene;
+			m_currScene = nullptr;
+			SceneUnloadEvent.Invoke();
+		}
+
+		ForgetCurrentSceneSourcePath();
+	}
+
+	bool SceneManager::HasCurrentScene() const
+	{
+		return m_currScene!=nullptr;
+	}
+
+	//bool SceneManager::LoadScene(std::string path)
+	//{
+	//	std::string completePath = path;
+	//	auto* scene = new Scene("Temp");
+	//	if (!AssetManager::LoadAsset(completePath, *scene))
+	//	{
+	//		return false;
+	//	}
+
+	//	scene->PostResourceLoaded();
+
+	//	// 将scene添加到map中
+	//	m_sceneList.push_back(scene);
+
+	//	// 初始化Scene中所有的GameObject,配置GameObject的层级关系
+	//	SetCurrentSceneSourcePath(completePath);
+	//	SetCurrentScene(scene);
+
+	//	// todo: is game play, need Awake all comp
+
+	//	// todo 将Scene注册到ScriptEngine中
+
+	//	return true;
+	//}
 
 	void SceneManager::SaveCurrentScene(const std::string& completePath)
 	{
 		AssetManager::SaveAsset<Scene>(*m_currScene, completePath);
 
 		// 设置当前场景的本地路径
-		SetCurrentSceneSourcePath(completePath);
+		StoreCurrentSceneSourcePath(completePath);
 	}
 
-	Scene* SceneManager::CreateScene(std::string sceneName)
+	//Scene* SceneManager::CreateScene(std::string sceneName)
+	//{
+	//	Scene* scene = new Scene(sceneName);
+	//	scene->PostResourceLoaded();
+
+	//	// 将scene添加到map中
+	//	m_sceneList.push_back(scene);
+
+	//	// 初始化Scene中所有的GameObject,配置GameObject的层级关系
+	//	SetCurrentSceneSourcePath("");
+	//	SetCurrentScene(scene);
+
+	//	return scene;
+	//}
+
+	//bool SceneManager::DestroyScene(Scene* scene)
+	//{
+	//	for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
+	//		if(*iter == scene)
+	//		{
+	//			m_sceneList.erase(iter);
+	//			delete scene;
+	//			return true;
+	//		}
+	//	}
+
+	//	return false;
+	//}
+
+	void SceneManager::StoreCurrentSceneSourcePath(const std::string& path)
 	{
-		Scene* scene = new Scene(sceneName);
-		scene->PostResourceLoaded();
-
-		// 将scene添加到map中
-		m_sceneList.push_back(scene);
-
-		// 初始化Scene中所有的GameObject,配置GameObject的层级关系
-		SetCurrentSceneSourcePath("");
-		SetCurrentScene(scene);
-
-		return scene;
+		m_currentSceneSourcePath = path;
+		m_currentSceneLoadedFromPath = true;
+		CurrentSceneSourcePathChangedEvent.Invoke(m_currentSceneSourcePath);
 	}
 
-	bool SceneManager::DestroyScene(Scene* scene)
+	void SceneManager::ForgetCurrentSceneSourcePath()
 	{
-		for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
-			if(*iter == scene)
-			{
-				m_sceneList.erase(iter);
-				delete scene;
-				return true;
-			}
-		}
-
-		return false;
+		m_currentSceneSourcePath = "";
+		m_currentSceneLoadedFromPath = false;
+		CurrentSceneSourcePathChangedEvent.Invoke(m_currentSceneSourcePath);
 	}
 
 	void SceneManager::Foreach(std::function<void(GameObject* game_object)> func)
 	{
-		for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
-			Scene* scene = *iter;
-			scene->Foreach(func);
-			//current_camera_->CheckCancelRenderToTexture();
-		}
+		//for (auto iter = m_sceneList.begin(); iter != m_sceneList.end(); iter++) {
+		//	Scene* scene = *iter;
+		//	scene->Foreach(func);
+		//	//current_camera_->CheckCancelRenderToTexture();
+		//}
+
+		m_currScene->Foreach(func);
 	}
 
 

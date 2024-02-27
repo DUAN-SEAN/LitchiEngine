@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 
+#include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Runtime/Function/Prefab/Prefab.h"
 #include "Runtime/Function/Scripting/ScriptObject.h"
 
@@ -64,8 +65,9 @@ namespace LitchiRuntime
 			return m_gameObjectList;
 		}
 
+		// Play Game
 		void Play();
-
+		bool IsPlaying() const { return m_isPlaying; }
 
 	public:
 
@@ -79,6 +81,7 @@ namespace LitchiRuntime
 		void PostResourceLoaded() override;
 
 	private:
+		bool m_isPlaying = false;
 		std::string m_name; //场景名字
 		bool m_resolve = false;
 		
@@ -89,72 +92,44 @@ namespace LitchiRuntime
 	{
 	public:
 
-		SceneManager();
+		SceneManager(const std::string& projectAssetsPath);
 		~SceneManager();
 
 		// new api
-		/**
-		* Load an empty scene in memory
-		*/
+		//  Load an empty scene in memory 
 		void LoadEmptyScene();
 
-
-		/**
-		* Load specific scene in memory
-		* @param p_scenePath
-		* @param p_absolute (If this setting is set to true, the scene loader will ignore the "SceneRootFolder" given on SceneManager construction)
-		*/
+		// Load specific scene in memory
 		bool LoadScene(const std::string& p_path, bool p_absolute = false);
 
-		/**
-		* Load specific scene in memory
-		* @param p_scenePath
-		*/
+		// Load specific scene in memory
 		bool LoadSceneFromMemory(std::string& p_doc);
 
-		/**
-		* Destroy current scene from memory
-		*/
+		// Destroy current scene from memory
 		void UnloadCurrentScene();
 
-
-		/**
-		* Return true if a scene is currently loaded
-		*/
+		// Return true if a scene is currently loaded
 		bool HasCurrentScene() const;
 
-		// will delete api
-		bool LoadScene(std::string path);
+		//// will delete api
+		//bool LoadScene(std::string path);
 
-		Scene* CreateScene(std::string sceneName);
+		//Scene* CreateScene(std::string sceneName);
 
-		bool DestroyScene(Scene* scene);
-		
-		void SetCurrentScene(Scene* scene)
-		{
-			m_currScene = scene;
-		}
+		//bool DestroyScene(Scene* scene);
+		//
+		//void SetCurrentScene(Scene* scene)
+		//{
+		//	m_currScene = scene;
+		//}
+
+		void SaveCurrentScene(const std::string& path);
 
 		Scene* GetCurrentScene()
 		{
 			return m_currScene;
 		}
 
-		void SetCurrentSceneSourcePath(const std::string& path)
-		{
-			if (path.empty())
-			{
-				m_currentSceneLoadedFromPath = false;
-				m_currentSceneSourcePath = "";
-
-			}
-			else
-			{
-
-				m_currentSceneLoadedFromPath = true;
-				m_currentSceneSourcePath = path;
-			}
-		}
 
 		std::string GetCurrentSceneSourcePath() const
 		{
@@ -166,17 +141,28 @@ namespace LitchiRuntime
 			return m_currentSceneLoadedFromPath;
 		}
 
-		/// 遍历所有Scene的GameObject
-		/// \param func
+		void StoreCurrentSceneSourcePath(const std::string& path);
+
+		// Reset the current scene source path to an empty string 
+		void ForgetCurrentSceneSourcePath();
+
+		// 遍历所有Scene的GameObject
 		void Foreach(std::function<void(GameObject* game_object)> func);
-		void SaveCurrentScene(const std::string& path);
+
+	public:
+		Event<> SceneLoadEvent;
+		Event<> SceneUnloadEvent;
+		Event<const std::string&> CurrentSceneSourcePathChangedEvent;
 
 	private:
-		
-		std::vector<Scene*> m_sceneList;
-		Scene* m_currScene = nullptr;
-		bool m_currentSceneLoadedFromPath = false;
-		std::string m_currentSceneSourcePath = "";
+
+		std::string m_projectAssetsPath;
+
+		// std::vector<Scene*> m_sceneList;
+
+		Scene* m_currScene {nullptr};
+		bool m_currentSceneLoadedFromPath {false};
+		std::string m_currentSceneSourcePath {};
 
 	};
 }

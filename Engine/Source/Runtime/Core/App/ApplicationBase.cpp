@@ -49,7 +49,7 @@ namespace LitchiRuntime
 		PrefabManager::ProvideAssetPaths(projectAssetsPath);
 
 		// 初始化场景 如果没有场景则构建默认场景
-		sceneManager = std::make_unique<SceneManager>();
+		sceneManager = std::make_unique<SceneManager>(projectAssetsPath);
 		shaderManager = std::make_unique<ShaderManager>();
 		materialManager = std::make_unique<MaterialManager>();
 		fontManager = std::make_unique<FontManager>();
