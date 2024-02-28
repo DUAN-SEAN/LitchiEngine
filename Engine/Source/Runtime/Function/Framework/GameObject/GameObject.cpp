@@ -134,6 +134,7 @@ namespace LitchiRuntime
 
 	void GameObject::OnStart()
 	{
+		m_started = true;
 		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnStart(); });
 	}
 

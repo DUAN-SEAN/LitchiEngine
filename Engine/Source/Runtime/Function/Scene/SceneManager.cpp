@@ -233,12 +233,15 @@ namespace LitchiRuntime
 		m_isPlaying = true;
 
 		/* Wake up actors to allow them to react to OnEnable, OnDisable and OnDestroy, */
-		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { p_element->SetSleeping(false); });
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element)
+			{ p_element->SetSleeping(false); });
 
-		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnAwake(); }); });
-		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnEnable(); }); });
-
-		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->OnStart(); });
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element)
+			{ if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnAwake(); }); });
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) 
+			{ if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnEnable(); }); });
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element)
+			{ if (p_element->GetActive()) p_element->OnStart(); });
 	}
 
 	void Scene::Update()
