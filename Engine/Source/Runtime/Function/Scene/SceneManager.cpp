@@ -136,9 +136,19 @@ namespace LitchiRuntime
 			root->SetScene(this);
 			m_gameObjectList.push_back(root);
 
-			root->ForeachComponent([](Component* comp) {
+			if (m_isPlaying)
+			{
+				root->SetSleeping(false);
+				if (root->GetActive())
+				{
+					root->OnAwake();
+					root->OnEnable();
+					root->OnStart();
+				}
+			}
+			/*root->ForeachComponent([](Component* comp) {
 				comp->OnAwake();
-				});
+				});*/
 
 			if(root->GetChildren().empty())
 			{

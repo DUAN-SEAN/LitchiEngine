@@ -244,16 +244,16 @@ namespace LitchiRuntime
 				OnDisable();
 		}
 
-	/*	for (auto child : m_children)
-			child->RecursiveActiveUpdate();*/
+		for (auto child : GetChildren())
+			child->RecursiveActiveUpdate();
 	}
 
 	void GameObject::RecursiveWasActiveUpdate()
 	{
 		m_wasActive = GetActive();
 
-		//for (auto child : m_children)
-		//	child->RecursiveWasActiveUpdate();
+		for (auto child : GetChildren())
+			child->RecursiveWasActiveUpdate();
 	}
 
 }

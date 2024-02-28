@@ -282,7 +282,7 @@ namespace LitchiRuntime
 		/* Internal settings */
 		unsigned char m_layer;
 		bool	m_destroyed = false;
-		bool	m_sleeping = true; // is editor model sleep is true
+		bool	m_sleeping = true; // is editor model sleep is true, so is default equal true
 		bool	m_awaked = false;
 		bool	m_started = false;
 		bool	m_wasActive = false;
