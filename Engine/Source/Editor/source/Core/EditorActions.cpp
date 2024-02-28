@@ -57,7 +57,7 @@ void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, b
 	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 		StopPlaying();
 
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path);
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path, p_absolute);
 
 	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
