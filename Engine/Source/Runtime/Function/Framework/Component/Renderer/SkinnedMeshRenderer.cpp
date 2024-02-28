@@ -15,14 +15,14 @@ SkinnedMeshRenderer::~SkinnedMeshRenderer()
 {
 }
 
-void SkinnedMeshRenderer::Awake()
+void SkinnedMeshRenderer::OnAwake()
 {
 
 }
 
-void SkinnedMeshRenderer::Update()
+void SkinnedMeshRenderer::OnUpdate()
 {
-	MeshRenderer::Update();
+	MeshRenderer::OnUpdate();
 
 	if (m_isFirstTick && m_material!= nullptr)
 	{

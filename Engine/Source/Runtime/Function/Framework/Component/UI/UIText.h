@@ -35,8 +35,8 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; }
 
 	public:
-		void Awake() override;
-		void Update() override;
+		void OnAwake() override;
+		void OnUpdate() override;
 		/// 渲染之前
 		void OnPreRender() override;
 		void OnPostRender() override;

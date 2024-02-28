@@ -60,7 +60,7 @@ namespace LitchiRuntime
         Light();
         ~Light();
 
-        void Update() override;
+        void OnUpdate() override;
 
 		LightType GetLightType() { return m_light_type; }
         void SetLightType(LightType type);

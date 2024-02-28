@@ -25,9 +25,9 @@ namespace LitchiRuntime
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;
 
-		void Awake() override;
+		void OnAwake() override;
 
-		void Update() override;
+		void OnUpdate() override;
 
 	public:
 		RTTR_ENABLE(Component);

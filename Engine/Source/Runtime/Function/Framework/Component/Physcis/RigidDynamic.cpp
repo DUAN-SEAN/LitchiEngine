@@ -24,18 +24,18 @@ namespace LitchiRuntime
         px_rigid_dynamic->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, m_enableCCD);
     }
 
-    void RigidDynamic::Awake() {
+    void RigidDynamic::OnAwake() {
         Transform* transform = GetGameObject()->GetComponent<Transform>();
         PxRigidDynamic* px_rigid_dynamic = Physics::CreateRigidDynamic(transform->GetPosition(),transform->GetRotation(), GetGameObject()->GetName().c_str());
         m_pxRigidActor = dynamic_cast<PxRigidActor*>(px_rigid_dynamic);
-        RigidActor::Awake();
+        RigidActor::OnAwake();
     }
 
-    void RigidDynamic::Update() {
+    void RigidDynamic::OnUpdate() {
 
     }
 
-    void RigidDynamic::FixedUpdate() {
+    void RigidDynamic::OnFixedUpdate() {
         if (m_pxRigidActor == nullptr) {
             DEBUG_LOG_ERROR("px_rigid_actor_== nullptr");
             return;

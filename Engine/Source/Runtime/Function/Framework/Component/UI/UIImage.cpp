@@ -21,11 +21,11 @@ UIImage::~UIImage() {
 
 }
 
-void UIImage::Awake()
+void UIImage::OnAwake()
 {
 }
 
-void UIImage::Update() {
+void UIImage::OnUpdate() {
     
 }
 

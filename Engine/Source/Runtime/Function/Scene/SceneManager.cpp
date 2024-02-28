@@ -29,9 +29,12 @@ namespace LitchiRuntime
 		m_gameObjectList.clear();
 	}
 
-	GameObject* Scene::CreateGameObject(std::string name, bool isUI)
+	GameObject* Scene::CreateGameObject(const std::string& name, bool isUI)
 	{
-		auto* game_object = new GameObject(name, m_availableID++);
+		int64_t id = m_availableID++;
+		auto* game_object = new GameObject(name, id,m_isPlaying);
+
+		// add default transform
 		if(!isUI)
 		{
 			game_object->AddComponent<Transform>();
@@ -39,14 +42,23 @@ namespace LitchiRuntime
 		{
 			game_object->AddComponent<RectTransform>();
 		}
-			
 		game_object->SetScene(this);
 
-		// 将go添加到game_object_vec_中
+
 		m_gameObjectList.push_back(game_object);
 
-		m_resolve = true;
+		if(m_isPlaying)
+		{
+			game_object->SetSleeping(false);
+			if(game_object->GetActive())
+			{
+				game_object->OnAwake();
+				game_object->OnEnable();
+				game_object->OnStart();
+			}
+		}
 
+		m_resolve = true;
 		return game_object;
 	}
 
@@ -83,6 +95,9 @@ namespace LitchiRuntime
 		// delete gameObject
 		for (Transform* transform : entities_to_remove)
 		{
+			auto go = transform->GetGameObject();
+
+
 			delete transform->GetGameObject();
 		}
 
@@ -91,6 +106,7 @@ namespace LitchiRuntime
 
 	GameObject* Scene::InstantiatePrefab(Prefab* prefab, GameObject* root)
 	{
+		// todo: 
 		auto prefab_data = AssetManager::Serialize(prefab);
 
 		auto deep_copy_prefab = new Prefab();
@@ -121,7 +137,7 @@ namespace LitchiRuntime
 			m_gameObjectList.push_back(root);
 
 			root->ForeachComponent([](Component* comp) {
-				comp->Awake();
+				comp->OnAwake();
 				});
 
 			if(root->GetChildren().empty())
@@ -206,34 +222,29 @@ namespace LitchiRuntime
 	{
 		m_isPlaying = true;
 
-		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->Awake(); }); });
+		/* Wake up actors to allow them to react to OnEnable, OnDisable and OnDestroy, */
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { p_element->SetSleeping(false); });
+
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnAwake(); }); });
 		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->ForeachComponent([](Component* comp) {comp->OnEnable(); }); });
+
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) { if (p_element->GetActive()) p_element->OnStart(); });
 	}
 
 	void Scene::Update()
 	{
 		// Start
-
-
-		// Update
-		for (auto* entity : m_gameObjectList)
-		{
-			for (auto* comp :entity->GetComponents())
-			{
-				comp->Update();
-			}
-		}
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) {  p_element->OnUpdate(); });
 	}
 
 	void Scene::FixedUpdate()
 	{
-		for (auto* entity : m_gameObjectList)
-		{
-			for (auto* comp : entity->GetComponents())
-			{
-				comp->FixedUpdate();
-			}
-		}
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) {  p_element->OnFixedUpdate(); });
+	}
+
+	void Scene::LateUpdate()
+	{
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element) {  p_element->OnLateUpdate(); });
 	}
 
 	void Scene::ResetResolve()

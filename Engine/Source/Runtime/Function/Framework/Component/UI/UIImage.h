@@ -32,8 +32,8 @@ namespace LitchiRuntime
         std::shared_ptr<RHI_VertexBuffer> GetVertexBuffer() { return m_vertex_buffer; }
         std::shared_ptr<RHI_IndexBuffer> GetIndexBuffer() { return m_index_buffer; };
     public:
-        void Awake() override;
-        void Update() override;
+        void OnAwake() override;
+        void OnUpdate() override;
 
         void PostResourceLoaded() override;
         void PostResourceModify() override;

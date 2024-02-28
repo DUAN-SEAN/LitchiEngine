@@ -27,12 +27,12 @@ void UIText::SetText(std::string text) {
     m_dirty=true;
 }
 
-void LitchiRuntime::UIText::Awake()
+void LitchiRuntime::UIText::OnAwake()
 {
 }
 
-void UIText::Update() {
-    Component::Update();
+void UIText::OnUpdate() {
+    Component::OnUpdate();
 
 
     if(m_font == nullptr)

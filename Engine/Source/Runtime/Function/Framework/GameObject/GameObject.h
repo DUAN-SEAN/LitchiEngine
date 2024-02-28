@@ -7,14 +7,15 @@
 #include <list>
 #include <functional>
 #include "Runtime/Function/Framework/Component/Base/component.h"
+#include "Runtime/Function/Framework/Component/Physcis/collider.h"
 
 namespace LitchiRuntime
 {
 	class Scene;
-	class GameObject :public ScriptObject{
+	class GameObject :public ScriptObject {
 	public:
 		GameObject() {}
-		GameObject(std::string name,int64_t id);
+		GameObject(const std::string& name, int64_t& id, bool& isPlaying);
 
 		~GameObject();
 
@@ -28,7 +29,7 @@ namespace LitchiRuntime
 
 		bool GetActive() { return m_active; }
 		void SetActive(bool active);
-		
+
 		bool SetParent(GameObject* parent);
 		bool HasParent();
 		GameObject* GetParent();
@@ -37,18 +38,130 @@ namespace LitchiRuntime
 		virtual void PostResourceLoaded() override;
 
 	public:
+
+		/**
+		* Defines if the actor is sleeping or not.
+		* A sleeping actor will not trigger methods suchs as OnEnable, OnDisable and OnDestroyed
+		* @param p_sleeping
+		*/
+		void SetSleeping(bool p_sleeping);
+
+		/**
+		* Called when the scene start or when the actor gets enabled for the first time during play mode
+		* This method will always be called in an ordered triple:
+		* - OnAwake()
+		* - OnEnable()
+		* - OnStart()
+		*/
+		void OnAwake();
+
+		/**
+		* Called when the actor gets enabled (SetActive set to true) or at scene start if the actor is hierarchically active.
+		* This method can be called in an ordered triple at scene start:
+		* - OnAwake()
+		* - OnEnable()
+		* - OnStart()
+		* Or can be called solo if the actor hierarchical active state changed to true and the actor already gets awaked
+		* Conditions:
+		* - Play mode only
+		*/
+		void OnEnable();
+
+		/**
+		* Called when the scene start or when the actor gets enabled for the first time during play mode
+		* This method will always be called in an ordered triple:
+		* - OnAwake()
+		* - OnEnable()
+		* - OnStart()
+		*/
+		void OnStart();
+
+		/**
+		* Called when the actor hierarchical active state changed to false or gets destroyed while being hierarchically active
+		* Conditions:
+		* - Play mode only
+		*/
+		void OnDisable();
+
+		/**
+		* Called when the actor gets destroyed if it has been awaked
+		* Conditions:
+		* - Play mode only
+		*/
+		void OnDestroy();
+
+
+		/**
+		* Called every frame
+		*/
+		void OnUpdate();
+
+		/**
+		* Called every physics frame
+		*/
+		void OnFixedUpdate();
+
+		/**
+		* Called every frame after OnUpdate
+		*/
+		void OnLateUpdate();
+
+		/**
+		* Called when the actor enter in collision with another physical object
+		* @param p_otherObject
+		*/
+		void OnCollisionEnter(Collider* p_otherObject);
+
+		/**
+		* Called when the actor is in collision with another physical object
+		* @param p_otherObject
+		*/
+		void OnCollisionStay(Collider* p_otherObject);
+
+		/**
+		* Called when the actor exit from collision with another physical object
+		* @param p_otherObject
+		*/
+		void OnCollisionExit(Collider* p_otherObject);
+
+		/**
+		* Called when the actor enter in trigger with another physical object
+		* @param p_otherObject
+		*/
+		void OnTriggerEnter(Collider* p_otherObject);
+
+		/**
+		* Called when the actor is in trigger with another physical object
+		* @param p_otherObject
+		*/
+		void OnTriggerStay(Collider* p_otherObject);
+
+		/**
+		* Called when the actor exit from trigger with another physical object
+		* @param p_otherObject
+		*/
+		void OnTriggerExit(Collider* p_otherObject);
+
+
+	public:
 		Scene* GetScene();
 		void SetScene(Scene* scene);
-		
+
 		template <class T = Component>
 		T* AddComponent() {
 			T* component = new T();
 			AttachComponent(component);
 			component->PostResourceLoaded();
-			component->Awake();
+
+			if (m_isPlaying && GetActive())
+			{
+				component->OnAwake();
+				component->OnEnable();
+				component->OnStart();
+			}
 			return dynamic_cast<T*>(component);
 		}
-		
+
 		template <class T = Component>
 		void AttachComponent(T* component)
 		{
@@ -59,9 +172,9 @@ namespace LitchiRuntime
 			component->SetObjectName(component_type_name);
 
 			m_componentList.push_back(component);
-			
+
 		}
-		
+
 		template <class T = Component>
 		T* GetComponent() const {
 			//获取类名
@@ -93,7 +206,7 @@ namespace LitchiRuntime
 
 			return nullptr;
 		}
-		
+
 		template <class T = Component>
 		T* GetComponent(const uint64_t unmanagedId) {
 			//获取类名
@@ -128,7 +241,7 @@ namespace LitchiRuntime
 		}
 
 		std::vector<Component*>& GetComponents() { return m_componentList; }
-		
+
 		void ForeachComponent(std::function<void(Component*)> func);
 		bool RemoveComponent(Component* component)
 		{
@@ -157,12 +270,21 @@ namespace LitchiRuntime
 	private:
 		void UnInitialize();
 
+		void RecursiveActiveUpdate();
+		void RecursiveWasActiveUpdate();
 	private:
-		// 将物体分不同的层，用于相机分层、物理碰撞分层等。
-		unsigned char m_layer;
-		// 场景
+
+		/* Settings */
 		Scene* m_scene = nullptr;
-		// 是否激活
 		bool m_active = true;
+		bool m_isPlaying; 
+
+		/* Internal settings */
+		unsigned char m_layer;
+		bool	m_destroyed = false;
+		bool	m_sleeping = true; // is editor model sleep is true
+		bool	m_awaked = false;
+		bool	m_started = false;
+		bool	m_wasActive = false;
 	};
 }

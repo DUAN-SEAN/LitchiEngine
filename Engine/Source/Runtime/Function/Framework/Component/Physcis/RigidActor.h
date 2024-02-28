@@ -16,7 +16,7 @@ namespace LitchiRuntime
         virtual void DetachColliderShape(Collider* collider);
 
     public:
-        void Awake() override;
+        void OnAwake() override;
 
     protected:
         PxRigidActor* m_pxRigidActor;

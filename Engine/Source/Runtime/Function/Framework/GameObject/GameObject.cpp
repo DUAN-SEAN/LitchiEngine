@@ -10,7 +10,12 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-	GameObject::GameObject(std::string name,int64_t id) : m_layer(0x01),m_id(id), m_parentId(0){
+	GameObject::GameObject(const std::string& name, int64_t& id, bool& isPlaying) :
+		m_layer(0x01),
+		m_id{ id },
+		m_parentId{0},
+		m_isPlaying{ isPlaying }
+	{
 		SetName(name);
 
 		Initialize();
@@ -28,11 +33,19 @@ namespace LitchiRuntime
 
 	void GameObject::SetActive(bool active)
 	{
-		m_active = active;
-		if(m_scene)
+		if(m_active != active)
 		{
-			m_scene->Resolve();
+			RecursiveWasActiveUpdate();
+			m_active = active;
+			RecursiveActiveUpdate();
+
+			if (m_scene)
+			{
+				m_scene->Resolve();
+			}
+			
 		}
+
 	}
 
 	bool GameObject::SetParent(GameObject* parent)
@@ -91,7 +104,96 @@ namespace LitchiRuntime
 
 			// comp执行资源加载后处理
 			comp->PostResourceLoaded();
+			
+			if (m_isPlaying && GetActive())
+			{
+				comp->OnAwake();
+				comp->OnEnable();
+				comp->OnStart();
+			}
 		}
+	}
+
+	void GameObject::SetSleeping(bool p_sleeping)
+	{
+		m_sleeping = p_sleeping;
+	}
+
+	void GameObject::OnAwake()
+	{
+		m_awaked = true;
+		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnAwake(); });
+
+		// todo script OnWake
+	}
+
+	void GameObject::OnEnable()
+	{
+		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnEnable(); });
+	}
+
+	void GameObject::OnStart()
+	{
+		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnStart(); });
+	}
+
+	void GameObject::OnDisable()
+	{
+		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnDisable(); });
+	}
+
+	void GameObject::OnDestroy()
+	{
+		std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnDestroy(); });
+	}
+
+	void GameObject::OnUpdate()
+	{
+		if(GetActive())
+		{
+			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnUpdate(); });
+		}
+	}
+
+	void GameObject::OnFixedUpdate()
+	{
+		if (GetActive())
+		{
+			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnFixedUpdate(); });
+		}
+	}
+
+	void GameObject::OnLateUpdate()
+	{
+		if (GetActive())
+		{
+			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnLateUpdate(); });
+		}
+	}
+
+	void GameObject::OnCollisionEnter(Collider* p_otherObject)
+	{
+		// do nothing
+	}
+
+	void GameObject::OnCollisionStay(Collider* p_otherObject)
+	{
+	}
+
+	void GameObject::OnCollisionExit(Collider* p_otherObject)
+	{
+	}
+
+	void GameObject::OnTriggerEnter(Collider* p_otherObject)
+	{
+	}
+
+	void GameObject::OnTriggerStay(Collider* p_otherObject)
+	{
+	}
+
+	void GameObject::OnTriggerExit(Collider* p_otherObject)
+	{
 	}
 
 	Scene* GameObject::GetScene()
@@ -119,6 +221,39 @@ namespace LitchiRuntime
 		for (auto& v : tempList) {
 			RemoveComponent(v);
 		}
+	}
+
+	void GameObject::RecursiveActiveUpdate()
+	{
+		bool isActive = GetActive();
+
+		if (!m_sleeping)
+		{
+			if (!m_wasActive && isActive)
+			{
+				if (!m_awaked)
+					OnAwake();
+
+				OnEnable();
+
+				if (!m_started)
+					OnStart();
+			}
+
+			if (m_wasActive && !isActive)
+				OnDisable();
+		}
+
+	/*	for (auto child : m_children)
+			child->RecursiveActiveUpdate();*/
+	}
+
+	void GameObject::RecursiveWasActiveUpdate()
+	{
+		m_wasActive = GetActive();
+
+		//for (auto child : m_children)
+		//	child->RecursiveWasActiveUpdate();
 	}
 
 }

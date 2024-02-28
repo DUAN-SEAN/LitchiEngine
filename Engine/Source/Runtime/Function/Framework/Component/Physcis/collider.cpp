@@ -22,7 +22,7 @@ namespace LitchiRuntime
         }
     }
 
-    void Collider::Awake() {
+    void Collider::OnAwake() {
     }
 
     void Collider::CreatePhysicMaterial() {
@@ -110,11 +110,11 @@ namespace LitchiRuntime
         return nullptr;
     }
 
-    void Collider::Update() {
+    void Collider::OnUpdate() {
 
     }
 
-    void Collider::FixedUpdate() {
+    void Collider::OnFixedUpdate() {
 
     }
 }

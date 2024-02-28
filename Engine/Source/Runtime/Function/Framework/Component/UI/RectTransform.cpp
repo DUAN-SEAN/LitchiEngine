@@ -10,11 +10,11 @@ namespace LitchiRuntime
 	RectTransform::~RectTransform()
 	{
 	}
-	void RectTransform::Awake()
+	void RectTransform::OnAwake()
 	{
 	}
 
-	void RectTransform::Update()
+	void RectTransform::OnUpdate()
 	{
 
 		UpdateCanvas();

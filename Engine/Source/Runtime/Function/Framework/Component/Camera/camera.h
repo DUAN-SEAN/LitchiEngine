@@ -25,8 +25,8 @@ namespace LitchiRuntime
         ~Camera();
         
     public:
-        void Awake() override;
-        void Update() override;
+        void OnAwake() override;
+        void OnUpdate() override;
 
         // Matrices
         const Matrix& GetViewMatrix()           const { return m_renderCamera->GetViewMatrix(); }

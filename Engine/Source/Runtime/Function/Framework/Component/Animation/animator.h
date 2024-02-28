@@ -13,9 +13,9 @@ namespace LitchiRuntime
 
 		Animator();
 		~Animator();
-		void Awake() override;
+		void OnAwake() override;
 
-		void Update() override;
+		void OnUpdate() override;
 
 		/**
 		 * \brief ²¥·Å¶¯»­

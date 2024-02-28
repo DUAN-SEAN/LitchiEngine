@@ -20,7 +20,7 @@ Light::~Light()
 {
 }
 
-void Light::Update()
+void Light::OnUpdate()
 {
 	// During engine startup, keep checking until the rhi device gets
         // created so we can create potentially required shadow maps

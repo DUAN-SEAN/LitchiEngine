@@ -11,11 +11,11 @@ namespace LitchiRuntime
 	UICanvas::~UICanvas()
 	{
 	}
-	void UICanvas::Awake()
+	void UICanvas::OnAwake()
 	{
 	}
 
-	void UICanvas::Update()
+	void UICanvas::OnUpdate()
 	{
 		Transform* transform = GetGameObject()->GetComponent<Transform>();
 		transform->SetPosition(Vector3::Zero);

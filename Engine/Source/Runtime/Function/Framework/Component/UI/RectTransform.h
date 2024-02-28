@@ -14,8 +14,8 @@ namespace LitchiRuntime
         RectTransform();
         ~RectTransform();
 
-        void Awake() override;
-        void Update() override;
+        void OnAwake() override;
+        void OnUpdate() override;
 
         // Pos
         void SetPos(Vector3 pos) { m_pos = pos; }

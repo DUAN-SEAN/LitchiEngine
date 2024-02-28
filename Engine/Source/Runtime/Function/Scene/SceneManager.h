@@ -18,15 +18,38 @@ namespace LitchiRuntime
 		Scene(std::string name);
 		~Scene();
 
-		std::string GetName() { return m_name; }
-		void SetName(std::string name) { m_name = name; }
+		// Play Game
+		void Play();
+
+		/**
+		* Returns true if the scene is playing
+		* only PlayMode or Runtime
+		*/
+		bool IsPlaying() const { return m_isPlaying; }
+
+		/**
+		* Update every actors
+		* @param p_deltaTime
+		*/
+		void Update();
+
+		/**
+		* Update every actors 60 frames per seconds
+		* @param p_deltaTime
+		*/
+		void FixedUpdate();
+		/**
+		* Update every actors lately
+		* @param p_deltaTime
+		*/
+		void LateUpdate();
 
 		/**
 		 * 创建GameObject
 		 * \param name go的名字
 		 * \return go
 		 */
-		GameObject* CreateGameObject(std::string name,bool isUI = false);
+		GameObject* CreateGameObject(const std::string& name,bool isUI = false);
 		void RemoveGameObject(GameObject* go);
 
 		// Prefab
@@ -36,8 +59,8 @@ namespace LitchiRuntime
 		/// \param func
 		void Foreach(std::function<void(GameObject* game_object)> func);
 
-		void Update();
-		void FixedUpdate();
+		std::string GetName() { return m_name; }
+		void SetName(std::string name) { m_name = name; }
 
 		void Resolve() { m_resolve = true; }
 		bool IsNeedResolve() { return m_resolve; }
@@ -64,10 +87,6 @@ namespace LitchiRuntime
 		{
 			return m_gameObjectList;
 		}
-
-		// Play Game
-		void Play();
-		bool IsPlaying() const { return m_isPlaying; }
 
 	public:
 

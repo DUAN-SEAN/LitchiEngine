@@ -23,7 +23,7 @@ namespace LitchiRuntime
         }
     }
 
-    void RigidActor::Awake() {
+    void RigidActor::OnAwake() {
         Component* component = GetGameObject()->GetComponent<Collider>();
         if (component != nullptr) {
             Collider* collider = static_cast<Collider*>(component);

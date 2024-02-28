@@ -13,11 +13,11 @@ namespace LitchiRuntime
 
     public:
         /// Awake里反序列化给成员变量赋值。
-        void Awake() override;
+        void OnAwake() override;
 
-        void Update() override;
+        void OnUpdate() override;
 
-        void FixedUpdate() override;
+        void OnFixedUpdate() override;
 
         RTTR_ENABLE(RigidActor)
     };

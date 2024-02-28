@@ -14,8 +14,8 @@ namespace LitchiRuntime
         UICanvas();
         ~UICanvas();
 
-        void Awake() override;
-        void Update() override;
+        void OnAwake() override;
+        void OnUpdate() override;
 
         void PostResourceLoaded() override;
 

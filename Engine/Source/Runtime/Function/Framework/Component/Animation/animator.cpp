@@ -16,11 +16,11 @@ LitchiRuntime::Animator::~Animator()
 {
 }
 
-void LitchiRuntime::Animator::Awake()
+void LitchiRuntime::Animator::OnAwake()
 {
 }
 
-void Animator::Update()
+void Animator::OnUpdate()
 {
 	m_timePos += Time::delta_time();
 

@@ -51,9 +51,11 @@ namespace LitchiRuntime
 		m_gameObjectList.clear();
 	}
 
-	GameObject* Prefab::CreateGameObject(std::string name, bool isUI)
+	GameObject* Prefab::CreateGameObject(const std::string& name, bool isUI)
 	{
-		auto* game_object = new GameObject(name, m_availableID++);
+		auto id = m_availableID++;
+		bool isPlaying = false;
+		auto* game_object = new GameObject(name, id, isPlaying);
 		if (!isUI)
 		{
 			game_object->AddComponent<Transform>();

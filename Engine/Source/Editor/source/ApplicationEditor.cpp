@@ -369,36 +369,32 @@ void LitchiEditor::ApplicationEditor::Update()
 	UpdateScreenSize();
 	InputManager::Tick();
 
-	auto scene = this->sceneManager->GetCurrentScene();
-
-	// Physics Tick
-	m_restFixedTime += Time::delta_time();
-	float fixedDeltaTime = Time::fixed_update_time();
-	while (m_restFixedTime > fixedDeltaTime)
+	if (auto editorMode = m_editorActions.GetCurrentEditorMode(); editorMode == EditorActions::EEditorMode::PLAY || editorMode == EditorActions::EEditorMode::FRAME_BY_FRAME)
 	{
-		Physics::FixedUpdate(fixedDeltaTime);
+		auto scene = this->sceneManager->GetCurrentScene();
 
-		scene->FixedUpdate();
+		// Physics Tick
+		m_restFixedTime += Time::delta_time();
+		float fixedDeltaTime = Time::fixed_update_time();
+		while (m_restFixedTime > fixedDeltaTime)
+		{
+			Physics::FixedUpdate(fixedDeltaTime);
 
-		m_restFixedTime -= fixedDeltaTime;
+			scene->FixedUpdate();
+
+			m_restFixedTime -= fixedDeltaTime;
+		}
+
+		scene->Update();
+		scene->LateUpdate();
+
+		// Input::Update();
+		//Audio::Update();
+
+	}else
+	{
+		// Edit Mode
 	}
-
-	scene->Update();
-
-	//// Update
-	//for (auto* entity : scene->GetAllGameObjectList())
-	//{
-	//	for (auto* comp : entity->GetComponents())
-	//	{
-	//		comp->Update();
-	//	}
-	//}
-
-	// 默认每帧都更新渲染对象
-	// Renderer::OnSceneResolved(scene->GetAllGameObjectList());
-
-	// Input::Update();
-	//Audio::Update();
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const

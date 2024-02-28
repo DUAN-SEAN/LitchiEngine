@@ -15,7 +15,7 @@ namespace LitchiRuntime
 
 	}
 	
-	void MeshRenderer::Update()
+	void MeshRenderer::OnUpdate()
 	{
 		if (m_material != nullptr)
 		{

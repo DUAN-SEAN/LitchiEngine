@@ -21,11 +21,11 @@ namespace LitchiRuntime
         m_renderCamera = nullptr;
 	}
 
-    void Camera::Awake()
+    void Camera::OnAwake()
     {
     }
 
-    void Camera::Update()
+    void Camera::OnUpdate()
     {
         // 默认editor状态不执行
         const auto& current_viewport = m_renderCamera->GetViewport();

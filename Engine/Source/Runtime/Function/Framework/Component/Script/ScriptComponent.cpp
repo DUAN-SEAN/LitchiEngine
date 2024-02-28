@@ -32,11 +32,11 @@ namespace LitchiRuntime
 		PostResourceLoaded();
 	}
 
-	void LitchiRuntime::ScriptComponent::Awake()
+	void LitchiRuntime::ScriptComponent::OnAwake()
 	{
 	}
 
-	void LitchiRuntime::ScriptComponent::Update()
+	void LitchiRuntime::ScriptComponent::OnUpdate()
 	{
 		//// 通知脚本引擎 执行回调Update
 		//auto& unmanagedId = m_unmanagedId;

@@ -19,19 +19,54 @@ namespace LitchiRuntime
     private:
 
     public:
+
+        /**
+        * Called when the scene start right before OnStart
+        * It allows you to apply prioritized game logic on scene start
+        */
+        virtual void OnAwake();
+
+        /**
+        * Called when the components gets enabled (owner SetActive set to true) and after OnAwake() on scene starts
+        */
         virtual void OnEnable();
 
-        // when 1. AddComponent 2. load scene on game play 
-        virtual void Awake();
-        virtual void Update();
-        virtual void FixedUpdate();
+        /**
+        * Called when the scene start right after OnAwake
+        * It allows you to apply prioritized game logic on scene start
+        */
+        virtual void OnStart();
+
+        /**
+        * Called every frame
+        */
+        virtual void OnUpdate();
+
+        /**
+        * Called every physics frame
+        */
+        virtual void OnFixedUpdate();
+
+        /**
+        * Called every frame after OnUpdate
+        */
+        virtual void OnLateUpdate() {}
+
+        /**
+        * Called when the component gets disabled (owner SetActive set to false) and before OnDestroy() when the component get destroyed
+        */
+        virtual void OnDisable();
+
+        /**
+        * Called when the components gets destroyed
+        */
+        virtual void OnDestroy() {}
 
         /// 渲染之前
         virtual void OnPreRender();
+
         /// 渲染之后
         virtual void OnPostRender();
-
-        virtual void OnDisable();
 
         virtual void OnTriggerEnter(GameObject* game_object);
 

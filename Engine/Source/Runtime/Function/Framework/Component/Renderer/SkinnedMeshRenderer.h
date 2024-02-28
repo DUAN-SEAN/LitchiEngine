@@ -12,9 +12,9 @@ namespace LitchiRuntime
 		SkinnedMeshRenderer();
 		~SkinnedMeshRenderer();
 
-		void Awake() override;
+		void OnAwake() override;
 
-		void Update() override;
+		void OnUpdate() override;
 
 		void PostResourceLoaded() override;
 		void PostResourceModify() override;

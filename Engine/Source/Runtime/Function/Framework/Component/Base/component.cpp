@@ -15,14 +15,18 @@ namespace LitchiRuntime
 	void Component::OnEnable() {
 	}
 	
-	void Component::Awake() {
+	void Component::OnAwake() {
 	}
 
-	void Component::Update() {
+	void Component::OnStart()
+	{
+	}
+
+	void Component::OnUpdate() {
 	}
 
 
-	void Component::FixedUpdate() {
+	void Component::OnFixedUpdate() {
 	}
 
 
