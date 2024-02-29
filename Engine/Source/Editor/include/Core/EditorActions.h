@@ -390,6 +390,7 @@ namespace LitchiEditor
 
 		std::vector<std::pair<uint32_t, std::function<void()>>> m_delayedActions;
 
+		std::string m_sceneBackup;
 
 		// StringBuffer sb;
 	};

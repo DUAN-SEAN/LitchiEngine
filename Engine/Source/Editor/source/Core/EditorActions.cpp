@@ -17,6 +17,7 @@
 #include "Editor/include/Panels/GameView.h"
 #include "Editor/include/Panels/Hierarchy.h"
 #include "Editor/include/Panels/SceneView.h"
+#include "runtime/core/meta/serializer/serializer.h"
 #include "Runtime/Core/Window/Dialogs/MessageBox.h"
 #include "Runtime/Core/Window/Dialogs/OpenFileDialog.h"
 #include "Runtime/Core/Window/Dialogs/SaveFileDialog.h"
@@ -472,7 +473,9 @@ void LitchiEditor::EditorActions::StartPlaying()
 			PlayEvent.Invoke();
 			
 			auto currScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
-			
+
+			m_sceneBackup = SerializerManager::SerializeToJson(currScene);
+
 			m_panelsManager.GetPanelAs<LitchiEditor::GameView>("Game View").Focus();
 			currScene->Play();
 			SetEditorMode(EEditorMode::PLAY);
@@ -493,27 +496,27 @@ void LitchiEditor::EditorActions::PauseGame()
 
 void LitchiEditor::EditorActions::StopPlaying()
 {
-	//if (m_editorMode != EEditorMode::EDIT)
-	//{
-	//	ImGui::GetIO().DisableMouseUpdate = false;
-	//	LitchiEditor::ApplicationEditor::Instance()->window->SetCursorMode(OvWindowing::Cursor::ECursorMode::NORMAL);
-	//	SetEditorMode(EEditorMode::EDIT);
-	//	bool loadedFromDisk = LitchiEditor::ApplicationEditor::Instance()->sceneManager.IsCurrentSceneLoadedFromDisk();
-	//	std::string sceneSourcePath = LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentSceneSourcePath();
+	if (m_editorMode != EEditorMode::EDIT)
+	{
+		// ImGui::GetIO().DisableMouseUpdate = false;
+		// LitchiEditor::ApplicationEditor::Instance()->window->SetCursorMode(OvWindowing::Cursor::ECursorMode::NORMAL);
+		SetEditorMode(EEditorMode::EDIT);
+		bool loadedFromDisk = LitchiEditor::ApplicationEditor::Instance()->sceneManager->IsCurrentSceneLoadedFromPath();
+		std::string sceneSourcePath = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath();
 
-	//	int64_t focusedActorID = -1;
+		int64_t focusedActorID = -1;
 
-	//	if (auto targetActor = EDITOR_PANEL(Inspector, "Inspector").GetTargetActor())
-	//		focusedActorID = targetActor->GetID();
+		if (auto targetActor = EDITOR_PANEL(Inspector, "Inspector").GetTargetActor())
+			focusedActorID = targetActor->m_id;
 
-	//	LitchiEditor::ApplicationEditor::Instance()->sceneManager.LoadSceneFromMemory(m_sceneBackup);
-	//	if (loadedFromDisk)
-	//		LitchiEditor::ApplicationEditor::Instance()->sceneManager.StoreCurrentSceneSourcePath(sceneSourcePath); // To bo able to save or reload the scene whereas the scene is loaded from memory (Supposed to have no path)
-	//	m_sceneBackup.Clear();
-	//	EDITOR_PANEL(SceneView, "Scene View").Focus();
-	//	if (auto actorInstance = LitchiEditor::ApplicationEditor::Instance()->sceneManager.GetCurrentScene()->FindActorByID(focusedActorID))
-	//		EDITOR_PANEL(Inspector, "Inspector").FocusActor(*actorInstance);
-	//}
+		LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadSceneFromMemory(m_sceneBackup);
+		if (loadedFromDisk)
+			LitchiEditor::ApplicationEditor::Instance()->sceneManager->StoreCurrentSceneSourcePath(sceneSourcePath); // To bo able to save or reload the scene whereas the scene is loaded from memory (Supposed to have no path)
+		m_sceneBackup.clear();
+		EDITOR_PANEL(SceneView, "Scene View").Focus();
+		if (auto actorInstance = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene()->Find(focusedActorID))
+			EDITOR_PANEL(Inspector, "Inspector").FocusActor(actorInstance);
+	}
 }
 
 void LitchiEditor::EditorActions::NextFrame()
