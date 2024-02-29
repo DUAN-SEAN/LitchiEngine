@@ -346,7 +346,7 @@ namespace LitchiRuntime
 		auto rendererPath4GameView = m_rendererPaths[RendererPathType_GameView];
 		if (rendererPath4GameView)
 		{
-			m_main_camera = rendererPath4GameView->GetRenderCamera();
+			// m_main_camera = rendererPath4GameView->GetRenderCamera();
 			rendererPath4GameView->UpdateRenderableGameObject();
 			auto cameras = rendererPath4GameView->GetRenderables().at(Renderer_Entity::Camera);
 			if (cameras.size() > 0)

@@ -262,6 +262,8 @@ namespace LitchiRuntime
 			return false;
 		}
 
+		void OnEditorUpdate();
+
 		int64_t m_id;
 		int64_t m_parentId;
 		std::vector<Component*> m_componentList;

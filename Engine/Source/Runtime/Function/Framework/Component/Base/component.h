@@ -40,6 +40,11 @@ namespace LitchiRuntime
         /**
         * Called every frame
         */
+        virtual void OnEditorUpdate(){}
+
+        /**
+        * Called every frame
+        */
         virtual void OnUpdate();
 
         /**

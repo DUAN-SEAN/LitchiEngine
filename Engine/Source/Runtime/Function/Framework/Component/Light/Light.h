@@ -109,6 +109,9 @@ namespace LitchiRuntime
 
         bool IsInViewFrustum(MeshFilter* renderable, uint32_t index) const;
 
+        void OnEditorUpdate() override;
+        void PostResourceLoaded() override;
+
         RTTR_ENABLE(Component)
 
     private:

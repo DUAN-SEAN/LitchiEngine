@@ -88,6 +88,8 @@ namespace LitchiRuntime
 			return m_gameObjectList;
 		}
 
+		void OnEditorUpdate();
+
 	public:
 
 		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。

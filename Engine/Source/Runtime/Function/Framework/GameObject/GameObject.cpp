@@ -216,6 +216,14 @@ namespace LitchiRuntime
 		}
 	}
 
+	void GameObject::OnEditorUpdate()
+	{
+		if (GetActive())
+		{
+			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnEditorUpdate(); });
+		}
+	}
+
 	void GameObject::UnInitialize()
 	{
 		auto tempList = m_componentList;

@@ -476,3 +476,37 @@ bool Light::IsInViewFrustum(MeshFilter* renderable, uint32_t index) const
 
     return m_shadow_map.slices[index].frustum.IsVisible(center, extents, ignore_near_plane);
 }
+
+void LitchiRuntime::Light::OnEditorUpdate()
+{
+    if (!m_initialized)
+    {
+        CreateShadowMap();
+        m_initialized = true;
+    }
+
+    // Update shadow map(s)
+    if (m_shadows_enabled)
+    {
+        if (m_light_type == LightType::Directional)
+        {
+            ComputeCascadeSplits();
+        }
+
+        ComputeViewMatrix();
+
+        // Compute projection matrix
+        if (m_shadow_map.texture_depth)
+        {
+            for (uint32_t i = 0; i < m_shadow_map.texture_depth->GetArrayLength(); i++)
+            {
+                ComputeProjectionMatrix(i);
+            }
+        }
+    }
+}
+
+void Light::PostResourceLoaded()
+{
+   
+}

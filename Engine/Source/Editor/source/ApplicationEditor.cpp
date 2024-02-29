@@ -393,6 +393,9 @@ void LitchiEditor::ApplicationEditor::Update()
 
 	}else
 	{
+		auto scene = this->sceneManager->GetCurrentScene();
+
+		scene->OnEditorUpdate();
 		// Edit Mode
 	}
 }

@@ -228,6 +228,13 @@ namespace LitchiRuntime
 		return root_entities;
 	}
 
+	void Scene::OnEditorUpdate()
+	{
+		/* Wake up actors to allow them to react to OnEnable, OnDisable and OnDestroy, */
+		std::for_each(m_gameObjectList.begin(), m_gameObjectList.end(), [](GameObject* p_element)
+			{ p_element->OnEditorUpdate(); });
+	}
+
 	void Scene::Play()
 	{
 		m_isPlaying = true;
