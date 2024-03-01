@@ -128,6 +128,7 @@ namespace LitchiRuntime
 		}
 	}
 
+
 	bool RendererPath::CheckIsBuildInRendererCamera()
 	{
 		if (m_rendererPathType == RendererPathType_GameView || m_rendererPathType == RendererPathType_Custom)
