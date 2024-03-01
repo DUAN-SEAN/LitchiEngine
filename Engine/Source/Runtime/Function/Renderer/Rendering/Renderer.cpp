@@ -39,7 +39,7 @@ namespace LitchiRuntime
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 	Cb_Material Renderer::m_cb_material_cpu;
-	RenderCamera* Renderer::m_main_camera;
+	//RenderCamera* Renderer::m_main_camera;
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	unique_ptr<Font> Renderer::m_font;
 	unique_ptr<Grid> Renderer::m_world_grid;
@@ -60,7 +60,7 @@ namespace LitchiRuntime
 		// resolution & viewport
 		Vector2 m_resolution_render = Vector2::Zero;
 		Vector2 m_resolution_output = Vector2::Zero;
-		RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
+		//RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
 
 		// environment texture
 		shared_ptr<RHI_Texture> environment_texture;
@@ -149,8 +149,8 @@ namespace LitchiRuntime
 			// The resolution of the output frame *we can upscale to that linearly or with FSR 2)
 			SetResolutionOutput(width, height, false);
 
-			// The resolution/size of the editor's viewport. This is overridden by the editor based on the actual viewport size
-			SetViewport(static_cast<float>(width), static_cast<float>(height));
+			//// The resolution/size of the editor's viewport. This is overridden by the editor based on the actual viewport size
+			//SetViewport(static_cast<float>(width), static_cast<float>(height));
 
 			// Note: If the editor is active, it will set the render and viewport resolution to what the actual viewport is
 		}
@@ -334,7 +334,7 @@ namespace LitchiRuntime
 		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath4SceneView)
 		{
-			m_main_camera = rendererPath4SceneView->GetRenderCamera();
+			//m_main_camera = rendererPath4SceneView->GetRenderCamera();
 			rendererPath4SceneView->UpdateRenderableGameObject();
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
 		}
@@ -625,7 +625,7 @@ namespace LitchiRuntime
 		}
 	}
 
-	const RHI_Viewport& Renderer::GetViewport()
+	/*const RHI_Viewport& Renderer::GetViewport()
 	{
 		return m_viewport;
 	}
@@ -641,7 +641,7 @@ namespace LitchiRuntime
 			m_viewport.height = height;
 			dirty_orthographic_projection = true;
 		}
-	}
+	}*/
 
 	const Vector2& Renderer::GetResolutionRender()
 	{
@@ -890,34 +890,35 @@ namespace LitchiRuntime
 		Flush();
 	}
 
-	void Renderer::OnFullScreenToggled()
-	{
-		static float    width_previous_viewport = 0;
-		static float    height_previous_viewport = 0;
-		static uint32_t width_previous_output = 0;
-		static uint32_t height_previous_output = 0;
+	// todo: remove
+	//void Renderer::OnFullScreenToggled()
+	//{
+	//	static float    width_previous_viewport = 0;
+	//	static float    height_previous_viewport = 0;
+	//	static uint32_t width_previous_output = 0;
+	//	static uint32_t height_previous_output = 0;
 
-		if (ApplicationBase::Instance()->window->IsFullscreen())
-		{
-			uint32_t width = ApplicationBase::Instance()->window->GetWidth();
-			uint32_t height = ApplicationBase::Instance()->window->GetHeight();
+	//	if (ApplicationBase::Instance()->window->IsFullscreen())
+	//	{
+	//		uint32_t width = ApplicationBase::Instance()->window->GetWidth();
+	//		uint32_t height = ApplicationBase::Instance()->window->GetHeight();
 
-			width_previous_viewport = m_viewport.width;
-			height_previous_viewport = m_viewport.height;
-			SetViewport(static_cast<float>(width), static_cast<float>(height));
+	//		width_previous_viewport = m_viewport.width;
+	//		height_previous_viewport = m_viewport.height;
+	//		SetViewport(static_cast<float>(width), static_cast<float>(height));
 
-			width_previous_output = static_cast<uint32_t>(m_viewport.width);
-			height_previous_output = static_cast<uint32_t>(m_viewport.height);
-			SetResolutionOutput(width, height);
-		}
-		else
-		{
-			SetViewport(width_previous_viewport, height_previous_viewport);
-			SetResolutionOutput(width_previous_output, height_previous_output);
-		}
+	//		width_previous_output = static_cast<uint32_t>(m_viewport.width);
+	//		height_previous_output = static_cast<uint32_t>(m_viewport.height);
+	//		SetResolutionOutput(width, height);
+	//	}
+	//	else
+	//	{
+	//		SetViewport(width_previous_viewport, height_previous_viewport);
+	//		SetResolutionOutput(width_previous_output, height_previous_output);
+	//	}
 
-		//  InputManager::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
-	}
+	//	//  InputManager::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
+	//}
 
 	void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
 	{
@@ -1161,8 +1162,8 @@ namespace LitchiRuntime
 		m_rendererPaths[rendererPathType] = rendererPath;
 	}
 
-	RenderCamera* Renderer::GetMainCamera()
+	/*RenderCamera* Renderer::GetMainCamera()
 	{
 		return m_main_camera;
-	}
+	}*/
 }

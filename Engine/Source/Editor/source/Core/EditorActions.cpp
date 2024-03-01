@@ -516,6 +516,8 @@ void LitchiEditor::EditorActions::StopPlaying()
 		EDITOR_PANEL(SceneView, "Scene View").Focus();
 		if (auto actorInstance = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene()->Find(focusedActorID))
 			EDITOR_PANEL(Inspector, "Inspector").FocusActor(actorInstance);
+
+		EDITOR_PANEL(Hierarchy, "Hierarchy").Refresh();
 	}
 }
 

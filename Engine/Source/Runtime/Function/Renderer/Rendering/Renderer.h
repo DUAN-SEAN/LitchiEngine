@@ -74,10 +74,10 @@ namespace LitchiRuntime
 		static uint64_t GetFrameNum();
 		static RHI_Api_Type GetRhiApiType();
 
-		//= RESOLUTION/SIZE =============================================================================
-		// Viewport
-		static const RHI_Viewport& GetViewport();
-		static void SetViewport(float width, float height);
+		////= RESOLUTION/SIZE =============================================================================
+		//// Viewport
+		//static const RHI_Viewport& GetViewport();
+		//static void SetViewport(float width, float height);
 
 		// Resolution render
 		static const Vector2& GetResolutionRender();
@@ -119,7 +119,7 @@ namespace LitchiRuntime
 
 		// RendererPath
 		static void UpdateRendererPath(RendererPathType rendererPathType, RendererPath* rendererPath);
-		static RenderCamera* GetMainCamera();
+		//static RenderCamera* GetMainCamera();
 
 	private:
 		// Constant buffers
@@ -156,7 +156,7 @@ namespace LitchiRuntime
 		// Event handlers
 		// static void OnWorldResolved(sp_variant data);
 		static void OnClear();
-		static void OnFullScreenToggled();
+		// static void OnFullScreenToggled();
 
 		// Lines
 	/*	static void Lines_OneFrameStart();*/
@@ -175,7 +175,7 @@ namespace LitchiRuntime
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
-		static RenderCamera* m_main_camera;
+		//static RenderCamera* m_main_camera;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_lines;
 		static std::unique_ptr<Font> m_font;
 		static std::unique_ptr<Grid> m_world_grid;

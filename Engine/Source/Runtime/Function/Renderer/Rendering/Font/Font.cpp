@@ -68,8 +68,10 @@ namespace LitchiRuntime
     {
         SP_ASSERT(m_vertex_buffer && m_index_buffer);
 
-        const float viewport_width = Renderer::GetViewport().width;
-        const float viewport_height = Renderer::GetViewport().height;
+        /*const float viewport_width = Renderer::GetViewport().width;
+        const float viewport_height = Renderer::GetViewport().height;*/
+        const float viewport_width = 4096;
+        const float viewport_height = 4096;
         const float aspect_ratio = viewport_width / viewport_height;
 
         // adjust the screen percentage position to compensate for the aspect ratio

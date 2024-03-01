@@ -1,6 +1,6 @@
 ﻿
-#ifndef UNTITLED_SCREEN_H
-#define UNTITLED_SCREEN_H
+#pragma once
+
 
 namespace LitchiRuntime
 {
@@ -25,5 +25,3 @@ namespace LitchiRuntime
         static float aspect_ratio_;//宽高比
     };
 }
-
-#endif //UNTITLED_SCREEN_H

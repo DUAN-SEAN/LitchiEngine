@@ -1,6 +1,7 @@
 ﻿
 #include "Light.h"
 
+#include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
@@ -35,7 +36,18 @@ void Light::OnUpdate()
     {
         if (m_light_type == LightType::Directional)
         {
-            ComputeCascadeSplits();
+            // find game first camera
+            auto& gameObjectList = GetGameObject()->GetScene()->GetAllGameObjectList();
+            for (auto& gameObject : gameObjectList)
+            {
+                auto camera= gameObject->GetComponent<Camera>();
+                if(camera!=nullptr)
+                {
+                    ComputeCascadeSplits(camera->GetRenderCamera());
+                    break;
+                }
+            }
+
         }
 
         ComputeViewMatrix();
@@ -303,16 +315,18 @@ const Matrix& Light::GetProjectionMatrix(uint32_t index /*= 0*/) const
     return m_matrix_projection[index];
 }
 
-void Light::ComputeCascadeSplits()
+void Light::ComputeCascadeSplits(RenderCamera* renderCamera)
 {
     if (m_shadow_map.slices.empty())
         return;
 
     // Can happen during the first frame, don't log error
-    if (!Renderer::GetMainCamera())
+    if (!renderCamera)
         return;
 
-    RenderCamera* camera = Renderer::GetMainCamera();
+
+
+    RenderCamera* camera = renderCamera;
     const float clip_near = camera->GetNearPlane();
     const float clip_far = camera->GetFarPlane();
     const Matrix projection = camera->ComputeProjection(clip_near, clip_far); // Non reverse-z matrix
@@ -490,7 +504,11 @@ void LitchiRuntime::Light::OnEditorUpdate()
     {
         if (m_light_type == LightType::Directional)
         {
-            ComputeCascadeSplits();
+            auto renderCamera= LitchiEditor::ApplicationEditor::Instance()->m_rendererPath4SceneView->GetRenderCamera();
+            if(renderCamera)
+            {
+                ComputeCascadeSplits(renderCamera);
+            }
         }
 
         ComputeViewMatrix();
