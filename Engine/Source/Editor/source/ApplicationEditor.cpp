@@ -498,6 +498,7 @@ void LitchiEditor::ApplicationEditor::SetupRendererPath()
 
 		// update renderer path
 		Renderer::UpdateRendererPath(RendererPathType_SceneView, m_rendererPath4SceneView);
+		m_rendererPath4SceneView->SetActive(true);
 	}
 
 	if (m_rendererPath4GameView == nullptr)
@@ -506,6 +507,7 @@ void LitchiEditor::ApplicationEditor::SetupRendererPath()
 
 		// update renderer path
 		Renderer::UpdateRendererPath(RendererPathType_GameView, m_rendererPath4GameView);
+		// default active = false
 	}
 
 }

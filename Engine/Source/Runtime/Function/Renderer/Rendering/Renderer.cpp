@@ -332,9 +332,8 @@ namespace LitchiRuntime
 		EASY_BLOCK("Render4BuildInSceneView")
 		// 绘制SceneView Path
 		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
-		if (rendererPath4SceneView)
+		if (rendererPath4SceneView && rendererPath4SceneView->GetActive())
 		{
-			//m_main_camera = rendererPath4SceneView->GetRenderCamera();
 			rendererPath4SceneView->UpdateRenderableGameObject();
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
 		}
@@ -344,9 +343,9 @@ namespace LitchiRuntime
 		EASY_BLOCK("Render4BuildInGameView")
 		// 绘制SceneView Path
 		auto rendererPath4GameView = m_rendererPaths[RendererPathType_GameView];
-		if (rendererPath4GameView)
+		if (rendererPath4GameView && rendererPath4GameView->GetActive())
 		{
-			// m_main_camera = rendererPath4GameView->GetRenderCamera();
+			// todo: only camera change need prepare camera
 			rendererPath4GameView->UpdateRenderableGameObject();
 			auto cameras = rendererPath4GameView->GetRenderables().at(Renderer_Entity::Camera);
 			if (cameras.size() > 0)
@@ -356,6 +355,7 @@ namespace LitchiRuntime
 				rendererPath4GameView->UpdateRenderCamera(firstCamera);
 			}
 
+			rendererPath4GameView->UpdateRenderableGameObject();
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
 		}
 		EASY_END_BLOCK

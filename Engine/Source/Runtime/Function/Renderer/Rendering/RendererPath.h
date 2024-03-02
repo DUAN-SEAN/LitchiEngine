@@ -41,6 +41,9 @@ namespace LitchiRuntime
 
 		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 
+		bool GetActive()const { return m_active; }
+		void SetActive(bool isActive) {  m_active = isActive; }
+
 	private:
 
 		void CreateColorRenderTarget();
@@ -63,6 +66,8 @@ namespace LitchiRuntime
 
 
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
+
+		bool m_active {false};
 	};
 
 }

@@ -78,7 +78,7 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateRenderCamera(RenderCamera* camera)
 	{
-		if(!CheckIsBuildInRendererCamera())
+		if(CheckIsBuildInRendererCamera())
 		{
 			return;
 		}

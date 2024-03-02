@@ -480,6 +480,8 @@ void LitchiEditor::EditorActions::StartPlaying()
 			currScene->Play();
 			SetEditorMode(EEditorMode::PLAY);
 			ApplicationEditor::Instance()->m_rendererPath4GameView->SetScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
+			ApplicationEditor::Instance()->m_rendererPath4GameView->SetActive(true);
+
 		}
 	}
 	else
@@ -521,6 +523,8 @@ void LitchiEditor::EditorActions::StopPlaying()
 		LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene()->Resolve();
 		EDITOR_PANEL(Hierarchy, "Hierarchy").Refresh();
 		ApplicationEditor::Instance()->m_rendererPath4SceneView->SetScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
+
+		ApplicationEditor::Instance()->m_rendererPath4GameView->SetActive(false);
 	}
 }
 
