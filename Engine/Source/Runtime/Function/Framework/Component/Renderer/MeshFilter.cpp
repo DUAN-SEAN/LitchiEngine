@@ -37,17 +37,17 @@ namespace LitchiRuntime
     {
         PostResourceModify();
 
-        auto animator = GetGameObject()->GetComponent<Animator>();
-        if (m_mesh && animator)
-        {
-            std::unordered_map<std::string, AnimationClip> animations;
-            m_mesh->GetAnimations(animations);
-            animator->SetAnimationClipMap(animations);
+        //auto animator = GetGameObject()->GetComponent<Animator>();
+        //if (m_mesh && animator)
+        //{
+        //    std::unordered_map<std::string, AnimationClip> animations;
+        //    m_mesh->GetAnimations(animations);
+        //    animator->SetAnimationClipMap(animations);
 
-            // todo temp
-            auto firstClipName = animations.begin()->first;
-            animator->Play(firstClipName);
-        }
+        //    // todo temp
+        //    auto firstClipName = animations.begin()->first;
+        //    animator->Play(firstClipName);
+        //}
     }
 
     void MeshFilter::PostResourceModify()

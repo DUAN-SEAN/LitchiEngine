@@ -318,8 +318,6 @@ namespace LitchiRuntime
 		UnloadCurrentScene();
 
 		m_currScene = new Scene("Empty Scene");
-
-		SceneLoadEvent.Invoke();
 	}
 
 	bool SceneManager::LoadScene(const std::string& p_path, bool p_absolute)
@@ -336,6 +334,8 @@ namespace LitchiRuntime
 
 		m_currScene->PostResourceLoaded();
 
+		SceneLoadEvent.Invoke();
+
 		return true;
 	}
 
@@ -350,6 +350,8 @@ namespace LitchiRuntime
 		}
 
 		m_currScene->PostResourceLoaded();
+
+		SceneLoadEvent.Invoke();
 
 		return true;
 	}

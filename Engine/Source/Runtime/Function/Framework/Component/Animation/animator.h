@@ -54,7 +54,7 @@ namespace LitchiRuntime
 		std::string m_clipName = "";
 
 
-		std::unordered_map<std::string, AnimationClip> m_animationClipMap;
+		std::unordered_map<std::string, AnimationClip> m_animationClipMap{};
 
 		AnimationClip* m_currentClip = nullptr;
 	};

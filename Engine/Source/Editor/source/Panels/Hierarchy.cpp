@@ -178,6 +178,8 @@ LitchiEditor::Hierarchy::Hierarchy
 	GameObject::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
 	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);
 	Scene::InstantiatePrefabEvent += std::bind(&Hierarchy::AddActorByPrefabInstance, this, std::placeholders::_1);
+	ServiceLocator::Get<SceneManager>().SceneLoadEvent += std::bind(&Hierarchy::OnSceneLoad, this);
+	ServiceLocator::Get<SceneManager>().SceneUnloadEvent += std::bind(&Hierarchy::OnSceneUnLoad, this);
 }
 
 void LitchiEditor::Hierarchy::Refresh()
@@ -345,6 +347,18 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 }
 
 void LitchiEditor::Hierarchy::AddActorByPrefabInstance(GameObject* p_actor)
+{
+	// just refresh all root
+	Refresh();
+}
+
+void LitchiEditor::Hierarchy::OnSceneLoad()
+{
+	// just refresh all root
+	Refresh();
+}
+
+void LitchiEditor::Hierarchy::OnSceneUnLoad()
 {
 	// just refresh all root
 	Refresh();

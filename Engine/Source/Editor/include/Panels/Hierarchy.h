@@ -86,6 +86,8 @@ namespace LitchiEditor
 		* @param p_actor root actor from prefab
 		*/
 		void AddActorByPrefabInstance(GameObject* p_actor);
+		void OnSceneLoad();
+		void OnSceneUnLoad();
 
 	public:
 		Event<GameObject*> ActorSelectedEvent;
