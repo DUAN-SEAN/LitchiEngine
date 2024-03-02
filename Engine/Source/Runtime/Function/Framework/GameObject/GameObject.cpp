@@ -10,10 +10,15 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
+	Event<GameObject*> GameObject::DestroyedEvent;
+	Event<GameObject*> GameObject::CreatedEvent;
+	Event<GameObject*, GameObject*> GameObject::AttachEvent;
+	Event<GameObject*> GameObject::DettachEvent;
+
 	GameObject::GameObject(const std::string& name, int64_t& id, bool& isPlaying) :
 		m_layer(0x01),
 		m_id{ id },
-		m_parentId{0},
+		m_parentId{ 0 },
 		m_isPlaying{ isPlaying }
 	{
 		SetName(name);
@@ -29,11 +34,22 @@ namespace LitchiRuntime
 
 	void GameObject::Initialize()
 	{
+		CreatedEvent.Invoke(this);
+	}
+
+	void GameObject::UnInitialize()
+	{
+		DestroyedEvent.Invoke(this);
+		// copy 
+		auto tempList = m_componentList;
+		for (auto& v : tempList) {
+			RemoveComponent(v);
+		}
 	}
 
 	void GameObject::SetActive(bool active)
 	{
-		if(m_active != active)
+		if (m_active != active)
 		{
 			RecursiveWasActiveUpdate();
 			m_active = active;
@@ -43,7 +59,7 @@ namespace LitchiRuntime
 			{
 				m_scene->Resolve();
 			}
-			
+
 		}
 
 	}
@@ -52,18 +68,23 @@ namespace LitchiRuntime
 	{
 		// remove old parent
 		auto oldParent = GetComponent<Transform>()->GetParent();
-		if(oldParent)
+		if (oldParent)
 		{
 			// m_parentId = 0;
 			oldParent->RemoveChild(GetComponent<Transform>());
+
+			DettachEvent.Invoke(this);
 		}
 
 		// add new parent
-		if(parent)
+		if (parent)
 		{
 			m_parentId = parent->m_id;
 			GetComponent<Transform>()->SetParent(parent->GetComponent<Transform>());
-		}else
+
+			AttachEvent.Invoke(this, parent);
+		}
+		else
 		{
 			GetComponent<Transform>()->SetParent(nullptr);
 		}
@@ -104,7 +125,7 @@ namespace LitchiRuntime
 
 			// comp执行资源加载后处理
 			comp->PostResourceLoaded();
-			
+
 			if (m_isPlaying && GetActive())
 			{
 				comp->OnAwake();
@@ -150,7 +171,7 @@ namespace LitchiRuntime
 
 	void GameObject::OnUpdate()
 	{
-		if(GetActive())
+		if (GetActive())
 		{
 			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnUpdate(); });
 		}
@@ -211,9 +232,29 @@ namespace LitchiRuntime
 	/// \param func
 	void GameObject::ForeachComponent(std::function<void(Component*)> func) {
 		for (auto& v : m_componentList) {
-			
+
 			func(v);
 		}
+	}
+
+	bool GameObject::RemoveComponent(Component* component)
+	{
+		//获取类名
+		type t = component->get_type();
+		std::string component_type_name = t.get_name().to_string();
+		for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
+		{
+			if (*iter == component)
+			{
+				ComponentRemovedEvent.Invoke(component);
+				m_componentList.erase(iter);
+				// todo: delete iter
+				delete component;
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	void GameObject::OnEditorUpdate()
@@ -221,14 +262,6 @@ namespace LitchiRuntime
 		if (GetActive())
 		{
 			std::for_each(m_componentList.begin(), m_componentList.end(), [](auto* element) { element->OnEditorUpdate(); });
-		}
-	}
-
-	void GameObject::UnInitialize()
-	{
-		auto tempList = m_componentList;
-		for (auto& v : tempList) {
-			RemoveComponent(v);
 		}
 	}
 

@@ -104,7 +104,7 @@ namespace LitchiRuntime
         Matrix m_matrix;
         Matrix m_matrix_local;
 
-        Transform* m_parent; // the parent of this transform
+        Transform* m_parent = nullptr; // the parent of this transform
         std::vector<Transform*> m_children; // the children of this transform
 
         Matrix m_matrix_previous;

@@ -84,7 +84,6 @@ namespace LitchiEditor
 	public:
 		Event<GameObject*> ActorSelectedEvent;
 		Event<GameObject*> ActorUnselectedEvent;
-
 	private:
 		void LoadPrefabFromFile(Scene* scene, GameObject* root, std::string filePath);
 

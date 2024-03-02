@@ -176,11 +176,11 @@ LitchiEditor::Inspector::Inspector
 
 	m_inspectorHeader->CreateWidget<Separator>();
 
-	/*m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject* p_destroyed)
+	m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject* p_destroyed)
 	{
-		if (&p_destroyed == m_targetActor)
+		if (p_destroyed == m_targetActor)
 			UnFocus();
-	};*/
+	};
 }
 
 LitchiEditor::Inspector::~Inspector()

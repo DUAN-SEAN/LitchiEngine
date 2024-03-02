@@ -53,6 +53,8 @@ namespace LitchiEditor
 		*/
 		void HandleActorPicking();
 	private:
+		void DeleteActorByInstance(GameObject* p_actor);
+	private:
 		GameObject* m_highlightedActor;
 		TransformGizmo* m_transform_gizmo;
 	};

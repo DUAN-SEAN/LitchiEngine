@@ -6,8 +6,11 @@
 #include <string>
 #include <list>
 #include <functional>
+
+#include "Runtime/Core/Tools/Eventing/Event.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
+#include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 
 namespace LitchiRuntime
 {
@@ -90,7 +93,6 @@ namespace LitchiRuntime
 		*/
 		void OnDestroy();
 
-
 		/**
 		* Called every frame
 		*/
@@ -142,133 +144,49 @@ namespace LitchiRuntime
 		*/
 		void OnTriggerExit(Collider* p_otherObject);
 
+		/**
+		 * \brief call in editor not play mode
+		 */
+		void OnEditorUpdate();
 
-	public:
+	public: 
 		Scene* GetScene();
 		void SetScene(Scene* scene);
 
 		template <class T = Component>
-		T* AddComponent() {
-			T* component = new T();
-			AttachComponent(component);
-			component->PostResourceLoaded();
-
-			if (m_isPlaying && GetActive())
-			{
-				component->OnAwake();
-				component->OnEnable();
-				component->OnStart();
-			}
-			return dynamic_cast<T*>(component);
-		}
+		T* AddComponent();
 
 		template <class T = Component>
-		void AttachComponent(T* component)
-		{
-			component->SetGameObject(this);
-			//获取类名
-			type t = type::get<T>();
-			std::string component_type_name = t.get_name().to_string();
-			component->SetObjectName(component_type_name);
-
-			m_componentList.push_back(component);
-
-		}
+		void AttachComponent(T* component);
 
 		template <class T = Component>
-		T* GetComponent() const {
-			//获取类名
-			type t = type::get<T>();
-			std::string component_type_name = t.get_name().to_string();
-			std::vector<Component*> component_vec;
-
-			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
-			{
-				if ((*iter)->get_type().get_name() == component_type_name)
-				{
-					return dynamic_cast<T*>(*iter);
-				}
-			}
-
-			// Find Drived Class
-			auto derived_classes = t.get_derived_classes();
-			for (auto derived_class : derived_classes) {
-				std::string derived_class_type_name = derived_class.get_name().to_string();
-
-				for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
-				{
-					if ((*iter)->get_type().get_name() == derived_class_type_name)
-					{
-						return dynamic_cast<T*>(*iter);
-					}
-				}
-			}
-
-			return nullptr;
-		}
+		T* GetComponent() const;
 
 		template <class T = Component>
-		T* GetComponent(const uint64_t unmanagedId) {
-			//获取类名
-			type t = type::get<T>();
-			std::string component_type_name = t.get_name().to_string();
-			std::vector<Component*> component_vec;
-
-			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
-			{
-				if ((*iter)->get_type().get_name() == component_type_name && (*iter)->GetUnmanagedId() == unmanagedId)
-				{
-					return dynamic_cast<T*>(*iter);
-				}
-			}
-
-			// Find Drived Class
-			auto derived_classes = t.get_derived_classes();
-			for (auto derived_class : derived_classes) {
-				std::string derived_class_type_name = derived_class.get_name().to_string();
-
-				for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
-				{
-					if ((*iter)->get_type().get_name() == derived_class_type_name && (*iter)->GetUnmanagedId() == unmanagedId)
-					{
-						return dynamic_cast<T*>(*iter);
-					}
-				}
-			}
-
-
-			return nullptr;
-		}
+		T* GetComponent(const uint64_t unmanagedId);
 
 		std::vector<Component*>& GetComponents() { return m_componentList; }
 
 		void ForeachComponent(std::function<void(Component*)> func);
-		bool RemoveComponent(Component* component)
-		{
-			//获取类名
-			type t = component->get_type();
-			std::string component_type_name = t.get_name().to_string();
-			for (auto iter = m_componentList.begin(); iter != m_componentList.end(); iter++)
-			{
-				if (*iter == component)
-				{
-					m_componentList.erase(iter);
-					// todo: delete iter
-					delete component;
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		void OnEditorUpdate();
+		bool RemoveComponent(Component* component);
 
 		int64_t m_id;
 		int64_t m_parentId;
 		std::vector<Component*> m_componentList;
 
 		RTTR_ENABLE()
+	public:
+		/* Some events that are triggered when an action occur on the actor instance */
+		Event<Component*>	ComponentAddedEvent;
+		Event<Component*>	ComponentRemovedEvent;
+		Event<ScriptComponent*>	BehaviourAddedEvent;
+		Event<ScriptComponent*>	BehaviourRemovedEvent;
+
+		/* Some events that are triggered when an action occur on any actor */
+		static Event<GameObject*>				DestroyedEvent;
+		static Event<GameObject*>				CreatedEvent;
+		static Event<GameObject*, GameObject*>		AttachEvent;
+		static Event<GameObject*>				DettachEvent;
 	private:
 		void UnInitialize();
 
@@ -290,3 +208,5 @@ namespace LitchiRuntime
 		bool	m_wasActive = false;
 	};
 }
+
+#include "GameObject.inl"

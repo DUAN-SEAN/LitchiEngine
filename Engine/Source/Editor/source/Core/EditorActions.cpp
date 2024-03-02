@@ -552,8 +552,9 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateEmptyActor(bool p_
 	if (p_focusOnCreation)
 		SelectActor(instance);
 
-	EDITOR_PANEL(Hierarchy, "Hierarchy").AddActorByInstance(instance);
-	EDITOR_PANEL(Hierarchy, "Hierarchy").AttachActorToParent(instance);
+	// remove use gameobject event
+	/*EDITOR_PANEL(Hierarchy, "Hierarchy").AddActorByInstance(instance);
+	EDITOR_PANEL(Hierarchy, "Hierarchy").AttachActorToParent(instance);*/
 
 	if (p_focusOnCreation)
 		SelectActor(instance);
@@ -593,13 +594,14 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 
 bool LitchiEditor::EditorActions::DestroyActor(LitchiRuntime::GameObject* p_actor)
 {
-	auto inspectorActor =
+	/*auto inspectorActor =
 		EDITOR_PANEL(Inspector, "Inspector").GetTargetActor();
 	if (inspectorActor == p_actor && inspectorActor != nullptr)
 	{
 		EDITOR_PANEL(Inspector, "Inspector").UnFocus();
-	}
-	EDITOR_PANEL(Hierarchy, "Hierarchy").DeleteActorByInstance(p_actor);
+	}*/
+
+	// EDITOR_PANEL(Hierarchy, "Hierarchy").DeleteActorByInstance(p_actor);
 
 	if(p_actor->GetScene())
 	{

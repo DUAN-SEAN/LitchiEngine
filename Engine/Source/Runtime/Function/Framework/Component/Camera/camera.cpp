@@ -23,6 +23,8 @@ namespace LitchiRuntime
 
     void Camera::OnAwake()
     {
+        // todo default select
+        m_renderCamera->SetViewport(1920, 1080);
     }
 
     void Camera::OnUpdate()

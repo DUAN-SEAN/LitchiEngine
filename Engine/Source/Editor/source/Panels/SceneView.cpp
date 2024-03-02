@@ -28,6 +28,8 @@ LitchiEditor::SceneView::SceneView
 	//	case PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
 	//	}
 	//};
+
+	GameObject::DestroyedEvent += std::bind(&SceneView::DeleteActorByInstance, this, std::placeholders::_1);
 }
 
 void LitchiEditor::SceneView::UpdateView(float p_deltaTime)
@@ -79,3 +81,16 @@ bool IsResizing()
 void LitchiEditor::SceneView::HandleActorPicking()
 {
 }
+
+void LitchiEditor::SceneView::DeleteActorByInstance(GameObject* p_actor)
+{
+	if (auto camera = m_camera)
+	{
+		auto selectedGO = camera->GetSelectedEntity();
+		if(selectedGO == p_actor)
+		{
+			camera->SetSelectedEntity(nullptr);
+		}
+	}
+}
+

@@ -171,6 +171,12 @@ LitchiEditor::Hierarchy::Hierarchy
 	EDITOR_EVENT(ActorSelectedEvent) += std::bind(&Hierarchy::SelectActorByInstance, this, std::placeholders::_1);
 	GameObject::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
 	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);*/
+
+
+	GameObject::CreatedEvent += std::bind(&Hierarchy::AddActorByInstance, this, std::placeholders::_1);
+	GameObject::DestroyedEvent += std::bind(&Hierarchy::DeleteActorByInstance, this, std::placeholders::_1);
+	GameObject::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
+	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);
 }
 
 void LitchiEditor::Hierarchy::Refresh()
