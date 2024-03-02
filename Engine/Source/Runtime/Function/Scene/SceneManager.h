@@ -89,6 +89,9 @@ namespace LitchiRuntime
 		}
 
 		void OnEditorUpdate();
+	public:
+
+		static Event<GameObject*>	InstantiatePrefabEvent;
 
 	public:
 
@@ -174,7 +177,6 @@ namespace LitchiRuntime
 		Event<> SceneLoadEvent;
 		Event<> SceneUnloadEvent;
 		Event<const std::string&> CurrentSceneSourcePathChangedEvent;
-
 	private:
 
 		std::string m_projectAssetsPath;

@@ -12,6 +12,7 @@
 
 namespace LitchiRuntime
 {
+	Event<GameObject*>	Scene::InstantiatePrefabEvent;
 	Scene::Scene() :m_name("default")
 	{
 	}
@@ -32,7 +33,7 @@ namespace LitchiRuntime
 	GameObject* Scene::CreateGameObject(const std::string& name, bool isUI)
 	{
 		int64_t id = m_availableID++;
-		auto* game_object = new GameObject(name, id,m_isPlaying);
+		auto* game_object = new GameObject(name, id,m_isPlaying,this);
 
 		// add default transform
 		if(!isUI)
@@ -42,10 +43,11 @@ namespace LitchiRuntime
 		{
 			game_object->AddComponent<RectTransform>();
 		}
-		game_object->SetScene(this);
-
 
 		m_gameObjectList.push_back(game_object);
+
+		// invoke event
+		GameObject::CreatedEvent.Invoke(game_object);
 
 		if(m_isPlaying)
 		{
@@ -167,6 +169,8 @@ namespace LitchiRuntime
 
 		m_resolve = true;
 
+		InstantiatePrefabEvent.Invoke(rootObject);
+		
 		// return root entity
 		return rootObject;
 	}

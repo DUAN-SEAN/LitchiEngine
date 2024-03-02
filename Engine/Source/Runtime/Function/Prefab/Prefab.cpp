@@ -55,7 +55,7 @@ namespace LitchiRuntime
 	{
 		auto id = m_availableID++;
 		bool isPlaying = false;
-		auto* game_object = new GameObject(name, id, isPlaying);
+		auto* game_object = new GameObject(name, id, isPlaying,nullptr);
 		if (!isUI)
 		{
 			game_object->AddComponent<Transform>();
@@ -64,9 +64,13 @@ namespace LitchiRuntime
 		{
 			game_object->AddComponent<RectTransform>();
 		}
+
 		// 将go添加到game_object_vec_中
 		m_gameObjectList.push_back(game_object);
-		
+
+		// invoke event
+		GameObject::CreatedEvent.Invoke(game_object);
+
 		return game_object;
 	}
 

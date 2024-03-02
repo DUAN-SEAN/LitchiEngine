@@ -247,6 +247,11 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	SetupRendererPath();
 
+	// Setup UI
+	SetupUI();
+
+	// below code is test process
+
 	//auto scene = sceneManager->CreateScene("Default");
 	//m_rendererPath4SceneView->SetScene(scene);
 	//
@@ -279,26 +284,21 @@ void LitchiEditor::ApplicationEditor::Init()
 	auto* scene = sceneManager->GetCurrentScene();
 	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
 
+	// create go from prefab
+	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	//auto mesh_prefab = mesh->GetModelPrefab();
+	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
 
-	auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	auto mesh_prefab = mesh->GetModelPrefab();
-	auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
+	// create camera
+	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
 
-	scene->PostResourceLoaded();
-	scene->Resolve();
+	// create cube
+	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
+
 	m_rendererPath4SceneView->SetScene(scene);
 	m_rendererPath4GameView->SetScene(scene);
 	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
 	
-	// Setup UI
-	SetupUI();
-
-	for (auto go : scene->GetAllGameObjectList())
-	{
-		m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").AddActorByInstance(go);
-	}
-	m_panelsManager.GetPanelAs<Hierarchy>("Hierarchy").Refresh();
-
 	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
 	canvas->SetName("Canvas");
 	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
@@ -315,11 +315,7 @@ void LitchiEditor::ApplicationEditor::Init()
 	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
 
 
-	ServiceLocator::Provide(*shaderManager.get());
-	ServiceLocator::Provide(*modelManager.get());
-	ServiceLocator::Provide(*materialManager.get());
-	ServiceLocator::Provide(*textureManager.get());
-	ServiceLocator::Provide(*fontManager.get());
+	scene->Resolve();
 }
 
 void LitchiEditor::ApplicationEditor::Run()

@@ -81,6 +81,12 @@ namespace LitchiEditor
 		*/
 		void AddActorByInstance(GameObject* p_actor);
 
+		/**
+		* Add a widget referencing the given actor
+		* @param p_actor root actor from prefab
+		*/
+		void AddActorByPrefabInstance(GameObject* p_actor);
+
 	public:
 		Event<GameObject*> ActorSelectedEvent;
 		Event<GameObject*> ActorUnselectedEvent;

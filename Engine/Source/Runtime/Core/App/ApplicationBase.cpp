@@ -57,6 +57,14 @@ namespace LitchiRuntime
 		modelManager = std::make_unique<ModelManager>();
 		prefabManager = std::make_unique<PrefabManager>();
 
+		ServiceLocator::Provide(*sceneManager.get());
+		ServiceLocator::Provide(*shaderManager.get());
+		ServiceLocator::Provide(*materialManager.get());
+		ServiceLocator::Provide(*textureManager.get());
+		ServiceLocator::Provide(*modelManager.get());
+		ServiceLocator::Provide(*fontManager.get());
+		ServiceLocator::Provide(*prefabManager.get());
+
 		/*ModelManager::ProvideAssetPaths(projectAssetsPath);
 		ShaderManager::ProvideAssetPaths(projectAssetsPath); */
 

@@ -15,14 +15,14 @@ namespace LitchiRuntime
 	Event<GameObject*, GameObject*> GameObject::AttachEvent;
 	Event<GameObject*> GameObject::DettachEvent;
 
-	GameObject::GameObject(const std::string& name, int64_t& id, bool& isPlaying) :
+	GameObject::GameObject(const std::string& name, int64_t& id, bool& isPlaying, Scene* scene) :
 		m_layer(0x01),
 		m_id{ id },
 		m_parentId{ 0 },
 		m_isPlaying{ isPlaying }
 	{
 		SetName(name);
-
+		SetScene(scene);
 		Initialize();
 	}
 
@@ -34,12 +34,12 @@ namespace LitchiRuntime
 
 	void GameObject::Initialize()
 	{
-		CreatedEvent.Invoke(this);
 	}
 
 	void GameObject::UnInitialize()
 	{
 		DestroyedEvent.Invoke(this);
+		SetScene(nullptr);
 		// copy 
 		auto tempList = m_componentList;
 		for (auto& v : tempList) {

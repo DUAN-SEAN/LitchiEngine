@@ -177,6 +177,7 @@ LitchiEditor::Hierarchy::Hierarchy
 	GameObject::DestroyedEvent += std::bind(&Hierarchy::DeleteActorByInstance, this, std::placeholders::_1);
 	GameObject::AttachEvent += std::bind(&Hierarchy::AttachActorToParent, this, std::placeholders::_1);
 	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);
+	Scene::InstantiatePrefabEvent += std::bind(&Hierarchy::AddActorByPrefabInstance, this, std::placeholders::_1);
 }
 
 void LitchiEditor::Hierarchy::Refresh()
@@ -297,6 +298,13 @@ void LitchiEditor::Hierarchy::DeleteActorByInstance(GameObject* p_actor)
 
 void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 {
+	auto* scene = ServiceLocator::Get<SceneManager>().GetCurrentScene();
+	auto inSceneActor= scene->Find(p_actor->m_id);
+	if(inSceneActor ==nullptr || inSceneActor != p_actor)
+	{
+		return;
+	}
+
 	auto& textSelectable = m_sceneRoot->CreateWidget<TreeNode>(p_actor->GetName(), true);
 	textSelectable.leaf = true;
 	textSelectable.AddPlugin<HierarchyContextualMenu>(p_actor, textSelectable);
@@ -336,6 +344,12 @@ void LitchiEditor::Hierarchy::AddActorByInstance(GameObject* p_actor)
 
 }
 
+void LitchiEditor::Hierarchy::AddActorByPrefabInstance(GameObject* p_actor)
+{
+	// just refresh all root
+	Refresh();
+}
+
 void LitchiEditor::Hierarchy::LoadPrefabFromFile(Scene* scene, GameObject* root, std::string filePath)
 {
 
@@ -359,8 +373,8 @@ void LitchiEditor::Hierarchy::LoadPrefabFromFile(Scene* scene, GameObject* root,
 	{
 		auto prefabObj = EDITOR_EXEC(LoadPrefab(scene, root, prefab));
 
-		AddActorByInstance(prefabObj);
-		AttachActorToParent(prefabObj);
+		//AddActorByInstance(prefabObj);
+		//AttachActorToParent(prefabObj);
 		EDITOR_EXEC(SelectActor(prefabObj));
 	}
 

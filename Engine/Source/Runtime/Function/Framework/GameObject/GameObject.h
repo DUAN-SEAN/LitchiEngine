@@ -18,7 +18,7 @@ namespace LitchiRuntime
 	class GameObject :public ScriptObject {
 	public:
 		GameObject() {}
-		GameObject(const std::string& name, int64_t& id, bool& isPlaying);
+		GameObject(const std::string& name, int64_t& id, bool& isPlaying,Scene* scene);
 
 		~GameObject();
 
@@ -195,7 +195,7 @@ namespace LitchiRuntime
 	private:
 
 		/* Settings */
-		Scene* m_scene = nullptr;
+		Scene* m_scene = nullptr; // if null, not scene gameObject, maybe used to prefab
 		bool m_active = true;
 		bool m_isPlaying; 
 
