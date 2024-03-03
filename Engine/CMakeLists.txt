@@ -13,24 +13,32 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LitchiEditor)
 endif()
 
+# 如果没有指定构建类型，那么默认为Release
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)
 endif()
 
+# 根据构建类型设置编译选项
 if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
+    # 在Debug模式下使用多线程调试DLL (/MTd)
     add_compile_options("/MTd")
+    # 启用并行编译
     add_compile_options("/MP")
 elseif (CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+    # 在Release模式下使用多线程DLL (/MT)
 	add_compile_options("/MT")
+        # 启用并行编译
     add_compile_options("/MP")
 else()
 	message("else:${CMAKE_BUILD_TYPE}")
 	message("else:${CMAKE_C_FLAGS_RELEASE}")
 endif()
 
+# 在Debug模式下定义_DEBUG宏
 set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
+# 如果是Windows环境并且不是Cygwin，那么在Debug模式下定义_DEBUG宏
 IF (WIN32 AND NOT CYGWIN)
     SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
 ENDIF ()

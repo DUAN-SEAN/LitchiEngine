@@ -1,10 +1,13 @@
 set(TARGET_NAME LitchiEditor)
 
+# 递归地从当前源目录的include子目录中获取所有.h和.inl文件
 file(GLOB_RECURSE EDITOR_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/include/*.h ${CMAKE_CURRENT_SOURCE_DIR}/include/*.inl)
+# 递归地从当前源目录的source子目录中获取所有.cpp文件
 file(GLOB_RECURSE EDITOR_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp)
 
 
 # dest build/****/Assets 和Editor目录平级
+# 将Assets目录复制到Debug/Project/Assets目录
 file(COPY "../../Assets/" DESTINATION "Debug/Project/Assets/")
 
 
@@ -18,6 +21,7 @@ file(COPY "../../Assets/" DESTINATION "Debug/Project/Assets/")
 		# ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_opengl3.cpp
 		# ${THIRD_PARTY_DIR}/imgui/backends/imgui_impl_glfw.cpp)
 		
+# 将EDITOR_HEADERS和EDITOR_SOURCES文件添加到源组
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR_SOURCES})
 # source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${imgui_src})
 		
@@ -29,6 +33,7 @@ include(../../ThridParty/physx-4.1/CMakeLists.txt)
 # add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE} ${imgui_src})
 add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE})
 
+# 添加编译定义
 add_compile_definitions("Litchi_ROOT_DIR=${BINARY_ROOT_DIR}")
 target_compile_options(${TARGET_NAME} 
 	PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/WX->"
@@ -62,7 +67,7 @@ target_link_libraries(${TARGET_NAME} LitchiRuntime)
 
 # add_custom_command(TARGET ${TARGET_NAME} ${POST_BUILD_COMMANDS})
 
-
+# 如果是MSVC环境，复制一些.dll文件到目标文件目录
 if(MSVC)
 	file(GLOB MODEL ${THIRD_PARTY_DIR}/mono/Libs/*.dll ${THIRD_PARTY_DIR}/assimp/bin/*.dll ${THIRD_PARTY_DIR}/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/*.dll ${THIRD_PARTY_DIR}/easy_profiler_core/lib/*.dll)
 	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${MODEL} $<TARGET_FILE_DIR:${TARGET_NAME}>)
