@@ -324,7 +324,7 @@ namespace LitchiRuntime
 	{
 		LoadEmptyScene();
 
-		if(!AssetManager::LoadAsset(p_absolute? p_path: m_projectAssetsPath+p_path, m_currScene))
+		if(!AssetManager::LoadAsset(p_absolute? m_projectAssetsPath + p_path : p_path, m_currScene))
 		{
 			UnloadCurrentScene();
 			return false;
