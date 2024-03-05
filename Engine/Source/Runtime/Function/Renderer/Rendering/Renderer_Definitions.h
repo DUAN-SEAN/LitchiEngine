@@ -78,6 +78,7 @@ namespace LitchiRuntime
         material = 2,
         lightArr = 3,
         boneArr = 4,
+        rendererPath = 5,
     };
     
     enum class Renderer_BindingsSrv

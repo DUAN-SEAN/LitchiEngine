@@ -70,6 +70,42 @@ namespace LitchiRuntime
 		bool operator!=(const Cb_Frame& rhs) const { return !(*this == rhs); }
 	};
 
+	// low frequency - updates once per rendererPath
+	struct Cb_RendererPath
+	{
+		Matrix view;
+		Matrix projection;
+		Matrix view_projection;
+		Matrix view_projection_inv;
+		Matrix view_projection_ortho;
+		Matrix view_projection_unjittered;
+		Matrix view_projection_previous;
+		
+		Vector3 camera_position;
+		float camera_near;
+
+		Vector3 camera_direction;
+		float camera_far;
+		
+		bool operator==(const Cb_Frame& rhs) const
+		{
+			return
+				view == rhs.view &&
+				projection == rhs.projection &&
+				view_projection == rhs.view_projection &&
+				view_projection_inv == rhs.view_projection_inv &&
+				view_projection_ortho == rhs.view_projection_ortho &&
+				view_projection_unjittered == rhs.view_projection_unjittered &&
+				view_projection_previous == rhs.view_projection_previous &&
+				camera_near == rhs.camera_near &&
+				camera_far == rhs.camera_far &&
+				camera_position == rhs.camera_position &&
+				camera_direction == rhs.camera_direction;
+		}
+
+		bool operator!=(const Cb_Frame& rhs) const { return !(*this == rhs); }
+	};
+
 	// medium frequency - updates per light
 	struct Cb_Light
 	{

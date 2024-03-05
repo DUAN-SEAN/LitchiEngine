@@ -250,56 +250,56 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	/* below code is test process */
 
-	//// test 1
-	//{
-	//	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
-	//	font->AddText("Hello World", Vector2::Zero);
-
-	//	sceneManager->LoadEmptyScene();
-	//	auto* scene = sceneManager->GetCurrentScene();
-	//	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
-
-	//	// create go from prefab
-	//	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	//	//auto mesh_prefab = mesh->GetModelPrefab();
-	//	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
-
-	//	// create camera
-	//	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
-
-	//	// create cube
-	//	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
-	
-	//	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-
-	//	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
-	//	canvas->SetName("Canvas");
-	//	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
-	//	text->SetName("Text");
-	//	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
-	//	text->GetComponent<UIText>()->SetText("Hello World !");
-	//	text->GetComponent<UIText>()->PostResourceModify();
-
-	//	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
-	//	image->SetName("Image");
-	//	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
-	//	image->GetComponent<UIImage>()->PostResourceModify();
-	//	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
-	//	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
-
-	//	scene->Resolve();
-	//  m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-	//  m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
-	//}
-
-	// test 2
+	// test 1
 	{
-		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
-		sceneManager->GetCurrentScene()->Resolve();
+		auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
+		font->AddText("Hello World", Vector2::Zero);
 
+		sceneManager->LoadEmptyScene();
+		auto* scene = sceneManager->GetCurrentScene();
+		// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+
+		// create go from prefab
+		//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+		//auto mesh_prefab = mesh->GetModelPrefab();
+		//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
+
+		// create camera
+		EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
+
+		// create cube
+		EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
+
+		CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
+
+		auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
+		canvas->SetName("Canvas");
+		auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
+		text->SetName("Text");
+		text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
+		text->GetComponent<UIText>()->SetText("Hello World !");
+		text->GetComponent<UIText>()->PostResourceModify();
+
+		auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
+		image->SetName("Image");
+		image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
+		image->GetComponent<UIImage>()->PostResourceModify();
+		image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
+		image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
+
+		scene->Resolve();
 		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
 		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
 	}
+
+	//// test 2
+	//{
+	//	sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+	//	sceneManager->GetCurrentScene()->Resolve();
+
+	//	m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
+	//	m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
+	//}
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -309,30 +309,30 @@ void LitchiEditor::ApplicationEditor::Run()
 		EASY_BLOCK("Frame") {
 			// PreUpdate
 			window->PollEvents();
-			
+
 			EASY_BLOCK("Update") {
 				Update();
 			}  EASY_END_BLOCK;
-			
+
 			// Update
 			// 检测是否删除物体
 			// 检测运行模式 Game or no
 			// 渲染Views
 
-			EASY_BLOCK("RenderViews"){
-			RenderViews(Time::delta_time());
+			EASY_BLOCK("RenderViews") {
+				RenderViews(Time::delta_time());
 			}  EASY_END_BLOCK;
 
 			EASY_BLOCK("Renderer") {
 				Renderer::Tick();
 			}  EASY_END_BLOCK;
 
-			
+
 			EASY_BLOCK("RenderUI") {
 				// 渲染UI
 				RenderUI();
 			}  EASY_END_BLOCK;
-			
+
 			// PostUpdate
 
 			//window->SwapBuffers();
@@ -371,7 +371,8 @@ void LitchiEditor::ApplicationEditor::Update()
 		// Input::Update();
 		//Audio::Update();
 
-	}else
+	}
+	else
 	{
 		auto scene = this->sceneManager->GetCurrentScene();
 
@@ -397,7 +398,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 	}
 
 	auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
-	if(gameView.IsOpened())
+	if (gameView.IsOpened())
 	{
 		gameView.UpdateView(p_deltaTime);
 		gameView.Render();
@@ -423,7 +424,7 @@ void LitchiEditor::ApplicationEditor::RenderUI()
 void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
 	// debug
-	if(p_target!=nullptr)
+	if (p_target != nullptr)
 	{
 		auto name = p_target->GetName();
 		auto transform = p_target->GetComponent<Transform>();
@@ -432,7 +433,7 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 		auto rotationEuler = rotation.ToEulerAngles();
 		DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 	}
-	
+
 	// todo Inspector 选择
 	EDITOR_EXEC(SelectActor(p_target));
 }

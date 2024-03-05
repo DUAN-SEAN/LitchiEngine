@@ -861,6 +861,17 @@ namespace LitchiRuntime
 		EASY_END_BLOCK
 	}
 
+	void Renderer::UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list,RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData)
+	{
+		auto constantBuffer = rendererPath->GetConstantBuffer();
+
+		// update cb
+		constantBuffer->UpdateWithReset( static_cast<void*>(&renderPathBufferData));
+
+		// set buffer
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, constantBuffer);
+	}
+
 	// todo: 
 	//void Renderer::OnWorldResolved(sp_variant data)
 	//{

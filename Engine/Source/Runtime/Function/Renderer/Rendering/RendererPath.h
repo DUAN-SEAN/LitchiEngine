@@ -44,6 +44,11 @@ namespace LitchiRuntime
 		bool GetActive()const { return m_active; }
 		void SetActive(bool isActive) {  m_active = isActive; }
 
+		std::shared_ptr<RHI_ConstantBuffer> GetConstantBuffer() const
+		{
+			return m_rendererPathConstantBuffer;
+		}
+
 	private:
 
 		void CreateColorRenderTarget();
@@ -66,6 +71,9 @@ namespace LitchiRuntime
 
 
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
+
+		// per renderPath buffer, store camera data
+		std::shared_ptr<RHI_ConstantBuffer> m_rendererPathConstantBuffer;
 
 		bool m_active {false};
 	};

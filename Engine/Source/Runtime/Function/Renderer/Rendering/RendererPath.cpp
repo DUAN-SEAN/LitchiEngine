@@ -12,6 +12,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
 
@@ -64,6 +65,10 @@ namespace LitchiRuntime
 			CreateColorRenderTarget();
 			CreateDepthRenderTarget();
 		}
+		
+		m_rendererPathConstantBuffer = std::make_shared<RHI_ConstantBuffer>("RendererPath");
+		constexpr int ElementCount = 1;
+		m_rendererPathConstantBuffer->Create<Cb_RendererPath>(ElementCount);
 	}
 
 	RendererPath::~RendererPath()

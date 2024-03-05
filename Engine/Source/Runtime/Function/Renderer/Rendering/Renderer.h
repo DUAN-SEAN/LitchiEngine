@@ -129,6 +129,7 @@ namespace LitchiRuntime
 		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RenderCamera* renderCamera);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
+		static void UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData);
 
 		// Resource creation
 		static void CreateConstantBuffers();
