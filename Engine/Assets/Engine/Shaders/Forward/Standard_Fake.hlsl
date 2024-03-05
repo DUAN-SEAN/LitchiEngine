@@ -51,7 +51,7 @@ Pixel mainVS(Vertex_PosUvNorTan input)
     input.position.w = 1.0f;
     vertex_out.fragPos = mul(input.position, buffer_pass.transform).xyz;
     output.position = mul(input.position, buffer_pass.transform);
-    output.position = mul(output.position, buffer_frame.view_projection_unjittered);
+    output.position = mul(output.position, buffer_rendererPath.view_projection_unjittered);
     output.normal = mul(float4(input.normal, 0), buffer_pass.transform).xyz;
     output.tangent = mul(float4(input.tangent, 0), buffer_pass.transform).xyz;
     output.uv = input.uv;
@@ -106,7 +106,7 @@ float4 mainPS(Pixel input) : SV_Target
 
     // todo: float shadow = ShadowCalculation(input.ShadowCoord);
 
-    float3 viewDir = normalize(buffer_frame.camera_position - vertex_out.fragPos);
+    float3 viewDir = normalize(buffer_rendererPath.camera_position - vertex_out.fragPos);
     float4 diffuseTexel = u_diffuseMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * materialData.u_diffuse;
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
     float3 normal = normalize(input.normal);

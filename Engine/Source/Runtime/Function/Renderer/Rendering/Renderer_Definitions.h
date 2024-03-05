@@ -258,6 +258,7 @@ namespace LitchiRuntime
         Light,
         Material,
         LightArr,
+        RendererPath,
     };
 
     enum class Renderer_StandardTexture

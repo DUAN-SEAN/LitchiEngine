@@ -177,12 +177,12 @@ float fast_cos(float x)
 ------------------------------------------------------------------------------*/
 float3 world_to_view(float3 x, bool is_position = true)
 {
-    return mul(float4(x, (float)is_position), buffer_frame.view).xyz;
+    return mul(float4(x, (float)is_position), buffer_rendererPath.view).xyz;
 }
 
 float3 world_to_ndc(float3 x, bool is_position = true)
 {
-    float4 ndc = mul(float4(x, (float)is_position), buffer_frame.view_projection);
+    float4 ndc = mul(float4(x, (float) is_position), buffer_rendererPath.view_projection);
     return ndc.xyz / ndc.w;
 }
 
@@ -194,19 +194,19 @@ float3 world_to_ndc(float3 x, float4x4 transform) // shadow mapping
 
 float3 view_to_ndc(float3 x, bool is_position = true)
 {
-    float4 ndc = mul(float4(x, (float)is_position), buffer_frame.projection);
+    float4 ndc = mul(float4(x, (float) is_position), buffer_rendererPath.projection);
     return ndc.xyz / ndc.w;
 }
 
 float2 world_to_uv(float3 x, bool is_position = true)
 {
-    float4 uv = mul(float4(x, (float)is_position), buffer_frame.view_projection);
+    float4 uv = mul(float4(x, (float) is_position), buffer_rendererPath.view_projection);
     return (uv.xy / uv.w) * float2(0.5f, -0.5f) + 0.5f;
 }
 
 float2 view_to_uv(float3 x, bool is_position = true)
 {
-    float4 uv = mul(float4(x, (float)is_position), buffer_frame.projection);
+    float4 uv = mul(float4(x, (float) is_position), buffer_rendererPath.projection);
     return (uv.xy / uv.w) * float2(0.5f, -0.5f) + 0.5f;
 }
 
@@ -225,7 +225,7 @@ float3 get_position_ws_from_depth(const float2 uv, const float depth)
     float x          = uv.x * 2.0f - 1.0f;
     float y          = (1.0f - uv.y) * 2.0f - 1.0f;
     float4 pos_clip  = float4(x, y, depth, 1.0f);
-    float4 pos_world = mul(pos_clip, buffer_frame.view_projection_inverted);
+    float4 pos_world = mul(pos_clip, buffer_rendererPath.view_projection_inverted);
     return             pos_world.xyz / pos_world.w;
 }
 
@@ -255,12 +255,12 @@ float3 reconstruct_normal_z(float2 normal)
 
 // float3 get_normal_view_space(uint2 pos)
 // {
-    // return normalize(mul(float4(get_normal(pos), 0.0f), buffer_frame.view).xyz);
+    // return normalize(mul(float4(get_normal(pos), 0.0f), buffer_rendererPath.view).xyz);
 // }
 
 // float3 get_normal_view_space(float2 uv)
 // {
-    // return normalize(mul(float4(get_normal(uv), 0.0f), buffer_frame.view).xyz);
+    // return normalize(mul(float4(get_normal(uv), 0.0f), buffer_rendererPath.view).xyz);
 // }
 
 float3x3 make_tangent_to_world_matrix(float3 n, float3 t)
@@ -303,7 +303,7 @@ float get_linear_depth(float z, float near, float far)
 
 float get_linear_depth(float z)
 {
-    return get_linear_depth(z, buffer_frame.camera_near, buffer_frame.camera_far);
+    return get_linear_depth(z, buffer_rendererPath.camera_near, buffer_rendererPath.camera_far);
 }
 
 // float get_linear_depth(uint2 pos)
@@ -324,7 +324,7 @@ float3 get_position(float z, float2 uv)
     float x             = uv.x * 2.0f - 1.0f;
     float y             = (1.0f - uv.y) * 2.0f - 1.0f;
     float4 pos_clip     = float4(x, y, z, 1.0f);
-    float4 pos_world    = mul(pos_clip, buffer_frame.view_projection_inverted);
+    float4 pos_world = mul(pos_clip, buffer_rendererPath.view_projection_inverted);
     return pos_world.xyz / pos_world.w;
 }
 
@@ -341,12 +341,12 @@ float3 get_position(float z, float2 uv)
 
 // float3 get_position_view_space(uint2 pos)
 // {
-    // return mul(float4(get_position(pos), 1.0f), buffer_frame.view).xyz;
+    // return mul(float4(get_position(pos), 1.0f), buffer_rendererPath.view).xyz;
 // }
 
 // float3 get_position_view_space(float2 uv)
 // {
-    // return mul(float4(get_position(uv), 1.0f), buffer_frame.view).xyz;
+    // return mul(float4(get_position(uv), 1.0f), buffer_rendererPath.view).xyz;
 // }
 
 /*------------------------------------------------------------------------------
@@ -354,7 +354,7 @@ float3 get_position(float z, float2 uv)
 ------------------------------------------------------------------------------*/
 // float3 get_view_direction(float3 position_world)
 // {
-    // return normalize(position_world - buffer_frame.camera_position.xyz);
+    // return normalize(position_world - buffer_rendererPath.camera_position.xyz);
 // }
 
 // float3 get_view_direction(float depth, float2 uv)
@@ -375,7 +375,7 @@ float3 get_position(float z, float2 uv)
 
 // float3 get_view_direction_view_space(float2 uv)
 // {
-    // return mul(float4(get_view_direction(get_position(uv)), 0.0f), buffer_frame.view).xyz;
+    // return mul(float4(get_view_direction(get_position(uv)), 0.0f), buffer_rendererPath.view).xyz;
 // }
 
 // float3 get_view_direction_view_space(uint2 pos)
@@ -386,7 +386,7 @@ float3 get_position(float z, float2 uv)
 
 // float3 get_view_direction_view_space(float3 position_world)
 // {
-    // return mul(float4(get_view_direction(position_world), 0.0f), buffer_frame.view).xyz;
+    // return mul(float4(get_view_direction(position_world), 0.0f), buffer_rendererPath.view).xyz;
 // }
 
 /*------------------------------------------------------------------------------

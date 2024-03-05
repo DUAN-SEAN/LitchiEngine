@@ -65,10 +65,6 @@ namespace LitchiRuntime
 			CreateColorRenderTarget();
 			CreateDepthRenderTarget();
 		}
-		
-		m_rendererPathConstantBuffer = std::make_shared<RHI_ConstantBuffer>("RendererPath");
-		constexpr int ElementCount = 1;
-		m_rendererPathConstantBuffer->Create<Cb_RendererPath>(ElementCount);
 	}
 
 	RendererPath::~RendererPath()
@@ -105,6 +101,21 @@ namespace LitchiRuntime
 		m_height = height;
 
 		CreateColorRenderTarget();
+	}
+
+	UICanvas* RendererPath::GetCanvas()
+	{
+		if (this->m_renderables.find(Renderer_Entity::Canvas) !=	m_renderables.end())
+		{
+			auto canvass = this->m_renderables.at(Renderer_Entity::Canvas);
+			if (canvass.size() > 0)
+			{
+				auto canvas = canvass[0]->GetComponent<UICanvas>();
+				return canvas;
+			}
+		}
+
+		return nullptr;
 	}
 
 	void RendererPath::CreateColorRenderTarget()

@@ -1,13 +1,13 @@
 
 struct FrameBufferData
 {
-    matrix view;
-    matrix projection;
-    matrix view_projection;
-    matrix view_projection_inverted;
-    matrix view_projection_orthographic;
-    matrix view_projection_unjittered;
-    matrix view_projection_previous;
+    //matrix view;
+    //matrix projection;
+    //matrix view_projection;
+    //matrix view_projection_inverted;
+    //matrix view_projection_orthographic;
+    //matrix view_projection_unjittered;
+    //matrix view_projection_previous;
 
     float2 resolution_render;
     float2 resolution_output;
@@ -19,6 +19,23 @@ struct FrameBufferData
     uint frame;
     float gamma;
     uint options;
+    
+    //float3 camera_position;
+    //float camera_near;
+    
+    //float3 camera_direction;
+    //float camera_far;
+};
+
+struct RendererPathBufferData
+{
+    matrix view;
+    matrix projection;
+    matrix view_projection;
+    matrix view_projection_inverted;
+    matrix view_projection_orthographic;
+    matrix view_projection_unjittered;
+    matrix view_projection_previous;
     
     float3 camera_position;
     float camera_near;
@@ -90,6 +107,7 @@ cbuffer BufferLight    : register(b1) { LightBufferData buffer_light;       }; /
 cbuffer BufferMaterial : register(b2) { MaterialBufferData buffer_material; }; // medium frequency - updates per material during the g-buffer pass
 cbuffer BufferLightArr : register(b3) { LightBufferDataArr light_buffer_data_arr; }
 cbuffer BoneDataArr : register(b4) {BoneDataArr bone_data_arr;}
+cbuffer BufferRendererPath : register(b5){RendererPathBufferData buffer_rendererPath;}
 
 struct PassBufferData
 {

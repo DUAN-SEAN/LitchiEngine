@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Renderer_Definitions.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 
@@ -44,10 +45,7 @@ namespace LitchiRuntime
 		bool GetActive()const { return m_active; }
 		void SetActive(bool isActive) {  m_active = isActive; }
 
-		std::shared_ptr<RHI_ConstantBuffer> GetConstantBuffer() const
-		{
-			return m_rendererPathConstantBuffer;
-		}
+		UICanvas* GetCanvas();
 
 	private:
 
@@ -69,11 +67,7 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
 		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
 
-
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
-
-		// per renderPath buffer, store camera data
-		std::shared_ptr<RHI_ConstantBuffer> m_rendererPathConstantBuffer;
 
 		bool m_active {false};
 	};

@@ -38,7 +38,7 @@ namespace LitchiRuntime
         array<shared_ptr<RHI_Texture>, 28>       m_render_targets;
         array<shared_ptr<RHI_Shader>, 51>        m_shaders;
         array<shared_ptr<RHI_Sampler>, 7>        m_samplers;
-        array<shared_ptr<RHI_ConstantBuffer>, 4> m_constant_buffers;
+        array<shared_ptr<RHI_ConstantBuffer>, 5> m_constant_buffers;
         shared_ptr<RHI_StructuredBuffer>         m_structured_buffer;
 
         // asset resources
@@ -60,6 +60,9 @@ namespace LitchiRuntime
 
         constant_buffer(Renderer_ConstantBuffer::LightArr) = make_shared<RHI_ConstantBuffer>(string("lightArr"));
         constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(m_frames_in_flight);
+
+        constant_buffer(Renderer_ConstantBuffer::RendererPath) = make_shared<RHI_ConstantBuffer>(string("rendererPath"));
+        constant_buffer(Renderer_ConstantBuffer::RendererPath)->Create<Cb_RendererPath>(1);
     }
 
     void Renderer::CreateStructuredBuffers()
@@ -527,7 +530,7 @@ namespace LitchiRuntime
         return m_shaders;
     }
 
-    array<shared_ptr<RHI_ConstantBuffer>, 4>& Renderer::GetConstantBuffers()
+    array<shared_ptr<RHI_ConstantBuffer>, 5>& Renderer::GetConstantBuffers()
     {
         return m_constant_buffers;
     }

@@ -8,12 +8,12 @@ Pixel_PosUvNorTan mainVS(Vertex_PosUvNorTan input)
     Pixel_PosUvNorTan output;
 
     output.position = mul(input.position,buffer_pass.transform);
-    output.position = mul(output.position, buffer_frame.view_projection);
+    output.position = mul(output.position, buffer_rendererPath.view_projection);
     output.uv = input.uv;
     output.normal = normalize(mul(input.normal, (float3x3) buffer_pass.transform)).xyz;
-    output.normal = normalize(mul(output.normal, (float3x3) buffer_frame.view_projection)).xyz;
+    output.normal = normalize(mul(output.normal, (float3x3) buffer_rendererPath.view_projection)).xyz;
     output.tangent = normalize(mul(input.tangent, (float3x3) buffer_pass.transform)).xyz;
-    output.tangent = normalize(mul(output.tangent, (float3x3) buffer_frame.view_projection)).xyz;
+    output.tangent = normalize(mul(output.tangent, (float3x3) buffer_rendererPath.view_projection)).xyz;
 
     return output;
 }

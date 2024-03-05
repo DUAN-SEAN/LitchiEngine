@@ -44,6 +44,7 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
 
 		// textures todo: ÔİÊ±Ã»ÓĞ
 		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
@@ -560,5 +561,5 @@ namespace LitchiRuntime
 		cmd_list->EndMarker();
 
 	}
-	
+
 }
