@@ -16,6 +16,7 @@ namespace LitchiRuntime
 
         void OnAwake() override;
         void OnUpdate() override;
+        void OnEditorUpdate() override;
 
         // Pos
         void SetPos(Vector3 pos) { m_pos = pos; }
@@ -30,7 +31,7 @@ namespace LitchiRuntime
         void PostResourceModify() override;
     private:
 
-        void UpdateTransform();
+        void UpdateRectTransform();
         void UpdateCanvas();
 
         // Canvas
