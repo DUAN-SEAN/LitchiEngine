@@ -1,0 +1,25 @@
+cmake_minimum_required(VERSION 3.21)
+
+# Project name and a few useful settings. Other commands can pick up the results
+project(dxcompiler_clang VERSION 1.0 DESCRIPTION "DXC Compiler Project")
+
+include(${CMAKE_CURRENT_LIST_DIR}/../../cmake/build.cmake)
+
+add_subdirectory(Analysis)
+add_subdirectory(AST)
+add_subdirectory(ASTMatchers)
+add_subdirectory(Basic)
+add_subdirectory(CodeGen)
+add_subdirectory(Driver)
+add_subdirectory(Edit)
+add_subdirectory(Format)
+add_subdirectory(Frontend)
+add_subdirectory(FrontendTool)
+add_subdirectory(Index)
+add_subdirectory(Lex)
+add_subdirectory(libclang)
+add_subdirectory(Parse)
+add_subdirectory(Rewrite)
+add_subdirectory(Sema)
+add_subdirectory(SPIRV)
+add_subdirectory(Tooling)
