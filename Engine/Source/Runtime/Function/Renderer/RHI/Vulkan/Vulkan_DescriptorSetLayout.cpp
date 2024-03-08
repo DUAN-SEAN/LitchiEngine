@@ -34,7 +34,7 @@ namespace LitchiRuntime
         );
 
         // layout bindings
-        static const uint8_t descriptors_max = 255;
+        constexpr uint8_t descriptors_max = 255;
         static array<VkDescriptorSetLayoutBinding, descriptors_max> layout_bindings;
         static array<VkDescriptorBindingFlags, descriptors_max> layout_binding_flags;
 
