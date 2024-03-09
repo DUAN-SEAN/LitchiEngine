@@ -1,14 +1,14 @@
 
 
-if(${TARGET_BUILD_PLATFORM} STREQUAL "android")
+if(CMAKE_SYSTEM_NAME STREQUAL "android")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE ANDROID)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE _ANDROID)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE __ANDROID__)
 	target_link_options(${PROJECT_NAME} PRIVATE -Wl,--no-undefined)
-elseif(${TARGET_BUILD_PLATFORM} STREQUAL "windows")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "windows")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE WIN32)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE _WIN32)
-elseif(${TARGET_BUILD_PLATFORM} STREQUAL "linux")
+elseif(CMAKE_SYSTEM_NAME STREQUAL "linux")
 	target_compile_definitions(${PROJECT_NAME} PRIVATE LINUX)
 	target_compile_definitions(${PROJECT_NAME} PRIVATE _LINUX)
 	if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")

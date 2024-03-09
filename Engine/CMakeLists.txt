@@ -1,6 +1,6 @@
 
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
-set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThridParty")
+set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty(new)")
 set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Asset")
 
 # option(ENABLE_PHYSICS_DEBUG_RENDERER "Enable Physics Debug Renderer" OFF)
@@ -55,11 +55,11 @@ ENDIF ()
 # 添加第三方构建子目录
 add_subdirectory("ThirdParty(new)")
 
-# # 添加运行时构建子目录
-# add_subdirectory(Source/Runtime)
+# 添加运行时构建子目录
+add_subdirectory(Source/Runtime)
 
-# # 添加引擎编辑器构建子目录
-# add_subdirectory(Source/Editor)
+# 添加引擎编辑器构建子目录
+add_subdirectory(Source/Editor)
 
-# # 添加引擎脚本构建子目录
-# add_subdirectory(Source/ScriptCore)
+# 添加引擎脚本构建子目录
+add_subdirectory(Source/ScriptCore)
