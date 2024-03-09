@@ -325,9 +325,13 @@ namespace LitchiRuntime
 	{
 		// Early exit if there is no change in shadow map resolution
 		const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
-		const bool resolution_changed = m_shadow_map.texture_depth ? (resolution != m_shadow_map.texture_depth->GetWidth()) : false;
-		if (!resolution_changed)
-			return;
+
+		if(m_shadow_map.texture_depth)
+		{
+			const bool resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
+			if (!resolution_changed)
+				return;
+		}
 
 		// Early exit if this light casts no shadows
 		if (!m_mainLight->GetShadowsEnabled())
