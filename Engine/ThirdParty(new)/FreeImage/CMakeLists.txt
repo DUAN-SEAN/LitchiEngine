@@ -1,177 +1,89 @@
-cmake_minimum_required(VERSION 2.6)
-project(FREEIMAGE)
+cmake_minimum_required(VERSION 3.16)
+project(FreeImage VERSION 3.19.0 LANGUAGES C CXX)
 
+# Options for configuring the build
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
+option(BUILD_JXR "Build JPEG-XR support" WIN32)
+option(BUILD_TESTS "Build the test suite" OFF)
 
-##########################################################################################
-# XMake-related settings
+# Define the FreeImage library
+add_subdirectory(Source)
 
-# Set the output paths
-if (NOT DEFINED XMAKE_BINARY_DIR)
-    set(XMAKE_BINARY_DIR "${FREEIMAGE_BINARY_DIR}")
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/bin")
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/lib")
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${XMAKE_BINARY_DIR}/bin")
+# Preprocessor definitions
+target_compile_definitions(${PROJECT_NAME} PUBLIC
+    DISABLE_PERF_MEASUREMENT
+    OPJ_STATIC
+    NO_LCMS
+    NO_WINDOWS
+)
+if (NOT BUILD_SHARED_LIBS)
+    target_compile_definitions(${PROJECT_NAME} PUBLIC FREEIMAGE_LIB)
+endif ()
+
+# Set C++ standard
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_11)
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_EXTENSIONS OFF)
+
+# Emscripten support
+if(EMSCRIPTEN)
+    add_executable(FreeImage_wasm)
+    target_link_libraries(FreeImage_wasm PRIVATE ${PROJECT_NAME}::${PROJECT_NAME})
 endif()
 
-# Set the dependencies path
-if (NOT DEFINED XMAKE_DEPENDENCIES_DIR)
-    set(XMAKE_DEPENDENCIES_DIR "${FREEIMAGE_SOURCE_DIR}/dependencies")
+# Apple-specific settings
+if (APPLE)
+    set_target_properties(${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_ONLY_ACTIVE_ARCH "NO")
+    if(BUILD_PLATFORM_APPLE_IOS)
+        set_target_properties(${PROJECT_NAME} PROPERTIES XCODE_ATTRIBUTE_GCC_THUMB_SUPPORT "NO")
+    endif()
 endif()
 
-
-##########################################################################################
-# XMake importation
-
-if (NOT EXISTS "${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
-    message(FATAL_ERROR
-"Missing dependency: XMake
-This distribution of FreeImage requires the following dependencies:
-   - XMake
-   - ZLib
-They are provided as GIT submodules of this repository.
-Did you forgot to execute the following commands?
-   git submodule init
-   git submodule update")
+# Enable Multi-core compilation in MSVC
+if (MSVC)
+    target_compile_options(${PROJECT_NAME} PRIVATE /MP)
 endif()
 
-include("${XMAKE_DEPENDENCIES_DIR}/XMake/XMake.cmake")
+# Append -d to debug build so we can have both debug and release builds in the same directory
+set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
+# Test suite
+if (BUILD_TESTS)
+    include(CTest)
+    enable_testing()
+    add_subdirectory(TestAPI)
+endif ()
 
-##########################################################################################
-# Process subdirectories
+# Install the library
+install(TARGETS ${PROJECT_NAME}
+    EXPORT ${PROJECT_NAME}Targets
+    RUNTIME DESTINATION bin
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    INCLUDES DESTINATION include
+)
+install(FILES Source/FreeImage.h DESTINATION include)
 
-add_subdirectory(dependencies)
-add_subdirectory(LibJPEG)
-add_subdirectory(LibMNG)
-add_subdirectory(LibOpenJPEG)
-add_subdirectory(LibPNG)
-add_subdirectory(LibRawLite)
-add_subdirectory(LibTIFF)
-add_subdirectory(OpenEXR)
-
-
-##########################################################################################
-# Declaration of the library
-
-# List the header files
-set(HEADERS CacheFile.h
-            FreeImage.h
-            FreeImageIO.h
-            Plugin.h
-            Quantizers.h
-            ToneMapping.h
-            Utilities.h
-            FreeImage/PSDParser.h
-            FreeImageToolkit/Filters.h
-            FreeImageToolkit/Resize.h
-            Metadata/FIRational.h
-            Metadata/FreeImageTag.h
+# Install the CMake Targets
+install(EXPORT ${PROJECT_NAME}Targets
+    FILE ${PROJECT_NAME}Targets.cmake
+    NAMESPACE ${PROJECT_NAME}::
+    DESTINATION lib/cmake/${PROJECT_NAME}
 )
 
-# List the source files
-set(SRCS FreeImage/BitmapAccess.cpp
-         FreeImage/CacheFile.cpp
-         FreeImage/ColorLookup.cpp
-         FreeImage/Conversion.cpp
-         FreeImage/Conversion16_555.cpp
-         FreeImage/Conversion16_565.cpp
-         FreeImage/Conversion24.cpp
-         FreeImage/Conversion32.cpp
-         FreeImage/Conversion4.cpp
-         FreeImage/Conversion8.cpp
-         FreeImage/ConversionRGBF.cpp
-         FreeImage/ConversionType.cpp
-         FreeImage/FreeImage.cpp
-         FreeImage/FreeImageIO.cpp
-         FreeImage/GetType.cpp
-         FreeImage/Halftoning.cpp
-         FreeImage/J2KHelper.cpp
-         FreeImage/MemoryIO.cpp
-         FreeImage/MultiPage.cpp
-         FreeImage/NNQuantizer.cpp
-         FreeImage/PSDParser.cpp
-         FreeImage/PixelAccess.cpp
-         FreeImage/Plugin.cpp
-         FreeImage/PluginBMP.cpp
-         FreeImage/PluginCUT.cpp
-         FreeImage/PluginDDS.cpp
-         FreeImage/PluginEXR.cpp
-         FreeImage/PluginG3.cpp
-         FreeImage/PluginGIF.cpp
-         FreeImage/PluginHDR.cpp
-         FreeImage/PluginICO.cpp
-         FreeImage/PluginIFF.cpp
-         FreeImage/PluginJ2K.cpp
-         FreeImage/PluginJP2.cpp
-         FreeImage/PluginJPEG.cpp
-         FreeImage/PluginKOALA.cpp
-         FreeImage/PluginMNG.cpp
-         FreeImage/PluginPCD.cpp
-         FreeImage/PluginPCX.cpp
-         FreeImage/PluginPFM.cpp
-         FreeImage/PluginPICT.cpp
-         FreeImage/PluginPNG.cpp
-         FreeImage/PluginPNM.cpp
-         FreeImage/PluginPSD.cpp
-         FreeImage/PluginRAS.cpp
-         FreeImage/PluginRAW.cpp
-         FreeImage/PluginSGI.cpp
-         FreeImage/PluginTARGA.cpp
-         FreeImage/PluginTIFF.cpp
-         FreeImage/PluginWBMP.cpp
-         FreeImage/PluginXBM.cpp
-         FreeImage/PluginXPM.cpp
-         FreeImage/TIFFLogLuv.cpp
-         FreeImage/ToneMapping.cpp
-         FreeImage/WuQuantizer.cpp
-         FreeImage/ZLibInterface.cpp
-         FreeImage/tmoColorConvert.cpp
-         FreeImage/tmoDrago03.cpp
-         FreeImage/tmoFattal02.cpp
-         FreeImage/tmoReinhard05.cpp
-         FreeImageToolkit/BSplineRotate.cpp
-         FreeImageToolkit/Background.cpp
-         FreeImageToolkit/Channels.cpp
-         FreeImageToolkit/ClassicRotate.cpp
-         FreeImageToolkit/Colors.cpp
-         FreeImageToolkit/CopyPaste.cpp
-         FreeImageToolkit/Display.cpp
-         FreeImageToolkit/Flip.cpp
-         FreeImageToolkit/JPEGTransform.cpp
-         FreeImageToolkit/MultigridPoissonSolver.cpp
-         FreeImageToolkit/Rescale.cpp
-         FreeImageToolkit/Resize.cpp
-         Metadata/Exif.cpp
-         Metadata/FIRational.cpp
-         Metadata/FreeImageTag.cpp
-         Metadata/IPTC.cpp
-         Metadata/TagConversion.cpp
-         Metadata/TagLib.cpp
-         Metadata/XTIFF.cpp
+# Install the CMake config
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    ${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}Config.cmake.in
+    ${PROJECT_NAME}Config.cmake
+    INSTALL_DESTINATION lib/cmake/${PROJECT_NAME}
 )
-
-# List the include paths
-include_directories(${FREEIMAGE_SOURCE_DIR}
-                    ${FREEIMAGE_SOURCE_DIR}/DeprecationManager
+write_basic_package_version_file(
+    ${PROJECT_NAME}ConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY SameMajorVersion
 )
-
-xmake_import_search_paths(OPENEXR)
-xmake_import_search_paths(ZLIB)
-
-# Declaration of the library
-xmake_create_static_library(FREEIMAGE freeimage ${HEADERS} ${SRCS})
-
-xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "OPJ_STATIC;FREEIMAGE_LIB;LIBRAW_NODLL")
-
-if (NOT WIN32)
-    xmake_add_to_property(FREEIMAGE COMPILE_FLAGS "-w")
-else()
-    xmake_add_to_property(FREEIMAGE COMPILE_FLAGS "/W0")
-    xmake_add_to_list_property(FREEIMAGE COMPILE_DEFINITIONS "_CRT_SECURE_NO_DEPRECATE")
-endif()
-
-xmake_project_link(FREEIMAGE JPEG MNG OPENEXR OPENJPEG PNG RAWLITE TIFF ZLIB)
-
-# Exportations
-xmake_export_include_paths(FREEIMAGE ${FREEIMAGE_SOURCE_DIR})
-xmake_export_compile_definitions(FREEIMAGE "FREEIMAGE_LIB" "OPJ_STATIC" "LIBRAW_NODLL")
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}Config.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}ConfigVersion.cmake
+    DESTINATION lib/cmake/${PROJECT_NAME}
+)

@@ -60,8 +60,21 @@ target_link_libraries(${TARGET_NAME} PUBLIC libmono-static-sgen.lib)
 # target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/assimp/lib)
 target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mt)
 
-# target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/freetype-windows-binaries-master/static/vs2015-2022/win64)
+target_link_directories(${TARGET_NAME}
+	PUBLIC
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/freetype/lib/Debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/freetype/lib/Release>
+)
 target_link_libraries(${TARGET_NAME} PUBLIC freetype)
+
+# Physx
+# target_link_directories(${TARGET_NAME}
+# 	PUBLIC
+#     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug>
+#     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release>
+# )
+# target_link_libraries(physx_64 physxFoundation_64 physxExtensions_static_64 physxPvdSDK_static_64)
+include(../../ThridParty/physx-4.1/CMakeLists.txt)
 
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)
 target_link_libraries(${TARGET_NAME} PUBLIC vulkan-1)
@@ -100,11 +113,13 @@ target_include_directories(${TARGET_NAME} PRIVATE $<BUILD_INTERFACE:${THIRD_PART
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/mono/include/mono>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/assimp/include>)
+# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/physx/include)
+# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/include> PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/devel>)
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype-windows-binaries-master/include>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/VulkanSDK/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/vulkanmemoryallocator/include>)
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/SPIRV-Cross>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/spirv_cross>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxcompiler/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/compressonator>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/FreeImage/FreeImage>)

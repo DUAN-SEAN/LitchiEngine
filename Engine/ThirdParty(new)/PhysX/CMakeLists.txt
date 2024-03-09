@@ -1,42 +1,33 @@
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+﻿# set(PhysxRootDir "../../ThridParty/physx-4.1")
+set(PhysxRootDir "../../ThirdParty/Physx")
 
-# -----------------------------------------------------------------------------------------------------------------------------
-# PROJECT
-# -----------------------------------------------------------------------------------------------------------------------------
+#头文件目录
+include_directories("${PhysxRootDir}/physx/include")
+include_directories("${PhysxRootDir}/pxshared/include")
 
-project("PhysX")
-set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+#链接目录
+if(MSVC)
+    # link_directories("${PhysxRootDir}/physx/bin/win.x86_64.vc142.mt/debug")
+    link_directories(
+        $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug>
+        $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release>
+    )
+    #链接lib文件
+    # link_libraries(physx_64 physxFoundation_64 physxExtensions_static_64 physxPvdSDK_static_64)
+    set(LINK_LIBRARIES
+        debug physx_64 physxFoundation_64 physxExtensions_static_64 physxPvdSDK_static_64
+        optimized glut32 PhysXDevices64
+    )
+    link_libraries(${LINK_LIBRARIES})
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# -----------------------------------------------------------------------------------------------------------------------------
-# SUB-DIRECTORIES
-# -----------------------------------------------------------------------------------------------------------------------------                    
-
-# PhysX Library
-add_subdirectory("PhysX")
-add_subdirectory("PhysXCharacterKinematic")
-add_subdirectory("PhysXVehicle")
-add_subdirectory("PhysXExtensions")
-add_subdirectory("SceneQuery")
-add_subdirectory("SimulationController")
-add_subdirectory("PhysXCooking")
-add_subdirectory("Common")
-add_subdirectory("PxFoundation")
-add_subdirectory("PxPvdSDK")
-add_subdirectory("LowLevel")
-add_subdirectory("LowLevelAABB")
-add_subdirectory("LowLevelDynamics")
-add_subdirectory("LowLevelCloth")
-add_subdirectory("LowLevelParticles")
-add_subdirectory("PxTask")
-add_subdirectory("PsFastXml")
-
-# # Snippets
-add_subdirectory("Snippets")
-
-# Samples
-# add_subdirectory("Samples")
-
+    #拷贝dll到exe目录
+    # file(COPY "physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/physxFoundation_64.dll" DESTINATION "./")
+    # file(COPY "physx/bin/win.x86_64.vc142.mt/debug/physxDevice64.dll" DESTINATION "./")
+    # file(COPY "physx/bin/win.x86_64.vc142.mt/debug/physxCooking_64.dll" DESTINATION "./")
+    # file(COPY "physx/bin/win.x86_64.vc142.mt/debug/physxCommon_64.dll" DESTINATION "./")
+    # file(COPY "physx/bin/win.x86_64.vc142.mt/debug/physx_64.dll" DESTINATION "./")
+else()
+    link_directories("${PhysxRootDir}/physx/bin/mac.x86_64/debug")
+    #链接lib文件
+    link_libraries(physx_static_64 physxFoundation_static_64 physxExtensions_static_64 physxPvdSDK_static_64 physxCommon_static_64)
+endif()

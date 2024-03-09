@@ -1,6 +1,0 @@
-[submodule "dependencies/XMake"]
-	path = dependencies/XMake
-	url = git://github.com/Kanma/XMake.git
-[submodule "dependencies/zlib"]
-	path = dependencies/zlib
-	url = git://github.com/Kanma/zlib.git
