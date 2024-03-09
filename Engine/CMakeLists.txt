@@ -53,13 +53,13 @@ ENDIF ()
 #endif()
 
 # 添加第三方构建子目录
-add_subdirectory(ThridParty)
+add_subdirectory("ThirdParty(new)")
 
-# 添加运行时构建子目录
-add_subdirectory(Source/Runtime)
+# # 添加运行时构建子目录
+# add_subdirectory(Source/Runtime)
 
-# 添加引擎编辑器构建子目录
-add_subdirectory(Source/Editor)
+# # 添加引擎编辑器构建子目录
+# add_subdirectory(Source/Editor)
 
-# 添加引擎脚本构建子目录
-add_subdirectory(Source/ScriptCore)
+# # 添加引擎脚本构建子目录
+# add_subdirectory(Source/ScriptCore)
