@@ -11,4 +11,3 @@
 3. 图标设置的地方会抛异常（文件位置ApplicationBase.cpp h99）
 4. Assets文件没有正确拷贝到Build目录
 5. SceneManager::LoadScene中对AssetManager::LoadAsset函数的调用三元运算符好像写反了
-6. 
