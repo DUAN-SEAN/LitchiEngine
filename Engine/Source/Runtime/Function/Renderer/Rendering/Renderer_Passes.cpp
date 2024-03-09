@@ -96,8 +96,8 @@ namespace LitchiRuntime
 				continue;
 
 			// Acquire light's shadow maps
-			RHI_Texture* tex_depth = light->GetDepthTexture();
-			RHI_Texture* tex_color = light->GetColorTexture();
+			RHI_Texture* tex_depth = rendererPath->GetShadowDepthTexture();
+			RHI_Texture* tex_color = rendererPath->GetShadowColorTexture();
 			if (!tex_depth)
 				continue;
 
@@ -122,7 +122,7 @@ namespace LitchiRuntime
 				pso.clear_color[0] = Color::standard_white;
 				pso.clear_depth = is_transparent_pass ? rhi_depth_load : 0.0f; // reverse-z
 
-				const Matrix& view_projection = light->GetViewMatrix(array_index) * light->GetProjectionMatrix(array_index);
+				const Matrix& view_projection = rendererPath->GetViewMatrix(array_index) * rendererPath->GetProjectionMatrix(array_index);
 
 				// Set appropriate rasterizer state
 				if (light->GetLightType() == LightType::Directional)
@@ -173,7 +173,7 @@ namespace LitchiRuntime
 						continue;
 
 					// Skip objects outside of the view frustum
-					if (!light->IsInViewFrustum(renderable, array_index))
+					if (!rendererPath->IsInViewFrustum(renderable, array_index))
 						continue;
 
 					if (skinned_mesh_renderer)
@@ -295,14 +295,14 @@ namespace LitchiRuntime
 			// 暂时只支持一个平行光绘制阴影
 			auto mainLightObj = lightEntities[0];
 			auto mainLight = mainLightObj->GetComponent<Light>();
-			auto depthTexture = mainLight->GetDepthTexture();
+			auto depthTexture = rendererPath->GetShadowDepthTexture();
 			if(depthTexture!=nullptr)
 			{
-				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
 			}
 
 		}
-		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath->GetRenderCamera());
+		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath);
 
 		EASY_END_BLOCK
 
@@ -385,7 +385,7 @@ namespace LitchiRuntime
 			// 暂时只支持一个平行光绘制阴影
 			auto mainLightObj = lightEntities[0];
 			auto mainLight = mainLightObj->GetComponent<Light>();
-			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, mainLight->GetDepthTexture());
+			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
 
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform

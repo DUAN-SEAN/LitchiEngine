@@ -334,7 +334,11 @@ namespace LitchiRuntime
 		if (rendererPath4SceneView && rendererPath4SceneView->GetActive())
 		{
 			rendererPath4SceneView->UpdateRenderableGameObject();
+			rendererPath4SceneView->UpdateLightShadow();
+
+			// Render SceneView
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
+
 		}
 		EASY_END_BLOCK
 
@@ -354,7 +358,10 @@ namespace LitchiRuntime
 				rendererPath4GameView->UpdateRenderCamera(firstCamera);
 			}
 
+			rendererPath4GameView->UpdateLightShadow();
 			rendererPath4GameView->UpdateRenderableGameObject();
+
+			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
 		}
 		EASY_END_BLOCK
@@ -627,16 +634,16 @@ namespace LitchiRuntime
 		cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RenderCamera* renderCamera)
+	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RendererPath* rendererPath)
 	{
-		for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
+		for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 		{
-			m_cb_light_cpu.view_projection[i] = light->GetViewMatrix(i) * light->GetProjectionMatrix(i);
+			m_cb_light_cpu.view_projection[i] = rendererPath->GetViewMatrix(i) * rendererPath->GetProjectionMatrix(i);
 		}
 
 		m_cb_light_cpu.intensity_range_angle_bias = Vector4
 		(
-			light->GetIntensityWatt(renderCamera),
+			light->GetIntensityWatt(rendererPath->GetRenderCamera()),
 			light->GetRange(), light->GetAngle(),
 			light->GetBias()
 		);
@@ -659,7 +666,7 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
 	}
 
-	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RenderCamera* renderCamera)
+	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RendererPath* rendererPath)
 	{
 		// GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->ResetOffset();
 
@@ -669,14 +676,15 @@ namespace LitchiRuntime
 		{
 			const auto light = lightArr[index];
 
-			for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
+			// todo only one light has shadow, is temp code
+			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 			{
-				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = light->GetViewMatrix(i) * light->GetProjectionMatrix(i);
+				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetViewMatrix(i) * rendererPath->GetProjectionMatrix(i);
 			}
 
 			m_cb_light_arr_cpu.lightArr[index].intensity_range_angle_bias = Vector4
 			(
-				light->GetIntensityWatt(renderCamera),
+				light->GetIntensityWatt(rendererPath->GetRenderCamera()),
 				light->GetRange(), light->GetAngle(),
 				light->GetBias()
 			);

@@ -55,3 +55,6 @@ add_subdirectory(Source/Editor)
 
 # 添加引擎脚本构建子目录
 add_subdirectory(Source/ScriptCore)
+
+# 添加桌面Standalone构建子目录
+add_subdirectory(Source/Standalone)
