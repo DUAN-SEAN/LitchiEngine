@@ -638,7 +638,7 @@ namespace LitchiRuntime
 	{
 		for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 		{
-			m_cb_light_cpu.view_projection[i] = rendererPath->GetViewMatrix(i) * rendererPath->GetProjectionMatrix(i);
+			m_cb_light_cpu.view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
 		}
 
 		m_cb_light_cpu.intensity_range_angle_bias = Vector4
@@ -679,7 +679,7 @@ namespace LitchiRuntime
 			// todo only one light has shadow, is temp code
 			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 			{
-				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetViewMatrix(i) * rendererPath->GetProjectionMatrix(i);
+				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
 			}
 
 			m_cb_light_arr_cpu.lightArr[index].intensity_range_angle_bias = Vector4

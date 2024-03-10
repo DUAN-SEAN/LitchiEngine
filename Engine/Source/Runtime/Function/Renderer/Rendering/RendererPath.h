@@ -50,14 +50,13 @@ namespace LitchiRuntime
 		UICanvas* GetCanvas();
 	public:
 
-		const Matrix& GetViewMatrix(uint32_t index = 0) const;
-		const Matrix& GetProjectionMatrix(uint32_t index = 0) const;
+		const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
+		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
 
 		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
 		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }
 		uint32_t GetShadowArraySize() const;
-		void CreateShadowMap();
-		bool IsInViewFrustum(MeshFilter* renderable, uint32_t index) const;
+		bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
 
 	private:
 
@@ -66,10 +65,11 @@ namespace LitchiRuntime
 		std::string GetRenderPathName();
 		bool CheckIsBuildInRendererCamera();
 
-		bool CheckShadowMapNeedReCreate();
+		bool CheckShadowMapNeedRecreate();
+		void CreateShadowMap();
 		void ComputeCascadeSplits(RenderCamera* renderCamera);
-		void ComputeViewMatrix();
-		void ComputeProjectionMatrix(uint32_t index = 0);
+		void ComputeLightViewMatrix();
+		void ComputeLightProjectionMatrix(uint32_t index = 0);
 
 		float m_width;
 		float m_height;
@@ -81,6 +81,8 @@ namespace LitchiRuntime
 		// UI provide Camera
 		RenderCamera* m_renderCamera4UI;
 
+		// one camera to light
+
 		// Light
 		Light* m_mainLight = nullptr;
 		std::array<Matrix, 6> m_matrix_view;
@@ -88,7 +90,7 @@ namespace LitchiRuntime
 
 		// shadow
 		uint32_t m_cascade_count = 4;
-		ShadowMap m_shadow_map;
+		ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;
 

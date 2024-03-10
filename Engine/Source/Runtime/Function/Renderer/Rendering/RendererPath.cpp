@@ -276,7 +276,7 @@ namespace LitchiRuntime
 		}
 
 		// check need Create New ShadowMap
-		if(CheckShadowMapNeedReCreate())
+		if(CheckShadowMapNeedRecreate())
 		{
 			CreateShadowMap();
 		}
@@ -289,27 +289,27 @@ namespace LitchiRuntime
 				ComputeCascadeSplits(m_renderCamera);
 			}
 
-			ComputeViewMatrix();
+			ComputeLightViewMatrix();
 
 			// Compute projection matrix
 			if (m_shadow_map.texture_depth)
 			{
 				for (uint32_t i = 0; i < m_shadow_map.texture_depth->GetArrayLength(); i++)
 				{
-					ComputeProjectionMatrix(i);
+					ComputeLightProjectionMatrix(i);
 				}
 			}
 		}
 	}
 
-	const Matrix& RendererPath::GetViewMatrix(uint32_t index /*= 0*/) const
+	const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
 	{
 		SP_ASSERT(index < static_cast<uint32_t>(m_matrix_view.size()));
 
 		return m_matrix_view[index];
 	}
 
-	const Matrix& RendererPath::GetProjectionMatrix(uint32_t index /*= 0*/) const
+	const Matrix& RendererPath::GetLightProjectionMatrix(uint32_t index /*= 0*/) const
 	{
 		SP_ASSERT(index < static_cast<uint32_t>(m_matrix_projection.size()));
 
@@ -383,7 +383,7 @@ namespace LitchiRuntime
 		}
 	}
 
-	bool RendererPath::IsInViewFrustum(MeshFilter* renderable, uint32_t index) const
+	bool RendererPath::IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const
 	{
 		if(!m_mainLight)
 		{
@@ -400,7 +400,7 @@ namespace LitchiRuntime
 		return m_shadow_map.slices[index].frustum.IsVisible(center, extents, ignore_near_plane);
 	}
 
-	bool RendererPath::CheckShadowMapNeedReCreate()
+	bool RendererPath::CheckShadowMapNeedRecreate()
 	{
 		if(!m_mainLight)
 		{
@@ -518,7 +518,7 @@ namespace LitchiRuntime
 		}
 	}
 
-	void RendererPath::ComputeViewMatrix()
+	void RendererPath::ComputeLightViewMatrix()
 	{
 		auto lightObject = m_mainLight->GetGameObject();
 		if (m_mainLight->GetLightType()== LightType::Directional)
@@ -558,7 +558,7 @@ namespace LitchiRuntime
 		}
 	}
 
-	void RendererPath::ComputeProjectionMatrix(uint32_t index /*= 0*/)
+	void RendererPath::ComputeLightProjectionMatrix(uint32_t index /*= 0*/)
 	{
 		SP_ASSERT(index < m_shadow_map.texture_depth->GetArrayLength());
 

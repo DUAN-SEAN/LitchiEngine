@@ -122,7 +122,7 @@ namespace LitchiRuntime
 				pso.clear_color[0] = Color::standard_white;
 				pso.clear_depth = is_transparent_pass ? rhi_depth_load : 0.0f; // reverse-z
 
-				const Matrix& view_projection = rendererPath->GetViewMatrix(array_index) * rendererPath->GetProjectionMatrix(array_index);
+				const Matrix& view_projection = rendererPath->GetLightViewMatrix(array_index) * rendererPath->GetLightProjectionMatrix(array_index);
 
 				// Set appropriate rasterizer state
 				if (light->GetLightType() == LightType::Directional)
@@ -173,7 +173,7 @@ namespace LitchiRuntime
 						continue;
 
 					// Skip objects outside of the view frustum
-					if (!rendererPath->IsInViewFrustum(renderable, array_index))
+					if (!rendererPath->IsInLightViewFrustum(renderable, array_index))
 						continue;
 
 					if (skinned_mesh_renderer)

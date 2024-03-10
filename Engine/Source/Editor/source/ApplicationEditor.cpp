@@ -43,14 +43,7 @@
 #include "Runtime/Resource/FontManager.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
-struct data
-{
-	union
-	{
-		float float_value;
-		unsigned char byte_value[4];
-	};
-};
+
 LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager), ApplicationBase()
 {
 
@@ -91,123 +84,6 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 	delete m_rendererPath4SceneView;
 	delete m_rendererPath4GameView;
-}
-
-GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string modelPath)
-{
-	auto gameObject4Cube = scene->CreateGameObject("Cube");
-	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
-	transform4Cube->SetPositionLocal(position);
-	transform4Cube->SetRotationLocal(rotation);
-	transform4Cube->SetScaleLocal(scale);
-	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
-	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
-	meshFilter4Cube->SetGeometry(mesh);
-	meshRenderer4Cube->SetDefaultMaterial();
-
-	return gameObject4Cube;
-}
-
-GameObject* CreateSkinnedModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string materialPath, std::string modelPath)
-{
-	auto gameObject4Cube = scene->CreateGameObject(name);
-	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
-	transform4Cube->SetPositionLocal(position);
-	transform4Cube->SetRotationLocal(rotation);
-	transform4Cube->SetScaleLocal(scale);
-
-	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<SkinnedMeshRenderer>();
-	auto animator = gameObject4Cube->AddComponent<Animator>();
-
-	auto material = ApplicationBase::Instance()->materialManager->LoadResource(materialPath);
-
-	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
-	meshFilter4Cube->SetGeometry(mesh);
-	meshRenderer4Cube->SetMaterial(material);
-
-	// 初始化animator
-	std::unordered_map<std::string, AnimationClip> animations;
-	mesh->GetAnimations(animations);
-	auto firstClipName = animations.begin()->first;
-	animator->SetAnimationClipMap(animations);
-	animator->Play(firstClipName);
-
-
-	return gameObject4Cube;
-}
-
-GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->GetComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->PostResourceLoaded();
-
-	auto directionalLight = go->AddComponent<Light>();
-	directionalLight->SetColor({ 0.3f,0.6f,0.7f });
-	directionalLight->SetIntensity(LightIntensity::bulb_100_watt);
-
-	return go;
-}
-
-GameObject* CreateUIImageObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, RHI_Texture* image)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->SetScaleLocal(Vector3(1));
-	transform->PostResourceLoaded();
-
-	/*auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = "";
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
-	mesh_renderer->PostResourceLoaded();*/
-	go->SetLayer(0x02); // UI 层级为2
-
-	auto uiImage = go->AddComponent<UIImage>();
-	uiImage->SetTexture(image);
-
-	return go;
-}
-
-GameObject* CreateUITextObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, Font* font)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->SetScaleLocal(Vector3(1));
-	transform->PostResourceLoaded();
-
-	/*auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = "";
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
-	mesh_renderer->PostResourceLoaded();*/
-	go->SetLayer(0x02); // UI 层级为2
-
-	// 创建UIText
-	auto uiText = go->AddComponent<UIText>();
-	uiText->SetFont(font);
-	uiText->SetText("EF");
-	uiText->SetColor(Color::White);
-
-	return go;
 }
 
 GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scriptName)
@@ -270,7 +146,12 @@ void LitchiEditor::ApplicationEditor::Init()
 		// create cube
 		EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
 
-		CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
+		auto lightObject = EDITOR_EXEC(CreateMonoComponentActor<Light>(false, nullptr));
+		lightObject->SetName("Directional Light");
+		lightObject->GetComponent<Transform>()->SetPosition(Vector3::Zero);
+		lightObject->GetComponent<Transform>()->SetRotation(Quaternion::FromEulerAngles(42, 0, 0));
+		lightObject->GetComponent<Light>()->SetLightType(LightType::Directional);
+		
 
 		auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
 		canvas->SetName("Canvas");
