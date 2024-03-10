@@ -15,8 +15,11 @@ int main(int argc, char** argv)
 	const char* projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
 
+#ifdef _DEBUG
+	application_standalone->SetProjectPath(filePath + "\\Debug\\Project\\");
+#else
 	application_standalone->SetProjectPath(filePath + "\\Project\\");
-
+#endif
 	delete projectPath;
 
 	application.Initiliaze(application_standalone);

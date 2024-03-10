@@ -60,7 +60,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 	// 析构其他
 	sceneManager = nullptr;
-	modelManager->UnloadResources();
+	modelManager->UnloadResources();\
 	modelManager = nullptr;
 	shaderManager->UnloadResources();
 	shaderManager = nullptr;
@@ -126,61 +126,78 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	/* below code is test process */
 
-	// test 1
-	{
-		auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
-		font->AddText("Hello World", Vector2::Zero);
-
-		sceneManager->LoadEmptyScene();
-		auto* scene = sceneManager->GetCurrentScene();
-		// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
-
-		// create go from prefab
-		//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-		//auto mesh_prefab = mesh->GetModelPrefab();
-		//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
-
-		// create camera
-		EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
-
-		// create cube
-		EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
-
-		auto lightObject = EDITOR_EXEC(CreateMonoComponentActor<Light>(false, nullptr));
-		lightObject->SetName("Directional Light");
-		lightObject->GetComponent<Transform>()->SetPosition(Vector3::Zero);
-		lightObject->GetComponent<Transform>()->SetRotation(Quaternion::FromEulerAngles(42, 0, 0));
-		lightObject->GetComponent<Light>()->SetLightType(LightType::Directional);
-		
-
-		auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
-		canvas->SetName("Canvas");
-		auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
-		text->SetName("Text");
-		text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
-		text->GetComponent<UIText>()->SetText("Hello World !");
-		text->GetComponent<UIText>()->PostResourceModify();
-
-		auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
-		image->SetName("Image");
-		image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
-		image->GetComponent<UIImage>()->PostResourceModify();
-		image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
-		image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
-
-		scene->Resolve();
-		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
-	}
-
-	//// test 2
+	//// test 1
 	//{
-	//	sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
-	//	sceneManager->GetCurrentScene()->Resolve();
+	//	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
+	//	font->AddText("Hello World", Vector2::Zero);
 
+	//	sceneManager->LoadEmptyScene();
+	//	auto* scene = sceneManager->GetCurrentScene();
+	//	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+
+	//	// create go from prefab
+	//	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	//	//auto mesh_prefab = mesh->GetModelPrefab();
+	//	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
+
+	//	// create camera
+	//	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
+
+	//	// create cube
+	//	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
+
+	//	auto lightObject = EDITOR_EXEC(CreateMonoComponentActor<Light>(false, nullptr));
+	//	lightObject->SetName("Directional Light");
+	//	lightObject->GetComponent<Transform>()->SetPosition(Vector3::Zero);
+	//	lightObject->GetComponent<Transform>()->SetRotation(Quaternion::FromEulerAngles(42, 0, 0));
+	//	lightObject->GetComponent<Light>()->SetLightType(LightType::Directional);
+	//	
+
+	//	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
+	//	canvas->SetName("Canvas");
+	//	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
+	//	text->SetName("Text");
+	//	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
+	//	text->GetComponent<UIText>()->SetText("Hello World !");
+	//	text->GetComponent<UIText>()->PostResourceModify();
+
+	//	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
+	//	image->SetName("Image");
+	//	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
+	//	image->GetComponent<UIImage>()->PostResourceModify();
+	//	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
+	//	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
+
+	//	scene->Resolve();
 	//	m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
 	//	m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
 	//}
+
+	// test 2
+	{
+		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+		sceneManager->GetCurrentScene()->Resolve();
+
+		sceneManager->GetCurrentScene()->Play();
+
+		// create camera
+		{
+			auto cameraObject = sceneManager->GetCurrentScene()->CreateGameObject("Camera");
+			auto camera = cameraObject->AddComponent<Camera>();
+			// 设置相机默认的位置和姿态
+			auto cameraPosition = Vector3(0.0f, 5.0f, -10.0f);
+
+			auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
+
+			camera->SetFovHorizontalDeg(60.0f);
+			cameraObject->GetComponent<Transform>()->SetPosition(cameraPosition);
+			cameraObject->GetComponent<Transform>()->SetRotation(cameraRotation);
+
+		}
+
+		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
+		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
+	}
 }
 
 void LitchiEditor::ApplicationEditor::Run()
