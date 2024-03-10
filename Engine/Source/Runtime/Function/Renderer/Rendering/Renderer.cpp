@@ -358,8 +358,8 @@ namespace LitchiRuntime
 				rendererPath4GameView->UpdateRenderCamera(firstCamera);
 			}
 
-			rendererPath4GameView->UpdateLightShadow();
 			rendererPath4GameView->UpdateRenderableGameObject();
+			rendererPath4GameView->UpdateLightShadow();
 
 			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
@@ -371,7 +371,16 @@ namespace LitchiRuntime
 		if (ApplicationBase::Instance()->window->IsFullscreen())
 		{
 			cmd_current->BeginMarker("copy_to_back_buffer");
-			cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+
+			// todo temp code
+			if(rendererPath4GameView!=nullptr)
+			{
+				auto colorTargetTexture = rendererPath4GameView->GetColorRenderTarget();
+				cmd_current->Blit(colorTargetTexture.get(), swap_chain.get());
+			}else
+			{
+				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+			}
 			cmd_current->EndMarker();
 		}
 
