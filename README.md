@@ -4,6 +4,17 @@
 
 
 
+直接使用现成库的第三方库：
+
++ compressonator
++ freetype
++ mono
++ PhysX
++ spirv_cross
++ VulkanSDK
+
+
+
 项目构建中的问题：
 
 1. Severity	Code	Description	Project	File	Line	Suppression State
