@@ -59,11 +59,11 @@ namespace LitchiEditor
 		openProjectButton.ClickedEvent += [this]
 			{
 				OpenFileDialog dialog("Open project");
-				dialog.AddFileType("Litchi Project", "*.ovproject");
+				dialog.AddFileType("Litchi Project", "*.litchiProject");
 				dialog.Show();
 
-				std::string ovProjectPath = dialog.GetSelectedFilePath();
-				std::string rootFolderPath = PathParser::GetContainingFolder(ovProjectPath);
+				std::string projectPath = dialog.GetSelectedFilePath();
+				std::string rootFolderPath = PathParser::GetContainingFolder(projectPath);
 
 				if (dialog.HasSucceeded())
 				{
@@ -174,6 +174,8 @@ namespace LitchiEditor
 			std::filesystem::create_directory(p_path + "Assets\\");
 			std::filesystem::create_directory(p_path + "Scripts\\");
 			std::ofstream projectFile(p_path + '\\' + PathParser::GetElementName(std::string(p_path.data(), p_path.data() + p_path.size() - 1)) + ".litchiProject");
+
+			// todo: copy engine asset to Assets\\Engine
 		}
 	}
 

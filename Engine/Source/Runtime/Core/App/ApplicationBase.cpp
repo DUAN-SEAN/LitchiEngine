@@ -29,16 +29,22 @@ namespace LitchiRuntime
 	void ApplicationBase::Init() {
 		s_instance = this;
 
+		// 第二个参数支持后续修改
+		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
+
+		configManager = std::make_unique<ConfigManager>();
+		if(!configManager->Initialize(m_projectPath + "ProjectConfig.Litchi"))
+		{
+			DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+		}
+
 		// Easy Profiler
 		EASY_MAIN_THREAD;
 		profiler::startListen();// 启动profiler服务器，等待gui连接。
 
 		Debug::Initialize();
-		
-		editorAssetsPath = m_projectPath + "Assets\\";
 
-		// todo 暂时这样写
-		projectAssetsPath = editorAssetsPath;
+		auto projectAssetsPath = configManager->GetAssetFolder().string();
 
 		FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
 		ModelManager::ProvideAssetPaths(projectAssetsPath);
@@ -70,9 +76,6 @@ namespace LitchiRuntime
 
 		DEBUG_LOG_INFO("game start");
 
-		// 第二个参数支持后续修改
-		ConfigManager::Initialize(new ConfigManager(), m_projectPath + "ProjectConfig.Litchi");
-
 		Time::Initialize();
 
 		////初始化图形库，例如glfw
@@ -90,7 +93,7 @@ namespace LitchiRuntime
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{
-			auto iconPath = editorAssetsPath + "Icon.png";
+			auto iconPath = configManager->GetAssetFolder().string() + "Icon.png";
 			int iconWidth = 30;
 			int iconHeight = 30;
 			int iconChannel = 3;
@@ -121,14 +124,7 @@ namespace LitchiRuntime
 
 		// ScriptEngine::Init(m_projectPath);
 
-		// 初始化ResourceManager
-		//modelManager = std::make_unique<ModelManager>();
-		// materialManager = std::make_unique<MaterialManager>();
-		//shaderManager = std::make_unique<ShaderManager>();
 
-		//ServiceLocator::Provide<ModelManager>(*modelManager);
-		// LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
-		// ServiceLocator::Provide<ShaderManager>(*shaderManager);
 	}
 
 	/// 初始化图形库，例如glfw

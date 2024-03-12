@@ -6,19 +6,18 @@
 
 namespace LitchiRuntime
 {
-	ConfigManager* ConfigManager::Instance_;
-
-	bool ConfigManager::Initialize(ConfigManager* instance,const std::filesystem::path& config_file_path)
+	bool ConfigManager::Initialize(const std::filesystem::path& config_file_path)
 	{
-		Instance_ = instance;
-
 		auto path = config_file_path.string();
 		DEBUG_LOG_INFO("ConfigManager::Initialize path: "+ path);
-		if(!AssetManager::LoadAsset(path, instance->config_res_))
+		if(!AssetManager::LoadAsset(path, m_config_res))
 		{
 			DEBUG_LOG_INFO("ConfigManager::Create Default Config: " + path);
-			// ³õÊ¼»¯Ä¬ÈÏÅäÖÃ
-			AssetManager::SaveAsset(instance->config_res_, path);
+
+			// Init Default Config
+			InitDefaultConfig(config_file_path);
+
+			AssetManager::SaveAsset(m_config_res, path);
 		}
 
 		return true;
@@ -26,16 +25,37 @@ namespace LitchiRuntime
 
 	const std::filesystem::path& ConfigManager::GetRootFolder() const
 	{
-		return config_res_.root_folder_;
+		return m_config_res.m_root_folder;
 	}
 
 	const std::filesystem::path& ConfigManager::GetAssetFolder() const
 	{
-		return config_res_.asset_folder_;
+		return m_config_res.m_asset_folder;
+	}
+
+	const std::filesystem::path& ConfigManager::GetEngineAssetFolder() const
+	{
+		return m_config_res.m_engine_asset_folder;
+	}
+
+	const std::filesystem::path& ConfigManager::GetScriptFolder() const
+	{
+		return m_config_res.m_script_folder;
 	}
 
 	const std::filesystem::path& ConfigManager::GetDefaultScenePath() const
 	{
-		return config_res_.default_scene_path_;
+		return m_config_res.m_default_scene_path;
+	}
+
+	void ConfigManager::InitDefaultConfig(const std::filesystem::path& config_file_path)
+	{
+		// m_config_res.m_engine_asset_folder =
+		m_config_res.m_root_folder = config_file_path.string();
+		m_config_res.m_asset_folder = m_config_res.m_root_folder + "Assets//";
+		m_config_res.m_script_folder = m_config_res.m_script_folder + "Scripts//";
+		// todo init 
+
+
 	}
 }

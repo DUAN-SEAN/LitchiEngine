@@ -3,11 +3,13 @@
 #include "rttr/type"
 namespace LitchiRuntime
 {
-	struct ConfigRes
+	struct ConfigRes final
 	{
-		std::string root_folder_;
-		std::string asset_folder_;
-        std::string default_scene_path_;
+		std::string m_root_folder;
+		std::string m_asset_folder;
+		std::string m_script_folder;
+		std::string m_engine_asset_folder;
+        std::string m_default_scene_path;
 
         RTTR_ENABLE()
 	};
@@ -15,17 +17,19 @@ namespace LitchiRuntime
     class ConfigManager
     {
     public:
-
-        static bool Initialize(ConfigManager* instance,const std::filesystem::path& config_file_path);
+        ConfigManager() = default;
+    	bool Initialize(const std::filesystem::path& config_file_path);
 
         const std::filesystem::path& GetRootFolder() const;
         const std::filesystem::path& GetAssetFolder() const;
+        const std::filesystem::path& GetEngineAssetFolder() const;
+        const std::filesystem::path& GetScriptFolder() const;
         const std::filesystem::path& GetDefaultScenePath() const;
-
-        static ConfigManager* Instance_;
+    private:
+        void InitDefaultConfig(const std::filesystem::path& config_file_path);
 
     private:
-    	ConfigRes config_res_;
+    	ConfigRes m_config_res;
 
     };
 } // namespace LitchiRuntime

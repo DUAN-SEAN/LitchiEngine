@@ -108,15 +108,15 @@ void LitchiEditor::ApplicationEditor::Init()
 	// init uiManager
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
-		uiManager->SetEditorLayoutSaveFilename(this->projectAssetsPath + "Config\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(configManager->GetAssetFolder().string() + "Config\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 	ServiceLocator::Provide<UIManager>(*uiManager.get());
 
-	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
-		uiManager->ResetLayout(this->projectAssetsPath + "Config\\layout.ini");
+	if (!std::filesystem::exists(configManager->GetAssetFolder().string() + "Config\\layout.ini"))
+		uiManager->ResetLayout(configManager->GetAssetFolder().string() + "Config\\layout.ini");
 
 	// Setup RendererPath
 	SetupRendererPath();
@@ -356,7 +356,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
+	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, configManager->GetAssetFolder().string());
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);

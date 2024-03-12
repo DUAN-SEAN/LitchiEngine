@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 
 
 #ifdef _DEBUG
-	application_standalone->SetProjectPath(filePath + "\\Debug\\Project\\");
+	application_standalone->SetProjectPath("D:\\Res\\LitchiEngine\\DemoProject\\ProjectTemplete\\");
 #else
 	application_standalone->SetProjectPath(filePath + "\\Project\\");
 #endif
