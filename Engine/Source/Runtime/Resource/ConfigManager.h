@@ -8,7 +8,6 @@ namespace LitchiRuntime
 		std::string m_root_folder;
 		std::string m_asset_folder;
 		std::string m_script_folder;
-		std::string m_engine_asset_folder;
         std::string m_default_scene_path;
 
         RTTR_ENABLE()
@@ -18,18 +17,17 @@ namespace LitchiRuntime
     {
     public:
         ConfigManager() = default;
-    	bool Initialize(const std::filesystem::path& config_file_path);
+    	bool Initialize(const std::string& projectRootFolder);
 
-        const std::filesystem::path& GetRootFolder() const;
-        const std::filesystem::path& GetAssetFolder() const;
-        const std::filesystem::path& GetEngineAssetFolder() const;
-        const std::filesystem::path& GetScriptFolder() const;
-        const std::filesystem::path& GetDefaultScenePath() const;
+        const std::string& GetRootFolder() const;
+        const std::string& GetAssetFolder() const;
+        const std::string& GetScriptFolder() const;
+        const std::string& GetDefaultScenePath() const;
     private:
-        void InitDefaultConfig(const std::filesystem::path& config_file_path);
+        void InitDefaultConfig(const std::string& projectRootFolder);
 
     private:
-    	ConfigRes m_config_res;
+    	ConfigRes m_config_res{};
 
     };
 } // namespace LitchiRuntime

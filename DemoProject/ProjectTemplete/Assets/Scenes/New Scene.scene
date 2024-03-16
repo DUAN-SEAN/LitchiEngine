@@ -1,0 +1,195 @@
+{
+    "availableID": 6,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 1,
+            "parentId": 0,
+            "name": "liubei",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 1.0,
+                        "z": 100.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\Cube.fbx",
+                    "meshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\Default.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 2,
+            "parentId": 0,
+            "name": "diaochan",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": -3.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\Cone.fbx",
+                    "meshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\Default.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 3,
+            "parentId": 0,
+            "name": "xiaoqiao",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 3.0,
+                        "z": 1.5
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\Sphere.fbx",
+                    "meshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\DefaultUnlit.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 4,
+            "parentId": 0,
+            "name": "DirectionalLight",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 10.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.9938886761665344,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": -0.11038724333047867
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "DirectionalLight",
+                    "light": {
+                        "lightType": 1.0,
+                        "color": {
+                            "x": 0.30000001192092898,
+                            "y": 0.6000000238418579,
+                            "z": 0.699999988079071
+                        },
+                        "intensity": 3.0,
+                        "constant": 0.0,
+                        "linear": 0.0,
+                        "quadratic": 1.0,
+                        "cutoff": 12.0,
+                        "outerCutoff": 15.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 5,
+            "parentId": 1,
+            "name": "Empty Object",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Component"
+                },
+                {
+                    "Type": "Collider",
+                    "physicsMaterial": {
+                        "dynamicFriction": -431602080.0,
+                        "restitution": -431602080.0,
+                        "staticFriction": -431602080.0
+                    }
+                }
+            ]
+        }
+    ]
+}

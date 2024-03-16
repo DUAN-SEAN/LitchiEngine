@@ -359,9 +359,9 @@ namespace LitchiRuntime
         SP_ASSERT(material != nullptr);
         SP_ASSERT(!file_path.empty());
 
-        // Try to get the texture
-        const auto tex_name = FileSystem::GetFileNameWithoutExtensionFromFilePath(file_path);
-        shared_ptr<RHI_Texture> texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
+        //// Try to get the texture
+        //const auto tex_name = FileSystem::GetFileNameWithoutExtensionFromFilePath(file_path);
+        //shared_ptr<RHI_Texture> texture = ResourceCache::GetByName<RHI_Texture2D>(tex_name);
 
         // todo:
         //if (texture)

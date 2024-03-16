@@ -30,6 +30,11 @@ namespace LitchiRuntime
             m_projectPath = project_path;
         }
 
+        const std::string& GetEngineAssetsPath()
+        {
+            return m_engineAssetsPath;
+        }
+
         /// 初始化
         virtual void Init();
 
@@ -78,9 +83,11 @@ namespace LitchiRuntime
 
     protected:
 
-        std::string m_engineRoot;// engine executable file root 
-        std::string m_projectPath;
-        std::string m_projectName;
+        std::string m_engineAssetsPath;
+
+        std::string m_engineRoot{};// engine executable file root 
+        std::string m_projectPath{};
+        std::string m_projectName{};
         std::string m_title;// default: ProjectName.EngineVersion
 
     };

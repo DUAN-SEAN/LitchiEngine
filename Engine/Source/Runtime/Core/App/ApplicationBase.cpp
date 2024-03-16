@@ -29,14 +29,21 @@ namespace LitchiRuntime
 	void ApplicationBase::Init() {
 		s_instance = this;
 
+		m_engineAssetsPath = std::filesystem::canonical("Data\\Engine").string() + "\\";
+
 		// 第二个参数支持后续修改
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
-		configManager = std::make_unique<ConfigManager>();
-		if(!configManager->Initialize(m_projectPath + "ProjectConfig.Litchi"))
+		if(!m_projectPath.empty())
 		{
-			DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+			configManager = std::make_unique<ConfigManager>();
+			if (!configManager->Initialize(m_projectPath + "ProjectConfig.Litchi"))
+			{
+				DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+				return;
+			}
 		}
+		
 
 		// Easy Profiler
 		EASY_MAIN_THREAD;
@@ -44,18 +51,22 @@ namespace LitchiRuntime
 
 		Debug::Initialize();
 
-		auto projectAssetsPath = configManager->GetAssetFolder().string();
+		std::string projectAssetsPath = "";
+		if(configManager)
+		{
+			projectAssetsPath = configManager->GetAssetFolder();
+		}
 
 		FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
-		ModelManager::ProvideAssetPaths(projectAssetsPath);
-		TextureManager::ProvideAssetPaths(projectAssetsPath);
-		ShaderManager::ProvideAssetPaths(projectAssetsPath);
-		MaterialManager::ProvideAssetPaths(projectAssetsPath);
-		FontManager::ProvideAssetPaths(projectAssetsPath);
-		PrefabManager::ProvideAssetPaths(projectAssetsPath);
+		ModelManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		TextureManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		ShaderManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		MaterialManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		FontManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		PrefabManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
 
 		// 初始化场景 如果没有场景则构建默认场景
-		sceneManager = std::make_unique<SceneManager>(projectAssetsPath);
+		sceneManager = std::make_unique<SceneManager>();
 		shaderManager = std::make_unique<ShaderManager>();
 		materialManager = std::make_unique<MaterialManager>();
 		fontManager = std::make_unique<FontManager>();
@@ -93,7 +104,7 @@ namespace LitchiRuntime
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{
-			auto iconPath = configManager->GetAssetFolder().string() + "Icon.png";
+			auto iconPath = m_engineAssetsPath + "Icons\\Icon.png";
 			int iconWidth = 30;
 			int iconHeight = 30;
 			int iconChannel = 3;
@@ -107,8 +118,8 @@ namespace LitchiRuntime
 		UpdateScreenSize();
 
 		{
+			// ResourceCache::Initialize(m_projectPath);
 
-			ResourceCache::Initialize(m_projectPath);
 			Renderer::Initialize();
 
 		}

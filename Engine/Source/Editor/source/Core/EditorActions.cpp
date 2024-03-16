@@ -87,7 +87,7 @@ void LitchiEditor::EditorActions::SaveSceneChanges()
 void LitchiEditor::EditorActions::SaveAs()
 {
 	SaveFileDialog dialog("New Scene");
-	dialog.SetInitialDirectory(LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath + "New Scene");
+	dialog.SetInitialDirectory(LitchiEditor::ApplicationEditor::Instance()->configManager->GetAssetFolder() + "New Scene");
 	dialog.DefineExtension("Litchi Scene", ".scene");
 	dialog.Show();
 
@@ -789,11 +789,11 @@ std::string LitchiEditor::EditorActions::GetRealPath(const std::string & p_path)
 
 	if (p_path[0] == ':') // The path is an engine path
 	{
-		result = LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath + std::string(p_path.data() + 1, p_path.data() + p_path.size());
+		result = LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + std::string(p_path.data() + 1, p_path.data() + p_path.size());
 	}
 	else // The path is a project path
 	{
-		result = LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath + p_path;
+		result = LitchiEditor::ApplicationEditor::Instance()->configManager->GetAssetFolder() + p_path;
 	}
 
 	return result;
@@ -803,7 +803,7 @@ std::string LitchiEditor::EditorActions::GetResourcePath(const std::string & p_p
 {
 	std::string result = p_path;
 
-	if (LitchiRuntime::String::Replace(result, p_isFromEngine ? LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath : LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath, ""))
+	if (LitchiRuntime::String::Replace(result, p_isFromEngine ? LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() : ApplicationEditor::Instance()->configManager->GetAssetFolder(), ""))
 	{
 		if (p_isFromEngine)
 			result = ':' + result;
@@ -816,8 +816,8 @@ std::string LitchiEditor::EditorActions::GetScriptPath(const std::string & p_pat
 {
 	std::string result = p_path;
 
-	String::Replace(result, LitchiEditor::ApplicationEditor::Instance()->projectScriptsPath, "");
-	String::Replace(result, ".lua", "");
+	String::Replace(result, ApplicationEditor::Instance()->configManager->GetScriptFolder(), "");
+	String::Replace(result, ".cs", "");
 
 	return result;
 }
@@ -1013,7 +1013,7 @@ void LitchiEditor::EditorActions::PropagateFileRename(std::string p_previousName
 
 void LitchiEditor::EditorActions::PropagateFileRenameThroughSavedFilesOfType(const std::string& p_previousName, const std::string& p_newName, LitchiRuntime::PathParser::EFileType p_fileType)
 {
-	for (auto& entry : std::filesystem::recursive_directory_iterator(LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath))
+	for (auto& entry : std::filesystem::recursive_directory_iterator(LitchiEditor::ApplicationEditor::Instance()->configManager->GetAssetFolder()))
 	{
 		if (PathParser::GetFileType(entry.path().string()) == p_fileType)
 		{

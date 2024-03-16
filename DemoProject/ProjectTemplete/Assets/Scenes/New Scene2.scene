@@ -1,0 +1,157 @@
+{
+    "availableID": 5,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 1,
+            "parentId": 0,
+            "name": "liubei",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": -1.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 1.0,
+                        "z": 100.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\Cube.fbx",
+                    "meshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\Default.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 2,
+            "parentId": 0,
+            "name": "diaochan",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.5999999642372131,
+                        "y": 0.3999999165534973,
+                        "z": -3.0
+                    },
+                    "localRotation": {
+                        "x": -0.5457308888435364,
+                        "y": -0.4496418833732605,
+                        "z": -0.4496418833732605,
+                        "w": 0.5457308888435364
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\rp_sophia_animated_003_idling.fbx",
+                    "meshIndex": 1
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\Default1.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 3,
+            "parentId": 0,
+            "name": "xiaoqiao",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 3.0,
+                        "z": 1.5
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "modelPath": "Engine\\Models\\Sphere.fbx",
+                    "meshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "Engine\\Materials\\DefaultUnlit.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 4,
+            "parentId": 0,
+            "name": "DirectionalLight",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 10.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.770011305809021,
+                        "y": 0.11168339103460312,
+                        "z": 0.6122757792472839,
+                        "w": 0.1404554694890976
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "DirectionalLight",
+                    "light": {
+                        "lightType": 1.0,
+                        "color": {
+                            "x": 0.5,
+                            "y": 0.5,
+                            "z": 0.5
+                        },
+                        "intensity": 2.3000006675720217,
+                        "constant": 0.5,
+                        "linear": 0.0,
+                        "quadratic": 1.0,
+                        "cutoff": 14.60000991821289,
+                        "outerCutoff": 15.0
+                    }
+                }
+            ]
+        }
+    ]
+}

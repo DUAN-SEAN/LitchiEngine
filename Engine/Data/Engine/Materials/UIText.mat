@@ -1,0 +1,12 @@
+{
+  "shaderPath": ":Shaders\\UIStandard.glsl",
+  "settings": {
+    "blendable": true,
+    "backfaceCulling": true,
+    "depthTest": true,
+    "gpuInstances": 1
+  },
+  "uniformInfoList": [
+   
+  ]
+}

@@ -247,7 +247,7 @@ namespace ImGuiSp
     }
 
     // Image slot
-    static void image_slot(const std::shared_ptr<LitchiRuntime::RHI_Texture>& texture_in, const std::function<void(const std::shared_ptr<LitchiRuntime::RHI_Texture>&)>& setter)
+    static void image_slot(const std::shared_ptr<LitchiRuntime::RHI_Texture>& texture_in, const std::function<void(LitchiRuntime::RHI_Texture*)>& setter)
     {
         const ImVec2 slot_size  = ImVec2(80 * LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale());
         const float button_size = 15.0f * LitchiRuntime::ApplicationBase::Instance()->window->GetDpiScale();
@@ -292,7 +292,7 @@ namespace ImGuiSp
         {
             try
             {
-                if (const auto tex = LitchiRuntime::ResourceCache::Load<LitchiRuntime::RHI_Texture2D>(std::get<const char*>(payload->data)))
+                if (const auto tex = LitchiRuntime::ApplicationBase::Instance()->textureManager->LoadResource(std::get<const char*>(payload->data)))
                 {
                     setter(tex);
                 }

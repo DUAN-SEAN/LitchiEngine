@@ -37,6 +37,12 @@ namespace LitchiEditor
 		static ApplicationEditor* Instance() { return instance_; }
 
 
+		const std::string& GetEditorAssetsPath()
+		{
+			return m_editorAssetsPath;
+		}
+
+
 	public:
 		// 提供一系列的绘制函数
 		void RenderViews(float p_deltaTime);
@@ -72,8 +78,14 @@ namespace LitchiEditor
 		*/
 		void SelectActor(GameObject* p_target);
 		void MoveToTarget(GameObject* p_target);
+
+	protected:
+		std::string m_editorAssetsPath;
+
 	private:
-		void SetupUI();
+		void RunProjectHub();
+		void OnProjectOpen();
+		void SetupEditorUI();
 		void SetupRendererPath();
 
 	private:

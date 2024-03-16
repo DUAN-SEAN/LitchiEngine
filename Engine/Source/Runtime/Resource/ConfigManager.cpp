@@ -6,16 +6,16 @@
 
 namespace LitchiRuntime
 {
-	bool ConfigManager::Initialize(const std::filesystem::path& config_file_path)
+	bool ConfigManager::Initialize(const std::string& projectRootFolder)
 	{
-		auto path = config_file_path.string();
+		auto path = projectRootFolder +"ProjectConfig.Litchi";
 		DEBUG_LOG_INFO("ConfigManager::Initialize path: "+ path);
 		if(!AssetManager::LoadAsset(path, m_config_res))
 		{
 			DEBUG_LOG_INFO("ConfigManager::Create Default Config: " + path);
 
 			// Init Default Config
-			InitDefaultConfig(config_file_path);
+			InitDefaultConfig(projectRootFolder);
 
 			AssetManager::SaveAsset(m_config_res, path);
 		}
@@ -23,37 +23,32 @@ namespace LitchiRuntime
 		return true;
 	}
 
-	const std::filesystem::path& ConfigManager::GetRootFolder() const
+	const std::string& ConfigManager::GetRootFolder() const
 	{
 		return m_config_res.m_root_folder;
 	}
 
-	const std::filesystem::path& ConfigManager::GetAssetFolder() const
+	const std::string& ConfigManager::GetAssetFolder() const
 	{
 		return m_config_res.m_asset_folder;
 	}
 
-	const std::filesystem::path& ConfigManager::GetEngineAssetFolder() const
-	{
-		return m_config_res.m_engine_asset_folder;
-	}
-
-	const std::filesystem::path& ConfigManager::GetScriptFolder() const
+	const std::string& ConfigManager::GetScriptFolder() const
 	{
 		return m_config_res.m_script_folder;
 	}
 
-	const std::filesystem::path& ConfigManager::GetDefaultScenePath() const
+	const std::string& ConfigManager::GetDefaultScenePath() const
 	{
 		return m_config_res.m_default_scene_path;
 	}
 
-	void ConfigManager::InitDefaultConfig(const std::filesystem::path& config_file_path)
+	void ConfigManager::InitDefaultConfig(const std::string& projectRootFolder)
 	{
 		// m_config_res.m_engine_asset_folder =
-		m_config_res.m_root_folder = config_file_path.string();
-		m_config_res.m_asset_folder = m_config_res.m_root_folder + "Assets//";
-		m_config_res.m_script_folder = m_config_res.m_script_folder + "Scripts//";
+		m_config_res.m_root_folder = projectRootFolder;
+		m_config_res.m_asset_folder = m_config_res.m_root_folder + "Assets\\";
+		m_config_res.m_script_folder = m_config_res.m_root_folder + "Scripts\\";
 		// todo init 
 
 

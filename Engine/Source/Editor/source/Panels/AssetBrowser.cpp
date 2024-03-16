@@ -288,7 +288,7 @@ public:
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath + "Shaders\\Standard.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Standard.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -305,7 +305,7 @@ public:
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath + "Shaders\\StandardPBR.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\StandardPBR.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -322,7 +322,7 @@ public:
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath + "Shaders\\Unlit.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Unlit.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -339,7 +339,7 @@ public:
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath + "Shaders\\Lambert.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Lambert.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -929,10 +929,14 @@ LitchiEditor::AssetBrowser::AssetBrowser
 	const std::string& p_title,
 	bool p_opened,
 	const LitchiRuntime::PanelWindowSettings& p_windowSettings,
-	const std::string& p_projectAssetFolder
+	const std::string& p_engineAssetFolder,
+	const std::string& p_projectAssetFolder,
+	const std::string& p_projectScriptFolder
 ) :
 	PanelWindow(p_title, p_opened, p_windowSettings),
-	m_projectAssetFolder(p_projectAssetFolder)
+	m_engineAssetFolder(p_engineAssetFolder),
+	m_projectAssetFolder(p_projectAssetFolder),
+	m_projectScriptFolder(p_projectScriptFolder)
 {
 	if (!std::filesystem::exists(m_projectAssetFolder))
 	{
@@ -942,6 +946,19 @@ LitchiEditor::AssetBrowser::AssetBrowser
 		(
 			"Assets folder not found",
 			"The \"Assets/\" folders hasn't been found in your project directory.\nIt has been automatically generated",
+			MessageBox::EMessageType::WARNING,
+			MessageBox::EButtonLayout::OK
+		);
+	}
+
+	if (!std::filesystem::exists(m_projectScriptFolder))
+	{
+		std::filesystem::create_directories(m_projectScriptFolder);
+
+		MessageBox message
+		(
+			"Scripts folder not found",
+			"The \"Scripts/\" folders hasn't been found in your project directory.\nIt has been automatically generated",
 			MessageBox::EMessageType::WARNING,
 			MessageBox::EButtonLayout::OK
 		);
@@ -964,7 +981,11 @@ LitchiEditor::AssetBrowser::AssetBrowser
 void LitchiEditor::AssetBrowser::Fill()
 {
 	m_assetList->CreateWidget<Separator>();
+	ConsiderItem(nullptr, std::filesystem::directory_entry(m_engineAssetFolder), true);
+	m_assetList->CreateWidget<Separator>();
 	ConsiderItem(nullptr, std::filesystem::directory_entry(m_projectAssetFolder), false);
+	m_assetList->CreateWidget<Separator>();
+	ConsiderItem(nullptr, std::filesystem::directory_entry(m_projectScriptFolder), false, false, true);
 }
 
 void LitchiEditor::AssetBrowser::Clear()

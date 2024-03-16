@@ -19,14 +19,6 @@ int main(int argc, char** argv)
 	projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
 
-
-
-#ifdef _DEBUG
-	application_standalone->SetProjectPath("D:\\Res\\LitchiEngine\\DemoProject\\ProjectTemplete\\");
-#else
-	application_standalone->SetProjectPath(filePath + "\\Project\\");
-#endif
-
 	delete projectPath;
 
 	application.Initiliaze(application_standalone);

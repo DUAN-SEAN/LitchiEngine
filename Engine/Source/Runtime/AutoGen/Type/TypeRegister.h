@@ -141,8 +141,9 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<ConfigRes>("ConfigRes")
 		.constructor<>()
-		.property("assetFolder", &ConfigRes::m_asset_folder)
 		.property("rootFolder", &ConfigRes::m_root_folder)
+		.property("assetFolder", &ConfigRes::m_asset_folder)
+		.property("scriptFolder", &ConfigRes::m_script_folder)
 		.property("defaultScenePath", &ConfigRes::m_default_scene_path);
 
 
