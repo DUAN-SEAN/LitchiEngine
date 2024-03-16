@@ -6,7 +6,8 @@ cd %~dp0
 
 mkdir Build
 cd Build
-cmake ..
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+:: cmake .. -DCMAKE_BUILD_TYPE=Release
 
 :: cmake --build . --config Release
 

@@ -77,13 +77,6 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     target_compile_definitions(GLFW PRIVATE _GLFW_WIN32)
 endif()
 
-if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(GLFW PRIVATE HZ_DEBUG)
-    set_target_properties(GLFW PROPERTIES DEBUG_POSTFIX d)
-elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(GLFW PRIVATE HZ_RELEASE)
-endif()
-
 # ==================================================================
 
 # cmake_minimum_required(VERSION 3.0...3.20 FATAL_ERROR)

@@ -5,7 +5,7 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 # 添加第三方库
 add_subdirectory(assimp)
 # add_subdirectory(compressonator)
-add_subdirectory(dxcompiler)
+# add_subdirectory(dxcompiler)
 add_subdirectory(easy_profiler)
 add_subdirectory(FreeImage)
 # add_subdirectory(freetype)

@@ -1,3 +1,4 @@
+add_definitions(-DDISABLE_FORCE_DEBUG_POSTFIX)
 
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
 set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty(new)")
@@ -14,9 +15,9 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # 如果没有指定构建类型，那么默认为Release
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)
-endif()
+# if(NOT CMAKE_BUILD_TYPE)
+# 	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)
+# endif()
 
 # # 根据构建类型设置编译选项
 # if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
@@ -36,19 +37,19 @@ endif()
 
 # 仅对 Visual Studio 编译器生效
 if(MSVC)
-    set(CMAKE_CXX_FLAGS_DEBUG "/MTd")
-    set(CMAKE_CXX_FLAGS_RELEASE "/MT")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /MT")
     add_compile_options("/MP")
 endif()
 
 # 在Debug模式下定义_DEBUG宏
-set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
+# set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
+# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
 
 # 如果是Windows环境并且不是Cygwin，那么在Debug模式下定义_DEBUG宏
-IF (WIN32 AND NOT CYGWIN)
-    SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
-ENDIF ()
+# IF (WIN32 AND NOT CYGWIN)
+#     SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
+# ENDIF ()
 
 # 平台相关设置
 #if(WIN32)

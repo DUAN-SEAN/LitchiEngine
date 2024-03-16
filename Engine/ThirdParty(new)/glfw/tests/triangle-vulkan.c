@@ -41,6 +41,7 @@
 #include <windows.h>
 #endif
 
+#define GLAD_VULKAN_IMPLEMENTATION
 #include <glad/vulkan.h>
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
@@ -1246,7 +1247,7 @@ static void demo_prepare_pipeline(struct demo *demo) {
     VkPipelineDepthStencilStateCreateInfo ds;
     VkPipelineViewportStateCreateInfo vp;
     VkPipelineMultisampleStateCreateInfo ms;
-    VkDynamicState dynamicStateEnables[2];
+    VkDynamicState dynamicStateEnables[(VK_DYNAMIC_STATE_STENCIL_REFERENCE - VK_DYNAMIC_STATE_VIEWPORT + 1)];
     VkPipelineDynamicStateCreateInfo dynamicState;
 
     VkResult U_ASSERT_ONLY err;
@@ -1560,7 +1561,6 @@ static VkBool32 demo_check_layers(uint32_t check_count, const char **check_names
 
 static void demo_init_vk(struct demo *demo) {
     VkResult err;
-    VkBool32 portability_enumeration = VK_FALSE;
     uint32_t i = 0;
     uint32_t required_extension_count = 0;
     uint32_t instance_extension_count = 0;
@@ -1668,13 +1668,6 @@ static void demo_init_vk(struct demo *demo) {
                 }
             }
             assert(demo->enabled_extension_count < 64);
-            if (!strcmp(VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
-                        instance_extensions[i].extensionName)) {
-                demo->extension_names[demo->enabled_extension_count++] =
-                    VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME;
-                portability_enumeration = VK_TRUE;
-            }
-            assert(demo->enabled_extension_count < 64);
         }
 
         free(instance_extensions);
@@ -1698,9 +1691,6 @@ static void demo_init_vk(struct demo *demo) {
         .enabledExtensionCount = demo->enabled_extension_count,
         .ppEnabledExtensionNames = (const char *const *)demo->extension_names,
     };
-
-    if (portability_enumeration)
-        inst_info.flags |= VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 
     uint32_t gpu_count;
 

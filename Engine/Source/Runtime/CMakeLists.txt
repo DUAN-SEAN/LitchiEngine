@@ -80,6 +80,11 @@ target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/W
 target_link_libraries(${TARGET_NAME} PUBLIC vulkan-1)
 
 # target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/dxc/lib)
+target_link_directories(${TARGET_NAME}
+    PUBLIC
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/dxcompiler/lib/Debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/dxcompiler/lib/Release>
+)
 target_link_libraries(${TARGET_NAME} PUBLIC dxcompiler)
 
 target_link_directories(${TARGET_NAME}
@@ -121,6 +126,6 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/vulkanmemoryallocator/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/spirv_cross/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxcompiler/include>)
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/compressonator>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/compressonator/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/FreeImage/FreeImage>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/easy_profiler/include>)
