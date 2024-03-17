@@ -16,9 +16,9 @@ int main(int argc, char** argv)
 	std::string filePath(projectPath);
 
 #ifdef _DEBUG
-	application_standalone->SetProjectPath(filePath + "\\Debug\\Project\\");
+	application_standalone->SetProjectPath(filePath + "\\ProjectTemplete\\");
 #else
-	application_standalone->SetProjectPath(filePath + "\\Project\\");
+	application_standalone->SetProjectPath(filePath + "\\ProjectTemplete\\");
 #endif
 	delete projectPath;
 

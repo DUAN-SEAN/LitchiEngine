@@ -6,8 +6,8 @@
 
 namespace LitchiRuntime
 {
-    std::filesystem::path AssetManager::GetFullPath(const std::string& relative_path)
+   /* std::filesystem::path AssetManager::GetFullPath(const std::string& relative_path)
     {
         return std::filesystem::absolute(Application::GetDataPath() + relative_path);
-    }
-} // namespace Piccolo
+    }*/
+}

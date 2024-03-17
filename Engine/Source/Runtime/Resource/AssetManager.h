@@ -77,8 +77,5 @@ namespace LitchiRuntime
             auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
             return asset_json_text;
         }
-
-        static std::filesystem::path GetFullPath(const std::string& relative_path);
-
     };
 } // namespace Piccolo

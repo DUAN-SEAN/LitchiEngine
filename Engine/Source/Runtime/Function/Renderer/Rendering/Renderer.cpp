@@ -328,6 +328,12 @@ namespace LitchiRuntime
 		OnFrameStart(cmd_current);
 		EASY_END_BLOCK
 
+		// update frame constant buffer
+		EASY_BLOCK("Build cb_frame")
+		Cb_Frame frameBufferData = BuildFrameBufferData();
+		UpdateConstantBufferFrame(cmd_current, frameBufferData, false);
+		EASY_END_BLOCK
+
 		EASY_BLOCK("Render4BuildInSceneView")
 		// 绘制SceneView Path
 		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
@@ -409,11 +415,11 @@ namespace LitchiRuntime
 		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
 		EASY_END_BLOCK
 
-		// update frame constant buffer
-		EASY_BLOCK("Build cb_frame")
-		Cb_Frame frameBufferData = BuildFrameBufferData();
-		UpdateConstantBufferFrame(cmd_list, frameBufferData, false);
-		EASY_END_BLOCK
+		//// update frame constant buffer
+		//EASY_BLOCK("Build cb_frame")
+		//Cb_Frame frameBufferData = BuildFrameBufferData();
+		//UpdateConstantBufferFrame(cmd_list, frameBufferData, false);
+		//EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
 		if (camera)
@@ -480,12 +486,6 @@ namespace LitchiRuntime
 		EASY_BLOCK("Build cb_rendererPath")
 		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
 		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
-		EASY_END_BLOCK
-
-		// update frame constant buffer
-		EASY_BLOCK("Build cb_frame")
-		Cb_Frame frameBufferData = BuildFrameBufferData();
-		UpdateConstantBufferFrame(cmd_list, frameBufferData, false);
 		EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();

@@ -37,7 +37,7 @@ namespace LitchiRuntime
 		if(!m_projectPath.empty())
 		{
 			configManager = std::make_unique<ConfigManager>();
-			if (!configManager->Initialize(m_projectPath + "ProjectConfig.Litchi"))
+			if (!configManager->Initialize(m_projectPath))
 			{
 				DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
 				return;
