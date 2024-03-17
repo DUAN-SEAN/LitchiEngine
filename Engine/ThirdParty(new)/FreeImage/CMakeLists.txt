@@ -44,7 +44,7 @@ if (MSVC)
 endif()
 
 # Append -d to debug build so we can have both debug and release builds in the same directory
-set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
+# set_target_properties(${PROJECT_NAME} PROPERTIES DEBUG_POSTFIX -d)
 
 # Test suite
 if (BUILD_TESTS)

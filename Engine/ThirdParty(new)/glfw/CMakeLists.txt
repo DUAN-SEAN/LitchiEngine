@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(GLFW)
+project(glfw)
 
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
@@ -9,8 +9,8 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 file(GLOB_RECURSE GLFW_SRC
-     "${PROJECT_SOURCE_DIR}/include/GLFW/glfw3.h"
-     "${PROJECT_SOURCE_DIR}/include/GLFW/glfw3native.h"
+     "${PROJECT_SOURCE_DIR}/include/glfw/glfw3.h"
+     "${PROJECT_SOURCE_DIR}/include/glfw/glfw3native.h"
      "${PROJECT_SOURCE_DIR}/src/glfw_config.h"
      "${PROJECT_SOURCE_DIR}/src/context.c"
      "${PROJECT_SOURCE_DIR}/src/init.c"
@@ -24,9 +24,9 @@ file(GLOB_RECURSE GLFW_SRC
      "${PROJECT_SOURCE_DIR}/src/vulkan.c"
      "${PROJECT_SOURCE_DIR}/src/window.c")
 
-add_library(GLFW STATIC ${GLFW_SRC})
+add_library(glfw STATIC ${GLFW_SRC})
 
-target_compile_definitions(GLFW PRIVATE _CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(glfw PRIVATE _CRT_SECURE_NO_WARNINGS)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     file(GLOB_RECURSE GLFW_LINUX_SRC
@@ -43,8 +43,8 @@ if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
          "${PROJECT_SOURCE_DIR}/src/osmesa_context.c"
          "${PROJECT_SOURCE_DIR}/src/linux_joystick.c")
 
-    target_sources(GLFW PRIVATE ${GLFW_LINUX_SRC})
-    target_compile_definitions(GLFW PRIVATE _GLFW_X11)
+    target_sources(glfw PRIVATE ${GLFW_LINUX_SRC})
+    target_compile_definitions(glfw PRIVATE _GLFW_X11)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
     file(GLOB_RECURSE GLFW_MAC_SRC
          "${PROJECT_SOURCE_DIR}/src/cocoa_init.m"
@@ -58,8 +58,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
          "${PROJECT_SOURCE_DIR}/src/osmesa_context.c"
          "${PROJECT_SOURCE_DIR}/src/egl_context.c")
 
-    target_sources(GLFW PRIVATE ${GLFW_MAC_SRC})
-    target_compile_definitions(GLFW PRIVATE _GLFW_COCOA)
+    target_sources(glfw PRIVATE ${GLFW_MAC_SRC})
+    target_compile_definitions(glfw PRIVATE _GLFW_COCOA)
 elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
     file(GLOB_RECURSE GLFW_WIN_SRC
          "${PROJECT_SOURCE_DIR}/src/win32_init.c"
@@ -73,8 +73,8 @@ elseif(CMAKE_SYSTEM_NAME STREQUAL "Windows")
          "${PROJECT_SOURCE_DIR}/src/egl_context.c"
          "${PROJECT_SOURCE_DIR}/src/osmesa_context.c")
 
-    target_sources(GLFW PRIVATE ${GLFW_WIN_SRC})
-    target_compile_definitions(GLFW PRIVATE _GLFW_WIN32)
+    target_sources(glfw PRIVATE ${GLFW_WIN_SRC})
+    target_compile_definitions(glfw PRIVATE _GLFW_WIN32)
 endif()
 
 # ==================================================================

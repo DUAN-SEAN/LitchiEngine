@@ -58,7 +58,7 @@ target_link_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME} PUBLIC libmono-static-sgen.lib)
 
 # target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/assimp/lib)
-target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mt)
+target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc143-mt)
 
 target_link_directories(${TARGET_NAME}
 	PUBLIC
@@ -70,11 +70,11 @@ target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 # Physx
 # target_link_directories(${TARGET_NAME}
 # 	PUBLIC
-#     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug>
-#     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release>
+#     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc.143mt/debug>
+#     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc143.mt/release>
 # )
 # target_link_libraries(physx_64 physxFoundation_64 physxExtensions_static_64 physxPvdSDK_static_64)
-include(../../ThridParty/physx-4.1/CMakeLists.txt)
+include("../../ThirdParty(new)/Physx/CMakeLists.txt")
 
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)
 target_link_libraries(${TARGET_NAME} PUBLIC vulkan-1)
@@ -125,7 +125,7 @@ target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/VulkanSDK/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/vulkanmemoryallocator/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/spirv_cross/include>)
-target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxcompiler/include>)
+target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/dxcompiler/include/dxc>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/compressonator/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/FreeImage/FreeImage>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/easy_profiler/include>)

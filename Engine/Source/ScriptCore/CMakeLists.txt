@@ -21,7 +21,6 @@ ADD_LIBRARY(${PROJECT_NAME} SHARED
 # Set designer and XAML properties.
 # CSHARP_SET_DESIGNER_CS_PROPERTIES("${CMAKE_BINARY_DIR}/Config/${PROJECT_NAME}/AssemblyInfo.cs")
 
-# 将Target工程添加到目录Engine目录下 
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
 # Set CLR assembly properties.

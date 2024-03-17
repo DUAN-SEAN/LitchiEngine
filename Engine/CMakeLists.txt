@@ -1,4 +1,4 @@
-add_definitions(-DDISABLE_FORCE_DEBUG_POSTFIX)
+# add_definitions(-DDISABLE_FORCE_DEBUG_POSTFIX)
 
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
 set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty(new)")
@@ -15,25 +15,25 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 endif()
 
 # 如果没有指定构建类型，那么默认为Release
-# if(NOT CMAKE_BUILD_TYPE)
-# 	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)
-# endif()
+if(NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)
+endif()
 
-# # 根据构建类型设置编译选项
-# if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
-#     # 在Debug模式下使用多线程调试DLL (/MTd)
-#     add_compile_options("/MTd")
-#     # 启用并行编译
-#     add_compile_options("/MP")
-# elseif (CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
-#     # 在Release模式下使用多线程DLL (/MT)
-# 	add_compile_options("/MT")
-#         # 启用并行编译
-#     add_compile_options("/MP")
-# else()
-# 	message("else:${CMAKE_BUILD_TYPE}")
-# 	message("else:${CMAKE_C_FLAGS_RELEASE}")
-# endif()
+# 根据构建类型设置编译选项
+if(CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Debug"))
+    # 在Debug模式下使用多线程调试DLL (/MTd)
+    add_compile_options("/MTd")
+    # 启用并行编译
+    add_compile_options("/MP")
+elseif (CMAKE_BUILD_TYPE AND (CMAKE_BUILD_TYPE STREQUAL "Release"))
+    # 在Release模式下使用多线程DLL (/MT)
+	add_compile_options("/MT")
+        # 启用并行编译
+    add_compile_options("/MP")
+else()
+	message("else:${CMAKE_BUILD_TYPE}")
+	message("else:${CMAKE_C_FLAGS_RELEASE}")
+endif()
 
 # 仅对 Visual Studio 编译器生效
 if(MSVC)
@@ -59,6 +59,8 @@ endif()
 #	endif()
 #else()
 #endif()
+
+link_directories(${CMAKE_BINARY_DIR}/bin)
 
 # 添加第三方构建子目录
 add_subdirectory("ThirdParty(new)")
