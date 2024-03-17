@@ -111,15 +111,15 @@ void LitchiEditor::ApplicationEditor::Init()
 	// init uiManager
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
-		uiManager->SetEditorLayoutSaveFilename(m_editorAssetsPath + "Config\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(m_engineRoot + "Config\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 	ServiceLocator::Provide<UIManager>(*uiManager.get());
 
-	if (!std::filesystem::exists(m_editorAssetsPath + "Config\\layout.ini"))
-		uiManager->ResetLayout(m_editorAssetsPath + "Config\\layout.ini");
+	if (!std::filesystem::exists(m_engineRoot + "Config\\layout.ini"))
+		uiManager->ResetLayout(m_engineRoot + "Config\\layout.ini");
 
 	RunProjectHub();
 }

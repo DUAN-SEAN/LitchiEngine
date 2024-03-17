@@ -67,8 +67,9 @@ namespace LitchiEditor
 		Window& m_window;
 		AView& m_view;
 		RenderCamera* m_camera;
-	/*	Vector3& m_cameraPosition;
-		Quaternion& m_cameraRotation;*/
+
+		std::queue<std::tuple<Vector3, Quaternion>> m_cameraDestinations{};
+		float m_focusLerpCoefficient = 8.0f;
 		
 		bool m_is_controlled_by_keyboard_mouse = false;
 		Vector2 m_mouse_last_position = Vector2::Zero;

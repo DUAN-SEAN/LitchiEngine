@@ -29,9 +29,9 @@ namespace LitchiRuntime
 	void ApplicationBase::Init() {
 		s_instance = this;
 
+		m_engineRoot = std::filesystem::current_path().string()+"\\";
 		m_engineAssetsPath = std::filesystem::canonical("Data\\Engine").string() + "\\";
 
-		// 第二个参数支持后续修改
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
 		if(!m_projectPath.empty())
@@ -43,7 +43,6 @@ namespace LitchiRuntime
 				return;
 			}
 		}
-		
 
 		// Easy Profiler
 		EASY_MAIN_THREAD;
@@ -76,15 +75,9 @@ namespace LitchiRuntime
 		ServiceLocator::Provide(*fontManager.get());
 		ServiceLocator::Provide(*prefabManager.get());
 
-		/*ModelManager::ProvideAssetPaths(projectAssetsPath);
-		ShaderManager::ProvideAssetPaths(projectAssetsPath); */
-
 		DEBUG_LOG_INFO("game start");
 
 		Time::Initialize();
-
-		////初始化图形库，例如glfw
-		//InitGraphicsLibraryFramework();
 
 		FontImporter::Initialize();
 		ModelImporter::Initialize();

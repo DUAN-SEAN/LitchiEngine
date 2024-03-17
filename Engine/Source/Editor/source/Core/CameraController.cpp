@@ -99,6 +99,31 @@ float GetActorFocusDist(GameObject* p_actor)
 
 void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 {
+	if (!m_cameraDestinations.empty())
+	{
+		//m_currentMovementSpeed = LitchiRuntime::Math::Zero;
+
+		while (m_cameraDestinations.size() != 1)
+			m_cameraDestinations.pop();
+
+		auto& [destPos, destRotation] = m_cameraDestinations.front();
+
+		float t = m_focusLerpCoefficient * p_deltaTime;
+
+		if (Vector3::Distance(m_camera->GetPosition(), destPos) <= 0.03f)
+		{
+			m_camera->SetPosition(destPos);
+			m_camera->SetRotation(destRotation);
+			m_cameraDestinations.pop();
+		}
+		else
+		{
+			m_camera->SetPosition(Vector3::Lerp(m_camera->GetPosition(), destPos, t));
+			m_camera->SetRotation(Quaternion::Lerp(m_camera->GetRotation(), destRotation, t));
+		}
+		return;
+	}
+
 	static const float movement_speed_max = 5.0f;
 	static float movement_acceleration = 1.0f;
 	static const float movement_drag = 10.0f;
@@ -245,6 +270,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			m_camera->SetPosition(m_camera->GetPosition()+m_movement_speed);
 		}
 	}
+
 }
 
 void LitchiEditor::CameraController::SetPosition(const Vector3 & p_position)
@@ -259,6 +285,8 @@ void LitchiEditor::CameraController::SetRotation(const Quaternion & p_rotation)
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* target)
 {
+	auto goWorldPos = target->GetComponent<Transform>()->GetPosition();
+	m_cameraDestinations.push({ goWorldPos - m_camera->GetRotation() * LitchiRuntime::Vector3::Forward * GetActorFocusDist(target), m_camera->GetRotation() });
 }
 
 const Vector3& LitchiEditor::CameraController::GetPosition() const

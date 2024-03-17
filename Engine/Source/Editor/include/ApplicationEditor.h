@@ -52,19 +52,7 @@ namespace LitchiEditor
 
 	public:
 
-		void SetSelectGameObject(GameObject* selectedGO) { m_selectGO = selectedGO; }
-		GameObject* GetSelectGameObject() { return m_selectGO; }
-		
 		std::unique_ptr<UIManager>		uiManager;
-		// std::unique_ptr<EditorResources>		editorResources;
-
-		//std::unique_ptr<ShaderStorageBuffer>	lightSSBO;
-		//std::unique_ptr<ShaderStorageBuffer>	simulatedLightSSBO;
-
-		/*Resource::Shader* m_shadowMapShader;
-		Resource::Shader* m_shadowMapShader4Skinned;*/
-		//std::unique_ptr<EditorRenderer> editorRenderer;
-
 		PanelsManager	m_panelsManager;
 		
 		RendererPath* m_rendererPath4SceneView = nullptr;
@@ -96,7 +84,6 @@ namespace LitchiEditor
 		Canvas			m_canvas;
 		static ApplicationEditor* instance_;
 
-		GameObject* m_selectGO = nullptr;
 		EditorActions	m_editorActions;
 	};
 }
