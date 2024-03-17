@@ -4,6 +4,7 @@
 #include <algorithm>
 
 #include "AResourceManager.h"
+#include "Runtime/Core/Tools/FileSystem/FileSystem.h"
 
 namespace LitchiRuntime
 {
@@ -109,13 +110,6 @@ namespace LitchiRuntime
 	}
 
 	template<typename T>
-	inline void AResourceManager<T>::ProvideAssetPaths(const std::string& p_projectAssetsPath, const std::string& p_engineAssetsPath)
-	{
-		__PROJECT_ASSETS_PATH = p_projectAssetsPath;
-		__ENGINE_ASSETS_PATH = p_engineAssetsPath;
-	}
-
-	template<typename T>
 	inline std::unordered_map<std::string, T*>& AResourceManager<T>::GetResources()
 	{
 		return m_resources;
@@ -128,11 +122,11 @@ namespace LitchiRuntime
 
 		if (p_path[0] == ':') // The path is an engine path
 		{
-			result = __ENGINE_ASSETS_PATH + std::string(p_path.data() + 1, p_path.data() + p_path.size());
+			result = FileSystem::GetEngineAssetDirectoryPath() + std::string(p_path.data() + 1, p_path.data() + p_path.size());
 		}
 		else // The path is a project path
 		{
-			result = __PROJECT_ASSETS_PATH + p_path;
+			result = FileSystem::GetProjectAssetDirectoryPath() + p_path;
 		}
 
 		return result;

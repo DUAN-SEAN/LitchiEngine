@@ -57,13 +57,7 @@ namespace LitchiRuntime
 			projectAssetsPath = configManager->GetAssetFolder();
 		}
 
-		FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
-		ModelManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-		TextureManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-		ShaderManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-		MaterialManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-		FontManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-		PrefabManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
+		FileSystem::SetAssetDirectoryPath(projectAssetsPath, m_engineAssetsPath);
 
 		// 初始化场景 如果没有场景则构建默认场景
 		sceneManager = std::make_unique<SceneManager>();

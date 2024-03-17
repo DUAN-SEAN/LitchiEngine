@@ -330,14 +330,7 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 
 	auto projectAssetsPath = configManager->GetAssetFolder();
 
-	FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
-	ModelManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-	TextureManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-	ShaderManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-	MaterialManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-	FontManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-	PrefabManager::ProvideAssetPaths(projectAssetsPath, m_engineAssetsPath);
-
+	FileSystem::SetAssetDirectoryPath(projectAssetsPath,m_engineAssetsPath);
 
 	// Setup RendererPath
 	SetupRendererPath();

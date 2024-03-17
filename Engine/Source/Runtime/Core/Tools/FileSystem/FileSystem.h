@@ -38,8 +38,9 @@ namespace LitchiRuntime {
         static bool IsEngineShaderFile(const std::string& path);
         static bool IsEngineFile(const std::string& path);
 
-        static void SetProjectAssetDirectoryPath(const std::string& workDir);
-        static std::string  GetProjectAssetDirectoryPath();
+        static void SetAssetDirectoryPath(const std::string& p_projectAssetsPath, const std::string& p_engineAssetsPath);
+        static std::string&  GetProjectAssetDirectoryPath();
+        static std::string&  GetEngineAssetDirectoryPath();
 
         // Supported files in directory
         static std::vector<std::string> GetSupportedFilesInDirectory(const std::string& path);
@@ -73,6 +74,7 @@ namespace LitchiRuntime {
         static bool CopyFileFromTo(const std::string& source, const std::string& destination);
 
         static std::string ProjectAssetDirectoryPath;
+        static std::string EngineAssetDirectoryPath;
 	};
     
 

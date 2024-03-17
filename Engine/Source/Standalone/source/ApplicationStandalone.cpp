@@ -29,7 +29,6 @@ namespace LitchiStandalone
 		textureManager->UnloadResources();
 		textureManager = nullptr;
 		window = nullptr;
-		ResourceCache::Shutdown();
 		Renderer::Shutdown();
 		FontImporter::Shutdown();
 
