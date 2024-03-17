@@ -22,11 +22,6 @@ namespace LitchiRuntime
         UpdateShape();
     }
 
-    void BoxCollider::PostResourceLoaded()
-    {
-        // do nothing init in Awake
-    }
-
     void BoxCollider::PostResourceModify()
     {
         Collider::PostResourceModify();

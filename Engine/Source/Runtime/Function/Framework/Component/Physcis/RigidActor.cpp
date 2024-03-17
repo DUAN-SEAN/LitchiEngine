@@ -36,6 +36,11 @@ namespace LitchiRuntime
             return;
         }
         PxShape* px_shape = collider->px_shape();
+        if(px_shape == nullptr)
+        {
+            return;
+        }
+
         Physics::AttachShape(m_pxRigidActor, px_shape);
         //    DEBUG_LOG_INFO("px_shape refCount: {}",px_shape->getReferenceCount());
     }
@@ -45,6 +50,11 @@ namespace LitchiRuntime
             return;
         }
         PxShape* px_shape = collider->px_shape();
+        if (px_shape == nullptr)
+        {
+            return;
+        }
+
         Physics::DetachShape(m_pxRigidActor, px_shape);
     }
 }

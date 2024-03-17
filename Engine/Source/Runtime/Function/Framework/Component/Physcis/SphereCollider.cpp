@@ -14,11 +14,6 @@ namespace LitchiRuntime
 
     }
 
-    void SphereCollider::PostResourceLoaded()
-    {
-        // do nothing init in Awake
-    }
-
     void SphereCollider::PostResourceModify()
     {
         Collider::PostResourceLoaded();
