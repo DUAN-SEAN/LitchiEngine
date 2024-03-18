@@ -68,18 +68,20 @@ target_link_directories(${TARGET_NAME}
 target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 
 # Physx
-# target_link_directories(${TARGET_NAME}
-# 	PUBLIC
-#     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc.143mt/debug>
-#     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc143.mt/release>
-# )
-# target_link_libraries(physx_64 physxFoundation_64 physxExtensions_static_64 physxPvdSDK_static_64)
-include("../../ThirdParty(new)/Physx/CMakeLists.txt")
+target_link_directories(${TARGET_NAME}
+	PUBLIC
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release>
+)
+target_link_libraries(${TARGET_NAME} PUBLIC
+    debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64
+    optimized glut32 PhysXDevice64)
 
+# Vulkan
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)
 target_link_libraries(${TARGET_NAME} PUBLIC vulkan-1)
 
-# target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/dxc/lib)
+# DxCompiler
 target_link_directories(${TARGET_NAME}
     PUBLIC
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/dxcompiler/lib/Debug>
@@ -118,6 +120,8 @@ target_include_directories(${TARGET_NAME} PRIVATE $<BUILD_INTERFACE:${THIRD_PART
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/mono/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/assimp/include>)
+include_directories(${THIRD_PARTY_DIR}/PhysX/physx/include)
+include_directories(${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/physx/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/include> PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/devel>)

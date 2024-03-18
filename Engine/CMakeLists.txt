@@ -1,7 +1,7 @@
 # add_definitions(-DDISABLE_FORCE_DEBUG_POSTFIX)
 
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
-set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty(new)")
+set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty")
 set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Asset")
 
 # option(ENABLE_PHYSICS_DEBUG_RENDERER "Enable Physics Debug Renderer" OFF)
@@ -63,7 +63,7 @@ endif()
 link_directories(${CMAKE_BINARY_DIR}/bin)
 
 # 添加第三方构建子目录
-add_subdirectory("ThirdParty(new)")
+add_subdirectory(ThirdParty)
 
 # 添加运行时构建子目录
 add_subdirectory(Source/Runtime)

@@ -15,7 +15,19 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR
 		
 
 # 显示包含PhysX静态库
-include("../../ThirdParty(new)/Physx/CMakeLists.txt")
+# include(../../ThirdParty/PhysX/CMakeLists.txt)
+
+# Physx
+# set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug)
+# set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release)
+# target_link_directories(${TARGET_NAME}
+# 	PUBLIC
+#     $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
+#     $<$<CONFIG:Release>:${PHYSX_RELEASE_LIB_PATH}>
+# )
+# target_link_libraries(${TARGET_NAME} 
+#     debug ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
+#     optimized ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
 
 # 添加执行程序
 # add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE} ${imgui_src})
