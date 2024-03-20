@@ -19,11 +19,12 @@ LitchiEditor::AViewControllable::AViewControllable
 
 void LitchiEditor::AViewControllable::UpdateView(float p_deltaTime)
 {
-	// 1. 更新cameraCtrl
-	m_cameraController.HandleInputs(p_deltaTime);
+	if(IsFocused() == true)
+	{
+		// 1. 更新cameraCtrl
+		m_cameraController.HandleInputs(p_deltaTime);
 
-	/*m_camera->SetPosition(m_cameraController.GetPosition());
-	m_camera->SetRotation(m_cameraController.GetRotation());*/
+	}
 
 	// 2. 更新View
 	AView::UpdateView(p_deltaTime);

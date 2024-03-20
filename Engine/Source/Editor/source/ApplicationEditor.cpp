@@ -172,6 +172,12 @@ void LitchiEditor::ApplicationEditor::Update()
 {
 	if (auto editorMode = m_editorActions.GetCurrentEditorMode(); editorMode == EditorActions::EEditorMode::PLAY || editorMode == EditorActions::EEditorMode::FRAME_BY_FRAME)
 	{
+		auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
+		if(!gameView.IsFocused() || !gameView.IsOpened())
+		{
+			return;
+		}
+
 		auto scene = this->sceneManager->GetCurrentScene();
 
 		// Physics Tick

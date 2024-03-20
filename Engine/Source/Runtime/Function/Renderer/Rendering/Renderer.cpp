@@ -711,7 +711,7 @@ namespace LitchiRuntime
 			m_cb_light_arr_cpu.lightArr[index].options |= light->GetVolumetricEnabled() ? (1 << 5) : 0;
 		}
 
-		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->UpdateWithReset(&m_cb_light_arr_cpu);
+		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
 	}
 
 	void Renderer::UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material)
@@ -775,7 +775,7 @@ namespace LitchiRuntime
 	void Renderer::UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list,RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData)
 	{
 		// set buffer
-		GetConstantBuffer(Renderer_ConstantBuffer::RendererPath)->UpdateWithReset(&renderPathBufferData);
+		GetConstantBuffer(Renderer_ConstantBuffer::RendererPath)->Update(&renderPathBufferData);
 
 		//auto constantBuffer = rendererPath->GetConstantBuffer();
 		//// update cb
