@@ -8,7 +8,7 @@ namespace LitchiRuntime
 {
 	bool ConfigManager::Initialize(const std::string& projectRootFolder)
 	{
-		auto path = projectRootFolder +"ProjectConfig.Litchi";
+		auto path = projectRootFolder +"ProjectConfig.litchiProject";
 		DEBUG_LOG_INFO("ConfigManager::Initialize path: "+ path);
 		if(!AssetManager::LoadAsset(path, m_config_res))
 		{

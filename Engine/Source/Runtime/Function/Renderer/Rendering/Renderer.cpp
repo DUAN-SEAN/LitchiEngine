@@ -711,7 +711,7 @@ namespace LitchiRuntime
 			m_cb_light_arr_cpu.lightArr[index].options |= light->GetVolumetricEnabled() ? (1 << 5) : 0;
 		}
 
-		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
+		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->UpdateWithReset(&m_cb_light_arr_cpu);
 	}
 
 	void Renderer::UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material)

@@ -86,6 +86,11 @@ namespace LitchiRuntime
 			return;
 		}
 
+		if(camera ==nullptr || m_renderCamera == camera)
+		{
+			return;
+		}
+
 		m_renderCamera = camera;
 		m_width = m_renderCamera->GetViewport().width;
 		m_height = m_renderCamera->GetViewport().height;

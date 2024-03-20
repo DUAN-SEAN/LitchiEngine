@@ -146,14 +146,13 @@ void LitchiEditor::ApplicationEditor::Run()
 			// 检测运行模式 Game or no
 			// 渲染Views
 
-			EASY_BLOCK("RenderViews") {
-				RenderViews(Time::delta_time());
-			}  EASY_END_BLOCK;
-
 			EASY_BLOCK("Renderer") {
 				Renderer::Tick();
 			}  EASY_END_BLOCK;
 
+			EASY_BLOCK("RenderViews") {
+				RenderViews(Time::delta_time());
+			}  EASY_END_BLOCK;
 
 			EASY_BLOCK("RenderUI") {
 				// 渲染UI
