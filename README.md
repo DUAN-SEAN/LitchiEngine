@@ -19,19 +19,7 @@
 项目构建中的问题：
 
 1. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	C2039	'null': is not a member of '_GLFWwindow'	GLFW	E:\CppProjects\VSCode\LitchiEngine-ex\Engine\ThirdParty(new)\glfw\src\null_window.c	37	
-2. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	LNK1104	cannot open file '..\..\..\bin\Debug\LitchiRuntimed.lib'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
-3. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	C1083	Cannot open include file: 'assimp/config.h': No such file or directory (compiling source file E:\CppProjects\VSCode\LitchiEngine-ex\Engine\Source\Runtime\Function\Renderer\Resource\Import\ModelImporter.cpp)	LitchiRuntime	E:\CppProjects\VSCode\LitchiEngine-ex\Engine\ThirdParty(new)\assimp\include\assimp\defs.h	55	
-4. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	C1083	Cannot open include file: 'compressonator.h': No such file or directory	LitchiRuntime	E:\CppProjects\VSCode\LitchiEngine-ex\Engine\Source\Runtime\Function\Renderer\RHI\RHI_Texture.cpp	8	
-5. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	C1083	Cannot open include file: 'spirv_cross/spirv_hlsl.hpp': No such file or directory	LitchiRuntime	E:\CppProjects\VSCode\LitchiEngine-ex\Engine\Source\Runtime\Function\Renderer\RHI\Vulkan\Vulkan_Shader.cpp	11
-6. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	LNK2001	unresolved external symbol _calloc_dbg	profiler_converter	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\ThirdParty(new)\easy_profiler\easy_profiler_converter\libcpmtd.lib(xlocale.obj)	1	
-7. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	LNK2001	unresolved external symbol _calloc_dbg	dxcompiler	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\ThirdParty(new)\dxcompiler\source\dxcompiler\libcpmtd.lib(xlocale.obj)	1	
+   Error	LNK1104	cannot open file 'E:\CppProjects\VSCode\LitchiEngine-ex\Engine\ThirdParty\physx\bin\win.x86_64.vc142.mt\debug\PhysX_64.dll'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
 
 
 

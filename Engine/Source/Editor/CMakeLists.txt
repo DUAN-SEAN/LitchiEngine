@@ -13,21 +13,8 @@ file(COPY "../../Assets/" DESTINATION "Debug/Project/Assets/")
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR_SOURCES})
 # source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${imgui_src})
 		
-
 # 显示包含PhysX静态库
 # include(../../ThirdParty/PhysX/CMakeLists.txt)
-
-# Physx
-# set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug)
-# set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release)
-# target_link_directories(${TARGET_NAME}
-# 	PUBLIC
-#     $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
-#     $<$<CONFIG:Release>:${PHYSX_RELEASE_LIB_PATH}>
-# )
-# target_link_libraries(${TARGET_NAME} 
-#     debug ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
-#     optimized ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
 
 # 添加执行程序
 # add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE} ${imgui_src})
@@ -45,8 +32,23 @@ target_compile_options(${TARGET_NAME}
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "LitchiEditor")
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
+# Physx
+set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug)
+set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release)
+target_link_directories(${TARGET_NAME}
+	PUBLIC
+    $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
+    $<$<CONFIG:Release>:${PHYSX_RELEASE_LIB_PATH}>
+)
+# target_link_libraries(${TARGET_NAME} 
+#     debug ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
+#     optimized ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
+
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
-target_link_libraries(${TARGET_NAME} LitchiRuntime)
+# target_link_libraries(${TARGET_NAME} LitchiRuntime)
+target_link_libraries(${TARGET_NAME} 
+    debug LitchiRuntime ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
+    optimized LitchiRuntime ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
 
 # 如果是MSVC环境，复制一些.dll文件到目标文件目录
 # todo 根据不同的Build Type复制不同的文件
