@@ -1,4 +1,4 @@
-﻿# set(PhysxRootDir "../../ThridParty/physx-4.1")
+﻿# set(PhysxRootDir "../../ThirdParty/physx-4.1")
 set(PhysxRootDir "../../ThirdParty/Physx")
 
 #头文件目录

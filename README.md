@@ -19,7 +19,7 @@
 项目构建中的问题：
 
 1. Severity	Code	Description	Project	File	Line	Suppression State
-   Error	LNK1104	cannot open file 'E:\CppProjects\VSCode\LitchiEngine-ex\Engine\ThirdParty\physx\bin\win.x86_64.vc142.mt\debug\PhysX_64.dll'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
+   Error	LNK1104	cannot open file 'PhysXDevice64.lib'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
 
 
 

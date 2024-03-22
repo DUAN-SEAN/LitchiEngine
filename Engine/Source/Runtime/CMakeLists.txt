@@ -6,12 +6,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # 引入cmakeList 临时写法
 # include(CMakeLists.txt.glfw)
-# include(../../ThridParty/physx-4.1/CMakeLists.txt)
+# include(../../ThirdParty/physx-4.1/CMakeLists.txt)
 
 # Note: globbing sources is considered bad practice as CMake's generators may not detect new files
 # automatically. Keep that in mind when changing files, or explicitly mention them here.
-file(GLOB_RECURSE rttr_cpp "../../ThridParty/rttr/*.cpp")
-file(GLOB_RECURSE GLAD_FILES "../../ThridParty/glad/*.c")
+file(GLOB_RECURSE rttr_cpp "../../ThirdParty/rttr/*.cpp")
+file(GLOB_RECURSE GLAD_FILES "../../ThirdParty/glad/*.c")
 file(GLOB_RECURSE HEADER_FILES "*.h" "*.inl")
 file(GLOB_RECURSE SOURCE_FILES "*.cpp")
 
@@ -70,12 +70,14 @@ target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 # Physx
 target_link_directories(${TARGET_NAME}
 	PUBLIC
-    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug>
-    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release>
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release>
 )
+# target_link_libraries(${TARGET_NAME} PUBLIC
+#     debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64
+#     optimized glut32 PhysXDevice64)
 target_link_libraries(${TARGET_NAME} PUBLIC
-    debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64
-    optimized glut32 PhysXDevice64)
+    debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
 
 # Vulkan
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)

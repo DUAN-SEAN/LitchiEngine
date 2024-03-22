@@ -33,27 +33,26 @@ set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Lit
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
 # Physx
-set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/debug)
-set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/physx/bin/win.x86_64.vc142.mt/release)
+set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug)
+set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release)
 target_link_directories(${TARGET_NAME}
 	PUBLIC
     $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
     $<$<CONFIG:Release>:${PHYSX_RELEASE_LIB_PATH}>
 )
-# target_link_libraries(${TARGET_NAME} 
-#     debug ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
-#     optimized ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
 
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 # target_link_libraries(${TARGET_NAME} LitchiRuntime)
+# target_link_libraries(${TARGET_NAME} 
+#     debug LitchiRuntime PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64
+#     optimized LitchiRuntime glut32 PhysXDevice64)
 target_link_libraries(${TARGET_NAME} 
-    debug LitchiRuntime ${PHYSX_DEBUG_LIB_PATH}/PhysX_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXFoundation_64.dll ${PHYSX_DEBUG_LIB_PATH}/PhysXExtensions_static_64.lib ${PHYSX_DEBUG_LIB_PATH}/PhysXPvdSDK_static_64.lib
-    optimized LitchiRuntime ${PHYSX_RELEASE_LIB_PATH}/glut32.dll ${PHYSX_RELEASE_LIB_PATH}/PhysXDevice64.dll)
+    debug LitchiRuntime PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
 
 # 如果是MSVC环境，复制一些.dll文件到目标文件目录
 # todo 根据不同的Build Type复制不同的文件
 if(MSVC)
 	# file(GLOB MODEL ${THIRD_PARTY_DIR}/mono/libs/*.dll ${THIRD_PARTY_DIR}/assimp/bin/*.dll ${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug/*.dll ${THIRD_PARTY_DIR}/easy_profiler_core/lib/*.dll)
-	file(GLOB MODEL ${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Debug/*.dll)
+	file(GLOB MODEL ${PHYSX_DEBUG_LIB_PATH}/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Debug/*.dll)
 	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${MODEL} $<TARGET_FILE_DIR:${TARGET_NAME}>)
 endif()
