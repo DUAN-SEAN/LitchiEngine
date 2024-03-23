@@ -309,14 +309,14 @@ namespace LitchiRuntime
 
 	const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
 	{
-		SP_ASSERT(index < static_cast<uint32_t>(m_matrix_view.size()));
+		LC_ASSERT(index < static_cast<uint32_t>(m_matrix_view.size()));
 
 		return m_matrix_view[index];
 	}
 
 	const Matrix& RendererPath::GetLightProjectionMatrix(uint32_t index /*= 0*/) const
 	{
-		SP_ASSERT(index < static_cast<uint32_t>(m_matrix_projection.size()));
+		LC_ASSERT(index < static_cast<uint32_t>(m_matrix_projection.size()));
 
 		return m_matrix_projection[index];
 	}
@@ -565,7 +565,7 @@ namespace LitchiRuntime
 
 	void RendererPath::ComputeLightProjectionMatrix(uint32_t index /*= 0*/)
 	{
-		SP_ASSERT(index < m_shadow_map.texture_depth->GetArrayLength());
+		LC_ASSERT(index < m_shadow_map.texture_depth->GetArrayLength());
 
 		ShadowSlice& shadow_slice = m_shadow_map.slices[index];
 

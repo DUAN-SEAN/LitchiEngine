@@ -88,8 +88,8 @@ namespace LitchiRuntime
             RHI_Format format           = texture->GetFormat();
             VkImageTiling image_tiling  = get_format_tiling(format, format_flags);
             
-            SP_ASSERT_MSG(image_tiling != VK_IMAGE_TILING_MAX_ENUM, "The GPU doesn't support this format");
-            SP_ASSERT_MSG(image_tiling == VK_IMAGE_TILING_OPTIMAL,  "This format doesn't support optimal tiling, switch to a more efficient format");
+            LC_ASSERT_MSG(image_tiling != VK_IMAGE_TILING_MAX_ENUM, "The GPU doesn't support this format");
+            LC_ASSERT_MSG(image_tiling == VK_IMAGE_TILING_OPTIMAL,  "This format doesn't support optimal tiling, switch to a more efficient format");
 
             // Set layout to pre-initialised (required by Vulkan)
             texture->SetLayout(RHI_Image_Layout::Preinitialized, nullptr);
@@ -159,7 +159,7 @@ namespace LitchiRuntime
             create_info.components.b                    = VK_COMPONENT_SWIZZLE_IDENTITY;
             create_info.components.a                    = VK_COMPONENT_SWIZZLE_IDENTITY;
 
-            SP_ASSERT_MSG(vkCreateImageView(RHI_Context::device, &create_info, nullptr, reinterpret_cast<VkImageView*>(&image_view)) == VK_SUCCESS, "Failed to create image view");
+            LC_ASSERT_MSG(vkCreateImageView(RHI_Context::device, &create_info, nullptr, reinterpret_cast<VkImageView*>(&image_view)) == VK_SUCCESS, "Failed to create image view");
         }
 
         static void set_debug_name(RHI_Texture* texture)
@@ -338,15 +338,15 @@ namespace LitchiRuntime
 
     bool RHI_Texture::RHI_CreateResource()
     {
-        SP_ASSERT_MSG(m_width  != 0, "Width can't be zero");
-        SP_ASSERT_MSG(m_height != 0, "Height can't be zero");
+        LC_ASSERT_MSG(m_width  != 0, "Width can't be zero");
+        LC_ASSERT_MSG(m_height != 0, "Height can't be zero");
 
         create_image(this);
 
         // if the texture has any data, stage it
         if (HasData())
         {
-            SP_ASSERT_MSG(stage(this), "Failed to stage");
+            LC_ASSERT_MSG(stage(this), "Failed to stage");
         }
 
         // transition to target layout

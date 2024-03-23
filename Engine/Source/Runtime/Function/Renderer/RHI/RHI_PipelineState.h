@@ -11,7 +11,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_PipelineState
+    class LC_CLASS RHI_PipelineState
     {
     public:
         RHI_PipelineState();

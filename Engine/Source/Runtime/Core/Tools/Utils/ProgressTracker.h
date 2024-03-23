@@ -18,7 +18,7 @@ namespace LitchiRuntime
         undefined
     };
 
-    class SP_CLASS Progress
+    class LC_CLASS Progress
     {
     public:
         void Start(const uint32_t job_count, const std::string& text);
@@ -37,7 +37,7 @@ namespace LitchiRuntime
         std::string m_text;
     };
 
-    class SP_CLASS ProgressTracker
+    class LC_CLASS ProgressTracker
     {
     public:
         static Progress& GetProgress(const ProgressType progress_type);

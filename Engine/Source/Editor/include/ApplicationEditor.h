@@ -3,20 +3,13 @@
 
 #include <memory>
 
-#include "Runtime/Core/Window/Window.h"
 #include "Runtime/Core/Window/Context/Device.h"
-#include "Runtime/Core/Window/Inputs/InputManager.h"
 #include "Runtime/Function/UI/UIManager/UIManager.h"
 
 #include "Core/EditorActions.h"
-#include "Core/EditorRenderer.h"
-#include "Core/EditorResources.h"
 #include "Core/PanelsManager.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/Rendering/RendererPath.h"
-#include "Runtime/Resource/ModelManager.h"
-#include "Runtime/Resource/ShaderManager.h"
-#include "Runtime/Resource/TextureManager.h"
 
 using namespace LitchiRuntime;
 

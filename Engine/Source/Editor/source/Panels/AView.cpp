@@ -2,7 +2,6 @@
 
 #include "Editor/include/Panels/AView.h"
 
-#include "Editor/include/Core/EditorRenderer.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 

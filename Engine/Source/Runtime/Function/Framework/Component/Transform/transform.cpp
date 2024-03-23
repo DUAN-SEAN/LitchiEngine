@@ -246,7 +246,7 @@ namespace LitchiRuntime
 
     void Transform::AddChild(Transform* child)
     {
-        SP_ASSERT(child != nullptr);
+        LC_ASSERT(child != nullptr);
 
         // Ensure that the child is not this transform.
         if (child->GetObjectId() == GetObjectId())
@@ -257,7 +257,7 @@ namespace LitchiRuntime
 
     void Transform::RemoveChild(Transform* child)
     {
-        SP_ASSERT(child != nullptr);
+        LC_ASSERT(child != nullptr);
 
         // Ensure the transform is not itself
         if (child->GetObjectId() == GetObjectId())
@@ -291,7 +291,7 @@ namespace LitchiRuntime
 
     void Transform::AddChild_Internal(Transform* child)
     {
-        SP_ASSERT(child != nullptr);
+        LC_ASSERT(child != nullptr);
 
         // Ensure that the child is not this transform.
         if (child->GetObjectId() == GetObjectId())
@@ -308,7 +308,7 @@ namespace LitchiRuntime
 
     void Transform::RemoveChild_Internal(Transform* child)
     {
-        SP_ASSERT(child != nullptr);
+        LC_ASSERT(child != nullptr);
 
         // Ensure the transform is not itself
         if (child->GetObjectId() == GetObjectId())
@@ -354,7 +354,7 @@ namespace LitchiRuntime
 
     bool Transform::IsDescendantOf(Transform* transform) const
     {
-        SP_ASSERT(transform != nullptr);
+        LC_ASSERT(transform != nullptr);
 
         if (!m_parent)
             return false;

@@ -4,9 +4,9 @@
 #include "RHI_Texture.h"
 #include "../Rendering/Renderer.h"
 #include "../Resource/Import/ImageImporter.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include "compressonator.h"
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //===========================================
 
 //= NAMESPACES =====
@@ -61,7 +61,7 @@ namespace LitchiRuntime
             if (format == RHI_Format::BC7)
                 return CMP_FORMAT::CMP_FORMAT_BC7;
 
-            SP_ASSERT_MSG(false, "No equivalent format");
+            LC_ASSERT_MSG(false, "No equivalent format");
             return CMP_FORMAT::CMP_FORMAT_Unknown;
         }
 
@@ -255,7 +255,7 @@ namespace LitchiRuntime
 
     bool RHI_Texture::LoadFromFile(const string& file_path)
     {
-        SP_ASSERT_MSG(!file_path.empty(), "A file path is required");
+        LC_ASSERT_MSG(!file_path.empty(), "A file path is required");
 
         m_data.clear();
         m_data.shrink_to_fit();
@@ -364,7 +364,7 @@ namespace LitchiRuntime
         }
 
         // create GPU resource
-        SP_ASSERT_MSG(RHI_CreateResource(), "Failed to create GPU resource");
+        LC_ASSERT_MSG(RHI_CreateResource(), "Failed to create GPU resource");
 
         // if this was a native texture (means the data is already saved) and the GPU resource
         // has been created, then clear the data as we don't need them anymore.
@@ -475,8 +475,8 @@ namespace LitchiRuntime
         // Asserts
         if (mip_specified)
         {
-            SP_ASSERT_MSG(HasPerMipViews(), "A mip is specified but the texture has no per mip views");
-            SP_ASSERT_MSG(mip_range != 0, "When a mip is specified, the mip_range can't be zero");
+            LC_ASSERT_MSG(HasPerMipViews(), "A mip is specified but the texture has no per mip views");
+            LC_ASSERT_MSG(mip_range != 0, "When a mip is specified, the mip_range can't be zero");
         }
 
         // Check if the layouts are indeed different from the new layout.

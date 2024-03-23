@@ -43,8 +43,8 @@ namespace LitchiRuntime
                 descriptor.range          = constant_buffer->GetStride();        // needed for vkUpdateDescriptorSets()
                 descriptor.dynamic_offset = constant_buffer->GetOffset();        // needed for vkCmdBindDescriptorSets
 
-                SP_ASSERT_MSG(constant_buffer->GetStructSize() == descriptor.struct_size, "Size mismatch between CPU and GPU side constant buffer");
-                SP_ASSERT_MSG(descriptor.dynamic_offset % descriptor.range == 0,          "Incorrect dynamic offset");
+                LC_ASSERT_MSG(constant_buffer->GetStructSize() == descriptor.struct_size, "Size mismatch between CPU and GPU side constant buffer");
+                LC_ASSERT_MSG(descriptor.dynamic_offset % descriptor.range == 0,          "Incorrect dynamic offset");
 
                 return;
             }
@@ -95,10 +95,10 @@ namespace LitchiRuntime
         RHI_Image_Layout layout = texture->GetLayout(mip_specified ? mip_index : 0);
 
          // Validate layout
-        SP_ASSERT(layout == RHI_Image_Layout::General || layout == RHI_Image_Layout::Shader_Read_Only_Optimal || layout == RHI_Image_Layout::Depth_Stencil_Read_Only_Optimal);
+        LC_ASSERT(layout == RHI_Image_Layout::General || layout == RHI_Image_Layout::Shader_Read_Only_Optimal || layout == RHI_Image_Layout::Depth_Stencil_Read_Only_Optimal);
 
         // Validate type
-        SP_ASSERT(texture->IsSrv());
+        LC_ASSERT(texture->IsSrv());
 
         for (RHI_Descriptor& descriptor : m_descriptors)
         {

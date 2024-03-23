@@ -66,7 +66,7 @@ namespace LitchiRuntime
 
     void Font::AddText(const string& text, const Vector2& position_screen_percentage)
     {
-        SP_ASSERT(m_vertex_buffer && m_index_buffer);
+        LC_ASSERT(m_vertex_buffer && m_index_buffer);
 
         /*const float viewport_width = Renderer::GetViewport().width;
         const float viewport_height = Renderer::GetViewport().height;*/
@@ -224,7 +224,7 @@ namespace LitchiRuntime
 
     void Font::UpdateVertexAndIndexBuffers()
     {
-        SP_ASSERT(m_vertex_buffer && m_index_buffer);
+        LC_ASSERT(m_vertex_buffer && m_index_buffer);
 
         if (m_text_data.empty())
             return;
@@ -270,7 +270,7 @@ namespace LitchiRuntime
 
     uint32_t Font::GetIndexCount()
     {
-        SP_ASSERT(m_index_buffer);
+        LC_ASSERT(m_index_buffer);
         return m_index_buffer->GetIndexCount();
     }
 }

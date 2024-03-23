@@ -12,7 +12,7 @@ namespace LitchiRuntime
     class Vector3;
     class Matrix;
 
-    class SP_CLASS Vector4
+    class LC_CLASS Vector4
     {
     public:
         Vector4()

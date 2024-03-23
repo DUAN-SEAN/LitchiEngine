@@ -150,10 +150,10 @@ namespace LitchiRuntime {
 
     wstring FileSystem::StringToWstring(const string& str)
     {
-        SP_WARNINGS_OFF
+        LC_WARNINGS_OFF
             wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
         return converter.from_bytes(str);
-        SP_WARNINGS_ON
+        LC_WARNINGS_ON
     }
 
     bool FileSystem::Exists(const string& path)

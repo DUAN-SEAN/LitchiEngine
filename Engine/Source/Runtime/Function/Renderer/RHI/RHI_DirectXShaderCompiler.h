@@ -2,9 +2,9 @@
 #pragma once
 
 //= INCLUDES =======
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include <dxcapi.h>
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //==================
 
 namespace LitchiRuntime

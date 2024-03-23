@@ -303,7 +303,7 @@ namespace ImGuiSp
 
     static void tooltip(const char* text)
     {
-        SP_ASSERT_MSG(text != nullptr, "Text is null");
+        LC_ASSERT_MSG(text != nullptr, "Text is null");
 
         if (ImGui::IsItemHovered())
         {

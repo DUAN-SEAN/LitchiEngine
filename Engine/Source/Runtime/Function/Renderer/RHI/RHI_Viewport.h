@@ -7,7 +7,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Viewport : public Object
+    class LC_CLASS RHI_Viewport : public Object
     {
     public:
         RHI_Viewport(const float x = 0.0f, const float y = 0.0f, const float width = 0.0f, const float height = 0.0f, const float depth_min = 0.0f, const float depth_max = 1.0f)

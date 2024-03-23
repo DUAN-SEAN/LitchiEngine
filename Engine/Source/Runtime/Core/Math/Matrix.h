@@ -9,7 +9,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Matrix
+    class LC_CLASS Matrix
     {
     public:
         Matrix()
@@ -440,6 +440,6 @@ namespace LitchiRuntime
     };
 
     // Reverse order operators
-    inline SP_CLASS Vector3 operator*(const Vector3& lhs, const Matrix& rhs) { return rhs * lhs; }
-    inline SP_CLASS Vector4 operator*(const Vector4& lhs, const Matrix& rhs) { return rhs * lhs; }
+    inline LC_CLASS Vector3 operator*(const Vector3& lhs, const Matrix& rhs) { return rhs * lhs; }
+    inline LC_CLASS Vector4 operator*(const Vector4& lhs, const Matrix& rhs) { return rhs * lhs; }
 }

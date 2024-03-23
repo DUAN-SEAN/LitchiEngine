@@ -24,9 +24,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include "FontImporter.h"
 #include "../../RHI/RHI_Texture2D.h"
 #include "../../Rendering/Font/Font.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include "freetype/ftstroke.h"
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //====================================
 
 //= NAMESPACES ===============
@@ -325,7 +325,7 @@ namespace LitchiRuntime
 
                     // Ensure we are not doing any wrong math
                     const uint32_t atlas_pos = atlas_x + atlas_y * atlas_width;
-                    SP_ASSERT(atlas.size() > atlas_pos);
+                    LC_ASSERT(atlas.size() > atlas_pos);
 
                     switch (bitmap.pixel_mode)
                     {

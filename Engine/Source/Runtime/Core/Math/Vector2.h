@@ -9,7 +9,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Vector2
+    class LC_CLASS Vector2
     {
     public:
         Vector2()

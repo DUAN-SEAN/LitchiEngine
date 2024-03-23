@@ -15,7 +15,7 @@ namespace LitchiRuntime
         fence_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 
         // Create
-        SP_ASSERT_MSG(vkCreateFence(RHI_Context::device, &fence_info, nullptr, reinterpret_cast<VkFence*>(&m_rhi_resource)) == VK_SUCCESS, "Failed to create fence");
+        LC_ASSERT_MSG(vkCreateFence(RHI_Context::device, &fence_info, nullptr, reinterpret_cast<VkFence*>(&m_rhi_resource)) == VK_SUCCESS, "Failed to create fence");
 
         // Name
         if (name)
@@ -46,7 +46,7 @@ namespace LitchiRuntime
 
     void RHI_Fence::Reset()
     {
-        SP_VK_ASSERT_MSG(vkResetFences(RHI_Context::device, 1, reinterpret_cast<VkFence*>(&m_rhi_resource)), "Failed to reset fence");
+        LC_VK_ASSERT_MSG(vkResetFences(RHI_Context::device, 1, reinterpret_cast<VkFence*>(&m_rhi_resource)), "Failed to reset fence");
         n_state_cpu = RHI_Sync_State::Idle;
     }
 }

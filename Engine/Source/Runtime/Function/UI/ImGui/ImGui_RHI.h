@@ -421,7 +421,7 @@ namespace ImGui::RHI
     static void window_create(ImGuiViewport* viewport)
     {
         // platformHandle is SDL_Window, PlatformHandleRaw is HWND
-        SP_ASSERT_MSG(viewport->PlatformHandle != nullptr, "Platform handle is invalid");
+        LC_ASSERT_MSG(viewport->PlatformHandle != nullptr, "Platform handle is invalid");
 
         WindowData* window = new WindowData();
         window->swapchain = make_shared<RHI_SwapChain>
@@ -463,7 +463,7 @@ namespace ImGui::RHI
     static void window_present(ImGuiViewport* viewport, void*)
     {
         WindowData* window = static_cast<WindowData*>(viewport->RendererUserData);
-        SP_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == LitchiRuntime::RHI_CommandListState::Submitted);
+        LC_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == LitchiRuntime::RHI_CommandListState::Submitted);
         window->swapchain->Present();
     }
 

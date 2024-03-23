@@ -9,7 +9,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_DepthStencilState : public Object
+    class LC_CLASS RHI_DepthStencilState : public Object
     {
     public:
         RHI_DepthStencilState(

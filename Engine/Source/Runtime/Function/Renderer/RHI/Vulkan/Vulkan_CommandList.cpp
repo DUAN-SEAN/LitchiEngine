@@ -57,11 +57,11 @@ namespace LitchiRuntime
             switch (layout)
             {
             case VK_IMAGE_LAYOUT_UNDEFINED:
-                SP_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_UNDEFINED.");
+                LC_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_UNDEFINED.");
                 break;
 
             case VK_IMAGE_LAYOUT_PREINITIALIZED:
-                SP_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_PREINITIALIZED.");
+                LC_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_PREINITIALIZED.");
                 access_mask = VK_ACCESS_HOST_WRITE_BIT;
                 break;
 
@@ -133,7 +133,7 @@ namespace LitchiRuntime
             while (access_flags != 0)
             {
                 VkAccessFlagBits access_flag = static_cast<VkAccessFlagBits>(access_flags & (~(access_flags - 1)));
-                SP_ASSERT(access_flag != 0 && (access_flag & (access_flag - 1)) == 0);
+                LC_ASSERT(access_flag != 0 && (access_flag & (access_flag - 1)) == 0);
                 access_flags &= ~access_flag;
 
                 switch (access_flag)
@@ -246,7 +246,7 @@ namespace LitchiRuntime
             allocate_info.commandBufferCount          = 1;
 
             // Allocate
-            SP_VK_ASSERT_MSG(vkAllocateCommandBuffers(RHI_Context::device, &allocate_info, reinterpret_cast<VkCommandBuffer*>(&m_rhi_resource)),
+            LC_VK_ASSERT_MSG(vkAllocateCommandBuffers(RHI_Context::device, &allocate_info, reinterpret_cast<VkCommandBuffer*>(&m_rhi_resource)),
                 "Failed to allocate command buffer");
 
             // Name
@@ -262,7 +262,7 @@ namespace LitchiRuntime
             query_pool_create_info.queryCount            = m_max_timestamps;
 
             auto query_pool = reinterpret_cast<VkQueryPool*>(&m_rhi_query_pool);
-            SP_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_create_info, nullptr, query_pool),
+            LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_create_info, nullptr, query_pool),
                 "Failed to created query pool");
 
             m_timestamps.fill(0);
@@ -291,7 +291,7 @@ namespace LitchiRuntime
     void RHI_CommandList::Begin()
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Idle);
+        LC_ASSERT(m_state == RHI_CommandListState::Idle);
 
         // Get queries
         if (m_queue_type != RHI_Queue_Type::Copy)
@@ -327,7 +327,7 @@ namespace LitchiRuntime
         VkCommandBufferBeginInfo begin_info = {};
         begin_info.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         begin_info.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
-        SP_ASSERT_MSG(vkBeginCommandBuffer(static_cast<VkCommandBuffer>(m_rhi_resource), &begin_info) == VK_SUCCESS, "Failed to begin command buffer");
+        LC_ASSERT_MSG(vkBeginCommandBuffer(static_cast<VkCommandBuffer>(m_rhi_resource), &begin_info) == VK_SUCCESS, "Failed to begin command buffer");
 
         // Reset query pool - Has to be done after vkBeginCommandBuffer or a VK_DEVICE_LOST will occur
         if (m_queue_type != RHI_Queue_Type::Copy)
@@ -343,9 +343,9 @@ namespace LitchiRuntime
     void RHI_CommandList::End()
     {
         EASY_FUNCTION(profiler::colors::Magenta);
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        SP_ASSERT_MSG(
+        LC_ASSERT_MSG(
             vkEndCommandBuffer(static_cast<VkCommandBuffer>(m_rhi_resource)) == VK_SUCCESS,
             "Failed to end command buffer"
         );
@@ -356,7 +356,7 @@ namespace LitchiRuntime
     void RHI_CommandList::Submit()
     {
         EASY_FUNCTION(profiler::colors::Magenta);
-        SP_ASSERT(m_state == RHI_CommandListState::Ended);
+        LC_ASSERT(m_state == RHI_CommandListState::Ended);
 
         RHI_Device::QueueSubmit(
             m_queue_type,                                  // queue
@@ -373,7 +373,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso)
     {
         EASY_FUNCTION(profiler::colors::Brown600);
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         EASY_BLOCK("GetOrCreatePipeline")
         // get (or create) a pipeline which matches the requested pipeline state
@@ -394,9 +394,9 @@ namespace LitchiRuntime
         {
             EASY_BLOCK("vkCmdBindPipeline")
             // Get vulkan pipeline object
-            SP_ASSERT(m_pipeline != nullptr);
+            LC_ASSERT(m_pipeline != nullptr);
             VkPipeline vk_pipeline = static_cast<VkPipeline>(m_pipeline->GetResource_Pipeline());
-            SP_ASSERT(vk_pipeline != nullptr);
+            LC_ASSERT(vk_pipeline != nullptr);
 
             // Bind
             VkPipelineBindPoint pipeline_bind_point = m_pso.IsCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -417,9 +417,9 @@ namespace LitchiRuntime
     void RHI_CommandList::BeginRenderPass()
     {
         EASY_FUNCTION(profiler::colors::Magenta);
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT_MSG(m_pso.IsGraphics(), "You can't use a render pass with a compute pipeline");
-        SP_ASSERT_MSG(!m_is_rendering, "The command list is already rendering");
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT_MSG(m_pso.IsGraphics(), "You can't use a render pass with a compute pipeline");
+        LC_ASSERT_MSG(!m_is_rendering, "The command list is already rendering");
 
         if (!m_pso.IsGraphics())
             return;
@@ -453,7 +453,7 @@ namespace LitchiRuntime
                 color_attachment.loadOp                    = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
                 color_attachment.storeOp                   = VK_ATTACHMENT_STORE_OP_STORE;
 
-                SP_ASSERT(color_attachment.imageView != nullptr);
+                LC_ASSERT(color_attachment.imageView != nullptr);
 
                 attachments_color.push_back(color_attachment);
             }
@@ -466,7 +466,7 @@ namespace LitchiRuntime
                     if (rt == nullptr)
                         break;
 
-                    SP_ASSERT_MSG(rt->IsRenderTargetColor(), "The texture wasn't created with the RHI_Texture_RenderTarget flag and/or isn't a color format");
+                    LC_ASSERT_MSG(rt->IsRenderTargetColor(), "The texture wasn't created with the RHI_Texture_RenderTarget flag and/or isn't a color format");
 
                     // Transition to the appropriate layout
                     if (rt->GetLayout(0) != RHI_Image_Layout::Color_Attachment_Optimal)
@@ -482,7 +482,7 @@ namespace LitchiRuntime
                     color_attachment.storeOp                   = VK_ATTACHMENT_STORE_OP_STORE;
                     color_attachment.clearValue.color          = { m_pso.clear_color[i].r, m_pso.clear_color[i].g, m_pso.clear_color[i].b, m_pso.clear_color[i].a };
 
-                    SP_ASSERT(color_attachment.imageView != nullptr);
+                    LC_ASSERT(color_attachment.imageView != nullptr);
 
                     attachments_color.push_back(color_attachment);
                 }
@@ -497,8 +497,8 @@ namespace LitchiRuntime
         {
             RHI_Texture* rt = m_pso.render_target_depth_texture;
 
-            SP_ASSERT_MSG(rt->GetWidth() == rendering_info.renderArea.extent.width, "The depth buffer doesn't match the output resolution");
-            SP_ASSERT(rt->IsRenderTargetDepthStencil());
+            LC_ASSERT_MSG(rt->GetWidth() == rendering_info.renderArea.extent.width, "The depth buffer doesn't match the output resolution");
+            LC_ASSERT(rt->IsRenderTargetDepthStencil());
 
             // Transition to the appropriate layout
             RHI_Image_Layout layout = rt->IsStencilFormat() ? RHI_Image_Layout::Depth_Stencil_Attachment_Optimal : RHI_Image_Layout::Depth_Attachment_Optimal;
@@ -558,7 +558,7 @@ namespace LitchiRuntime
     void RHI_CommandList::ClearPipelineStateRenderTargets(RHI_PipelineState& pipeline_state)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         uint32_t attachment_count = 0;
         array<VkClearAttachment, rhi_max_render_target_count + 1> attachments; // +1 for depth-stencil
@@ -623,8 +623,8 @@ namespace LitchiRuntime
     )
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
 
         if (!texture || !texture->GetRhiSrv())
         {
@@ -670,7 +670,7 @@ namespace LitchiRuntime
     void RHI_CommandList::Draw(const uint32_t vertex_count, uint32_t vertex_start_index /*= 0*/)
     {
         EASY_FUNCTION(profiler::colors::Magenta);
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to draw
         OnDraw();
@@ -693,7 +693,7 @@ namespace LitchiRuntime
     void RHI_CommandList::DrawIndexed(const uint32_t index_count, const uint32_t index_offset, const uint32_t vertex_offset)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to draw
         OnDraw();
@@ -718,7 +718,7 @@ namespace LitchiRuntime
     void RHI_CommandList::Dispatch(uint32_t x, uint32_t y, uint32_t z /*= 1*/, bool async /*= false*/)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Ensure correct state before attempting to dispatch
         OnDraw();
@@ -732,11 +732,11 @@ namespace LitchiRuntime
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0,      "The texture needs the RHI_Texture_ClearOrBlit flag");
-        SP_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0,      "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         if (blit_mips)
         {
-            SP_ASSERT_MSG(source->GetMipCount() == destination->GetMipCount(),
+            LC_ASSERT_MSG(source->GetMipCount() == destination->GetMipCount(),
                 "If the mips are blitted, then the mip count between the source and the destination textures must match");
         }
 
@@ -757,7 +757,7 @@ namespace LitchiRuntime
             destination_blit_size.y           = destination->GetHeight() >> mip_index;
             destination_blit_size.z           = 1;
 
-            SP_ASSERT_MSG(source_blit_size.x <= destination_blit_size.x && source_blit_size.y <= destination_blit_size.y,
+            LC_ASSERT_MSG(source_blit_size.x <= destination_blit_size.x && source_blit_size.y <= destination_blit_size.y,
                 "The source texture dimension(s) are larger than the those of the destination texture");
 
             VkImageBlit& blit_region                  = blit_regions[mip_index];
@@ -811,7 +811,7 @@ namespace LitchiRuntime
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_SwapChain* destination)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
       /*  SP_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
             "The source texture dimension(s) are larger than the those of the destination texture");*/
 
@@ -868,14 +868,14 @@ namespace LitchiRuntime
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-        SP_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-        SP_ASSERT(source->GetWidth() == destination->GetWidth());
-        SP_ASSERT(source->GetHeight() == destination->GetHeight());
-        SP_ASSERT(source->GetFormat() == destination->GetFormat());
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT(source->GetWidth() == destination->GetWidth());
+        LC_ASSERT(source->GetHeight() == destination->GetHeight());
+        LC_ASSERT(source->GetFormat() == destination->GetFormat());
         if (blit_mips)
         {
-            SP_ASSERT_MSG(source->GetMipCount() == destination->GetMipCount(),
+            LC_ASSERT_MSG(source->GetMipCount() == destination->GetMipCount(),
                 "If the mips are blitted, then the mip count between the source and the destination textures must match");
         }
 
@@ -929,10 +929,10 @@ namespace LitchiRuntime
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_SwapChain* destination)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-        SP_ASSERT(source->GetWidth() == destination->GetWidth());
-        SP_ASSERT(source->GetHeight() == destination->GetHeight());
-        SP_ASSERT(source->GetFormat() == destination->GetFormat());
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT(source->GetWidth() == destination->GetWidth());
+        LC_ASSERT(source->GetHeight() == destination->GetHeight());
+        LC_ASSERT(source->GetFormat() == destination->GetFormat());
 
         VkImageCopy copy_region               = {};
         copy_region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
@@ -966,9 +966,9 @@ namespace LitchiRuntime
     void RHI_CommandList::SetViewport(const RHI_Viewport& viewport) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT(viewport.width != 0);
-        SP_ASSERT(viewport.height != 0);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(viewport.width != 0);
+        LC_ASSERT(viewport.height != 0);
 
         VkViewport vk_viewport = {};
         vk_viewport.x          = viewport.x;
@@ -989,7 +989,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetScissorRectangle(const Rectangle& scissor_rectangle) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         VkRect2D vk_scissor;
         vk_scissor.offset.x      = static_cast<int32_t>(scissor_rectangle.left);
@@ -1008,7 +1008,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetBufferVertex(const RHI_VertexBuffer* buffer)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         // Skip if already set
         if (m_vertex_buffer_id == buffer->GetObjectId())
@@ -1033,7 +1033,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetBufferIndex(const RHI_IndexBuffer* buffer)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (m_index_buffer_id == buffer->GetObjectId())
             return;
@@ -1053,7 +1053,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetConstantBuffer(const uint32_t slot, RHI_ConstantBuffer* constant_buffer) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
         {
@@ -1068,8 +1068,8 @@ namespace LitchiRuntime
     void RHI_CommandList::PushConstants(const uint32_t offset, const uint32_t size, const void* data)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT(size <= RHI_Device::PropertyGetMaxPushConstantSize());
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(size <= RHI_Device::PropertyGetMaxPushConstantSize());
 
         uint32_t stages = 0;
         if (m_pso.IsCompute())
@@ -1099,7 +1099,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetSampler(const uint32_t slot, RHI_Sampler* sampler) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
         {
@@ -1114,11 +1114,11 @@ namespace LitchiRuntime
     void RHI_CommandList::SetTexture(const uint32_t slot, RHI_Texture* texture, const uint32_t mip_index /*= all_mips*/, uint32_t mip_range /*= 0*/, const bool uav /*= false*/)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (mip_index != rhi_all_mips)
         {
-            SP_ASSERT_MSG(mip_range != 0, "If a mip was specified, then mip_range can't be 0");
+            LC_ASSERT_MSG(mip_range != 0, "If a mip was specified, then mip_range can't be 0");
         }
 
         if (!m_descriptor_layout_current)
@@ -1137,8 +1137,8 @@ namespace LitchiRuntime
         const uint32_t mip_start        = mip_specified ? mip_index : 0;
         RHI_Image_Layout current_layout = texture->GetLayout(mip_start);
 
-        SP_ASSERT_MSG(texture->GetRhiSrv() != nullptr, "The texture has no srv"); // Vulkan only has SRVs
-        SP_ASSERT_MSG(current_layout != RHI_Image_Layout::Undefined && current_layout != RHI_Image_Layout::Preinitialized, "Invalid layout");
+        LC_ASSERT_MSG(texture->GetRhiSrv() != nullptr, "The texture has no srv"); // Vulkan only has SRVs
+        LC_ASSERT_MSG(current_layout != RHI_Image_Layout::Undefined && current_layout != RHI_Image_Layout::Preinitialized, "Invalid layout");
 
         // Transition to appropriate layout (if needed)
         {
@@ -1146,7 +1146,7 @@ namespace LitchiRuntime
 
             if (uav)
             {
-                SP_ASSERT(texture->IsUav());
+                LC_ASSERT(texture->IsUav());
                 
                 // According to section 13.1 of the Vulkan spec, storage textures have to be in a general layout.
                 // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage
@@ -1154,7 +1154,7 @@ namespace LitchiRuntime
             }
             else
             {
-                SP_ASSERT(texture->IsSrv());
+                LC_ASSERT(texture->IsSrv());
 
                 // Color
                 if (texture->IsColorFormat())
@@ -1170,7 +1170,7 @@ namespace LitchiRuntime
             }
 
             // Verify that an appropriate layout has been deduced
-            SP_ASSERT(target_layout != RHI_Image_Layout::Undefined);
+            LC_ASSERT(target_layout != RHI_Image_Layout::Undefined);
 
             // Determine if a layout transition is needed
             bool transition_required = current_layout != target_layout;
@@ -1192,7 +1192,7 @@ namespace LitchiRuntime
             // Transition
             if (transition_required)
             {
-                SP_ASSERT(!m_is_rendering && "Can't transition to a different layout while rendering");
+                LC_ASSERT(!m_is_rendering && "Can't transition to a different layout while rendering");
                 texture->SetLayout(target_layout, this, mip_index, mip_range);
             }
         }
@@ -1204,7 +1204,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetStructuredBuffer(const uint32_t slot, RHI_StructuredBuffer* structured_buffer) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
         {
@@ -1218,7 +1218,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer) const
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (!m_descriptor_layout_current)
         {
@@ -1247,9 +1247,9 @@ namespace LitchiRuntime
     
     uint32_t RHI_CommandList::BeginTimestamp()
     {
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT(RHI_Context::gpu_profiling);
-        SP_ASSERT(m_rhi_query_pool != nullptr);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(RHI_Context::gpu_profiling);
+        LC_ASSERT(m_rhi_query_pool != nullptr);
 
         uint32_t timestamp_index = m_timestamp_index;
         vkCmdWriteTimestamp(static_cast<VkCommandBuffer>(m_rhi_resource), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, static_cast<VkQueryPool>(m_rhi_query_pool), timestamp_index);
@@ -1260,9 +1260,9 @@ namespace LitchiRuntime
 
     void RHI_CommandList::EndTimestamp()
     {
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
-        SP_ASSERT(RHI_Context::gpu_profiling);
-        SP_ASSERT(m_rhi_query_pool != nullptr);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(RHI_Context::gpu_profiling);
+        LC_ASSERT(m_rhi_query_pool != nullptr);
 
         vkCmdWriteTimestamp(static_cast<VkCommandBuffer>(m_rhi_resource), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, static_cast<VkQueryPool>(m_rhi_query_pool), m_timestamp_index++);
     }
@@ -1290,8 +1290,8 @@ namespace LitchiRuntime
 
     void RHI_CommandList::BeginTimeblock(const char* name, const bool gpu_marker, const bool gpu_timing)
     {
-        SP_ASSERT_MSG(m_timeblock_active == nullptr, "The previous time block is still active");
-        SP_ASSERT(name != nullptr);
+        LC_ASSERT_MSG(m_timeblock_active == nullptr, "The previous time block is still active");
+        LC_ASSERT(name != nullptr);
 
         // Allowed profiler ?
         if (RHI_Context::gpu_profiling && gpu_timing)
@@ -1311,7 +1311,7 @@ namespace LitchiRuntime
 
     void RHI_CommandList::EndTimeblock()
     {
-        SP_ASSERT_MSG(m_timeblock_active != nullptr, "A time block wasn't started");
+        LC_ASSERT_MSG(m_timeblock_active != nullptr, "A time block wasn't started");
 
         // Allowed markers ?
         if (RHI_Context::gpu_markers)
@@ -1332,7 +1332,7 @@ namespace LitchiRuntime
     void RHI_CommandList::OnDraw()
     {
         EASY_FUNCTION(profiler::colors::Magenta);
-        SP_ASSERT(m_state == RHI_CommandListState::Recording);
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         EASY_BLOCK("SetGlobalShaderResources")
         Renderer::SetGlobalShaderResources(this);//
@@ -1384,7 +1384,7 @@ namespace LitchiRuntime
     )
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(image != nullptr);
+        LC_ASSERT(image != nullptr);
 
         VkImageMemoryBarrier image_barrier            = {};
         image_barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -1450,14 +1450,14 @@ namespace LitchiRuntime
     void RHI_CommandList::InsertMemoryBarrierImage(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(texture != nullptr);
+        LC_ASSERT(texture != nullptr);
         InsertMemoryBarrierImage(texture->GetRhiResource(), get_aspect_mask(texture), mip_start, mip_range, array_length, layout_old, layout_new);
     }
 
     void RHI_CommandList::InsertMemoryBarrierImageWaitForWrite(RHI_Texture* texture)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        SP_ASSERT(texture != nullptr);
+        LC_ASSERT(texture != nullptr);
 
         VkImageMemoryBarrier image_barrier            = {};
         image_barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;

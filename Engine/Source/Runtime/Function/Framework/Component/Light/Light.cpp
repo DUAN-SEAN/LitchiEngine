@@ -131,7 +131,7 @@ void Light::SetIntensityLumens(float lumens)
 
 float Light::GetIntensityWatt(RenderCamera* camera) const
 {
-    SP_ASSERT(camera != nullptr);
+    LC_ASSERT(camera != nullptr);
 
     // This magic values are chosen empirically based on how the lights
     // types in the LightIntensity enum should look in the engine

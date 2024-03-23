@@ -11,60 +11,60 @@ struct sp_info
 
 //= CLASS EXPORTING/IMPORTING =====================================
 #if defined(_MSC_VER)
-    #define SP_CLASS
+    #define LC_CLASS
     #if SPARTAN_RUNTIME_SHARED == 1
-        #ifdef SPARTAN_RUNTIME
-        #define SP_CLASS __declspec(dllexport)
+        #ifdef LITCHI_RUNTIME
+        #define LC_CLASS __declspec(dllexport)
     #else
-        #define SP_CLASS __declspec(dllimport)
+        #define LC_CLASS __declspec(dllimport)
     #endif
 #endif
 #elif defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
-    #define SP_CLASS
+    #define LC_CLASS
     #if SPARTAN_RUNTIME_SHARED == 1
-        #ifdef SPARTAN_RUNTIME
-            #define SP_CLASS __attribute__((visibility("default")))
+        #ifdef  LITCHI_RUNTIME
+            #define LC_CLASS __attribute__((visibility("default")))
         #else
-            #define SP_CLASS
+            #define LC_CLASS
         #endif
     #endif
 #else
-    #error "SP_CLASS is not implemented for this compiler/platform"
+    #error "LC_CLASS is not implemented for this compiler/platform"
 #endif
 //=================================================================
 
 //= OPTIMISATION ON/OFF ================================================
 #if defined(_MSC_VER)
-    #define SP_OPTIMISE_OFF __pragma(optimize("", off))
-    #define SP_OPTIMISE_ON  __pragma(optimize("", on))
+    #define LC_OPTIMISE_OFF __pragma(optimize("", off))
+    #define LC_OPTIMISE_ON  __pragma(optimize("", on))
 #elif defined(__clang__)
-    #define SP_OPTIMISE_OFF _Pragma("clang optimize off")
-    #define SP_OPTIMISE_ON  _Pragma("clang optimize on")
+    #define LC_OPTIMISE_OFF _Pragma("clang optimize off")
+    #define LC_OPTIMISE_ON  _Pragma("clang optimize on")
 #elif defined(__GNUC__) || defined(__GNUG__)
-    #define SP_OPTIMISE_OFF         \
+    #define LC_OPTIMISE_OFF         \
         _Pragma("GCC push_options") \
         _Pragma("GCC optimize (\"O0\")")
-    #define SP_OPTIMISE_ON _Pragma("GCC pop_options")
+    #define LC_OPTIMISE_ON _Pragma("GCC pop_options")
 #else
-    #error "SP_OPTIMISE_* is not implemented for this compiler/platform"
+    #error "LC_OPTIMISE_* is not implemented for this compiler/platform"
 #endif
 //======================================================================
 
 //= WARNINGS ON/OFF ====================================================
 #if defined(_MSC_VER)
-    #define SP_WARNINGS_OFF __pragma(warning(push, 0))
-    #define SP_WARNINGS_ON  __pragma(warning(pop))
+    #define LC_WARNINGS_OFF __pragma(warning(push, 0))
+    #define LC_WARNINGS_ON  __pragma(warning(pop))
 #elif defined(__clang__)
-    #define SP_WARNINGS_OFF              \
+    #define LC_WARNINGS_OFF              \
         _Pragma("clang diagnostic push") \
         _Pragma("clang diagnostic ignored \"-Weverything\"")
-    #define SP_WARNINGS_ON _Pragma("clang diagnostic pop")
+    #define LC_WARNINGS_ON _Pragma("clang diagnostic pop")
 #elif defined(__GNUC__) || defined(__GNUG__)
-    #define SP_WARNINGS_OFF                         \
+    #define LC_WARNINGS_OFF                         \
         _Pragma("GCC diagnostic push")              \
         _Pragma("GCC diagnostic ignored \"-Wall\"") \
         _Pragma("GCC diagnostic ignored \"-Wextra\"") 
-    #define SP_WARNINGS_ON _Pragma("GCC diagnostic pop")
+    #define LC_WARNINGS_ON _Pragma("GCC diagnostic pop")
 #else
     #error "SP_WARNINGS_* is not implemented for this compiler/platform"
 #endif
@@ -72,11 +72,11 @@ struct sp_info
 
 //= DEBUG BREAK =========================================================
 #if defined(_MSC_VER)
-#define SP_DEBUG_BREAK() __debugbreak()
+#define LC_DEBUG_BREAK() __debugbreak()
 #elif defined(__clang__) || defined(__GNUC__) || defined(__GNUG__)
-    #define SP_DEBUG_BREAK() __builtin_trap()
+    #define LC_DEBUG_BREAK() __builtin_trap()
 #else
-    #error "SP_DEBUG_BREAK is not implemented for this compiler/platform"
+    #error "LC_DEBUG_BREAK is not implemented for this compiler/platform"
 #endif
 //=======================================================================
 
@@ -103,18 +103,18 @@ struct sp_info
 
 //= ERROR WINDOW =================================================================
 #if defined(_MSC_VER)
-    #define SP_ERROR_WINDOW(text_message)                                       \
+    #define LC_ERROR_WINDOW(text_message)                                       \
     {                                                                           \
         MessageBeep(MB_ICONERROR);                                              \
         HWND hwnd = GetConsoleWindow();                                         \
         MessageBox(hwnd, WIDE_STR(text_message), L"Error", MB_OK | MB_TOPMOST); \
-        SP_DEBUG_BREAK();                                                       \
+        LC_DEBUG_BREAK();                                                       \
     }
 #else
-    #define SP_ERROR_WINDOW(text_message)    \
+    #define LC_ERROR_WINDOW(text_message)    \
     {                                        \
         printf("Error: %s\n", text_message); \
-        SP_DEBUG_BREAK();                    \
+        LC_DEBUG_BREAK();                    \
     }
 #endif
 //================================================================================
@@ -122,25 +122,25 @@ struct sp_info
 //= ASSERT =====================================================================
 // On debug mode, the assert will have the default behaviour.
 // On release mode, the assert will write the error to a file and then break.
-#ifdef DEBUG
+#ifdef _DEBUG
 #include <cassert>
-#define SP_ASSERT(expression) assert(expression)
+#define LC_ASSERT(expression) assert(expression)
 #else
-#define SP_ASSERT(expression)                       \
+#define LC_ASSERT(expression)                       \
 if (!(##expression))                                \
 {                                                   \
    /* LitchiRuntime::Log::SetLogToFile(true);               \
     DEBUG_LOG_ERROR("Assertion failed: " #expression); */\
-    SP_DEBUG_BREAK();                               \
+    LC_DEBUG_BREAK();                               \
 }
 #endif
 
 // An assert which can print a text message
-#define SP_ASSERT_MSG(expression, text_message) \
-SP_ASSERT(expression && text_message)
+#define LC_ASSERT_MSG(expression, text_message) \
+LC_ASSERT(expression && text_message)
 
 // A static assert
-#define SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(T) \
+#define LC_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(T) \
 static_assert(std::is_trivially_copyable_v<T>, "Type is not trivially copyable")
 //==============================================================================
 

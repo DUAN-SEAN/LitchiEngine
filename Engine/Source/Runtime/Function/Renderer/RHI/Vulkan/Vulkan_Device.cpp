@@ -14,10 +14,10 @@
 #include "../RHI_Texture.h"
 #include "GLFW/glfw3.h"
 //#include "../../Profiling/Profiler.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #define VMA_IMPLEMENTATION
 #include "vk_mem_alloc.h"
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //=====================================
 
 //= NAMESPACES ===============
@@ -277,13 +277,13 @@ namespace LitchiRuntime
 			allocator_info.vulkanApiVersion = api_version;
 			allocator_info.flags = VMA_ALLOCATOR_CREATE_EXT_MEMORY_BUDGET_BIT;
 
-			SP_ASSERT_MSG(vmaCreateAllocator(&allocator_info, &vulkan_memory_allocator::allocator) == VK_SUCCESS, "Failed to create memory allocator");
+			LC_ASSERT_MSG(vmaCreateAllocator(&allocator_info, &vulkan_memory_allocator::allocator) == VK_SUCCESS, "Failed to create memory allocator");
 		}
 
 		static void destroy()
 		{
-			SP_ASSERT(vulkan_memory_allocator::allocator != nullptr);
-			SP_ASSERT_MSG(vulkan_memory_allocator::allocations.empty(), "There are still allocations");
+			LC_ASSERT(vulkan_memory_allocator::allocator != nullptr);
+			LC_ASSERT_MSG(vulkan_memory_allocator::allocations.empty(), "There are still allocations");
 			vmaDestroyAllocator(static_cast<VmaAllocator>(vulkan_memory_allocator::allocator));
 			vulkan_memory_allocator::allocator = nullptr;
 		}
@@ -295,8 +295,8 @@ namespace LitchiRuntime
 
 		static void save_allocation(void*& resource, const char* name, VmaAllocation allocation)
 		{
-			SP_ASSERT_MSG(resource != nullptr, "Resource can't be null");
-			SP_ASSERT_MSG(name != nullptr, "Name can't be empty");
+			LC_ASSERT_MSG(resource != nullptr, "Resource can't be null");
+			LC_ASSERT_MSG(name != nullptr, "Name can't be empty");
 
 			// Set allocation data
 			vmaSetAllocationUserData(allocator, allocation, resource);
@@ -381,7 +381,7 @@ namespace LitchiRuntime
 			layout_info.pBindings = &layout_binding;
 			layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
 
-			SP_VK_ASSERT_MSG(vkCreateDescriptorSetLayout(RHI_Context::device, &layout_info, nullptr, descriptor_set_layout), "Failed to create descriptor set layout");
+			LC_VK_ASSERT_MSG(vkCreateDescriptorSetLayout(RHI_Context::device, &layout_info, nullptr, descriptor_set_layout), "Failed to create descriptor set layout");
 			RHI_Device::SetResourceName(static_cast<void*>(*descriptor_set_layout), RHI_Resource_Type::DescriptorSetLayout, debug_name);
 
 			// create descriptor set
@@ -391,7 +391,7 @@ namespace LitchiRuntime
 			allocInfo.descriptorSetCount = 1;
 			allocInfo.pSetLayouts = descriptor_set_layout;
 
-			SP_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocInfo, descriptor_set), "Failed to allocate descriptor set");
+			LC_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocInfo, descriptor_set), "Failed to allocate descriptor set");
 			RHI_Device::SetResourceName(static_cast<void*>(*descriptor_set), RHI_Resource_Type::DescriptorSet, debug_name);
 
 			// update descriptor set with samplers
@@ -417,14 +417,14 @@ namespace LitchiRuntime
 
 		static void get_descriptors_from_pipeline_state(RHI_PipelineState& pipeline_state, vector<RHI_Descriptor>& descriptors)
 		{
-			SP_ASSERT(pipeline_state.IsValid());
+			LC_ASSERT(pipeline_state.IsValid());
 
 			EASY_BLOCK("Build Descriptors")
 			// descriptors.clear();
 			bool isNeedSort = false;
 			if (pipeline_state.IsCompute())
 			{
-				SP_ASSERT(pipeline_state.shader_compute->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+				LC_ASSERT(pipeline_state.shader_compute->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
 				descriptors = pipeline_state.shader_compute->GetDescriptors();
 			}
 			else if (pipeline_state.IsGraphics())
@@ -434,13 +434,13 @@ namespace LitchiRuntime
 					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
 				}else
 				{
-					SP_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
 					descriptors = pipeline_state.shader_vertex->GetDescriptors();
 
 					// If there is a pixel shader, merge it's resources into our map as well
 					if (pipeline_state.shader_pixel)
 					{
-						SP_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+						LC_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
 
 						for (const RHI_Descriptor& descriptor_pixel : pipeline_state.shader_pixel->GetDescriptors())
 						{
@@ -533,7 +533,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::Initialize()
 	{
-		SP_ASSERT_MSG(RHI_Context::api_type == RHI_Api_Type::Vulkan, "RHI context not initialized");
+		LC_ASSERT_MSG(RHI_Context::api_type == RHI_Api_Type::Vulkan, "RHI context not initialized");
 
 		// #ifdef DEBUG
 			// Add validation related extensions
@@ -592,7 +592,7 @@ namespace LitchiRuntime
 				// VK_EXT_shader_demote_to_helper_invocation - 1.3
 				// VK_KHR_synchronization2                   - 1.3
 				// We make Vulkan 1.3 the minimum required version and we enable those extensions from the core.
-				SP_ASSERT_MSG(app_info.apiVersion >= VK_API_VERSION_1_3, "Vulkan 1.3 is not supported");
+				LC_ASSERT_MSG(app_info.apiVersion >= VK_API_VERSION_1_3, "Vulkan 1.3 is not supported");
 
 				// In case the SDK is not supported by the driver, prompt the user to update
 				if (sdk_version > driver_version)
@@ -645,7 +645,7 @@ namespace LitchiRuntime
 				}
 			}
 
-			SP_ASSERT_MSG(vkCreateInstance(&create_info, nullptr, &RHI_Context::instance) == VK_SUCCESS, "Failed to create instance");
+			LC_ASSERT_MSG(vkCreateInstance(&create_info, nullptr, &RHI_Context::instance) == VK_SUCCESS, "Failed to create instance");
 		}
 
 		// Get function pointers (from extensions)
@@ -658,7 +658,7 @@ namespace LitchiRuntime
 		}
 
 		// Find a physical device
-		SP_ASSERT_MSG(PhysicalDeviceDetect(), "Failed to detect any devices");
+		LC_ASSERT_MSG(PhysicalDeviceDetect(), "Failed to detect any devices");
 		PhysicalDeviceSelectPrimary();
 
 		// Device
@@ -740,43 +740,43 @@ namespace LitchiRuntime
 				// Check if certain features are supported and enable them
 				{
 					// Anisotropic filtering
-					SP_ASSERT(features_supported.features.samplerAnisotropy == VK_TRUE);
+					LC_ASSERT(features_supported.features.samplerAnisotropy == VK_TRUE);
 					device_features_to_enable.features.samplerAnisotropy = VK_TRUE;
 
 					// Line and point rendering
-					SP_ASSERT(features_supported.features.fillModeNonSolid == VK_TRUE);
+					LC_ASSERT(features_supported.features.fillModeNonSolid == VK_TRUE);
 					device_features_to_enable.features.fillModeNonSolid = VK_TRUE;
 
 					// Lines with adjustable thickness
-					SP_ASSERT(features_supported.features.wideLines == VK_TRUE);
+					LC_ASSERT(features_supported.features.wideLines == VK_TRUE);
 					device_features_to_enable.features.wideLines = VK_TRUE;
 
 					// Cubemaps
-					SP_ASSERT(features_supported.features.imageCubeArray == VK_TRUE);
+					LC_ASSERT(features_supported.features.imageCubeArray == VK_TRUE);
 					device_features_to_enable.features.imageCubeArray = VK_TRUE;
 
 					// Partially bound descriptors
-					SP_ASSERT(features_supported_1_2.descriptorBindingPartiallyBound == VK_TRUE);
+					LC_ASSERT(features_supported_1_2.descriptorBindingPartiallyBound == VK_TRUE);
 					device_features_to_enable_1_2.descriptorBindingPartiallyBound = VK_TRUE;
 
 					// Runtime descriptor array
-					SP_ASSERT(features_supported_1_2.runtimeDescriptorArray == VK_TRUE);
+					LC_ASSERT(features_supported_1_2.runtimeDescriptorArray == VK_TRUE);
 					device_features_to_enable_1_2.runtimeDescriptorArray = VK_TRUE;
 
 					// Timeline semaphores
-					SP_ASSERT(features_supported_1_2.timelineSemaphore == VK_TRUE);
+					LC_ASSERT(features_supported_1_2.timelineSemaphore == VK_TRUE);
 					device_features_to_enable_1_2.timelineSemaphore = VK_TRUE;
 
 					// Rendering without render passes and frame buffer objects
-					SP_ASSERT(features_supported_1_3.dynamicRendering == VK_TRUE);
+					LC_ASSERT(features_supported_1_3.dynamicRendering == VK_TRUE);
 					device_features_to_enable_1_3.dynamicRendering = VK_TRUE;
 
 					// Extended types (int8, int16, int64, etc) - SPD
-					SP_ASSERT(features_supported_1_2.shaderSubgroupExtendedTypes == VK_TRUE);
+					LC_ASSERT(features_supported_1_2.shaderSubgroupExtendedTypes == VK_TRUE);
 					device_features_to_enable_1_2.shaderSubgroupExtendedTypes = VK_TRUE;
 
 					// Wave64
-					SP_ASSERT(features_supported_1_3.shaderDemoteToHelperInvocation == VK_TRUE);
+					LC_ASSERT(features_supported_1_3.shaderDemoteToHelperInvocation == VK_TRUE);
 					device_features_to_enable_1_3.shaderDemoteToHelperInvocation = VK_TRUE;
 
 					// Wave64 - If supported, FSR 2 will opt for it, so don't assert.
@@ -833,7 +833,7 @@ namespace LitchiRuntime
 			}
 
 			// Create
-			SP_ASSERT_MSG(vkCreateDevice(RHI_Context::device_physical, &create_info, nullptr, &RHI_Context::device) == VK_SUCCESS, "Failed to create device");
+			LC_ASSERT_MSG(vkCreateDevice(RHI_Context::device_physical, &create_info, nullptr, &RHI_Context::device) == VK_SUCCESS, "Failed to create device");
 		}
 
 		// Get a graphics, compute and a copy queue.
@@ -877,7 +877,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::Destroy()
 	{
-		SP_ASSERT(queues::graphics != nullptr);
+		LC_ASSERT(queues::graphics != nullptr);
 
 		QueueWaitAll();
 
@@ -908,15 +908,15 @@ namespace LitchiRuntime
 	bool RHI_Device::PhysicalDeviceDetect()
 	{
 		uint32_t device_count = 0;
-		SP_ASSERT_MSG(
+		LC_ASSERT_MSG(
 			vkEnumeratePhysicalDevices(RHI_Context::instance, &device_count, nullptr) == VK_SUCCESS,
 			"Failed to get physical device count"
 		);
 
-		SP_ASSERT_MSG(device_count != 0, "There are no available physical devices");
+		LC_ASSERT_MSG(device_count != 0, "There are no available physical devices");
 
 		vector<VkPhysicalDevice> physical_devices(device_count);
-		SP_ASSERT_MSG(
+		LC_ASSERT_MSG(
 			vkEnumeratePhysicalDevices(RHI_Context::instance, &device_count, physical_devices.data()) == VK_SUCCESS,
 			"Failed to enumerate physical devices"
 		);
@@ -1071,7 +1071,7 @@ namespace LitchiRuntime
 		uint32_t semaphore_count = static_cast<uint32_t>(wait_semaphores.size());
 		for (uint32_t i = 0; i < semaphore_count; i++)
 		{
-			SP_ASSERT_MSG(wait_semaphores[i]->GetStateCpu() == RHI_Sync_State::Submitted, "The wait semaphore hasn't been signaled");
+			LC_ASSERT_MSG(wait_semaphores[i]->GetStateCpu() == RHI_Sync_State::Submitted, "The wait semaphore hasn't been signaled");
 			vk_wait_semaphores[i] = static_cast<VkSemaphore>(wait_semaphores[i]->GetRhiResource());
 		}
 
@@ -1083,7 +1083,7 @@ namespace LitchiRuntime
 		present_info.pSwapchains = reinterpret_cast<VkSwapchainKHR*>(&swapchain);
 		present_info.pImageIndices = image_index;
 
-		SP_VK_ASSERT_MSG(vkQueuePresentKHR(static_cast<VkQueue>(queues::graphics), &present_info), "Failed to present");
+		LC_VK_ASSERT_MSG(vkQueuePresentKHR(static_cast<VkQueue>(queues::graphics), &present_info), "Failed to present");
 
 		// Update semaphore state
 		for (uint32_t i = 0; i < semaphore_count; i++)
@@ -1097,12 +1097,12 @@ namespace LitchiRuntime
 		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> lock(queues::mutex_queue);
 
-		SP_ASSERT_MSG(cmd_buffer != nullptr, "Invalid command buffer");
+		LC_ASSERT_MSG(cmd_buffer != nullptr, "Invalid command buffer");
 
 		// Validate semaphores
-		if (wait_semaphore)   SP_ASSERT_MSG(wait_semaphore->GetStateCpu() != RHI_Sync_State::Idle, "Wait semaphore is in an idle state and will never be signaled");
-		if (signal_semaphore) SP_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "Signal semaphore is already in a signaled state.");
-		if (signal_fence)     SP_ASSERT_MSG(signal_fence->GetStateCpu() != RHI_Sync_State::Submitted, "Signal fence is already in a signaled state.");
+		if (wait_semaphore)   LC_ASSERT_MSG(wait_semaphore->GetStateCpu() != RHI_Sync_State::Idle, "Wait semaphore is in an idle state and will never be signaled");
+		if (signal_semaphore) LC_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "Signal semaphore is already in a signaled state.");
+		if (signal_fence)     LC_ASSERT_MSG(signal_fence->GetStateCpu() != RHI_Sync_State::Submitted, "Signal fence is already in a signaled state.");
 
 		// Get semaphores
 		array<VkSemaphore, 1> vk_wait_semaphore = { wait_semaphore ? static_cast<VkSemaphore>(wait_semaphore->GetRhiResource()) : nullptr };
@@ -1124,7 +1124,7 @@ namespace LitchiRuntime
 		void* vk_signal_fence = signal_fence ? signal_fence->GetRhiResource() : nullptr;
 
 		// The actual submit
-		SP_VK_ASSERT_MSG(vkQueueSubmit(static_cast<VkQueue>(QueueGet(type)), 1, &submit_info, static_cast<VkFence>(vk_signal_fence)), "Failed to submit");
+		LC_VK_ASSERT_MSG(vkQueueSubmit(static_cast<VkQueue>(QueueGet(type)), 1, &submit_info, static_cast<VkFence>(vk_signal_fence)), "Failed to submit");
 
 		// Update semaphore states
 		if (wait_semaphore)   wait_semaphore->SetStateCpu(RHI_Sync_State::Idle);
@@ -1137,7 +1137,7 @@ namespace LitchiRuntime
 		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> lock(queues::mutex_queue);
 
-		SP_VK_ASSERT_MSG(vkQueueWaitIdle(static_cast<VkQueue>(QueueGet(type))), "Failed to wait for queue");
+		LC_VK_ASSERT_MSG(vkQueueWaitIdle(static_cast<VkQueue>(QueueGet(type))), "Failed to wait for queue");
 	}
 
 	void* RHI_Device::QueueGet(const RHI_Queue_Type type)
@@ -1222,7 +1222,7 @@ namespace LitchiRuntime
 				case RHI_Resource_Type::QueryPool:           vkDestroyQueryPool(RHI_Context::device, static_cast<VkQueryPool>(resource), nullptr);                     break;
 				case RHI_Resource_Type::Pipeline:            vkDestroyPipeline(RHI_Context::device, static_cast<VkPipeline>(resource), nullptr);                       break;
 				case RHI_Resource_Type::PipelineLayout:      vkDestroyPipelineLayout(RHI_Context::device, static_cast<VkPipelineLayout>(resource), nullptr);           break;
-				default:                                     SP_ASSERT_MSG(false, "Unknown resource");                                                                 break;
+				default:                                     LC_ASSERT_MSG(false, "Unknown resource");                                                                 break;
 				}
 			}
 		}
@@ -1257,8 +1257,8 @@ namespace LitchiRuntime
 		pool_create_info.maxSets = capacity;
 
 		// create
-		SP_ASSERT(descriptors::descriptor_pool == nullptr);
-		SP_VK_ASSERT_MSG(vkCreateDescriptorPool(RHI_Context::device, &pool_create_info, nullptr, &descriptors::descriptor_pool),
+		LC_ASSERT(descriptors::descriptor_pool == nullptr);
+		LC_VK_ASSERT_MSG(vkCreateDescriptorPool(RHI_Context::device, &pool_create_info, nullptr, &descriptors::descriptor_pool),
 			"Failed to create descriptor pool");
 
 		descriptors::descriptor_pool_max_sets = capacity;
@@ -1272,7 +1272,7 @@ namespace LitchiRuntime
 	{
 		// verify that an allocation is possible
 		{
-			SP_ASSERT_MSG(descriptors::allocated_descriptor_sets < descriptors::descriptor_pool_max_sets, "Reached descriptor set limit");
+			LC_ASSERT_MSG(descriptors::allocated_descriptor_sets < descriptors::descriptor_pool_max_sets, "Reached descriptor set limit");
 
 			uint32_t textures = 0;
 			uint32_t storage_textures = 0;
@@ -1303,11 +1303,11 @@ namespace LitchiRuntime
 				}
 			}
 
-			SP_ASSERT_MSG(samplers <= descriptors::descriptor_pool_max_samplers, "Descriptor set requires more samplers");
-			SP_ASSERT_MSG(textures <= descriptors::descriptor_pool_max_textures, "Descriptor set requires more textures");
-			SP_ASSERT_MSG(storage_textures <= descriptors::descriptor_pool_max_storage_textures, "Descriptor set requires more storage textures");
-			SP_ASSERT_MSG(storage_buffers <= descriptors::descriptor_pool_max_storage_buffers_dynamic, "Descriptor set requires more dynamic storage buffers");
-			SP_ASSERT_MSG(dynamic_constant_buffers <= descriptors::descriptor_pool_max_constant_buffers_dynamic, "Descriptor set requires more dynamic constant buffers");
+			LC_ASSERT_MSG(samplers <= descriptors::descriptor_pool_max_samplers, "Descriptor set requires more samplers");
+			LC_ASSERT_MSG(textures <= descriptors::descriptor_pool_max_textures, "Descriptor set requires more textures");
+			LC_ASSERT_MSG(storage_textures <= descriptors::descriptor_pool_max_storage_textures, "Descriptor set requires more storage textures");
+			LC_ASSERT_MSG(storage_buffers <= descriptors::descriptor_pool_max_storage_buffers_dynamic, "Descriptor set requires more dynamic storage buffers");
+			LC_ASSERT_MSG(dynamic_constant_buffers <= descriptors::descriptor_pool_max_constant_buffers_dynamic, "Descriptor set requires more dynamic constant buffers");
 		}
 
 		// describe
@@ -1319,8 +1319,8 @@ namespace LitchiRuntime
 		allocate_info.pSetLayouts = reinterpret_cast<VkDescriptorSetLayout*>(descriptor_set_layouts.data());
 
 		// allocate
-		SP_ASSERT(resource == nullptr);
-		SP_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocate_info, reinterpret_cast<VkDescriptorSet*>(&resource)),
+		LC_ASSERT(resource == nullptr);
+		LC_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocate_info, reinterpret_cast<VkDescriptorSet*>(&resource)),
 			"Failed to allocate descriptor set");
 
 		// track allocations
@@ -1360,7 +1360,7 @@ namespace LitchiRuntime
 		if (descriptor.type == RHI_Descriptor_Type::ConstantBuffer)
 			return VkDescriptorType::VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC;
 
-		SP_ASSERT_MSG(false, "Unhandled descriptor type");
+		LC_ASSERT_MSG(false, "Unhandled descriptor type");
 		return VkDescriptorType::VK_DESCRIPTOR_TYPE_MAX_ENUM;
 	}
 
@@ -1410,7 +1410,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::GetOrCreatePipeline(RHI_PipelineState& pso, RHI_Pipeline*& pipeline, RHI_DescriptorSetLayout*& descriptor_set_layout)
 	{
-		SP_ASSERT(pso.IsValid());
+		LC_ASSERT(pso.IsValid());
 
 		pso.ComputeHash();
 		EASY_BLOCK("descriptors::get_or_create_descriptor_set_layout")
@@ -1500,7 +1500,7 @@ namespace LitchiRuntime
 		// Create the buffer
 		VmaAllocation allocation = nullptr;
 		VmaAllocationInfo allocation_info;
-		SP_VK_ASSERT_MSG(vmaCreateBuffer(
+		LC_VK_ASSERT_MSG(vmaCreateBuffer(
 			vulkan_memory_allocator::allocator,
 			&buffer_create_info,
 			&allocation_create_info,
@@ -1512,7 +1512,7 @@ namespace LitchiRuntime
 		// If a pointer to the buffer data has been passed, map the buffer and copy over the data
 		if (data_initial != nullptr)
 		{
-			SP_ASSERT(is_mappable && "Mapping initial data requires the buffer to be created with a VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT memory flag.");
+			LC_ASSERT(is_mappable && "Mapping initial data requires the buffer to be created with a VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT memory flag.");
 
 			// Memory in Vulkan doesn't need to be unmapped before using it on GPU, but unless a
 			// memory type has VK_MEMORY_PROPERTY_HOST_COHERENT_BIT flag set, you need to manually
@@ -1520,9 +1520,9 @@ namespace LitchiRuntime
 			// it. Map/unmap operations don't do that automatically.
 
 			void* mapped_data = nullptr;
-			SP_VK_ASSERT_MSG(vmaMapMemory(vulkan_memory_allocator::allocator, allocation, &mapped_data), "Failed to map allocation");
+			LC_VK_ASSERT_MSG(vmaMapMemory(vulkan_memory_allocator::allocator, allocation, &mapped_data), "Failed to map allocation");
 			memcpy(mapped_data, data_initial, size);
-			SP_VK_ASSERT_MSG(vmaFlushAllocation(vulkan_memory_allocator::allocator, allocation, 0, size), "Failed to flush allocation");
+			LC_VK_ASSERT_MSG(vmaFlushAllocation(vulkan_memory_allocator::allocator, allocation, 0, size), "Failed to flush allocation");
 			vmaUnmapMemory(vulkan_memory_allocator::allocator, allocation);
 		}
 
@@ -1531,7 +1531,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::MemoryBufferDestroy(void*& resource)
 	{
-		SP_ASSERT_MSG(resource != nullptr, "Resource is null");
+		LC_ASSERT_MSG(resource != nullptr, "Resource is null");
 		lock_guard<mutex> lock(vulkan_memory_allocator::mutex_allocator);
 
 		if (VmaAllocation allocation = static_cast<VmaAllocation>(vulkan_memory_allocator::get_allocation_from_resource(resource)))
@@ -1550,7 +1550,7 @@ namespace LitchiRuntime
 
 		// Create image
 		VmaAllocation allocation;
-		SP_VK_ASSERT_MSG(vmaCreateImage(
+		LC_VK_ASSERT_MSG(vmaCreateImage(
 			vulkan_memory_allocator::allocator,
 			static_cast<VkImageCreateInfo*>(vk_image_creat_info), &allocation_info,
 			reinterpret_cast<VkImage*>(&resource),
@@ -1563,7 +1563,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::MemoryTextureDestroy(void*& resource)
 	{
-		SP_ASSERT_MSG(resource != nullptr, "Resource is null");
+		LC_ASSERT_MSG(resource != nullptr, "Resource is null");
 		lock_guard<mutex> lock(vulkan_memory_allocator::mutex_allocator);
 
 		if (VmaAllocation allocation = static_cast<VmaAllocation>(vulkan_memory_allocator::get_allocation_from_resource(resource)))
@@ -1577,13 +1577,13 @@ namespace LitchiRuntime
 	{
 		if (VmaAllocation allocation = static_cast<VmaAllocation>(vulkan_memory_allocator::get_allocation_from_resource(resource)))
 		{
-			SP_ASSERT_MSG(vmaMapMemory(vulkan_memory_allocator::allocator, allocation, reinterpret_cast<void**>(&mapped_data)) == VK_SUCCESS, "Failed to map memory");
+			LC_ASSERT_MSG(vmaMapMemory(vulkan_memory_allocator::allocator, allocation, reinterpret_cast<void**>(&mapped_data)) == VK_SUCCESS, "Failed to map memory");
 		}
 	}
 
 	void RHI_Device::MemoryUnmap(void* resource, void*& mapped_data)
 	{
-		SP_ASSERT_MSG(mapped_data, "Memory is already unmapped");
+		LC_ASSERT_MSG(mapped_data, "Memory is already unmapped");
 
 		if (VmaAllocation allocation = static_cast<VmaAllocation>(vulkan_memory_allocator::get_allocation_from_resource(resource)))
 		{
@@ -1710,8 +1710,8 @@ namespace LitchiRuntime
 
 	void RHI_Device::MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Vector4& color)
 	{
-		SP_ASSERT(RHI_Context::gpu_markers);
-		SP_ASSERT(functions::marker_begin != nullptr);
+		LC_ASSERT(RHI_Context::gpu_markers);
+		LC_ASSERT(functions::marker_begin != nullptr);
 
 		VkDebugUtilsLabelEXT label = {};
 		label.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_LABEL_EXT;
@@ -1727,7 +1727,7 @@ namespace LitchiRuntime
 
 	void RHI_Device::MarkerEnd(RHI_CommandList* cmd_list)
 	{
-		SP_ASSERT(RHI_Context::gpu_markers);
+		LC_ASSERT(RHI_Context::gpu_markers);
 
 		functions::marker_end(static_cast<VkCommandBuffer>(cmd_list->GetRhiResource()));
 	}
@@ -1738,8 +1738,8 @@ namespace LitchiRuntime
 	{
 		if (RHI_Context::validation) // function pointers are not initialized if validation disabled 
 		{
-			SP_ASSERT(resource != nullptr);
-			SP_ASSERT(functions::set_object_name != nullptr);
+			LC_ASSERT(resource != nullptr);
+			LC_ASSERT(functions::set_object_name != nullptr);
 
 			VkDebugUtilsObjectNameInfoEXT name_info = {};
 			name_info.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_OBJECT_NAME_INFO_EXT;

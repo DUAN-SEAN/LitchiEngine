@@ -29,7 +29,7 @@ namespace LitchiRuntime
         uint32_t offset;
     };
 
-    class SP_CLASS RHI_InputLayout : public Object
+    class LC_CLASS RHI_InputLayout : public Object
     {
     public:
         RHI_InputLayout() = default;

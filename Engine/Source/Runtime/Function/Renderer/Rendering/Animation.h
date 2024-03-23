@@ -84,7 +84,7 @@ namespace LitchiRuntime
         int parentIndex;
     };
 
-    class SP_CLASS Animation : public IResource
+    class LC_CLASS Animation : public IResource
     {
     public:
         Animation();

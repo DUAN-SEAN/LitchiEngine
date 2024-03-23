@@ -20,12 +20,12 @@ namespace LitchiRuntime
 {
     void RHI_CommandList::WaitForExecution()
     {
-        SP_ASSERT_MSG(m_state == RHI_CommandListState::Submitted, "The command list hasn't been submitted, can't wait for it.");
+        LC_ASSERT_MSG(m_state == RHI_CommandListState::Submitted, "The command list hasn't been submitted, can't wait for it.");
 
         // Wait for execution to finish
         if (IsExecuting())
         {
-            SP_ASSERT_MSG(m_proccessed_fence->Wait(), "Timed out while waiting for the fence");
+            LC_ASSERT_MSG(m_proccessed_fence->Wait(), "Timed out while waiting for the fence");
         }
 
         // Reset fence

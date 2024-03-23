@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Fence : public Object
+    class LC_CLASS RHI_Fence : public Object
     {
     public:
         RHI_Fence(const char* name = nullptr);

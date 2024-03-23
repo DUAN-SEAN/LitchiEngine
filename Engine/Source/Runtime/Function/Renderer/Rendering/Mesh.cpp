@@ -13,9 +13,9 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include "meshoptimizer/meshoptimizer.h"
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //===========================================
 
 //= NAMESPACES ================
@@ -152,11 +152,11 @@ namespace LitchiRuntime
 
     void Mesh::GetGeometry(uint32_t index_offset, uint32_t index_count, uint32_t vertex_offset, uint32_t vertex_count, vector<uint32_t>* indices, vector<RHI_Vertex_PosTexNorTan>* vertices)
     {
-        SP_ASSERT_MSG(indices != nullptr || vertices != nullptr, "Indices and vertices vectors can't both be null");
+        LC_ASSERT_MSG(indices != nullptr || vertices != nullptr, "Indices and vertices vectors can't both be null");
 
         if (indices)
         {
-            SP_ASSERT_MSG(index_count != 0, "Index count can't be 0");
+            LC_ASSERT_MSG(index_count != 0, "Index count can't be 0");
 
             const auto index_first = m_indices.begin() + index_offset;
             const auto index_last  = m_indices.begin() + index_offset + index_count;
@@ -165,7 +165,7 @@ namespace LitchiRuntime
 
         if (vertices)
         {
-            SP_ASSERT_MSG(vertex_count != 0, "Index count can't be 0");
+            LC_ASSERT_MSG(vertex_count != 0, "Index count can't be 0");
 
             const auto vertex_first = m_vertices.begin() + vertex_offset;
             const auto vertex_last  = m_vertices.begin() + vertex_offset + vertex_count;
@@ -175,11 +175,11 @@ namespace LitchiRuntime
 
 	void Mesh::GetGeometry(uint32_t index_offset, uint32_t index_count, uint32_t vertex_offset, uint32_t vertex_count, vector<uint32_t>* indices, vector<RHI_Vertex_PosTexNorTanBone>* vertices)
     {
-        SP_ASSERT_MSG(indices != nullptr || vertices != nullptr, "Indices and vertices vectors can't both be null");
+        LC_ASSERT_MSG(indices != nullptr || vertices != nullptr, "Indices and vertices vectors can't both be null");
 
         if (indices)
         {
-            SP_ASSERT_MSG(index_count != 0, "Index count can't be 0");
+            LC_ASSERT_MSG(index_count != 0, "Index count can't be 0");
 
             const auto index_first = m_indices.begin() + index_offset;
             const auto index_last = m_indices.begin() + index_offset + index_count;
@@ -188,7 +188,7 @@ namespace LitchiRuntime
 
         if (vertices)
         {
-            SP_ASSERT_MSG(vertex_count != 0, "Index count can't be 0");
+            LC_ASSERT_MSG(vertex_count != 0, "Index count can't be 0");
 
             const auto vertex_first = m_verticesWithBone.begin() + vertex_offset;
             const auto vertex_last = m_verticesWithBone.begin() + vertex_offset + vertex_count;
@@ -252,11 +252,11 @@ namespace LitchiRuntime
     {
         if (m_model_is_animation)
         {
-            SP_ASSERT_MSG(m_verticesWithBone.size() != 0, "There are no vertices");
+            LC_ASSERT_MSG(m_verticesWithBone.size() != 0, "There are no vertices");
             m_aabb = BoundingBox(m_verticesWithBone.data(), static_cast<uint32_t>(m_verticesWithBone.size()));
         }else
         {
-            SP_ASSERT_MSG(m_vertices.size() != 0, "There are no vertices");
+            LC_ASSERT_MSG(m_vertices.size() != 0, "There are no vertices");
             m_aabb = BoundingBox(m_vertices.data(), static_cast<uint32_t>(m_vertices.size()));
         }
     }
@@ -281,8 +281,8 @@ namespace LitchiRuntime
     
     void Mesh::Optimize()
     {
-        SP_ASSERT(!m_indices.empty());
-        SP_ASSERT(!m_vertices.empty());
+        LC_ASSERT(!m_indices.empty());
+        LC_ASSERT(!m_vertices.empty());
 
         uint32_t index_count                     = static_cast<uint32_t>(m_indices.size());
         uint32_t vertex_count                    = static_cast<uint32_t>(m_vertices.size());
@@ -317,18 +317,18 @@ namespace LitchiRuntime
 
     void Mesh::CreateGpuBuffers()
     {
-        SP_ASSERT_MSG(!m_indices.empty(), "There are no indices");
+        LC_ASSERT_MSG(!m_indices.empty(), "There are no indices");
         m_index_buffer = make_shared<RHI_IndexBuffer>(false, (string("mesh_index_buffer_") + m_object_name).c_str());
         m_index_buffer->Create(m_indices);
 
         if(m_model_is_animation)
         {
-            SP_ASSERT_MSG(!m_verticesWithBone.empty(), "There are no vertices");
+            LC_ASSERT_MSG(!m_verticesWithBone.empty(), "There are no vertices");
             m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
             m_vertex_buffer->Create(m_verticesWithBone);
         }else
         {
-            SP_ASSERT_MSG(!m_vertices.empty(), "There are no vertices");
+            LC_ASSERT_MSG(!m_vertices.empty(), "There are no vertices");
             m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
             m_vertex_buffer->Create(m_vertices);
         }
@@ -336,8 +336,8 @@ namespace LitchiRuntime
 
     void Mesh::AddMaterial(Material* material, GameObject* entity) const
     {
-        SP_ASSERT(material != nullptr);
-        SP_ASSERT(entity != nullptr);
+        LC_ASSERT(material != nullptr);
+        LC_ASSERT(entity != nullptr);
 
         // Create a file path for this material (required for the material to be able to be cached by the resource cache)
         const string spartan_asset_path = FileSystem::GetDirectoryFromFilePath(GetResourceFilePathNative()) + material->GetObjectName() + EXTENSION_MATERIAL;
@@ -356,8 +356,8 @@ namespace LitchiRuntime
 
     void Mesh::AddTexture(Material* material, const MaterialTexture texture_type, const string& file_path, bool is_gltf)
     {
-        SP_ASSERT(material != nullptr);
-        SP_ASSERT(!file_path.empty());
+        LC_ASSERT(material != nullptr);
+        LC_ASSERT(!file_path.empty());
 
         //// Try to get the texture
         //const auto tex_name = FileSystem::GetFileNameWithoutExtensionFromFilePath(file_path);

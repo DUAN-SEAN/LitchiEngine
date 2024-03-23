@@ -46,7 +46,7 @@ namespace LitchiRuntime
 	// all functions (set/load) resolve to this
 	Material* MeshRenderer::SetMaterial(Material* material)
 	{
-		SP_ASSERT(material != nullptr);
+		LC_ASSERT(material != nullptr);
 
 		// in order for the component to guarantee serialization/deserialization, we cache the material
 		// Material* _material = ResourceCache::Cache(material);

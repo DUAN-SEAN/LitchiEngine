@@ -50,8 +50,8 @@ namespace LitchiRuntime
 
     PhysicalDevice* RHI_Device::GetPrimaryPhysicalDevice()
     {
-        SP_ASSERT_MSG(physical_devices.size() != 0, "No physical devices detected");
-        SP_ASSERT_MSG(m_physical_device_index < physical_devices.size(), "Index out of bounds");
+        LC_ASSERT_MSG(physical_devices.size() != 0, "No physical devices detected");
+        LC_ASSERT_MSG(m_physical_device_index < physical_devices.size(), "Index out of bounds");
 
         return &physical_devices[m_physical_device_index];
     }

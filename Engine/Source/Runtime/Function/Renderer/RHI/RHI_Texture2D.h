@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Texture2D : public RHI_Texture
+    class LC_CLASS RHI_Texture2D : public RHI_Texture
     {
     public:
         // Creates a texture without data (intended for manual loading)

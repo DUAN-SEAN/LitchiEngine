@@ -15,7 +15,7 @@ namespace LitchiRuntime
     {*/
         class Matrix;
 
-        class SP_CLASS BoundingBox
+        class LC_CLASS BoundingBox
         {
         public:
             // Construct with zero size.

@@ -526,7 +526,7 @@ namespace LitchiRuntime
 
 		for (GameObject* entity : gameObjectList)
 		{
-			SP_ASSERT_MSG(entity != nullptr, "Entity is null");
+			LC_ASSERT_MSG(entity != nullptr, "Entity is null");
 
 			if (entity->GetActive())
 			{
@@ -1016,7 +1016,7 @@ namespace LitchiRuntime
 			return;
 
 		// SP_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
-		SP_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
+		LC_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
 
 		swap_chain->Present();
 

@@ -34,7 +34,7 @@ namespace LitchiRuntime
 	//====================
 
 
-	class SP_CLASS Renderer
+	class LC_CLASS Renderer
 	{
 	public:
 		static void Initialize();

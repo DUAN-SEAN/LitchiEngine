@@ -12,7 +12,7 @@ namespace LitchiRuntime
 
    /* namespace Math
     {*/
-        class SP_CLASS RayHit
+        class LC_CLASS RayHit
         {
         public:
             RayHit(GameObject* entity, const Vector3& position, float distance, bool is_inside)

@@ -85,7 +85,7 @@ namespace LitchiRuntime
 
     static uint32_t get_bits_per_channel(FIBITMAP* bitmap)
     {
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
     
         const FREE_IMAGE_TYPE type = FreeImage_GetImageType(bitmap);
         uint32_t size = 0;
@@ -103,28 +103,28 @@ namespace LitchiRuntime
             size = sizeof(float);
         }
 
-        SP_ASSERT(size != 0);
+        LC_ASSERT(size != 0);
 
         return size * 8;
     }
 
     static uint32_t get_channel_count(FIBITMAP* bitmap)
     {
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
 
         const uint32_t bits_per_pixel   = FreeImage_GetBPP(bitmap);
         const uint32_t bits_per_channel = get_bits_per_channel(bitmap);
         const uint32_t channel_count    = bits_per_pixel / bits_per_channel;
 
-        SP_ASSERT(channel_count != 0);
+        LC_ASSERT(channel_count != 0);
     
         return channel_count;
     }
 
     static RHI_Format get_rhi_format(const uint32_t bits_per_channel, const uint32_t channel_count)
     {
-        SP_ASSERT(bits_per_channel != 0);
-        SP_ASSERT(channel_count != 0);
+        LC_ASSERT(bits_per_channel != 0);
+        LC_ASSERT(channel_count != 0);
 
         RHI_Format format = RHI_Format::Undefined;
 
@@ -169,7 +169,7 @@ namespace LitchiRuntime
             }
         }
 
-        SP_ASSERT(format != RHI_Format::Undefined);
+        LC_ASSERT(format != RHI_Format::Undefined);
 
         return format;
     }
@@ -179,35 +179,35 @@ namespace LitchiRuntime
     // bitmap, otherwise (1 or 4-bit palletised bitmaps) it will be a palletised bitmap.
     static FIBITMAP* convert_to_8bits(FIBITMAP* bitmap)
     {
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
 
         FIBITMAP* previous_bitmap = bitmap;
         bitmap = FreeImage_ConvertTo8Bits(previous_bitmap);
         FreeImage_Unload(previous_bitmap);
 
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
 
         return bitmap;
     }
 
     static FIBITMAP* convert_to_32bits(FIBITMAP* bitmap)
     {
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
 
         FIBITMAP* previous_bitmap = bitmap;
         bitmap = FreeImage_ConvertTo32Bits(previous_bitmap);
         FreeImage_Unload(previous_bitmap);
 
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
 
         return bitmap;
     }
 
     static FIBITMAP* rescale(FIBITMAP* bitmap, const uint32_t width, const uint32_t height)
     {
-        SP_ASSERT(bitmap != nullptr);
-        SP_ASSERT(width != 0);
-        SP_ASSERT(height != 0);
+        LC_ASSERT(bitmap != nullptr);
+        LC_ASSERT(width != 0);
+        LC_ASSERT(height != 0);
 
         FIBITMAP* previous_bitmap = bitmap;
         bitmap = FreeImage_Rescale(previous_bitmap, width, height, FREE_IMAGE_FILTER::FILTER_LANCZOS3);
@@ -224,7 +224,7 @@ namespace LitchiRuntime
 
     static FIBITMAP* apply_bitmap_corrections(FIBITMAP* bitmap)
     {
-        SP_ASSERT(bitmap != nullptr);
+        LC_ASSERT(bitmap != nullptr);
     
         // Convert to a standard bitmap. FIT_UINT16 and FIT_RGBA16 are processed without errors
         // but show up empty in the editor. For now, we convert everything to a standard bitmap.
@@ -285,11 +285,11 @@ namespace LitchiRuntime
     static void get_bits_from_bitmap(RHI_Texture_Mip* mip, FIBITMAP* bitmap, const uint32_t width, const uint32_t height, const uint32_t channel_count, const uint32_t bits_per_channel)
     {
         // Validate
-        SP_ASSERT(mip != nullptr);
-        SP_ASSERT(bitmap != nullptr);
-        SP_ASSERT(width != 0);
-        SP_ASSERT(height != 0);
-        SP_ASSERT(channel_count != 0);
+        LC_ASSERT(mip != nullptr);
+        LC_ASSERT(bitmap != nullptr);
+        LC_ASSERT(width != 0);
+        LC_ASSERT(height != 0);
+        LC_ASSERT(channel_count != 0);
 
         // Compute expected data size and reserve enough memory
         const size_t size_bytes = static_cast<size_t>(width) * static_cast<size_t>(height) * static_cast<size_t>(channel_count) * static_cast<size_t>(bits_per_channel / 8);
@@ -330,7 +330,7 @@ namespace LitchiRuntime
 
     bool ImageImporter::Load(const string& file_path, const uint32_t slice_index, RHI_Texture* texture)
     {
-        SP_ASSERT(texture != nullptr);
+        LC_ASSERT(texture != nullptr);
 
         if (!FileSystem::Exists(file_path))
         {
@@ -398,10 +398,10 @@ namespace LitchiRuntime
 
         // Fill RHI_Texture with image properties
         {
-            SP_ASSERT(bits_per_channel != 0);
-            SP_ASSERT(channel_count != 0);
-            SP_ASSERT(width != 0);
-            SP_ASSERT(height != 0);
+            LC_ASSERT(bits_per_channel != 0);
+            LC_ASSERT(channel_count != 0);
+            LC_ASSERT(width != 0);
+            LC_ASSERT(height != 0);
 
             texture->SetBitsPerChannel(bits_per_channel);
             texture->SetWidth(width);

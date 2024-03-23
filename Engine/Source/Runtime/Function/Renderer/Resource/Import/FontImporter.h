@@ -10,7 +10,7 @@ namespace LitchiRuntime
 {
     class Font;
 
-    class SP_CLASS FontImporter
+    class LC_CLASS FontImporter
     {
     public:
         static void Initialize();
