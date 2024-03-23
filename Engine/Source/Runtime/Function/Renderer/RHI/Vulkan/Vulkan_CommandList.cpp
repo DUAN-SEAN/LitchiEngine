@@ -812,8 +812,8 @@ namespace LitchiRuntime
     {
         EASY_FUNCTION(profiler::colors::Brown200)
         SP_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-        SP_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
-            "The source texture dimension(s) are larger than the those of the destination texture");
+      /*  SP_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
+            "The source texture dimension(s) are larger than the those of the destination texture");*/
 
         VkOffset3D source_blit_size = {};
         source_blit_size.x          = source->GetWidth();
