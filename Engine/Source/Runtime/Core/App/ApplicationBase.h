@@ -17,6 +17,12 @@ namespace LitchiRuntime
 {
 	class Window;
 
+    enum class ApplicationType
+    {
+        Editor,
+        Game
+    };
+
 	class ApplicationBase {
     public:
         ApplicationBase(){}
@@ -35,34 +41,17 @@ namespace LitchiRuntime
             return m_engineAssetsPath;
         }
 
+        virtual ApplicationType GetApplicationType() = 0;
+
         /// 初始化
         virtual void Init();
 
-        /// 初始化图形库，例如glfw
-        virtual void InitGraphicsLibraryFramework();
-
-        ///
-        virtual void InitLuaBinding();
-
-        virtual void LoadConfig();
-
         virtual void Run();
-
-        /// 一帧
-        virtual void OneFrame();
-
-        virtual void UpdateScreenSize();
 
         /// 每一帧内逻辑代码。
         virtual void Update();
 
-        virtual void FixedUpdate();
-
-        /// 逻辑代码执行后，应用到渲染。
-        virtual void Render();
-
         virtual void Exit();
-
 
         // std::unique_ptr<Renderer>					renderer;
 

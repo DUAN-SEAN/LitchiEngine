@@ -51,6 +51,8 @@ namespace LitchiRuntime
 
 	namespace
 	{
+		bool is_game_mode = true;
+
 		// states
 		atomic<bool> is_rendering_allowed = true;
 		atomic<bool> flush_requested = false;
@@ -121,6 +123,8 @@ namespace LitchiRuntime
 	{
 		render_thread_id = this_thread::get_id();
 		m_brdf_specular_lut_rendered = false;
+
+		is_game_mode = ApplicationBase::Instance()->GetApplicationType() == ApplicationType::Game;
 
 		// Display::DetectDisplayModes();
 
@@ -374,9 +378,9 @@ namespace LitchiRuntime
 
 
 		// blit to back buffer when in full screen
-		if (ApplicationBase::Instance()->window->IsFullscreen())
+		if (is_game_mode)
 		{
-			cmd_current->BeginMarker("copy_to_back_buffer");
+			cmd_current->BeginMarker("game_mode_copy_to_back_buffer");
 
 			// todo temp code
 			if(rendererPath4GameView!=nullptr)

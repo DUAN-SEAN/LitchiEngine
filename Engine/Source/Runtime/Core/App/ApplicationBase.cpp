@@ -102,8 +102,6 @@ namespace LitchiRuntime
 
 		InputManager::Initialize(window.get());
 
-		UpdateScreenSize();
-
 		{
 			// ResourceCache::Initialize(m_projectPath);
 
@@ -125,70 +123,12 @@ namespace LitchiRuntime
 
 	}
 
-	/// 初始化图形库，例如glfw
-	void ApplicationBase::InitGraphicsLibraryFramework() {
-
-	}
-
-	void ApplicationBase::InitLuaBinding() {
-	}
-
-	void ApplicationBase::LoadConfig() {
-	}
-
 	void ApplicationBase::Run() {
 
 	}
 
 	void ApplicationBase::Update() {
-		Time::Update();
-		UpdateScreenSize();
-
-		InputManager::Tick();
-
-		auto scene = this->sceneManager->GetCurrentScene();
-		if (scene)
-		{
-			scene->Update();
-		}
-
-		// Input::Update();
-		//Audio::Update();
-	}
-
-
-	void ApplicationBase::Render() {
-
-		// RenderSystem::Instance()->Render();
-		Renderer::Tick();
-	}
-
-	void ApplicationBase::FixedUpdate() {
-		//Physics::FixedUpdate();
-
-
-		this->sceneManager->Foreach([](GameObject* game_object) {
-			if (game_object->GetActive()) {
-				game_object->ForeachComponent([](Component* component) {
-					component->OnFixedUpdate();
-					});
-			}
-			});
-	}
-
-	void ApplicationBase::OneFrame() {
-		Update();
-		// 如果一帧卡了很久，就多执行几次FixedUpdate
-		float cost_time = Time::delta_time();
-		while (cost_time >= Time::fixed_update_time()) {
-			FixedUpdate();
-			cost_time -= Time::fixed_update_time();
-		}
-
-		Render();
-	}
-
-	void ApplicationBase::UpdateScreenSize() {
+	
 	}
 
 	void ApplicationBase::Exit() {

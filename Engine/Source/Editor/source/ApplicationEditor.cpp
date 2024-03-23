@@ -87,6 +87,11 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	delete m_rendererPath4GameView;
 }
 
+ApplicationType LitchiEditor::ApplicationEditor::GetApplicationType()
+{
+	return ApplicationType::Editor;
+}
+
 GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scriptName)
 {
 	GameObject* go = scene->CreateGameObject(name);
@@ -134,7 +139,6 @@ void LitchiEditor::ApplicationEditor::Run()
 
 			// EASY_FUNCTION(profiler::colors::Magenta);
 			Time::Update();
-			UpdateScreenSize();
 			InputManager::Tick();
 
 			EASY_BLOCK("Update") {
@@ -298,7 +302,6 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 
 			// EASY_FUNCTION(profiler::colors::Magenta);
 			Time::Update();
-			UpdateScreenSize();
 			InputManager::Tick();
 
 			EASY_BLOCK("Renderer") {

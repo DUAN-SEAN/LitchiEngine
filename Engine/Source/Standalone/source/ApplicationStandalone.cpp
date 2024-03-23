@@ -33,6 +33,12 @@ namespace LitchiStandalone
 		FontImporter::Shutdown();
 
 	}
+
+	ApplicationType ApplicationStandalone::GetApplicationType()
+	{
+		return ApplicationType::Game;
+	}
+
 	void ApplicationStandalone::Init()
 	{
 		instance_ = this;
@@ -100,7 +106,6 @@ namespace LitchiStandalone
 	void ApplicationStandalone::Update()
 	{
 		Time::Update();
-		UpdateScreenSize();
 		InputManager::Tick();
 
 		auto scene = this->sceneManager->GetCurrentScene();

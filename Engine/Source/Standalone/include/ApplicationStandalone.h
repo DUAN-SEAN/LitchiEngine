@@ -13,6 +13,7 @@ namespace LitchiStandalone
 	public:
 		ApplicationStandalone();
 		~ApplicationStandalone();
+		ApplicationType GetApplicationType() override;
 		void Init() override;
 		void Run() override;
 		void Update() override;
@@ -21,7 +22,6 @@ namespace LitchiStandalone
 		*/
 		bool IsRunning() const;
 		static ApplicationStandalone* Instance() { return instance_; }
-
 	public:
 		void SetupRendererPath();
 		RendererPath* m_rendererPath4Game = nullptr;
