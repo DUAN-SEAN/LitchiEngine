@@ -2,7 +2,7 @@
 
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
 set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty")
-set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Asset")
+set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Assets")
 
 # option(ENABLE_PHYSICS_DEBUG_RENDERER "Enable Physics Debug Renderer" OFF)
 

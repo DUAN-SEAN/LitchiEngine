@@ -3,8 +3,8 @@ set(THIRD_PARTY_DIR ThirdParty)
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
 
 # 添加第三方库
-add_subdirectory(assimp)
-set_property(TARGET assimp PROPERTY FOLDER "ThirdParty")
+# add_subdirectory(assimp)
+# set_property(TARGET assimp PROPERTY FOLDER "ThirdParty")
 # add_subdirectory(compressonator)
 # add_subdirectory(dxcompiler)
 add_subdirectory(easy_profiler)

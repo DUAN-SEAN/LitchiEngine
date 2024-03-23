@@ -55,11 +55,17 @@ target_link_directories(${TARGET_NAME}
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/mono/lib/Debug>
     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/mono/lib/Release>
 )
-target_link_libraries(${TARGET_NAME} PUBLIC libmono-static-sgen.lib)
+target_link_libraries(${TARGET_NAME} PUBLIC libmono-static-sgen)
 
-# target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/assimp/lib)
-target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc143-mt)
+# assimp
+target_link_directories(${TARGET_NAME}
+	PUBLIC
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/assimp/lib/Debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/assimp/lib/Release>
+)
+target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mtd)
 
+# freetype
 target_link_directories(${TARGET_NAME}
 	PUBLIC
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/freetype/lib/Debug>
@@ -70,14 +76,24 @@ target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 # Physx
 target_link_directories(${TARGET_NAME}
 	PUBLIC
-    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/debug>
-    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/physx/bin/win.x86_64.vc142.mt/release>
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/release>
 )
-# target_link_libraries(${TARGET_NAME} PUBLIC
-#     debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64
-#     optimized glut32 PhysXDevice64)
-target_link_libraries(${TARGET_NAME} PUBLIC
-    debug PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
+target_link_libraries(${TARGET_NAME} PUBLIC PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
+
+# foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
+#     if(CONFIG_TYPE STREQUAL "Debug")
+#         target_link_libraries(${TARGET_NAME} PUBLIC
+#             PhysX_64 
+#             PhysXFoundation_64 
+#             PhysXExtensions_static_64 
+#             PhysXPvdSDK_static_64)
+#     else()
+#         target_link_libraries(${TARGET_NAME} PUBLIC
+#             glut32 
+#             PhysXDevice64)
+#     endif()
+# endforeach()
 
 # Vulkan
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)
@@ -89,7 +105,7 @@ target_link_directories(${TARGET_NAME}
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/dxcompiler/lib/Debug>
     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/dxcompiler/lib/Release>
 )
-target_link_libraries(${TARGET_NAME} PUBLIC dxcompiler)
+target_link_libraries(${TARGET_NAME} PUBLIC libdxcompiler)
 
 target_link_directories(${TARGET_NAME}
 	PUBLIC
@@ -112,6 +128,12 @@ target_link_libraries(${TARGET_NAME} PUBLIC FreeImage)
 target_link_libraries(${TARGET_NAME} PUBLIC easy_profiler)
 
 # 将Source目录添加到Link Target 的项目include中
+target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/physx/include)
+target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/pxshared/include)
+# include_directories(${THIRD_PARTY_DIR}/PhysX/physx/include)
+# include_directories(${THIRD_PARTY_DIR}/PhysX/pxshared/include)
+# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/physx/include)
+# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${ENGINE_ROOT_DIR}/Source>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/rttr>)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/glm-0.9.9.8/glm>)
@@ -122,12 +144,6 @@ target_include_directories(${TARGET_NAME} PRIVATE $<BUILD_INTERFACE:${THIRD_PART
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/stb>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/mono/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/assimp/include>)
-target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/physx/include)
-target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/pxshared/include)
-# include_directories(${THIRD_PARTY_DIR}/PhysX/physx/include)
-# include_directories(${THIRD_PARTY_DIR}/PhysX/pxshared/include)
-# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/physx/include)
-# target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/include> PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/devel>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/freetype/include>)
 target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/VulkanSDK/include>)

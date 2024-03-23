@@ -6,6 +6,8 @@
 
 直接使用现成库的第三方库：
 
++ assimp
+
 + compressonator
 + dxcompiler
 + freetype
@@ -18,8 +20,10 @@
 
 项目构建中的问题：
 
-1. Severity	Code	Description	Project	File	Line	Suppression State
+1. 添加了Relase分支选项之后，会有Severity	Code	Description	Project	File	Line	Suppression State
    Error	LNK1104	cannot open file 'PhysXDevice64.lib'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
+
+2. exe启动的时候会去找名叫libdxcompiler.dll的文件，但实际生成和链接应该的是dxcompiler.dll，先临时改变了名字为libdxcompiler.dll
 
 
 
