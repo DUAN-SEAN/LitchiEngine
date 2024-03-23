@@ -8,7 +8,8 @@ namespace LitchiRuntime
 {
 	bool ConfigManager::Initialize(const std::string& projectRootFolder)
 	{
-		auto path = projectRootFolder +"ProjectConfig.litchiProject";
+		m_projectRootFolder = projectRootFolder;
+		auto path = m_projectRootFolder +"ProjectConfig.litchiProject";
 		DEBUG_LOG_INFO("ConfigManager::Initialize path: "+ path);
 		if(!AssetManager::LoadAsset(path, m_config_res))
 		{
@@ -25,30 +26,28 @@ namespace LitchiRuntime
 
 	const std::string& ConfigManager::GetRootFolder() const
 	{
-		return m_config_res.m_root_folder;
+		return m_projectRootFolder;
 	}
 
-	const std::string& ConfigManager::GetAssetFolder() const
+	const std::string ConfigManager::GetAssetFolder() const
 	{
-		return m_config_res.m_asset_folder;
+		return m_projectRootFolder+m_config_res.m_asset_folder;
 	}
 
-	const std::string& ConfigManager::GetScriptFolder() const
+	const std::string ConfigManager::GetScriptFolder() const
 	{
-		return m_config_res.m_script_folder;
+		return m_projectRootFolder+m_config_res.m_script_folder;
 	}
 
-	const std::string& ConfigManager::GetDefaultScenePath() const
+	const std::string ConfigManager::GetDefaultScenePath() const
 	{
-		return m_config_res.m_default_scene_path;
+		return m_projectRootFolder+m_config_res.m_default_scene_path;
 	}
 
 	void ConfigManager::InitDefaultConfig(const std::string& projectRootFolder)
 	{
-		// m_config_res.m_engine_asset_folder =
-		m_config_res.m_root_folder = projectRootFolder;
-		m_config_res.m_asset_folder = m_config_res.m_root_folder + "Assets\\";
-		m_config_res.m_script_folder = m_config_res.m_root_folder + "Scripts\\";
+		m_config_res.m_asset_folder = "Assets\\";
+		m_config_res.m_script_folder = "Scripts\\";
 		// todo init 
 
 
