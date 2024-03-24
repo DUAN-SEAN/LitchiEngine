@@ -223,6 +223,18 @@ void LitchiEditor::ApplicationEditor::Update()
 	}
 }
 
+WindowSettings LitchiEditor::ApplicationEditor::CreateWindowSettings()
+{
+	WindowSettings windowSettings;
+	windowSettings.title = "Litchi Editor";
+	windowSettings.width = 1920;
+	windowSettings.height = 1080;
+	windowSettings.minimumWidth = 1;
+	windowSettings.minimumHeight = 1;
+	windowSettings.maximized = true;
+	return windowSettings;
+}
+
 bool LitchiEditor::ApplicationEditor::IsRunning() const
 {
 	return !window->ShouldClose();
@@ -300,6 +312,12 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 	m_canvas.AddPanel(*m_mainPanel);
 	m_canvas.MakeDockspace(true);
 
+	auto oldSize = window->GetSize();
+	auto oldPos = window->GetPosition();
+	window->SetPosition(50.0f,50.0f);
+	auto panelSize = m_mainPanel->GetSize();
+	window->SetSize(static_cast<uint16_t>(panelSize.x), static_cast<uint16_t>(panelSize.y));
+
 	while (true)
 	{
 		if(!m_mainPanel->IsOpened())
@@ -338,6 +356,10 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 	m_canvas.RemoveAllPanels();
 
 	SetProjectPath(path);
+
+	window->SetPosition(oldPos.first, oldPos.second);
+	window->SetSize(oldSize.first, oldSize.second);
+
 	OnProjectOpen();
 }
 

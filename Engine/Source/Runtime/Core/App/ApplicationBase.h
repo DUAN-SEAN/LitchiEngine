@@ -43,15 +43,20 @@ namespace LitchiRuntime
 
         virtual ApplicationType GetApplicationType() = 0;
 
-        /// 初始化
+        // Init 
         virtual void Init();
 
+        // Call Before Init
         virtual void Run();
 
-        /// 每一帧内逻辑代码。
+        // Per Frame Call, Call by Run。
         virtual void Update();
 
+        // Exit
         virtual void Exit();
+
+        // Create Window Setting, Must Impl
+        virtual WindowSettings CreateWindowSettings() = 0;
 
         // std::unique_ptr<Renderer>					renderer;
 

@@ -328,7 +328,12 @@ void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSetti
 {
 	GLFWmonitor* selectedMonitor = nullptr;
 	if (m_fullscreen)
+	{
 		selectedMonitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(selectedMonitor);
+		m_size.first = mode->width;
+		m_size.second = mode->height;
+	}
 
 	glfwWindowHint(GLFW_RESIZABLE,		p_windowSettings.resizable);
 	glfwWindowHint(GLFW_DECORATED,		p_windowSettings.decorated);
@@ -339,7 +344,6 @@ void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSetti
 	glfwWindowHint(GLFW_AUTO_ICONIFY,	p_windowSettings.autoIconify);
 	glfwWindowHint(GLFW_REFRESH_RATE,	p_windowSettings.refreshRate);
 	glfwWindowHint(GLFW_SAMPLES,		p_windowSettings.samples);
-
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 	m_glfwWindow = glfwCreateWindow(static_cast<int>(m_size.first), static_cast<int>(m_size.second), m_title.c_str(), selectedMonitor, nullptr);

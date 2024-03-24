@@ -83,13 +83,7 @@ namespace LitchiRuntime
 		ModelImporter::Initialize();
 		ImageImporter::Initialize();
 
-		WindowSettings windowSettings;
-		windowSettings.title = "Litchi Editor";
-		windowSettings.width = 1920;
-		windowSettings.height = 1080;
-		windowSettings.minimumWidth = 1;
-		windowSettings.minimumHeight = 1;
-		windowSettings.maximized = true;
+		WindowSettings windowSettings = CreateWindowSettings();
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{

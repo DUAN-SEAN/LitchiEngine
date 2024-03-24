@@ -78,7 +78,7 @@ namespace LitchiStandalone
 		}
 
 		// set fullscreen
-		window->SetFullscreen(true);
+		// window->SetFullscreen(true);
 	}
 	void ApplicationStandalone::Run()
 	{
@@ -153,5 +153,27 @@ namespace LitchiStandalone
 		// update renderer path
 		Renderer::UpdateRendererPath(RendererPathType_GameView, m_rendererPath4Game);
 	}
+
+	WindowSettings ApplicationStandalone::CreateWindowSettings()
+	{
+		constexpr  bool IsFullScreen = false;
+
+		WindowSettings windowSettings;
+		windowSettings.title = "Litchi Standalone";
+		windowSettings.width = 1920;
+		windowSettings.height = 1080;
+		windowSettings.minimumWidth = 1;
+		windowSettings.minimumHeight = 1;
+		windowSettings.maximized = true;
+		windowSettings.decorated = false;
+		windowSettings.cursorMode = ECursorMode::DISABLED;
+		if(IsFullScreen)
+		{
+			windowSettings.fullscreen = true;
+		}
+
+		return windowSettings;
+	}
+
 }
 

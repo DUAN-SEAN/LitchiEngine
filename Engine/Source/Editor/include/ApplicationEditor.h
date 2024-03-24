@@ -23,6 +23,9 @@ namespace LitchiEditor
 		void Init() override;
 		void Run() override;
 		void Update() override;
+
+		WindowSettings CreateWindowSettings() override;
+
 		/**
 		* Returns true if the app is running
 		*/
