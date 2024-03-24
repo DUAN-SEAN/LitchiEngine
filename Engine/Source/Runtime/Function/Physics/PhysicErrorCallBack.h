@@ -3,8 +3,8 @@
 #define INTEGRATE_PHYSX_PHYSIC_ERROR_CALL_BACK_H
 
 #include "PxPhysicsAPI.h"
-#include "foundation/include/PsString.h"
-#include "foundation/include/PsThread.h"
+#include "foundation/PxString.h"
+#include "foundation/PxThread.h"
 #include "Runtime/Core/Log/debug.h"
 
 using namespace physx;
@@ -78,7 +78,7 @@ namespace LitchiRuntime
                 while (code == PxErrorCode::eABORT)
                 {
                     DEBUG_LOG_ERROR(buffer);
-                    physx::shdfnd::Thread::sleep(1000);
+                    //physx::shdfnd::Thread::sleep(1000);
                 }
             }
         }

@@ -72,7 +72,7 @@ namespace LitchiRuntime
 		static PxDefaultAllocator		px_allocator_;
 		static PhysicErrorCallback	    physic_error_callback_;
 		static SimulationEventCallback  simulation_event_callback_;
-		static SimulationFilterCallback  simulation_filter_callback_;
+		//static SimulationFilterCallback  simulation_filter_callback_;
 
 		static PxFoundation* px_foundation_;
 		static PxPhysics* px_physics_;

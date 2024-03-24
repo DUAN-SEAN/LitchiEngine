@@ -20,10 +20,11 @@
 
 项目构建中的问题：
 
-1. 添加了Relase分支选项之后，会有Severity	Code	Description	Project	File	Line	Suppression State
-   Error	LNK1104	cannot open file 'PhysXDevice64.lib'	LitchiEditor	E:\CppProjects\VSCode\LitchiEngine-ex\Build\Engine\Source\Editor\LINK	1	
-
+1. gitignore忽略了部分lib文件
 2. exe启动的时候会去找名叫libdxcompiler.dll的文件，但实际生成和链接应该的是dxcompiler.dll，先临时改变了名字为libdxcompiler.dll
+
+
+
 
 
 
@@ -33,6 +34,5 @@
 2. 图标设置的地方会抛异常（文件位置ApplicationBase.cpp h99）
 3. Assets文件没有正确拷贝到Build目录
 4. SceneManager::LoadScene中对AssetManager::LoadAsset函数的调用三元运算符好像写反了
-5. release编译时 physx报的NDebug _Debug 宏那个编译问题 你现在有解决方案么
-6. cmake debug和release编译配置 vs有个debug宏在release还存在
-7. c#脚本项目 scriptcore 现在只是用的临时方案 看有没有更好的方案
+5. c#脚本项目 scriptcore 现在只是用的临时方案 看有没有更好的方案
+6. Physx版本从142改为了143，有些方法调用需要更改

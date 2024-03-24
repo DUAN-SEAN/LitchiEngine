@@ -16,6 +16,20 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${EDITOR_HEADERS} ${EDITOR
 # 显示包含PhysX静态库
 # include(../../ThirdParty/PhysX/CMakeLists.txt)
 
+# if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+#     add_definitions(-D_DEBUG)
+# elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+#     add_definitions(-DNDEBUG)
+# endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(_DEBUG)
+	add_compile_definitions(PX_PHYSX_STATIC_LIB)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_definitions(NDEBUG)
+	add_compile_definitions(PX_PHYSX_STATIC_LIB)
+endif()
+
 # 添加执行程序
 # add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE} ${imgui_src})
 add_executable(${TARGET_NAME} ${EDITOR_HEADERS} ${EDITOR_SOURCES} ${EDITOR_RESOURCE})
@@ -33,8 +47,8 @@ set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Lit
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
 # Physx
-set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/debug)
-set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/release)
+set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/debug)
+set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/release)
 target_link_directories(${TARGET_NAME}
 	PUBLIC
     $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
@@ -43,7 +57,7 @@ target_link_directories(${TARGET_NAME}
 
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 # target_link_libraries(${TARGET_NAME} LitchiRuntime)
-target_link_libraries(${TARGET_NAME} PUBLIC LitchiRuntime PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
+target_link_libraries(${TARGET_NAME} PUBLIC LitchiRuntime PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 
 # foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
 # 	if(CONFIG_TYPE STREQUAL "Debug")

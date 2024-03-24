@@ -20,6 +20,14 @@ source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_F
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${rttr_cpp})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${GLAD_FILES})
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    add_compile_definitions(_DEBUG)
+	add_compile_definitions(PX_PHYSX_STATIC_LIB)
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    add_compile_definitions(NDEBUG)
+	add_compile_definitions(PX_PHYSX_STATIC_LIB)
+endif()
+
 # 添加目标库
 # add_library(${TARGET_NAME} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES})
 # add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${glfw_sources} ${HEADER_FILES} ${SOURCE_FILES} ${imgui_src})
@@ -63,7 +71,7 @@ target_link_directories(${TARGET_NAME}
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/assimp/lib/Debug>
     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/assimp/lib/Release>
 )
-target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mtd)
+target_link_libraries(${TARGET_NAME} PUBLIC assimp-vc142-mt)
 
 # freetype
 target_link_directories(${TARGET_NAME}
@@ -76,10 +84,10 @@ target_link_libraries(${TARGET_NAME} PUBLIC freetype)
 # Physx
 target_link_directories(${TARGET_NAME}
 	PUBLIC
-    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/debug>
-    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc142.mt/release>
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/release>
 )
-target_link_libraries(${TARGET_NAME} PUBLIC PhysX_64 PhysXFoundation_64 PhysXExtensions_static_64 PhysXPvdSDK_static_64)
+target_link_libraries(${TARGET_NAME} PUBLIC PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 
 # foreach(CONFIG_TYPE ${CMAKE_CONFIGURATION_TYPES})
 #     if(CONFIG_TYPE STREQUAL "Debug")
@@ -129,7 +137,7 @@ target_link_libraries(${TARGET_NAME} PUBLIC easy_profiler)
 
 # 将Source目录添加到Link Target 的项目include中
 target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/physx/include)
-target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/pxshared/include)
+# target_include_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # include_directories(${THIRD_PARTY_DIR}/PhysX/physx/include)
 # include_directories(${THIRD_PARTY_DIR}/PhysX/pxshared/include)
 # target_include_directories(${TARGET_NAME} PUBLIC $<BUILD_INTERFACE:${THIRD_PARTY_DIR}/PhysX/physx/include)
