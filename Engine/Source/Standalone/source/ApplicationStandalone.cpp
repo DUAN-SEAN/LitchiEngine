@@ -97,16 +97,6 @@ namespace LitchiStandalone
 					Update();
 				}  EASY_END_BLOCK;
 
-				if (!ApplicationBase::Instance()->window->IsVisible())
-				{
-					DEBUG_LOG_INFO("Window IsVisible");
-				}
-
-				if (ApplicationBase::Instance()->window->IsHidden())
-				{
-					DEBUG_LOG_INFO("Window IsHidden");
-				}
-
 				EASY_BLOCK("Renderer") {
 					if(!ApplicationBase::Instance()->window->IsMinimized())
 					{

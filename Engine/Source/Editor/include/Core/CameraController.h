@@ -38,7 +38,7 @@ namespace LitchiEditor
 		* Handle mouse and keyboard inputs
 		* @parma p_deltaTime
 		*/
-		void HandleInputs(float p_deltaTime);
+		void HandleInputs(float p_deltaTime,bool p_isFocus,bool p_isHovered);
 
 		/**
 		* Defines the position of the camera
