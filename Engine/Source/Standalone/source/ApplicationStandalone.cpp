@@ -92,9 +92,22 @@ namespace LitchiStandalone
 					Update();
 				}  EASY_END_BLOCK;
 
+				if (!ApplicationBase::Instance()->window->IsVisible())
+				{
+					DEBUG_LOG_INFO("Window IsVisible");
+				}
+
+				if (ApplicationBase::Instance()->window->IsHidden())
+				{
+					DEBUG_LOG_INFO("Window IsHidden");
+				}
+
 				EASY_BLOCK("Renderer") {
-					Renderer::Tick();
-					Renderer::Present();
+					if(!ApplicationBase::Instance()->window->IsMinimized())
+					{
+						Renderer::Tick();
+						Renderer::Present();
+					}
 				}  EASY_END_BLOCK;
 
 				//window->SwapBuffers();

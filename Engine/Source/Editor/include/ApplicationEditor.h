@@ -3,7 +3,6 @@
 
 #include <memory>
 
-#include "Runtime/Core/Window/Context/Device.h"
 #include "Runtime/Function/UI/UIManager/UIManager.h"
 
 #include "Core/EditorActions.h"

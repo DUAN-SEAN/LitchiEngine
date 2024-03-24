@@ -13,6 +13,7 @@
 #include "../RHI_Pipeline.h"
 #include "../RHI_Texture.h"
 #include "GLFW/glfw3.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 //#include "../../Profiling/Profiler.h"
 LC_WARNINGS_OFF
 #define VMA_IMPLEMENTATION

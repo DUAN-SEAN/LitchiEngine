@@ -9,7 +9,7 @@
 
 std::unordered_map<GLFWwindow*, LitchiRuntime::Window*> LitchiRuntime::Window::__WINDOWS_MAP;
 
-LitchiRuntime::Event<LitchiRuntime::EDeviceError, std::string> LitchiRuntime::Window::ErrorEvent;
+LitchiRuntime::Event<LitchiRuntime::EWindowError, std::string> LitchiRuntime::Window::ErrorEvent;
 
 LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	m_title(p_windowSettings.title),
@@ -26,8 +26,8 @@ LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	int initializationCode = glfwInit();
 	if (initializationCode == GLFW_FALSE)
 	{
-		throw std::runtime_error("Failed to Init GLFW");
 		glfwTerminate();
+		throw std::runtime_error("Failed to Init GLFW");
 	}
 
 	CreateCursors();
@@ -197,7 +197,7 @@ bool LitchiRuntime::Window::IsMaximized() const
 
 bool LitchiRuntime::Window::IsMinimized() const
 {
-	return glfwGetWindowAttrib(m_glfwWindow, GLFW_MAXIMIZED) == GLFW_FALSE;
+	return GetSize().first == 0|| GetSize().second==0;
 }
 
 bool LitchiRuntime::Window::IsFocused() const
@@ -591,7 +591,7 @@ void LitchiRuntime::Window::BindErrorCallback()
 {
 	auto errorCallback = [](int p_code, const char* p_description)
 	{
-		ErrorEvent.Invoke(static_cast<EDeviceError>(p_code), p_description);
+		ErrorEvent.Invoke(static_cast<EWindowError>(p_code), p_description);
 	};
 
 	glfwSetErrorCallback(errorCallback);

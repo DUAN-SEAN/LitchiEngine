@@ -145,29 +145,40 @@ void LitchiEditor::ApplicationEditor::Run()
 				Update();
 			}  EASY_END_BLOCK;
 
-			// Update
-			// ¼ì²âÊÇ·ñÉ¾³ýÎïÌå
-			// ¼ì²âÔËÐÐÄ£Ê½ Game or no
-			// äÖÈ¾Views
+			if(!ApplicationBase::Instance()->window->IsMinimized())
+			{
+				EASY_BLOCK("Renderer") {
+					Renderer::Tick();
+				}  EASY_END_BLOCK;
 
-			EASY_BLOCK("Renderer") {
-				Renderer::Tick();
-			}  EASY_END_BLOCK;
+				EASY_BLOCK("RenderViews") {
+					RenderViews(Time::delta_time());
+				}  EASY_END_BLOCK;
 
-			EASY_BLOCK("RenderViews") {
-				RenderViews(Time::delta_time());
-			}  EASY_END_BLOCK;
+				EASY_BLOCK("RenderUI") {
+					// äÖÈ¾UI
+					RenderUI();
+				}  EASY_END_BLOCK;
 
-			EASY_BLOCK("RenderUI") {
-				// äÖÈ¾UI
-				RenderUI();
-			}  EASY_END_BLOCK;
+			}
 
 			// PostUpdate
 
 			//window->SwapBuffers();
 			InputManager::ClearEvents();
 			++m_elapsedFrames;
+
+
+			/*if(ApplicationBase::Instance()->window->IsMinimized())
+			{
+				DEBUG_LOG_INFO("Window IsMinimized");
+			}
+
+			if(ApplicationBase::Instance()->window->IsVisible())
+			{
+				DEBUG_LOG_INFO("Window IsVisible");
+			}*/
+
 		}  EASY_END_BLOCK;
 	}
 }
@@ -304,15 +315,17 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 			Time::Update();
 			InputManager::Tick();
 
-			EASY_BLOCK("Renderer") {
-				Renderer::Tick();
-			}  EASY_END_BLOCK;
+			if (!ApplicationBase::Instance()->window->IsMinimized())
+			{
+				EASY_BLOCK("Renderer") {
+					Renderer::Tick();
+				}  EASY_END_BLOCK;
 
-			EASY_BLOCK("RenderUI") {
-				// äÖÈ¾UI
-				RenderUI();
-			}  EASY_END_BLOCK;
-
+				EASY_BLOCK("RenderUI") {
+					// äÖÈ¾UI
+					RenderUI();
+				}  EASY_END_BLOCK;
+			}
 			// PostUpdate
 
 			//window->SwapBuffers();

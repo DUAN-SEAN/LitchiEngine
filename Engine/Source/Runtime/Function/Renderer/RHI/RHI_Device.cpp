@@ -74,7 +74,7 @@ namespace LitchiRuntime
     bool RHI_Device::IsValidResolution(const uint32_t width, const uint32_t height)
     {
         return width  >= 0 && width  <= m_max_texture_2d_dimension &&
-               height >=0 && height <= m_max_texture_2d_dimension;
+               height >= 0 && height <= m_max_texture_2d_dimension;
     }
 
     void RHI_Device::QueueWaitAll()

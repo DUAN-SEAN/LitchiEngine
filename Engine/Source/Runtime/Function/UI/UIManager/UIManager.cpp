@@ -4,7 +4,7 @@
 #include "Runtime/Function/UI/ImGui/imgui_impl_glfw.h"
 #include "Runtime/Function/UI/ImGui/ImGui_RHI.h"
 
-LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, const std::string& p_glslVersion)
+LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style)
 {
 	ImGui::CreateContext();
 
@@ -12,9 +12,6 @@ LitchiRuntime::UIManager::UIManager(GLFWwindow* p_glfwWindow, EStyle p_style, co
 	EnableDocking(false);
 
 	ApplyStyle(p_style);
-
-	// ImGui_ImplGlfw_InitForOpenGL(p_glfwWindow, true);
-	// ImGui_ImplOpenGL3_Init(p_glslVersion.c_str());
 
 	ImGui_ImplGlfw_InitForVulkan(p_glfwWindow, true);
 	ImGui::RHI::Initialize();

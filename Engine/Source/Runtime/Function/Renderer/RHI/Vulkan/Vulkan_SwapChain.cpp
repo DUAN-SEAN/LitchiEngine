@@ -362,6 +362,11 @@ namespace LitchiRuntime
     {
         LC_ASSERT(RHI_Device::IsValidResolution(width, height));
 
+        if(width==0 || height==0)
+        {
+            return;
+        }
+
         // Only resize if needed
         if (!force)
         {

@@ -194,6 +194,7 @@ namespace ImGui::RHI
 
         // get the viewport resources
         bool is_child_window                = window_data != nullptr;
+
         ViewportRhiResources* rhi_resources = is_child_window ? window_data->viewport_rhi_resources.get() : &g_viewport_data;
 
         rhi_resources->cmd_pool->Tick();
@@ -407,14 +408,9 @@ namespace ImGui::RHI
         cmd_list->End();
         cmd_list->Submit();
 
-
         if (!is_child_window)
         {
-            // todo: ÓĞbug ÏÈ×¢ÊÍµô
-        	// if (!ApplicationBase::Instance()->window->IsMinimized())
-            {
-                Renderer::Present();
-            }
+            Renderer::Present();
         }
     }
 
