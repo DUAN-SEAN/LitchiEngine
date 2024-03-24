@@ -143,7 +143,10 @@ RTTR_REGISTRATION //注册反射
 		.constructor<>()
 		.property("assetFolder", &ConfigRes::m_asset_folder)
 		.property("scriptFolder", &ConfigRes::m_script_folder)
-		.property("defaultScenePath", &ConfigRes::m_default_scene_path);
+		.property("defaultScenePath", &ConfigRes::m_default_scene_path)
+		.property("resolutionWidth", &ConfigRes::m_resolution_width)
+		.property("resolutionHeight", &ConfigRes::m_resolution_height)
+		.property("isFullScreen", &ConfigRes::m_is_fullScreen);
 
 
 	/* Material Resource  */

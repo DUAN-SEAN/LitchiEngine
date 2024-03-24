@@ -154,7 +154,7 @@ void LitchiRuntime::Window::SetFullscreen(bool p_value)
 		m_fullscreen = true;
 
 	// todo temp
-	/*glfwSetWindowMonitor
+	glfwSetWindowMonitor
 	(
 		m_glfwWindow,
 		p_value ? glfwGetPrimaryMonitor() : nullptr,
@@ -163,7 +163,7 @@ void LitchiRuntime::Window::SetFullscreen(bool p_value)
 		static_cast<int>(m_size.first),
 		static_cast<int>(m_size.second),
 		m_refreshRate
-	);*/
+	);
 
 	if (!p_value)
 		m_fullscreen = false;

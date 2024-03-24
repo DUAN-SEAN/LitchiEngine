@@ -8,6 +8,9 @@ namespace LitchiRuntime
 		std::string m_asset_folder;
 		std::string m_script_folder;
         std::string m_default_scene_path;
+        int32_t m_resolution_width;
+        int32_t m_resolution_height;
+        bool m_is_fullScreen;
 
         RTTR_ENABLE()
 	};
@@ -22,6 +25,10 @@ namespace LitchiRuntime
         const std::string GetAssetFolder() const;
         const std::string GetScriptFolder() const;
         const std::string GetDefaultScenePath() const;
+        const std::pair<int32_t,int32_t> GetResolutionSize();
+        const bool IsFullScreen();
+
+        bool Save();
     private:
         void InitDefaultConfig(const std::string& projectRootFolder);
 

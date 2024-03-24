@@ -44,7 +44,7 @@ namespace LitchiRuntime
         virtual ApplicationType GetApplicationType() = 0;
 
         // Init 
-        virtual void Init();
+        virtual bool Init();
 
         // Call Before Init
         virtual void Run();

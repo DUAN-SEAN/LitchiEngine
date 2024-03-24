@@ -15,10 +15,11 @@ int main(int argc, char** argv)
 	const char* projectPath = _getcwd(nullptr, 1);
 	std::string filePath(projectPath);
 
+	// todo temp , must input in argv
 #ifdef _DEBUG
-	application_standalone->SetProjectPath(filePath + "\\ProjectTemplete\\");
+	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
 #else
-	application_standalone->SetProjectPath(filePath + "\\ProjectTemplete\\");
+	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
 #endif
 	delete projectPath;
 

@@ -39,12 +39,15 @@ namespace LitchiStandalone
 		return ApplicationType::Game;
 	}
 
-	void ApplicationStandalone::Init()
+	bool ApplicationStandalone::Init()
 	{
 		instance_ = this;
 
 		// Init Base
-		ApplicationBase::Init();
+		if(!ApplicationBase::Init())
+		{
+			return false;
+		}
 
 		// prepare swapChain window
 
@@ -79,6 +82,8 @@ namespace LitchiStandalone
 
 		// set fullscreen
 		// window->SetFullscreen(true);
+
+		return true;
 	}
 	void ApplicationStandalone::Run()
 	{
@@ -156,8 +161,6 @@ namespace LitchiStandalone
 
 	WindowSettings ApplicationStandalone::CreateWindowSettings()
 	{
-		constexpr  bool IsFullScreen = false;
-
 		WindowSettings windowSettings;
 		windowSettings.title = "Litchi Standalone";
 		windowSettings.width = 1920;
@@ -166,10 +169,14 @@ namespace LitchiStandalone
 		windowSettings.minimumHeight = 1;
 		windowSettings.maximized = true;
 		windowSettings.decorated = false;
-		windowSettings.cursorMode = ECursorMode::DISABLED;
-		if(IsFullScreen)
+		//windowSettings.cursorMode = ECursorMode::DISABLED;
+
+		if (configManager)
 		{
-			windowSettings.fullscreen = true;
+			auto size = configManager->GetResolutionSize();
+			windowSettings.width = size.first;
+			windowSettings.height = size.second;
+			windowSettings.fullscreen = configManager->IsFullScreen();
 		}
 
 		return windowSettings;

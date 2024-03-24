@@ -104,12 +104,15 @@ GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scrip
 	return go;
 }
 
-void LitchiEditor::ApplicationEditor::Init()
+bool LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
 
 	// Init Base
-	ApplicationBase::Init();
+	if (!ApplicationBase::Init())
+	{
+		return false;
+	}
 
 	m_editorAssetsPath = std::filesystem::canonical("Data\\Editor").string() + "\\";
 
@@ -127,6 +130,8 @@ void LitchiEditor::ApplicationEditor::Init()
 		uiManager->ResetLayout(m_engineRoot + "Config\\layout.ini");
 
 	RunProjectHub();
+
+	return true;
 }
 
 void LitchiEditor::ApplicationEditor::Run()

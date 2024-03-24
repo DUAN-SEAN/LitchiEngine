@@ -26,7 +26,7 @@
 namespace LitchiRuntime
 {
 	ApplicationBase* ApplicationBase::s_instance;
-	void ApplicationBase::Init() {
+	bool ApplicationBase::Init() {
 		s_instance = this;
 
 		m_engineRoot = std::filesystem::current_path().string()+"\\";
@@ -34,14 +34,28 @@ namespace LitchiRuntime
 
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
-		if(!m_projectPath.empty())
+		if(GetApplicationType() == ApplicationType::Game)
 		{
 			configManager = std::make_unique<ConfigManager>();
 			if (!configManager->Initialize(m_projectPath))
 			{
+				configManager = nullptr;
 				DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
-				return;
+				return false;
 			}
+			
+		}else
+		{
+			if (!m_projectPath.empty())
+			{
+				configManager = std::make_unique<ConfigManager>();
+				if (!configManager->Initialize(m_projectPath))
+				{
+					DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+					return false;
+				}
+			}
+			
 		}
 
 		// Easy Profiler
@@ -116,6 +130,7 @@ namespace LitchiRuntime
 
 		// ScriptEngine::Init(m_projectPath);
 
+		return true;
 
 	}
 
