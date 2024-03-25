@@ -61,7 +61,9 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 	// Îö¹¹ÆäËû
 	sceneManager = nullptr;
-	modelManager->UnloadResources();\
+	prefabManager->UnloadResources();
+	prefabManager = nullptr;
+	modelManager->UnloadResources();
 	modelManager = nullptr;
 	shaderManager->UnloadResources();
 	shaderManager = nullptr;
