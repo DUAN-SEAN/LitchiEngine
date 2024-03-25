@@ -34,8 +34,8 @@ set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "Lit
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
 # PhysX
-set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/debug)
-set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/release)
+set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/debug)
+set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/release)
 target_link_directories(${TARGET_NAME}
 	PUBLIC
     $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>

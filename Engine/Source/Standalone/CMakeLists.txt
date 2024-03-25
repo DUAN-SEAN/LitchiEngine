@@ -31,8 +31,8 @@ set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 # 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
 target_link_directories(${TARGET_NAME}
 	PUBLIC
-    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/debug>
-    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/release>
+    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/debug>
+    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/release>
 )
 target_link_libraries(${TARGET_NAME} LitchiRuntime PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 
