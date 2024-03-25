@@ -189,6 +189,10 @@ void LitchiEditor::Hierarchy::Refresh()
 
 	 // 先构建所有的叶子
 	auto* scene = ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
+	if(scene == nullptr)
+	{
+		return;
+	}
 	for (auto go : scene->m_gameObjectList)
 	{
 		if(go != nullptr)

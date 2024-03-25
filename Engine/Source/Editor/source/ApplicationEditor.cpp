@@ -294,7 +294,7 @@ void LitchiEditor::ApplicationEditor::Init()
 
 	// test 2
 	{
-		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+		sceneManager->LoadScene("Scenes\\New Scene Empty.scene", true);
 		sceneManager->GetCurrentScene()->Resolve();
 
 		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());

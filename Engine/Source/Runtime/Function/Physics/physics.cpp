@@ -19,7 +19,7 @@ namespace LitchiRuntime
     PxDefaultAllocator		Physics::px_allocator_;
     PhysicErrorCallback	    Physics::physic_error_callback_;
     SimulationEventCallback Physics::simulation_event_callback_;
-    SimulationFilterCallback Physics::simulation_filter_callback_;
+    //SimulationFilterCallback Physics::simulation_filter_callback_;
     PxFoundation* Physics::px_foundation_;
     PxPhysics* Physics::px_physics_;
     PxDefaultCpuDispatcher* Physics::px_cpu_dispatcher_;
@@ -101,7 +101,7 @@ namespace LitchiRuntime
         //~en Set the actions when collision occurs,Physx needs to do.
         // sceneDesc.filterShader = SimulationFilterShader;
         sceneDesc.filterShader = PxDefaultSimulationFilterShader;
-        sceneDesc.filterCallback = &simulation_filter_callback_;
+        //sceneDesc.filterCallback = &simulation_filter_callback_;
         if (enable_ccd_) {
             //~zh 启用CCD
             //~en Enable CCD
@@ -227,7 +227,7 @@ namespace LitchiRuntime
     {
         if (actor != nullptr)
         {
-            actor->setLinearVelocity(PhysXMathConvertHelper::ConvertToPxVec3(velocity));
+            //actor->setLinearVelocity(PhysXMathConvertHelper::ConvertToPxVec3(velocity));
         }
     }
 
@@ -235,7 +235,7 @@ namespace LitchiRuntime
     {
         if (actor != nullptr)
         {
-            actor->setAngularVelocity(PhysXMathConvertHelper::ConvertToPxVec3(velocity));
+            //actor->setAngularVelocity(PhysXMathConvertHelper::ConvertToPxVec3(velocity));
         }
     }
 
