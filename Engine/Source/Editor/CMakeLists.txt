@@ -33,7 +33,7 @@ target_compile_options(${TARGET_NAME}
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17 OUTPUT_NAME "LitchiEditor")
 set_target_properties(${TARGET_NAME} PROPERTIES FOLDER "Engine")
 
-# Physx
+# PhysX
 set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/debug)
 set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/win.x86_64.vc143.mt/release)
 target_link_directories(${TARGET_NAME}
@@ -43,7 +43,7 @@ target_link_directories(${TARGET_NAME}
 )
 
 # 链接LitchiRuntime和PhysX库
-target_link_libraries(${TARGET_NAME} PUBLIC LitchiRuntime PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
+target_link_libraries(${TARGET_NAME} LitchiRuntime PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 
 # 如果是MSVC环境，复制一些.dll文件到目标文件目录
 if(MSVC)
