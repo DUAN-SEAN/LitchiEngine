@@ -59,7 +59,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 		ImGui::DestroyContext();
 	}*/
 
-	// Îö¹¹ÆäËû
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	sceneManager = nullptr;
 	prefabManager->UnloadResources();
 	prefabManager = nullptr;
@@ -163,7 +163,7 @@ void LitchiEditor::ApplicationEditor::Run()
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderUI") {
-					// äÖÈ¾UI
+					// ï¿½ï¿½È¾UI
 					RenderUI();
 				}  EASY_END_BLOCK;
 
@@ -250,7 +250,7 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
 	// EASY_FUNCTION(profiler::colors::Magenta);
-	// äÖÈ¾View 
+	// ï¿½ï¿½È¾View 
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
 	{
@@ -295,7 +295,7 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 		DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 	}
 
-	// todo Inspector Ñ¡Ôñ
+	// todo Inspector Ñ¡ï¿½ï¿½
 	EDITOR_EXEC(SelectActor(p_target));
 }
 
@@ -347,7 +347,7 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderUI") {
-					// äÖÈ¾UI
+					// ï¿½ï¿½È¾UI
 					RenderUI();
 				}  EASY_END_BLOCK;
 			}
@@ -448,7 +448,7 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 		{
 			auto cameraObject = sceneManager->GetCurrentScene()->CreateGameObject("Camera");
 			auto camera = cameraObject->AddComponent<Camera>();
-			// ÉèÖÃÏà»úÄ¬ÈÏµÄÎ»ÖÃºÍ×ËÌ¬
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ïµï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½Ì¬
 			auto cameraPosition = Vector3(0.0f, 5.0f, -10.0f);
 
 			auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
