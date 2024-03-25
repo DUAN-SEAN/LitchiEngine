@@ -12,7 +12,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Grid
+    class LC_CLASS Grid
     {
     public:
         Grid();

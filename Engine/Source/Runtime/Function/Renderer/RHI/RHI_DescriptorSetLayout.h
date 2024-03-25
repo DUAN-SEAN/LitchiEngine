@@ -17,7 +17,7 @@
 
 namespace LitchiRuntime
 {
-	class SP_CLASS RHI_DescriptorSetLayout : public Object
+	class LC_CLASS RHI_DescriptorSetLayout : public Object
 	{
 	public:
 		RHI_DescriptorSetLayout() = default;

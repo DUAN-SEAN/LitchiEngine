@@ -16,10 +16,12 @@ namespace LitchiRuntime
 
 	void RectTransform::OnUpdate()
 	{
+		UpdateRectTransform();
+	}
 
-		UpdateCanvas();
-
-		UpdateTransform();
+	void RectTransform::OnEditorUpdate()
+	{
+		UpdateRectTransform();
 	}
 
 	void RectTransform::PostResourceLoaded()
@@ -29,13 +31,13 @@ namespace LitchiRuntime
 
 	void RectTransform::PostResourceModify()
 	{
-		UpdateCanvas();
-
-		UpdateTransform();
+		UpdateRectTransform();
 	}
 
-	void RectTransform::UpdateTransform()
+	void RectTransform::UpdateRectTransform()
 	{
+		UpdateCanvas();
+
 		if (m_canvas)
 		{
 			// get canvas transform

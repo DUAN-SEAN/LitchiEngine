@@ -12,16 +12,12 @@ using namespace LitchiRuntime;
 int main(int argc, char** argv)
 {
 	Application application;
-	// auto application_standalone=new ApplicationStandalone();
 	auto application_standalone = new ApplicationEditor();
 
-	char* projectPath = nullptr;
-	projectPath = _getcwd(nullptr, 1);
-	std::string filePath(projectPath);
-
-	application_standalone->SetProjectPath(filePath + "\\Project\\");
-
-	delete projectPath;
+	//char* projectPath = nullptr;
+	//projectPath = _getcwd(nullptr, 1);
+	//std::string filePath(projectPath);
+	// delete projectPath;
 
 	application.Initiliaze(application_standalone);
 

@@ -19,11 +19,11 @@ LitchiEditor::AViewControllable::AViewControllable
 
 void LitchiEditor::AViewControllable::UpdateView(float p_deltaTime)
 {
-	// 1. 更新cameraCtrl
-	m_cameraController.HandleInputs(p_deltaTime);
+	// let the input system know if the mouse is within the viewport
+	InputManager::SetEditorViewportOffset(GetPosition());
 
-	/*m_camera->SetPosition(m_cameraController.GetPosition());
-	m_camera->SetRotation(m_cameraController.GetRotation());*/
+	// 1. 更新cameraCtrl
+	m_cameraController.HandleInputs(p_deltaTime, IsFocused(), IsHovered());
 
 	// 2. 更新View
 	AView::UpdateView(p_deltaTime);

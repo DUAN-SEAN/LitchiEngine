@@ -24,7 +24,8 @@ namespace LitchiRuntime
     void RenderCamera::Initialize()
     {
 		// default viewport
-        auto& size = ApplicationBase::Instance()->window->GetSize();
+        // auto& size = ApplicationBase::Instance()->window->GetSize();
+        std::pair<float,float> size{ 3840.0f,2160.0f };
         uint32_t width = size.first;
         uint32_t height = size.second;
 

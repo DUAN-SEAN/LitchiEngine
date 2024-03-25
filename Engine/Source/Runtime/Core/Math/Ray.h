@@ -15,7 +15,7 @@ namespace LitchiRuntime
         class Plane;
         class Sphere;
 
-        class SP_CLASS Ray
+        class LC_CLASS Ray
         {
         public:
             Ray() = default;

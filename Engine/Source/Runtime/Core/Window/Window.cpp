@@ -9,7 +9,7 @@
 
 std::unordered_map<GLFWwindow*, LitchiRuntime::Window*> LitchiRuntime::Window::__WINDOWS_MAP;
 
-LitchiRuntime::Event<LitchiRuntime::EDeviceError, std::string> LitchiRuntime::Window::ErrorEvent;
+LitchiRuntime::Event<LitchiRuntime::EWindowError, std::string> LitchiRuntime::Window::ErrorEvent;
 
 LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	m_title(p_windowSettings.title),
@@ -26,8 +26,8 @@ LitchiRuntime::Window::Window(const WindowSettings& p_windowSettings) :
 	int initializationCode = glfwInit();
 	if (initializationCode == GLFW_FALSE)
 	{
-		throw std::runtime_error("Failed to Init GLFW");
 		glfwTerminate();
+		throw std::runtime_error("Failed to Init GLFW");
 	}
 
 	CreateCursors();
@@ -153,6 +153,7 @@ void LitchiRuntime::Window::SetFullscreen(bool p_value)
 	if (p_value)
 		m_fullscreen = true;
 
+	// todo temp
 	glfwSetWindowMonitor
 	(
 		m_glfwWindow,
@@ -196,7 +197,7 @@ bool LitchiRuntime::Window::IsMaximized() const
 
 bool LitchiRuntime::Window::IsMinimized() const
 {
-	return glfwGetWindowAttrib(m_glfwWindow, GLFW_MAXIMIZED) == GLFW_FALSE;
+	return GetSize().first == 0|| GetSize().second==0;
 }
 
 bool LitchiRuntime::Window::IsFocused() const
@@ -327,7 +328,12 @@ void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSetti
 {
 	GLFWmonitor* selectedMonitor = nullptr;
 	if (m_fullscreen)
+	{
 		selectedMonitor = glfwGetPrimaryMonitor();
+		const GLFWvidmode* mode = glfwGetVideoMode(selectedMonitor);
+		m_size.first = mode->width;
+		m_size.second = mode->height;
+	}
 
 	glfwWindowHint(GLFW_RESIZABLE,		p_windowSettings.resizable);
 	glfwWindowHint(GLFW_DECORATED,		p_windowSettings.decorated);
@@ -338,7 +344,6 @@ void LitchiRuntime::Window::CreateGlfwWindow(const WindowSettings& p_windowSetti
 	glfwWindowHint(GLFW_AUTO_ICONIFY,	p_windowSettings.autoIconify);
 	glfwWindowHint(GLFW_REFRESH_RATE,	p_windowSettings.refreshRate);
 	glfwWindowHint(GLFW_SAMPLES,		p_windowSettings.samples);
-
 	glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
 
 	m_glfwWindow = glfwCreateWindow(static_cast<int>(m_size.first), static_cast<int>(m_size.second), m_title.c_str(), selectedMonitor, nullptr);
@@ -590,7 +595,7 @@ void LitchiRuntime::Window::BindErrorCallback()
 {
 	auto errorCallback = [](int p_code, const char* p_description)
 	{
-		ErrorEvent.Invoke(static_cast<EDeviceError>(p_code), p_description);
+		ErrorEvent.Invoke(static_cast<EWindowError>(p_code), p_description);
 	};
 
 	glfwSetErrorCallback(errorCallback);

@@ -97,24 +97,55 @@ float GetActorFocusDist(GameObject* p_actor)
 	return distance;
 }
 
-void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
+void LitchiEditor::CameraController::HandleInputs(float p_deltaTime, bool p_isFocus, bool p_isHovered)
 {
+	if(!p_isFocus)
+	{
+		return;
+	}
+
+	if (!m_cameraDestinations.empty())
+	{
+		//m_currentMovementSpeed = LitchiRuntime::Math::Zero;
+
+		while (m_cameraDestinations.size() != 1)
+			m_cameraDestinations.pop();
+
+		auto& [destPos, destRotation] = m_cameraDestinations.front();
+
+		float t = m_focusLerpCoefficient * p_deltaTime;
+
+		if (Vector3::Distance(m_camera->GetPosition(), destPos) <= 0.03f)
+		{
+			m_camera->SetPosition(destPos);
+			m_camera->SetRotation(destRotation);
+			m_cameraDestinations.pop();
+		}
+		else
+		{
+			m_camera->SetPosition(Vector3::Lerp(m_camera->GetPosition(), destPos, t));
+			m_camera->SetRotation(Quaternion::Lerp(m_camera->GetRotation(), destRotation, t));
+		}
+		return;
+	}
+
 	static const float movement_speed_max = 5.0f;
 	static float movement_acceleration = 1.0f;
 	static const float movement_drag = 10.0f;
+	static const float wheel_speed = 5.0f;
 	Vector3 movement_direction = Vector3::Zero;
 	float delta_time = static_cast<float>(p_deltaTime);
 
 	// Detect if fps control should be activated
 	{
 		// Initiate control only when the mouse is within the viewport
-		if (InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && InputManager::GetMouseIsInViewport())
+		m_is_controlled_by_keyboard_mouse = false;
+		if ((InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN ||
+			InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_MIDDLE) == EMouseButtonState::MOUSE_DOWN) &&
+			p_isHovered)
 		{
 			m_is_controlled_by_keyboard_mouse = true;
 		}
-
-		// Maintain control as long as the right click is pressed and initial control has been given
-		m_is_controlled_by_keyboard_mouse = InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN && m_is_controlled_by_keyboard_mouse;
 	}
 
 	// Cursor visibility and position
@@ -124,30 +155,29 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 		{
 			m_mouse_last_position = InputManager::GetMousePosition();
 
-			if (!ApplicationBase::Instance()->window->IsFullscreen())
-				// if (!  Window::IsFullscreen()) // change the mouse state only in editor mode
+			//if(InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_MIDDLE) == EMouseButtonState::MOUSE_DOWN)
+			//{
+			//	InputManager::SetMouseCursorVisible(true);
+			//	InputManager::Set
+			//	m_fps_control_cursor_hidden = false;
+			//}else
 			{
-				// todo:
 				InputManager::SetMouseCursorVisible(false);
+				m_fps_control_cursor_hidden = true;
 			}
-
-			m_fps_control_cursor_hidden = true;
 		}
 		else if (!m_is_controlled_by_keyboard_mouse && m_fps_control_cursor_hidden)
 		{
 			InputManager::SetMousePosition(m_mouse_last_position);
-
-			// if (!Window::IsFullscreen()) // change the mouse state only in editor mode
-			if (!ApplicationBase::Instance()->window->IsFullscreen()) // change the mouse state only in editor mode
-			{
-				// todo:
-				InputManager::SetMouseCursorVisible(true);
-			}
+			// todo:
+			InputManager::SetMouseCursorVisible(true);
+			
 
 			m_fps_control_cursor_hidden = false;
 		}
 	}
 
+	m_movement_scroll_accumulator = 0;
 	if (m_is_controlled_by_keyboard_mouse)
 	{
 		// Mouse look
@@ -200,26 +230,29 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			if (InputManager::GetKeyState(EKey::KEY_S) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetBackward();
 			if (InputManager::GetKeyState(EKey::KEY_D) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetRight();
 			if (InputManager::GetKeyState(EKey::KEY_A) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetLeft();
-			if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetDown();
-			if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += m_camera->GetUp();
+			if (InputManager::GetKeyState(EKey::KEY_Q) == EKeyState::KEY_DOWN) movement_direction += Vector3::Left;
+			if (InputManager::GetKeyState(EKey::KEY_E) == EKeyState::KEY_DOWN) movement_direction += Vector3::Right;
+			if (InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_MIDDLE) == EMouseButtonState::MOUSE_DOWN)
+			{
+				auto mouseMoveDir = Vector3(InputManager::GetMouseDelta().x, -InputManager::GetMouseDelta().y, 0.0f);
+				mouseMoveDir.Normalize();
+				movement_direction += mouseMoveDir;
+			}
+
+
 			movement_direction.Normalize();
 		}
 
 		// Wheel delta (used to adjust movement speed)
 		{
 			// Accumulate
-			m_movement_scroll_accumulator += InputManager::GetMouseWheelDelta().y * 0.1f;
-
-			// Clamp
-			float min = -movement_acceleration + 0.1f; // Prevent it from negating or zeroing the acceleration, see translation calculation.
-			float max = movement_acceleration * 2.0f;  // An empirically chosen max.
-			m_movement_scroll_accumulator = Math::Helper::Clamp(m_movement_scroll_accumulator, min, max);
+			m_movement_scroll_accumulator += InputManager::GetMouseWheelDelta().y * wheel_speed;
 		}
 	}
 
 	// Translation
 	{
-		Vector3 translation = (movement_acceleration + m_movement_scroll_accumulator) * movement_direction;
+		Vector3 translation = (movement_acceleration * movement_direction + m_movement_scroll_accumulator * (m_camera->GetForward()));
 
 		// On shift, double the translation
 		if (InputManager::GetKeyState(EKey::KEY_LEFT_ALT) == EKeyState::KEY_DOWN)
@@ -245,6 +278,7 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime)
 			m_camera->SetPosition(m_camera->GetPosition()+m_movement_speed);
 		}
 	}
+
 }
 
 void LitchiEditor::CameraController::SetPosition(const Vector3 & p_position)
@@ -259,6 +293,8 @@ void LitchiEditor::CameraController::SetRotation(const Quaternion & p_rotation)
 
 void LitchiEditor::CameraController::MoveToTarget(GameObject* target)
 {
+	auto goWorldPos = target->GetComponent<Transform>()->GetPosition();
+	m_cameraDestinations.push({ goWorldPos - m_camera->GetRotation() * LitchiRuntime::Vector3::Forward * GetActorFocusDist(target), m_camera->GetRotation() });
 }
 
 const Vector3& LitchiEditor::CameraController::GetPosition() const

@@ -26,30 +26,54 @@
 namespace LitchiRuntime
 {
 	ApplicationBase* ApplicationBase::s_instance;
-	void ApplicationBase::Init() {
+	bool ApplicationBase::Init() {
 		s_instance = this;
+
+		m_engineRoot = std::filesystem::current_path().string()+"\\";
+		m_engineAssetsPath = std::filesystem::canonical("Data\\Engine").string() + "\\";
+
+		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
+
+		if(GetApplicationType() == ApplicationType::Game)
+		{
+			configManager = std::make_unique<ConfigManager>();
+			if (!configManager->Initialize(m_projectPath))
+			{
+				configManager = nullptr;
+				DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+				return false;
+			}
+			
+		}else
+		{
+			if (!m_projectPath.empty())
+			{
+				configManager = std::make_unique<ConfigManager>();
+				if (!configManager->Initialize(m_projectPath))
+				{
+					DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+					return false;
+				}
+			}
+			
+		}
 
 		// Easy Profiler
 		EASY_MAIN_THREAD;
 		profiler::startListen();// 启动profiler服务器，等待gui连接。
 
 		Debug::Initialize();
-		
-		editorAssetsPath = m_projectPath + "Assets\\";
 
-		// todo 暂时这样写
-		projectAssetsPath = editorAssetsPath;
+		std::string projectAssetsPath = "";
+		if(configManager)
+		{
+			projectAssetsPath = configManager->GetAssetFolder();
+		}
 
-		FileSystem::SetProjectAssetDirectoryPath(projectAssetsPath);
-		ModelManager::ProvideAssetPaths(projectAssetsPath);
-		TextureManager::ProvideAssetPaths(projectAssetsPath);
-		ShaderManager::ProvideAssetPaths(projectAssetsPath);
-		MaterialManager::ProvideAssetPaths(projectAssetsPath);
-		FontManager::ProvideAssetPaths(projectAssetsPath);
-		PrefabManager::ProvideAssetPaths(projectAssetsPath);
+		FileSystem::SetAssetDirectoryPath(projectAssetsPath, m_engineAssetsPath);
 
 		// 初始化场景 如果没有场景则构建默认场景
-		sceneManager = std::make_unique<SceneManager>(projectAssetsPath);
+		sceneManager = std::make_unique<SceneManager>();
 		shaderManager = std::make_unique<ShaderManager>();
 		materialManager = std::make_unique<MaterialManager>();
 		fontManager = std::make_unique<FontManager>();
@@ -65,32 +89,19 @@ namespace LitchiRuntime
 		ServiceLocator::Provide(*fontManager.get());
 		ServiceLocator::Provide(*prefabManager.get());
 
-		/*ModelManager::ProvideAssetPaths(projectAssetsPath);
-		ShaderManager::ProvideAssetPaths(projectAssetsPath); */
-
 		DEBUG_LOG_INFO("game start");
 
-		// 第二个参数支持后续修改
-		ConfigManager::Initialize(new ConfigManager(), m_projectPath + "ProjectConfig.Litchi");
-
 		Time::Initialize();
-
-		////初始化图形库，例如glfw
-		//InitGraphicsLibraryFramework();
 
 		FontImporter::Initialize();
 		ModelImporter::Initialize();
 		ImageImporter::Initialize();
 
-		WindowSettings windowSettings;
-		windowSettings.title = "Litchi Editor";
-		windowSettings.width = 1280;
-		windowSettings.height = 720;
-		windowSettings.maximized = true;
+		WindowSettings windowSettings = CreateWindowSettings();
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{
-			auto iconPath = editorAssetsPath + "Icon.png";
+			auto iconPath = m_engineAssetsPath + "Icons\\Icon.png";
 			int iconWidth = 30;
 			int iconHeight = 30;
 			int iconChannel = 3;
@@ -101,11 +112,9 @@ namespace LitchiRuntime
 
 		InputManager::Initialize(window.get());
 
-		UpdateScreenSize();
-
 		{
+			// ResourceCache::Initialize(m_projectPath);
 
-			ResourceCache::Initialize(m_projectPath);
 			Renderer::Initialize();
 
 		}
@@ -121,25 +130,8 @@ namespace LitchiRuntime
 
 		// ScriptEngine::Init(m_projectPath);
 
-		// 初始化ResourceManager
-		//modelManager = std::make_unique<ModelManager>();
-		// materialManager = std::make_unique<MaterialManager>();
-		//shaderManager = std::make_unique<ShaderManager>();
+		return true;
 
-		//ServiceLocator::Provide<ModelManager>(*modelManager);
-		// LitchiRuntime::ServiceLocator::Provide<MaterialManager>(*materialManager);
-		// ServiceLocator::Provide<ShaderManager>(*shaderManager);
-	}
-
-	/// 初始化图形库，例如glfw
-	void ApplicationBase::InitGraphicsLibraryFramework() {
-
-	}
-
-	void ApplicationBase::InitLuaBinding() {
-	}
-
-	void ApplicationBase::LoadConfig() {
 	}
 
 	void ApplicationBase::Run() {
@@ -147,54 +139,7 @@ namespace LitchiRuntime
 	}
 
 	void ApplicationBase::Update() {
-		Time::Update();
-		UpdateScreenSize();
-
-		InputManager::Tick();
-
-		auto scene = this->sceneManager->GetCurrentScene();
-		if (scene)
-		{
-			scene->Update();
-		}
-
-		// Input::Update();
-		//Audio::Update();
-	}
-
-
-	void ApplicationBase::Render() {
-
-		// RenderSystem::Instance()->Render();
-		Renderer::Tick();
-	}
-
-	void ApplicationBase::FixedUpdate() {
-		//Physics::FixedUpdate();
-
-
-		this->sceneManager->Foreach([](GameObject* game_object) {
-			if (game_object->GetActive()) {
-				game_object->ForeachComponent([](Component* component) {
-					component->OnFixedUpdate();
-					});
-			}
-			});
-	}
-
-	void ApplicationBase::OneFrame() {
-		Update();
-		// 如果一帧卡了很久，就多执行几次FixedUpdate
-		float cost_time = Time::delta_time();
-		while (cost_time >= Time::fixed_update_time()) {
-			FixedUpdate();
-			cost_time -= Time::fixed_update_time();
-		}
-
-		Render();
-	}
-
-	void ApplicationBase::UpdateScreenSize() {
+	
 	}
 
 	void ApplicationBase::Exit() {

@@ -11,7 +11,7 @@ namespace LitchiRuntime
 {
     static void create_semaphore(VkDevice device, const bool is_timeline, void*& resource)
     {
-        SP_ASSERT(resource == nullptr);
+        LC_ASSERT(resource == nullptr);
 
         VkSemaphoreTypeCreateInfo semaphore_type_create_info = {};
         semaphore_type_create_info.sType                     = VK_STRUCTURE_TYPE_SEMAPHORE_TYPE_CREATE_INFO;
@@ -25,7 +25,7 @@ namespace LitchiRuntime
         semaphore_create_info.flags                 = 0;
 
         // Create
-        SP_ASSERT_MSG(
+        LC_ASSERT_MSG(
             vkCreateSemaphore(device, &semaphore_create_info, nullptr, reinterpret_cast<VkSemaphore*>(&resource)) == VK_SUCCESS,
             "Failed to create semaphore"
         );
@@ -56,7 +56,7 @@ namespace LitchiRuntime
 
     void RHI_Semaphore::Wait(const uint64_t value, uint64_t timeout /*= std::numeric_limits<uint64_t>::max()*/)
     {
-        SP_ASSERT(m_is_timeline);
+        LC_ASSERT(m_is_timeline);
 
         VkSemaphoreWaitInfo semaphore_wait_info = {};
         semaphore_wait_info.sType               = VK_STRUCTURE_TYPE_SEMAPHORE_WAIT_INFO;
@@ -66,12 +66,12 @@ namespace LitchiRuntime
         semaphore_wait_info.pSemaphores         = reinterpret_cast<VkSemaphore*>(&m_rhi_resource);
         semaphore_wait_info.pValues             = &value;
 
-        SP_VK_ASSERT_MSG(vkWaitSemaphores(RHI_Context::device, &semaphore_wait_info, timeout), "Failed to wait for semaphore");
+        LC_VK_ASSERT_MSG(vkWaitSemaphores(RHI_Context::device, &semaphore_wait_info, timeout), "Failed to wait for semaphore");
     }
 
     void RHI_Semaphore::Signal(const uint64_t value)
     {
-        SP_ASSERT(m_is_timeline);
+        LC_ASSERT(m_is_timeline);
 
         VkSemaphoreSignalInfo semaphore_signal_info = {};
         semaphore_signal_info.sType                 = VK_STRUCTURE_TYPE_SEMAPHORE_SIGNAL_INFO;
@@ -79,16 +79,16 @@ namespace LitchiRuntime
         semaphore_signal_info.semaphore             = static_cast<VkSemaphore>(m_rhi_resource);
         semaphore_signal_info.value                 = value;
 
-        SP_VK_ASSERT_MSG(vkSignalSemaphore(RHI_Context::device, &semaphore_signal_info),
+        LC_VK_ASSERT_MSG(vkSignalSemaphore(RHI_Context::device, &semaphore_signal_info),
             "Failed to signal semaphore");
     }
 
     uint64_t RHI_Semaphore::GetValue()
     {
-        SP_ASSERT(m_is_timeline);
+        LC_ASSERT(m_is_timeline);
 
         uint64_t value = 0;
-        SP_VK_ASSERT_MSG(
+        LC_VK_ASSERT_MSG(
             vkGetSemaphoreCounterValue(RHI_Context::device, static_cast<VkSemaphore>(m_rhi_resource), &value),
             "Failed to get semaphore counter value");
 

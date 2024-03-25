@@ -7,7 +7,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_TextureCube : public RHI_Texture
+    class LC_CLASS RHI_TextureCube : public RHI_Texture
     {
     public:
         RHI_TextureCube()

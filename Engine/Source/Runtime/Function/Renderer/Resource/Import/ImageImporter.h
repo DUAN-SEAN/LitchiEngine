@@ -10,7 +10,7 @@ namespace LitchiRuntime
 {
     class RHI_Texture;
 
-    class SP_CLASS ImageImporter
+    class LC_CLASS ImageImporter
     {
     public:
         static void Initialize();

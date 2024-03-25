@@ -21,7 +21,7 @@ namespace LitchiRuntime
         Failed
     };
 
-    class SP_CLASS RHI_Shader : public Object
+    class LC_CLASS RHI_Shader : public Object
     {
     public:
         RHI_Shader();

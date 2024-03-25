@@ -12,7 +12,7 @@ namespace LitchiRuntime
 	/**
 	 * \brief 管线对象
 	 */
-	class SP_CLASS RHI_Pipeline : public Object
+	class LC_CLASS RHI_Pipeline : public Object
     {
     public:
         RHI_Pipeline() = default;

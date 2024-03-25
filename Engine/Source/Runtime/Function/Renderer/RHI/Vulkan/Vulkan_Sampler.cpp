@@ -28,7 +28,7 @@ namespace LitchiRuntime
         sampler_info.minLod              = 0.0f;
         sampler_info.maxLod              = FLT_MAX;
     
-        SP_VK_ASSERT_MSG(vkCreateSampler(RHI_Context::device, &sampler_info, nullptr, reinterpret_cast<VkSampler*>(&m_rhi_resource)), "Failed to create sampler");
+        LC_VK_ASSERT_MSG(vkCreateSampler(RHI_Context::device, &sampler_info, nullptr, reinterpret_cast<VkSampler*>(&m_rhi_resource)), "Failed to create sampler");
     }
 
     RHI_Sampler::~RHI_Sampler()

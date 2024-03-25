@@ -23,7 +23,7 @@ namespace LitchiRuntime
 
     void RHI_DescriptorSetLayout::CreateRhiResource(vector<RHI_Descriptor> descriptors)
     {
-        SP_ASSERT(m_rhi_resource == nullptr);
+        LC_ASSERT(m_rhi_resource == nullptr);
 
         // remove push constants since they are not part of the descriptor set layout
         descriptors.erase(
@@ -34,7 +34,7 @@ namespace LitchiRuntime
         );
 
         // layout bindings
-        static const uint8_t descriptors_max = 255;
+        constexpr uint8_t descriptors_max = 255;
         static array<VkDescriptorSetLayoutBinding, descriptors_max> layout_bindings;
         static array<VkDescriptorBindingFlags, descriptors_max> layout_binding_flags;
 
@@ -73,7 +73,7 @@ namespace LitchiRuntime
         create_info.pBindings                       = layout_bindings.data();
 
         // descriptor set layout
-        SP_VK_ASSERT_MSG(
+        LC_VK_ASSERT_MSG(
             vkCreateDescriptorSetLayout(RHI_Context::device, &create_info, nullptr, reinterpret_cast<VkDescriptorSetLayout*>(&m_rhi_resource)),
             "Failed to allocate descriptor set layout");
 

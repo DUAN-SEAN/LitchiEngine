@@ -16,7 +16,6 @@ namespace LitchiRuntime
             return m_radius;
         }
 
-        void PostResourceLoaded() override;
         void PostResourceModify() override;
         void UpdateRadius(float radius);
     protected:

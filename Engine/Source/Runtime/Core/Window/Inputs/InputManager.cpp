@@ -115,6 +115,7 @@ void LitchiRuntime::InputManager::Tick()
 
 void LitchiRuntime::InputManager::ClearEvents()
 {
+	m_mouse_wheel_delta = Vector2::Zero;
 	m_keyEvents.clear();
 	m_mouseButtonEvents.clear();
 }

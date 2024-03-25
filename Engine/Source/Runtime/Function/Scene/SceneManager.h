@@ -116,7 +116,7 @@ namespace LitchiRuntime
 	{
 	public:
 
-		SceneManager(const std::string& projectAssetsPath);
+		SceneManager();
 		~SceneManager();
 
 		// new api
@@ -178,8 +178,6 @@ namespace LitchiRuntime
 		Event<> SceneUnloadEvent;
 		Event<const std::string&> CurrentSceneSourcePathChangedEvent;
 	private:
-
-		std::string m_projectAssetsPath;
 
 		// std::vector<Scene*> m_sceneList;
 

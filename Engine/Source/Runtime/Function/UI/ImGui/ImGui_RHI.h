@@ -131,7 +131,7 @@ namespace ImGui::RHI
 
             // compile shaders
             {
-                const string shader_path = ResourceCache::GetResourceDirectory(ResourceDirectory::Shaders) + "\\ImGui.hlsl";
+                const string shader_path = ApplicationBase::Instance()->GetEngineAssetsPath() + "Shaders\\ImGui.hlsl";
 
                 bool async = false;
 
@@ -194,6 +194,7 @@ namespace ImGui::RHI
 
         // get the viewport resources
         bool is_child_window                = window_data != nullptr;
+
         ViewportRhiResources* rhi_resources = is_child_window ? window_data->viewport_rhi_resources.get() : &g_viewport_data;
 
         rhi_resources->cmd_pool->Tick();
@@ -407,21 +408,16 @@ namespace ImGui::RHI
         cmd_list->End();
         cmd_list->Submit();
 
-
         if (!is_child_window)
         {
-            // todo: ÓÐbug ÏÈ×¢ÊÍµô
-        	// if (!ApplicationBase::Instance()->window->IsMinimized())
-            {
-                Renderer::Present();
-            }
+            Renderer::Present();
         }
     }
 
     static void window_create(ImGuiViewport* viewport)
     {
         // platformHandle is SDL_Window, PlatformHandleRaw is HWND
-        SP_ASSERT_MSG(viewport->PlatformHandle != nullptr, "Platform handle is invalid");
+        LC_ASSERT_MSG(viewport->PlatformHandle != nullptr, "Platform handle is invalid");
 
         WindowData* window = new WindowData();
         window->swapchain = make_shared<RHI_SwapChain>
@@ -463,7 +459,7 @@ namespace ImGui::RHI
     static void window_present(ImGuiViewport* viewport, void*)
     {
         WindowData* window = static_cast<WindowData*>(viewport->RendererUserData);
-        SP_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == LitchiRuntime::RHI_CommandListState::Submitted);
+        LC_ASSERT(window->viewport_rhi_resources->cmd_pool->GetCurrentCommandList()->GetState() == LitchiRuntime::RHI_CommandListState::Submitted);
         window->swapchain->Present();
     }
 

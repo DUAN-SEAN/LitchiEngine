@@ -1,0 +1,13 @@
+
+Component：
+	OnAwake() Start Play、AddComponent
+	OnEnable() Start Play、AddComponent、SetActive(true)
+	OnDisable() SetActive(false)
+	
+	OnUpdate() Game Mode
+	OnEditorUpdate() Scene Mode
+	
+Animator: SceneMode模式下的初始化流程
+	GameMode模式下Add流程和反序列化流程
+
+Light: ComputeCascadeSplits 该流程用于根据相机计算阴影分级信息, 

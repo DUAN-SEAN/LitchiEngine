@@ -27,13 +27,13 @@ namespace LitchiRuntime
 
             // create the first one
             VkCommandPool cmd_pool = nullptr;
-            SP_VK_ASSERT_MSG(vkCreateCommandPool(RHI_Context::device, &cmd_pool_info, nullptr, &cmd_pool), "Failed to create command pool");
+            LC_VK_ASSERT_MSG(vkCreateCommandPool(RHI_Context::device, &cmd_pool_info, nullptr, &cmd_pool), "Failed to create command pool");
             RHI_Device::SetResourceName(cmd_pool, RHI_Resource_Type::CommandPool, m_object_name + string("_0"));
             m_rhi_resources[0] = static_cast<void*>(cmd_pool);
 
             // create the second one
             cmd_pool = nullptr;
-            SP_VK_ASSERT_MSG(vkCreateCommandPool(RHI_Context::device, &cmd_pool_info, nullptr, &cmd_pool), "Failed to create command pool");
+            LC_VK_ASSERT_MSG(vkCreateCommandPool(RHI_Context::device, &cmd_pool_info, nullptr, &cmd_pool), "Failed to create command pool");
             RHI_Device::SetResourceName(cmd_pool, RHI_Resource_Type::CommandPool, m_object_name + string("_1"));
             m_rhi_resources[1] = static_cast<void*>(cmd_pool);
         }
@@ -115,7 +115,7 @@ namespace LitchiRuntime
             // wait
             for (shared_ptr<RHI_CommandList> cmd_list : cmd_lists)
             {
-                SP_ASSERT(cmd_list->GetState() != RHI_CommandListState::Recording);
+                LC_ASSERT(cmd_list->GetState() != RHI_CommandListState::Recording);
 
                 if (cmd_list->GetState() == RHI_CommandListState::Submitted)
                 {
@@ -124,7 +124,7 @@ namespace LitchiRuntime
             }
 
             // reset
-            SP_VK_ASSERT_MSG(vkResetCommandPool(RHI_Context::device, pool, 0), "Failed to reset command pool");
+            LC_VK_ASSERT_MSG(vkResetCommandPool(RHI_Context::device, pool, 0), "Failed to reset command pool");
             has_been_reset = true;
         }
 

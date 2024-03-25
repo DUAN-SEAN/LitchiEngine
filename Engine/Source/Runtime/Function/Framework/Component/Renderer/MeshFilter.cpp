@@ -93,7 +93,7 @@ namespace LitchiRuntime
 
 	void MeshFilter::GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const
 	{
-		SP_ASSERT_MSG(m_mesh != nullptr, "Invalid mesh");
+		LC_ASSERT_MSG(m_mesh != nullptr, "Invalid mesh");
 
 		m_mesh->GetGeometry(m_sub_mesh.m_geometry_index_offset, m_sub_mesh.m_geometry_index_count, m_sub_mesh.m_geometry_vertex_offset, m_sub_mesh.m_geometry_vertex_count, indices, vertices);
 	}

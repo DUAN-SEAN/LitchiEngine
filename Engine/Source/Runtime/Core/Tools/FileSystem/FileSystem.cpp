@@ -7,6 +7,7 @@ using namespace std;
 namespace LitchiRuntime {
 
 	std::string FileSystem::ProjectAssetDirectoryPath = "";
+	std::string FileSystem::EngineAssetDirectoryPath = "";
 
 	Buffer FileSystem::ReadFileBinary(const std::filesystem::path& filepath)
 	{
@@ -149,10 +150,10 @@ namespace LitchiRuntime {
 
     wstring FileSystem::StringToWstring(const string& str)
     {
-        SP_WARNINGS_OFF
+        LC_WARNINGS_OFF
             wstring_convert<codecvt_utf8_utf16<wchar_t>> converter;
         return converter.from_bytes(str);
-        SP_WARNINGS_ON
+        LC_WARNINGS_ON
     }
 
     bool FileSystem::Exists(const string& path)
@@ -439,7 +440,11 @@ namespace LitchiRuntime {
 
     bool FileSystem::IsEngineFile(const string& path)
     {
-        return
+        const filesystem::path p = filesystem::absolute(path);
+        int result = p.compare(EngineAssetDirectoryPath);
+        return result>0;
+
+      /*  return
             IsEnginePrefabFile(path) ||
             IsEngineModelFile(path) ||
             IsEngineMaterialFile(path) ||
@@ -447,17 +452,23 @@ namespace LitchiRuntime {
             IsEngineSceneFile(path) ||
             IsEngineTextureFile(path) ||
             IsEngineAudioFile(path) ||
-            IsEngineShaderFile(path);
+            IsEngineShaderFile(path);*/
     }
 
-    void FileSystem::SetProjectAssetDirectoryPath(const std::string& workDir)
+    void FileSystem::SetAssetDirectoryPath(const std::string& p_projectAssetsPath, const std::string& p_engineAssetsPath)
     {
-        ProjectAssetDirectoryPath = workDir;
+        ProjectAssetDirectoryPath = p_projectAssetsPath;
+        EngineAssetDirectoryPath = p_engineAssetsPath;
     }
 
-    std::string FileSystem::GetProjectAssetDirectoryPath()
+    std::string& FileSystem::GetProjectAssetDirectoryPath()
     {
         return ProjectAssetDirectoryPath;
+    }
+
+    std::string& FileSystem::GetEngineAssetDirectoryPath()
+    {
+        return EngineAssetDirectoryPath;
     }
     
     vector<string> FileSystem::GetSupportedFilesInDirectory(const string& path)
@@ -595,7 +606,16 @@ namespace LitchiRuntime {
     {
         // create absolute paths
         const filesystem::path p = filesystem::absolute(path);
-        const filesystem::path r = filesystem::absolute(GetProjectAssetDirectoryPath());
+
+        bool isEngineFile = LitchiRuntime::FileSystem::IsEngineFile(path);
+        filesystem::path r;
+        if (isEngineFile)
+        {
+            r = filesystem::absolute(GetEngineAssetDirectoryPath());
+        }else
+        {
+            r = filesystem::absolute(GetProjectAssetDirectoryPath());
+        }
 
         // if root paths are different, return absolute path
         if (p.root_path() != r.root_path())
@@ -629,6 +649,11 @@ namespace LitchiRuntime {
         {
             result /= *itr_path;
             ++itr_path;
+        }
+
+        if(isEngineFile)
+        {
+            return ":" + result.generic_string();
         }
 
         return result.generic_string();

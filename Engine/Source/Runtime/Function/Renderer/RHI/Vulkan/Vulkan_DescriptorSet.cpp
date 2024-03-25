@@ -21,7 +21,7 @@ namespace LitchiRuntime
     {
         EASY_FUNCTION(profiler::colors::Yellow500)
         // Validate descriptor set
-        SP_ASSERT(m_resource != nullptr);
+        LC_ASSERT(m_resource != nullptr);
 
         static const uint32_t descriptor_count = 256;
         static array<VkWriteDescriptorSet, descriptor_count> descriptor_sets;
@@ -111,7 +111,7 @@ namespace LitchiRuntime
             }
             else
             {
-                SP_ASSERT_MSG(false, "Unhandled descriptor type");
+                LC_ASSERT_MSG(false, "Unhandled descriptor type");
             }
 
             // Write descriptor set

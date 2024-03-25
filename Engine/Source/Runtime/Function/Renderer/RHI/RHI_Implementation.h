@@ -363,13 +363,13 @@ static const char* vkresult_to_string(const VkResult result)
     return "Unknown error code";
 }
 
-#define SP_VK_ASSERT_MSG(vk_result, text_message)          \
+#define LC_VK_ASSERT_MSG(vk_result, text_message)          \
     if (vk_result != VK_SUCCESS)                           \
     {                                                      \
        /* Log::SetLogToFile(true);                           \
         DEBUG_LOG_ERROR("%s", vkresult_to_string(vk_result)); \*/\
         DEBUG_LOG_ERROR("{}", vkresult_to_string(vk_result));\
-		SP_ASSERT(false && text_message);                  \
+		LC_ASSERT(false && text_message);                  \
     }
 #endif
 
@@ -377,7 +377,7 @@ static const char* vkresult_to_string(const VkResult result)
 #include "RHI_Definitions.h"
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Context
+    class LC_CLASS RHI_Context
     {
     public:
         static void Initialize();

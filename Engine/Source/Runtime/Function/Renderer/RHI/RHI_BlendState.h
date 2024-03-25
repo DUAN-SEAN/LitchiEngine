@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_BlendState : public Object
+    class LC_CLASS RHI_BlendState : public Object
     {
     public:
         RHI_BlendState(

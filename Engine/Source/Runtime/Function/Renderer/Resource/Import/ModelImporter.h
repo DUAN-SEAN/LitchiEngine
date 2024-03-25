@@ -16,7 +16,7 @@ namespace LitchiRuntime
     class GameObject;
     class Mesh;
 
-    class SP_CLASS ModelImporter
+    class LC_CLASS ModelImporter
     {
     public:
         static void Initialize();

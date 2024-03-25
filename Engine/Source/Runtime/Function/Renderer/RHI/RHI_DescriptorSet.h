@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_DescriptorSet : public Object
+    class LC_CLASS RHI_DescriptorSet : public Object
     {
     public:
         RHI_DescriptorSet() = default;

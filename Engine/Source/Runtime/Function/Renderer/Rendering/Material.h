@@ -173,7 +173,7 @@ namespace LitchiRuntime
 	/**
 	 * \brief only support simple struct global cbuffer as material data
 	 */
-	class SP_CLASS Material : public IResource
+	class LC_CLASS Material : public IResource
 	{
 	public:
 		Material();

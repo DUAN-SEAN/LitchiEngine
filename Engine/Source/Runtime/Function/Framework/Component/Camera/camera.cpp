@@ -44,8 +44,8 @@ namespace LitchiRuntime
             m_position = transform->GetPosition();
             m_rotation = transform->GetRotation();
 
-            DEBUG_LOG_INFO("Camera::Update Pos:{},{},{}", m_position.x, m_position.y, m_position.z);
-            DEBUG_LOG_INFO("Camera::Update Rotation:{},{},{}", m_rotation.ToEulerAngles().x, m_rotation.ToEulerAngles().y, m_rotation.ToEulerAngles().z);
+       /*     DEBUG_LOG_INFO("Camera::Update Pos:{},{},{}", m_position.x, m_position.y, m_position.z);
+            DEBUG_LOG_INFO("Camera::Update Rotation:{},{},{}", m_rotation.ToEulerAngles().x, m_rotation.ToEulerAngles().y, m_rotation.ToEulerAngles().z);*/
 
             m_is_dirty = true;
         }

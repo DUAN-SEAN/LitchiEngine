@@ -20,9 +20,8 @@ namespace LitchiRuntime
 		* Create the UI manager. Will setup ImGui internally\
 		* @param p_glfwWindow
 		* @param p_style
-		* @param p_glslVersion (Ex: #version 150)
 		*/
-		UIManager(GLFWwindow* p_glfwWindow, EStyle p_style = EStyle::IM_DARK_STYLE, const std::string& p_glslVersion = "#version 150");
+		UIManager(GLFWwindow* p_glfwWindow, EStyle p_style = EStyle::IM_DARK_STYLE);
 
 		/**
 		* Destroy the UI manager. Will handle ImGui destruction internally

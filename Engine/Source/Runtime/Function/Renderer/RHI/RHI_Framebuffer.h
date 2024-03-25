@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Framebuffer : public Object
+    class LC_CLASS RHI_Framebuffer : public Object
     {
     public:
         RHI_Framebuffer(const char* name = nullptr);

@@ -11,7 +11,7 @@ namespace LitchiRuntime
 {
     class Vector4;
 
-    class SP_CLASS Vector3
+    class LC_CLASS Vector3
     {
     public:
         // Constructor
@@ -273,5 +273,5 @@ namespace LitchiRuntime
     };
 
     // Reverse order operators
-    inline SP_CLASS Vector3 operator*(float lhs, const Vector3& rhs) { return rhs * lhs; }
+    inline LC_CLASS Vector3 operator*(float lhs, const Vector3& rhs) { return rhs * lhs; }
 }

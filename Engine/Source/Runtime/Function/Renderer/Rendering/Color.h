@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Color
+    class LC_CLASS Color
     {
     public:
         Color() = default;

@@ -1,16 +1,11 @@
-# add_definitions(-DDISABLE_FORCE_DEBUG_POSTFIX)
-
 set(ENGINE_ROOT_DIR "${LITCHI_ROOT_DIR}/Engine")
 set(THIRD_PARTY_DIR "${ENGINE_ROOT_DIR}/ThirdParty")
-set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Assets")
+set(ENGINE_ASSET_DIR "${ENGINE_ROOT_DIR}/Data")
 
 # option(ENABLE_PHYSICS_DEBUG_RENDERER "Enable Physics Debug Renderer" OFF)
 
 # 如果是MSVC环境，设置编译选项为MP,并且设置某个项目为启动项
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # add_compile_options("/MTd")
-    # add_compile_options("/MP")
-	# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /MTd")
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LitchiEditor)
 endif()
 
@@ -42,24 +37,7 @@ if(MSVC)
     add_compile_options("/MP")
 endif()
 
-# 在Debug模式下定义_DEBUG宏
-# set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D_DEBUG")
-# set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D_DEBUG")
-
-# 如果是Windows环境并且不是Cygwin，那么在Debug模式下定义_DEBUG宏
-# IF (WIN32 AND NOT CYGWIN)
-#     SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
-# ENDIF ()
-
-# 平台相关设置
-#if(WIN32)
-#elseif(UNIX)
-#    if(APPLE)
-#	else()
-#	endif()
-#else()
-#endif()
-
+# 将库文件输出目录作为链接目录
 link_directories(${CMAKE_BINARY_DIR}/bin)
 
 # 添加第三方构建子目录
@@ -73,3 +51,6 @@ add_subdirectory(Source/Editor)
 
 # 添加引擎脚本构建子目录
 add_subdirectory(Source/ScriptCore)
+
+# 添加桌面Standalone构建子目录
+add_subdirectory(Source/Standalone)

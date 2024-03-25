@@ -7,7 +7,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Quaternion
+    class LC_CLASS Quaternion
     {
     public:
         // Constructs an identity quaternion
@@ -326,6 +326,6 @@ namespace LitchiRuntime
     };
 
     // Reverse order operators
-    inline SP_CLASS Vector3 operator*(const Vector3& lhs, const Quaternion& rhs) { return rhs * lhs; }
-    inline SP_CLASS Quaternion operator*(float lhs, const Quaternion& rhs)       { return rhs * lhs; }
+    inline LC_CLASS Vector3 operator*(const Vector3& lhs, const Quaternion& rhs) { return rhs * lhs; }
+    inline LC_CLASS Quaternion operator*(float lhs, const Quaternion& rhs)       { return rhs * lhs; }
 }

@@ -1,4 +1,4 @@
-﻿#include "SceneManager.h"
+#include "SceneManager.h"
 
 #include <stack>
 
@@ -9,6 +9,7 @@
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 #include "Runtime/Resource/AssetManager.h"
+#include <Standalone/include/ApplicationStandalone.h>
 
 namespace LitchiRuntime
 {
@@ -297,9 +298,8 @@ namespace LitchiRuntime
 		}
 	}
 
-	SceneManager::SceneManager(const std::string& projectAssetsPath)
+	SceneManager::SceneManager()
 	{
-		m_projectAssetsPath = projectAssetsPath;
 	}
 
 	SceneManager::~SceneManager()
@@ -324,7 +324,7 @@ namespace LitchiRuntime
 	{
 		LoadEmptyScene();
 
-		if(!AssetManager::LoadAsset(p_absolute? m_projectAssetsPath + p_path : p_path, m_currScene))
+		if(!AssetManager::LoadAsset(p_absolute? p_path: ApplicationBase::Instance()->configManager->GetAssetFolder()+p_path, m_currScene))
 		{
 			UnloadCurrentScene();
 			return false;

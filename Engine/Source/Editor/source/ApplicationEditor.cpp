@@ -26,6 +26,7 @@
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
 #include "Editor/include/Panels/GameView.h"
+#include "Editor/include/Panels/ProjectHubPanel.h"
 #include "Editor/include/Panels/Toolbar.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
@@ -43,14 +44,7 @@
 #include "Runtime/Resource/FontManager.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
-struct data
-{
-	union
-	{
-		float float_value;
-		unsigned char byte_value[4];
-	};
-};
+
 LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManager(m_canvas), m_editorActions(m_panelsManager), ApplicationBase()
 {
 
@@ -65,9 +59,9 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 		ImGui::DestroyContext();
 	}*/
 
-	// Îö¹¹ÆäËû
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	sceneManager = nullptr;
-	modelManager->UnloadResources();
+	modelManager->UnloadResources();\
 	modelManager = nullptr;
 	shaderManager->UnloadResources();
 	shaderManager = nullptr;
@@ -78,7 +72,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	textureManager->UnloadResources();
 	textureManager = nullptr;
 	window = nullptr;
-	ResourceCache::Shutdown();
+	//ResourceCache::Shutdown();
 	// World::Shutdown();
 	Renderer::Shutdown();
 	// Physics::Shutdown();
@@ -93,121 +87,9 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	delete m_rendererPath4GameView;
 }
 
-GameObject* CreateModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string modelPath)
+ApplicationType LitchiEditor::ApplicationEditor::GetApplicationType()
 {
-	auto gameObject4Cube = scene->CreateGameObject("Cube");
-	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
-	transform4Cube->SetPositionLocal(position);
-	transform4Cube->SetRotationLocal(rotation);
-	transform4Cube->SetScaleLocal(scale);
-	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<MeshRenderer>();
-	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
-	meshFilter4Cube->SetGeometry(mesh);
-	meshRenderer4Cube->SetDefaultMaterial();
-
-	return gameObject4Cube;
-}
-
-GameObject* CreateSkinnedModel(Scene* scene, std::string name, Vector3 position, Quaternion rotation, Vector3 scale, std::string materialPath, std::string modelPath)
-{
-	auto gameObject4Cube = scene->CreateGameObject(name);
-	auto transform4Cube = gameObject4Cube->GetComponent<Transform>();
-	transform4Cube->SetPositionLocal(position);
-	transform4Cube->SetRotationLocal(rotation);
-	transform4Cube->SetScaleLocal(scale);
-
-	auto meshFilter4Cube = gameObject4Cube->AddComponent<MeshFilter>();
-	auto meshRenderer4Cube = gameObject4Cube->AddComponent<SkinnedMeshRenderer>();
-	auto animator = gameObject4Cube->AddComponent<Animator>();
-
-	auto material = ApplicationBase::Instance()->materialManager->LoadResource(materialPath);
-
-	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(modelPath);
-	meshFilter4Cube->SetGeometry(mesh);
-	meshRenderer4Cube->SetMaterial(material);
-
-	// ³õÊ¼»¯animator
-	std::unordered_map<std::string, AnimationClip> animations;
-	mesh->GetAnimations(animations);
-	auto firstClipName = animations.begin()->first;
-	animator->SetAnimationClipMap(animations);
-	animator->Play(firstClipName);
-
-
-	return gameObject4Cube;
-}
-
-GameObject* CreateLightObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->GetComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->PostResourceLoaded();
-
-	auto directionalLight = go->AddComponent<Light>();
-	directionalLight->SetColor({ 0.3f,0.6f,0.7f });
-	directionalLight->SetIntensity(LightIntensity::bulb_100_watt);
-
-	return go;
-}
-
-GameObject* CreateUIImageObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, RHI_Texture* image)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->SetScaleLocal(Vector3(1));
-	transform->PostResourceLoaded();
-
-	/*auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = "";
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = "Engine\\Materials\\UIImage.mat";
-	mesh_renderer->PostResourceLoaded();*/
-	go->SetLayer(0x02); // UI ²ã¼¶Îª2
-
-	auto uiImage = go->AddComponent<UIImage>();
-	uiImage->SetTexture(image);
-
-	return go;
-}
-
-GameObject* CreateUITextObject(Scene* scene, std::string name, Vector3 pos, Quaternion rotation, Font* font)
-{
-	GameObject* go = scene->CreateGameObject(name);
-	go->PostResourceLoaded();
-
-	auto transform = go->AddComponent<Transform>();
-	transform->SetPositionLocal(Vector3(pos.x, pos.y, pos.z));
-	transform->SetRotationLocal(Quaternion(rotation.x, rotation.y, rotation.z, rotation.w));
-	transform->SetScaleLocal(Vector3(1));
-	transform->PostResourceLoaded();
-
-	/*auto mesh_filter = go->AddComponent<MeshFilter>();
-	mesh_filter->model_path = "";
-	mesh_filter->PostResourceLoaded();
-
-	auto mesh_renderer = go->AddComponent<MeshRenderer>();
-	mesh_renderer->material_path = "Engine\\Materials\\UIText.mat";
-	mesh_renderer->PostResourceLoaded();*/
-	go->SetLayer(0x02); // UI ²ã¼¶Îª2
-
-	// ´´½¨UIText
-	auto uiText = go->AddComponent<UIText>();
-	uiText->SetFont(font);
-	uiText->SetText("EF");
-	uiText->SetColor(Color::White);
-
-	return go;
+	return ApplicationType::Editor;
 }
 
 GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scriptName)
@@ -222,84 +104,34 @@ GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scrip
 	return go;
 }
 
-void LitchiEditor::ApplicationEditor::Init()
+bool LitchiEditor::ApplicationEditor::Init()
 {
 	instance_ = this;
 
 	// Init Base
-	ApplicationBase::Init();
+	if (!ApplicationBase::Init())
+	{
+		return false;
+	}
+
+	m_editorAssetsPath = std::filesystem::canonical("Data\\Editor").string() + "\\";
 
 	// init uiManager
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
-		uiManager->SetEditorLayoutSaveFilename(this->projectAssetsPath + "Config\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(m_engineRoot + "Config\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 	ServiceLocator::Provide<UIManager>(*uiManager.get());
 
-	if (!std::filesystem::exists(this->projectAssetsPath + "Config\\layout.ini"))
-		uiManager->ResetLayout(this->projectAssetsPath + "Config\\layout.ini");
+	if (!std::filesystem::exists(m_engineRoot + "Config\\layout.ini"))
+		uiManager->ResetLayout(m_engineRoot + "Config\\layout.ini");
 
-	// Setup RendererPath
-	SetupRendererPath();
+	RunProjectHub();
 
-	// Setup UI
-	SetupUI();
-
-	/* below code is test process */
-
-	//// test 1
-	//{
-	//	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
-	//	font->AddText("Hello World", Vector2::Zero);
-
-	//	sceneManager->LoadEmptyScene();
-	//	auto* scene = sceneManager->GetCurrentScene();
-	//	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
-
-	//	// create go from prefab
-	//	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	//	//auto mesh_prefab = mesh->GetModelPrefab();
-	//	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
-
-	//	// create camera
-	//	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
-
-	//	// create cube
-	//	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
-	
-	//	CreateLightObject(scene, "Directional Light", Vector3::Zero, Quaternion::FromEulerAngles(42, 0, 0));
-
-	//	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
-	//	canvas->SetName("Canvas");
-	//	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
-	//	text->SetName("Text");
-	//	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
-	//	text->GetComponent<UIText>()->SetText("Hello World !");
-	//	text->GetComponent<UIText>()->PostResourceModify();
-
-	//	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
-	//	image->SetName("Image");
-	//	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
-	//	image->GetComponent<UIImage>()->PostResourceModify();
-	//	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
-	//	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
-
-	//	scene->Resolve();
-	//  m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-	//  m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
-	//}
-
-	// test 2
-	{
-		sceneManager->LoadScene("Scenes\\New Scene Empty.scene", true);
-		sceneManager->GetCurrentScene()->Resolve();
-
-		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
-	}
+	return true;
 }
 
 void LitchiEditor::ApplicationEditor::Run()
@@ -309,48 +141,63 @@ void LitchiEditor::ApplicationEditor::Run()
 		EASY_BLOCK("Frame") {
 			// PreUpdate
 			window->PollEvents();
-			
+
+			// EASY_FUNCTION(profiler::colors::Magenta);
+			Time::Update();
+			InputManager::Tick();
+
 			EASY_BLOCK("Update") {
 				Update();
 			}  EASY_END_BLOCK;
-			
-			// Update
-			// ¼ì²âÊÇ·ñÉ¾³ýÎïÌå
-			// ¼ì²âÔËÐÐÄ£Ê½ Game or no
-			// äÖÈ¾Views
 
-			EASY_BLOCK("RenderViews"){
-			RenderViews(Time::delta_time());
-			}  EASY_END_BLOCK;
+			if(!ApplicationBase::Instance()->window->IsMinimized())
+			{
+				EASY_BLOCK("Renderer") {
+					Renderer::Tick();
+				}  EASY_END_BLOCK;
 
-			EASY_BLOCK("Renderer") {
-				Renderer::Tick();
-			}  EASY_END_BLOCK;
+				EASY_BLOCK("RenderViews") {
+					RenderViews(Time::delta_time());
+				}  EASY_END_BLOCK;
 
-			
-			EASY_BLOCK("RenderUI") {
-				// äÖÈ¾UI
-				RenderUI();
-			}  EASY_END_BLOCK;
-			
+				EASY_BLOCK("RenderUI") {
+					// ï¿½ï¿½È¾UI
+					RenderUI();
+				}  EASY_END_BLOCK;
+
+			}
+
 			// PostUpdate
 
 			//window->SwapBuffers();
 			InputManager::ClearEvents();
 			++m_elapsedFrames;
+
+
+			/*if(ApplicationBase::Instance()->window->IsMinimized())
+			{
+				DEBUG_LOG_INFO("Window IsMinimized");
+			}
+
+			if(ApplicationBase::Instance()->window->IsVisible())
+			{
+				DEBUG_LOG_INFO("Window IsVisible");
+			}*/
+
 		}  EASY_END_BLOCK;
 	}
 }
 
 void LitchiEditor::ApplicationEditor::Update()
 {
-	// EASY_FUNCTION(profiler::colors::Magenta);
-	Time::Update();
-	UpdateScreenSize();
-	InputManager::Tick();
-
 	if (auto editorMode = m_editorActions.GetCurrentEditorMode(); editorMode == EditorActions::EEditorMode::PLAY || editorMode == EditorActions::EEditorMode::FRAME_BY_FRAME)
 	{
+		auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
+		if(!gameView.IsFocused() || !gameView.IsOpened())
+		{
+			return;
+		}
+
 		auto scene = this->sceneManager->GetCurrentScene();
 
 		// Physics Tick
@@ -371,13 +218,26 @@ void LitchiEditor::ApplicationEditor::Update()
 		// Input::Update();
 		//Audio::Update();
 
-	}else
+	}
+	else
 	{
 		auto scene = this->sceneManager->GetCurrentScene();
 
 		scene->OnEditorUpdate();
 		// Edit Mode
 	}
+}
+
+WindowSettings LitchiEditor::ApplicationEditor::CreateWindowSettings()
+{
+	WindowSettings windowSettings;
+	windowSettings.title = "Litchi Editor";
+	windowSettings.width = 1920;
+	windowSettings.height = 1080;
+	windowSettings.minimumWidth = 1;
+	windowSettings.minimumHeight = 1;
+	windowSettings.maximized = true;
+	return windowSettings;
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const
@@ -388,7 +248,7 @@ bool LitchiEditor::ApplicationEditor::IsRunning() const
 void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 {
 	// EASY_FUNCTION(profiler::colors::Magenta);
-	// äÖÈ¾View 
+	// ï¿½ï¿½È¾View 
 	auto& sceneView = m_panelsManager.GetPanelAs<SceneView>("Scene View");
 	if (sceneView.IsOpened())
 	{
@@ -397,7 +257,7 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 	}
 
 	auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
-	if(gameView.IsOpened())
+	if (gameView.IsOpened())
 	{
 		gameView.UpdateView(p_deltaTime);
 		gameView.Render();
@@ -423,7 +283,7 @@ void LitchiEditor::ApplicationEditor::RenderUI()
 void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 {
 	// debug
-	if(p_target!=nullptr)
+	if (p_target != nullptr)
 	{
 		auto name = p_target->GetName();
 		auto transform = p_target->GetComponent<Transform>();
@@ -432,8 +292,8 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 		auto rotationEuler = rotation.ToEulerAngles();
 		DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 	}
-	
-	// todo Inspector Ñ¡Ôñ
+
+	// todo Inspector Ñ¡ï¿½ï¿½
 	EDITOR_EXEC(SelectActor(p_target));
 }
 
@@ -446,7 +306,163 @@ void LitchiEditor::ApplicationEditor::MoveToTarget(GameObject* p_target)
 	sceneView.GetCameraController().MoveToTarget(p_target);
 }
 
-void LitchiEditor::ApplicationEditor::SetupUI()
+void LitchiEditor::ApplicationEditor::RunProjectHub()
+{
+	auto readyToGo = false;
+	string path = "";
+	string projectName = "";
+	auto m_mainPanel = std::make_unique<ProjectHubPanel>(readyToGo, path, projectName);
+
+	uiManager->SetCanvas(m_canvas);
+	m_canvas.AddPanel(*m_mainPanel);
+	m_canvas.MakeDockspace(true);
+
+	auto oldSize = window->GetSize();
+	auto oldPos = window->GetPosition();
+	window->SetPosition(50.0f,50.0f);
+	auto panelSize = m_mainPanel->GetSize();
+	window->SetSize(static_cast<uint16_t>(panelSize.x), static_cast<uint16_t>(panelSize.y));
+
+	while (true)
+	{
+		if(!m_mainPanel->IsOpened())
+		{
+			break;
+		}
+
+		EASY_BLOCK("Frame") {
+			// PreUpdate
+			window->PollEvents();
+
+			// EASY_FUNCTION(profiler::colors::Magenta);
+			Time::Update();
+			InputManager::Tick();
+
+			if (!ApplicationBase::Instance()->window->IsMinimized())
+			{
+				EASY_BLOCK("Renderer") {
+					Renderer::Tick();
+				}  EASY_END_BLOCK;
+
+				EASY_BLOCK("RenderUI") {
+					// ï¿½ï¿½È¾UI
+					RenderUI();
+				}  EASY_END_BLOCK;
+			}
+			// PostUpdate
+
+			//window->SwapBuffers();
+			InputManager::ClearEvents();
+			++m_elapsedFrames;
+		}  EASY_END_BLOCK;
+
+	}
+
+	m_canvas.RemoveAllPanels();
+
+	SetProjectPath(path);
+
+	window->SetPosition(oldPos.first, oldPos.second);
+	window->SetSize(oldSize.first, oldSize.second);
+
+	OnProjectOpen();
+}
+
+void LitchiEditor::ApplicationEditor::OnProjectOpen()
+{
+	configManager = std::make_unique<ConfigManager>();
+	if (!configManager->Initialize(m_projectPath))
+	{
+		DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
+	}
+
+	auto projectAssetsPath = configManager->GetAssetFolder();
+
+	FileSystem::SetAssetDirectoryPath(projectAssetsPath,m_engineAssetsPath);
+
+	// Setup RendererPath
+	SetupRendererPath();
+
+	// Setup UI
+	SetupEditorUI();
+
+	/* below code is test process */
+
+	//// test 1
+	//{
+	//	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
+	//	font->AddText("Hello World", Vector2::Zero);
+
+	//	sceneManager->LoadEmptyScene();
+	//	auto* scene = sceneManager->GetCurrentScene();
+	//	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
+
+	//	// create go from prefab
+	//	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
+	//	//auto mesh_prefab = mesh->GetModelPrefab();
+	//	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
+
+	//	// create camera
+	//	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
+
+	//	// create cube
+	//	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
+
+	//	auto lightObject = EDITOR_EXEC(CreateMonoComponentActor<Light>(false, nullptr));
+	//	lightObject->SetName("Directional Light");
+	//	lightObject->GetComponent<Transform>()->SetPosition(Vector3::Zero);
+	//	lightObject->GetComponent<Transform>()->SetRotation(Quaternion::FromEulerAngles(42, 0, 0));
+	//	lightObject->GetComponent<Light>()->SetLightType(LightType::Directional);
+	//	
+
+	//	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
+	//	canvas->SetName("Canvas");
+	//	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
+	//	text->SetName("Text");
+	//	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
+	//	text->GetComponent<UIText>()->SetText("Hello World !");
+	//	text->GetComponent<UIText>()->PostResourceModify();
+
+	//	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
+	//	image->SetName("Image");
+	//	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
+	//	image->GetComponent<UIImage>()->PostResourceModify();
+	//	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
+	//	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
+
+	//	scene->Resolve();
+	//	m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
+	//	m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
+	//}
+
+	// test 2
+	{
+		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+		sceneManager->GetCurrentScene()->Resolve();
+
+		sceneManager->GetCurrentScene()->Play();
+
+		// create camera
+		{
+			auto cameraObject = sceneManager->GetCurrentScene()->CreateGameObject("Camera");
+			auto camera = cameraObject->AddComponent<Camera>();
+			// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¬ï¿½Ïµï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½Ì¬
+			auto cameraPosition = Vector3(0.0f, 5.0f, -10.0f);
+
+			auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
+
+			camera->SetFovHorizontalDeg(60.0f);
+			cameraObject->GetComponent<Transform>()->SetPosition(cameraPosition);
+			cameraObject->GetComponent<Transform>()->SetRotation(cameraRotation);
+
+		}
+
+		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
+		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
+	}
+}
+
+void LitchiEditor::ApplicationEditor::SetupEditorUI()
 {
 	PanelWindowSettings settings;
 	settings.closable = true;
@@ -457,7 +473,7 @@ void LitchiEditor::ApplicationEditor::SetupUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, projectAssetsPath);
+	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, GetEngineAssetsPath(), configManager->GetAssetFolder(), configManager->GetScriptFolder());
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);

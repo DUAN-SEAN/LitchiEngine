@@ -36,7 +36,7 @@ namespace LitchiRuntime
         Vector2 position;
     };
 
-    class SP_CLASS Font : public IResource
+    class LC_CLASS Font : public IResource
     {
     public:
         Font(const std::string& file_path, const uint32_t font_size, const Vector4& color);

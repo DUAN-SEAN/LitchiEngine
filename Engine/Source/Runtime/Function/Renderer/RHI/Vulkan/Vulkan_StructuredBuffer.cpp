@@ -49,9 +49,9 @@ namespace LitchiRuntime
 
     void RHI_StructuredBuffer::Update(void* data_cpu)
     {
-        SP_ASSERT_MSG(data_cpu != nullptr,                      "Invalid update data");
-        SP_ASSERT_MSG(m_mapped_data != nullptr,                 "Invalid mapped data");
-        SP_ASSERT_MSG(m_offset + m_stride <= m_object_size_gpu, "Out of memory");
+        LC_ASSERT_MSG(data_cpu != nullptr,                      "Invalid update data");
+        LC_ASSERT_MSG(m_mapped_data != nullptr,                 "Invalid mapped data");
+        LC_ASSERT_MSG(m_offset + m_stride <= m_object_size_gpu, "Out of memory");
 
         // advance offset
         m_offset += m_stride;

@@ -82,14 +82,6 @@ namespace LitchiRuntime
 		T* operator[](const std::string& p_path);
 
 		/**
-		* Provide asset paths for the resource managers
-		* @important This method MUST be called before trying to access any resource from any resource manager
-		* @param p_projectAssetsPath
-		* @param p_engineAssetsPath
-		*/
-		static void ProvideAssetPaths(const std::string& p_projectAssetsPath);
-
-		/**
 		* Returns the resource map
 		*/
 		std::unordered_map<std::string, T*>& GetResources();
@@ -101,7 +93,6 @@ namespace LitchiRuntime
 		std::string GetRealPath(const std::string& p_path) const;
 
 	private:
-		inline static std::string __PROJECT_ASSETS_PATH = "";
 
 		std::unordered_map<std::string, T*> m_resources;
 	};

@@ -15,6 +15,7 @@
 #include "Font/Font.h"
 #include "Grid.h"
 #include "RendererPath.h"
+#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 //===================================
 
 namespace LitchiRuntime
@@ -33,7 +34,7 @@ namespace LitchiRuntime
 	//====================
 
 
-	class SP_CLASS Renderer
+	class LC_CLASS Renderer
 	{
 	public:
 		static void Initialize();
@@ -103,7 +104,7 @@ namespace LitchiRuntime
 		// Get all
 		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
 		static std::array<std::shared_ptr<RHI_Shader>, 51>& GetShaders();
-		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 4>& GetConstantBuffers();
+		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 5>& GetConstantBuffers();
 
 		// Get individual
 		static std::shared_ptr<RHI_RasterizerState> GetRasterizerState(const Renderer_RasterizerState type);
@@ -123,12 +124,13 @@ namespace LitchiRuntime
 
 	private:
 		// Constant buffers
-		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set = true);
+		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, Cb_Frame& frameBufferData,const bool set = true);
 		static void PushPassConstants(RHI_CommandList* cmd_list);
-		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light,RenderCamera* renderCamera);
-		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RenderCamera* renderCamera);
+		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RendererPath* rendererPath);
+		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
+		static void UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData);
 
 		// Resource creation
 		static void CreateConstantBuffers();
@@ -148,10 +150,12 @@ namespace LitchiRuntime
 		static void Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath,const bool is_transparent_pass);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
-
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
-
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+
+		// Buffer
+		static Cb_Frame BuildFrameBufferData();
+		static Cb_RendererPath BuildRendererPathFrameBufferData(RenderCamera* camera, UICanvas* canvas);
 
 		// Event handlers
 		// static void OnWorldResolved(sp_variant data);
@@ -170,7 +174,6 @@ namespace LitchiRuntime
 		static bool IsCallingFromOtherThread();
 		static void DestroyResources();
 		
-		static Cb_Frame m_cb_frame_cpu;
 		static Pcb_Pass m_cb_pass_cpu;
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;

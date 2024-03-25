@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS Stopwatch
+    class LC_CLASS Stopwatch
     {
     public:
         Stopwatch() { Start(); }

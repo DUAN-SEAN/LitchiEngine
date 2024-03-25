@@ -37,7 +37,7 @@ namespace LitchiRuntime
             // validate descriptor set layouts
             for (void* layout : layouts)
             {
-                SP_ASSERT(layout != nullptr);
+                LC_ASSERT(layout != nullptr);
             }
 
             // push constant buffers
@@ -46,7 +46,7 @@ namespace LitchiRuntime
             {
                 if (descriptor.type == RHI_Descriptor_Type::PushConstantBuffer)
                 { 
-                    SP_ASSERT(descriptor.struct_size <= RHI_Device::PropertyGetMaxPushConstantSize());
+                    LC_ASSERT(descriptor.struct_size <= RHI_Device::PropertyGetMaxPushConstantSize());
 
                     VkPushConstantRange push_constant_range  = {};
                     push_constant_range.offset               = 0;
@@ -69,7 +69,7 @@ namespace LitchiRuntime
             pipeline_layout_info.pPushConstantRanges        = push_constant_ranges.data();
 
             // create
-            SP_VK_ASSERT_MSG(vkCreatePipelineLayout(RHI_Context::device, &pipeline_layout_info, nullptr, reinterpret_cast<VkPipelineLayout*>(&m_resource_pipeline_layout)),
+            LC_VK_ASSERT_MSG(vkCreatePipelineLayout(RHI_Context::device, &pipeline_layout_info, nullptr, reinterpret_cast<VkPipelineLayout*>(&m_resource_pipeline_layout)),
                 "Failed to create pipeline layout");
 
             // name
@@ -135,8 +135,8 @@ namespace LitchiRuntime
             shader_stage_info.pName                           = m_state.shader_vertex->GetEntryPoint();
 
             // Validate shader stage
-            SP_ASSERT(shader_stage_info.module != nullptr);
-            SP_ASSERT(shader_stage_info.pName != nullptr);
+            LC_ASSERT(shader_stage_info.module != nullptr);
+            LC_ASSERT(shader_stage_info.pName != nullptr);
 
             shader_stages.push_back(shader_stage_info);
         }
@@ -151,8 +151,8 @@ namespace LitchiRuntime
             shader_stage_info.pName                           = m_state.shader_pixel->GetEntryPoint();
 
             // Validate shader stage
-            SP_ASSERT(shader_stage_info.module != nullptr);
-            SP_ASSERT(shader_stage_info.pName != nullptr);
+            LC_ASSERT(shader_stage_info.module != nullptr);
+            LC_ASSERT(shader_stage_info.pName != nullptr);
 
             shader_stages.push_back(shader_stage_info);
         }
@@ -167,8 +167,8 @@ namespace LitchiRuntime
             shader_stage_info.pName                           = m_state.shader_compute->GetEntryPoint();
 
             // Validate shader stage
-            SP_ASSERT(shader_stage_info.module != nullptr);
-            SP_ASSERT(shader_stage_info.pName != nullptr);
+            LC_ASSERT(shader_stage_info.module != nullptr);
+            LC_ASSERT(shader_stage_info.pName != nullptr);
 
             shader_stages.push_back(shader_stage_info);
         }
@@ -309,6 +309,8 @@ namespace LitchiRuntime
             depth_stencil_state.front.writeMask   = m_state.depth_stencil_state->GetStencilWriteMask();
             depth_stencil_state.front.reference   = 1;
             depth_stencil_state.back              = depth_stencil_state.front;
+            depth_stencil_state.minDepthBounds = 1.0f; // functionality of DirectX with reverse-z
+            depth_stencil_state.maxDepthBounds = 0.0f; // functionality of DirectX with reverse-z
         }
 
         // Pipeline
@@ -374,7 +376,7 @@ namespace LitchiRuntime
                 pipeline_info.renderPass                   = nullptr;
         
                 // Create
-                SP_VK_ASSERT_MSG(vkCreateGraphicsPipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),
+                LC_VK_ASSERT_MSG(vkCreateGraphicsPipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),
                     "Failed to create graphics pipeline");
 
                 // Disable naming until I can come up with a more meaningful name
@@ -389,7 +391,7 @@ namespace LitchiRuntime
                 pipeline_info.stage                       = shader_stages[0];
 
                 // Create
-                SP_VK_ASSERT_MSG(vkCreateComputePipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),
+                LC_VK_ASSERT_MSG(vkCreateComputePipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),
                     "Failed to create compute pipeline");
 
                 // Name

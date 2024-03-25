@@ -179,7 +179,7 @@ LitchiEditor::Hierarchy::Hierarchy
 	GameObject::DettachEvent += std::bind(&Hierarchy::DetachFromParent, this, std::placeholders::_1);
 	Scene::InstantiatePrefabEvent += std::bind(&Hierarchy::AddActorByPrefabInstance, this, std::placeholders::_1);
 	ServiceLocator::Get<SceneManager>().SceneLoadEvent += std::bind(&Hierarchy::OnSceneLoad, this);
-	ServiceLocator::Get<SceneManager>().SceneUnloadEvent += std::bind(&Hierarchy::OnSceneUnLoad, this);
+	//ServiceLocator::Get<SceneManager>().SceneUnloadEvent += std::bind(&Hierarchy::OnSceneUnLoad, this);
 }
 
 void LitchiEditor::Hierarchy::Refresh()

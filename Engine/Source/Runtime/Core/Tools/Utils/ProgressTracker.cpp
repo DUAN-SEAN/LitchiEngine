@@ -16,7 +16,7 @@ namespace LitchiRuntime
 
     void Progress::Start(const uint32_t job_count, const std::string& text)
     {
-        SP_ASSERT_MSG(GetFraction() == 1.0f, "The previous progress tracking hasn't finished");
+        LC_ASSERT_MSG(GetFraction() == 1.0f, "The previous progress tracking hasn't finished");
 
         lock_guard lock(m_mutex_jobs);
 
@@ -44,7 +44,7 @@ namespace LitchiRuntime
     {
         lock_guard lock(m_mutex_jobs);
 
-        SP_ASSERT_MSG(m_jobs_done + 1 <= m_job_count, "Job count exceeded");
+        LC_ASSERT_MSG(m_jobs_done + 1 <= m_job_count, "Job count exceeded");
         m_jobs_done++;
     }
 

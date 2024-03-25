@@ -8,7 +8,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_Texture2DArray : public RHI_Texture
+    class LC_CLASS RHI_Texture2DArray : public RHI_Texture
     {
     public:
         RHI_Texture2DArray(const uint32_t flags = RHI_Texture_Srv, const char* name = nullptr)

@@ -89,11 +89,11 @@ namespace LitchiRuntime
         static vector<VkSurfaceFormatKHR> get_supported_surface_formats(const VkSurfaceKHR surface)
         {
             uint32_t format_count;
-            SP_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceFormatsKHR(RHI_Context::device_physical, surface, &format_count, nullptr),
+            LC_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceFormatsKHR(RHI_Context::device_physical, surface, &format_count, nullptr),
                 "Failed to get physical device surface format count");
 
             vector<VkSurfaceFormatKHR> surface_formats(format_count);
-            SP_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceFormatsKHR(RHI_Context::device_physical, surface, &format_count, &surface_formats[0]),
+            LC_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceFormatsKHR(RHI_Context::device_physical, surface, &format_count, &surface_formats[0]),
                 "Failed to get physical device surfaces");
 
             return surface_formats;
@@ -134,7 +134,7 @@ namespace LitchiRuntime
 
             // Get physical device surface capabilities
             VkSurfaceCapabilitiesKHR surface_capabilities;
-            SP_VK_ASSERT_MSG(
+            LC_VK_ASSERT_MSG(
                 vkGetPhysicalDeviceSurfaceCapabilitiesKHR(RHI_Context::device_physical, surface, &surface_capabilities),
                 "Failed to get surface capabilities");
 
@@ -160,7 +160,7 @@ namespace LitchiRuntime
         const char* name
     )
     {
-        SP_ASSERT_MSG(RHI_Device::IsValidResolution(width, height), "Invalid resolution");
+        LC_ASSERT_MSG(RHI_Device::IsValidResolution(width, height), "Invalid resolution");
 
         // Copy parameters
         m_format       = format_sdr; // for now, we use SDR by default as HDR doesn't look rigth - Display::GetHdr() ? format_hdr : format_sdr;
@@ -187,7 +187,7 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::Create()
     {
-        SP_ASSERT(m_glfw_window != nullptr);
+        LC_ASSERT(m_glfw_window != nullptr);
 
         // Create surface
         VkSurfaceKHR surface = nullptr;
@@ -212,14 +212,14 @@ namespace LitchiRuntime
             }
 
             VkBool32 present_support = false;
-            SP_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceSupportKHR(
+            LC_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceSupportKHR(
                 RHI_Context::device_physical,
                 RHI_Device::QueueGetIndex(RHI_Queue_Type::Graphics),
                 surface,
                 &present_support),
                 "Failed to get physical device surface support");
 
-            SP_ASSERT_MSG(present_support, "The device does not support this kind of surface");
+            LC_ASSERT_MSG(present_support, "The device does not support this kind of surface");
         }
 
         // Get surface capabilities
@@ -227,7 +227,7 @@ namespace LitchiRuntime
 
         // Ensure that the surface supports the requested format and color space
         VkColorSpaceKHR color_space = get_color_space(IsHdr());
-        SP_ASSERT_MSG(is_format_and_color_space_supported(surface, &m_format, color_space), "The surface doesn't support the requested format");
+        LC_ASSERT_MSG(is_format_and_color_space_supported(surface, &m_format, color_space), "The surface doesn't support the requested format");
 
         // Clamp size between the supported min and max
         m_width  = Math::Helper::Clamp(m_width,  capabilities.minImageExtent.width,  capabilities.maxImageExtent.width);
@@ -267,15 +267,15 @@ namespace LitchiRuntime
             create_info.clipped        = VK_TRUE;
             create_info.oldSwapchain   = nullptr;
 
-            SP_VK_ASSERT_MSG(vkCreateSwapchainKHR(RHI_Context::device, &create_info, nullptr, &swap_chain),
+            LC_VK_ASSERT_MSG(vkCreateSwapchainKHR(RHI_Context::device, &create_info, nullptr, &swap_chain),
                 "Failed to create swapchain");
         }
 
         // Images
         {
             uint32_t image_count = 0;
-            SP_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, nullptr), "Failed to get swapchain image count");
-            SP_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, reinterpret_cast<VkImage*>(m_rhi_rt.data())), "Failed to get swapchain image count");
+            LC_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, nullptr), "Failed to get swapchain image count");
+            LC_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, reinterpret_cast<VkImage*>(m_rhi_rt.data())), "Failed to get swapchain image count");
 
             // Transition layouts to VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
             if (RHI_CommandList* cmd_list = RHI_Device::CmdImmediateBegin(RHI_Queue_Type::Graphics))
@@ -321,7 +321,7 @@ namespace LitchiRuntime
                 create_info.components.b                    = VK_COMPONENT_SWIZZLE_IDENTITY;
                 create_info.components.a                    = VK_COMPONENT_SWIZZLE_IDENTITY;
 
-                SP_ASSERT_MSG(vkCreateImageView(RHI_Context::device, &create_info, nullptr, reinterpret_cast<VkImageView*>(&m_rhi_rtv[i])) == VK_SUCCESS, "Failed to create swapchain RTV");
+                LC_ASSERT_MSG(vkCreateImageView(RHI_Context::device, &create_info, nullptr, reinterpret_cast<VkImageView*>(&m_rhi_rtv[i])) == VK_SUCCESS, "Failed to create swapchain RTV");
             }
         }
 
@@ -360,7 +360,12 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::Resize(const uint32_t width, const uint32_t height, const bool force /*= false*/)
     {
-        SP_ASSERT(RHI_Device::IsValidResolution(width, height));
+        LC_ASSERT(RHI_Device::IsValidResolution(width, height));
+
+        if(width==0 || height==0)
+        {
+            return;
+        }
 
         // Only resize if needed
         if (!force)
@@ -405,12 +410,12 @@ namespace LitchiRuntime
         RHI_Semaphore* signal_semaphore = m_acquire_semaphore[m_sync_index].get();
 
         // Ensure semaphore state
-        SP_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "The semaphore is already signaled");
+        LC_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "The semaphore is already signaled");
 
         m_image_index_previous = m_image_index;
 
         // Acquire next image
-        SP_VK_ASSERT_MSG(vkAcquireNextImageKHR(
+        LC_VK_ASSERT_MSG(vkAcquireNextImageKHR(
             RHI_Context::device,                                          // device
             static_cast<VkSwapchainKHR>(m_rhi_swapchain),                 // swapchain
             timeout,                                                      // timeout
@@ -430,9 +435,9 @@ namespace LitchiRuntime
     void RHI_SwapChain::Present()
     {
         // SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
-        SP_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
-        SP_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
-        SP_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Src,                            "Invalid layout");
+        LC_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
+        LC_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
+        LC_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Src,                            "Invalid layout");
 
         // Get the semaphores that present should wait for
         m_wait_semaphores.clear();
@@ -450,11 +455,11 @@ namespace LitchiRuntime
                     }
                 }
             }
-            SP_ASSERT_MSG(!m_wait_semaphores.empty(), "Present() present should not be called if no work is to be presented");
+            LC_ASSERT_MSG(!m_wait_semaphores.empty(), "Present() present should not be called if no work is to be presented");
 
             // Semaphore that's signaled when the image is acquired
             RHI_Semaphore* semaphore_image_aquired = m_acquire_semaphore[m_sync_index].get();
-            SP_ASSERT(semaphore_image_aquired->GetStateCpu() == RHI_Sync_State::Submitted);
+            LC_ASSERT(semaphore_image_aquired->GetStateCpu() == RHI_Sync_State::Submitted);
             m_wait_semaphores.emplace_back(semaphore_image_aquired);
         }
 

@@ -34,7 +34,6 @@ using namespace LitchiRuntime::Math;
 namespace LitchiRuntime
 {
 	std::unordered_map<RendererPathType, RendererPath*> Renderer::m_rendererPaths;
-	Cb_Frame Renderer::m_cb_frame_cpu;
 	Pcb_Pass Renderer::m_cb_pass_cpu;
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
@@ -52,6 +51,8 @@ namespace LitchiRuntime
 
 	namespace
 	{
+		bool is_game_mode = true;
+
 		// states
 		atomic<bool> is_rendering_allowed = true;
 		atomic<bool> flush_requested = false;
@@ -122,6 +123,8 @@ namespace LitchiRuntime
 	{
 		render_thread_id = this_thread::get_id();
 		m_brdf_specular_lut_rendered = false;
+
+		is_game_mode = ApplicationBase::Instance()->GetApplicationType() == ApplicationType::Game;
 
 		// Display::DetectDisplayModes();
 
@@ -329,13 +332,23 @@ namespace LitchiRuntime
 		OnFrameStart(cmd_current);
 		EASY_END_BLOCK
 
+		// update frame constant buffer
+		EASY_BLOCK("Build cb_frame")
+		Cb_Frame frameBufferData = BuildFrameBufferData();
+		UpdateConstantBufferFrame(cmd_current, frameBufferData, false);
+		EASY_END_BLOCK
+
 		EASY_BLOCK("Render4BuildInSceneView")
 		// 绘制SceneView Path
 		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath4SceneView && rendererPath4SceneView->GetActive())
 		{
 			rendererPath4SceneView->UpdateRenderableGameObject();
+			rendererPath4SceneView->UpdateLightShadow();
+
+			// Render SceneView
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
+
 		}
 		EASY_END_BLOCK
 
@@ -356,16 +369,28 @@ namespace LitchiRuntime
 			}
 
 			rendererPath4GameView->UpdateRenderableGameObject();
+			rendererPath4GameView->UpdateLightShadow();
+
+			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
 		}
 		EASY_END_BLOCK
 
 
 		// blit to back buffer when in full screen
-		if (ApplicationBase::Instance()->window->IsFullscreen())
+		if (is_game_mode)
 		{
-			cmd_current->BeginMarker("copy_to_back_buffer");
-			cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+			cmd_current->BeginMarker("game_mode_copy_to_back_buffer");
+
+			// todo temp code
+			if(rendererPath4GameView!=nullptr)
+			{
+				auto colorTargetTexture = rendererPath4GameView->GetColorRenderTarget();
+				cmd_current->Blit(colorTargetTexture.get(), swap_chain.get());
+			}else
+			{
+				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+			}
 			cmd_current->EndMarker();
 		}
 
@@ -384,73 +409,21 @@ namespace LitchiRuntime
 	{
 		auto camera = rendererPath->GetRenderCamera();
 		auto rendererables = rendererPath->GetRenderables();
+		auto canvas = rendererPath->GetCanvas();
 
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),0, 0, false, camera->GetClearColor());
 
-		EASY_BLOCK("Build cb_frame")
-		if (camera)
-		{
-			if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
-			{
-				near_plane = camera->GetNearPlane();
-				far_plane = camera->GetFarPlane();
-				dirty_orthographic_projection = true;
-			}
-
-			m_cb_frame_cpu.view = camera->GetViewMatrix();
-			m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
-		}
-
-		// todo get canvas resolution
-		auto canvass = rendererPath->GetRenderables().at(Renderer_Entity::Canvas);
-		if(canvass.size()>0)
-		{
-			auto canvas = canvass[0]->GetComponent<UICanvas>();
-			// if (dirty_orthographic_projection)
-			{
-				float canvasResolutionWidth = canvas->GetResolution().x;
-				float canvasResolutionHeight = canvas->GetResolution().y;
-
-				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
-				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
-				m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
-				dirty_orthographic_projection = false;
-			}
-
-		}
-
-		// update the remaining of the frame buffer
-		m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
-		m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
-		m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
-		if (camera)
-		{
-			m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * camera->GetProjectionMatrix();
-			m_cb_frame_cpu.camera_near = camera->GetNearPlane();
-			m_cb_frame_cpu.camera_far = camera->GetFarPlane();
-			m_cb_frame_cpu.camera_position = camera->GetPosition();
-			m_cb_frame_cpu.camera_direction = camera->GetForward();
-		}
-		m_cb_frame_cpu.resolution_output = m_resolution_output;
-		m_cb_frame_cpu.resolution_render = m_resolution_render;
-		m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
-		m_cb_frame_cpu.taa_jitter_current = jitter_offset;
-		m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
-		m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
-		m_cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
-
-		// These must match what Common_Buffer.hlsl is reading
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
-
+		// update rendererPath buffer
+		EASY_BLOCK("Build cb_rendererPath")
+		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
+		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
 		EASY_END_BLOCK
 
-		// update frame constant buffer
-		EASY_BLOCK("Update cb_frame")
-		UpdateConstantBufferFrame(cmd_list, false);
-		EASY_END_BLOCK
+		//// update frame constant buffer
+		//EASY_BLOCK("Build cb_frame")
+		//Cb_Frame frameBufferData = BuildFrameBufferData();
+		//UpdateConstantBufferFrame(cmd_list, frameBufferData, false);
+		//EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
 		if (camera)
@@ -488,6 +461,7 @@ namespace LitchiRuntime
 			Pass_DebugGridPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
+
 		}
 		else
 		{
@@ -503,79 +477,19 @@ namespace LitchiRuntime
 	void Renderer::Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		auto camera = rendererPath->GetRenderCamera();
-
+		auto canvas = rendererPath->GetCanvas();
+		auto rendererables = rendererPath->GetRenderables();
 		if (!camera)
 		{
 			return;
 		}
 
-		auto rendererables = rendererPath->GetRenderables();
-
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
 
-		EASY_BLOCK("Build cb_frame")
-		if (camera)
-		{
-			if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
-			{
-				near_plane = camera->GetNearPlane();
-				far_plane = camera->GetFarPlane();
-				dirty_orthographic_projection = true;
-			}
-
-			m_cb_frame_cpu.view = camera->GetViewMatrix();
-			m_cb_frame_cpu.projection = camera->GetProjectionMatrix();
-		}
-
-		// todo get canvas resolution
-		auto canvass = rendererPath->GetRenderables().at(Renderer_Entity::Canvas);
-		if (canvass.size() > 0)
-		{
-			auto canvas = canvass[0]->GetComponent<UICanvas>();
-			// if (dirty_orthographic_projection)
-			{
-				float canvasResolutionWidth = canvas->GetResolution().x;
-				float canvasResolutionHeight = canvas->GetResolution().y;
-
-				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
-				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
-				m_cb_frame_cpu.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
-				dirty_orthographic_projection = false;
-			}
-
-		}
-
-		// update the remaining of the frame buffer
-		m_cb_frame_cpu.view_projection_previous = m_cb_frame_cpu.view_projection;
-		m_cb_frame_cpu.view_projection = m_cb_frame_cpu.view * m_cb_frame_cpu.projection;
-		m_cb_frame_cpu.view_projection_inv = Matrix::Invert(m_cb_frame_cpu.view_projection);
-		if (camera)
-		{
-			m_cb_frame_cpu.view_projection_unjittered = m_cb_frame_cpu.view * camera->GetProjectionMatrix();
-			m_cb_frame_cpu.camera_near = camera->GetNearPlane();
-			m_cb_frame_cpu.camera_far = camera->GetFarPlane();
-			m_cb_frame_cpu.camera_position = camera->GetPosition();
-			m_cb_frame_cpu.camera_direction = camera->GetForward();
-		}
-		m_cb_frame_cpu.resolution_output = m_resolution_output;
-		m_cb_frame_cpu.resolution_render = m_resolution_render;
-		m_cb_frame_cpu.taa_jitter_previous = m_cb_frame_cpu.taa_jitter_current;
-		m_cb_frame_cpu.taa_jitter_current = jitter_offset;
-		m_cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
-		m_cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
-		m_cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
-
-		// These must match what Common_Buffer.hlsl is reading
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
-		m_cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
-
-		EASY_END_BLOCK
-
-		// update frame constant buffer
-		EASY_BLOCK("Update cb_frame")
-		UpdateConstantBufferFrame(cmd_list, false);
+		// update rendererPath buffer
+		EASY_BLOCK("Build cb_rendererPath")
+		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
+		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
 		EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
@@ -616,7 +530,7 @@ namespace LitchiRuntime
 
 		for (GameObject* entity : gameObjectList)
 		{
-			SP_ASSERT_MSG(entity != nullptr, "Entity is null");
+			LC_ASSERT_MSG(entity != nullptr, "Entity is null");
 
 			if (entity->GetActive())
 			{
@@ -717,9 +631,9 @@ namespace LitchiRuntime
 		DEBUG_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
 	}
 
-	void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list, const bool set /*= true*/)
+	void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list,Cb_Frame& frameBufferData, const bool set /*= true*/)
 	{
-		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&m_cb_frame_cpu);
+		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&frameBufferData);
 
 		// Bind because the offset just changed
 		if (set)
@@ -733,16 +647,16 @@ namespace LitchiRuntime
 		cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RenderCamera* renderCamera)
+	void Renderer::UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RendererPath* rendererPath)
 	{
-		for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
+		for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 		{
-			m_cb_light_cpu.view_projection[i] = light->GetViewMatrix(i) * light->GetProjectionMatrix(i);
+			m_cb_light_cpu.view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
 		}
 
 		m_cb_light_cpu.intensity_range_angle_bias = Vector4
 		(
-			light->GetIntensityWatt(renderCamera),
+			light->GetIntensityWatt(rendererPath->GetRenderCamera()),
 			light->GetRange(), light->GetAngle(),
 			light->GetBias()
 		);
@@ -765,7 +679,7 @@ namespace LitchiRuntime
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
 	}
 
-	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RenderCamera* renderCamera)
+	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RendererPath* rendererPath)
 	{
 		// GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->ResetOffset();
 
@@ -775,14 +689,15 @@ namespace LitchiRuntime
 		{
 			const auto light = lightArr[index];
 
-			for (uint32_t i = 0; i < light->GetShadowArraySize(); i++)
+			// todo only one light has shadow, is temp code
+			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
 			{
-				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = light->GetViewMatrix(i) * light->GetProjectionMatrix(i);
+				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
 			}
 
 			m_cb_light_arr_cpu.lightArr[index].intensity_range_angle_bias = Vector4
 			(
-				light->GetIntensityWatt(renderCamera),
+				light->GetIntensityWatt(rendererPath->GetRenderCamera()),
 				light->GetRange(), light->GetAngle(),
 				light->GetBias()
 			);
@@ -859,6 +774,18 @@ namespace LitchiRuntime
 			cmd_list->SetTexture(texture_map.first, texture_map.second);
 		}
 		EASY_END_BLOCK
+	}
+
+	void Renderer::UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list,RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData)
+	{
+		// set buffer
+		GetConstantBuffer(Renderer_ConstantBuffer::RendererPath)->Update(&renderPathBufferData);
+
+		//auto constantBuffer = rendererPath->GetConstantBuffer();
+		//// update cb
+		//constantBuffer->UpdateWithReset(static_cast<void*>(&renderPathBufferData));
+		//// set buffer
+		//cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, constantBuffer);
 	}
 
 	// todo: 
@@ -1092,8 +1019,8 @@ namespace LitchiRuntime
 		if (!is_rendering_allowed)
 			return;
 
-		// SP_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
-		SP_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
+		LC_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
+		LC_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
 
 		swap_chain->Present();
 
@@ -1161,6 +1088,74 @@ namespace LitchiRuntime
 	{
 		m_rendererPaths[rendererPathType] = rendererPath;
 	}
+
+
+	Cb_Frame Renderer::BuildFrameBufferData()
+	{
+		Cb_Frame cb_frame_cpu;
+		cb_frame_cpu.resolution_output = m_resolution_output;
+		cb_frame_cpu.resolution_render = m_resolution_render;
+		cb_frame_cpu.taa_jitter_previous = cb_frame_cpu.taa_jitter_current;
+		cb_frame_cpu.taa_jitter_current = jitter_offset;
+		cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
+		cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
+		cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
+
+		// These must match what Common_Buffer.hlsl is reading
+		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
+		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
+		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
+		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
+		return cb_frame_cpu;
+	}
+
+	Cb_RendererPath Renderer::BuildRendererPathFrameBufferData(RenderCamera* camera,UICanvas* canvas)
+	{
+		Cb_RendererPath rendererPathBufferData{};
+		if (camera)
+		{
+			if (near_plane != camera->GetNearPlane() || far_plane != camera->GetFarPlane())
+			{
+				near_plane = camera->GetNearPlane();
+				far_plane = camera->GetFarPlane();
+				dirty_orthographic_projection = true;
+			}
+
+			rendererPathBufferData.view = camera->GetViewMatrix();
+			rendererPathBufferData.projection = camera->GetProjectionMatrix();
+		}
+		
+		if (canvas!=nullptr)
+		{
+			// if (dirty_orthographic_projection)
+			{
+				float canvasResolutionWidth = canvas->GetResolution().x;
+				float canvasResolutionHeight = canvas->GetResolution().y;
+
+				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
+				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
+				rendererPathBufferData.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
+				dirty_orthographic_projection = false;
+			}
+
+		}
+
+		// update the remaining of the frame buffer
+		rendererPathBufferData.view_projection_previous = rendererPathBufferData.view_projection;
+		rendererPathBufferData.view_projection = rendererPathBufferData.view * rendererPathBufferData.projection;
+		rendererPathBufferData.view_projection_inv = Matrix::Invert(rendererPathBufferData.view_projection);
+		if (camera)
+		{
+			rendererPathBufferData.view_projection_unjittered = rendererPathBufferData.view * camera->GetProjectionMatrix();
+			rendererPathBufferData.camera_near = camera->GetNearPlane();
+			rendererPathBufferData.camera_far = camera->GetFarPlane();
+			rendererPathBufferData.camera_position = camera->GetPosition();
+			rendererPathBufferData.camera_direction = camera->GetForward();
+		}
+
+		return rendererPathBufferData;
+	}
+
 
 	/*RenderCamera* Renderer::GetMainCamera()
 	{

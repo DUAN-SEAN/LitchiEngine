@@ -18,6 +18,7 @@
 #include "../RHI/RHI_AMD_FidelityFX.h"
 #include "../RHI/RHI_Device.h"
 #include "../RHI/RHI_CommandPool.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 //=======================================
 
 //= NAMESPACES ===============
@@ -38,7 +39,7 @@ namespace LitchiRuntime
         array<shared_ptr<RHI_Texture>, 28>       m_render_targets;
         array<shared_ptr<RHI_Shader>, 51>        m_shaders;
         array<shared_ptr<RHI_Sampler>, 7>        m_samplers;
-        array<shared_ptr<RHI_ConstantBuffer>, 4> m_constant_buffers;
+        array<shared_ptr<RHI_ConstantBuffer>, 5> m_constant_buffers;
         shared_ptr<RHI_StructuredBuffer>         m_structured_buffer;
 
         // asset resources
@@ -59,7 +60,10 @@ namespace LitchiRuntime
         constant_buffer(Renderer_ConstantBuffer::Material)->Create<Cb_Material>(3000 * m_frames_in_flight);
 
         constant_buffer(Renderer_ConstantBuffer::LightArr) = make_shared<RHI_ConstantBuffer>(string("lightArr"));
-        constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(m_frames_in_flight);
+        constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(2 * m_frames_in_flight);
+
+        constant_buffer(Renderer_ConstantBuffer::RendererPath) = make_shared<RHI_ConstantBuffer>(string("rendererPath"));
+        constant_buffer(Renderer_ConstantBuffer::RendererPath)->Create<Cb_RendererPath>(2* m_frames_in_flight);
     }
 
     void Renderer::CreateStructuredBuffers()
@@ -239,7 +243,7 @@ namespace LitchiRuntime
     void Renderer::CreateShaders()
     {
         const bool async        = false;// 默认使用同步
-        const string shader_dir = ResourceCache::GetResourceDirectory(ResourceDirectory::Shaders) + "\\";
+        const string shader_dir = ApplicationBase::Instance()->GetEngineAssetsPath()+"Shaders\\";
         #define shader(x) m_shaders[static_cast<uint8_t>(x)]
 
         // G-Buffer
@@ -448,7 +452,7 @@ namespace LitchiRuntime
     void Renderer::CreateFonts()
     {
         // Get standard font directory
-        const string dir_font = ResourceCache::GetResourceDirectory(ResourceDirectory::Fonts) + "\\";
+        const string dir_font = ApplicationBase::Instance()->GetEngineAssetsPath() + "Fonts\\";
 
         // Load a font (used for performance metrics)
         // m_font = make_unique<Font>(dir_font + "CalibriBold.ttf", static_cast<uint32_t>(13 * Window::GetDpiScale()), Vector4(0.8f, 0.8f, 0.8f, 1.0f));
@@ -464,7 +468,7 @@ namespace LitchiRuntime
 
     void Renderer::CreateStandardTextures()
     {
-        const string dir_texture = ResourceCache::GetResourceDirectory(ResourceDirectory::Textures) + "\\";
+        const string dir_texture = ApplicationBase::Instance()->GetEngineAssetsPath() + "Textures\\";
         #define standard_texture(x) m_standard_textures[static_cast<uint8_t>(x)]
 
         // Noise textures
@@ -527,7 +531,7 @@ namespace LitchiRuntime
         return m_shaders;
     }
 
-    array<shared_ptr<RHI_ConstantBuffer>, 4>& Renderer::GetConstantBuffers()
+    array<shared_ptr<RHI_ConstantBuffer>, 5>& Renderer::GetConstantBuffers()
     {
         return m_constant_buffers;
     }

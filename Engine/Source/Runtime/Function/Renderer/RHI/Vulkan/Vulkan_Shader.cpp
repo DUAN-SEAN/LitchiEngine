@@ -7,9 +7,9 @@
 #include "../RHI_InputLayout.h"
 #include "../RHI_DirectXShaderCompiler.h"
 #include "Runtime/Function/Renderer/Rendering/ShaderUniform.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include <spirv_cross/spirv_hlsl.hpp>
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //=======================================
 
 //= NAMESPACES =======================
@@ -291,7 +291,7 @@ namespace LitchiRuntime
 			create_info.codeSize = static_cast<size_t>(shader_buffer->GetBufferSize());
 			create_info.pCode = reinterpret_cast<const uint32_t*>(shader_buffer->GetBufferPointer());
 
-			SP_VK_ASSERT_MSG(vkCreateShaderModule(RHI_Context::device, &create_info, nullptr, &shader_module), "Failed to create shader module");
+			LC_VK_ASSERT_MSG(vkCreateShaderModule(RHI_Context::device, &create_info, nullptr, &shader_module), "Failed to create shader module");
 
 			// name the shader module (useful for GPU-based validation)
 			RHI_Device::SetResourceName(static_cast<void*>(shader_module), RHI_Resource_Type::Shader, m_object_name.c_str());
@@ -321,8 +321,8 @@ namespace LitchiRuntime
 
 	void RHI_Shader::Reflect(const RHI_Shader_Stage shader_stage, const uint32_t* ptr, const uint32_t size)
 	{
-		SP_ASSERT(ptr != nullptr);
-		SP_ASSERT(size != 0);
+		LC_ASSERT(ptr != nullptr);
+		LC_ASSERT(size != 0);
 
 		const CompilerHLSL compiler = CompilerHLSL(ptr, size);
 		ShaderResources resources = compiler.get_shader_resources();

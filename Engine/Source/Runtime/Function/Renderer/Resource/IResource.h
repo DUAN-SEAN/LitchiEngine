@@ -27,7 +27,7 @@ namespace LitchiRuntime
         Unknown,
     };
 
-    class SP_CLASS IResource : public Object
+    class LC_CLASS IResource : public Object
     {
     public:
         IResource(ResourceType type);

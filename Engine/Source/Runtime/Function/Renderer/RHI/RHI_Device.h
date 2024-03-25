@@ -15,7 +15,7 @@ namespace LitchiRuntime
 		sampler_regular
 	};
 
-	class SP_CLASS RHI_Device
+	class LC_CLASS RHI_Device
 	{
 	public:
 		static void Initialize();

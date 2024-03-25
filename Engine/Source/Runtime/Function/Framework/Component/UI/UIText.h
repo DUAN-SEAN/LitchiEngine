@@ -37,6 +37,7 @@ namespace LitchiRuntime
 	public:
 		void OnAwake() override;
 		void OnUpdate() override;
+		void OnEditorUpdate() override;
 		/// 渲染之前
 		void OnPreRender() override;
 		void OnPostRender() override;
@@ -47,6 +48,7 @@ namespace LitchiRuntime
 	private:
 
 		void CreateTextBuffer();
+		void UpdateTextContent();
 
 	private:
 		std::string m_font_path;

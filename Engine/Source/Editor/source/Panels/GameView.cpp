@@ -11,6 +11,12 @@ namespace LitchiEditor
 	void GameView::UpdateView(float p_deltaTime)
 	{
 		AView::UpdateView(p_deltaTime);
+
+		auto renderTargetTexture = m_rendererPath->GetColorRenderTarget().get();
+		if(renderTargetTexture)
+		{
+			m_image->UpdateRenderTarget(renderTargetTexture);
+		}
 	}
 
 	void GameView::_Render_Impl()

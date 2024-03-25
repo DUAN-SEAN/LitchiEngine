@@ -7,7 +7,10 @@ namespace LitchiRuntime
 
     void Application::Initiliaze(ApplicationBase* instance) {
         s_instance = instance;
-        s_instance->Init();
+        if(!s_instance->Init())
+        {
+            throw std::runtime_error("Failed to Init Application");
+        }
     }
 
     const std::string& Application::GetDataPath() {

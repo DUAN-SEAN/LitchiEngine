@@ -23,8 +23,6 @@ namespace LitchiRuntime
         }
 
         void UpdateSize(const Vector3& size);
-
-        void PostResourceLoaded() override;
         void PostResourceModify() override;
 
     protected:

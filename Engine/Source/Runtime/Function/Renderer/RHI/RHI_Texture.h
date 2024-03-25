@@ -43,7 +43,7 @@ namespace LitchiRuntime
         uint32_t GetMipCount() { return static_cast<uint32_t>(mips.size()); }
     };
 
-    class SP_CLASS RHI_Texture : public IResource, public std::enable_shared_from_this<RHI_Texture>
+    class LC_CLASS RHI_Texture : public IResource, public std::enable_shared_from_this<RHI_Texture>
     {
     public:
         RHI_Texture();

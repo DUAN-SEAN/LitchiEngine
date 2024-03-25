@@ -10,7 +10,7 @@
 
 namespace LitchiRuntime
 {
-    class SP_CLASS RHI_ConstantBuffer : public Object
+    class LC_CLASS RHI_ConstantBuffer : public Object
     {
     public:
         RHI_ConstantBuffer() = default;
@@ -20,9 +20,9 @@ namespace LitchiRuntime
         template<typename T>
         void Create(const uint32_t element_count)
         {
-            SP_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(T);
-            SP_ASSERT_MSG(sizeof(T) % 16 == 0, "The size is not a multiple of 16");
-            SP_ASSERT_MSG(element_count != 0,  "Element count can't be zero");
+            LC_ASSERT_STATIC_IS_TRIVIALLY_COPYABLE(T);
+            LC_ASSERT_MSG(sizeof(T) % 16 == 0, "The size is not a multiple of 16");
+            LC_ASSERT_MSG(element_count != 0,  "Element count can't be zero");
 
             m_type_size     = static_cast<uint32_t>(sizeof(T));
             m_stride        = m_type_size; // will be aligned based on minimum device offset alignment
@@ -33,8 +33,8 @@ namespace LitchiRuntime
 
         void Create(const uint32_t size, const uint32_t element_count)
         {
-            SP_ASSERT_MSG(size % 16 == 0, "The size is not a multiple of 16");
-            SP_ASSERT_MSG(element_count != 0, "Element count can't be zero");
+            LC_ASSERT_MSG(size % 16 == 0, "The size is not a multiple of 16");
+            LC_ASSERT_MSG(element_count != 0, "Element count can't be zero");
 
             m_type_size = size;
             m_stride = m_type_size; // will be aligned based on minimum device offset alignment

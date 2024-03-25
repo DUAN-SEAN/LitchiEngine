@@ -15,13 +15,13 @@
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/UI/ImGui/Extensions/ImGuiExtension.h"
-SP_WARNINGS_OFF
+LC_WARNINGS_OFF
 #include "assimp/scene.h"
 #include "assimp/ProgressHandler.hpp"
 #include "assimp/version.h"
 #include "assimp/Importer.hpp"
 #include "assimp/postprocess.h"
-SP_WARNINGS_ON
+LC_WARNINGS_ON
 //============================================
 
 //= NAMESPACES ===============
@@ -81,7 +81,7 @@ namespace LitchiRuntime
 
 	static void set_entity_transform(const aiNode* node, GameObject* entity)
 	{
-		SP_ASSERT_MSG(node != nullptr && entity != nullptr, "Invalid parameter(s)");
+		LC_ASSERT_MSG(node != nullptr && entity != nullptr, "Invalid parameter(s)");
 
 		// Convert to engine matrix
 		const Matrix matrix_engine = convert_matrix(node->mTransformation);
@@ -269,7 +269,7 @@ namespace LitchiRuntime
 
 	static Material* load_material(Mesh* mesh, const string& file_path, const bool is_gltf, const aiMaterial* material_assimp)
 	{
-		SP_ASSERT(material_assimp != nullptr);
+		LC_ASSERT(material_assimp != nullptr);
 
 		Material* material = new Material();
 
@@ -322,7 +322,7 @@ namespace LitchiRuntime
 
 	bool ModelImporter::Load(Mesh* mesh_in, const string& file_path)
 	{
-		SP_ASSERT_MSG(mesh_in != nullptr, "Invalid parameter");
+		LC_ASSERT_MSG(mesh_in != nullptr, "Invalid parameter");
 
 		if (!FileSystem::IsFile(file_path))
 		{
@@ -540,7 +540,7 @@ namespace LitchiRuntime
 		// An aiNode can have any number of meshes (albeit typically, it's one).
 		// If it has more than one meshes, then we create children entities to store them.
 
-		SP_ASSERT_MSG(assimp_node->mNumMeshes != 0, "No meshes to process");
+		LC_ASSERT_MSG(assimp_node->mNumMeshes != 0, "No meshes to process");
 
 		for (uint32_t i = 0; i < assimp_node->mNumMeshes; i++)
 		{
@@ -614,8 +614,8 @@ namespace LitchiRuntime
 
 	void ModelImporter::ParseMesh(aiMesh* assimp_mesh, GameObject* entity_parent)
 	{
-		SP_ASSERT(assimp_mesh != nullptr);
-		SP_ASSERT(entity_parent != nullptr);
+		LC_ASSERT(assimp_mesh != nullptr);
+		LC_ASSERT(entity_parent != nullptr);
 
 		if (model_has_animation)
 		{
@@ -631,14 +631,14 @@ namespace LitchiRuntime
 		{
 			// Create a Renderable and pass the material to it
 
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials\\Standard4Phong.mat");
 			entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
 		}
 		else
 		{
 			// Create a Renderable and pass the material to it
 
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\StandardSkinn4Phong.mat");
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials\\StandardSkinn4Phong.mat");
 			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
 		}
 

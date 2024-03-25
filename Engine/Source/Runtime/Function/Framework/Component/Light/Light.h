@@ -78,12 +78,6 @@ namespace LitchiRuntime
         LightIntensity GetIntensity() const { return m_intensity; }
         float GetIntensityWatt(RenderCamera* camera) const;
 
-        bool GetShadowsEnabled() const { return m_shadows_enabled; }
-        void SetShadowsEnabled(bool cast_shadows);
-
-        bool GetShadowsTransparentEnabled() const { return m_shadows_transparent_enabled; }
-        void SetShadowsTransparentEnabled(bool cast_transparent_shadows);
-
         bool GetVolumetricEnabled() const { return m_volumetric_enabled; }
         void SetVolumetricEnabled(bool is_volumetric) { m_volumetric_enabled = is_volumetric; }
 
@@ -99,35 +93,24 @@ namespace LitchiRuntime
         void SetNormalBias(float value) { m_normal_bias = value; }
         auto GetNormalBias() const { return m_normal_bias; }
 
-        const Matrix& GetViewMatrix(uint32_t index = 0) const;
-        const Matrix& GetProjectionMatrix(uint32_t index = 0) const;
+        bool GetShadowsEnabled() const { return m_shadows_enabled; }
+        void SetShadowsEnabled(bool cast_shadows);
 
-        RHI_Texture* GetDepthTexture() const { return m_shadow_map.texture_depth.get(); }
-        RHI_Texture* GetColorTexture() const { return m_shadow_map.texture_color.get(); }
-        uint32_t GetShadowArraySize() const;
-        void CreateShadowMap();
+        bool GetShadowsTransparentEnabled() const { return m_shadows_transparent_enabled; }
+        void SetShadowsTransparentEnabled(bool cast_transparent_shadows);
 
-        bool IsInViewFrustum(MeshFilter* renderable, uint32_t index) const;
-
-        void OnEditorUpdate() override;
         void PostResourceLoaded() override;
 
         RTTR_ENABLE(Component)
 
     private:
-        void ComputeViewMatrix();
-        void ComputeProjectionMatrix(uint32_t index = 0);
-        void ComputeCascadeSplits(RenderCamera* renderCamera);
 
         // Intensity
         LightIntensity m_intensity = LightIntensity::bulb_500_watt;
         float m_intensity_lumens = 2600.0f;
 
-        // Shadows
         bool m_shadows_enabled = true;
         bool m_shadows_transparent_enabled = true;
-        uint32_t m_cascade_count = 4;
-        ShadowMap m_shadow_map;
 
         // Bias
         float m_bias = 0.0f;
@@ -141,8 +124,6 @@ namespace LitchiRuntime
         float m_range = 10.0f;
         float m_angle_rad = 0.5f; // about 30 degrees
         bool m_initialized = false;
-        std::array<Matrix, 6> m_matrix_view;
-        std::array<Matrix, 6> m_matrix_projection;
 
         // Dirty checks
         bool m_is_dirty = true;

@@ -44,10 +44,6 @@ void LitchiEditor::SceneView::_Render_Impl()
 
 void LitchiEditor::SceneView::OnDraw()
 {
-	// let the input system know if the mouse is within the viewport
-	InputManager::SetMouseIsInViewport(IsHovered());
-	InputManager::SetEditorViewportOffset(GetPosition());
-	
 	// mouse picking
 	if (ImGui::IsMouseClicked(0) && IsHovered() && ImGui::TransformGizmo::allow_picking())
 	{
