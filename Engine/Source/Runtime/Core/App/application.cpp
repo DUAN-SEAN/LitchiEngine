@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "application.h"
 #include "ApplicationBase.h"
 namespace LitchiRuntime

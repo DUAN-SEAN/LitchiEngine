@@ -1,4 +1,6 @@
 ﻿
+#include "Runtime/Core/pch.h"
+
 #define RAPIDJSON_HAS_STDSTRING 1
 
 #include <rapidjson/prettywriter.h>

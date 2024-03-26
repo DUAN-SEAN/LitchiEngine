@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include <cstdint>
 
 #include "Runtime/Core/Meta/Reflection/object.h"

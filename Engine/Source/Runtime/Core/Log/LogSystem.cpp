@@ -1,13 +1,6 @@
 
 
-#if defined(_MSC_VER)
-
-#pragma warning(disable: 4043)
-#pragma warning(disable: 4996)
-
-#endif
-
-
+#include "Runtime/Core/pch.h"
 #include "LogSystem.h"
 
 #include <spdlog/async.h>

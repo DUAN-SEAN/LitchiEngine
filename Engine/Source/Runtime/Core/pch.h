@@ -1,4 +1,6 @@
 
+#pragma once
+
 // Engine macros
 #include "Definitions.h"
 
@@ -36,15 +38,13 @@
 //= RUNTIME ====================
 // Core
 //#include "Engine.h"
-//#include "Event.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
 //#include "Settings.h"
 //#include "Timer.h"
 #include "Runtime/Core/Tools/FileSystem/FileSystem.h"
 #include "Runtime/Core/Tools/Utils/Stopwatch.h"
 //
-//// Logging
-//#include "../Logging/Log.h"
-
+// Logging
 #include "Runtime/Core/Log/debug.h"
 
 // Math

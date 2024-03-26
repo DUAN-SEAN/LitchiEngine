@@ -1,4 +1,6 @@
-﻿#include "ProperyField.h"
+﻿
+#include "Runtime/Core/pch.h"
+#include "ProperyField.h"
 
 #include "Runtime/Core/Meta/Reflection/object.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
