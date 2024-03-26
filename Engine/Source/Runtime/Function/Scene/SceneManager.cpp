@@ -1,3 +1,5 @@
+
+#include "Runtime/Core/pch.h"
 #include "SceneManager.h"
 
 #include <stack>

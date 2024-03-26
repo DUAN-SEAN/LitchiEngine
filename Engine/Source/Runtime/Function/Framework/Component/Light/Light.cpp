@@ -1,4 +1,4 @@
-﻿
+﻿#include "Runtime/Core/pch.h"
 #include "Light.h"
 
 #include "Runtime/Function/Framework/Component/Camera/camera.h"

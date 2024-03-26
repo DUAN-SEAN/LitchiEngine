@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "UIImage.h"
 
 #include <vector>

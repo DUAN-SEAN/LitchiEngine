@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "InputDouble.h"
 
 LitchiRuntime::InputDouble::InputDouble(double p_defaultValue, double p_step, double p_fastStep, const std::string & p_label, const std::string & p_format, bool p_selectAllOnClick)

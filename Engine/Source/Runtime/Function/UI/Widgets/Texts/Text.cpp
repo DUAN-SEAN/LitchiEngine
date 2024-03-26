@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "Text.h"
 
 LitchiRuntime::Text::Text(const std::string & p_content) :

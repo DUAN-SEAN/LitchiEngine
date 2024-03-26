@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "Spacing.h"
 
 LitchiRuntime::Spacing::Spacing(uint16_t p_spaces) : spaces(p_spaces)

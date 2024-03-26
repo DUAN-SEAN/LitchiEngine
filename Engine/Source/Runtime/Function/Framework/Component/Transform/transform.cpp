@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "transform.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Scene/SceneManager.h"

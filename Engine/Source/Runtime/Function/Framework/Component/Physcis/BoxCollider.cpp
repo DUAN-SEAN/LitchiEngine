@@ -1,4 +1,4 @@
-﻿
+﻿#include "Runtime/Core/pch.h"
 #include "BoxCollider.h"
 
 #include "rttr/registration"

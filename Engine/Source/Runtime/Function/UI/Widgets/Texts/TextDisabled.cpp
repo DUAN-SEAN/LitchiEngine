@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "TextDisabled.h"
 
 LitchiRuntime::TextDisabled::TextDisabled(const std::string & p_content) :

@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "InputInt.h"
 
 LitchiRuntime::InputInt::InputInt(int p_defaultValue, int p_step, int p_fastStep, const std::string & p_label, const std::string & p_format, bool p_selectAllOnClick)

@@ -1,4 +1,4 @@
-﻿
+﻿#include "Runtime/Core/pch.h"
 #include "camera.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Core/Time/time.h"

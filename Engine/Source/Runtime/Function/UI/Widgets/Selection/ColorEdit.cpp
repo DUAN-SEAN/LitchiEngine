@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "ColorEdit.h"
 
 LitchiRuntime::ColorEdit::ColorEdit(bool p_enableAlpha, const Color & p_defaultColor) :

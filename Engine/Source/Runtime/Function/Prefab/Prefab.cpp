@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "Prefab.h"
 
 #include "Runtime/Core/App/ApplicationBase.h"

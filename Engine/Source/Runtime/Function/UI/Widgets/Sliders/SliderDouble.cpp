@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "SliderDouble.h"
 
 LitchiRuntime::SliderDouble::SliderDouble

@@ -1,9 +1,6 @@
 
-#include <filesystem>
-#include <fstream>
-#include <iostream>
+#include "Runtime/Core/pch.h"
 
-#include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/UI/Plugins/ContextualMenu.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 #include <Runtime/Function/UI/Widgets/InputFields/InputText.h>
@@ -21,6 +18,7 @@
 #include <Runtime/Function/UI/Plugins/DDSource.h>
 
 #include "Editor/include/ApplicationEditor.h"
+
 #include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/MaterialEditor.h"
 #include "Runtime/Core/Tools/Utils/String.h"

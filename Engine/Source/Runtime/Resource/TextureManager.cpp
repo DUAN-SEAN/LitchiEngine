@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "TextureManager.h"
 
 #include "Runtime/Core/Tools/FileSystem/IniFile.h"

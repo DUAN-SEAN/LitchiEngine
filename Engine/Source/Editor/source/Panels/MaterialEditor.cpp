@@ -1,7 +1,6 @@
 
+#include "Runtime/Core/pch.h"
 #include "Editor/include/Panels/MaterialEditor.h"
-
-#include <string>
 
 #include "Editor/include/Core/EditorActions.h"
 #include "Editor/include/Panels/AssetView.h"

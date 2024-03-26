@@ -1,8 +1,5 @@
-/**
-* @project: Overload
-* @author: Overload Tech.
-* @licence: MIT
-*/
+
+#include "Runtime/Core/pch.h"
 
 #include "ProgressBar.h"
 

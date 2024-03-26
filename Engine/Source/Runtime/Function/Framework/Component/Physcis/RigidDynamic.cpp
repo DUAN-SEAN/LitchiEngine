@@ -1,4 +1,4 @@
-﻿
+﻿#include "Runtime/Core/pch.h"
 #include "RigidDynamic.h"
 
 #include "rttr/registration"

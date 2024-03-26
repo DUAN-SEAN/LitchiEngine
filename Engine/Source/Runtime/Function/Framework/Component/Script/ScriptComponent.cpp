@@ -1,4 +1,6 @@
-﻿#include "ScriptComponent.h"
+﻿
+#include "Runtime/Core/pch.h"
+#include "ScriptComponent.h"
 
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"

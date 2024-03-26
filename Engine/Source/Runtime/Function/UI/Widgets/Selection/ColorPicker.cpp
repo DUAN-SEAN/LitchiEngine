@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "ColorPicker.h"
 
 LitchiRuntime::ColorPicker::ColorPicker(bool p_enableAlpha, const Color & p_defaultColor) :

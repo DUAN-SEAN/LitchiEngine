@@ -1,7 +1,5 @@
 ﻿
-#include <map>
-#include <string>
-
+#include "Runtime/Core/pch.h"
 
 #include "Editor/include/Panels/Inspector.h"
 

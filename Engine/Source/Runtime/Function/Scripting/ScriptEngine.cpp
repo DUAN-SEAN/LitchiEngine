@@ -1,4 +1,6 @@
-﻿#include "ScriptEngine.h"
+﻿
+#include "Runtime/Core/pch.h"
+#include "ScriptEngine.h"
 
 #include <string>
 

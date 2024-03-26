@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "ShaderManager.h"
 
 LitchiRuntime::MaterialShader* LitchiRuntime::ShaderManager::CreateResource(const std::string & p_path)

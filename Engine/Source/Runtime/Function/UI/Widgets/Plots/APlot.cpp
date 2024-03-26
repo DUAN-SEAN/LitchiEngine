@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "APlot.h"
 
 LitchiRuntime::APlot::APlot

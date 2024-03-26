@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "Editor/include/Panels/GameView.h"
 
 namespace LitchiEditor

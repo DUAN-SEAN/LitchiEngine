@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "physics.h"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Core/Math/Vector3.h"

@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 
 #include "Editor/include/Panels/AView.h"
 
@@ -6,7 +7,6 @@
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 
 #include "Runtime/Function/Renderer/RenderCamera.h"
-#include "Runtime/Core/Log/debug.h"
 
 #include "Runtime\Function\UI\ImGui\ImGui_TransformGizmo.h"
 

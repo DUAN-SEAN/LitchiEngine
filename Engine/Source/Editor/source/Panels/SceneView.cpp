@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "Editor/include/Panels/SceneView.h"
 
 #include "Editor/include/ApplicationEditor.h"

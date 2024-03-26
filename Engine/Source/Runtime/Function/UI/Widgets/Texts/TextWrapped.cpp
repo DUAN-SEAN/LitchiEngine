@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "TextWrapped.h"
 
 LitchiRuntime::TextWrapped::TextWrapped(const std::string & p_content) :

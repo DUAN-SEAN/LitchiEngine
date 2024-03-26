@@ -1,5 +1,7 @@
 
 //= INCLUDES ======================
+
+#include "Runtime/Core/pch.h"
 #include "IconLoader.h"
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"

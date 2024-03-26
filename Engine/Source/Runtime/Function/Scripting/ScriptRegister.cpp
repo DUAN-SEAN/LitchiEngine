@@ -1,4 +1,7 @@
-﻿#include "ScriptRegister.h"
+﻿
+
+#include "Runtime/Core/pch.h"
+#include "ScriptRegister.h"
 
 #include "ScriptEngine.h"
 

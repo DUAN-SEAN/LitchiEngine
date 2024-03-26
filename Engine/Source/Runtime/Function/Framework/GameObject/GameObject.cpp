@@ -1,4 +1,5 @@
 ﻿
+#include "Runtime/Core/pch.h"
 #include "GameObject.h"
 
 #include "rttr/registration"

@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "FontManager.h"
 #include "Runtime/Core/Tools/FileSystem/IniFile.h"
 

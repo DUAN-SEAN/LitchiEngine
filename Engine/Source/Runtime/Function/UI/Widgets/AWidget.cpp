@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "AWidget.h"
 
 uint64_t LitchiRuntime::AWidget::__WIDGET_ID_INCREMENT = 0;

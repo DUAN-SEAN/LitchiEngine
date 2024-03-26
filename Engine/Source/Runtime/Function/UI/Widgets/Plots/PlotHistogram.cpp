@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "PlotHistogram.h"
 
 #include "Runtime/Function/UI/Internal/Converter.h"

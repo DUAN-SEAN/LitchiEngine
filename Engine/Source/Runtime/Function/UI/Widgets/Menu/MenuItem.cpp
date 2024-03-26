@@ -1,4 +1,5 @@
 
+#include "Runtime/Core/pch.h"
 #include "MenuItem.h"
 
 LitchiRuntime::MenuItem::MenuItem(const std::string & p_name, const std::string & p_shortcut, bool p_checkable, bool p_checked) :
