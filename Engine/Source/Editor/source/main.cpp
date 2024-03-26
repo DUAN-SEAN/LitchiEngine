@@ -1,8 +1,10 @@
-﻿#include <filesystem>
+﻿
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <thread>
 
+#include "Runtime/Core/Definitions.h"
 #include "Runtime/Core/App/application.h"
 #include "Editor/include/ApplicationEditor.h"
 #include "Runtime/Core/Meta/Serializer/serializer.h"
