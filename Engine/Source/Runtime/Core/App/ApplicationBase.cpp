@@ -2,8 +2,6 @@
 #include "Runtime/Core/pch.h"
 #include "ApplicationBase.h"
 
-#include <memory>
-
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Runtime/Core/Global/ServiceLocator.h"
@@ -98,6 +96,7 @@ namespace LitchiRuntime
 		ImageImporter::Initialize();
 
 		WindowSettings windowSettings = CreateWindowSettings();
+
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{
@@ -106,7 +105,7 @@ namespace LitchiRuntime
 			int iconHeight = 30;
 			int iconChannel = 3;
 			unsigned char* dataBuffer = stbi_load(iconPath.c_str(), &iconWidth, &iconHeight, &iconChannel, 4);
-			//window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
+			window->SetIconFromMemory(reinterpret_cast<uint8_t*>(dataBuffer), iconWidth, iconHeight);
 			window->MakeCurrentContext();
 		}
 
