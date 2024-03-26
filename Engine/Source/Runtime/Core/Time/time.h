@@ -1,7 +1,4 @@
-﻿
-#ifndef UNTITLED_TIME_H
-#define UNTITLED_TIME_H
-
+﻿#pragma once
 
 #include <string>
 #include <chrono>
@@ -42,5 +39,3 @@ namespace LitchiRuntime
         static float fixed_update_time_;
     };
 }
-
-#endif //UNTITLED_TIME_H

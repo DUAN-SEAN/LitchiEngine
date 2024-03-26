@@ -26,6 +26,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
+#include "Editor/include/Panels/Console.h"
 #include "Editor/include/Panels/GameView.h"
 #include "Editor/include/Panels/ProjectHubPanel.h"
 #include "Editor/include/Panels/Toolbar.h"
@@ -478,7 +479,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, GetEngineAssetsPath(), configManager->GetAssetFolder(), configManager->GetScriptFolder());
 	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
-	//m_panelsManager.CreatePanel<Console>("Console", true, settings);
+	m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);

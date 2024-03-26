@@ -13,19 +13,29 @@
 namespace LitchiRuntime
 {
 	/**
-	* Some log modes (Indicates the handler to use)
+	* Some log levels
 	*/
-	enum class ELogMode
+	enum class ELogLevel
 	{
-		DEFAULT,
-		CONSOLE,
-		FILE,
-		ALL
+		LOG_DEFAULT,
+		LOG_INFO,
+		LOG_WARNING,
+		LOG_ERROR
+	};
+
+	/**
+	* Store the log information
+	*/
+	struct LogData
+	{
+		std::string message;
+		ELogLevel logLevel;
+		std::string date;
 	};
 
     class Debug {
     public:
         static void Initialize();
-		static Event<ELogMode, const std::string&> LogEvent;
+		static Event<const LogData&> LogEvent;
     };
 }

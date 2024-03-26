@@ -3,8 +3,12 @@
 
 #include "debug.h"
 #include <iostream>
-#include "spdlog/sinks/stdout_color_sinks.h"
+
+#include "spdlog/fmt/bundled/compile.h"
 #include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/sinks/stdout_color_sinks.h"
+#include "spdlog/details/os.h"
+
 namespace LitchiRuntime
 {
 	class callback_sink_mt : public spdlog::sinks::base_sink<spdlog::details::null_mutex> {
@@ -19,7 +23,12 @@ namespace LitchiRuntime
 		{
 			spdlog::memory_buf_t formatted;
 			formatter_->format(msg, formatted);
-			const std::string realMsg = formatted.data();
+			std::string realMsg = formatted.data();
+			int end = realMsg.find("\r\n");
+			if(end!=-1)
+			{
+				realMsg = realMsg.substr(0, end);
+			}
 			m_callback(msg, realMsg);
 		}
 
@@ -27,12 +36,11 @@ namespace LitchiRuntime
 		{
 			// do nothing
 		}
-
 	private:
 		std::function<void(const spdlog::details::log_msg&, const std::string&)> m_callback;
 	};
 
-	Event<ELogMode, const std::string&> Debug::LogEvent;
+	Event<const LogData&> Debug::LogEvent;
 
 	void Debug::Initialize() {
 		try
@@ -53,16 +61,32 @@ namespace LitchiRuntime
 				auto level = log_msg.level;
 				auto logMsg = log_msg.payload;
 
-				ELogMode mode = ELogMode::DEFAULT;
+				LogData logData;
+
 				switch (level)
 				{
-				case spdlog::level::level_enum::debug:
-					break;
-
-				default:;
+					case spdlog::level::level_enum::debug:
+					case spdlog::level::level_enum::info:
+						logData.logLevel = ELogLevel::LOG_INFO;
+						break;
+					case spdlog::level::level_enum::warn:
+						logData.logLevel = ELogLevel::LOG_WARNING;
+						break;
+					case spdlog::level::level_enum::err:
+					case spdlog::level::level_enum::trace:
+					case spdlog::level::level_enum::critical:
+						logData.logLevel = ELogLevel::LOG_ERROR;
+						break;
+					default:
+						logData.logLevel = ELogLevel::LOG_DEFAULT;
+						break;
 				}
-
-				LogEvent.Invoke(mode, realMsg);
+				logData.message = realMsg;
+				time_t tnow = spdlog::log_clock::to_time_t(log_msg.time);
+				auto tm =  spdlog::details::os::localtime(tnow);
+				
+				logData.date = fmt::format("[{},{},{}]",tm.tm_hour,tm.tm_min,tm.tm_sec);
+				LogEvent.Invoke(logData);
 				});
 			callback_sink->set_level(spdlog::level::trace);
 
