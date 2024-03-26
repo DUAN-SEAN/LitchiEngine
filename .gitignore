@@ -51,6 +51,6 @@ bld/
 # !Engine/ThirdParty/assimp/[Ll]ib/*
 # !Engine/ThirdParty/compressonator/[Ll]ib/
 # !Engine/ThirdParty/compressonator/[Ll]ib/*
-/Engine/ThirdParty/free_image/lib/FreeImageLib_debug.lib
+# /Engine/ThirdParty/free_image/lib/FreeImageLib_debug.lib
 
 Tools/easy_profiler-v2.1.0-msvc15-win64
