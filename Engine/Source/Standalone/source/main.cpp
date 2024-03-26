@@ -17,9 +17,9 @@ int main(int argc, char** argv)
 
 	// todo temp , must input in argv
 #ifdef _DEBUG
-	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
+	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
 #else
-	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
+	application_standalone->SetProjectPath(filePath + "\\..\\..\\..\\DemoProject\\ProjectTemplete\\");
 #endif
 	delete projectPath;
 

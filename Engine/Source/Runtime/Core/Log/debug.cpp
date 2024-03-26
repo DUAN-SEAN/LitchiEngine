@@ -8,15 +8,17 @@ namespace LitchiRuntime
 	class callback_sink_mt : public spdlog::sinks::base_sink<spdlog::details::null_mutex> {
 	public:
 		callback_sink_mt() = delete;
-		callback_sink_mt(std::function<void(const spdlog::details::log_msg&)> callback) : base_sink()
+		callback_sink_mt(std::function<void(const spdlog::details::log_msg&,const std::string&)> callback) : base_sink()
 		{
 			m_callback = callback;
 		}
 
 		void sink_it_(const spdlog::details::log_msg& msg) override
 		{
-			// formatter_->format()
-			m_callback(msg);
+			spdlog::memory_buf_t formatted;
+			formatter_->format(msg, formatted);
+			const std::string realMsg = formatted.data();
+			m_callback(msg, realMsg);
 		}
 
 		void flush_() override
@@ -25,7 +27,7 @@ namespace LitchiRuntime
 		}
 
 	private:
-		std::function<void(const spdlog::details::log_msg&)> m_callback;
+		std::function<void(const spdlog::details::log_msg&, const std::string&)> m_callback;
 	};
 
 	Event<ELogMode, const std::string&> Debug::LogEvent;
@@ -44,10 +46,10 @@ namespace LitchiRuntime
 
 			// create callback sink
 
-			auto callback_sink = std::make_shared<callback_sink_mt>([](const spdlog::details::log_msg& msg) {
+			auto callback_sink = std::make_shared<callback_sink_mt>([](const spdlog::details::log_msg& log_msg, const std::string& realMsg) {
 
-				auto level = msg.level;
-				auto logMsg = msg.payload;
+				auto level = log_msg.level;
+				auto logMsg = log_msg.payload;
 
 				ELogMode mode = ELogMode::DEFAULT;
 				switch (level)
@@ -57,8 +59,8 @@ namespace LitchiRuntime
 
 				default:;
 				}
-				std::string m = logMsg.data();
-				LogEvent.Invoke(mode, logMsg.data());
+
+				LogEvent.Invoke(mode, realMsg);
 				});
 			callback_sink->set_level(spdlog::level::trace);
 
