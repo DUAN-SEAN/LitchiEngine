@@ -168,10 +168,9 @@ static_assert(std::is_trivially_copyable_v<T>, "Type is not trivially copyable")
 // https://docs.microsoft.com/en-us/cpp/code-quality/c26110?view=msvc-170
 //===================================================================================================================
 
-#pragma warning(disable: 4996)
-// stdext::checked_array_iterator, stdext::unchecked_array_iterator, and related factory functions are non-Standard extensions and will be removed in the future. std::span (since C++20) and gsl::span can be used instead. You can define _SILENCE_STDEXT_ARR_ITERS_DEPRECATION_WARNING or _SILENCE_ALL_MS_EXT_DEPRECATION_WARNINGS to suppress this warning.
 #pragma warning(disable: 4819)
 #pragma warning(disable: 4067)
+#pragma warning(disable: 4244)
 
 //= Avoid conflicts with numeric limit min/max =
 #ifndef NOMINMAX
