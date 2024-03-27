@@ -50,8 +50,8 @@ if(MSVC)
 		#set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Debug)
         file(GLOB MODEL ${PHYSX_DEBUG_LIB_PATH}/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Debug/*.dll ${THIRD_PARTY_DIR}/assimp/bin/Debug/*.dll)
     else()
-		set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Release)
-        #file(GLOB MODEL ${PHYSX_RELEASE_LIB_PATH}/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Release/*.dll ${THIRD_PARTY_DIR}/assimp/bin/Release/*.dll)
+		#set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/bin/Release)
+        file(GLOB MODEL ${PHYSX_RELEASE_LIB_PATH}/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Release/*.dll ${THIRD_PARTY_DIR}/assimp/bin/Release/*.dll)
     endif()
 	
 
