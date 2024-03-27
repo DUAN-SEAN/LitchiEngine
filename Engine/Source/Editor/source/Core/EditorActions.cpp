@@ -56,7 +56,7 @@ void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, b
 	if (GetCurrentEditorMode() != EEditorMode::EDIT)
 		StopPlaying();
 
-	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path, p_absolute);
+	LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadScene(p_path);
 
 	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
@@ -100,9 +100,9 @@ void LitchiEditor::EditorActions::SaveAs()
 			case MessageBox::EUserAction::NO: return;
 			}
 		}
-
-		SaveCurrentSceneTo(dialog.GetSelectedFilePath());
-		DEBUG_LOG_INFO("Current scene saved to: " + dialog.GetSelectedFilePath());
+		auto path = FileSystem::GetRelativePathAssetFromNative(dialog.GetSelectedFilePath());
+		SaveCurrentSceneTo(path);
+		DEBUG_LOG_INFO("Current scene saved to: " + path);
 	}
 }
 
@@ -511,6 +511,7 @@ void LitchiEditor::EditorActions::StopPlaying()
 			focusedActorID = targetActor->m_id;
 
 		LitchiEditor::ApplicationEditor::Instance()->sceneManager->LoadSceneFromMemory(m_sceneBackup);
+
 		if (loadedFromDisk)
 			LitchiEditor::ApplicationEditor::Instance()->sceneManager->StoreCurrentSceneSourcePath(sceneSourcePath); // To bo able to save or reload the scene whereas the scene is loaded from memory (Supposed to have no path)
 		m_sceneBackup.clear();
@@ -520,9 +521,11 @@ void LitchiEditor::EditorActions::StopPlaying()
 
 		LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene()->Resolve();
 		EDITOR_PANEL(Hierarchy, "Hierarchy").Refresh();
+
 		ApplicationEditor::Instance()->m_rendererPath4SceneView->SetScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
 
 		ApplicationEditor::Instance()->m_rendererPath4GameView->SetActive(false);
+
 	}
 }
 

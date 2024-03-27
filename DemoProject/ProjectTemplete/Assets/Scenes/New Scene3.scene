@@ -1,313 +1,47 @@
 {
-    "availableID": 8,
-    "gameObjects": [
+  "availableID": 8,
+  "gameObjects": [
+    {
+      "Type": "GameObject",
+      "id": 3,
+      "parentId": 0,
+      "layer": 1,
+      "name": "Directional Light",
+      "componentList": [
         {
-            "Type": "GameObject",
-            "id": 1,
-            "parentId": 0,
-            "layer": 1,
-            "name": "Cube",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 4.0,
-                        "z": 0.0
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "localScale": {
-                        "x": 5.5,
-                        "y": 1.0,
-                        "z": 10.5
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/Cube.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "MeshRenderer",
-                    "materialPath": "Engine/Materials/Standard4Phong.mat"
-                },
-                {
-                    "Type": "RigidStatic"
-                },
-                {
-                    "Type": "BoxCollider",
-                    "physicsMaterial": {
-                        "dynamicFriction": 0.6000000238418579,
-                        "restitution": 0.10000000149011612,
-                        "staticFriction": 0.6000000238418579
-                    },
-                    "Size": {
-                        "x": 5.5,
-                        "y": 1.0,
-                        "z": 10.5
-                    }
-                }
-            ]
+          "Type": "Transform",
+          "localPosition": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "localRotation": {
+            "x": 0.3583679497241974,
+            "y": 0.0,
+            "z": 0.0,
+            "w": 0.9335803985595703
+          },
+          "localScale": {
+            "x": 1.0,
+            "y": 1.0,
+            "z": 1.0
+          }
         },
         {
-            "Type": "GameObject",
-            "id": 2,
-            "parentId": 0,
-            "layer": 1,
-            "name": "Cube",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 10.0,
-                        "z": -1.0
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "localScale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/Cube.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "MeshRenderer",
-                    "materialPath": "Engine/Materials/Standard4Phong.mat"
-                },
-                {
-                    "Type": "RigidDynamic"
-                },
-                {
-                    "Type": "BoxCollider",
-                    "physicsMaterial": {
-                        "dynamicFriction": 0.6000000238418579,
-                        "restitution": 0.10000000149011612,
-                        "staticFriction": 0.6000000238418579
-                    },
-                    "Size": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 3,
-            "parentId": 0,
-            "layer": 1,
-            "name": "Directional Light",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "localRotation": {
-                        "x": 0.3583679497241974,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.9335803985595703
-                    },
-                    "localScale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
-                    }
-                },
-                {
-                    "Type": "Light",
-                    "lightType": "Directional",
-                    "color": {
-                        "r": 0.30000001192092898,
-                        "g": 0.6000000238418579,
-                        "b": 0.699999988079071,
-                        "a": 1.0
-                    },
-                    "intensityLumens": 1600.0,
-                    "shadowsEnabled": true,
-                    "shadowsTransparentEnabled": true,
-                    "bias": 0.0
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 4,
-            "parentId": 0,
-            "layer": 1,
-            "name": "rp_sophia",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": -2.0,
-                        "y": 4.5,
-                        "z": -4.5
-                    },
-                    "localRotation": {
-                        "x": 0.7071067690849304,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.7071067690849304
-                    },
-                    "localScale": {
-                        "x": 0.009999999776482582,
-                        "y": 0.009999999776482582,
-                        "z": 0.009999999776482582
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/rp_sophia_animated_003_idling.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "SkinnedMeshRenderer",
-                    "materialPath": "Engine/Materials/rp_sophia.mat"
-                },
-                {
-                    "Type": "Animator"
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 5,
-            "parentId": 0,
-            "layer": 1,
-            "name": "rp_sophia",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 4.5,
-                        "z": -4.5
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "localScale": {
-                        "x": 0.009999999776482582,
-                        "y": 0.009999999776482582,
-                        "z": 0.009999999776482582
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/Catwalk Walk Forward HighKnees.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "SkinnedMeshRenderer",
-                    "materialPath": "Engine/Materials/rp_sophia.mat"
-                },
-                {
-                    "Type": "Animator"
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 6,
-            "parentId": 0,
-            "layer": 1,
-            "name": "rp_sophia",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 4.5,
-                        "z": -4.5
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "localScale": {
-                        "x": 0.009999999776482582,
-                        "y": 0.009999999776482582,
-                        "z": 0.009999999776482582
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/Standing Torch Walk Left.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "SkinnedMeshRenderer",
-                    "materialPath": "Engine/Materials/rp_sophia.mat"
-                },
-                {
-                    "Type": "Animator"
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 7,
-            "parentId": 0,
-            "layer": 1,
-            "name": "rp_sophia",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 0.0,
-                        "y": 4.5,
-                        "z": -4.5
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
-                    },
-                    "localScale": {
-                        "x": 0.009999999776482582,
-                        "y": 0.009999999776482582,
-                        "z": 0.009999999776482582
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": "Engine/Models/OrangeSpider.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "SkinnedMeshRenderer",
-                    "materialPath": "Engine/Materials/rp_sophia.mat"
-                },
-                {
-                    "Type": "Animator"
-                }
-            ]
+          "Type": "Light",
+          "lightType": "Directional",
+          "color": {
+            "r": 0.30000001192092898,
+            "g": 0.6000000238418579,
+            "b": 0.699999988079071,
+            "a": 1.0
+          },
+          "intensityLumens": 1600.0,
+          "shadowsEnabled": true,
+          "shadowsTransparentEnabled": true,
+          "bias": 0.0
         }
-    ]
+      ]
+    }
+  ]
 }

@@ -124,7 +124,7 @@ namespace LitchiRuntime
 		void LoadEmptyScene();
 
 		// Load specific scene in memory
-		bool LoadScene(const std::string& p_path, bool p_absolute = false);
+		bool LoadScene(const std::string& p_path);
 
 		// Load specific scene in memory
 		bool LoadSceneFromMemory(std::string& p_doc);

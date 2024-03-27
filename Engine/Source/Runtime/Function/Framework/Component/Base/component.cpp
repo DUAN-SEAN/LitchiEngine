@@ -10,7 +10,7 @@ namespace LitchiRuntime
 	}
 
 	Component::~Component() {
-
+		
 	}
 
 	void Component::OnEnable() {

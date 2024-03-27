@@ -269,7 +269,7 @@ namespace LitchiRuntime
 	void RendererPath::UpdateLightShadow()
 	{
 		// try find first light specify main light
-		if(m_mainLight == nullptr)
+		// if(m_mainLight == nullptr)
 		{
 			auto& lights = this->m_renderables.at(Renderer_Entity::Light);
 			if(lights.empty())

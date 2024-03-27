@@ -143,6 +143,7 @@ void LitchiEditor::ApplicationEditor::Run()
 	while (IsRunning())
 	{
 		EASY_BLOCK("Frame") {
+
 			// PreUpdate
 			window->PollEvents();
 
@@ -176,17 +177,6 @@ void LitchiEditor::ApplicationEditor::Run()
 			//window->SwapBuffers();
 			InputManager::ClearEvents();
 			++m_elapsedFrames;
-
-
-			/*if(ApplicationBase::Instance()->window->IsMinimized())
-			{
-				DEBUG_LOG_INFO("Window IsMinimized");
-			}
-
-			if(ApplicationBase::Instance()->window->IsVisible())
-			{
-				DEBUG_LOG_INFO("Window IsVisible");
-			}*/
 
 		}  EASY_END_BLOCK;
 	}
@@ -441,25 +431,8 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 
 	// test 2
 	{
-		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+		sceneManager->LoadScene("Scenes\\New Scene4.scene");
 		sceneManager->GetCurrentScene()->Resolve();
-
-		// sceneManager->GetCurrentScene()->Play();
-
-		// create camera
-		{
-			auto cameraObject = sceneManager->GetCurrentScene()->CreateGameObject("Camera");
-			auto camera = cameraObject->AddComponent<Camera>();
-			// �������Ĭ�ϵ�λ�ú���̬
-			auto cameraPosition = Vector3(0.0f, 5.0f, -10.0f);
-
-			auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
-
-			camera->SetFovHorizontalDeg(60.0f);
-			cameraObject->GetComponent<Transform>()->SetPosition(cameraPosition);
-			cameraObject->GetComponent<Transform>()->SetRotation(cameraRotation);
-
-		}
 
 		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
 		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());

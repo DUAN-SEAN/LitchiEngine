@@ -44,7 +44,10 @@ namespace LitchiRuntime
 		// copy 
 		auto tempList = m_componentList;
 		for (auto& v : tempList) {
-			RemoveComponent(v);
+			if(!RemoveComponent(v))
+			{
+				DEBUG_LOG_ERROR("RemoveComponent Fail CompName:{}",v->GetObjectName());
+			}
 		}
 	}
 

@@ -268,6 +268,7 @@ RTTR_REGISTRATION //注册反射
 
 	registration::class_<Scene>("Scene")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+		.property("name", &Scene::GetName, &Scene::SetName)
 		.property("availableID", &Scene::m_availableID)
 		.property("gameObjects", &Scene::m_gameObjectList);
 

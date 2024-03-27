@@ -194,6 +194,9 @@ void LitchiEditor::Hierarchy::Refresh()
 	{
 		return;
 	}
+
+	m_sceneRoot->name = scene->GetName();
+
 	for (auto go : scene->m_gameObjectList)
 	{
 		if(go != nullptr)

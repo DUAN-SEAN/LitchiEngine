@@ -871,7 +871,7 @@ public:
 
 		editAction.ClickedEvent += [this]
 		{
-			EDITOR_EXEC(LoadSceneFromDisk(GetFileFullPath(),true));
+			EDITOR_EXEC(LoadSceneFromDisk(filePath,true));
 		};
 
 		FileContextualMenu::CreateList();
