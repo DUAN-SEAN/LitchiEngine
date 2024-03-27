@@ -197,7 +197,7 @@ namespace LitchiRuntime
 		/* Settings */
 		Scene* m_scene = nullptr; // if null, not scene gameObject, maybe used to prefab
 		bool m_active = true;
-		bool m_isPlaying; 
+		bool m_isPlaying {false};
 
 		/* Internal settings */
 		unsigned char m_layer;

@@ -39,8 +39,8 @@ namespace LitchiRuntime
 		static void SetLinearDamping(PxRigidBody* actor, float damping);
 		// damping 0.0f-1.0f  default: 0.05
 		static void SetAngularDamping(PxRigidBody* actor, float damping);
-		static void SetLinearVelocity(PxRigidBody* actor, const Vector3& velocity);
-		static void SetAngularVelocitySet(PxRigidBody* actor, const Vector3& velocity);
+		static void SetLinearVelocity(PxRigidDynamic* actor, const Vector3& velocity);
+		static void SetAngularVelocitySet(PxRigidDynamic* actor, const Vector3& velocity);
 		static PxVec3 GetLinearVelocity(PxRigidBody* actor);
 		static PxVec3 GetAngularVelocity(PxRigidBody* actor);
 
@@ -72,7 +72,7 @@ namespace LitchiRuntime
 		static PxDefaultAllocator		px_allocator_;
 		static PhysicErrorCallback	    physic_error_callback_;
 		static SimulationEventCallback  simulation_event_callback_;
-		//static SimulationFilterCallback  simulation_filter_callback_;
+		static SimulationFilterCallback  simulation_filter_callback_;
 
 		static PxFoundation* px_foundation_;
 		static PxPhysics* px_physics_;

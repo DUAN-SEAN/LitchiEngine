@@ -87,10 +87,10 @@ namespace LitchiRuntime
     class SimulationFilterCallback :public PxSimulationFilterCallback
     {
     public:
-        PxFilterFlags	pairFound(PxU32 pairID,
-            PxFilterObjectAttributes attributes0, PxFilterData filterData0, const PxActor* a0, const PxShape* s0,
-            PxFilterObjectAttributes attributes1, PxFilterData filterData1, const PxActor* a1, const PxShape* s1,
-            PxPairFlags& pairFlags)
+
+        PxFilterFlags pairFound(PxU64 pairID, 
+            PxFilterObjectAttributes attributes0, PxFilterData filterData0, const PxActor* a0, const PxShape* s0, 
+            PxFilterObjectAttributes attributes1, PxFilterData filterData1, const PxActor* a1, const PxShape* s1, PxPairFlags& pairFlags) override
         {
             // 如果是Trigger 且 shape层级相同时就可以不走后续检测
 
@@ -98,19 +98,15 @@ namespace LitchiRuntime
             return PxFilterFlag::eNOTIFY;
         }
 
-
-        void pairLost(PxU32 pairID,
-            PxFilterObjectAttributes attributes0,
-            PxFilterData filterData0,
-            PxFilterObjectAttributes attributes1,
-            PxFilterData filterData1,
-            bool objectRemoved)
+        void pairLost(PxU64 pairID, 
+            PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+            PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+            bool objectRemoved) override
         {
-            //printf("pairLost\n");
+	        
         }
 
-
-        bool statusChange(PxU32& pairID, PxPairFlags& pairFlags, PxFilterFlags& filterFlags)
+        bool statusChange(PxU64& pairID, PxPairFlags& pairFlags, PxFilterFlags& filterFlags) override
         {
             //printf("statusChange\n");
             return false;

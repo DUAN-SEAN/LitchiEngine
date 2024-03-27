@@ -444,7 +444,7 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 		sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
 		sceneManager->GetCurrentScene()->Resolve();
 
-		sceneManager->GetCurrentScene()->Play();
+		// sceneManager->GetCurrentScene()->Play();
 
 		// create camera
 		{
