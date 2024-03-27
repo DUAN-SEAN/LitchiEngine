@@ -23,6 +23,14 @@ namespace LitchiRuntime
 			m_material->Tick();
 		}
 	}
+
+	void MeshRenderer::OnEditorUpdate()
+	{
+		if (m_material != nullptr)
+		{
+			m_material->Tick();
+		}
+	}
 	
 	void MeshRenderer::PostResourceLoaded()
 	{

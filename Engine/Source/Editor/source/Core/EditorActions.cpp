@@ -405,7 +405,7 @@ void LitchiEditor::EditorActions::SetActorSpawnMode(EActorSpawnMode p_value)
 
 void LitchiEditor::EditorActions::ResetLayout()
 {
-    // DelayAction([this]() {LitchiEditor::ApplicationEditor::Instance()->uiManager->ResetLayout("Config\\layout.ini"); });
+    DelayAction([this]() {LitchiEditor::ApplicationEditor::Instance()->uiManager->ResetLayout(ApplicationBase::Instance()->GetEngineRootPath()+"Config\\layout.ini"); });
 }
 
 void LitchiEditor::EditorActions::SetSceneViewCameraSpeed(int p_speed)

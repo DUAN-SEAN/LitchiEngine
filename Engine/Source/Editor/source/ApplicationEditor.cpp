@@ -28,6 +28,7 @@
 
 #include "Editor/include/Panels/Console.h"
 #include "Editor/include/Panels/GameView.h"
+#include "Editor/include/Panels/Profiler.h"
 #include "Editor/include/Panels/ProjectHubPanel.h"
 #include "Editor/include/Panels/Toolbar.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
@@ -123,15 +124,15 @@ bool LitchiEditor::ApplicationEditor::Init()
 	// init uiManager
 	uiManager = std::make_unique<UIManager>(window->GetGlfwWindow(), EStyle::DUNE_DARK);
 	{
-		uiManager->SetEditorLayoutSaveFilename(m_engineRoot + "Config\\layout.ini");
+		uiManager->SetEditorLayoutSaveFilename(m_engineRootPath + "Config\\layout.ini");
 		uiManager->SetEditorLayoutAutosaveFrequency(60.0f);
 		uiManager->EnableEditorLayoutSave(true);
 		uiManager->EnableDocking(true);
 	}
 	ServiceLocator::Provide<UIManager>(*uiManager.get());
 
-	if (!std::filesystem::exists(m_engineRoot + "Config\\layout.ini"))
-		uiManager->ResetLayout(m_engineRoot + "Config\\layout.ini");
+	if (!std::filesystem::exists(m_engineRootPath + "Config\\layout.ini"))
+		uiManager->ResetLayout(m_engineRootPath + "Config\\layout.ini");
 
 	RunProjectHub();
 
@@ -219,6 +220,13 @@ void LitchiEditor::ApplicationEditor::Update()
 
 		scene->OnEditorUpdate();
 		// Edit Mode
+	}
+
+
+	auto& profiler = m_panelsManager.GetPanelAs<Profiler>("Profiler");
+	if(profiler.IsOpened())
+	{
+		profiler.Update(Time::delta_time());
 	}
 }
 
@@ -451,7 +459,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
 	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, GetEngineAssetsPath(), configManager->GetAssetFolder(), configManager->GetScriptFolder());
-	//m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
+	m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);

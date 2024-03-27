@@ -41,6 +41,12 @@ namespace LitchiRuntime
             return m_engineAssetsPath;
         }
 
+        const std::string& GetEngineRootPath()
+        {
+            return m_engineRootPath;
+        }
+
+
         virtual ApplicationType GetApplicationType() = 0;
 
         // Init 
@@ -79,7 +85,7 @@ namespace LitchiRuntime
 
         std::string m_engineAssetsPath;
 
-        std::string m_engineRoot{};// engine executable file root 
+        std::string m_engineRootPath{};// engine executable file root 
         std::string m_projectPath{};
         std::string m_projectName{};
         std::string m_title;// default: ProjectName.EngineVersion

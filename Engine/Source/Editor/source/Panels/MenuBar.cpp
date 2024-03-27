@@ -6,6 +6,9 @@
 
 #include "Editor/include/Panels/MenuBar.h"
 
+#include "Runtime/Function/UI/Widgets/Visual/Separator.h"
+#include <Runtime/Function/UI/Widgets/Texts/Text.h>
+
 using namespace LitchiRuntime;
 
 LitchiEditor::MenuBar::MenuBar()
@@ -56,18 +59,6 @@ LitchiEditor::MenuBar::MenuBar()
 //	buildMenu.CreateWidget<Separator>();
 //	buildMenu.CreateWidget<MenuItem>("Temporary build").ClickedEvent			+=	EDITOR_BIND(Build, true, true);
 //}
-//
-//void LitchiEditor::MenuBar::CreateWindowMenu()
-//{
-//	m_windowMenu = &CreateWidget<MenuList>("Window");
-//	m_windowMenu->CreateWidget<MenuItem>("Close all").ClickedEvent	+= std::bind(&MenuBar::OpenEveryWindows, this, false);
-//	m_windowMenu->CreateWidget<MenuItem>("Open all").ClickedEvent		+= std::bind(&MenuBar::OpenEveryWindows, this, true);
-//	m_windowMenu->CreateWidget<Separator>();
-//
-//	/* When the menu is opened, we update which window is marked as "Opened" or "Closed" */
-//	m_windowMenu->ClickedEvent += std::bind(&MenuBar::UpdateToggleableItems, this);
-//}
-//
 //void LitchiEditor::MenuBar::CreateActorsMenu()
 //{
 //	auto& actorsMenu = CreateWidget<MenuList>("Actors");
@@ -165,39 +156,6 @@ LitchiEditor::MenuBar::MenuBar()
 //	auto& layoutMenu = CreateWidget<MenuList>("Layout");
 //	layoutMenu.CreateWidget<MenuItem>("Reset").ClickedEvent += EDITOR_BIND(ResetLayout);
 //}
-//
-//void LitchiEditor::MenuBar::CreateHelpMenu()
-//{
-//    auto& helpMenu = CreateWidget<MenuList>("Help");
-//    helpMenu.CreateWidget<MenuItem>("GitHub").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload"); };
-//    helpMenu.CreateWidget<MenuItem>("Tutorials").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/wiki/Tutorials"); };
-//    helpMenu.CreateWidget<MenuItem>("Scripting API").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/wiki/Scripting-API"); };
-//    helpMenu.CreateWidget<Separator>();
-//    helpMenu.CreateWidget<MenuItem>("Bug Report").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/issues/new?assignees=&labels=Bug&template=bug_report.md&title="); };
-//    helpMenu.CreateWidget<MenuItem>("Feature Request").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/adriengivry/Overload/issues/new?assignees=&labels=Feature&template=feature_request.md&title="); };
-//    helpMenu.CreateWidget<Separator>();
-//    helpMenu.CreateWidget<Texts::Text>("Version: 1.3.0");
-//}
-//
-//void LitchiEditor::MenuBar::RegisterPanel(const std::string& p_name, PanelWindow& p_panel)
-//{
-//	auto& menuItem = m_windowMenu->CreateWidget<MenuItem>(p_name, "", true, true);
-//	menuItem.ValueChangedEvent += std::bind(&PanelWindow::SetOpened, &p_panel, std::placeholders::_1);
-//
-//	m_panels.emplace(p_name, std::make_pair(std::ref(p_panel), std::ref(menuItem)));
-//}
-//
-//void LitchiEditor::MenuBar::UpdateToggleableItems()
-//{
-//	for (auto&[name, panel] : m_panels)
-//		panel.second.get().checked = panel.first.get().IsOpened();
-//}
-//
-//void LitchiEditor::MenuBar::OpenEveryWindows(bool p_state)
-//{
-//	for (auto&[name, panel] : m_panels)
-//		panel.first.get().SetOpened(p_state);
-//}
 
 void LitchiEditor::MenuBar::HandleShortcuts(float p_deltaTime)
 {
@@ -205,6 +163,10 @@ void LitchiEditor::MenuBar::HandleShortcuts(float p_deltaTime)
 
 void LitchiEditor::MenuBar::RegisterPanel(const std::string& p_name, LitchiRuntime::PanelWindow& p_panel)
 {
+	auto& menuItem = m_windowMenu->CreateWidget<MenuItem>(p_name, "", true, true);
+	menuItem.ValueChangedEvent += std::bind(&PanelWindow::SetOpened, &p_panel, std::placeholders::_1);
+
+	m_panels.emplace(p_name, std::make_pair(std::ref(p_panel), std::ref(menuItem)));
 }
 
 void LitchiEditor::MenuBar::CreateFileMenu()
@@ -222,6 +184,13 @@ void LitchiEditor::MenuBar::CreateBuildMenu()
 
 void LitchiEditor::MenuBar::CreateWindowMenu()
 {
+	m_windowMenu = &CreateWidget<MenuList>("Window");
+	m_windowMenu->CreateWidget<MenuItem>("Close all").ClickedEvent	+= std::bind(&MenuBar::OpenEveryWindows, this, false);
+	m_windowMenu->CreateWidget<MenuItem>("Open all").ClickedEvent		+= std::bind(&MenuBar::OpenEveryWindows, this, true);
+	m_windowMenu->CreateWidget<Separator>();
+
+	/* When the menu is opened, we update which window is marked as "Opened" or "Closed" */
+	m_windowMenu->ClickedEvent += std::bind(&MenuBar::UpdateToggleableItems, this);
 }
 
 void LitchiEditor::MenuBar::CreateActorsMenu()
@@ -238,16 +207,26 @@ void LitchiEditor::MenuBar::CreateSettingsMenu()
 
 void LitchiEditor::MenuBar::CreateLayoutMenu()
 {
+	auto& layoutMenu = CreateWidget<MenuList>("Layout");
+	layoutMenu.CreateWidget<MenuItem>("Reset").ClickedEvent += EDITOR_BIND(ResetLayout);
 }
 
 void LitchiEditor::MenuBar::CreateHelpMenu()
 {
+	auto& helpMenu = CreateWidget<MenuList>("Help");
+    helpMenu.CreateWidget<MenuItem>("GitHub").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/DUAN-SEAN/LitchiEngine/tree/vulkanDev"); };
+    helpMenu.CreateWidget<Separator>();
+    helpMenu.CreateWidget<Text>("Version: 1.0.0");
 }
 
 void LitchiEditor::MenuBar::UpdateToggleableItems()
 {
+	for (auto&[name, panel] : m_panels)
+		panel.second.get().checked = panel.first.get().IsOpened();
 }
 
 void LitchiEditor::MenuBar::OpenEveryWindows(bool p_state)
 {
+		for (auto&[name, panel] : m_panels)
+		panel.first.get().SetOpened(p_state);
 }

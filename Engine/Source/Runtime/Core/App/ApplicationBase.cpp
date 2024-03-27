@@ -27,7 +27,7 @@ namespace LitchiRuntime
 	bool ApplicationBase::Init() {
 		s_instance = this;
 
-		m_engineRoot = std::filesystem::current_path().string()+"\\";
+		m_engineRootPath = std::filesystem::current_path().string()+"\\";
 		m_engineAssetsPath = std::filesystem::canonical("Data\\Engine").string() + "\\";
 
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
