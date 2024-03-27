@@ -56,7 +56,7 @@ namespace LitchiStandalone
 
 		// test 2
 		{
-			sceneManager->LoadScene("Scenes\\New Scene4.scene", false);
+			sceneManager->LoadScene("Scenes\\New Scene4.scene");
 			sceneManager->GetCurrentScene()->Resolve();
 
 			sceneManager->GetCurrentScene()->Play();
