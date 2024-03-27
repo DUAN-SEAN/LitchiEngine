@@ -434,8 +434,8 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 		sceneManager->LoadScene("Scenes\\New Scene4.scene");
 		sceneManager->GetCurrentScene()->Resolve();
 
-		m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-		m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
+		m_rendererPath4SceneView->UpdateScene(sceneManager->GetCurrentScene());
+		m_rendererPath4GameView->UpdateScene(sceneManager->GetCurrentScene());
 	}
 }
 

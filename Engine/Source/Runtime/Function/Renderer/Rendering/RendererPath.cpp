@@ -78,6 +78,11 @@ namespace LitchiRuntime
 		}
 	}
 
+	void RendererPath::UpdateScene(Scene* scene)
+	{
+		m_renderScene = scene;
+		m_mainLight = nullptr;
+	}
 
 	void RendererPath::UpdateRenderCamera(RenderCamera* camera)
 	{

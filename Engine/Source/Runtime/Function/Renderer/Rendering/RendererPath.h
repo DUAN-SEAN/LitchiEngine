@@ -39,7 +39,7 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
 		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
 
-		void SetScene(Scene* scene) { m_renderScene = scene; }
+		void UpdateScene(Scene* scene);
 		Scene* GetRenderScene() { return m_renderScene; }
 
 		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }

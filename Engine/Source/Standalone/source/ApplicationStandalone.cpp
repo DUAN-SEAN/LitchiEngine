@@ -76,7 +76,7 @@ namespace LitchiStandalone
 
 			}
 			
-			m_rendererPath4Game->SetScene(sceneManager->GetCurrentScene());
+			m_rendererPath4Game->UpdateScene(sceneManager->GetCurrentScene());
 			m_rendererPath4Game->SetActive(true);
 		}
 
