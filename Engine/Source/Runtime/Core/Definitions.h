@@ -129,9 +129,7 @@ struct sp_info
 #define LC_ASSERT(expression)                       \
 if (!(##expression))                                \
 {                                                   \
-   /* LitchiRuntime::Log::SetLogToFile(true);               \
-    DEBUG_LOG_ERROR("Assertion failed: " #expression); */\
-    LC_DEBUG_BREAK();                               \
+    DEBUG_LOG_ERROR("Assertion failed: {}", #expression); \
 }
 #endif
 

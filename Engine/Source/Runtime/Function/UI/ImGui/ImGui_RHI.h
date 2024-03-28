@@ -180,6 +180,9 @@ namespace ImGui::RHI
 
     static void shutdown()
     {
+        // todo temp code this
+        destroy_rhi_resources();
+
         DestroyPlatformWindows();
     }
 

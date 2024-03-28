@@ -29,8 +29,9 @@ namespace LitchiRuntime
 	{
 		if (auto resource = GetResource(p_path, false); resource)
 		{
+			auto tempPath = p_path;
 			DestroyResource(resource);
-			UnregisterResource(p_path);
+			UnregisterResource(tempPath);
 		}
 	}
 

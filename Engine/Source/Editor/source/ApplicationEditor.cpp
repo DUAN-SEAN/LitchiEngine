@@ -41,6 +41,8 @@
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
+#include "Runtime/Function/Renderer/Resource/Import/ImageImporter.h"
+#include "Runtime/Function/Renderer/Resource/Import/ModelImporter.h"
 
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Resource/AssetManager.h"
@@ -55,17 +57,12 @@ LitchiEditor::ApplicationEditor::ApplicationEditor() :m_canvas(), m_panelsManage
 
 LitchiEditor::ApplicationEditor::~ApplicationEditor()
 {
-	/*if (ImGui::GetCurrentContext())
-	{
-		ImGui::RHI::shutdown();
-		ImGui_ImplGlfw_Shutdown();
-		ImGui::DestroyContext();
-	}*/
+	uiManager = nullptr;
 
-	// ��������
+	delete m_rendererPath4SceneView;
+	delete m_rendererPath4GameView;
+
 	sceneManager = nullptr;
-	prefabManager->UnloadResources();
-	prefabManager = nullptr;
 	modelManager->UnloadResources();
 	modelManager = nullptr;
 	shaderManager->UnloadResources();
@@ -76,20 +73,17 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	fontManager = nullptr;
 	textureManager->UnloadResources();
 	textureManager = nullptr;
-	window = nullptr;
-	//ResourceCache::Shutdown();
-	// World::Shutdown();
-	Renderer::Shutdown();
-	// Physics::Shutdown();
-	// ThreadPool::Shutdown();
-	// Event::Shutdown();
-	// Audio::Shutdown();
-	// Profiler::Shutdown();
-	//ImageImporterExporter::Shutdown();
-	FontImporter::Shutdown();
+	prefabManager->UnloadResources();
+	prefabManager = nullptr;
 
-	delete m_rendererPath4SceneView;
-	delete m_rendererPath4GameView;
+	InputManager::UnInit();
+
+	window = nullptr;
+
+	Renderer::Shutdown();
+
+	ImageImporter::Shutdown();
+	FontImporter::Shutdown();
 }
 
 ApplicationType LitchiEditor::ApplicationEditor::GetApplicationType()

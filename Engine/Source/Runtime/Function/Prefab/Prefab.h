@@ -1,17 +1,18 @@
 #pragma once
 
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/Resource/IResource.h"
 
 namespace LitchiRuntime
 {
 	class GameObject;
 
 	// Prefab, A Tree of GameObjects. Use For Mesh and Scene
-	class Prefab :public ScriptObject
+	class Prefab :public ScriptObject,public IResource
 	{
 	public:
 		Prefab();
-		Prefab(std::string name);
+		Prefab(const std::string& path);
 		~Prefab();
 		
 		bool LoadFromFile(const std::string& string);

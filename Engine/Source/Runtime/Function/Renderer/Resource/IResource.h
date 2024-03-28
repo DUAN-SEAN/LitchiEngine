@@ -24,6 +24,7 @@ namespace LitchiRuntime
         Animation,
         Font,
         Shader,
+        Prefab,
         Unknown,
     };
 

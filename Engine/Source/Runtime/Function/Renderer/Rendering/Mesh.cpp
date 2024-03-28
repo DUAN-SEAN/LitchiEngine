@@ -36,7 +36,7 @@ namespace LitchiRuntime
         m_vertex_buffer = nullptr;
         if(m_model_prefab)
         {
-            ApplicationBase::Instance()->prefabManager->DestroyResource(m_model_prefab);
+            ApplicationBase::Instance()->prefabManager->UnloadResource(m_model_prefab->GetResourceFilePathAsset());
         }
     }
 
@@ -69,10 +69,10 @@ namespace LitchiRuntime
 
         if(m_model_prefab)
         {
-            ApplicationBase::Instance()->prefabManager->DestroyResource(m_model_prefab);
+            // ApplicationBase::Instance()->prefabManager->UnloadResource(m_model_prefab->GetResourceFilePathAsset());
             m_model_prefab = nullptr;
         }
-        m_model_prefab = ApplicationBase::Instance()->prefabManager->CreatePrefab(file_path);
+        m_model_prefab = ApplicationBase::Instance()->prefabManager->CreatePrefab(FileSystem::GetRelativePathAssetFromNative(file_path));
 
         //// load engine format todo:
         //if (FileSystem::GetExtensionFromFilePath(file_path) == EXTENSION_MODEL)

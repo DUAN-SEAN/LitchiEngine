@@ -6,6 +6,7 @@
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
+#include "Runtime/Function/Renderer/Resource/Import/ImageImporter.h"
 
 namespace LitchiStandalone
 {
@@ -16,7 +17,8 @@ namespace LitchiStandalone
 	}
 	ApplicationStandalone::~ApplicationStandalone()
 	{
-		// Îö¹¹ÆäËû
+		delete m_rendererPath4Game;
+
 		sceneManager = nullptr;
 		modelManager->UnloadResources();
 		modelManager = nullptr;
@@ -28,8 +30,16 @@ namespace LitchiStandalone
 		fontManager = nullptr;
 		textureManager->UnloadResources();
 		textureManager = nullptr;
+		prefabManager->UnloadResources();
+		prefabManager = nullptr;
+
+		InputManager::UnInit();
+
 		window = nullptr;
+
 		Renderer::Shutdown();
+
+		ImageImporter::Shutdown();
 		FontImporter::Shutdown();
 
 	}

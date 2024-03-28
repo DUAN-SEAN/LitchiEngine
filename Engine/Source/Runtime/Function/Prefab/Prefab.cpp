@@ -9,13 +9,14 @@
 
 namespace LitchiRuntime
 {
-	Prefab::Prefab() :m_name("default")
+	Prefab::Prefab() :m_name("default"),IResource(ResourceType::Prefab)
 	{
 	}
-	Prefab::Prefab(std::string name)
+	Prefab::Prefab(const std::string& obsoultePath):m_name("default"),IResource(ResourceType::Prefab)
 	{
-		m_name = name;
+		SetResourceFilePath(obsoultePath);
 	}
+
 	Prefab::~Prefab()
 	{
 		// 析构所有的GO
@@ -33,6 +34,8 @@ namespace LitchiRuntime
 		{
 			return false;
 		}
+
+		SetResourceFilePath(path);
 
 		return true;
 	}

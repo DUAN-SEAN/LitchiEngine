@@ -76,6 +76,9 @@ namespace LitchiRuntime
 			delete m_renderCamera;
 			m_renderCamera = nullptr;
 		}
+
+		m_depthRenderTarget = nullptr;
+		m_colorRenderTarget = nullptr;
 	}
 
 	void RendererPath::UpdateScene(Scene* scene)
