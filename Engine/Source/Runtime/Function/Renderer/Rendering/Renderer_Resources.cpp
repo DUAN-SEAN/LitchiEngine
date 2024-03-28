@@ -243,7 +243,7 @@ namespace LitchiRuntime
     void Renderer::CreateShaders()
     {
         const bool async        = false;// 默认使用同步
-        const string shader_dir = ApplicationBase::Instance()->GetEngineAssetsPath()+"Shaders\\";
+        const string shader_dir = ApplicationBase::Instance()->GetEngineAssetsPath()+"Shaders/";
         #define shader(x) m_shaders[static_cast<uint8_t>(x)]
 
         // G-Buffer
@@ -300,15 +300,15 @@ namespace LitchiRuntime
 
         // Font
         shader(Renderer_Shader::font_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::font_v)->Compile(RHI_Shader_Vertex, shader_dir + "Forward\\Standard_Text.hlsl", async, RHI_Vertex_Type::PosUv);
+        shader(Renderer_Shader::font_v)->Compile(RHI_Shader_Vertex, shader_dir + "Forward/Standard_Text.hlsl", async, RHI_Vertex_Type::PosUv);
         shader(Renderer_Shader::font_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward\\Standard_Text.hlsl", async);
+        shader(Renderer_Shader::font_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward/Standard_Text.hlsl", async);
 
         // Image
         shader(Renderer_Shader::ui_image_v) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::ui_image_v)->Compile(RHI_Shader_Vertex, shader_dir + "Forward\\Standard_Image.hlsl", async, RHI_Vertex_Type::PosUv);
+        shader(Renderer_Shader::ui_image_v)->Compile(RHI_Shader_Vertex, shader_dir + "Forward/Standard_Image.hlsl", async, RHI_Vertex_Type::PosUv);
         shader(Renderer_Shader::ui_image_p) = make_shared<RHI_Shader>();
-        shader(Renderer_Shader::ui_image_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward\\Standard_Image.hlsl", async);
+        shader(Renderer_Shader::ui_image_p)->Compile(RHI_Shader_Pixel, shader_dir + "Forward/Standard_Image.hlsl", async);
 
         // Line
         shader(Renderer_Shader::line_v) = make_shared<RHI_Shader>();
@@ -383,7 +383,7 @@ namespace LitchiRuntime
 
         //// FXAA
         //shader(Renderer_Shader::fxaa_c) = make_shared<RHI_Shader>();
-        //shader(Renderer_Shader::fxaa_c)->Compile(RHI_Shader_Compute, shader_dir + "fxaa\\fxaa.hlsl", async);
+        //shader(Renderer_Shader::fxaa_c)->Compile(RHI_Shader_Compute, shader_dir + "fxaa/fxaa.hlsl", async);
 
         //// Depth of Field
         //{
@@ -435,13 +435,13 @@ namespace LitchiRuntime
 
         //// AMD FidelityFX CAS - Contrast Adaptive Sharpening
         //shader(Renderer_Shader::ffx_cas_c) = make_shared<RHI_Shader>();
-        //shader(Renderer_Shader::ffx_cas_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\cas.hlsl", async);
+        //shader(Renderer_Shader::ffx_cas_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx/cas.hlsl", async);
 
         //// Compiled immediately, they are needed the moment the engine starts.
         //{
         //    // AMD FidelityFX SPD - Single Pass Downsample
         //    shader(Renderer_Shader::ffx_spd_c) = make_shared<RHI_Shader>();
-        //    shader(Renderer_Shader::ffx_spd_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx\\spd.hlsl", false);
+        //    shader(Renderer_Shader::ffx_spd_c)->Compile(RHI_Shader_Compute, shader_dir + "amd_fidelity_fx/spd.hlsl", false);
 
         //    // BRDF - Specular Lut
         //    shader(Renderer_Shader::brdf_specular_lut_c) = make_shared<RHI_Shader>();
@@ -452,7 +452,7 @@ namespace LitchiRuntime
     void Renderer::CreateFonts()
     {
         // Get standard font directory
-        const string dir_font = ApplicationBase::Instance()->GetEngineAssetsPath() + "Fonts\\";
+        const string dir_font = ApplicationBase::Instance()->GetEngineAssetsPath() + "Fonts/";
 
         // Load a font (used for performance metrics)
         // m_font = make_unique<Font>(dir_font + "CalibriBold.ttf", static_cast<uint32_t>(13 * Window::GetDpiScale()), Vector4(0.8f, 0.8f, 0.8f, 1.0f));
@@ -468,7 +468,7 @@ namespace LitchiRuntime
 
     void Renderer::CreateStandardTextures()
     {
-        const string dir_texture = ApplicationBase::Instance()->GetEngineAssetsPath() + "Textures\\";
+        const string dir_texture = ApplicationBase::Instance()->GetEngineAssetsPath() + "Textures/";
         #define standard_texture(x) m_standard_textures[static_cast<uint8_t>(x)]
 
         // Noise textures

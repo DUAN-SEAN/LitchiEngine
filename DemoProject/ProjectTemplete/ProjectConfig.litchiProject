@@ -1,6 +1,6 @@
 {
-    "assetFolder": "Assets\\",
-    "scriptFolder": "Scripts\\",
+    "assetFolder": "Assets/",
+    "scriptFolder": "Scripts/",
     "defaultScenePath": "",
     "resolutionWidth": 1920,
     "resolutionHeight": 1080,

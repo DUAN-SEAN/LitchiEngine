@@ -131,7 +131,7 @@ namespace ImGui::RHI
 
             // compile shaders
             {
-                const string shader_path = ApplicationBase::Instance()->GetEngineAssetsPath() + "Shaders\\ImGui.hlsl";
+                const string shader_path = ApplicationBase::Instance()->GetEngineAssetsPath() + "Shaders/ImGui.hlsl";
 
                 bool async = false;
 

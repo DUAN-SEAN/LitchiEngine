@@ -13,10 +13,10 @@ namespace LitchiRuntime
 	*/
 	struct ShaderUniform
 	{
-		UniformType		type;
-		std::string		name;
-		uint32_t		location;
-		int size;
-		std::vector<ShaderUniform>* memberUniform;
+		UniformType		type{UniformType::UNIFORM_Unknown };
+		std::string		name{};
+		uint32_t		location{0};
+		int size{0};
+		std::vector<ShaderUniform>* memberUniform{nullptr};
 	};
 }

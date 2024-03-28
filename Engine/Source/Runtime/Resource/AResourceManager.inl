@@ -5,6 +5,7 @@
 
 #include "AResourceManager.h"
 #include "Runtime/Core/Tools/FileSystem/FileSystem.h"
+#include "Runtime/Core/Log/debug.h"
 
 namespace LitchiRuntime
 {
@@ -77,6 +78,8 @@ namespace LitchiRuntime
 		if (auto resource = GetResource(p_path, false); resource)
 			DestroyResource(resource);
 
+		DEBUG_LOG_INFO("RegisterResource path:{}", p_path);
+
 		m_resources[p_path] = p_instance;
 
 		return p_instance;
@@ -85,6 +88,8 @@ namespace LitchiRuntime
 	template<typename T>
 	inline void AResourceManager<T>::UnregisterResource(const std::string & p_path)
 	{
+		DEBUG_LOG_INFO("UnregisterResource path:{}", p_path);
+
 		m_resources.erase(p_path);
 	}
 

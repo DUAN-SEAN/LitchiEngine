@@ -27,8 +27,8 @@ namespace LitchiRuntime
 	bool ApplicationBase::Init() {
 		s_instance = this;
 
-		m_engineRootPath = std::filesystem::current_path().string()+"\\";
-		m_engineAssetsPath = std::filesystem::canonical("Data\\Engine").string() + "\\";
+		m_engineRootPath = PathParser::MakeNonWindowsStyle(std::filesystem::current_path().string() + "/");
+		m_engineAssetsPath = PathParser::MakeNonWindowsStyle(std::filesystem::canonical("Data/Engine").string() + "/");
 
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
@@ -100,7 +100,7 @@ namespace LitchiRuntime
 		// 初始化Window
 		window = std::make_unique<Window>(windowSettings);
 		{
-			auto iconPath = m_engineAssetsPath + "Icons\\Icon.png";
+			auto iconPath = m_engineAssetsPath + "Icons/Icon.png";
 			int iconWidth = 30;
 			int iconHeight = 30;
 			int iconChannel = 3;

@@ -166,7 +166,7 @@ std::optional<std::string> LitchiEditor::EditorActions::SelectBuildFolder()
 	//if (dialog.HasSucceeded())
 	//{
 	//	std::string result = dialog.GetSelectedFilePath();
-	//	result = std::string(result.data(), result.data() + result.size() - std::string("..").size()) + "\\"; // remove auto extension
+	//	result = std::string(result.data(), result.data() + result.size() - std::string("..").size()) + "/"; // remove auto extension
 	//	if (!std::filesystem::exists(result))
 	//		return result;
 	//	else
@@ -189,7 +189,7 @@ void LitchiEditor::EditorActions::Build(bool p_autoRun, bool p_tempFolder)
 
 	//if (p_tempFolder)
 	//{
-	//	destinationFolder = std::string(getenv("APPDATA")) + "\\OverloadTech\\OvEditor\\TempBuild\\";
+	//	destinationFolder = std::string(getenv("APPDATA")) + "/OverloadTech/OvEditor/TempBuild/";
 	//	try
 	//	{
 	//		std::filesystem::remove_all(destinationFolder);
@@ -223,25 +223,25 @@ void LitchiEditor::EditorActions::BuildAtLocation(const std::string & p_configur
 	{
 		DEBUG_LOG_INFO("Build directory created");
 
-		if (std::filesystem::create_directory(buildPath + "Data\\"))
+		if (std::filesystem::create_directory(buildPath + "Data/"))
 		{
 			DEBUG_LOG_INFO("Data directory created");
 
-			if (std::filesystem::create_directory(buildPath + "Data\\User\\"))
+			if (std::filesystem::create_directory(buildPath + "Data/User/"))
 			{
-				DEBUG_LOG_INFO("Data\\User directory created");
+				DEBUG_LOG_INFO("Data/User directory created");
 
 				std::error_code err;
 
-				std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectFilePath, buildPath + "Data\\User\\Game.ini", err);
+				std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectFilePath, buildPath + "Data/User/Game.ini", err);
 
 				if (!err)
 				{
-					DEBUG_LOG_INFO("Data\\User\\Game.ini file generated");
+					DEBUG_LOG_INFO("Data/User/Game.ini file generated");
 		
-					std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath, buildPath + "Data\\User\\Assets\\", std::filesystem::copy_options::recursive, err);
+					std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectAssetsPath, buildPath + "Data/User/Assets/", std::filesystem::copy_options::recursive, err);
 
-					if (!std::filesystem::exists(buildPath + "Data\\User\\Assets\\" + (LitchiEditor::ApplicationEditor::Instance()->projectSettings.Get<std::string>("start_scene"))))
+					if (!std::filesystem::exists(buildPath + "Data/User/Assets/" + (LitchiEditor::ApplicationEditor::Instance()->projectSettings.Get<std::string>("start_scene"))))
 					{
 						OVLOG_ERROR("Failed to find Start Scene at expected path. Verify your Project Setings.");
 						OvWindowing::Dialogs::MessageBox message("Build Failure", "An error occured during the building of your game.\nCheck the console for more information", OvWindowing::Dialogs::MessageBox::EMessageType::ERROR, OvWindowing::Dialogs::MessageBox::EButtonLayout::OK, true);
@@ -251,45 +251,45 @@ void LitchiEditor::EditorActions::BuildAtLocation(const std::string & p_configur
 
 					if (!err)
 					{
-						DEBUG_LOG_INFO("Data\\User\\Assets\\ directory copied");
+						DEBUG_LOG_INFO("Data/User/Assets/ directory copied");
 
-						std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectScriptsPath, buildPath + "Data\\User\\Scripts\\", std::filesystem::copy_options::recursive, err);
+						std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->projectScriptsPath, buildPath + "Data/User/Scripts/", std::filesystem::copy_options::recursive, err);
 
 						if (!err)
 						{
-							DEBUG_LOG_INFO("Data\\User\\Scripts\\ directory copied");
+							DEBUG_LOG_INFO("Data/User/Scripts/ directory copied");
 
-							std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath, buildPath + "Data\\Engine\\", std::filesystem::copy_options::recursive, err);
+							std::filesystem::copy(LitchiEditor::ApplicationEditor::Instance()->engineAssetsPath, buildPath + "Data/Engine/", std::filesystem::copy_options::recursive, err);
 
 							if (!err)
 							{
-								DEBUG_LOG_INFO("Data\\Engine\\ directory copied");
+								DEBUG_LOG_INFO("Data/Engine/ directory copied");
 							}
 							else
 							{
-								OVLOG_ERROR("Data\\Engine\\ directory failed to copy");
+								OVLOG_ERROR("Data/Engine/ directory failed to copy");
 								failed = true;
 							}
 						}
 						else
 						{
-							OVLOG_ERROR("Data\\User\\Scripts\\ directory failed to copy");
+							OVLOG_ERROR("Data/User/Scripts/ directory failed to copy");
 							failed = true;
 						}
 					}
 					else
 					{
-						OVLOG_ERROR("Data\\User\\Assets\\ directory failed to copy");
+						OVLOG_ERROR("Data/User/Assets/ directory failed to copy");
 						failed = true;
 					}
 				}
 				else
 				{
-					OVLOG_ERROR("Data\\User\\Game.ini file failed to generate");
+					OVLOG_ERROR("Data/User/Game.ini file failed to generate");
 					failed = true;
 				}
 
-				std::string builderFolder = "Builder\\" + p_configuration + "\\";
+				std::string builderFolder = "Builder/" + p_configuration + "/";
 
 				if (std::filesystem::exists(builderFolder))
 				{
@@ -405,7 +405,7 @@ void LitchiEditor::EditorActions::SetActorSpawnMode(EActorSpawnMode p_value)
 
 void LitchiEditor::EditorActions::ResetLayout()
 {
-    DelayAction([this]() {LitchiEditor::ApplicationEditor::Instance()->uiManager->ResetLayout(ApplicationBase::Instance()->GetEngineRootPath()+"Config\\layout.ini"); });
+    DelayAction([this]() {LitchiEditor::ApplicationEditor::Instance()->uiManager->ResetLayout(ApplicationBase::Instance()->GetEngineRootPath()+"Config/layout.ini"); });
 }
 
 void LitchiEditor::EditorActions::SetSceneViewCameraSpeed(int p_speed)
@@ -578,7 +578,7 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 	/*
 	meshFilter->modelPath = p_path;
 	meshFilter->meshIndex = 0;
-	meshFilter->PostResourceLoaded();meshRenderer->materialPath = "Engine\\Materials\\Standard4Phong.mat";
+	meshFilter->PostResourceLoaded();meshRenderer->materialPath = ":Materials/Standard4Phong.mat";
 	meshRenderer->PostResourceLoaded();
 	*/
 
@@ -586,7 +586,7 @@ LitchiRuntime::GameObject* LitchiEditor::EditorActions::CreateActorWithModel(con
 	auto mesh = ApplicationBase::Instance()->modelManager->LoadResource(p_path);
 	meshFilter->SetGeometry(mesh,0);
 
-	auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+	auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
 	meshRenderer->SetMaterial(material);
 	
 	if (p_focusOnCreation)

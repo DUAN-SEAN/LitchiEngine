@@ -40,7 +40,7 @@ std::function<void()> UIActorWithComponentCreationHandler(LitchiRuntime::GameObj
 
 std::function<void()> ActorWithModelComponentCreationHandler(LitchiRuntime::GameObject* p_parent, const std::string& p_modelName, std::optional<std::function<void()>> p_onItemClicked)
 {
-    return Combine(EDITOR_BIND(CreateActorWithModel, "Engine\\Models\\" + p_modelName + ".fbx", true, p_parent, p_modelName), p_onItemClicked);
+    return Combine(EDITOR_BIND(CreateActorWithModel, ":Models/" + p_modelName + ".fbx", true, p_parent, p_modelName), p_onItemClicked);
 }
 
 void LitchiEditor::ActorCreationMenu::GenerateActorCreationMenu(LitchiRuntime::MenuList& p_menuList, LitchiRuntime::GameObject* p_parent, std::optional<std::function<void()>> p_onItemClicked)

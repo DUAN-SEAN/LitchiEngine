@@ -631,14 +631,14 @@ namespace LitchiRuntime
 		{
 			// Create a Renderable and pass the material to it
 
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials\\Standard4Phong.mat");
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
 			entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
 		}
 		else
 		{
 			// Create a Renderable and pass the material to it
 
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials\\StandardSkinn4Phong.mat");
+			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/StandardSkinn4Phong.mat");
 			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
 		}
 

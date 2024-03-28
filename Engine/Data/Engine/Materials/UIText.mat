@@ -1,5 +1,5 @@
 {
-  "shaderPath": ":Shaders\\UIStandard.glsl",
+  "shaderPath": ":Shaders/UIStandard.glsl",
   "settings": {
     "blendable": true,
     "backfaceCulling": true,

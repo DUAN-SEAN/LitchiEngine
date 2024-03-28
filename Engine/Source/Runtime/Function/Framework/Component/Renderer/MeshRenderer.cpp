@@ -87,7 +87,7 @@ namespace LitchiRuntime
 
 	void MeshRenderer::SetDefaultMaterial()
 	{
-		auto material = ApplicationBase::Instance()->materialManager->LoadResource("Engine\\Materials\\Standard4Phong.mat");
+		auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
 		SetMaterial(material);
 		m_material_default = true;
 	}

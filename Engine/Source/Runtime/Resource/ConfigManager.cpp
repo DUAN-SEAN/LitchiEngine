@@ -82,8 +82,8 @@ namespace LitchiRuntime
 
 	void ConfigManager::InitDefaultConfig(const std::string& projectRootFolder)
 	{
-		m_config_res.m_asset_folder = "Assets\\";
-		m_config_res.m_script_folder = "Scripts\\";
+		m_config_res.m_asset_folder = "Assets/";
+		m_config_res.m_script_folder = "Scripts/";
 		m_config_res.m_resolution_width = 1920;
 		m_config_res.m_resolution_height = 1080;
 		m_config_res.m_is_fullScreen = true;

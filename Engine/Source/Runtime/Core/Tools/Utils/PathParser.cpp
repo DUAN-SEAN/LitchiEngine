@@ -45,7 +45,7 @@ std::string LitchiRuntime::PathParser::GetContainingFolder(const std::string & p
 	std::reverse(result.begin(), result.end());
 
 	if (!result.empty() && result.back() != '\\'&& result.back() != '/')
-		result += '\\';
+		result += '/';
 
 	return result;
 }

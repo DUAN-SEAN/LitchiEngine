@@ -140,7 +140,7 @@ public:
 					filePath = newPath;
 
 				if (std::filesystem::is_directory(oldPath))
-					filePath += '\\';
+					filePath += '/';
 
 				RenamedEvent.Invoke(oldPath, newPath);
 			};
@@ -281,12 +281,12 @@ public:
 
 				do
 				{
-					finalPath = filePath + '\\' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
+					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
 
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Standard.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Standard.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -298,12 +298,12 @@ public:
 
 				do
 				{
-					finalPath = filePath + '\\' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
+					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
 
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\StandardPBR.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/StandardPBR.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -315,12 +315,12 @@ public:
 
 				do
 				{
-					finalPath = filePath + '\\' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
+					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
 
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Unlit.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Unlit.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -332,12 +332,12 @@ public:
 
 				do
 				{
-					finalPath = filePath + '\\' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
+					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
 
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders\\Lambert.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Lambert.glsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -386,7 +386,7 @@ public:
 
 				//{
 				//	std::ofstream outfile(finalPath);
-				//	outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
+				//	outfile << "<root><shader>:Shaders/Standard.glsl</shader></root>" << std::endl; // Empty standard material content
 				//}
 
 				//ItemAddedEvent.Invoke(finalPath);
@@ -416,7 +416,7 @@ public:
 
 				//{
 				//	std::ofstream outfile(finalPath);
-				//	outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
+				//	outfile << "<root><shader>:Shaders/StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
 				//}
 
 				//ItemAddedEvent.Invoke(finalPath);
@@ -447,7 +447,7 @@ public:
 
 				//{
 				//	std::ofstream outfile(finalPath);
-				//	outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty unlit material content
+				//	outfile << "<root><shader>:Shaders/Unlit.glsl</shader></root>" << std::endl; // Empty unlit material content
 				//}
 
 				//ItemAddedEvent.Invoke(finalPath);
@@ -477,7 +477,7 @@ public:
 
 				//{
 				//	std::ofstream outfile(finalPath);
-				//	outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty unlit material content
+				//	outfile << "<root><shader>:Shaders/Lambert.glsl</shader></root>" << std::endl; // Empty unlit material content
 				//}
 
 				//ItemAddedEvent.Invoke(finalPath);
@@ -738,7 +738,7 @@ public:
 
 			//			{
 			//				std::ofstream outfile(finalPath);
-			//				outfile << "<root><shader>:Shaders\\Standard.glsl</shader></root>" << std::endl; // Empty standard material content
+			//				outfile << "<root><shader>:Shaders/Standard.glsl</shader></root>" << std::endl; // Empty standard material content
 			//			}
 
 			//			DuplicateEvent.Invoke(finalPath);
@@ -766,7 +766,7 @@ public:
 
 			//			{
 			//				std::ofstream outfile(finalPath);
-			//				outfile << "<root><shader>:Shaders\\StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
+			//				outfile << "<root><shader>:Shaders/StandardPBR.glsl</shader></root>" << std::endl; // Empty standard material content
 			//			}
 
 			//			DuplicateEvent.Invoke(finalPath);
@@ -794,7 +794,7 @@ public:
 
 			//			{
 			//				std::ofstream outfile(finalPath);
-			//				outfile << "<root><shader>:Shaders\\Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
+			//				outfile << "<root><shader>:Shaders/Unlit.glsl</shader></root>" << std::endl; // Empty standard material content
 			//			}
 
 			//			DuplicateEvent.Invoke(finalPath);
@@ -822,7 +822,7 @@ public:
 
 			//			{
 			//				std::ofstream outfile(finalPath);
-			//				outfile << "<root><shader>:Shaders\\Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
+			//				outfile << "<root><shader>:Shaders/Lambert.glsl</shader></root>" << std::endl; // Empty standard material content
 			//			}
 
 			//			DuplicateEvent.Invoke(finalPath);
@@ -889,7 +889,9 @@ public:
 
 		editAction.ClickedEvent += [this]
 		{
-			Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+			auto relativePath = FileSystem::GetRelativePathAssetFromNative(filePath);
+
+			Material* material = OVSERVICE(MaterialManager)[EDITOR_EXEC(GetResourcePath(relativePath, m_protected))];
 			if (material)
 			{
 				auto& materialEditor = EDITOR_PANEL(LitchiEditor::MaterialEditor, "Material Editor");
@@ -897,7 +899,7 @@ public:
 				materialEditor.Open();
 				materialEditor.Focus();
 
-				Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+				Material* resource = LitchiRuntime::ServiceLocator::Get<MaterialManager>()[EDITOR_EXEC(GetResourcePath(relativePath, m_protected))];
 				auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
 				assetView.SetResource(resource);
 				assetView.Open();
@@ -908,8 +910,10 @@ public:
 		auto& reload = CreateWidget<MenuItem>("Reload");
 		reload.ClickedEvent += [this]
 		{
+			auto relativePath = FileSystem::GetRelativePathAssetFromNative(filePath);
+
 			auto& materialManager = OVSERVICE(MaterialManager);
-			auto resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			auto resourcePath = EDITOR_EXEC(GetResourcePath(relativePath, m_protected));
 			Material* material = materialManager[resourcePath];
 			if (material)
 			{
@@ -1014,9 +1018,9 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 {
 	bool isDirectory = p_entry.is_directory();
 	std::string itemname = PathParser::GetElementName(p_entry.path().string());
-	std::string path = p_entry.path().string();
-	if (isDirectory && path.back() != '\\' && path.back() != '/') // Add '\\' if is directory and backslash is missing
-		path += '\\';
+	std::string path = PathParser::MakeNonWindowsStyle(p_entry.path().string());
+	if (isDirectory && path.back() != '/' && path.back() != '/') // Add '/' if is directory and backslash is missing
+		path += '/';
 	std::string resourceFormatPath = EDITOR_EXEC(GetResourcePath(path, p_isEngineItem));
 	bool protectedItem = !p_root || p_isEngineItem;
 
@@ -1071,7 +1075,7 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 					{
 						std::string folderReceivedPath = EDITOR_EXEC(GetRealPath(p_data.first));
 
-						std::string folderName = PathParser::GetElementName(folderReceivedPath) + '\\';
+						std::string folderName = PathParser::GetElementName(folderReceivedPath) + '/';
 						std::string prevPath = folderReceivedPath;
 						std::string correctPath = m_pathUpdate.find(&treeNode) != m_pathUpdate.end() ? m_pathUpdate.at(&treeNode) : path;
 						std::string newPath = correctPath + folderName;
@@ -1168,14 +1172,14 @@ void LitchiEditor::AssetBrowser::ConsiderItem(TreeNode* p_root, const std::files
 
 			contextMenu.RenamedEvent += [this, &treeNode, path, &ddSource, p_isEngineItem](std::string p_prev, std::string p_newPath)
 			{
-				p_newPath += '\\';
+				p_newPath += '/';
 
 				if (!std::filesystem::exists(p_newPath)) // Do not rename a folder if it already exists
 				{
 					RenameAsset(p_prev, p_newPath);
 					EDITOR_EXEC(PropagateFolderRename(p_prev, p_newPath));
 					std::string elementName = PathParser::GetElementName(p_newPath);
-					std::string data = PathParser::GetContainingFolder(ddSource.data.first) + elementName + "\\";
+					std::string data = PathParser::GetContainingFolder(ddSource.data.first) + elementName + "/";
 					ddSource.data.first = data;
 					ddSource.tooltip = data;
 					treeNode.name = elementName;
