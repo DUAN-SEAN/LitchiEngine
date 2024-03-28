@@ -77,12 +77,12 @@ namespace LitchiRuntime
 		int64_t m_availableID = 1;
 
 		// root game object id
-		int64_t m_root_entity_id;
+		int64_t m_root_entity_id{-1};
 
 		void PostResourceLoaded() override;
 
 	private:
-		GameObject* m_root_entity;
+		GameObject* m_root_entity{nullptr};
 		std::string m_name;
 	};
 

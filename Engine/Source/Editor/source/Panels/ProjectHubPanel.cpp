@@ -15,7 +15,7 @@
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 
-#define PROJECTS_FILE std::string(std::string(getenv("APPDATA")) + "\\LitchiEngine\\LitchiEditor\\projects.ini")
+#define PROJECTS_FILE std::string(std::string(getenv("APPDATA")) + "/LitchiEngine/LitchiEditor/projects.ini")
 
 using namespace LitchiRuntime;
 namespace LitchiEditor
@@ -30,7 +30,7 @@ namespace LitchiEditor
 		movable = false;
 		titleBar = false;
 
-		std::filesystem::create_directories(std::string(getenv("APPDATA")) + "\\LitchiEngine\\LitchiEditor\\");
+		std::filesystem::create_directories(std::string(getenv("APPDATA")) + "/LitchiEngine/LitchiEditor/");
 
 		SetSize({ 1000, 580 });
 		SetPosition({ 0.f, 0.f });
@@ -80,7 +80,7 @@ namespace LitchiEditor
 				{
 					std::string result = dialog.GetSelectedFilePath();
 					pathField.content = std::string(result.data(), result.data() + result.size() - std::string("..").size()); // remove auto extension
-					pathField.content += "\\";
+					pathField.content += "/";
 					UpdateGoButton(pathField.content);
 				}
 			};
@@ -167,12 +167,13 @@ namespace LitchiEditor
 
 	void ProjectHubPanel::CreateProject(const std::string& p_path)
 	{
-		if (!std::filesystem::exists(p_path))
+		auto noWindowPath = PathParser::MakeNonWindowsStyle(p_path);
+		if (!std::filesystem::exists(noWindowPath))
 		{
-			std::filesystem::create_directory(p_path);
-			std::filesystem::create_directory(p_path + "Assets\\");
-			std::filesystem::create_directory(p_path + "Scripts\\");
-			std::ofstream projectFile(p_path + '\\' + PathParser::GetElementName(std::string(p_path.data(), p_path.data() + p_path.size() - 1)) + ".litchiProject");
+			std::filesystem::create_directory(noWindowPath);
+			std::filesystem::create_directory(noWindowPath + "Assets/");
+			std::filesystem::create_directory(noWindowPath + "Scripts/");
+			std::ofstream projectFile(noWindowPath + '/' + (PathParser::GetElementName(std::string(noWindowPath.data(), noWindowPath.data() + noWindowPath.size() - 1)))+ ".litchiProject");
 
 			// todo: copy engine asset to Assets\\Engine
 		}
@@ -180,6 +181,7 @@ namespace LitchiEditor
 
 	void ProjectHubPanel::RegisterProject(const std::string& p_path)
 	{
+		auto noWindowPath = PathParser::MakeNonWindowsStyle(p_path);
 		bool pathAlreadyRegistered = false;
 
 		{
@@ -189,7 +191,7 @@ namespace LitchiEditor
 			{
 				while (getline(myfile, line))
 				{
-					if (line == p_path)
+					if (line == noWindowPath)
 					{
 						pathAlreadyRegistered = true;
 						break;
@@ -202,20 +204,21 @@ namespace LitchiEditor
 		if (!pathAlreadyRegistered)
 		{
 			std::ofstream projectsFile(PROJECTS_FILE, std::ios::app);
-			projectsFile << p_path << std::endl;
+			projectsFile << noWindowPath << std::endl;
 		}
 	}
 
 	void ProjectHubPanel::OpenProject(const std::string& p_path)
 	{
-		m_readyToGo = std::filesystem::exists(p_path);
+		auto noWindowPath = PathParser::MakeNonWindowsStyle(p_path);
+		m_readyToGo = std::filesystem::exists(noWindowPath);
 		if (!m_readyToGo)
 		{
 			MessageBox errorMessage("Project not found", "The selected project does not exists", MessageBox::EMessageType::ERROR, MessageBox::EButtonLayout::OK);
 		}
 		else
 		{
-			m_path = p_path;
+			m_path = noWindowPath;
 			m_projectName = PathParser::GetElementName(m_path);
 			Close();
 		}

@@ -36,7 +36,7 @@ namespace LitchiRuntime
 
         void SetResourceFilePath(const std::string& obsoultePath)
         {
-            const bool is_native_file = LitchiRuntime::FileSystem::IsEngineMaterialFile(obsoultePath) || LitchiRuntime::FileSystem::IsEngineModelFile(obsoultePath);
+            const bool is_native_file = LitchiRuntime::FileSystem::IsEngineMaterialFile(obsoultePath) || LitchiRuntime::FileSystem::IsEngineModelFile(obsoultePath) || LitchiRuntime::FileSystem::IsEnginePrefabFile(obsoultePath);
 
             // If this is an native engine file, don't do a file check as no actual foreign material exists (it was created on the fly)
             if (!is_native_file)
@@ -53,8 +53,10 @@ namespace LitchiRuntime
             //// Foreign file
             //if (!LitchiRuntime::FileSystem::IsEngineFile(path))
             //{
-                m_resource_file_path_foreign    = file_path_relative;
-                m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);
+                /*m_resource_file_path_foreign    = file_path_relative;
+                m_resource_file_path_native     = LitchiRuntime::FileSystem::NativizeFilePath(file_path_relative);*/
+        		m_resource_file_path_foreign = obsoultePath;
+                m_resource_file_path_native = obsoultePath;
                 m_resource_file_path_asset = LitchiRuntime::FileSystem::GetRelativePathAssetFromNative(obsoultePath);
 
             //}

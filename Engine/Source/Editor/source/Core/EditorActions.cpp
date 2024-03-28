@@ -142,7 +142,9 @@ void LitchiEditor::EditorActions::CreatePrefab(Scene* scene, GameObject* root, s
 	}
 
 	prefab->m_root_entity_id = root->m_id;
-	prefab->SaveToFile(path);
+	prefab->SaveToFile(prefab->GetResourceFilePath());
+	// deep copy
+	prefab->LoadFromFile(prefab->GetResourceFilePath());
 }
 
 GameObject* LitchiEditor::EditorActions::LoadPrefab(LitchiRuntime::Scene* scene, LitchiRuntime::GameObject* root, LitchiRuntime::Prefab* prefab)

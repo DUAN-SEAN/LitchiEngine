@@ -62,9 +62,10 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	delete m_rendererPath4SceneView;
 	delete m_rendererPath4GameView;
 
-	sceneManager = nullptr;
 	modelManager->UnloadResources();
 	modelManager = nullptr;
+	prefabManager->UnloadResources();
+	prefabManager = nullptr;
 	shaderManager->UnloadResources();
 	shaderManager = nullptr;
 	materialManager->UnloadResources();
@@ -73,8 +74,8 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	fontManager = nullptr;
 	textureManager->UnloadResources();
 	textureManager = nullptr;
-	prefabManager->UnloadResources();
-	prefabManager = nullptr;
+
+	sceneManager = nullptr;
 
 	InputManager::UnInit();
 
