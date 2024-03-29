@@ -28,11 +28,11 @@ namespace LitchiRuntime
 		RendererPath(RendererPathType rendererPathType);
 		~RendererPath();
 	public:
-		void UpdateRenderTarget(float width, float height);
-		void UpdateRenderableGameObject();
-		void UpdateLightShadow();
 
-		RendererPathType GetRendererPathType(){	return m_rendererPathType;}
+		RendererPathType GetRendererPathType() { return m_rendererPathType; }
+
+		bool GetActive()const { return m_active; }
+		void SetActive(bool isActive) { m_active = isActive; }
 
 		RenderCamera* GetRenderCamera(){return m_renderCamera;}
 		void UpdateRenderCamera(RenderCamera* camera);
@@ -40,20 +40,25 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
 		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
 
+		void UpdateRenderTarget(float width, float height);
+		void UpdateRenderableGameObject();
+		void UpdateLightShadow();
+
 		void UpdateScene(Scene* scene);
 		Scene* GetRenderScene() { return m_renderScene; }
-
 		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
-
-		bool GetActive()const { return m_active; }
-		void SetActive(bool isActive) {  m_active = isActive; }
-
 		UICanvas* GetCanvas();
-	public:
 
+		void SetSelectedMaterial(Material* material) { m_selectedMaterial = material; }
+		Material* GetSelectedMaterial() const { return m_selectedMaterial; }
+		void SetSelectedMesh(Mesh* mesh) { m_selectedMesh = mesh; }
+		Mesh* GetSelectedMesh() const { return m_selectedMesh; }
+		void SetSelectedTexture2D(RHI_Texture2D* texture_2d) { m_selectedTexture2D = texture_2d; }
+		RHI_Texture2D* GetSelectedTexture2D() const { return m_selectedTexture2D; }
+
+		// Light & Shadow
 		const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
 		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
-
 		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
 		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }
 		uint32_t GetShadowArraySize() const;
@@ -63,7 +68,7 @@ namespace LitchiRuntime
 
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
-		std::string GetRenderPathName();
+		std::string GetRenderPathName() const;
 		bool CheckIsBuildInRendererCamera();
 
 		bool CheckShadowMapNeedRecreate();
@@ -72,15 +77,25 @@ namespace LitchiRuntime
 		void ComputeLightViewMatrix();
 		void ComputeLightProjectionMatrix(uint32_t index = 0);
 
-		float m_width;
-		float m_height;
+	private:
+
+		bool m_active{ false };
 
 		RendererPathType m_rendererPathType = RendererPathType_Invalid;
 		RenderCamera* m_renderCamera = nullptr;
+
+		// scene 
 		Scene* m_renderScene = nullptr;
+		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
 
 		// UI provide Camera
 		RenderCamera* m_renderCamera4UI;
+
+		// rt
+		float m_width;
+		float m_height;
+		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
+		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
 
 		// one camera to light
 
@@ -95,12 +110,11 @@ namespace LitchiRuntime
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;
 
-		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
-		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
+		// Select Material
+		Material* m_selectedMaterial = nullptr;
+		RHI_Texture2D* m_selectedTexture2D = nullptr;
+		Mesh* m_selectedMesh = nullptr;
 
-		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
-
-		bool m_active {false};
 	};
 
 }

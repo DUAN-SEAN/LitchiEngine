@@ -36,11 +36,11 @@ LitchiEditor::SceneView::SceneView
 void LitchiEditor::SceneView::UpdateView(float p_deltaTime)
 {
 	AViewControllable::UpdateView(p_deltaTime);
-	PrepareCamera();
 }
 
 void LitchiEditor::SceneView::_Render_Impl()
 {
+	PrepareCamera();
 }
 
 void LitchiEditor::SceneView::OnDraw()

@@ -532,7 +532,6 @@ namespace LitchiRuntime
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
-		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_color[0] = rhi_color_load;
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
@@ -562,45 +561,64 @@ namespace LitchiRuntime
 
 	}
 
-	void Renderer::Pass_AssetPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	void Renderer::Pass_MaterialPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
-		Material* selectMaterial = nullptr;
+		Material* selectMaterial = rendererPath->GetSelectedMaterial();
+		if(selectMaterial == nullptr)
+		{
+			return;
+		}
 
 		RHI_Shader* shader_v = selectMaterial->GetVertexShader();
 		RHI_Shader* shader_p = selectMaterial->GetPixelShader();
 
 		auto camera = rendererPath->GetRenderCamera();
 
-		// define the pipeline state
+		// define PipelineState
 		static RHI_PipelineState pso;
+		pso.name = "Pass_MaterialPass";
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
-		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
-		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
-		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
-		pso.clear_color[0] = rhi_color_load;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.clear_depth = 0.0f; // reverse-z
+		pso.clear_color[0] = camera->GetClearColor();
+		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.material_shader = selectMaterial->GetShader();
 
-		cmd_list->BeginMarker("DebugGridPass");
+		UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
+
+		cmd_list->BeginMarker("MaterialPass");
 
 		// set pipeline state
-		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		// pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
 		cmd_list->SetPipelineState(pso);
 		cmd_list->BeginRenderPass();
 		// push pass constants
 		{
-			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
-			if (camera)
-			{
-				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(camera->GetPosition());
-			}
+			/*m_cb_pass_cpu.set_resolution_out(GetResolutionRender());*/
+			EASY_BLOCK("PushPassConstants")
+			// Set pass constants with cascade transform
+			m_cb_pass_cpu.transform = m_geom_sphere->GetWorldMatrix();
 			PushPassConstants(cmd_list);
+			EASY_END_BLOCK
 		}
-		cmd_list->SetBufferVertex(m_world_grid->GetVertexBuffer().get());
-		cmd_list->Draw(m_world_grid->GetVertexCount());
+		cmd_list->SetBufferVertex(m_geom_sphere->GetVertexBuffer().get());
+		cmd_list->SetBufferIndex(m_geom_sphere->GetIndexBuffer().get());
+
+		EASY_BLOCK("UpdateMaterial")
+		UpdateMaterial(cmd_list, selectMaterial);
+		EASY_END_BLOCK
+
+		EASY_BLOCK("DrawCall")
+		// Draw 
+		cmd_list->DrawIndexed(m_geom_sphere->GetIndexCount(), 0, 0);
+		EASY_END_BLOCK
+
 		cmd_list->EndRenderPass();
 		cmd_list->EndMarker();
 	}

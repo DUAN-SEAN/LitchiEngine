@@ -3,6 +3,7 @@
 
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #include "Runtime/Core/Tools/Eventing/Event.h"
+
 #include "spdlog/spdlog.h"
 
 /// 输出文件名

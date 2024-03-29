@@ -52,6 +52,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 	delete m_rendererPath4SceneView;
 	delete m_rendererPath4GameView;
+	delete m_rendererPath4AssetView;
 
 	modelManager->UnloadResources();
 	modelManager = nullptr;
@@ -251,15 +252,12 @@ void LitchiEditor::ApplicationEditor::RenderViews(float p_deltaTime)
 		gameView.Render();
 	}
 
-	/*auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
+	auto& assetView = m_panelsManager.GetPanelAs<AssetView>("Asset View");
 	if (assetView.IsOpened())
 	{
-		simulatedLightSSBO->Bind(0);
-
-		assetView.Update(p_deltaTime);
+		assetView.UpdateView(p_deltaTime);
 		assetView.Render();
-		simulatedLightSSBO->Unbind();
-	}*/
+	}
 }
 
 void LitchiEditor::ApplicationEditor::RenderUI()
@@ -450,7 +448,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
-	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4SceneView);
+	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4AssetView);
 	m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);

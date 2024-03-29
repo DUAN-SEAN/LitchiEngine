@@ -15,6 +15,7 @@
 #include "Font/Font.h"
 #include "Grid.h"
 #include "RendererPath.h"
+#include "SphereGeometry.h"
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 //===================================
 
@@ -128,6 +129,7 @@ namespace LitchiRuntime
 		static void PushPassConstants(RHI_CommandList* cmd_list);
 		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RendererPath* rendererPath);
 		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);
+		static void UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list,const int lightCount, RendererPath* rendererPath);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData);
@@ -153,7 +155,7 @@ namespace LitchiRuntime
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
-		static void Pass_AssetPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		static void Pass_MaterialPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
 		// Buffer
 		static Cb_Frame BuildFrameBufferData();
@@ -180,10 +182,10 @@ namespace LitchiRuntime
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
-		//static RenderCamera* m_main_camera;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_lines;
 		static std::unique_ptr<Font> m_font;
 		static std::unique_ptr<Grid> m_world_grid;
+		static std::unique_ptr<SphereGeometry> m_geom_sphere;
 		static bool m_brdf_specular_lut_rendered;
 		static std::vector<RHI_Vertex_PosCol> m_line_vertices;
 		static std::vector<float> m_lines_duration;

@@ -59,8 +59,6 @@ float4 mainPS(Pixel input) : SV_Target
 {
     float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
 
-    float shadow = ShadowCalculation(input.fragPos);
-
     float3 viewDir = normalize(buffer_rendererPath.camera_position - input.fragPos);
     float4 diffuseTexel = u_diffuseMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * materialData.u_diffuse;
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
@@ -79,9 +77,17 @@ float4 mainPS(Pixel input) : SV_Target
     // float4 color = diffuseTexel;
 
     //float3 shadowedColor = (1.0f - shadow) * lightSum;
+
+    float shadow = 1.0f;
+    if (light_has_shadows())
+    {
+    	shadow = ShadowCalculation(input.fragPos);
+    }
+
     float3 shadowedColor = shadow * lightSum;
     float4 color = float4(shadowedColor, diffuseTexel.a);
     return color;
+
     //return float4(shadow, shadow, shadow,1.0f);
 
     //float3 pos_ndc = world_to_ndc(input.fragPos, light_buffer_data_arr.lightBufferDataArr[0].view_projection[0]);

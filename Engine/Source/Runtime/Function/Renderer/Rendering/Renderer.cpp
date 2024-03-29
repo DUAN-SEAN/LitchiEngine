@@ -42,6 +42,7 @@ namespace LitchiRuntime
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	unique_ptr<Font> Renderer::m_font;
 	unique_ptr<Grid> Renderer::m_world_grid;
+	std::unique_ptr<SphereGeometry> Renderer::m_geom_sphere;
 	vector<RHI_Vertex_PosCol> Renderer::m_line_vertices;
 	vector<float> Renderer::m_lines_duration;
 	uint32_t Renderer::m_lines_index_depth_off;
@@ -259,6 +260,7 @@ namespace LitchiRuntime
 
 			m_entities_to_add.clear();
 			m_world_grid.reset();
+			m_geom_sphere.reset();
 			m_font.reset();
 			swap_chain = nullptr;
 			m_vertex_buffer_lines = nullptr;
@@ -491,21 +493,20 @@ namespace LitchiRuntime
 	void Renderer::Render4BuildInAssetView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		auto camera = rendererPath->GetRenderCamera();
-		auto canvas = rendererPath->GetCanvas();
 
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
 
 		// update rendererPath buffer
 		EASY_BLOCK("Build cb_rendererPath")
-		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
+		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, nullptr);
 		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
 		EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
 		if (camera)
 		{
-			EASY_BLOCK("Pass_DebugGridPass")
-			Pass_DebugGridPass(cmd_list, rendererPath);
+			EASY_BLOCK("Pass_MaterialPass")
+			Pass_MaterialPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 		}
 		else
@@ -758,6 +759,39 @@ namespace LitchiRuntime
 			m_cb_light_arr_cpu.lightArr[index].options |= light->GetShadowsEnabled() ? (1 << 3) : 0;
 			m_cb_light_arr_cpu.lightArr[index].options |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
 			m_cb_light_arr_cpu.lightArr[index].options |= light->GetVolumetricEnabled() ? (1 << 5) : 0;
+		}
+
+		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
+	}
+
+	void Renderer::UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list, const int lightCount, RendererPath* rendererPath)
+	{
+		m_cb_light_arr_cpu.lightCount = lightCount;
+
+		for (int index = 0; index < lightCount; index++)
+		{
+			// todo only one light has shadow, is temp code
+			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
+			{
+				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
+			}
+
+			m_cb_light_arr_cpu.lightArr[index].intensity_range_angle_bias = Vector4
+			(
+				1.7f,
+				10.0f, 0.5f,
+				0.0f
+			);
+
+			m_cb_light_arr_cpu.lightArr[index].color = Color::White;
+			m_cb_light_arr_cpu.lightArr[index].normal_bias = 5.0f;
+			m_cb_light_arr_cpu.lightArr[index].position = Vector3::Zero;
+			m_cb_light_arr_cpu.lightArr[index].direction = Quaternion::FromAngleAxis(30.0f,Vector3::Forward)* Vector3::Forward;
+			m_cb_light_arr_cpu.lightArr[index].options = 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= (1 << 0);
+			m_cb_light_arr_cpu.lightArr[index].options |= false ? (1 << 3) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= false ? (1 << 4) : 0;
+			m_cb_light_arr_cpu.lightArr[index].options |= false ? (1 << 5) : 0;
 		}
 
 		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);

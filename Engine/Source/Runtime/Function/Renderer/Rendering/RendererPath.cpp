@@ -148,14 +148,15 @@ namespace LitchiRuntime
 		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, RHI_Texture_RenderTarget | RHI_Texture_Srv, rtName.c_str());
 	}
 
-	std::string RendererPath::GetRenderPathName()
+	std::string RendererPath::GetRenderPathName() const
 	{
 		switch (m_rendererPathType)
 		{
 		case RendererPathType_SceneView: return "SceneView";
 		case RendererPathType_GameView: return "GameView";
+		case RendererPathType_AssetView: return "AssetView";
 		case RendererPathType_Custom: return "Custom";
-		default:;
+		default:return "";
 		}
 	}
 
@@ -276,16 +277,23 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateLightShadow()
 	{
-		// try find first light specify main light
-		// if(m_mainLight == nullptr)
+		if(this->m_renderables.size()>0)
 		{
 			auto& lights = this->m_renderables.at(Renderer_Entity::Light);
-			if(lights.empty())
+			if(!lights.empty())
 			{
-				return;
+				auto lightObject = this->m_renderables.at(Renderer_Entity::Light)[0];
+				m_mainLight = lightObject->GetComponent<Light>();
+			}else
+			{
+				// todo clear?
+				m_mainLight = nullptr;
 			}
-			auto lightObject = this->m_renderables.at(Renderer_Entity::Light)[0];
-			m_mainLight = lightObject->GetComponent<Light>();
+		}
+
+		if(!m_mainLight)
+		{
+			return;
 		}
 
 		// check need Create New ShadowMap
@@ -294,7 +302,7 @@ namespace LitchiRuntime
 			CreateShadowMap();
 		}
 
-		if(m_mainLight->GetShadowsEnabled() && m_renderCamera)
+		if(m_mainLight && m_mainLight->GetShadowsEnabled() && m_renderCamera)
 		{
 			if (m_mainLight->GetLightType() == LightType::Directional)
 			{

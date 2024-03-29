@@ -60,7 +60,7 @@ namespace LitchiRuntime
         constant_buffer(Renderer_ConstantBuffer::Material)->Create<Cb_Material>(3000 * m_frames_in_flight);
 
         constant_buffer(Renderer_ConstantBuffer::LightArr) = make_shared<RHI_ConstantBuffer>(string("lightArr"));
-        constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(2 * m_frames_in_flight);
+        constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(3 * m_frames_in_flight);
 
         constant_buffer(Renderer_ConstantBuffer::RendererPath) = make_shared<RHI_ConstantBuffer>(string("rendererPath"));
         constant_buffer(Renderer_ConstantBuffer::RendererPath)->Create<Cb_RendererPath>(2* m_frames_in_flight);
@@ -464,6 +464,8 @@ namespace LitchiRuntime
         // misc
         m_vertex_buffer_lines = make_shared<RHI_VertexBuffer>(true, "lines");
         m_world_grid          = make_unique<Grid>();
+
+        m_geom_sphere = make_unique<SphereGeometry>();
     }
 
     void Renderer::CreateStandardTextures()
