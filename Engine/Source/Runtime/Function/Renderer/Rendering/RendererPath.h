@@ -16,6 +16,7 @@ namespace LitchiRuntime
 		RendererPathType_Invalid,
 		RendererPathType_SceneView,
 		RendererPathType_GameView,
+		RendererPathType_AssetView,
 		RendererPathType_Custom,
 		RendererPathType_Count
 	};

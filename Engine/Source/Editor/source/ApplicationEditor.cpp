@@ -483,4 +483,11 @@ void LitchiEditor::ApplicationEditor::SetupRendererPath()
 		// default active = false
 	}
 
+	if(m_rendererPath4AssetView == nullptr)
+	{
+		m_rendererPath4AssetView = new RendererPath(RendererPathType_AssetView);
+		// update renderer path
+		Renderer::UpdateRendererPath(RendererPathType_AssetView, m_rendererPath4AssetView);
+	}
+
 }

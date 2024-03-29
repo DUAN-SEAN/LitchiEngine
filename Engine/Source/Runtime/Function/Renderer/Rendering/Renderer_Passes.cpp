@@ -562,4 +562,47 @@ namespace LitchiRuntime
 
 	}
 
+	void Renderer::Pass_AssetPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		Material* selectMaterial = nullptr;
+
+		RHI_Shader* shader_v = selectMaterial->GetVertexShader();
+		RHI_Shader* shader_p = selectMaterial->GetPixelShader();
+
+		auto camera = rendererPath->GetRenderCamera();
+
+		// define the pipeline state
+		static RHI_PipelineState pso;
+		pso.shader_vertex = shader_v;
+		pso.shader_pixel = shader_p;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
+		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.clear_color[0] = rhi_color_load;
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
+		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
+
+		cmd_list->BeginMarker("DebugGridPass");
+
+		// set pipeline state
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+
+		cmd_list->SetPipelineState(pso);
+		cmd_list->BeginRenderPass();
+		// push pass constants
+		{
+			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
+			if (camera)
+			{
+				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(camera->GetPosition());
+			}
+			PushPassConstants(cmd_list);
+		}
+		cmd_list->SetBufferVertex(m_world_grid->GetVertexBuffer().get());
+		cmd_list->Draw(m_world_grid->GetVertexCount());
+		cmd_list->EndRenderPass();
+		cmd_list->EndMarker();
+	}
+
 }

@@ -352,6 +352,20 @@ namespace LitchiRuntime
 		}
 		EASY_END_BLOCK
 
+		EASY_BLOCK("Render4BuildInAssetView")
+		// 绘制SceneView Path
+		auto rendererPath4AssetView = m_rendererPaths[RendererPathType_AssetView];
+		if (rendererPath4AssetView && rendererPath4AssetView->GetActive())
+		{
+			rendererPath4AssetView->UpdateRenderableGameObject();
+			rendererPath4AssetView->UpdateLightShadow();
+
+			// Render SceneView
+			Render4BuildInAssetView(cmd_current, rendererPath4AssetView);
+
+		}
+		EASY_END_BLOCK
+
 
 		EASY_BLOCK("Render4BuildInGameView")
 		// 绘制SceneView Path
@@ -462,6 +476,37 @@ namespace LitchiRuntime
 			EASY_END_BLOCK
 
 
+		}
+		else
+		{
+			// if there is no camera, clear to black and and render the performance metrics
+			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
+		}
+
+		// transition the render target to a readable state so it can be rendered
+		// within the viewport or copied to the swap chain back buffer
+		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+	}
+
+	void Renderer::Render4BuildInAssetView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		auto camera = rendererPath->GetRenderCamera();
+		auto canvas = rendererPath->GetCanvas();
+
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
+
+		// update rendererPath buffer
+		EASY_BLOCK("Build cb_rendererPath")
+		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
+		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
+		EASY_END_BLOCK
+
+		auto rt_output = rendererPath->GetColorRenderTarget().get();
+		if (camera)
+		{
+			EASY_BLOCK("Pass_DebugGridPass")
+			Pass_DebugGridPass(cmd_list, rendererPath);
+			EASY_END_BLOCK
 		}
 		else
 		{

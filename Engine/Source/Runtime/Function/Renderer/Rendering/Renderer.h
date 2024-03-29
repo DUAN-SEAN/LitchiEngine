@@ -147,11 +147,13 @@ namespace LitchiRuntime
 
 		// Passes - Core
 		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		static void Render4BuildInAssetView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath,const bool is_transparent_pass);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		static void Pass_AssetPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
 		// Buffer
 		static Cb_Frame BuildFrameBufferData();
