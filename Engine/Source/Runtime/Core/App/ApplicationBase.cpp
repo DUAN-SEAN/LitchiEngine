@@ -32,7 +32,7 @@ namespace LitchiRuntime
 
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
-		if(GetApplicationType() == ApplicationType::Game)
+		if(GetApplicationType() == LitchiApplicationType::Game)
 		{
 			configManager = std::make_unique<ConfigManager>();
 			if (!configManager->Initialize(m_projectPath))

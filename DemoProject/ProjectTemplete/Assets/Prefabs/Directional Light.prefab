@@ -1,0 +1,48 @@
+{
+    "availableID": 1,
+    "rootEntityId": 3,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 3,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Directional Light",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.3583679497241974,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9335803985595703
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Directional",
+                    "color": {
+                        "r": 0.30000001192092898,
+                        "g": 0.6000000238418579,
+                        "b": 0.699999988079071,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 1600.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "bias": 0.0
+                }
+            ]
+        }
+    ]
+}

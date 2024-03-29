@@ -13,7 +13,7 @@ namespace LitchiStandalone
 	public:
 		ApplicationStandalone();
 		~ApplicationStandalone();
-		ApplicationType GetApplicationType() override;
+		LitchiApplicationType GetApplicationType() override;
 		bool Init() override;
 		void Run() override;
 		void Update() override;

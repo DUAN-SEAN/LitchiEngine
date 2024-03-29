@@ -124,7 +124,7 @@ namespace LitchiRuntime
 		render_thread_id = this_thread::get_id();
 		m_brdf_specular_lut_rendered = false;
 
-		is_game_mode = ApplicationBase::Instance()->GetApplicationType() == ApplicationType::Game;
+		is_game_mode = ApplicationBase::Instance()->GetApplicationType() == LitchiApplicationType::Game;
 
 		// Display::DetectDisplayModes();
 

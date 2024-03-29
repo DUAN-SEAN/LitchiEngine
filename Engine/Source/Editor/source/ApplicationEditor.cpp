@@ -15,15 +15,11 @@
 #include "Runtime/Core/Global/ServiceLocator.h"
 #include "Runtime/Core/Time/time.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
-#include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Resource/MaterialManager.h"
 #include "Runtime/Resource/ModelManager.h"
 #include "Runtime/Resource/ShaderManager.h"
 #include "Runtime/Resource/TextureManager.h"
-#include "Runtime/Function/Framework/Component/Animation/animator.h"
-#include "Runtime/Function/Framework/Component/Renderer/SkinnedMeshRenderer.h"
-#include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
 #include "Editor/include/Panels/Console.h"
@@ -31,22 +27,17 @@
 #include "Editor/include/Panels/Profiler.h"
 #include "Editor/include/Panels/ProjectHubPanel.h"
 #include "Editor/include/Panels/Toolbar.h"
-#include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
-#include "Runtime/Function/Framework/Component/Camera/Camera.h";
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
-#include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
-#include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
 #include "Runtime/Function/Framework/Component/UI/RectTransform.h"
-#include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Resource/Import/FontImporter.h"
 #include "Runtime/Function/Renderer/Resource/Import/ImageImporter.h"
-#include "Runtime/Function/Renderer/Resource/Import/ModelImporter.h"
 
-#include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Resource/AssetManager.h"
 #include "Runtime/Resource/FontManager.h"
+
+#include "Runtime/Core/Tools/Utils/ConsoleHelper.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 
@@ -87,9 +78,9 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 	FontImporter::Shutdown();
 }
 
-ApplicationType LitchiEditor::ApplicationEditor::GetApplicationType()
+LitchiRuntime::LitchiApplicationType LitchiEditor::ApplicationEditor::GetApplicationType()
 {
-	return ApplicationType::Editor;
+	return LitchiRuntime::LitchiApplicationType::Editor;
 }
 
 GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scriptName)
@@ -367,6 +358,8 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 
 void LitchiEditor::ApplicationEditor::OnProjectOpen()
 {
+	ConsoleHelper::HideConsole();
+
 	configManager = std::make_unique<ConfigManager>();
 	if (!configManager->Initialize(m_projectPath))
 	{

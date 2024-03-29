@@ -2,6 +2,7 @@
 #include "Standalone/include/ApplicationStandalone.h"
 
 #include "Runtime/Core/Time/time.h"
+#include "Runtime/Core/Tools/Utils/ConsoleHelper.h"
 #include "Runtime/Function/Physics/physics.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
 #include "Runtime/Function/Renderer/Resource/ResourceCache.h"
@@ -44,9 +45,9 @@ namespace LitchiStandalone
 
 	}
 
-	ApplicationType ApplicationStandalone::GetApplicationType()
+	LitchiApplicationType ApplicationStandalone::GetApplicationType()
 	{
-		return ApplicationType::Game;
+		return LitchiApplicationType::Game;
 	}
 
 	bool ApplicationStandalone::Init()
@@ -92,6 +93,8 @@ namespace LitchiStandalone
 
 		// set fullscreen
 		// window->SetFullscreen(true);
+
+		ConsoleHelper::HideConsole();
 
 		return true;
 	}

@@ -19,7 +19,7 @@ namespace LitchiEditor
 	public:
 		ApplicationEditor();
 		~ApplicationEditor();
-		ApplicationType GetApplicationType() override;
+		LitchiApplicationType GetApplicationType() override;
 		bool Init() override;
 		void Run() override;
 		void Update() override;

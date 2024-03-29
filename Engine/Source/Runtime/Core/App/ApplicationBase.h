@@ -17,7 +17,7 @@ namespace LitchiRuntime
 {
 	class Window;
 
-    enum class ApplicationType
+    enum class LitchiApplicationType
     {
         Editor,
         Game
@@ -47,7 +47,7 @@ namespace LitchiRuntime
         }
 
 
-        virtual ApplicationType GetApplicationType() = 0;
+        virtual LitchiApplicationType GetApplicationType() = 0;
 
         // Init 
         virtual bool Init();
