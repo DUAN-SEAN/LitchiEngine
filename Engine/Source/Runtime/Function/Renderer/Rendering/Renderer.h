@@ -148,6 +148,7 @@ namespace LitchiRuntime
 		static void CreateSamplers(const bool create_only_anisotropic = false);
 		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
 		static void LoadDefaultMaterials();
+		static void CreateDefaultBoneConstantBuffer();
 
 		// Passes - Core
 		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
@@ -179,28 +180,32 @@ namespace LitchiRuntime
 		// Misc
 		static bool IsCallingFromOtherThread();
 		static void DestroyResources();
-		
+
+		static RHI_CommandPool* m_cmd_pool;
+		static const uint32_t m_frames_in_flight = 5;
+
+		// RendererPath container
+		static std::unordered_map<RendererPathType, RendererPath*> m_rendererPaths;
+
 		static Pcb_Pass m_cb_pass_cpu;
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
+
+		static bool m_brdf_specular_lut_rendered;
+
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_lines;
+		static std::vector<RHI_Vertex_PosCol> m_line_vertices;
+		static std::vector<float> m_lines_duration;
+		static uint32_t m_lines_index_depth_off;
+		static uint32_t m_lines_index_depth_on;
+
 		static std::unique_ptr<Font> m_font;
 		static std::unique_ptr<Grid> m_world_grid;
 		static std::unique_ptr<SphereGeometry> m_geom_sphere;
 		static std::unique_ptr<PlaneGeometry> m_geom_plane;
 		static Material* m_default_standard_material;
-		static bool m_brdf_specular_lut_rendered;
-		static std::vector<RHI_Vertex_PosCol> m_line_vertices;
-		static std::vector<float> m_lines_duration;
-		static uint32_t m_lines_index_depth_off;
-		static uint32_t m_lines_index_depth_on;
-		static RHI_CommandPool* m_cmd_pool;
-		static const uint32_t m_frames_in_flight = 5;
-
-		static std::unordered_map<RendererPathType, RendererPath*> m_rendererPaths;
-
-		// window
-		static std::unique_ptr<Window> m_window;
+		static Material* m_default_standard_skin_material;
+		static std::shared_ptr<RHI_ConstantBuffer> m_default_bone_constant_buffer;
 	};
 }

@@ -1,0 +1,108 @@
+{
+    "availableID": 1,
+    "rootEntityId": 88,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 88,
+            "parentId": 0,
+            "layer": 1,
+            "name": "VM_Basemesh_Female",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 5.98255729675293,
+                        "z": -2.5337769985198976
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.14944805204868318,
+                        "y": 0.14944805204868318,
+                        "z": 0.14944805204868318
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 89,
+            "parentId": 88,
+            "layer": 1,
+            "name": "Eyes_Female",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.00004307384369894862,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/VM_Basemesh_Female.fbx",
+                    "SubMeshIndex": 1
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 90,
+            "parentId": 88,
+            "layer": 1,
+            "name": "VM_Basemesh_Female",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/VM_Basemesh_Female.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        }
+    ]
+}

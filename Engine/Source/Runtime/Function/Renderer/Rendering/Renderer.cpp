@@ -33,24 +33,30 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-	std::unordered_map<RendererPathType, RendererPath*> Renderer::m_rendererPaths;
 	Pcb_Pass Renderer::m_cb_pass_cpu;
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 	Cb_Material Renderer::m_cb_material_cpu;
-	//RenderCamera* Renderer::m_main_camera;
-	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
+
+	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
+
+	std::unordered_map<RendererPathType, RendererPath*> Renderer::m_rendererPaths;
+
+	bool Renderer::m_brdf_specular_lut_rendered;
+
 	unique_ptr<Font> Renderer::m_font;
 	unique_ptr<Grid> Renderer::m_world_grid;
 	std::unique_ptr<SphereGeometry> Renderer::m_geom_sphere;
 	std::unique_ptr<PlaneGeometry> Renderer::m_geom_plane;
 	Material* Renderer::m_default_standard_material;
+	Material* Renderer::m_default_standard_skin_material;
+	std::shared_ptr<RHI_ConstantBuffer> Renderer::m_default_bone_constant_buffer;
+
+	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	vector<RHI_Vertex_PosCol> Renderer::m_line_vertices;
 	vector<float> Renderer::m_lines_duration;
 	uint32_t Renderer::m_lines_index_depth_off;
 	uint32_t Renderer::m_lines_index_depth_on;
-	bool Renderer::m_brdf_specular_lut_rendered;
-	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
 
 	namespace
 	{
@@ -225,6 +231,7 @@ namespace LitchiRuntime
 		CreateStandardTextures();
 		CreateStandardMeshes();// todo:
 		LoadDefaultMaterials();
+		CreateDefaultBoneConstantBuffer();
 
 		m_rendererPaths.clear();
 		for (size_t i = RendererPathType_Invalid + 1; i < RendererPathType_Count; i++)
@@ -265,6 +272,8 @@ namespace LitchiRuntime
 			m_world_grid.reset();
 			m_geom_sphere.reset();
 			m_geom_plane.reset();
+			m_default_bone_constant_buffer.reset();
+
 			m_default_standard_material = nullptr;// unload by resourceManager
 			m_font.reset();
 			swap_chain = nullptr;

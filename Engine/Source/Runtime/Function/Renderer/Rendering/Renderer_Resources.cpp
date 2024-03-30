@@ -517,6 +517,13 @@ namespace LitchiRuntime
     void Renderer::LoadDefaultMaterials()
     {
         m_default_standard_material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard.mat");
+        m_default_standard_skin_material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/StandardSkin.mat");
+    }
+
+    void Renderer::CreateDefaultBoneConstantBuffer()
+    {
+        m_default_bone_constant_buffer = std::make_unique<RHI_ConstantBuffer>();
+        m_default_bone_constant_buffer->Create<Cb_Bone_Arr>(1);
     }
 
     void Renderer::DestroyResources()

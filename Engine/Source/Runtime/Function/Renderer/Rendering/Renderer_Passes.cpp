@@ -15,6 +15,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIImage.h"
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
+#include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_IndexBuffer.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
@@ -571,7 +572,6 @@ namespace LitchiRuntime
 		bool isDrawMesh = !isDrawMaterial && selectedMesh != nullptr;
 		bool isDrawTexture2D = !isDrawMaterial && !isDrawMesh && selectedTexture2d != nullptr;
 
-
 		RHI_VertexBuffer* m_vertex_buffer;
 		RHI_IndexBuffer* m_index_buffer;
 		int indexCount;
@@ -589,7 +589,22 @@ namespace LitchiRuntime
 			m_index_buffer = selectedMesh->GetIndexBuffer();
 			indexCount = selectedMesh->GetIndexCount();
 			// transform = ;
-			selectMaterial = m_default_standard_material;
+			selectMaterial = selectedMesh->IsAnimationModel()? m_default_standard_skin_material:m_default_standard_material;
+
+			// get bone data
+			std::vector<int> boneHierarchy;
+			std::vector<Matrix> defaultTransform;
+			selectedMesh->GetBoneHierarchy(boneHierarchy);
+			selectedMesh->GetNodeOffsets(defaultTransform);
+
+			Cb_Bone_Arr m_bone_arr;
+			uint32_t numBones = defaultTransform.size();
+			// 
+			for (uint32_t i = 0; i < numBones; i++) {
+				m_bone_arr.boneArr[i] = defaultTransform[i];
+			}
+			// update cbuffer
+			m_default_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
 		}
 		else if(isDrawTexture2D)
 		{
@@ -653,6 +668,12 @@ namespace LitchiRuntime
 		}
 		cmd_list->SetBufferVertex(m_vertex_buffer);
 		cmd_list->SetBufferIndex(m_index_buffer);
+
+		// 如果是skinnedMesh 更新蒙皮数据
+		if (isDrawMesh && selectedMesh->IsAnimationModel())
+		{
+			cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, m_default_bone_constant_buffer);
+		}
 
 		EASY_BLOCK("UpdateMaterial")
 		UpdateMaterial(cmd_list, selectMaterial);

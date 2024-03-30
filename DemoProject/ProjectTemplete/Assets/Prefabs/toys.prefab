@@ -1,0 +1,1043 @@
+{
+    "availableID": 1,
+    "rootEntityId": 567,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 567,
+            "parentId": 0,
+            "layer": 1,
+            "name": "toys",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.5878440141677857,
+                        "y": 5.114834785461426,
+                        "z": -4.729822158813477
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.009999999776482582,
+                        "y": 0.009999999776482582,
+                        "z": 0.009999999776482582
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 568,
+            "parentId": 567,
+            "layer": 1,
+            "name": "骨架",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 82.07244873046875,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 100.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 569,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132291316986084,
+                        "y": -0.27928343415260317,
+                        "z": 0.048759639263153079
+                    },
+                    "localRotation": {
+                        "x": 0.42304664850234988,
+                        "y": 6.228430748933533e-8,
+                        "z": -2.9079503249818118e-8,
+                        "w": 0.9061079025268555
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 24
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 570,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_002",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": -0.05052068829536438,
+                        "z": -0.09728217124938965
+                    },
+                    "localRotation": {
+                        "x": -0.07815422117710114,
+                        "y": -0.7027744054794312,
+                        "z": 0.07815422117710114,
+                        "w": 0.7027744650840759
+                    },
+                    "localScale": {
+                        "x": 0.07427825033664704,
+                        "y": 0.07427825033664704,
+                        "z": 0.3674207627773285
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 23
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 571,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_003",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.513229250907898,
+                        "y": -0.4873829782009125,
+                        "z": 0.22304093837738038
+                    },
+                    "localRotation": {
+                        "x": 0.42304664850234988,
+                        "y": 6.228430748933533e-8,
+                        "z": -2.9079503249818118e-8,
+                        "w": 0.9061079025268555
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 22
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 572,
+            "parentId": 568,
+            "layer": 1,
+            "name": "球体",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5141390562057495,
+                        "y": -0.08696136623620987,
+                        "z": -0.11381536722183228
+                    },
+                    "localRotation": {
+                        "x": 0.42304664850234988,
+                        "y": 6.228431459476269e-8,
+                        "z": -2.9079503249818118e-8,
+                        "w": 0.9061079025268555
+                    },
+                    "localScale": {
+                        "x": 0.21225744485855103,
+                        "y": 0.2122574895620346,
+                        "z": 0.2122574895620346
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 21
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 573,
+            "parentId": 568,
+            "layer": 1,
+            "name": "平面",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.21380317211151124,
+                        "y": -0.8808959722518921,
+                        "z": -1.4490680694580079
+                    },
+                    "localRotation": {
+                        "x": -0.11052671819925308,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9938731789588928
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 20
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 574,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.9840252995491028,
+                        "y": -0.4365178644657135,
+                        "z": -1.7925572395324708
+                    },
+                    "localRotation": {
+                        "x": -0.10698539763689041,
+                        "y": -0.038945816457271579,
+                        "z": 0.004095824901014566,
+                        "w": 0.9934890866279602
+                    },
+                    "localScale": {
+                        "x": 1.4177109003067017,
+                        "y": 1.4177113771438599,
+                        "z": 1.6156893968582154
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 19
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 575,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0788881704211235,
+                        "z": 0.47735416889190676
+                    },
+                    "localRotation": {
+                        "x": -0.11052671819925308,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9938731789588928
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 18
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 576,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.0332581996917725,
+                        "y": -0.3521341383457184,
+                        "z": -1.5772624015808106
+                    },
+                    "localRotation": {
+                        "x": -0.10706955939531326,
+                        "y": 0.009835167787969113,
+                        "z": -0.0013822490582242609,
+                        "w": 0.9942018985748291
+                    },
+                    "localScale": {
+                        "x": 1.224949836730957,
+                        "y": 1.224949598312378,
+                        "z": 1.224949836730957
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 17
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 577,
+            "parentId": 568,
+            "layer": 1,
+            "name": "Cube.001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.18031245470046998,
+                        "z": 0.9277260303497315
+                    },
+                    "localRotation": {
+                        "x": -0.11052671819925308,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9938731789588928
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 16
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 578,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_004",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132289528846741,
+                        "y": -0.4873829483985901,
+                        "z": 0.2230408787727356
+                    },
+                    "localRotation": {
+                        "x": 0.42304664850234988,
+                        "y": 6.228430748933533e-8,
+                        "z": -2.9079503249818118e-8,
+                        "w": 0.9061079025268555
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 15
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 579,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_003",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132290124893189,
+                        "y": -0.636552631855011,
+                        "z": 0.5725480318069458
+                    },
+                    "localRotation": {
+                        "x": 0.19704319536685944,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9803948402404785
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 14
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 580,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_004",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132290720939636,
+                        "y": -0.7162980437278748,
+                        "z": 0.6539539098739624
+                    },
+                    "localRotation": {
+                        "x": 0.19704324007034303,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9803947806358337
+                    },
+                    "localScale": {
+                        "x": 0.9506712555885315,
+                        "y": 0.845411479473114,
+                        "z": 0.9999999403953552
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 13
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 581,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_002",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132290720939636,
+                        "y": -0.5589044094085693,
+                        "z": 0.3871805965900421
+                    },
+                    "localRotation": {
+                        "x": 0.19704319536685944,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9803948402404785
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 12
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 582,
+            "parentId": 568,
+            "layer": 1,
+            "name": "球体_001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.48204904794692995,
+                        "y": -0.0654786229133606,
+                        "z": -0.11731433868408203
+                    },
+                    "localRotation": {
+                        "x": -0.2174009084701538,
+                        "y": 0.006447906140238047,
+                        "z": -0.0026176634710282089,
+                        "w": 0.9760575890541077
+                    },
+                    "localScale": {
+                        "x": 0.21225742995738984,
+                        "y": 0.2122575044631958,
+                        "z": 0.2122574895620346
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 11
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 583,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_006",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.479499876499176,
+                        "y": 0.04243987053632736,
+                        "z": 0.11020791530609131
+                    },
+                    "localRotation": {
+                        "x": -0.217400923371315,
+                        "y": 0.006447906140238047,
+                        "z": -0.0026176634710282089,
+                        "w": 0.9760575890541077
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 10
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 584,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_005",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.47577425837516787,
+                        "y": 0.15762735903263093,
+                        "z": 0.3559666574001312
+                    },
+                    "localRotation": {
+                        "x": -0.217400923371315,
+                        "y": 0.006447906140238047,
+                        "z": -0.0026176634710282089,
+                        "w": 0.9760575890541077
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 9
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 585,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_006",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.4757745563983917,
+                        "y": 0.15762737393379212,
+                        "z": 0.35596659779548647
+                    },
+                    "localRotation": {
+                        "x": -0.217400923371315,
+                        "y": 0.006447906140238047,
+                        "z": -0.0026176634710282089,
+                        "w": 0.9760575890541077
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 8
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 586,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_007",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.4789900779724121,
+                        "y": 0.32842564582824709,
+                        "z": 0.4070384204387665
+                    },
+                    "localRotation": {
+                        "x": -0.6113463044166565,
+                        "y": -0.0295748058706522,
+                        "z": -0.022855782881379129,
+                        "w": 0.7904800176620483
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 7
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 587,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_008",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.4827706515789032,
+                        "y": 0.5229410529136658,
+                        "z": 0.45743492245674136
+                    },
+                    "localRotation": {
+                        "x": -0.6113463044166565,
+                        "y": -0.0295748058706522,
+                        "z": -0.022855782881379129,
+                        "w": 0.7904800176620483
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 6
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 588,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_009",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.4839182198047638,
+                        "y": 0.615326464176178,
+                        "z": 0.5227369070053101
+                    },
+                    "localRotation": {
+                        "x": -0.6119313836097717,
+                        "y": -0.0076413522474467758,
+                        "z": 0.0035618788097053768,
+                        "w": 0.7908658981323242
+                    },
+                    "localScale": {
+                        "x": 0.9506710171699524,
+                        "y": 0.845411479473114,
+                        "z": 0.9999998211860657
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 5
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 589,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_007",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.0477378964424134e-9,
+                        "y": -0.01671677641570568,
+                        "z": 0.05282312631607056
+                    },
+                    "localRotation": {
+                        "x": -0.11052671819925308,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9938731789588928
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 4
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 590,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_005",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5132290720939636,
+                        "y": -0.9966531991958618,
+                        "z": 0.5604455471038818
+                    },
+                    "localRotation": {
+                        "x": 0.1970432549715042,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9803947806358337
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 3
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 591,
+            "parentId": 568,
+            "layer": 1,
+            "name": "立方体_010",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.48619428277015688,
+                        "y": 0.5033175945281982,
+                        "z": 0.7607730627059937
+                    },
+                    "localRotation": {
+                        "x": -0.0701412558555603,
+                        "y": -0.009040945209562779,
+                        "z": -0.006954564247280359,
+                        "w": 0.9974718689918518
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 2
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 592,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_008",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.0256879329681397,
+                        "y": -0.35371777415275576,
+                        "z": -1.5771350860595704
+                    },
+                    "localRotation": {
+                        "x": -0.10803431272506714,
+                        "y": 0.10700251907110214,
+                        "z": -0.011644275858998299,
+                        "w": 0.9883033037185669
+                    },
+                    "localScale": {
+                        "x": 1.224949836730957,
+                        "y": 1.2249494791030884,
+                        "z": 1.224949836730957
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 1
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 593,
+            "parentId": 568,
+            "layer": 1,
+            "name": "柱体_010",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.9777761697769165,
+                        "y": -0.43886598944664,
+                        "z": -1.792426586151123
+                    },
+                    "localRotation": {
+                        "x": -0.10837571322917938,
+                        "y": 0.07222520560026169,
+                        "z": -0.00784994661808014,
+                        "w": 0.9914517998695374
+                    },
+                    "localScale": {
+                        "x": 1.417710781097412,
+                        "y": 1.417710542678833,
+                        "z": 1.6156892776489258
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/toys.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 594,
+            "parentId": 567,
+            "layer": 1,
+            "name": "Camera",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 735.88916015625,
+                        "y": 495.8309326171875,
+                        "z": -692.5791015625
+                    },
+                    "localRotation": {
+                        "x": -0.21255731582641602,
+                        "y": 0.9047968983650208,
+                        "z": 0.08438927680253983,
+                        "w": -0.3592219352722168
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 100.00000762939453,
+                        "z": 100.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 595,
+            "parentId": 567,
+            "layer": 1,
+            "name": "Light",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 407.6245422363281,
+                        "y": 590.38623046875,
+                        "z": 100.54539489746094
+                    },
+                    "localRotation": {
+                        "x": -0.16907577216625215,
+                        "y": -0.7558802366256714,
+                        "z": -0.2721713185310364,
+                        "w": 0.570947527885437
+                    },
+                    "localScale": {
+                        "x": 100.00000762939453,
+                        "y": 100.00000762939453,
+                        "z": 100.0
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,108 @@
+{
+    "availableID": 1,
+    "rootEntityId": 91,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 91,
+            "parentId": 0,
+            "layer": 1,
+            "name": "VM_Basemesh_Male",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 5.407454013824463,
+                        "z": -3.455338478088379
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.1460791528224945,
+                        "y": 0.1460791528224945,
+                        "z": 0.1460791528224945
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 92,
+            "parentId": 91,
+            "layer": 1,
+            "name": "Eyes_Male",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/VM_Basemesh_Male.fbx",
+                    "SubMeshIndex": 1
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 93,
+            "parentId": 91,
+            "layer": 1,
+            "name": "VM_Basemesh_Male",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/VM_Basemesh_Male.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                }
+            ]
+        }
+    ]
+}

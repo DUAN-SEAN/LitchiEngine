@@ -1,0 +1,282 @@
+e7e5a972e69b576c091c618453490b5f148ee820	Engine/ThirdParty/dxcompiler/lib/Debug/libdxcompiler.dll	80.41 Mb	18.99 Mb	1	2024/3/25 10:39	False
+7b9d9983f7f0c1f12a2157d53d548d7f4fd0b484	Engine/ThirdParty/PhysX/lib/debug/PhysXExtensions_static_64.lib	44.95 Mb	<Unknown>	26	2024/3/30 19:14	False
+decf0fec50eb4abc97586c2f951168e9dc896b9c	Engine/ThirdParty/VulkanSDK/bin/MacOS/libVkLayer_khronos_validation.dylib	41.47 Mb	10.77 Mb	288	2024/3/30 19:14	False
+f1b46553ec0707a9f1210f7c33e9781c50116ded	Engine/ThirdParty/mono/lib/Debug/libmono-static-sgen.lib	38.41 Mb	12.13 Mb	32	2024/3/30 19:14	False
+273308da5a3b72851f746a7098a38d664e663073	Engine/ThirdParty/PhysX/lib/debug/PhysX_64.pdb	33.52 Mb	<Unknown>	26	2024/3/30 19:14	False
+d30c154bfef076f0d0c887392a5b3bfa15be9fa5	Engine/ThirdParty/mono/lib/Release/libmono-static-sgen.lib	32.59 Mb	11.13 Mb	32	2024/3/30 19:14	False
+919b6ffdd183a1023c34d08b2912edfc040031b8	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXExtensions_static_64.lib	31.85 Mb	4.41 Mb	253	2024/3/25 14:03	False
+d27816d14cbc90c88f96abc6377f41e3c7fe7481	Engine/ThirdParty/VulkanSDK/bin/Linux/libVkLayer_khronos_validation.so	29.42 Mb	6.94 Mb	288	2024/3/30 19:14	False
+ee9f6bdf8313dbaa754f91d62b4a52c88e0eb2a0	Engine/ThridParty/mono/Libs/libmono-static-sgen.lib	29.23 Mb	8.92 Mb	423	2024/3/25 14:03	False
+4b5922427a75f19aa1d6d5a1610e5f6171ae7f19	Engine/ThirdParty/compressonator/lib/Debug/Compressonator.lib	28.69 Mb	6.72 Mb	237	2024/3/30 19:14	False
+7666a70c5aeda1739458bd658f78065eaee9b435	Engine/ThirdParty/VulkanSDK/bin/Win32/VkLayer_khronos_validation.dll	26.40 Mb	6.86 Mb	288	2024/3/30 19:14	False
+6a2c74a2ad15976fd62881286e0573429cf942b7	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.pdb	26.11 Mb	5.26 Mb	253	2024/3/25 14:03	False
+781b4420a7e8f1f73db70ba2bfff9f04c3efeff7	Engine/Assets/Showroom/Assets/Meshes/sponza.obj	22.75 Mb	5.45 Mb	357	2024/3/26 22:24	False
+29333c8156b6827a7eaf9919ac9da95e9b2fc200	Engine/ThirdParty/spirv_cross/lib/Debug/spirv-cross-core.lib	21.17 Mb	2.61 Mb	237	2024/3/30 19:14	False
+3ab420ed5077cf4616a04525826bc330a74f2447	Engine/ThridParty/free_image/lib/FreeImageLib.lib	21.08 Mb	5.51 Mb	205	2024/3/25 14:03	False
+4450761680cef9024c7d54b3caa079f781f14477	Engine/ThirdParty/PhysX/lib/release/PhysX_64.pdb	20.09 Mb	<Unknown>	26	2024/3/30 19:14	False
+03f3dca03acafbc967525c695fdf1bbbaeb2bb1d	Engine/ThridParty/dxc/lib/dxcompiler.dll	19.56 Mb	8.55 Mb	205	2024/3/25 14:03	False
+ec04b909a285e6b9c5631e290ba26009edcf22f0	Engine/ThirdParty/dxcompiler/lib/Release/libdxcompiler.dll	19.35 Mb	8.48 Mb	32	2024/3/30 19:14	False
+45b020b0e83211b58072b6145da477b4ad79d448	Engine/ThirdParty/assimp/bin/Debug/assimp-vc142-mtd.dll	18.41 Mb	4.14 Mb	35	2024/3/30 19:14	False
+62b9c7ab2f05385fde224ef5b474d11a9fe2cc47	Engine/ThirdParty/spirv_cross/lib/Debug/spirv-cross-glsl.lib	17.55 Mb	2.18 Mb	237	2024/3/30 19:14	False
+b30fd933ec87700fd6149c9a69d238df482d8ebc	Engine/ThridParty/mono/Libs/mono-2.0-sgen.pdb	16.85 Mb	5.49 Mb	423	2024/3/25 14:03	False
+fe89fc10dceec43e5fc1de5f6e2fb0333d20b83d	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.map	16.82 Mb	1.52 Mb	253	2024/3/25 14:03	False
+03eaaf46ab8303208c3a98f69f4b2dd14106f6a6	Engine/ThirdParty/PhysX/lib/release/PhysXExtensions_static_64.lib	16.45 Mb	<Unknown>	26	2024/3/30 19:14	False
+8a7d5984b1468e8121f30962da1e19c64d1e083a	Engine/Data/Engine/Mono/mono/fsharp/FSharp.Compiler.Private.dll	16.36 Mb	5.60 Mb	461	2024/3/30 19:14	False
+bbd012117a7435b930801fd2f3b0b7fae7bf9a2a	Engine/ThirdParty/PhysX/lib/debug/SimulationController_static_64.lib	16.20 Mb	<Unknown>	26	2024/3/30 19:14	False
+5f4928d85be02fc36a66e43c36a27036dc3449cc	Engine/ThirdParty/PhysX/lib/debug/PhysXVehicle_static_64.lib	16.08 Mb	<Unknown>	26	2024/3/30 19:14	False
+d3d906ceb64411cf95a3ffaab3089c708007d215	Engine/ThirdParty/PhysX/lib/release/PhysXCommon_64.pdb	16.07 Mb	<Unknown>	26	2024/3/30 19:14	False
+7a541e99df064d6f19a5ec1b941bb2661496f363	Engine/ThridParty/mono/lib/monodoc/sources/netdocs.zip	15.96 Mb	15.59 Mb	423	2024/3/25 14:03	False
+746d17ddedb79f0a44c1f8e42ec3e745b9b1ce88	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXVehicle_static_64.lib	15.31 Mb	1.82 Mb	253	2024/3/25 14:03	False
+1edd8b1cec02a51c7219685f6e7129c9ddbc2184	Engine/ThirdParty/PhysX/lib/debug/PhysXCommon_64.pdb	14.79 Mb	<Unknown>	26	2024/3/30 19:14	False
+09ba0cab6a00644ed5c5815a902b8e2c656ebf34	Engine/Data/Engine/Textures/rp_sophia_animated_003_norm.jpg	14.12 Mb	13.55 Mb	331	2024/3/30 19:14	False
+5e37c8e7f463b66d3f4ad251d06b3aeb145be5f4	Engine/ThirdParty/PhysX/lib/debug/PhysX_64.map	13.93 Mb	<Unknown>	26	2024/3/30 19:14	False
+7dc5f3ce0f7ddbf55e5b64f09d6c515ee3f96327	Engine/ThirdParty/VulkanSDK/bin/MacOS/glslangValidator	13.21 Mb	4.00 Mb	288	2024/3/30 19:14	False
+e2c89fae9435a3f6c17b9e2cd47024429807b149	Engine/ThirdParty/VulkanSDK/bin/MacOS/libMoltenVK.dylib	13.08 Mb	3.99 Mb	288	2024/3/30 19:14	False
+1d663cf114b2042cddea408dbe5f2431691c3bb4	Engine/Data/Engine/Textures/LadyCat.png	12.00 Mb	0.64 Mb	331	2024/3/30 19:14	False
+d8f9a288f3bb80067ffac7e2f4f9fe0f05e9e0d3	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_curtain_green_diff.tga	12.00 Mb	9.16 Mb	357	2024/3/26 22:24	False
+16b8f4e58f5a1d659e9cea3cf14cfa2c103021dc	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_curtain_ddn.tga	12.00 Mb	6.52 Mb	357	2024/3/26 22:24	False
+6cd4c528b6cb3e1fc7242ba391e276b430d7e21a	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_curtain_blue_diff.tga	12.00 Mb	9.48 Mb	357	2024/3/26 22:24	False
+af23d3efe395dac1b0169c1eff10d9aba45c9ef2	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_curtain_diff.tga	12.00 Mb	9.79 Mb	357	2024/3/26 22:24	False
+258df91c3462d21fe5daf4bbe2b1225201f917f9	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.pdb	11.82 Mb	2.39 Mb	253	2024/3/25 14:03	False
+24f1e2c82e21a2ad3a9190ab73e52b383df21ac9	Engine/ThirdParty/compressonator/lib/Release/Compressonator.lib	11.77 Mb	3.36 Mb	237	2024/3/30 19:14	False
+482704e8a94ae4cbc218683ff86bc57830ea12d7	Engine/ThirdParty/spirv_cross/lib/Debug/spirv-cross-hlsl.lib	11.64 Mb	1.53 Mb	237	2024/3/30 19:14	False
+274d719c20fb04bad439c59deabe22c6a9cec43c	Engine/ThridParty/free_image/lib/FreeImageLib_debug.rar	11.41 Mb	11.35 Mb	205	2024/3/25 14:03	False
+863b5843184f801740e259938d835d3b826e805c	Engine/ThirdParty/PhysX/lib/release/SimulationController_static_64.lib	10.05 Mb	<Unknown>	26	2024/3/30 19:14	False
+1db9346d96d7d8d003f937924e46360fed1a9626	Engine/Assets/Engine/Models/rp_sophia_animated_003_idling.fbx	9.62 Mb	7.20 Mb	199	2024/1/8 22:27	False
+3417b07f80fe28d8cdd2f5046b46e6ce5caca21d	Tools/easy_profiler-v2.1.0-msvc15-win64.zip	9.28 Mb	9.25 Mb	489	2024/3/30 19:14	False
+a24eee68bbc5334e3fe00643fc74bbe56133de81	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/LowLevelDynamics_static_64.lib	9.22 Mb	2.22 Mb	253	2024/3/25 14:03	False
+87d2137b1e3972693d83efc9c2ea6ccc0426df64	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/SimulationController_static_64.lib	9.17 Mb	1.92 Mb	253	2024/3/25 14:03	False
+177cdc59ddefe016c4ddf48032fab26c242b0ed6	Engine/ThirdParty/PhysX/lib/debug/LowLevelDynamics_static_64.lib	9.16 Mb	<Unknown>	26	2024/3/30 19:14	False
+3300e26ed93651761032d80ad51102f05470a561	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.map	8.00 Mb	0.72 Mb	253	2024/3/25 14:03	False
+44faa93a48493064130e87eba68841feebe67e15	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCooking_64.pdb	7.93 Mb	1.08 Mb	253	2024/3/25 14:03	False
+c2b6785a3804e3636d2876b7297ebb934a721a7f	Engine/ThirdParty/assimp/test/models-nonbsd/AMF/3_bananas.amf.7z	7.30 Mb	7.30 Mb	22	2024/3/22 10:17	False
+fe1d621a96b69e6222aa789ae49876dc49f09611	Engine/ThirdParty/VulkanSDK/bin/Win32/glslangValidator.exe	7.22 Mb	2.21 Mb	288	2024/3/30 19:14	False
+1bbd8374c8bf3cd0510685248d65293d6815cfde	Engine/ThirdParty/PhysX/lib/debug/PhysXFoundation_64.pdb	6.89 Mb	<Unknown>	26	2024/3/30 19:14	False
+4074127567ad41a68a13cc070da98355a2670fed	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXFoundation_64.pdb	6.85 Mb	0.90 Mb	253	2024/3/25 14:03	False
+c4f85f604dedbf0afdad34af760becd8fe814066	Engine/Data/Engine/Mono/mono/nuget/nuget.exe	6.76 Mb	2.15 Mb	461	2024/3/30 19:14	False
+a54d46275118cf6fa2508ba84823547aa55f6deb	Engine/ThirdParty/PhysX/lib/debug/PhysXCommon_64.map	6.62 Mb	<Unknown>	26	2024/3/30 19:14	False
+c6cff1b4b455e2eb2d182d2fa5dca32c0b1da237	DemoProject/ProjectTemplete/Assets/Models/rp_sophia_animated_003_idling.fbm/rp_sophia_animated_003_dif.jpg	6.51 Mb	5.92 Mb	331	2024/3/30 19:14	False
+6d732e5e49ea31f45666071661d63f4340cfdac6	Engine/ThirdParty/spirv_cross/lib/Debug/spirv-cross-c.lib	6.47 Mb	0.81 Mb	237	2024/3/30 19:14	False
+d48567e2c2424c6081229631b4033cdd8bb39ffb	Engine/ThridParty/assimp/bin/assimp-vc142-mt.dll	6.36 Mb	2.27 Mb	253	2024/3/25 14:03	False
+ad67f5e78e476b5e68b5120164887d06cbba826c	Engine/ThirdParty/assimp/bin/Release/assimp-vc142-mt.pdb	6.30 Mb	1.40 Mb	35	2024/3/30 19:14	False
+8ded83438d8492f1f57b2bcd8faaa6b85f31b53c	Engine/ThirdParty/PhysX/lib/release/LowLevelDynamics_static_64.lib	5.99 Mb	<Unknown>	26	2024/3/30 19:14	False
+6213a35cfbc08e8db2f2e02e081a170f91602695	Engine/ThirdParty/PhysX/lib/debug/PhysXCooking_64.pdb	5.91 Mb	<Unknown>	26	2024/3/30 19:14	False
+e741f656ab5caff4a574ea2d5c3877564fb0572d	Engine/ThirdParty/spirv_cross/lib/Release/spirv-cross-glsl.lib	5.90 Mb	0.90 Mb	237	2024/3/30 19:14	False
+4d0586f9d52de668eb590864bd3286689c9c1dd8	DemoProject/ProjectTemplete/Assets/Models/Minion_FBX.fbx	5.84 Mb	4.94 Mb	334	2024/3/30 19:14	False
+acb9364603e82860134433e7cb4fee5267a1b3cb	Engine/ThirdParty/assimp/bin/Debug/unit.exe	5.83 Mb	1.18 Mb	34	2024/3/30 19:14	False
+9f4c8fa2277f0162e621aafbbfb60ff0945b3833	Engine/Data/Engine/Mono/mono/4.5/Microsoft.CodeAnalysis.CSharp.dll	5.74 Mb	2.13 Mb	461	2024/3/30 19:14	False
+b0ed978d1c76701584d86f183c60ec647d3cb4d5	Engine/ThirdParty/PhysX/lib/debug/PhysX_64.dll	5.73 Mb	<Unknown>	26	2024/3/30 19:14	False
+4e4b5de853cc6c15e24c9fc9f71f4146119a9f51	Engine/ThridParty/mono/Libs/mono-2.0-sgen.dll	5.56 Mb	2.12 Mb	254	2024/3/25 14:03	False
+96acdf3e9c9f12bb7253769200bd95bd96e36d01	Engine/ThridParty/glm-0.9.9.8.zip	5.53 Mb	5.22 Mb	355	2024/3/25 14:03	False
+09260b684eabe821311a0291c4dca3252eb98398	Engine/ThirdParty/PhysX/lib/release/PhysXVehicle_static_64.lib	5.52 Mb	<Unknown>	26	2024/3/30 19:14	False
+a7d2a8c5fbeed9d15a43322ac6a02137a03eac97	Engine/Data/Engine/Mono/mono/4.5/sqlmetal.exe	5.48 Mb	1.29 Mb	461	2024/3/30 19:14	False
+024959f6fbd10a9c050f7fcbd316ed7829611126	Engine/ThirdParty/PhysX/lib/debug/PhysXExtensions_static_64.pdb	5.26 Mb	<Unknown>	26	2024/3/30 19:14	False
+cdc89ba2545180990be3e9b20fcd774b4fed43cf	Engine/ThirdParty/assimp/bin/Release/assimp-vc142-mt.dll	5.26 Mb	2.17 Mb	35	2024/3/30 19:14	False
+f4a3fce5183c4feff0e4360f44977384102e98ea	Engine/Assets/Showroom/Assets/Sounds/Sea Waves-SoundBible.com-946156036.wav	5.15 Mb	4.58 Mb	357	2024/3/26 22:24	False
+2dd7d94ed9c77ec427135af14d2b5d8106860a99	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysX_64.dll	5.13 Mb	1.49 Mb	253	2024/3/25 14:03	False
+6a74e2f9d1b806d9ddc3237f46b29aec8580a29f	Engine/ThirdParty(new)/Vulkan/external/vulkan/vulkan_structs.hpp	5.10 Mb	0.35 Mb	4	2024/3/9 11:41	False
+e3e6402a7787671583d599612cd5f1937d2fa837	DemoProject/ProjectTemplete/Assets/Models/LadyCat.obj	5.08 Mb	1.44 Mb	331	2024/3/30 19:14	False
+1a79d541f32400a968f2da88f64bcca91a348fdc	Engine/Data/Engine/Mono/mono/4.5/Microsoft.CodeAnalysis.VisualBasic.dll	4.97 Mb	1.80 Mb	461	2024/3/30 19:14	False
+3e47ca094550535b5c8d0e7a847c0b7e6b7aa18c	Engine/ThirdParty/PhysX/lib/release/PhysXExtensions_static_64.pdb	4.87 Mb	<Unknown>	26	2024/3/30 19:14	False
+8ffe8f2e680e8a452f7450bd0de1edc6ef2221af	Engine/ThirdParty/VulkanSDK/include/vulkan/vulkan_structs.hpp	4.82 Mb	0.33 Mb	282	2024/3/30 19:14	False
+901f47ae9ae3aae6a5abcd165f59d2d77bb5886e	Engine/ThirdParty/PhysX/lib/release/PhysXFoundation_64.pdb	4.61 Mb	<Unknown>	26	2024/3/30 19:14	False
+e34716ccec7cab4e10029001ee42e0cf78d0d80c	Engine/Data/Engine/Mono/mono/4.5/mscorlib.dll	4.42 Mb	1.52 Mb	461	2024/3/30 19:14	False
+222987b1921e30aa5aa6d9cc38b2e5d66a933cda	Engine/ThirdParty/freetype/lib/Release/freetype.lib	4.40 Mb	1.58 Mb	32	2024/3/30 19:14	False
+cdd7a3fb33c3f4ff34c48fcc54613ba35df2df3e	DemoProject/ProjectTemplete/Assets/Models/Capoeira.fbx	4.36 Mb	3.80 Mb	331	2024/3/30 19:14	False
+e7b7c0c29ee2e5ea5d66859f364bc5afd98c5d68	Engine/ThridParty/glm-release.zip	4.33 Mb	4.28 Mb	2	2023/4/10 14:00	False
+931515530dfd24f5b31f352921b41ca179b09e94	Engine/ThridParty/freetype-windows-binaries-master/static/vs2015-2022/win64/freetype.lib	4.33 Mb	1.59 Mb	284	2024/3/25 14:03	False
+a31cf09ac472ef278f4b781fa0b8c193e82301bf	Engine/ThirdParty/PhysX/lib/debug/LowLevel_static_64.lib	4.27 Mb	<Unknown>	26	2024/3/30 19:14	False
+1e7e6d3f7ccf3162000f966c81488d936dd01991	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/SceneQuery_static_64.lib	4.19 Mb	0.95 Mb	253	2024/3/25 14:03	False
+e3ee292f93419c43cc3f54b0cf75768fd92f01bc	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXPvdSDK_static_64.lib	4.17 Mb	0.70 Mb	253	2024/3/25 14:03	False
+7c13089f17026511d623af0fc22a877c261737eb	Engine/ThirdParty/PhysX/lib/debug/PhysXPvdSDK_static_64.lib	4.12 Mb	<Unknown>	26	2024/3/30 19:14	False
+b1e5493c4ff08135da66287f7c354ae8d1f4fedd	Engine/ThirdParty/freetype/lib/Debug/freetype.lib	4.05 Mb	1.29 Mb	32	2024/3/30 19:14	False
+67be1d86eea9debd249ec3c1c8060dbca36c4972	Engine/ThirdParty/PhysX/lib/release/PhysXCooking_64.pdb	4.04 Mb	<Unknown>	26	2024/3/30 19:14	False
+6888e9e40dd35e3f1cb03213f5dbe654af89fa6e	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/lion.tga	4.00 Mb	2.25 Mb	357	2024/3/26 22:24	False
+6ddbe2f4605fb1213ae23e772d042b5e9bdbdaf8	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/vase_plant.tga	4.00 Mb	0.98 Mb	357	2024/3/26 22:24	False
+3448ef92a7d8cf0f5d230c6f221e681fdf3b2ebc	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_details_ddn.tga	4.00 Mb	1.25 Mb	357	2024/3/26 22:24	False
+76289529f6cd90ef7c4602881062102d7a37ca5e	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_fabric_ddn.tga	4.00 Mb	1.58 Mb	357	2024/3/26 22:24	False
+a3e91a7f1a38de02b293d1adf23d8decedd6dc28	Engine/ThirdParty/PhysX/lib/debug/PhysXCommon_64.dll	3.96 Mb	<Unknown>	26	2024/3/30 19:14	False
+71c35c05d7bf525854deb68bec22521658f7fe61	Engine/ThridParty/freetype-windows-binaries-master/static/vs2015-2022/win32/freetype.lib	3.91 Mb	1.42 Mb	284	2024/3/25 14:03	False
+9bcad1d93843568f978f81c249fe1710effbe684	Engine/ThirdParty/assimp/test/models/IFC/AC14-FZK-Haus.ifc	3.88 Mb	0.73 Mb	22	2024/3/22 10:17	False
+f05c0ff89194b26c994536920f34df45c6725ccd	Engine/ThirdParty/spirv_cross/lib/Debug/spirv-cross-cpp.lib	3.86 Mb	0.59 Mb	237	2024/3/30 19:14	False
+85ce081ecbe61683683a45cabaa4fa46939ebe68	Engine/Data/Engine/Textures/rp_sophia_animated_003_gloss.jpg	3.72 Mb	2.65 Mb	331	2024/3/30 19:14	False
+e99b89f7d9641680a3848795fa0dae1d340e7423	Engine/ThirdParty/assimp/test/models-nonbsd/FBX/2013_ASCII/pyramob.fbx	3.71 Mb	0.86 Mb	22	2024/3/22 10:17	False
+efa3c004d401b436fe1b3101c416cabc491121de	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/LowLevel_static_64.lib	3.70 Mb	0.67 Mb	253	2024/3/25 14:03	False
+3f5970083f64ad98ad1648275911e6b8091106bc	Engine/ThirdParty/PhysX/lib/debug/PhysXVehicle_static_64.pdb	3.69 Mb	<Unknown>	26	2024/3/30 19:14	False
+8bf7dc24392d79998a577497f5e2ab472c21e088	Engine/ThirdParty/PhysX/lib/release/PhysXVehicle_static_64.pdb	3.65 Mb	<Unknown>	26	2024/3/30 19:14	False
+e78eeb2b5012e8b05d11e89a1f6c303e2805e6bb	Engine/Data/Engine/Textures/base_albedo.jpg	3.63 Mb	3.57 Mb	371	2024/3/30 19:14	False
+0276edcfb7121d51a4666f4565ede9f8314f41eb	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXExtensions_static_64.pdb	3.56 Mb	0.82 Mb	253	2024/3/25 14:03	False
+9188b89cc566c8c107437179ddf7637c396b10a6	Engine/ThirdParty/assimp/test/models/CSM/ThomasFechten.csm	3.49 Mb	1.63 Mb	22	2024/3/22 10:17	False
+9f081f9bcfb4c366c8c02d9635c9d133a1c3335f	Engine/Assets/Showroom/Assets/Textures/PBR/Pistol/base_normal.jpg	3.29 Mb	3.27 Mb	357	2024/3/26 22:24	False
+cb87ecf2d2f22b0812b37419b8e5dfc36d822c58	Engine/ThirdParty/assimp/test/models/BVH/01_03.bvh	3.26 Mb	1.19 Mb	22	2024/3/22 10:17	False
+9ede54db4fc02e6264ecd7626c8849ce8dd663cb	Engine/ThirdParty/spirv_cross/lib/Release/spirv-cross-hlsl.lib	3.25 Mb	0.45 Mb	237	2024/3/30 19:14	False
+d92a94d37f497ecaccf2989e3c26b09038b77354	Engine/Data/Engine/Mono/mono/4.5/System.Data.Entity.dll	3.18 Mb	1.05 Mb	461	2024/3/30 19:14	False
+1d8833fe9f79c7d80667abd799adb1db38069bf7	Engine/ThirdParty/PhysX/lib/release/PhysX_64.map	3.17 Mb	<Unknown>	26	2024/3/30 19:14	False
+cb1152bcf9255f9dabb8ac2e731b9f61d500f7e9	Engine/Assets/Showroom/Assets/Textures/PBR/Pistol/base_roughness.jpg	3.09 Mb	3.01 Mb	357	2024/3/26 22:24	False
+0a9f048e6e7e4c753527fabe57a1ee43fa794158	Engine/Data/Engine/Mono/mono/4.5/System.Xml.dll	3.03 Mb	1.01 Mb	461	2024/3/30 19:14	False
+c57081d96ab8abb1783013500293d8917c41c4cd	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXVehicle_static_64.pdb	3.00 Mb	0.67 Mb	253	2024/3/25 14:03	False
+e5d849c35ee08173a1de0295ec5dd0e3fa76858a	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_floor_a_spec.tga	3.00 Mb	1.12 Mb	357	2024/3/26 22:24	False
+4ef1409957b23e5f0d4bf042b6c541b54d4459f1	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_floor_a_ddn.tga	3.00 Mb	1.54 Mb	357	2024/3/26 22:24	False
+e6519acf1186ac197f3d47f6df68a79828609e5f	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_details_spec.tga	3.00 Mb	1.00 Mb	357	2024/3/26 22:24	False
+c147b37d5a3ad442156fa31fbcfd9bea6a30f68b	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/vase_dif.tga	3.00 Mb	2.49 Mb	357	2024/3/26 22:24	False
+72b1cbec663cf1c514e66e713c2c83163767ee8c	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_roof_ddn.tga	3.00 Mb	2.15 Mb	357	2024/3/26 22:24	False
+7a37c26fa51b7e9689cba49f0a74f06e5ee79b91	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_fabric_blue_diff.tga	3.00 Mb	2.46 Mb	357	2024/3/26 22:24	False
+004ed6584f289868fb318adbb61a7385d8652238	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_fabric_spec.tga	3.00 Mb	0.68 Mb	357	2024/3/26 22:24	False
+c4e22a3927944af969700aa9c1019f2b29b5a571	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_flagpole_spec.tga	3.00 Mb	0.88 Mb	357	2024/3/26 22:24	False
+6155a5b316813b830169dbf20fe795812e2d60b2	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_column_c_spec.tga	3.00 Mb	1.02 Mb	357	2024/3/26 22:24	False
+c6d202fe8c5f6163b82743ea3f1f21b32819cd31	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_flagpole_ddn.tga	3.00 Mb	1.13 Mb	357	2024/3/26 22:24	False
+31b67d81f0baaeb7dd453b9d81f84606a23a1cad	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_details_diff.tga	3.00 Mb	1.95 Mb	357	2024/3/26 22:24	False
+68dc6ea5c876ceacb11f258e349d200191f35d9c	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_column_a_spec.tga	3.00 Mb	1.00 Mb	357	2024/3/26 22:24	False
+0fb9ff14efc4a9b32c9b873f5e55264d37f1838d	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/vase_plant_spec.tga	3.00 Mb	0.92 Mb	357	2024/3/26 22:24	False
+8478671528eebe4e7a5fb47d9f31bdeeec2dd4ff	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_column_b_diff.tga	3.00 Mb	2.49 Mb	357	2024/3/26 22:24	False
+9deae8ec175b849712aaaddd9e5ee7e0864b3823	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_ceiling_a_spec.tga	3.00 Mb	0.98 Mb	357	2024/3/26 22:24	False
+2f78759ecbfece29dfeb9741b99c57dbb9141fd6	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/vase_ddn.tga	3.00 Mb	2.00 Mb	357	2024/3/26 22:24	False
+dddc76ad4941a4fe709e158ddf4e8e47a124bba4	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/vase_round_ddn.tga	3.00 Mb	0.27 Mb	357	2024/3/26 22:24	False
+c9f933afce069c970009d8140c9e761c798c6516	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_fabric_diff.tga	3.00 Mb	2.43 Mb	357	2024/3/26 22:24	False
+f8c3a8858fb17da88ce629b14a51bc949d8967cb	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_column_b_spec.tga	3.00 Mb	1.01 Mb	357	2024/3/26 22:24	False
+302a9ddd8b093d4978c6ab4a128c2d5497372bee	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/sponza_arch_spec.tga	3.00 Mb	0.79 Mb	357	2024/3/26 22:24	False
+ed4a42eebf43052aaebb9657622e614cba93a455	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/vase_round_spec.tga	3.00 Mb	2.17 Mb	357	2024/3/26 22:24	False
+5a9932289ffdc1a2f313b0a8516569f001170229	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_column_a_ddn.tga	3.00 Mb	1.48 Mb	357	2024/3/26 22:24	False
+451250af103ca0ddec5364bfe136dfadd9485e1e	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/vase_hanging_ddn.tga	3.00 Mb	2.22 Mb	357	2024/3/26 22:24	False
+16cfc25cd92fd6f74749c0125ee9e09da85d4976	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_ceiling_a_diff.tga	3.00 Mb	2.21 Mb	357	2024/3/26 22:24	False
+5d7a0a4693aa379bbc7ff5fa5c167a2189e9fd5a	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_ceiling_a_ddn.tga	3.00 Mb	1.41 Mb	357	2024/3/26 22:24	False
+e9587e386b80a32168e5498ffbb2bb724efb96d8	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_floor_a_diff.tga	3.00 Mb	2.27 Mb	357	2024/3/26 22:24	False
+7693da3cd2e7bd302ea0faf032799bd5c63d7d68	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_fabric_green_diff.tga	3.00 Mb	2.37 Mb	357	2024/3/26 22:24	False
+6f83f612d52037ef651ae2edf05dec66e3287d0d	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/vase_round.tga	3.00 Mb	2.19 Mb	357	2024/3/26 22:24	False
+31dcfc27183f9652e87acc7d0e61f2d911a2ddc6	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/spnza_bricks_a_ddn.tga	3.00 Mb	1.30 Mb	357	2024/3/26 22:24	False
+c716b3872784fdc53c292ffeb888cfd2d2abfef3	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_column_b_ddn.tga	3.00 Mb	1.27 Mb	357	2024/3/26 22:24	False
+16a1c78a8ab3434f0a0a7fb6b05df691dae4fe45	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/lion_ddn.tga	3.00 Mb	2.00 Mb	357	2024/3/26 22:24	False
+8ab961f3e43dddbe9597ca58795d046a3e2ec2e6	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/lion2_ddn.tga	3.00 Mb	2.00 Mb	357	2024/3/26 22:24	False
+ba10c954fcc91424086e86e821dc192501268a0d	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_column_a_diff.tga	3.00 Mb	2.20 Mb	357	2024/3/26 22:24	False
+01c425eb2d5fd320db710b22b8ba558a4daaed86	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_arch_diff.tga	3.00 Mb	1.79 Mb	357	2024/3/26 22:24	False
+2124b323bf864202be05b2ad4e97fc1524c343ae	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/spnza_bricks_a_diff.tga	3.00 Mb	2.16 Mb	357	2024/3/26 22:24	False
+0c384e7841ec2930d90072f8f2d3d36ebfe36ddc	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_column_c_ddn.tga	3.00 Mb	1.56 Mb	357	2024/3/26 22:24	False
+89545614e7924775d56dcd4807eb243c6979bf40	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/vase_hanging.tga	3.00 Mb	1.46 Mb	357	2024/3/26 22:24	False
+19da1d3a48b8503a6f2fef45befc80ed41c58e5c	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/background.tga	3.00 Mb	1.68 Mb	357	2024/3/26 22:24	False
+09851c6ff75226a6e22fdeea859a221c0a760272	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/sponza_arch_ddn.tga	3.00 Mb	0.30 Mb	357	2024/3/26 22:24	False
+3839936452bcdf9d3798d61e78314634515ad874	Engine/Assets/Showroom/Assets/Textures/Sponza/Normals/background_ddn.tga	3.00 Mb	1.50 Mb	357	2024/3/26 22:24	False
+8600a6b6256d698079e366866f69c77dcec034f7	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_flagpole_diff.tga	3.00 Mb	1.75 Mb	357	2024/3/26 22:24	False
+61ea0c0ff8546b18eec65f8073f6870a709eaceb	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_column_c_diff.tga	3.00 Mb	2.47 Mb	357	2024/3/26 22:24	False
+a8fd321e1753d439e951ce7edacd91df072c41d7	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_roof_diff.tga	3.00 Mb	2.81 Mb	357	2024/3/26 22:24	False
+ce528175b37c963ea173aed9b0ce723f81346d94	Engine/ThridParty/freetype/objs/freetype.pdb	2.97 Mb	0.90 Mb	1	2023/7/10 22:03	False
+d1400cd186ad1ff91bfd692ef06b8f192851b8a7	Engine/Data/Engine/Textures/TexturesCom_CliffRock3_2x2_1K_normal.png	2.90 Mb	2.91 Mb	371	2024/3/30 19:14	False
+9131b8462f788d6403ffb99abb5ded7752511f7d	Engine/ThridParty/mono/lib/monodoc/sources/netdocs.tree	2.90 Mb	0.82 Mb	423	2024/3/25 14:03	False
+98bc4de552a053f6c6c6849f8be554c6c5775394	Engine/Data/Engine/Mono/mono/4.5/System.Web.dll	2.89 Mb	0.94 Mb	461	2024/3/30 19:14	False
+a36c8715efe41083a85fe7d2ad49722b5e914a69	Engine/ThirdParty/PhysX/lib/debug/LowLevelAABB_static_64.lib	2.87 Mb	<Unknown>	26	2024/3/30 19:14	False
+0c1fc47d0d076d15d6ead70aeea7436fd7297067	Engine/Assets/Engine/Models/rp_sophia_animated_003_idling_ue4.fbx	2.83 Mb	0.40 Mb	199	2024/1/8 22:27	False
+a808f2d85e71b2673bfd3055b3d891a7065ead99	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCommon_64.dll	2.82 Mb	0.82 Mb	253	2024/3/25 14:03	False
+b0987badd4e95125027ba599c185a10bf0b48473	Engine/Data/Engine/Mono/mono/4.5/System.Windows.Forms.dll	2.76 Mb	1.00 Mb	461	2024/3/30 19:14	False
+f1e2f50e06204917c5fd4ccf33efa5d5725330ed	Engine/Data/Engine/Mono/mono/fsharp/FSharp.Core.dll	2.76 Mb	0.88 Mb	461	2024/3/30 19:14	False
+a3d321b7f8fb68fd4a73231ca110df63f6ce86c6	Engine/ThirdParty/assimp/test/models/MDL/MDL5 (3DGS A5)/minigun_mdl5.mdl	2.73 Mb	0.02 Mb	22	2024/3/22 10:17	False
+d48dfc45e6ba7a39ccfb272b9c744a646c0f31d3	Engine/ThirdParty/assimp/test/models/MDL/MDL3 (3DGS A4)/minigun.MDL	2.72 Mb	0.02 Mb	22	2024/3/22 10:17	False
+7dd768b8beb2da9d9a93097a9c59f0f27239c68a	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/LowLevelAABB_static_64.lib	2.71 Mb	0.55 Mb	253	2024/3/25 14:03	False
+ae1da332a05263b6995249ce50640969f50bb5e2	Engine/Data/Engine/Mono/mono/4.5/Microsoft.CodeAnalysis.dll	2.68 Mb	1.06 Mb	461	2024/3/30 19:14	False
+37509a6152c99ba6d1a41bf48b8a196d0b822e31	Engine/ThirdParty/VulkanSDK/bin/Linux/glslangValidator	2.65 Mb	1.01 Mb	288	2024/3/30 19:14	False
+c38bfb2a40ccd11276b299d232b2bfa985bd47f9	Engine/Assets/Engine/Models/rp_sophia_animated_003_idling_u3d.fbx	2.61 Mb	0.35 Mb	199	2024/1/8 22:27	False
+66ae92475c9ced44820b6b639b42652f33eb615c	Engine/Assets/Showroom/Assets/Meshes/Island.obj	2.55 Mb	0.69 Mb	357	2024/3/26 22:24	False
+65509ac23fc60e2fb6c866bc63bd2797057c41ef	Engine/ThirdParty/assimp/test/models/BVH/Boxing_Toes.bvh	2.53 Mb	0.97 Mb	22	2024/3/22 10:17	False
+125cf113d43431a12d033f322d712d8dab16c625	Engine/Data/Engine/Mono/mono/fsharp/api/.NETFramework/v4.0/4.4.3.0/FSharp.Core.dll	2.53 Mb	0.72 Mb	461	2024/3/30 19:14	False
+dcad3247bfa659007c46b00099feb28d4edb402c	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.78.41.0/FSharp.Core.dll	2.52 Mb	0.21 Mb	461	2024/3/30 19:14	False
+abb1822384d04e1c13b76f9396165e7a4eba8689	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.259.41.0/FSharp.Core.dll	2.52 Mb	0.72 Mb	461	2024/3/30 19:14	False
+e739cdaeb2fb4acd93c48a5b8cb4379e7309d956	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCooking_64.map	2.52 Mb	0.26 Mb	253	2024/3/25 14:03	False
+3771e1285fc41bf71f573874b063e94536054433	Engine/ThirdParty/PhysX/lib/release/SimulationController_static_64.pdb	2.50 Mb	<Unknown>	26	2024/3/30 19:14	False
+c38c4e7b03bc78162c68e7402140f487e12062cf	Engine/ThirdParty/PhysX/lib/debug/SimulationController_static_64.pdb	2.50 Mb	<Unknown>	26	2024/3/30 19:14	False
+64150d2dbbe385b470af599551fd447f1b3af0bb	Engine/Data/Engine/Mono/mono/fsharp/api/.NETFramework/v4.0/4.4.1.0/FSharp.Core.dll	2.49 Mb	0.71 Mb	461	2024/3/30 19:14	False
+75e0bbc33c7f8aeaeb5f95aabe354f9d8062644a	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.7.41.0/FSharp.Core.dll	2.49 Mb	0.71 Mb	461	2024/3/30 19:14	False
+c11d7d97bc51f436fd6d643e7dfbd8521a2ad622	Engine/Data/Engine/Mono/mono/4.5/System.dll	2.48 Mb	0.95 Mb	461	2024/3/30 19:14	False
+ac7b0437ea0245e24251ed9e9b233d403e7b41a5	Engine/Data/Engine/Mono/mono/fsharp/api/.NETPortable/3.47.41.0/FSharp.Core.dll	2.46 Mb	0.70 Mb	461	2024/3/30 19:14	False
+f25fa36af9716ac4591cf1c7e0e235f24965edc1	Engine/ThirdParty/spirv_cross/lib/Release/spirv-cross-core.lib	2.44 Mb	0.41 Mb	237	2024/3/30 19:14	False
+05c5172abdeb0880cf986af834f7d9e18a6b218f	DemoProject/ProjectTemplete/Assets/Models/LadyCat.fbx	2.37 Mb	2.04 Mb	331	2024/3/30 19:14	False
+eb84746e1946d40088c38e439736b9b2ca1f03e0	Engine/Data/Engine/Textures/TexturesCom_CliffRock3_2x2_1K_albedo.png	2.31 Mb	2.31 Mb	371	2024/3/30 19:14	False
+df9eb5708934e0a5b8ec013e12377997f8d8280f	Engine/ThirdParty/PhysX/lib/release/LowLevel_static_64.lib	2.30 Mb	<Unknown>	26	2024/3/30 19:14	False
+7da0a62c250c2908ffef6a2c12ff41a4dbbb2a77	Engine/ThirdParty/PhysX/lib/debug/PhysXCharacterKinematic_static_64.lib	2.26 Mb	<Unknown>	26	2024/3/30 19:14	False
+26938c4c77a77a232f4ad0ed54b145f26e1fbf9a	Engine/ThirdParty/assimp/test/models/WRL/MotionCaptureROM.WRL	2.21 Mb	0.33 Mb	22	2024/3/22 10:17	False
+37733863d5b06d27772ec7f73a1d13888164cb46	Engine/ThridParty/freetype/objs/freetype.dll	2.18 Mb	0.63 Mb	1	2023/7/10 22:03	False
+25da76d48fe6e3ab2c0cd8f325a972a2da7fd722	Engine/ThirdParty/assimp/test/models/COB/dwarf_ascii.cob	2.16 Mb	0.41 Mb	22	2024/3/22 10:17	False
+2212f7dde5b13912cce15e8fe37f1d86d975dfb6	Engine/ThirdParty/PhysX/lib/release/PhysXCommon_64.dll	2.12 Mb	<Unknown>	26	2024/3/30 19:14	False
+480628c0fef4c64854a3ab7d79e26e87812972a4	Engine/Data/Engine/Textures/rp_sophia_animated_003_mask01.jpg	2.11 Mb	0.21 Mb	331	2024/3/30 19:14	False
+e07a0ca40a5240ad19479c6a5b1083d60e4c5907	Engine/Data/Engine/Textures/rp_sophia_animated_003_mask02.jpg	2.07 Mb	0.21 Mb	331	2024/3/30 19:14	False
+a45e0322d856bbef01c46b7a5a45a0570fae69be	Engine/ThirdParty/assimp/test/models/PLY/pond.0.ply	2.07 Mb	1.86 Mb	22	2024/3/22 10:17	False
+cc30c428da132a84e3a1d4f7dcb986e34396fc50	Engine/Data/Engine/Mono/mono/4.5/System.Data.dll	2.03 Mb	0.70 Mb	461	2024/3/30 19:14	False
+4a848b80a0310453e735a2ce5c5d846dc49b809c	Engine/ThirdParty/assimp/bin/Release/unit.exe	2.01 Mb	0.63 Mb	35	2024/3/30 19:14	False
+4212671af7f580662e7eea3fa93a7da703edfbc6	Engine/ThirdParty/PhysX/lib/debug/PhysXVehicle2_static_64.lib	2.00 Mb	<Unknown>	26	2024/3/30 19:14	False
+b6aec38a9088400fa249e5c07a5a2958a5461830	Engine/Data/Engine/Textures/diffuse_fishsoup_pot.cpt	2.00 Mb	0.83 Mb	469	2024/3/30 19:14	False
+b8f917fab6ffe0dc2cc09b79597c0ff1e2669041	Engine/ThirdParty/PhysX/lib/release/PhysX_64.dll	1.99 Mb	<Unknown>	26	2024/3/30 19:14	False
+2bb7b56638daa1d50360ed59b08f47e21387d90b	Engine/ThirdParty/assimp/test/models/BVH/01_01.bvh	1.97 Mb	0.72 Mb	22	2024/3/22 10:17	False
+348ed45362ded9ce5c27578357c96fc7a0470464	Engine/ThirdParty/PhysX/lib/release/PhysXPvdSDK_static_64.lib	1.97 Mb	<Unknown>	26	2024/3/30 19:14	False
+99762b2ee5e8780b062d370a5cb78649244c9191	Engine/ThirdParty/VulkanSDK/include/vulkan/vulkan_profiles.hpp	1.94 Mb	0.07 Mb	282	2024/3/30 19:14	False
+21e1fec05095c19ab6b5ede7ae384a9360e3cd2f	Engine/Assets/Showroom/Assets/Textures/PBR/Pistol/base_AO.jpg	1.93 Mb	1.83 Mb	357	2024/3/26 22:24	False
+c8fb33af8a5b3d0602ef634dc152b13d270fb6e3	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCharacterKinematic_static_64.lib	1.90 Mb	0.39 Mb	253	2024/3/25 14:03	False
+3897c6441494d32bff9023ae97030ad2bf3096a2	DemoProject/ProjectTemplete/Assets/Models/1.abc	1.82 Mb	<Unknown>	1	2024/3/30 19:14	False
+dea197cb5f7c25b1a91f0519d0b7fdaebc252918	DemoProject/ProjectTemplete/Assets/Models/Walking.fbx	1.81 Mb	<Unknown>	1	2024/3/30 19:14	False
+82f53ec9a3c08310866b87147dcdd9d93a836990	Engine/Data/Engine/Mono/mono/fsharp/Microsoft.Build.dll	1.80 Mb	0.71 Mb	461	2024/3/30 19:14	False
+3a577491f1df0728c0ee250cb0e24c6fe5ab6e91	Engine/ThirdParty/PhysX/lib/release/PhysXCommon_64.map	1.80 Mb	<Unknown>	26	2024/3/30 19:14	False
+2e33fbf8954f67cbef33309e0f88675642323b3b	DemoProject/ProjectTemplete/Assets/Models/Catwalk Walk Forward HighKnees.fbx	1.78 Mb	0.08 Mb	331	2024/3/30 19:14	False
+d5a32805ff773c768ed98cace45ac75677a7afb8	DemoProject/ProjectTemplete/Assets/Models/Catwalk Walk Forward HighKnees (1).fbx	1.78 Mb	1.23 Mb	331	2024/3/30 19:14	False
+0e9b10568c74ce93743161c76dd6d8c1428bd48b	Engine/ThirdParty/assimp/test/models/glTF2/2CylinderEngine-glTF-Binary/2CylinderEngine.glb	1.75 Mb	0.57 Mb	22	2024/3/22 10:17	False
+4089fb628b6bc75846b44ecd3eb9698dd96d00f4	Engine/Data/Engine/Mono/mono/4.5/mcs.exe	1.74 Mb	0.63 Mb	461	2024/3/30 19:14	False
+049cdb0554bf2aa9ade2cf09173b45334a22be25	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/SceneQuery_static_64.pdb	1.71 Mb	0.42 Mb	253	2024/3/25 14:03	False
+58b4f4c001dd63194a9e5bca48efac8397b3caed	DemoProject/ProjectTemplete/Assets/Models/Standing Torch Walk Left.fbx	1.69 Mb	1.23 Mb	331	2024/3/30 19:14	False
+4297389d93cb0917da64de704a06af0b6b75c0ef	Engine/ThridParty/mono/lib/ironpython/IronPython.dll	1.65 Mb	0.69 Mb	423	2024/3/25 14:03	False
+8b59e30f565e52eaa23cec0119809f89912c8adb	Engine/Data/Engine/Mono/mono/4.5/mscorlib.pdb	1.63 Mb	0.68 Mb	461	2024/3/30 19:14	False
+ac2485435ba0138bcd2a33428997ec3c2e96e2fa	Engine/ThirdParty/PhysX/lib/release/LowLevelAABB_static_64.lib	1.63 Mb	<Unknown>	26	2024/3/30 19:14	False
+3c8d9ae50b2362367222788da6da820de8c7a28b	Engine/ThirdParty(new)/Vulkan/external/vulkan/vulkan_funcs.hpp	1.61 Mb	0.11 Mb	4	2024/3/9 11:41	False
+920376c967b646c7d5dc4960fb7403b95067c735	Engine/ThirdParty/PhysX/lib/debug/SceneQuery_static_64.lib	1.59 Mb	<Unknown>	26	2024/3/30 19:14	False
+60b2f6ef0701e0445b1260cf0fcab876b2f0529d	Engine/ThridParty/rttr-0.9.6.zip	1.47 Mb	1.40 Mb	416	2024/3/25 14:03	False
+be4cdb2da25f586577fed3e6d2621223086fa8ca	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.259.4.0/FSharp.Core.dll	1.46 Mb	0.45 Mb	461	2024/3/30 19:14	False
+f806aa1a50c0c50a12aa07631550e2b5fa2b2d68	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.78.4.0/FSharp.Core.dll	1.46 Mb	0.15 Mb	461	2024/3/30 19:14	False
+f73565ffbee8557e687a6c92ec362bc3590ed822	Engine/Data/Engine/Mono/mono/fsharp/api/.NETFramework/v4.0/4.4.0.0/FSharp.Core.dll	1.44 Mb	0.45 Mb	461	2024/3/30 19:14	False
+52a85efe1e8e5ef3f3d076f7c80ee0ae535d6070	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.7.4.0/FSharp.Core.dll	1.44 Mb	0.44 Mb	461	2024/3/30 19:14	False
+ba8139367cc813e40024ac9b608343215e1bf0cf	Engine/Data/Engine/Mono/mono/fsharp/api/.NETPortable/3.47.4.0/FSharp.Core.dll	1.42 Mb	0.44 Mb	461	2024/3/30 19:14	False
+75f81090a6cec52df6558adce0370fb2eaa72f1e	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/SimulationController_static_64.pdb	1.41 Mb	0.37 Mb	253	2024/3/25 14:03	False
+1ab87369d8cc490ee17fc4d4ac55196358ee7f93	Engine/ThirdParty/VulkanSDK/include/vulkan/vulkan_funcs.hpp	1.40 Mb	0.09 Mb	282	2024/3/30 19:14	False
+f93479a4fe4c9bb56e9aae4c371a82bd4f7c6363	Engine/ThridParty/glm-0.9.9.8/doc/manual.pdf	1.40 Mb	1.36 Mb	355	2024/3/25 14:03	False
+cc5588415b21d332c66d72110ab1f1c3c673d070	Engine/Data/Engine/Mono/mono/fsharp/FSharp.Compiler.Private.xml	1.39 Mb	0.22 Mb	461	2024/3/30 19:14	False
+b8b3e3def4a7dcd9199d23f801a411fb46729f91	Engine/ThirdParty/assimp/test/models-nonbsd/BLEND/fleurOptonl.blend	1.39 Mb	1.05 Mb	22	2024/3/22 10:17	False
+5b80ba1dde1a958e686d63c877e0a4ff0a3ac181	Engine/Assets/Showroom/Assets/Textures/Island/Palm/TexturesCom_Nature_PalmTrunk_1K_normal.png	1.37 Mb	1.37 Mb	357	2024/3/26 22:24	False
+b5a67a0abdeda9c7c01a283fb92ea7c45a2d0d67	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.78.3.1/FSharp.Core.dll	1.36 Mb	0.42 Mb	461	2024/3/30 19:14	False
+99267ed4a57bec1ebc746a0304c2a1fd2aa41898	Engine/Data/Engine/Mono/mono/4.5/System.ServiceModel.dll	1.36 Mb	0.46 Mb	461	2024/3/30 19:14	False
+c4ab78b2c7077797836052297107ca08a6ddc4f7	Engine/Data/Engine/Mono/mono/fsharp/api/.NETCore/3.3.1.0/FSharp.Core.dll	1.34 Mb	0.41 Mb	461	2024/3/30 19:14	False
+86b505d20c1f380f69b255108cc0ea38ce70e38a	Engine/Data/Engine/Mono/mono/fsharp/api/.NETFramework/v4.0/4.3.1.0/FSharp.Core.dll	1.34 Mb	0.41 Mb	461	2024/3/30 19:14	False
+18c8e7a05647014d9881098216febb7a2864ba87	Engine/Data/Engine/Mono/mono/fsharp/api/.NETPortable/2.3.5.1/FSharp.Core.dll	1.32 Mb	0.41 Mb	461	2024/3/30 19:14	False
+30a2da63f350cf9f6b983bc3aa9e7cab29b4163d	Engine/ThirdParty/PhysX/lib/debug/PhysXCooking_64.map	1.31 Mb	<Unknown>	26	2024/3/30 19:14	False
+854aac3153c1b55e99779bb126336aba756cf674	Engine/ThirdParty/PhysX/lib/debug/LowLevelDynamics_static_64.pdb	1.29 Mb	<Unknown>	26	2024/3/30 19:14	False
+34fc33470ded7877c8d5867ddafc4b4b1fa5189c	Engine/ThirdParty/PhysX/lib/release/LowLevelDynamics_static_64.pdb	1.29 Mb	<Unknown>	26	2024/3/30 19:14	False
+6fa0f1f6b1786fce4d3b5860342ef0b1855e312a	Engine/Data/Engine/Mono/mono/fsharp/Microsoft.Build.Tasks.Core.dll	1.29 Mb	0.47 Mb	461	2024/3/30 19:14	False
+6bf8089cc113a5ca81afd3e5496c79329ee55c34	Engine/Data/Engine/Mono/mono/4.5/Mono.CSharp.dll	1.29 Mb	0.47 Mb	461	2024/3/30 19:14	False
+e97bfb38f4c4f3df40456051fae70b516145f6e8	Engine/ThirdParty(new)/Vulkan/external/vulkan/vulkan_raii.hpp	1.29 Mb	0.12 Mb	4	2024/3/9 11:41	False
+eb053d86c759b9a8211c03412afcda43b8811062	Engine/Data/Engine/Textures/banner.bmp	1.28 Mb	0.01 Mb	239	2024/3/30 19:14	False
+d7b26d5f577660edab38c248fb8ad408a4dad3c7	Engine/ThirdParty/PhysX/lib/release/PhysXCharacterKinematic_static_64.lib	1.27 Mb	<Unknown>	26	2024/3/30 19:14	False
+56672dbc5903028378734ea50e1b6fbba2e3102b	Engine/Assets/Showroom/Assets/Textures/PBR/Pistol/base_metallic.jpg	1.27 Mb	1.10 Mb	357	2024/3/26 22:24	False
+6a476d3a19349c25ec9a9502581164534ba7fbd9	Engine/ThirdParty/assimp/test/models/FBX/embedded_ascii/box_embedded_texture_fragmented.fbx	1.25 Mb	0.94 Mb	22	2024/3/22 10:17	False
+f065519ebfe4b411e5b24a24869fcb9957944b3c	Engine/ThirdParty/VulkanSDK/include/vulkan/vulkan_raii.hpp	1.20 Mb	0.11 Mb	282	2024/3/30 19:14	False
+152298d90b1f70a770c578f10d4a419b8b397e8b	Engine/ThirdParty/PhysX/lib/debug/LowLevel_static_64.pdb	1.20 Mb	<Unknown>	26	2024/3/30 19:14	False
+5523fe759b36dd2ab40a6d24b2ccba98caa36829	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXCooking_64.dll	1.20 Mb	0.21 Mb	253	2024/3/25 14:03	False
+fb9868c96c0a1ba2b15bb6ce70701e687562904c	Engine/ThirdParty/PhysX/lib/release/LowLevel_static_64.pdb	1.19 Mb	<Unknown>	26	2024/3/30 19:14	False
+66a72f2ee65c7de79ee396640dd6b69b087f0c47	Engine/Data/Engine/Mono/mono/gac/System.Xml/4.0.0.0__b77a5c561934e089/System.Xml.pdb	1.18 Mb	0.49 Mb	461	2024/3/30 19:14	False
+450c0e7d90d05d6ba2fbe568c4a80b8e3441ddf9	Engine/Data/Engine/Mono/mono/gac/System.Windows.Forms/4.0.0.0__b77a5c561934e089/System.Windows.Forms.pdb	1.14 Mb	0.45 Mb	461	2024/3/30 19:14	False
+8a695197a629ced5dd1ee701cae92e5616325798	Engine/Data/Engine/Mono/mono/4.5/vbnc.exe	1.12 Mb	0.32 Mb	461	2024/3/30 19:14	False
+3ab43c1edc8c80f2141db92ab883a84363f5831c	Engine/Data/Engine/Mono/mono/gac/System.Data.Entity/4.0.0.0__b77a5c561934e089/System.Data.Entity.pdb	1.10 Mb	0.46 Mb	461	2024/3/30 19:14	False
+0b1eea4323f6587a3b479be20dc0877797eb7bf5	Engine/ThirdParty/PhysX/lib/release/PhysXVehicle2_static_64.lib	1.10 Mb	<Unknown>	26	2024/3/30 19:14	False
+c13d16cc9d552448011db3277635de2c841ccebc	Engine/ThirdParty(new)/FreeImage/OpenEXR/IlmImf/b44ExpLogTable.h	1.08 Mb	0.07 Mb	11	2024/3/9 11:41	False
+a8ab078271243dee1d86b698505357a6b0d3e55b	Engine/Data/Engine/Mono/mono/fsharp/api/.NETFramework/v4.0/4.3.0.0/FSharp.Core.dll	1.07 Mb	0.36 Mb	461	2024/3/30 19:14	False
+7ee5ed9f349ea3d89ae1c4786040cf55185b51ab	Engine/Data/Engine/Textures/TexturesCom_CliffRock3_2x2_1K_roughness.png	1.06 Mb	1.05 Mb	371	2024/3/30 19:14	False
+5c36664d96bc32fa5dd6acca4be78762f55be4f0	Engine/Data/Engine/Mono/mono/fsharp/api/.NETPortable/2.3.5.0/FSharp.Core.dll	1.05 Mb	0.35 Mb	461	2024/3/30 19:14	False
+4eaa6374179f39d7d02331ed889036501ff3de40	Engine/Assets/Showroom/Assets/Sounds/Sponza_Background.ogg	1.05 Mb	1.02 Mb	357	2024/3/26 22:24	False
+8b70718e40b477c57077d6e5cf1f2b113c814828	Engine/ThirdParty/assimp/test/models/ASE/MotionCaptureROM.ase	1.05 Mb	0.18 Mb	22	2024/3/22 10:17	False
+4766d06bb618621c35bff661f4035ab3e6019d5f	Engine/ThridParty/glm-release/doc/glm-0.9.3.pdf	1.05 Mb	0.90 Mb	447	2024/3/25 14:03	False
+691b09f83f6ac2baf2d6bb55026da9b95470c536	Engine/ThirdParty/assimp/test/models/Collada/human.zae	1.04 Mb	1.04 Mb	22	2024/3/22 10:17	False
+80e682f22a9cdb276a23d6c414f6d5764828c089	Engine/Data/Engine/Mono/mono/4.5/System.Core.dll	1.03 Mb	0.35 Mb	461	2024/3/30 19:14	False
+3accb23d21c86dd678c4dc022a36035c1316a8a8	Engine/Data/Engine/Mono/mono/gac/System/4.0.0.0__b77a5c561934e089/System.pdb	1.03 Mb	0.44 Mb	461	2024/3/30 19:14	False
+c9b93cf078e32eeae52a18eeb1f220a876c28909	Engine/ThirdParty/FreeImage/Wrapper/FreeImage.NET/cs/UnitTest/FreeImage.cs	1.03 Mb	0.13 Mb	43	2024/3/30 19:14	False
+a9f1a7ece840cce19f2ecb161efa0d38a086c571	Engine/Data/Engine/Mono/mono/gac/monodoc/1.0.0.0__0738eb9f132ed756/monodoc.dll	1.02 Mb	0.39 Mb	461	2024/3/30 19:14	False
+69ec386483a377e445bad6797fb2bc33ef161fbe	Engine/ThirdParty/dxcompiler/include/dx/directx/d3d12.h	1.02 Mb	0.10 Mb	56	2024/3/30 19:14	False
+2481c2b855a4412d55ac61e34f886307b4fe24c5	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/PhysXFoundation_64.dll	1.02 Mb	0.17 Mb	253	2024/3/25 14:03	False
+c8e297d83fce999934e199f3f87ee8f6da774c63	Engine/Source/Runtime/Function/UI/ImGui/imgui.cpp	1.01 Mb	0.25 Mb	28	2023/10/29 18:14	False
+c21408ddce55db1ae62b660c448b08dce909d1f6	Engine/Source/Runtime/Function/UI/ImGui/imgui.cpp	1.01 Mb	0.00 Mb	241	2024/3/30 19:14	False
+45b573238f86e297406afdcda51842f233b9f1aa	Engine/Source/Runtime/Function/UI/ImGui/imgui.cpp	1.01 Mb	0.00 Mb	9	2023/10/10 23:42	False
+27a2e82cca11243071e3712da3dd99c274bb0432	Engine/Data/Engine/Mono/mono/gac/System.Web/4.0.0.0__b03f5f7f11d50a3a/System.Web.pdb	1.01 Mb	0.42 Mb	461	2024/3/30 19:14	False
+571d9c8364e68b8160fe5c38e006ad945432634e	Engine/ThridParty/physx-4.1/physx/bin/win.x86_64.vc142.mt/debug/LowLevelDynamics_static_64.pdb	1.00 Mb	0.28 Mb	253	2024/3/25 14:03	False
+df946a2b3797f1c9b89b7773f11750782324eb04	Engine/Assets/Showroom/Assets/Textures/Sponza/Specular/spnza_bricks_a_spec.tga	1.00 Mb	0.88 Mb	357	2024/3/26 22:24	False
+da77e00cbdd12672cb14d1efcdaf7d84a8c54519	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/sponza_thorn_diff.tga	1.00 Mb	0.70 Mb	357	2024/3/26 22:24	False
+297274b1ab83997d8ef89c286dc9b85f0aecb8a7	Engine/Assets/Showroom/Assets/Textures/Sponza/Diffuse/chain_texture.tga	1.00 Mb	0.51 Mb	357	2024/3/26 22:24	False

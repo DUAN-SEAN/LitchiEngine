@@ -54,7 +54,11 @@ LitchiRuntime::Mesh* LitchiRuntime::ModelManager::CreateResource(const std::stri
 	//	*reinterpret_cast<std::string*>(reinterpret_cast<char*>(model) + offsetof(Model, path)) = p_path; // Force the resource path to fit the given path
 
 	auto mesh = new Mesh();
-	mesh->LoadFromFile(realPath);
+	if(!mesh->LoadFromFile(realPath))
+	{
+		delete mesh;
+		return nullptr;
+	}
 
 	return mesh;
 }
