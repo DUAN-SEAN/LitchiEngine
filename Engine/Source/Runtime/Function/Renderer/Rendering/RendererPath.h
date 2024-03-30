@@ -49,11 +49,9 @@ namespace LitchiRuntime
 		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 		UICanvas* GetCanvas();
 
-		void SetSelectedMaterial(Material* material) { m_selectedMaterial = material; }
+		void SetSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d){ m_selectedMaterial = material; m_selectedMesh = mesh; m_selectedTexture2D = texture_2d; }
 		Material* GetSelectedMaterial() const { return m_selectedMaterial; }
-		void SetSelectedMesh(Mesh* mesh) { m_selectedMesh = mesh; }
 		Mesh* GetSelectedMesh() const { return m_selectedMesh; }
-		void SetSelectedTexture2D(RHI_Texture2D* texture_2d) { m_selectedTexture2D = texture_2d; }
 		RHI_Texture2D* GetSelectedTexture2D() const { return m_selectedTexture2D; }
 
 		// Light & Shadow

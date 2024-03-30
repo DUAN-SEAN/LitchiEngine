@@ -45,6 +45,13 @@ LitchiEditor::AssetView::AssetView
 			break;
 		}
 	};
+
+	// 设置相机默认的位置和姿态
+	auto cameraPosition = Vector3(0.0f, 0.0f, -10.0f);
+	auto cameraRotation = Quaternion::Identity;
+
+	m_cameraController.SetPosition(cameraPosition);
+	m_cameraController.SetRotation(cameraRotation);
 }
 
 void LitchiEditor::AssetView::_Render_Impl()
@@ -53,14 +60,15 @@ void LitchiEditor::AssetView::_Render_Impl()
 
 	PrepareCamera();
 
-	if (auto pval = std::get_if<Mesh*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedMesh(*pval);
-	
-	if (auto pval = std::get_if<RHI_Texture2D*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedTexture2D(*pval);
-	
 	if (auto pval = std::get_if<Material*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedMaterial(*pval);
+		rendererPath->SetSelectedAssetViewResource(*pval,nullptr,nullptr);
+
+	if (auto pval = std::get_if<Mesh*>(&m_resource); pval && *pval)
+		rendererPath->SetSelectedAssetViewResource(nullptr, *pval, nullptr);
+
+	if (auto pval = std::get_if<RHI_Texture2D*>(&m_resource); pval && *pval)
+		rendererPath->SetSelectedAssetViewResource(nullptr, nullptr, *pval);
+
 
 	rendererPath->SetActive(IsOpened());
 }

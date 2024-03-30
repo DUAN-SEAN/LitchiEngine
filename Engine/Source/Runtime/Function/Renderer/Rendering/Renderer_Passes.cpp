@@ -561,13 +561,57 @@ namespace LitchiRuntime
 
 	}
 
-	void Renderer::Pass_MaterialPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	void Renderer::Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		Material* selectMaterial = rendererPath->GetSelectedMaterial();
-		if(selectMaterial == nullptr)
+		Mesh* selectedMesh = rendererPath->GetSelectedMesh();
+		RHI_Texture2D* selectedTexture2d = rendererPath->GetSelectedTexture2D();
+
+		bool isDrawMaterial = selectMaterial != nullptr;
+		bool isDrawMesh = !isDrawMaterial && selectedMesh != nullptr;
+		bool isDrawTexture2D = !isDrawMaterial && !isDrawMesh && selectedTexture2d != nullptr;
+
+
+		RHI_VertexBuffer* m_vertex_buffer;
+		RHI_IndexBuffer* m_index_buffer;
+		int indexCount;
+		Matrix transform = Matrix::CreateScale(1) * Matrix::CreateTranslation(Vector3::Zero) * Matrix::CreateRotation(Quaternion::Identity);
+		if (isDrawMaterial)
+		{
+			m_vertex_buffer = m_geom_sphere->GetVertexBuffer().get();
+			m_index_buffer = m_geom_sphere->GetIndexBuffer().get();
+			indexCount = m_geom_sphere->GetIndexCount();
+			transform = m_geom_sphere->GetWorldMatrix();
+		}
+		else if(isDrawMesh)
+		{
+			m_vertex_buffer = selectedMesh->GetVertexBuffer();
+			m_index_buffer = selectedMesh->GetIndexBuffer();
+			indexCount = selectedMesh->GetIndexCount();
+			// transform = ;
+			selectMaterial = m_default_standard_material;
+		}
+		else if(isDrawTexture2D)
+		{
+			m_vertex_buffer = m_geom_plane->GetVertexBuffer().get();
+			m_index_buffer = m_geom_plane->GetIndexBuffer().get();
+			indexCount = m_geom_plane->GetIndexCount();
+			transform = m_geom_plane->GetWorldMatrix();
+			selectMaterial = m_default_standard_material;
+			selectMaterial->SetTexture("u_diffuseMap",selectedTexture2d);
+		}
+		else
 		{
 			return;
 		}
+
+		if(selectMaterial == nullptr && selectedMesh==nullptr && selectedTexture2d)
+		{
+			return;
+		}
+
+		// set material default
+		selectMaterial->Tick();
 
 		RHI_Shader* shader_v = selectMaterial->GetVertexShader();
 		RHI_Shader* shader_p = selectMaterial->GetPixelShader();
@@ -591,7 +635,7 @@ namespace LitchiRuntime
 
 		UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
 
-		cmd_list->BeginMarker("MaterialPass");
+		cmd_list->BeginMarker("Pass_SelectedAssetViewResourcePass");
 
 		// set pipeline state
 		// pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
@@ -603,12 +647,12 @@ namespace LitchiRuntime
 			/*m_cb_pass_cpu.set_resolution_out(GetResolutionRender());*/
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform
-			m_cb_pass_cpu.transform = m_geom_sphere->GetWorldMatrix();
+			m_cb_pass_cpu.transform = transform;
 			PushPassConstants(cmd_list);
 			EASY_END_BLOCK
 		}
-		cmd_list->SetBufferVertex(m_geom_sphere->GetVertexBuffer().get());
-		cmd_list->SetBufferIndex(m_geom_sphere->GetIndexBuffer().get());
+		cmd_list->SetBufferVertex(m_vertex_buffer);
+		cmd_list->SetBufferIndex(m_index_buffer);
 
 		EASY_BLOCK("UpdateMaterial")
 		UpdateMaterial(cmd_list, selectMaterial);
@@ -616,7 +660,7 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("DrawCall")
 		// Draw 
-		cmd_list->DrawIndexed(m_geom_sphere->GetIndexCount(), 0, 0);
+		cmd_list->DrawIndexed(indexCount, 0, 0);
 		EASY_END_BLOCK
 
 		cmd_list->EndRenderPass();

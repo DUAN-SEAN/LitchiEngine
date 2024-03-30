@@ -466,6 +466,7 @@ namespace LitchiRuntime
         m_world_grid          = make_unique<Grid>();
 
         m_geom_sphere = make_unique<SphereGeometry>();
+        m_geom_plane = make_unique<PlaneGeometry>();
     }
 
     void Renderer::CreateStandardTextures()
@@ -511,6 +512,11 @@ namespace LitchiRuntime
             standard_texture(Renderer_StandardTexture::Gizmo_audio_source) = make_shared<RHI_Texture2D>(RHI_Texture_Srv, "standard_icon_audio_source");
             standard_texture(Renderer_StandardTexture::Gizmo_audio_source)->LoadFromFile(dir_texture + "audio.png");
         }
+    }
+
+    void Renderer::LoadDefaultMaterials()
+    {
+        m_default_standard_material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard.mat");
     }
 
     void Renderer::DestroyResources()

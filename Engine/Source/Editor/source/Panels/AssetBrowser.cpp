@@ -643,16 +643,17 @@ public:
 	virtual void CreateList() override
 	{
 		// todo:
-	/*	auto& previewAction = CreateWidget<MenuItem>("Preview");
+		auto& previewAction = CreateWidget<MenuItem>("Preview");
 
 		previewAction.ClickedEvent += [this]
 		{
-			Resource* resource = LitchiRuntime::ServiceLocator::Get<ResourceLoader>()[EDITOR_EXEC(GetResourcePath(filePath, m_protected))];
+			auto relativePath = FileSystem::GetRelativePathAssetFromNative(filePath);
+			Resource* resource = LitchiRuntime::ServiceLocator::Get<ResourceLoader>()[EDITOR_EXEC(GetResourcePath(relativePath, m_protected))];
 			auto& assetView = EDITOR_PANEL(LitchiEditor::AssetView, "Asset View");
 			assetView.SetResource(resource);
 			assetView.Open();
 			assetView.Focus();
-		};*/
+		};
 
 		FileContextualMenu::CreateList();
 	}

@@ -14,6 +14,7 @@
 #include "Renderer_ConstantBuffers.h"
 #include "Font/Font.h"
 #include "Grid.h"
+#include "PlaneGeometry.h"
 #include "RendererPath.h"
 #include "SphereGeometry.h"
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
@@ -146,6 +147,7 @@ namespace LitchiRuntime
 		static void CreateShaders();
 		static void CreateSamplers(const bool create_only_anisotropic = false);
 		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
+		static void LoadDefaultMaterials();
 
 		// Passes - Core
 		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
@@ -155,7 +157,7 @@ namespace LitchiRuntime
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
-		static void Pass_MaterialPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		static void Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
 		// Buffer
 		static Cb_Frame BuildFrameBufferData();
@@ -186,6 +188,8 @@ namespace LitchiRuntime
 		static std::unique_ptr<Font> m_font;
 		static std::unique_ptr<Grid> m_world_grid;
 		static std::unique_ptr<SphereGeometry> m_geom_sphere;
+		static std::unique_ptr<PlaneGeometry> m_geom_plane;
+		static Material* m_default_standard_material;
 		static bool m_brdf_specular_lut_rendered;
 		static std::vector<RHI_Vertex_PosCol> m_line_vertices;
 		static std::vector<float> m_lines_duration;
