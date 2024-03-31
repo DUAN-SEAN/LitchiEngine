@@ -27,8 +27,7 @@ void SkinnedMeshRenderer::OnUpdate()
 
 	if (m_isFirstTick && m_material!= nullptr)
 	{
-		m_material->GetShader()->ChangeVertexType(RHI_Vertex_Type::PosUvNorTanBone);
-
+		// todo do some thing
 		m_isFirstTick = false;
 	}
 

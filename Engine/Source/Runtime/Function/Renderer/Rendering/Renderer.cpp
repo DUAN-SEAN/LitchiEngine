@@ -50,7 +50,6 @@ namespace LitchiRuntime
 	std::unique_ptr<PlaneGeometry> Renderer::m_geom_plane;
 	Material* Renderer::m_default_standard_material;
 	Material* Renderer::m_default_standard_skin_material;
-	std::shared_ptr<RHI_ConstantBuffer> Renderer::m_default_bone_constant_buffer;
 
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	vector<RHI_Vertex_PosCol> Renderer::m_line_vertices;
@@ -231,7 +230,6 @@ namespace LitchiRuntime
 		CreateStandardTextures();
 		CreateStandardMeshes();// todo:
 		LoadDefaultMaterials();
-		CreateDefaultBoneConstantBuffer();
 
 		m_rendererPaths.clear();
 		for (size_t i = RendererPathType_Invalid + 1; i < RendererPathType_Count; i++)
@@ -272,7 +270,6 @@ namespace LitchiRuntime
 			m_world_grid.reset();
 			m_geom_sphere.reset();
 			m_geom_plane.reset();
-			m_default_bone_constant_buffer.reset();
 
 			m_default_standard_material = nullptr;// unload by resourceManager
 			m_font.reset();

@@ -148,7 +148,6 @@ namespace LitchiRuntime
 		static void CreateSamplers(const bool create_only_anisotropic = false);
 		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
 		static void LoadDefaultMaterials();
-		static void CreateDefaultBoneConstantBuffer();
 
 		// Passes - Core
 		static void Render4BuildInSceneView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
@@ -206,6 +205,5 @@ namespace LitchiRuntime
 		static std::unique_ptr<PlaneGeometry> m_geom_plane;
 		static Material* m_default_standard_material;
 		static Material* m_default_standard_skin_material;
-		static std::shared_ptr<RHI_ConstantBuffer> m_default_bone_constant_buffer;
 	};
 }

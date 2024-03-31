@@ -567,58 +567,43 @@ namespace LitchiRuntime
 		Material* selectMaterial = rendererPath->GetSelectedMaterial();
 		Mesh* selectedMesh = rendererPath->GetSelectedMesh();
 		RHI_Texture2D* selectedTexture2d = rendererPath->GetSelectedTexture2D();
-
-		bool isDrawMaterial = selectMaterial != nullptr;
-		bool isDrawMesh = !isDrawMaterial && selectedMesh != nullptr;
-		bool isDrawTexture2D = !isDrawMaterial && !isDrawMesh && selectedTexture2d != nullptr;
+		SelectedResourceType selectedResType  = rendererPath->GetSelectedResourceType();
 
 		RHI_VertexBuffer* m_vertex_buffer;
 		RHI_IndexBuffer* m_index_buffer;
 		int indexCount;
 		Matrix transform = Matrix::CreateScale(1) * Matrix::CreateTranslation(Vector3::Zero) * Matrix::CreateRotation(Quaternion::Identity);
-		if (isDrawMaterial)
-		{
+		std::shared_ptr<RHI_ConstantBuffer> selectedMeshBoneConstantBuffer;
+		
+
+		switch (selectedResType) {
+		case SelectedResourceType_None:
+			return;
+		case SelectedResourceType_Material:
 			m_vertex_buffer = m_geom_sphere->GetVertexBuffer().get();
 			m_index_buffer = m_geom_sphere->GetIndexBuffer().get();
 			indexCount = m_geom_sphere->GetIndexCount();
 			transform = m_geom_sphere->GetWorldMatrix();
-		}
-		else if(isDrawMesh)
-		{
+			break;
+		case SelectedResourceType_Mesh:
 			m_vertex_buffer = selectedMesh->GetVertexBuffer();
 			m_index_buffer = selectedMesh->GetIndexBuffer();
 			indexCount = selectedMesh->GetIndexCount();
 			// transform = ;
-			selectMaterial = selectedMesh->IsAnimationModel()? m_default_standard_skin_material:m_default_standard_material;
+			selectMaterial = selectedMesh->IsAnimationModel() ? m_default_standard_skin_material : m_default_standard_material;
+			selectedMeshBoneConstantBuffer = rendererPath->GetSelectedMeshBoneConstantBuffer();
+			break;
+		case SelectedResourceType_Texture2D:
 
-			// get bone data
-			std::vector<int> boneHierarchy;
-			std::vector<Matrix> defaultTransform;
-			selectedMesh->GetBoneHierarchy(boneHierarchy);
-			selectedMesh->GetNodeOffsets(defaultTransform);
-
-			Cb_Bone_Arr m_bone_arr;
-			uint32_t numBones = defaultTransform.size();
-			// 
-			for (uint32_t i = 0; i < numBones; i++) {
-				m_bone_arr.boneArr[i] = defaultTransform[i];
-			}
-			// update cbuffer
-			m_default_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
-		}
-		else if(isDrawTexture2D)
-		{
 			m_vertex_buffer = m_geom_plane->GetVertexBuffer().get();
 			m_index_buffer = m_geom_plane->GetIndexBuffer().get();
 			indexCount = m_geom_plane->GetIndexCount();
 			transform = m_geom_plane->GetWorldMatrix();
 			selectMaterial = m_default_standard_material;
-			selectMaterial->SetTexture("u_diffuseMap",selectedTexture2d);
+			selectMaterial->SetTexture("u_diffuseMap", selectedTexture2d);
+			break;
 		}
-		else
-		{
-			return;
-		}
+
 
 		if(selectMaterial == nullptr && selectedMesh==nullptr && selectedTexture2d)
 		{
@@ -670,9 +655,9 @@ namespace LitchiRuntime
 		cmd_list->SetBufferIndex(m_index_buffer);
 
 		// 如果是skinnedMesh 更新蒙皮数据
-		if (isDrawMesh && selectedMesh->IsAnimationModel())
+		if (selectedResType == SelectedResourceType_Mesh && selectedMesh->IsAnimationModel())
 		{
-			cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, m_default_bone_constant_buffer);
+			cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, selectedMeshBoneConstantBuffer);
 		}
 
 		EASY_BLOCK("UpdateMaterial")
@@ -681,7 +666,24 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("DrawCall")
 		// Draw 
-		cmd_list->DrawIndexed(indexCount, 0, 0);
+		if(selectedResType == SelectedResourceType_Mesh)
+		{
+			const auto& subMeshArr = selectedMesh->GetSubMeshArr();
+
+			LC_ASSERT_MSG(subMeshArr.size() > 0, "SubMeshSize ==0")
+
+			if(subMeshArr.size()>0)
+			{
+				for (const auto& subMesh : subMeshArr)
+				{
+					cmd_list->DrawIndexed(subMesh.m_geometry_index_count, subMesh.m_geometry_index_offset, subMesh.m_geometry_vertex_offset);
+				}
+			}
+
+		}else
+		{
+			cmd_list->DrawIndexed(indexCount, 0, 0);
+		}
 		EASY_END_BLOCK
 
 		cmd_list->EndRenderPass();

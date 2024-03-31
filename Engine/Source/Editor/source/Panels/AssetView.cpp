@@ -61,13 +61,13 @@ void LitchiEditor::AssetView::_Render_Impl()
 	PrepareCamera();
 
 	if (auto pval = std::get_if<Material*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedAssetViewResource(*pval,nullptr,nullptr);
+		rendererPath->UpdateSelectedAssetViewResource(*pval,nullptr,nullptr);
 
 	if (auto pval = std::get_if<Mesh*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedAssetViewResource(nullptr, *pval, nullptr);
+		rendererPath->UpdateSelectedAssetViewResource(nullptr, *pval, nullptr);
 
 	if (auto pval = std::get_if<RHI_Texture2D*>(&m_resource); pval && *pval)
-		rendererPath->SetSelectedAssetViewResource(nullptr, nullptr, *pval);
+		rendererPath->UpdateSelectedAssetViewResource(nullptr, nullptr, *pval);
 
 
 	rendererPath->SetActive(IsOpened());

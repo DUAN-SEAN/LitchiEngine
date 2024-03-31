@@ -79,6 +79,11 @@ namespace LitchiRuntime
 
 		m_depthRenderTarget = nullptr;
 		m_colorRenderTarget = nullptr;
+
+		if(m_selectedMesh_bone_constant_buffer)
+		{
+			m_selectedMesh_bone_constant_buffer.reset();
+		}
 	}
 
 	void RendererPath::UpdateScene(Scene* scene)
@@ -131,6 +136,52 @@ namespace LitchiRuntime
 		}
 
 		return nullptr;
+	}
+
+	void RendererPath::UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d)
+	{
+		// only one select
+		m_selectedMaterial = material;
+		m_selectedMesh = mesh;
+		m_selectedTexture2D = texture_2d;
+
+		if(m_selectedMaterial != nullptr)
+		{
+			m_selectedResType = SelectedResourceType_Material;
+			m_selectedMesh_bone_constant_buffer.reset();
+			m_selectedMesh_bone_constant_buffer = nullptr;
+		}
+		else if(m_selectedMesh != nullptr)
+		{
+			m_selectedResType = SelectedResourceType_Mesh;
+
+			if(m_selectedMesh_bone_constant_buffer == nullptr)
+			{
+				m_selectedMesh_bone_constant_buffer = std::make_unique<RHI_ConstantBuffer>();
+				m_selectedMesh_bone_constant_buffer->Create<Cb_Bone_Arr>(1);
+			}
+
+			// get bone data
+			std::vector<int> boneHierarchy;
+			std::vector<Matrix> defaultTransform;
+			m_selectedMesh->GetBoneHierarchy(boneHierarchy);
+			m_selectedMesh->GetNodeOffsets(defaultTransform);
+
+			Cb_Bone_Arr m_bone_arr;
+			uint32_t numBones = defaultTransform.size();
+			// 
+			for (uint32_t i = 0; i < numBones; i++) {
+				m_bone_arr.boneArr[i] = defaultTransform[i];
+			}
+			// update cbuffer
+			m_selectedMesh_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
+		}
+		else if(m_selectedTexture2D != nullptr)
+		{
+			m_selectedResType = SelectedResourceType_Texture2D;
+			m_selectedMesh_bone_constant_buffer.reset();
+			m_selectedMesh_bone_constant_buffer = nullptr;
+		}
 	}
 
 	void RendererPath::CreateColorRenderTarget()

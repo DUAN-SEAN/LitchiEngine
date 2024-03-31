@@ -21,6 +21,14 @@ namespace LitchiRuntime
 		RendererPathType_Count
 	};
 
+	enum SelectedResourceType
+	{
+		SelectedResourceType_None,
+		SelectedResourceType_Material,
+		SelectedResourceType_Mesh,
+		SelectedResourceType_Texture2D,
+	};
+
 	// rendererPath, completed once pass, render to texture
 	class RendererPath
 	{
@@ -49,16 +57,18 @@ namespace LitchiRuntime
 		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 		UICanvas* GetCanvas();
 
-		void SetSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d){ m_selectedMaterial = material; m_selectedMesh = mesh; m_selectedTexture2D = texture_2d; }
+		void UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d);
 		Material* GetSelectedMaterial() const { return m_selectedMaterial; }
 		Mesh* GetSelectedMesh() const { return m_selectedMesh; }
 		RHI_Texture2D* GetSelectedTexture2D() const { return m_selectedTexture2D; }
+		SelectedResourceType GetSelectedResourceType() const { return m_selectedResType; }
 
 		// Light & Shadow
 		const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
 		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
 		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
 		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }
+		std::shared_ptr<RHI_ConstantBuffer>  GetSelectedMeshBoneConstantBuffer() { return m_selectedMesh_bone_constant_buffer; }
 		uint32_t GetShadowArraySize() const;
 		bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
 
@@ -112,6 +122,8 @@ namespace LitchiRuntime
 		Material* m_selectedMaterial = nullptr;
 		RHI_Texture2D* m_selectedTexture2D = nullptr;
 		Mesh* m_selectedMesh = nullptr;
+		std::shared_ptr<RHI_ConstantBuffer> m_selectedMesh_bone_constant_buffer;
+		SelectedResourceType m_selectedResType{SelectedResourceType_None};
 
 	};
 

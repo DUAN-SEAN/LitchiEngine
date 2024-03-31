@@ -104,6 +104,7 @@ namespace LitchiRuntime
         // SubMesh
         void AddSubMesh(SubMesh subMesh, int& subMeshIndex);
         SubMesh GetSubMesh(int index, bool& result);
+        std::vector<SubMesh>& GetSubMeshArr() { return m_subMeshArr; }
 
         // Bone
         std::vector<BoneInfo>& GetBones() { return m_boneInfoArr; }
@@ -154,7 +155,7 @@ namespace LitchiRuntime
         BoundingBox m_aabb;
 
         // sub Mesh collection
-        std::vector<SubMesh> m_subMeshArr;
+        std::vector<SubMesh> m_subMeshArr{};
 
 
         //Bone/Animation Information
