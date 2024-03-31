@@ -33,6 +33,7 @@ namespace LitchiRuntime
 			return false;
 		}
 
+		LC_ASSERT_MSG(materialRes->vertexType != RHI_Vertex_Type::Undefined, "Load Material Not Specify VertexType");
 
 		SetResourceFilePath(file_path);
 		m_materialRes = materialRes;
@@ -351,6 +352,9 @@ namespace LitchiRuntime
 		m_valueConstantBuffer->Create(size,1);
 		m_valueConstantBuffer->ResetOffset();
 		m_valueConstantBuffer->Update(value);
+
+		// modify vertexType
+		m_shader->ChangeVertexType(m_materialRes->vertexType);
 	}
 
 	void Material::Tick()

@@ -1,4 +1,5 @@
 {
+  "vertexType": "PosUvNorTanBone",
   "shaderPath": ":Shaders/Forward/Standard_Skin.hlsl",
   "uniformInfoList": [
     {

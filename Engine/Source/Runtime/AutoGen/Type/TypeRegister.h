@@ -107,6 +107,15 @@ RTTR_REGISTRATION //注册反射
 		value("Point", LightType::Point)
 		);
 
+	registration::enumeration<RHI_Vertex_Type>("VertexType")(
+		value("Undefined", RHI_Vertex_Type::Undefined),
+		value("Pos", RHI_Vertex_Type::Pos),
+		value("PosCol", RHI_Vertex_Type::PosCol),
+		value("PosUv", RHI_Vertex_Type::PosUv),
+		value("PosUvNorTan", RHI_Vertex_Type::PosUvNorTan),
+		value("Pos2dUvCol8", RHI_Vertex_Type::Pos2dUvCol8),
+		value("PosUvNorTanBone", RHI_Vertex_Type::PosUvNorTanBone)
+		);
 
 	registration::class_<Object>("Object")
 		.constructor<>()(rttr::policy::ctor::as_raw_ptr)
@@ -224,6 +233,7 @@ RTTR_REGISTRATION //注册反射
 			rttr::metadata("Serializable", true)
 			)
 		.constructor<>()
+		.property("vertexType", &MaterialRes::vertexType)
 		.property("shaderPath", &MaterialRes::shaderPath)
 		.property("uniformInfoList", &MaterialRes::uniformInfoList);
 

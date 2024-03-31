@@ -334,6 +334,28 @@ namespace LitchiRuntime
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.push_constant_buffers, RHI_Descriptor_Type::PushConstantBuffer, shader_stage);
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.separate_samplers, RHI_Descriptor_Type::Sampler, shader_stage);
 
+		// todo try auto calc input layout vertex type
+		//auto size111 = sizeof(RHI_Vertex_PosTexNorTan);
+		//if(shader_stage == RHI_Shader_Vertex)
+		//{
+		//	const SmallVector<Resource>& inputResources = resources.stage_inputs;
+		//	for (const Resource& resource : inputResources)
+		//	{
+		//		uint32_t slot = compiler.get_decoration(resource.id, spv::DecorationLocation);
+		//		auto name = compiler.get_name(resource.id);
+		//		auto name2 = compiler.get_block_fallback_name(resource.id);
+		//		auto name3 = compiler.get_remapped_declared_block_name(resource.id);
+
+		//		SPIRType type = compiler.get_type(resource.type_id);
+		//		auto baseType = type.basetype;
+		//		SPIRType parentType = compiler.get_type(type.parent_type);
+		//		for (auto memberTypeId : parentType.member_types)
+		//		{
+		//			SPIRType memberType = compiler.get_type(memberTypeId);
+		//		}
+		//	}
+		//}
+
 		// pre sort
 		sort(m_descriptors.begin(), m_descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
 			{

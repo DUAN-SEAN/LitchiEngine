@@ -125,6 +125,7 @@ namespace LitchiRuntime
 	class MaterialRes
 	{
 	public:
+		RHI_Vertex_Type vertexType;
 		std::string shaderPath;
 		std::vector<UniformInfoBase*> uniformInfoList;
 

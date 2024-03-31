@@ -1,4 +1,5 @@
 {
+  "vertexType": "PosUvNorTan",
   "shaderPath": ":Shaders/Forward/Standard.hlsl",
   "uniformInfoList": [
     {

@@ -1,4 +1,5 @@
 {
+  "vertexType": "PosUv",
   "shaderPath": ":Shaders/UIStandard.glsl",
   "settings": {
     "blendable": true,
@@ -7,6 +8,6 @@
     "gpuInstances": 1
   },
   "uniformInfoList": [
-   
+
   ]
 }

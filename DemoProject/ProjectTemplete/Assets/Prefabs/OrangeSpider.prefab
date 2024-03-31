@@ -1,0 +1,827 @@
+{
+    "availableID": 1,
+    "rootEntityId": 853,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 853,
+            "parentId": 0,
+            "layer": 1,
+            "name": "OrangeSpider",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 2.5635316371917726,
+                        "y": 2.5635316371917726,
+                        "z": 2.5635316371917726
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 855,
+            "parentId": 853,
+            "layer": 1,
+            "name": "Скелет",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 12.850320816040039,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 100.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 864,
+            "parentId": 855,
+            "layer": 1,
+            "name": "Root",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.00018498522695153952,
+                        "y": 0.000490503036417067,
+                        "z": 0.09064552187919617
+                    },
+                    "localRotation": {
+                        "x": -0.2705979347229004,
+                        "y": 0.6532814502716065,
+                        "z": 0.653281569480896,
+                        "w": -0.2705979645252228
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 865,
+            "parentId": 864,
+            "layer": 1,
+            "name": "Body",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0002500138944014907,
+                        "y": -0.03824697434902191,
+                        "z": -0.00000823217851575464
+                    },
+                    "localRotation": {
+                        "x": 0.7070193290710449,
+                        "y": 0.015728672966361047,
+                        "z": 0.7070193290710449,
+                        "w": -0.000004902811724605272
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 878,
+            "parentId": 865,
+            "layer": 1,
+            "name": "Bone",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.00019050671835429966,
+                        "y": 0.061410438269376758,
+                        "z": 0.07599067687988281
+                    },
+                    "localRotation": {
+                        "x": 0.37701767683029177,
+                        "y": 0.10173245519399643,
+                        "z": 0.0027429095935076477,
+                        "w": 0.920598030090332
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 879,
+            "parentId": 878,
+            "layer": 1,
+            "name": "Bone.001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.6566128730773929e-9,
+                        "y": 0.15034618973731996,
+                        "z": -7.450580596923828e-9
+                    },
+                    "localRotation": {
+                        "x": 0.6029213666915894,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.797800600528717
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 880,
+            "parentId": 879,
+            "layer": 1,
+            "name": "Bone.002",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.916241884231568e-9,
+                        "y": 0.0714002251625061,
+                        "z": -2.2351741790771486e-8
+                    },
+                    "localRotation": {
+                        "x": 0.3633889853954315,
+                        "y": 5.373947331577256e-8,
+                        "z": 1.3777443541584945e-7,
+                        "w": 0.9316375255584717
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 881,
+            "parentId": 880,
+            "layer": 1,
+            "name": "Bone.002_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.21525661647319795,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 874,
+            "parentId": 865,
+            "layer": 1,
+            "name": "Bone.003",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.00019051157869398594,
+                        "y": 0.06141044571995735,
+                        "z": -0.07613684237003327
+                    },
+                    "localRotation": {
+                        "x": -0.28651997447013857,
+                        "y": 0.10362295806407929,
+                        "z": -0.007939706556499005,
+                        "w": 0.9524208903312683
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 875,
+            "parentId": 874,
+            "layer": 1,
+            "name": "Bone.004",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.725290298461914e-9,
+                        "y": 0.15034617483615876,
+                        "z": 7.450580596923828e-9
+                    },
+                    "localRotation": {
+                        "x": -0.6165434122085571,
+                        "y": -2.8034747856509059e-7,
+                        "z": 2.5254936986129908e-7,
+                        "w": 0.7873209118843079
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 876,
+            "parentId": 875,
+            "layer": 1,
+            "name": "Bone.005",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -5.587935447692871e-9,
+                        "y": 0.07140018790960312,
+                        "z": 2.2351741790771486e-8
+                    },
+                    "localRotation": {
+                        "x": -0.40202707052230837,
+                        "y": -3.240986856667405e-8,
+                        "z": 7.381438393849749e-8,
+                        "w": 0.9156277775764465
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 877,
+            "parentId": 876,
+            "layer": 1,
+            "name": "Bone.005_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.21525663137435914,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 870,
+            "parentId": 865,
+            "layer": 1,
+            "name": "Bone.006",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.07277227193117142,
+                        "y": 0.06036468967795372,
+                        "z": -0.0004908833070658147
+                    },
+                    "localRotation": {
+                        "x": -0.006182331126183271,
+                        "y": -0.13617216050624848,
+                        "z": -0.3643028438091278,
+                        "w": 0.9212504625320435
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 871,
+            "parentId": 870,
+            "layer": 1,
+            "name": "Bone.007",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.862645149230957e-8,
+                        "y": 0.15399333834648133,
+                        "z": -4.6566128730773929e-9
+                    },
+                    "localRotation": {
+                        "x": 0.4385727047920227,
+                        "y": 0.5546655654907227,
+                        "z": -0.4385724663734436,
+                        "w": 0.5546659231185913
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 872,
+            "parentId": 871,
+            "layer": 1,
+            "name": "Bone.008",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.8870999813079835e-8,
+                        "y": 0.07162787020206452,
+                        "z": 2.60770320892334e-8
+                    },
+                    "localRotation": {
+                        "x": 0.37419262528419497,
+                        "y": -1.767537582963996e-7,
+                        "z": 1.5465955982563174e-7,
+                        "w": 0.9273509979248047
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 873,
+            "parentId": 872,
+            "layer": 1,
+            "name": "Bone.008_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.21446648240089417,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 866,
+            "parentId": 865,
+            "layer": 1,
+            "name": "Bone.009",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.07479526102542877,
+                        "y": 0.06036469340324402,
+                        "z": -0.0004908927367068827
+                    },
+                    "localRotation": {
+                        "x": 0.011418480426073075,
+                        "y": -0.13944296538829804,
+                        "z": 0.27276062965393069,
+                        "w": 0.9518544673919678
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 867,
+            "parentId": 866,
+            "layer": 1,
+            "name": "Bone.010",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.450580596923828e-9,
+                        "y": 0.15399335324764253,
+                        "z": 1.1175870895385743e-8
+                    },
+                    "localRotation": {
+                        "x": -0.4473111033439636,
+                        "y": 0.5476428270339966,
+                        "z": 0.44731080532073977,
+                        "w": 0.54764324426651
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 868,
+            "parentId": 867,
+            "layer": 1,
+            "name": "Bone.011",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.30385160446167e-8,
+                        "y": 0.07162792980670929,
+                        "z": -3.725290298461914e-9
+                    },
+                    "localRotation": {
+                        "x": -0.4108593165874481,
+                        "y": -2.99306606166283e-7,
+                        "z": 9.091567676478008e-8,
+                        "w": 0.9116987586021423
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 869,
+            "parentId": 868,
+            "layer": 1,
+            "name": "Bone.011_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.21446646749973298,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 862,
+            "parentId": 855,
+            "layer": 1,
+            "name": "Foot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.25459885597229006,
+                        "y": -0.17866206169128419,
+                        "z": 0.1278085857629776
+                    },
+                    "localRotation": {
+                        "x": -0.0,
+                        "y": -0.0,
+                        "z": 0.9238796234130859,
+                        "w": 0.38268330693244936
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 863,
+            "parentId": 862,
+            "layer": 1,
+            "name": "Foot_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.05645637586712837,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 860,
+            "parentId": 855,
+            "layer": 1,
+            "name": "Foot.001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.2533235549926758,
+                        "y": 0.1792602390050888,
+                        "z": 0.07780856639146805
+                    },
+                    "localRotation": {
+                        "x": 0.2705981135368347,
+                        "y": 0.6532815098762512,
+                        "z": -0.27059805393218996,
+                        "w": 0.6532815098762512
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 861,
+            "parentId": 860,
+            "layer": 1,
+            "name": "Foot.001_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.05645633488893509,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 858,
+            "parentId": 855,
+            "layer": 1,
+            "name": "Foot.002",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.25359320640563967,
+                        "y": 0.15695297718048097,
+                        "z": 0.12525960803031922
+                    },
+                    "localRotation": {
+                        "x": 0.2705978751182556,
+                        "y": -0.6532815098762512,
+                        "z": 0.27059781551361086,
+                        "w": 0.6532816290855408
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 859,
+            "parentId": 858,
+            "layer": 1,
+            "name": "Foot.002_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0653972402215004,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 856,
+            "parentId": 855,
+            "layer": 1,
+            "name": "Foot.003",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.25480395555496218,
+                        "y": -0.15752288699150086,
+                        "z": 0.07525955140590668
+                    },
+                    "localRotation": {
+                        "x": 0.9238796234130859,
+                        "y": 0.3826832175254822,
+                        "z": 8.64785789644884e-8,
+                        "w": 1.149228978647443e-8
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 857,
+            "parentId": 856,
+            "layer": 1,
+            "name": "Foot.003_end",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.06539728492498398,
+                        "z": -0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 854,
+            "parentId": 853,
+            "layer": 1,
+            "name": "Spider",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0015329569578170777,
+                        "y": 0.39682984352111819,
+                        "z": 0.00324249267578125
+                    },
+                    "localRotation": {
+                        "x": 0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 100.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "Models/OrangeSpider.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "SkinnedMeshRenderer",
+                    "materialPath": ":Materials/StandardSkinn4Phong.mat"
+                }
+            ]
+        }
+    ]
+}

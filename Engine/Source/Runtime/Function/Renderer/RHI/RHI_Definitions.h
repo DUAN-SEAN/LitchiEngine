@@ -207,14 +207,13 @@ namespace LitchiRuntime
 
     enum class RHI_Vertex_Type
     {
-
+        Undefined,
         Pos,
         PosCol,
         PosUv,
         PosUvNorTan,
         Pos2dUvCol8,
         PosUvNorTanBone,
-        Undefined
     };
 
     enum class RHI_Blend

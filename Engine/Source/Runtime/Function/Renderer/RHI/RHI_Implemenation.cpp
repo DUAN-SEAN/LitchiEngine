@@ -51,10 +51,10 @@ namespace LitchiRuntime
         #endif
         
         #ifdef _DEBUG
-            validation = false;
-            gpu_markers = false;
+            validation = true;
+            gpu_markers = true;
             gpu_profiling = true;
-            renderdoc = false;
+            renderdoc = true;
        /*     validation    = true;
             gpu_markers   = true;
             gpu_profiling = true;
@@ -62,7 +62,7 @@ namespace LitchiRuntime
         #else
             validation    = false;
             gpu_markers   = false;
-            gpu_profiling = true;
+            gpu_profiling = false;
             renderdoc     = false;
         #endif
     } 
