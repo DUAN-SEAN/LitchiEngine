@@ -307,6 +307,24 @@ std::string UniformFormat(const std::string& p_string)
 void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 {
 	m_shaderSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
+	auto getString = [this]
+		{
+			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().value_to_name(m_target->GetMaterialRes()->vertexType);
+			return modifyVertexType.to_string();
+		};
+
+	auto setString = [this](std::string value)
+		{
+			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().name_to_value(value).convert<RHI_Vertex_Type>();
+			m_target->GetMaterialRes()->vertexType = modifyVertexType;
+		};
+	enumeration enum_align = type::get<RHI_Vertex_Type>().get_enumeration();
+	std::vector<std::string> enumValueList;
+	for (auto enumName : enum_align.get_names())
+	{
+		enumValueList.push_back(enumName.to_string());
+	}
+	GUIDrawer::DrawEnum(*m_shaderSettingsColumns, "VertexType", enumValueList, getString, setString);
 
 	std::multimap<int, std::pair<std::string, std::any*>> sortedUniformsData;
 
