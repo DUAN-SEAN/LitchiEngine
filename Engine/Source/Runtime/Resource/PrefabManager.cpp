@@ -28,11 +28,11 @@ namespace LitchiRuntime
 
 	void PrefabManager::ReloadResource(LitchiRuntime::Prefab* p_resource, const std::string& p_path)
 	{
-		/*std::string realPath = GetRealPath(p_path);
-
-		auto [min, mag, mipmap] = GetAssetMetadata(realPath);
-
-		Loaders::TextureLoader::Reload(*p_resource, realPath, min, mag, mipmap);*/
+		std::string realPath = GetRealPath(p_path);
+		if (!p_resource->LoadFromFile(realPath))
+		{
+			DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+		}
 	}
 
 	Prefab* PrefabManager::CreatePrefab(const std::string& p_path)

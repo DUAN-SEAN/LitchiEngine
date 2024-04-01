@@ -79,7 +79,6 @@
     #define FFX_GCC
 #endif
 
-
 #define USING_EASY_PROFILER
 
 #include <easy/details/profiler_colors.h>

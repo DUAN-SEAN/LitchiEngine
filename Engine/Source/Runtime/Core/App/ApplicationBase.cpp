@@ -24,7 +24,7 @@
 namespace LitchiRuntime
 {
 	ApplicationBase* ApplicationBase::s_instance;
-	bool ApplicationBase::Init() {
+	bool ApplicationBase::Initialize() {
 		s_instance = this;
 
 		m_engineRootPath = PathParser::MakeNonWindowsStyle(std::filesystem::current_path().string() + "/");
@@ -87,8 +87,6 @@ namespace LitchiRuntime
 		ServiceLocator::Provide(*fontManager.get());
 		ServiceLocator::Provide(*prefabManager.get());
 
-		DEBUG_LOG_INFO("game start");
-
 		Time::Initialize();
 
 		FontImporter::Initialize();
@@ -118,9 +116,6 @@ namespace LitchiRuntime
 
 		}
 
-		TypeManager::Initialize();
-		SerializerManager::Initialize();
-
 		//初始化 fmod
 		//Audio::Init();
 
@@ -129,18 +124,23 @@ namespace LitchiRuntime
 
 		// ScriptEngine::Init(m_projectPath);
 
+		DEBUG_LOG_INFO("ApplicationBase Initialization End");
+
 		return true;
 
 	}
 
-	void ApplicationBase::Run() {
+	void ApplicationBase::Run()
+	{
 
 	}
 
-	void ApplicationBase::Update() {
+	void ApplicationBase::Update()
+	{
 	
 	}
 
-	void ApplicationBase::Exit() {
+	void ApplicationBase::Exit()
+	{
 	}
 }

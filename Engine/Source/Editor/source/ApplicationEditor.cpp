@@ -96,12 +96,12 @@ GameObject* CreateScriptObject(Scene* scene, std::string name, std::string scrip
 	return go;
 }
 
-bool LitchiEditor::ApplicationEditor::Init()
+bool LitchiEditor::ApplicationEditor::Initialize()
 {
 	instance_ = this;
 
 	// Init Base
-	if (!ApplicationBase::Init())
+	if (!ApplicationBase::Initialize())
 	{
 		return false;
 	}
@@ -120,6 +120,8 @@ bool LitchiEditor::ApplicationEditor::Init()
 
 	if (!std::filesystem::exists(m_engineRootPath + "Config/layout.ini"))
 		uiManager->ResetLayout(m_engineRootPath + "Config/layout.ini");
+
+	DEBUG_LOG_INFO("ApplicationEditor Initialization End");
 
 	RunProjectHub();
 

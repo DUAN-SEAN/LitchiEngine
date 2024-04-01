@@ -1,6 +1,4 @@
-﻿
-#ifndef UNTITLED_SERIALIZERMANAGER_H
-#define UNTITLED_SERIALIZERMANAGER_H
+﻿#pragma once
 
 #include "rttr/registration"
 
@@ -14,10 +12,6 @@ namespace LitchiRuntime
 		static std::string SerializeToJson(rttr::instance obj);
 
 		static bool DeserializeFromJson(const std::string& json, rttr::instance obj);
-
-		static void Initialize();
-
 	private:
 	};
 }
-#endif //UNTITLED_TYPE_H

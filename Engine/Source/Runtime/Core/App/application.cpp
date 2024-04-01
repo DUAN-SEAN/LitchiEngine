@@ -6,16 +6,12 @@ namespace LitchiRuntime
 {
     ApplicationBase* Application::s_instance = nullptr;
 
-    void Application::Initiliaze(ApplicationBase* instance) {
+    void Application::Initialize(ApplicationBase* instance) {
         s_instance = instance;
-        if(!s_instance->Init())
+        if(!s_instance->Initialize())
         {
-            throw std::runtime_error("Failed to Init Application");
+            throw std::runtime_error("Failed to Initialization Application");
         }
-    }
-
-    const std::string& Application::GetDataPath() {
-        return s_instance->GetProjectPath();
     }
 
     void Application::Run() {

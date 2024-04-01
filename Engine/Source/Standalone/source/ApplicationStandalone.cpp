@@ -50,12 +50,12 @@ namespace LitchiStandalone
 		return LitchiApplicationType::Game;
 	}
 
-	bool ApplicationStandalone::Init()
+	bool ApplicationStandalone::Initialize()
 	{
 		instance_ = this;
 
 		// Init Base
-		if(!ApplicationBase::Init())
+		if(!ApplicationBase::Initialize())
 		{
 			return false;
 		}
@@ -91,10 +91,9 @@ namespace LitchiStandalone
 			m_rendererPath4Game->SetActive(true);
 		}
 
-		// set fullscreen
-		// window->SetFullscreen(true);
-
 		ConsoleHelper::HideConsole();
+
+		DEBUG_LOG_INFO("ApplicationStandalone Initialization End");
 
 		return true;
 	}
@@ -118,7 +117,6 @@ namespace LitchiStandalone
 					}
 				}  EASY_END_BLOCK;
 
-				//window->SwapBuffers();
 				InputManager::ClearEvents();
 				++m_elapsedFrames;
 			}  EASY_END_BLOCK;

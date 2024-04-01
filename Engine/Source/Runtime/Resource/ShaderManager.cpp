@@ -24,5 +24,9 @@ void LitchiRuntime::ShaderManager::DestroyResource(LitchiRuntime::MaterialShader
 
 void LitchiRuntime::ShaderManager::ReloadResource(LitchiRuntime::MaterialShader* p_resource, const std::string& p_path)
 {
-	// Loaders::ShaderLoader::Recompile(*p_resource, p_path);
+	std::string realPath = GetRealPath(p_path);
+	if (!p_resource->LoadFromFile(realPath))
+	{
+		DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+	}
 }

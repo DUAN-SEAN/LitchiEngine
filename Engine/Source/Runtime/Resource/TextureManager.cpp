@@ -43,9 +43,9 @@ void LitchiRuntime::TextureManager::DestroyResource(LitchiRuntime::RHI_Texture2D
 
 void LitchiRuntime::TextureManager::ReloadResource(LitchiRuntime::RHI_Texture2D* p_resource, const std::string& p_path)
 {
-	/*std::string realPath = GetRealPath(p_path);
-
-	auto [min, mag, mipmap] = GetAssetMetadata(realPath);
-
-	Loaders::TextureLoader::Reload(*p_resource, realPath, min, mag, mipmap);*/
+	std::string realPath = GetRealPath(p_path);
+	if (!p_resource->LoadFromFile(realPath))
+	{
+		DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+	}
 }

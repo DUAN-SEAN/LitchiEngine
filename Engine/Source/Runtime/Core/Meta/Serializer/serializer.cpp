@@ -19,40 +19,6 @@ using namespace rapidjson;
 
 namespace LitchiRuntime
 {
-	void SerializerManager::Initialize()
-	{
-		/*MaterialRes materialRes;
-		materialRes.shader_path_ = "shader/XXX.fs";
-		TextureRes textureRes;
-		textureRes.texture_name_ = "TXName";
-		textureRes.texture_path_ = "texture/XXXX";
-		materialRes.textureRes_arr_.push_back(textureRes);
-
-		auto json = instance->SerializeToJson(materialRes);
-		DEBUG_LOG_INFO("SerializeToJson1::\n" + json);
-
-		auto materialRes2 = rttr::type::get_by_name("MaterialRes").create();
-
-		instance->DeserializeFromJson(json, materialRes2);
-		json = instance->SerializeToJson(materialRes2);
-		DEBUG_LOG_INFO("SerializeToJson2::\n" + json);
-
-		VertexRes vertexRes;
-		vertexRes.pos_.x = 2.0f;
-		vertexRes.color_.x = 1.0f;
-		auto vertexResJson = instance->SerializeToJson(vertexRes);
-		DEBUG_LOG_INFO("vertexResJson2::\n" + vertexResJson);
-
-		GameObject* go = new GameObject("TestObj");
-		auto transform = go->AddComponent<Transform>();
-		transform->set_position(Vector3(0, 1, 0));
-		auto collider = go->AddComponent<Collider>();
-		collider->SetPhysicMaterial(PhysicMaterialRes(0.5f, 1.0f, 0.7f));
-
-		json = instance->SerializeToJson(go);
-		DEBUG_LOG_INFO("GameObject2Josn::\n" + json);*/
-	}
-
 #if 1 // Serialize
 
 	static void to_json_recursively(const instance& obj, PrettyWriter<StringBuffer>& writer);

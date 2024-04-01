@@ -22,7 +22,6 @@ namespace LitchiRuntime
             z = 0;
         }
 
-        // Copy-constructor
         Vector3(const Vector3& vector) = default;
 
         // Copy-constructor
@@ -51,8 +50,7 @@ namespace LitchiRuntime
             y = f;
             z = f;
         }
-
-        // Normalize
+        
         void Normalize()
         {
             const auto length_squared = LengthSquared();

@@ -40,20 +40,15 @@ namespace LitchiRuntime
         template<typename AssetType>
         static bool SaveAsset(const AssetType& out_asset, const std::string& asset_url)
         {
-            // std::ofstream asset_json_file(GetFullPath(asset_url));
             std::ofstream asset_json_file(asset_url);
-           /* if (!asset_json_file)
+            if (!asset_json_file)
             {
                 if(!std::filesystem::create_directory(asset_url))
                 {
                     DEBUG_LOG_ERROR("open file {} failed!", asset_url);
                 	return false;
                 }
-            }*/
-
-            // write to json object and dump to string
-          /*  auto&&        asset_json      = SerializerManager::SerializeToJson(out_asset);
-            std::string&& asset_json_text = asset_json.dump();*/
+            }
 
             auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
 

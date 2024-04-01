@@ -12,8 +12,6 @@ namespace LitchiRuntime
 	class TypeManager {
 	public:
 
-		static void Initialize();
-
 		/**
 		 * \brief 获取类型句柄
 		 * \tparam T

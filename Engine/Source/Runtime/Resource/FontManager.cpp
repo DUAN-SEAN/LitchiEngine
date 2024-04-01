@@ -41,5 +41,9 @@ void LitchiRuntime::FontManager::DestroyResource(LitchiRuntime::Font* p_resource
 
 void LitchiRuntime::FontManager::ReloadResource(LitchiRuntime::Font* p_resource, const std::string& p_path)
 {
-	// do nothing
+	std::string realPath = GetRealPath(p_path);
+	if (!p_resource->LoadFromFile(realPath))
+	{
+		DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+	}
 }

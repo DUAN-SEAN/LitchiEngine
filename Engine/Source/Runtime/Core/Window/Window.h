@@ -10,7 +10,8 @@
 #include "GLFW/glfw3.h"
 
 namespace LitchiRuntime
-{/**
+{
+	/**
 	* Some errors that the driver can return
 	*/
 	enum class EWindowError

@@ -9,12 +9,10 @@ namespace LitchiRuntime
 		std::string realPath = GetRealPath(p_path);
 
 		Material* material = new Material();
-		if (material)
+		if (!material->LoadFromFile(realPath))
 		{
-			if (material->LoadFromFile(realPath))
-			{
-				// material->SetResourceFilePath(p_path);
-			}
+			delete material;
+			return nullptr;
 		}
 
 		return material;
@@ -28,7 +26,11 @@ namespace LitchiRuntime
 
 	void MaterialManager::ReloadResource(Material* p_resource, const std::string& p_path)
 	{
-		// Loaders::MaterialLoader::Reload(*p_resource, p_path);
+		std::string realPath = GetRealPath(p_path);
+		if (!p_resource->LoadFromFile(realPath))
+		{
+			DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+		}
 	}
 	
 }

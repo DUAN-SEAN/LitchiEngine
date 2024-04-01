@@ -50,7 +50,7 @@ namespace LitchiRuntime
         virtual LitchiApplicationType GetApplicationType() = 0;
 
         // Init 
-        virtual bool Init();
+        virtual bool Initialize();
 
         // Call Before Init
         virtual void Run();
@@ -64,10 +64,6 @@ namespace LitchiRuntime
         // Create Window Setting, Must Impl
         virtual WindowSettings CreateWindowSettings() = 0;
 
-        // std::unique_ptr<Renderer>					renderer;
-
-        //std::unique_ptr<UniformBuffer>	engineUBO;
-        
 		std::unique_ptr<ConfigManager> configManager;
 		std::unique_ptr<ModelManager> modelManager;
         std::unique_ptr<ShaderManager> shaderManager;

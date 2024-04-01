@@ -23,7 +23,7 @@ int main(int argc, char** argv)
 #endif
 	delete projectPath;
 
-	application.Initiliaze(application_standalone);
+	application.Initialize(application_standalone);
 	application.Run();
 
 	delete application_standalone;

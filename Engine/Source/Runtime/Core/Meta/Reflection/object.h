@@ -19,7 +19,7 @@ namespace LitchiRuntime
 		std::string& GetObjectName()    { return m_object_name; }
 		void SetObjectName(std::string& name) { m_object_name = name; }
 
-		// Id
+		// Runtime Id
 		uint64_t GetObjectId()        const { return m_object_id; }
 		void SetObjectId(uint64_t id) { m_object_id = id; }
 		static uint64_t GenerateObjectId() { return ++g_id; }

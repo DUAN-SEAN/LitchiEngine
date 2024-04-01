@@ -21,7 +21,7 @@ int main(int argc, char** argv)
 	//std::string filePath(projectPath);
 	// delete projectPath;
 
-	application.Initiliaze(application_standalone);
+	application.Initialize(application_standalone);
 
 	application.Run();
 

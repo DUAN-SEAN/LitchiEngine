@@ -71,6 +71,9 @@ void LitchiRuntime::ModelManager::DestroyResource(Mesh* p_resource)
 
 void LitchiRuntime::ModelManager::ReloadResource(Mesh* p_resource, const std::string& p_path)
 {
-	/*std::string realPath = GetRealPath(p_path);
-	Loaders::ModelLoader::Reload(*p_resource, realPath, GetAssetMetadata(realPath));*/
+	std::string realPath = GetRealPath(p_path);
+	if(!p_resource->LoadFromFile(realPath))
+	{
+		 DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
+	}
 }
