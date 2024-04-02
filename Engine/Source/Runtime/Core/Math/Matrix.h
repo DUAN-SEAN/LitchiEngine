@@ -43,8 +43,14 @@ namespace LitchiRuntime
 
         ~Matrix() = default;
 
-        // Generate a matrix with row first memory alignment
-        // We need this for compatibility reasons with ImGui
+        /**
+         * @brief Generate a matrix with row first memory alignment
+         * We need this for compatibility reasons with ImGui
+         * @param position 
+         * @param rotation 
+         * @param scale 
+         * @return 
+        */
         [[nodiscard]] static Matrix GenerateRowFirst(const Vector3& position, const Quaternion& rotation, const Vector3& scale)
         {
             const Matrix mRotation = CreateRotation(rotation).Transposed();
@@ -72,7 +78,11 @@ namespace LitchiRuntime
         }
         //=========================================================
 
-        //= ROTATION =====================================================================================
+        /**
+         * @brief Create matrix from rotation
+         * @param rotation 
+         * @return 
+        */
         static inline Matrix CreateRotation(const Quaternion& rotation)
         {
             const float num9 = rotation.x * rotation.x;

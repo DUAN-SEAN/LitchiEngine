@@ -13,10 +13,10 @@ namespace LitchiRuntime
 	public:
 
 		/**
-		 * \brief 获取类型句柄
-		 * \tparam T
-		 * \return
-		 */
+		 * @brief Get type handle
+		 * @tparam T 
+		 * @return 
+		*/
 		template <class T>
 		rttr::type GetType()
 		{
@@ -31,10 +31,10 @@ namespace LitchiRuntime
 		}
 
 		/**
-		 * \brief
-		 * \tparam T 类型是否可序列化
-		 * \return
-		 */
+		 * @brief Check type can serialize
+		 * @tparam T 
+		 * @return 
+		*/
 		template <class T>
 		bool IsSerializable()
 		{
@@ -48,11 +48,11 @@ namespace LitchiRuntime
 		}
 
 		/**
-		 * \brief 属性是否可序列化
-		 * \tparam T
-		 * \param propertyName
-		 * \return
-		 */
+		 * @brief Check property can serialize
+		 * @tparam T 
+		 * @param propertyName property name
+		 * @return 
+		*/
 		template <class T>
 		bool IsSerializable(std::string propertyName)
 		{
@@ -66,8 +66,15 @@ namespace LitchiRuntime
 		}
 
 	private:
+
+		/**
+		 * @brief singleton
+		*/
 		static TypeManager* s_instance;
 
+		/**
+		 * @brief type group 
+		*/
 		std::vector<std::string> m_typeList;
 	};
 }

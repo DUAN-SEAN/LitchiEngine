@@ -37,7 +37,7 @@ void LitchiRuntime::InputManager::Initialize(Window* p_window)
 
 }
 
-void LitchiRuntime::InputManager::UnInit()
+void LitchiRuntime::InputManager::UnInitialize()
 {
 
 	m_window->KeyPressedEvent.RemoveListener(m_keyPressedListener);

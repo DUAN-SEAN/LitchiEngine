@@ -34,7 +34,7 @@ namespace LitchiRuntime
             buffer << asset_json_file.rdbuf();
             std::string asset_json_text(buffer.str());
             
-            return SerializerManager::DeserializeFromJson(asset_json_text, out_asset);
+            return Serializer::DeserializeFromJson(asset_json_text, out_asset);
         }
 
         template<typename AssetType>
@@ -50,7 +50,7 @@ namespace LitchiRuntime
                 }
             }
 
-            auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
+            auto asset_json_text = Serializer::SerializeToJson(out_asset);
 
             // write to file
             asset_json_file << asset_json_text;
@@ -63,13 +63,13 @@ namespace LitchiRuntime
         template<typename AssetType>
         static bool Deserialize(const std::string& data, AssetType& out_asset)
         {
-            return SerializerManager::DeserializeFromJson(data, out_asset);
+            return Serializer::DeserializeFromJson(data, out_asset);
         }
 
         template<typename AssetType>
         static std::string Serialize(const AssetType& out_asset)
         {
-            auto asset_json_text = SerializerManager::SerializeToJson(out_asset);
+            auto asset_json_text = Serializer::SerializeToJson(out_asset);
             return asset_json_text;
         }
     };

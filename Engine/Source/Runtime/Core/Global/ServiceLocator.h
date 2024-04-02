@@ -9,23 +9,27 @@
 namespace LitchiRuntime
 {
 	/**
-	* Provide a way to access to core services
+	 * @brief Provide a way to access to core services
 	*/
 	class ServiceLocator
 	{
 	public:
+
 		/**
-		* Register a service in the service locator
-		* @param p_service
+		 * @brief Register a service in the service locator
+		 * @tparam T 
+		 * @param p_service 
 		*/
 		template<typename T>
 		static void Provide(T& p_service)
 		{
 			__SERVICES[typeid(T).hash_code()] = std::any(&p_service);
 		}
-		
+
 		/**
-		* Returns a service of the given type (Make sure that your provided the service before calling this method)
+		 * @brief Returns a service of the given type (Make sure that your provided the service before calling this method)
+		 * @tparam T
+		 * @return
 		*/
 		template<typename T>
 		static T& Get()

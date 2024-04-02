@@ -34,7 +34,7 @@ namespace LitchiStandalone
 		prefabManager->UnloadResources();
 		prefabManager = nullptr;
 
-		InputManager::UnInit();
+		InputManager::UnInitialize();
 
 		window = nullptr;
 
@@ -132,8 +132,8 @@ namespace LitchiStandalone
 		if(scene->IsPlaying())
 		{
 			// Physics Tick
-			m_restFixedTime += Time::delta_time();
-			float fixedDeltaTime = Time::fixed_update_time();
+			m_restFixedTime += Time::GetDeltaTime();
+			float fixedDeltaTime = Time::GetFixedUpdateTime();
 			while (m_restFixedTime > fixedDeltaTime)
 			{
 				Physics::FixedUpdate(fixedDeltaTime);

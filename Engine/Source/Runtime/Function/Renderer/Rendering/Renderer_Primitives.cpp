@@ -231,7 +231,7 @@ namespace LitchiRuntime
         //uint32_t end = static_cast<uint32_t>(m_lines_depth_disabled_duration.size());
         //for (uint32_t i = 0; i < end; i++)
         //{
-        //    m_lines_depth_disabled_duration[i] -= static_cast<float>(delta_time);
+        //    m_lines_depth_disabled_duration[i] -= static_cast<float>(GetDeltaTime);
         //
         //    if (m_lines_depth_disabled_duration[i] <= 0.0f)
         //    {
@@ -245,7 +245,7 @@ namespace LitchiRuntime
         //end = static_cast<uint32_t>(m_lines_depth_enabled_duration.size());
         //for (uint32_t i = 0; i < end; i++)
         //{
-        //    m_lines_depth_enabled_duration[i] -= static_cast<float>(delta_time);
+        //    m_lines_depth_enabled_duration[i] -= static_cast<float>(GetDeltaTime);
         //
         //    if (m_lines_depth_enabled_duration[i] <= 0.0f)
         //    {

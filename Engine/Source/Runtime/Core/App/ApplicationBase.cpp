@@ -32,7 +32,7 @@ namespace LitchiRuntime
 
 		DEBUG_LOG_INFO("ConfigManager::Initialize ProjectPath:{}", m_projectPath);
 
-		if(GetApplicationType() == LitchiApplicationType::Game)
+		if (GetApplicationType() == LitchiApplicationType::Game)
 		{
 			configManager = std::make_unique<ConfigManager>();
 			if (!configManager->Initialize(m_projectPath))
@@ -41,8 +41,9 @@ namespace LitchiRuntime
 				DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
 				return false;
 			}
-			
-		}else
+
+		}
+		else
 		{
 			if (!m_projectPath.empty())
 			{
@@ -53,7 +54,7 @@ namespace LitchiRuntime
 					return false;
 				}
 			}
-			
+
 		}
 
 		// Easy Profiler
@@ -63,7 +64,7 @@ namespace LitchiRuntime
 		Debug::Initialize();
 
 		std::string projectAssetsPath = "";
-		if(configManager)
+		if (configManager)
 		{
 			projectAssetsPath = configManager->GetAssetFolder();
 		}
@@ -137,7 +138,7 @@ namespace LitchiRuntime
 
 	void ApplicationBase::Update()
 	{
-	
+
 	}
 
 	void ApplicationBase::Exit()

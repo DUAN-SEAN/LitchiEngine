@@ -475,7 +475,7 @@ namespace LitchiRuntime
 
 #endif 
 
-	std::string SerializerManager::SerializeToJson(rttr::instance obj)
+	std::string Serializer::SerializeToJson(rttr::instance obj)
 	{
 		if (!obj.is_valid())
 			return std::string();
@@ -488,7 +488,7 @@ namespace LitchiRuntime
 		return sb.GetString();
 	}
 
-	bool SerializerManager::DeserializeFromJson(const std::string& json, rttr::instance obj)
+	bool Serializer::DeserializeFromJson(const std::string& json, rttr::instance obj)
 	{
 		Document document;  // Default template parameter uses UTF8 and MemoryPoolAllocator.
 

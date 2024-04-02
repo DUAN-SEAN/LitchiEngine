@@ -1187,7 +1187,7 @@ namespace LitchiRuntime
 		cb_frame_cpu.resolution_render = m_resolution_render;
 		cb_frame_cpu.taa_jitter_previous = cb_frame_cpu.taa_jitter_current;
 		cb_frame_cpu.taa_jitter_current = jitter_offset;
-		cb_frame_cpu.delta_time = static_cast<float>(Time::delta_time());
+		cb_frame_cpu.delta_time = static_cast<float>(Time::GetDeltaTime());
 		cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
 		cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
 

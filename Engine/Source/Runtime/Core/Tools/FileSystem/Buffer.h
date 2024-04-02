@@ -5,7 +5,9 @@
 
 namespace LitchiRuntime {
 
-	// Non-owning raw buffer class
+	/**
+	 * @brief Non-owning raw buffer class
+	*/
 	struct Buffer
 	{
 		uint8_t* Data = nullptr;

@@ -3,18 +3,32 @@
 
 namespace LitchiRuntime
 {
+	/**
+	 * @brief Console Helper control console window
+	*/
 	class ConsoleHelper
 	{
 	public:
+		
 		/**
-		* Disabled constructor
+		 * @brief Disabled constructor
 		*/
 		ConsoleHelper() = delete;
 
+		/**
+		 * @brief Hide console window
+		*/
 		static void HideConsole();
 
+		/**
+		 * @brief Show console window
+		*/
 		static void ShowConsole();
 
+		/**
+		 * @brief console is visible
+		 * @return 
+		*/
 		static bool IsConsoleVisible();
 	};
 }

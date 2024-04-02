@@ -270,7 +270,7 @@ namespace LitchiRuntime
         static float movement_acceleration = 1.0f;
         static const float movement_drag = 10.0f;
         Vector3 movement_direction = Vector3::Zero;
-        float delta_time = static_cast<float>(Time::delta_time());
+        float delta_time = static_cast<float>(Time::GetDeltaTime());
 
         // Detect if fps control should be activated
         {
@@ -479,7 +479,7 @@ namespace LitchiRuntime
             const float lerp_duration = 2.0f + Math::Helper::Clamp(m_lerp_to_target_distance * 0.01f, 0.0f, 2.0f);
 
             // Alpha
-            m_lerp_to_target_alpha += static_cast<float>(Time::delta_time()) / lerp_duration;
+            m_lerp_to_target_alpha += static_cast<float>(Time::GetDeltaTime()) / lerp_duration;
 
             // Position
             if (m_lerp_to_target_p)

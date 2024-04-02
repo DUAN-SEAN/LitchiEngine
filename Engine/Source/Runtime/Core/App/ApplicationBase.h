@@ -17,74 +17,161 @@ namespace LitchiRuntime
 {
 	class Window;
 
-    enum class LitchiApplicationType
-    {
-        Editor,
-        Game
-    };
+	/**
+	 * @brief Litchi Engine Application Type
+	*/
+	enum class LitchiApplicationType
+	{
+		Editor,
+		Game
+	};
 
+	/**
+	 * @brief Application Instance Base
+	*/
 	class ApplicationBase {
-    public:
-        ApplicationBase(){}
-        virtual ~ApplicationBase() {}
+	public:
 
-        void SetTitle(std::string title) { m_title = title; }
+		/**
+		 * @brief ctor
+		*/
+		ApplicationBase() {}
 
-        const std::string& GetProjectPath() { return m_projectPath; }
-        void SetProjectPath(std::string project_path)
-        {
-            m_projectPath = project_path;
-        }
+		/**
+		 * @brief cctor
+		 * call when application exit
+		*/
+		virtual ~ApplicationBase() {}
 
-        const std::string& GetEngineAssetsPath()
-        {
-            return m_engineAssetsPath;
-        }
+		/**
+		 * @brief Set Application Title
+		 * @param title
+		*/
+		void SetTitle(std::string title) { m_title = title; }
 
-        const std::string& GetEngineRootPath()
-        {
-            return m_engineRootPath;
-        }
+		/**
+		 * @brief Get Project Path
+		 * @return Project Path
+		*/
+		const std::string& GetProjectPath() { return m_projectPath; }
 
+		/**
+		 * @brief Set Project Path
+		 * @param projectPath
+		*/
+		void SetProjectPath(const std::string& projectPath)
+		{
+			m_projectPath = projectPath;
+		}
 
-        virtual LitchiApplicationType GetApplicationType() = 0;
+		/**
+		 * @brief Get Engine Assets Path
+		 * @return
+		*/
+		const std::string& GetEngineAssetsPath()
+		{
+			return m_engineAssetsPath;
+		}
 
-        // Init 
-        virtual bool Initialize();
+		/**
+		 * @brief Get Engine Execute Path
+		 * @return
+		*/
+		const std::string& GetEngineRootPath()
+		{
+			return m_engineRootPath;
+		}
 
-        // Call Before Init
-        virtual void Run();
+		/**
+		 * @brief Get Litchi Engine Application Type
+		 * @return
+		*/
+		virtual LitchiApplicationType GetApplicationType() = 0;
 
-        // Per Frame Call, Call by Run。
-        virtual void Update();
+		/**
+		 * @brief When Engine Run, Initialize Application Instance
+		 * @return return true if Initialize done
+		*/
+		virtual bool Initialize();
 
-        // Exit
-        virtual void Exit();
+		/**
+		 * @brief Run Application, Call Before Initialize
+		*/
+		virtual void Run();
 
-        // Create Window Setting, Must Impl
-        virtual WindowSettings CreateWindowSettings() = 0;
+		/**
+		 * @brief Per Frame Call, Call by Run。
+		*/
+		virtual void Update();
 
+		/**
+		 * @brief Exit Application
+		*/
+		virtual void Exit();
+
+		/**
+		 * @brief Create Window Setting, Must override
+		 * @return window setting
+		*/
+		virtual WindowSettings CreateWindowSettings() = 0;
+
+		/**
+		 * @brief Config Manager, Include Project Config
+		*/
 		std::unique_ptr<ConfigManager> configManager;
+
+		/**
+		 * @brief window handle
+		*/
+		std::unique_ptr<Window> window;
+
+		/* Resource Managers */
 		std::unique_ptr<ModelManager> modelManager;
-        std::unique_ptr<ShaderManager> shaderManager;
-        std::unique_ptr<MaterialManager> materialManager;
-        std::unique_ptr<FontManager> fontManager;
-        std::unique_ptr<TextureManager> textureManager;
-        std::unique_ptr<Window> window;
-        std::unique_ptr<SceneManager> sceneManager;
-        std::unique_ptr<PrefabManager> prefabManager;
+		std::unique_ptr<ShaderManager> shaderManager;
+		std::unique_ptr<MaterialManager> materialManager;
+		std::unique_ptr<FontManager> fontManager;
+		std::unique_ptr<TextureManager> textureManager;
+		std::unique_ptr<SceneManager> sceneManager;
+		std::unique_ptr<PrefabManager> prefabManager;
 
-        static ApplicationBase* Instance() { return s_instance; }
-        static ApplicationBase* s_instance;
+		/**
+		 * @brief Return Current Application Singleton Instance
+		 * @return
+		*/
+		static ApplicationBase* Instance() { return s_instance; }
 
-    protected:
+		/**
+		 * @brief  Application Singleton Instance
+		*/
+		static ApplicationBase* s_instance;
 
-        std::string m_engineAssetsPath;
+	protected:
 
-        std::string m_engineRootPath{};// engine executable file root 
-        std::string m_projectPath{};
-        std::string m_projectName{};
-        std::string m_title;// default: ProjectName.EngineVersion
+		/**
+		 * @brief Engine Assets Path
+		 * Location in the engine's execution directory
+		*/
+		std::string m_engineAssetsPath;
 
-    };
+		/**
+		 * @brief engine's execution directory
+		*/
+		std::string m_engineRootPath{};
+
+		/**
+		 * @brief Project Root Path
+		*/
+		std::string m_projectPath{};
+
+		/**
+		 * @brief Project Name
+		*/
+		std::string m_projectName{};
+
+		/**
+		 * @brief ProjectName.EngineVersion
+		*/
+		std::string m_title;
+
+	};
 }

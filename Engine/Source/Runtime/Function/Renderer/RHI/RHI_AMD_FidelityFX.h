@@ -32,7 +32,7 @@ namespace LitchiRuntime
     //        RHI_Texture* tex_mask_transparency,
     //        RHI_Texture* tex_output,
     //        Camera* camera,
-    //        float delta_time,
+    //        float GetDeltaTime,
     //        float sharpness
     //    );
     //};

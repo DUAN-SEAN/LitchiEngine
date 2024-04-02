@@ -345,7 +345,7 @@ namespace LitchiRuntime
 	{
 		LoadEmptyScene();
 
-		if(!SerializerManager::DeserializeFromJson(p_doc,m_currScene))
+		if(!Serializer::DeserializeFromJson(p_doc,m_currScene))
 		{
 			UnloadCurrentScene();
 			return false;

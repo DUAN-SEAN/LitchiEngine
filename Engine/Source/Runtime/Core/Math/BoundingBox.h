@@ -8,68 +8,138 @@
 
 namespace LitchiRuntime
 {
-    struct RHI_Vertex_PosTexNorTan;
-    struct RHI_Vertex_PosTexNorTanBone;
+	struct RHI_Vertex_PosTexNorTan;
+	struct RHI_Vertex_PosTexNorTanBone;
 
-   /* namespace Math
-    {*/
-        class Matrix;
+	class Matrix;
 
-        class LC_CLASS BoundingBox
-        {
-        public:
-            // Construct with zero size.
-            BoundingBox();
+	/**
+	 * @brief Bounding Struct
+	*/
+	class LC_CLASS BoundingBox
+	{
+	public:
 
-            // Construct from minimum and maximum vectors.
-            BoundingBox(const Vector3& min, const Vector3& max);
+		/**
+		 * @brief Construct with zero size.
+		*/
+		BoundingBox();
 
-            // Construct from points
-            BoundingBox(const Vector3* vertices, const uint32_t point_count);
+		/**
+		 * @brief Construct from minimum and maximum vectors.
+		 * @param min 
+		 * @param max 
+		*/
+		BoundingBox(const Vector3& min, const Vector3& max);
 
-            // Construct from vertices
-            BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
-            BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count);
+		/**
+		 * @brief Construct from points
+		 * @param vertices 
+		 * @param point_count 
+		*/
+		BoundingBox(const Vector3* vertices, const uint32_t point_count);
 
-            ~BoundingBox() = default;
+		/**
+		 * @brief Construct from vertices
+		 * @param vertices RHI_Vertex_PosTexNorTan without bone
+		 * @param vertex_count 
+		*/
+		BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
 
-            // Assign from bounding box
-            BoundingBox& operator =(const BoundingBox& rhs) = default;
+		/**
+		 * @brief Construct from vertices with bone
+		 * @param vertices RHI_Vertex_PosTexNorTanBone
+		 * @param vertex_count 
+		*/
+		BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count);
 
-            // Returns the center
-            Vector3 GetCenter() const { return (m_max + m_min) * 0.5f; }
+		/**
+		 * @brief cctor
+		*/
+		~BoundingBox() = default;
 
-            // Returns the size
-            Vector3 GetSize() const { return m_max - m_min; }
+		/**
+		 * @brief Assign from bounding box
+		 * @param rhs 
+		 * @return 
+		*/
+		BoundingBox& operator =(const BoundingBox& rhs) = default;
 
-            // Returns extents
-            Vector3 GetExtents() const { return (m_max - m_min) * 0.5f; }
+		/**
+		 * @brief Returns the center
+		 * @return 
+		*/
+		Vector3 GetCenter() const { return (m_max + m_min) * 0.5f; }
 
-            // Test if a point is inside
-            Intersection IsInside(const Vector3& point) const;
+		/**
+		 * @brief Returns the size
+		 * @return 
+		*/
+		Vector3 GetSize() const { return m_max - m_min; }
 
-            // Test if a bounding box is inside
-            Intersection IsInside(const BoundingBox& box) const;
+		/**
+		 * @brief Returns extents
+		 * @return 
+		*/
+		Vector3 GetExtents() const { return (m_max - m_min) * 0.5f; }
 
-            // Returns a transformed bounding box
-            BoundingBox Transform(const Matrix& transform) const;
+		/**
+		 * @brief Test if a point is inside
+		 * @param point 
+		 * @return 
+		*/
+		Intersection IsInside(const Vector3& point) const;
 
-            // Merge with another bounding box
-            void Merge(const BoundingBox& box);
+		/**
+		 * @brief Test if a bounding box is inside
+		 * @param box 
+		 * @return 
+		*/
+		Intersection IsInside(const BoundingBox& box) const;
 
-            bool operator==(const BoundingBox& other) const
-            {
-                return GetMin() == other.GetMin() && GetMax() == other.GetMax();
-            }
+		/**
+		 * @brief Returns a transformed bounding box
+		 * @param transform 
+		 * @return 
+		*/
+		BoundingBox Transform(const Matrix& transform) const;
 
-            const Vector3& GetMin() const { return m_min; }
-            const Vector3& GetMax() const { return m_max; }
+		/**
+		 * @brief Merge with another bounding box
+		 * @param box 
+		*/
+		void Merge(const BoundingBox& box);
 
-            static const BoundingBox Undefined;
+		/**
+		 * @brief Compare Other Bonding Box
+		 * @param other compared target
+		 * @return 
+		*/
+		bool operator==(const BoundingBox& other) const
+		{
+			return GetMin() == other.GetMin() && GetMax() == other.GetMax();
+		}
 
-        private:
-            Vector3 m_min;
-            Vector3 m_max;
-        };
-    //}
+		/**
+		 * @brief Get BoundingBox min location
+		 * @return 
+		*/
+		const Vector3& GetMin() const { return m_min; }
+
+		/**
+		 * @brief Get BoundingBox max location
+		 * @return 
+		*/
+		const Vector3& GetMax() const { return m_max; }
+
+		/**
+		 * @brief 
+		*/
+		static const BoundingBox Undefined;
+
+	private:
+		Vector3 m_min;
+		Vector3 m_max;
+	};
+
 }

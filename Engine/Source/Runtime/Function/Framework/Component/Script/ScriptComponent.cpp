@@ -43,7 +43,7 @@ namespace LitchiRuntime
 		//// 通知脚本引擎 执行回调Update
 		//auto& unmanagedId = m_unmanagedId;
 
-		//float deltaTime = Time::delta_time();
+		//float deltaTime = Time::GetDeltaTime();
 		//ScriptEngine::InvokeMethod(unmanagedId, "OnUpdate",&deltaTime);
 	}
 }

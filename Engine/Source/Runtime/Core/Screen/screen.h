@@ -6,22 +6,24 @@ namespace LitchiRuntime
 {
     class Screen {
     public:
-        static int width() { return width_; }
-        static int height() { return height_; }
+        static int GetWidth() { return m_width; }
+        static int GetHeight() { return m_height; }
 
-        /// 获取屏幕宽高比
-        /// \return
-        static float aspect_ratio() { return aspect_ratio_; }
+        /**
+         * @brief get screen height/witdh
+         * @return 
+        */
+        static float GetAspectRatio() { return m_aspectRatio; }
 
-        static void set_width(int width) { width_ = width; calculate_aspect_ratio(); }
-        static void set_height(int height) { height_ = height; calculate_aspect_ratio(); }
-        static void set_width_height(int width, int height) { width_ = width; height_ = height; calculate_aspect_ratio(); }
+        static void SetWidth(int width) { m_width = width; CalculateAspectRatio(); }
+        static void SetHeight(int height) { m_height = height; CalculateAspectRatio(); }
+        static void SetWidthHeight(int width, int height) { m_width = width; m_height = height; CalculateAspectRatio(); }
 
     private:
-        static void calculate_aspect_ratio() { aspect_ratio_ = width_ * 1.0f / height_; }
+        static void CalculateAspectRatio() { m_aspectRatio = static_cast<float>(m_width) * 1.0f / static_cast<float>(m_height); }
     private:
-        static int width_;
-        static int height_;
-        static float aspect_ratio_;//宽高比
+        static int m_width;
+        static int m_height;
+        static float m_aspectRatio;//宽高比
     };
 }

@@ -69,7 +69,7 @@ LitchiEditor::ApplicationEditor::~ApplicationEditor()
 
 	sceneManager = nullptr;
 
-	InputManager::UnInit();
+	InputManager::UnInitialize();
 
 	window = nullptr;
 
@@ -152,7 +152,7 @@ void LitchiEditor::ApplicationEditor::Run()
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderViews") {
-					RenderViews(Time::delta_time());
+					RenderViews(Time::GetDeltaTime());
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderUI") {
@@ -185,8 +185,8 @@ void LitchiEditor::ApplicationEditor::Update()
 		auto scene = this->sceneManager->GetCurrentScene();
 
 		// Physics Tick
-		m_restFixedTime += Time::delta_time();
-		float fixedDeltaTime = Time::fixed_update_time();
+		m_restFixedTime += Time::GetDeltaTime();
+		float fixedDeltaTime = Time::GetFixedUpdateTime();
 		while (m_restFixedTime > fixedDeltaTime)
 		{
 			Physics::FixedUpdate(fixedDeltaTime);
@@ -215,7 +215,7 @@ void LitchiEditor::ApplicationEditor::Update()
 	auto& profiler = m_panelsManager.GetPanelAs<Profiler>("Profiler");
 	if(profiler.IsOpened())
 	{
-		profiler.Update(Time::delta_time());
+		profiler.Update(Time::GetDeltaTime());
 	}
 }
 

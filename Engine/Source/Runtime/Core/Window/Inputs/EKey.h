@@ -3,9 +3,7 @@
 
 namespace LitchiRuntime
 {
-	/**
-	* Keyboard keys
-	*/
+	/// @brief Keyboard keys
 	enum class EKey
 	{
 		KEY_UNKNOWN			= -1,

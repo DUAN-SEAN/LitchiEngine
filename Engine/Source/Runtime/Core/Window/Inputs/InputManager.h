@@ -12,25 +12,38 @@
 
 namespace LitchiRuntime
 {
-	/**
-	* Handles inputs (Mouse and keyboard)
-	*/
+	/// <summary>
+	/// Handles inputs (Mouse and keyboard)
+	/// </summary>
 	class InputManager
 	{
 	public:
-		
-		static void Initialize(Window* p_window);
-		static void UnInit();
-		static void Tick();
 		/**
-		* Clear any event occured
-		* @note Should be called at the end of every game tick
+		 * @brief Initialize
+		 * @param p_window 
+		*/
+		static void Initialize(Window* p_window);
+
+		/**
+		 * @brief UnInitialize
+		*/
+		static void UnInitialize();
+
+		/**
+		 * @brief Tick
+		*/
+		static void Tick();
+
+		/**
+		 * @brief Clear any event occur
+		 * Should be called at the end of every game tick
 		*/
 		static void ClearEvents();
 
 		/**
-		* Return the current state of the given key
-		* @param p_key
+		 * @brief Return the current state of the given key
+		 * @param p_key 
+		 * @return 
 		*/
 		static EKeyState GetKeyState(EKey p_key);
 
@@ -63,7 +76,6 @@ namespace LitchiRuntime
 		* @param p_button
 		*/
 		static bool IsMouseButtonReleased(EMouseButton p_button);
-		
 
 		static void SetMouseCursorVisible(const bool visible);
 		static bool GetMouseCursorVisible();

@@ -3,9 +3,7 @@
 
 namespace LitchiRuntime
 {
-	/**
-	* Mouse buttons
-	*/
+	/// @brief Mouse buttons
 	enum class EMouseButton
 	{
 		MOUSE_BUTTON_1		= 0,

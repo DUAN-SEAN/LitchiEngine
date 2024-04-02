@@ -474,7 +474,7 @@ void LitchiEditor::EditorActions::StartPlaying()
 			
 			auto currScene = LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene();
 
-			m_sceneBackup = SerializerManager::SerializeToJson(currScene);
+			m_sceneBackup = Serializer::SerializeToJson(currScene);
 
 			m_panelsManager.GetPanelAs<LitchiEditor::GameView>("Game View").Focus();
 			currScene->Play();

@@ -23,7 +23,7 @@ void LitchiRuntime::Animator::OnAwake()
 
 void Animator::OnUpdate()
 {
-	m_timePos += Time::delta_time();
+	m_timePos += Time::GetDeltaTime();
 
 	// 更新Clip中的信息
 	if(m_currentClip!=nullptr && m_timePos > m_currentClip->GetClipEndTime())

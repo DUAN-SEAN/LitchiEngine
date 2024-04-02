@@ -14,7 +14,7 @@
 namespace LitchiRuntime
 {
 	/**
-	* Some log levels
+	 * @brief Some log levels
 	*/
 	enum class ELogLevel
 	{
@@ -25,7 +25,7 @@ namespace LitchiRuntime
 	};
 
 	/**
-	* Store the log information
+	 * @brief Store the log information
 	*/
 	struct LogData
 	{
@@ -34,6 +34,9 @@ namespace LitchiRuntime
 		std::string date;
 	};
 
+    /**
+     * @brief Manage Debug
+    */
     class Debug {
     public:
         static void Initialize();
