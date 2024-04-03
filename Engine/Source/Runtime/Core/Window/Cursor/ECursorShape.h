@@ -4,9 +4,9 @@
 namespace LitchiRuntime
 {
 	/**
-	* Some cursor shapes.
-	* They specify how the mouse pointer should look
-	*/
+	 * @brief Some cursor shapes.
+	 * They specify how the mouse pointer should look
+	 */
 	enum class ECursorShape
 	{
 		ARROW		= 0x00036001,

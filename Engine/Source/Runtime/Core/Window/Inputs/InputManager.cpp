@@ -20,11 +20,11 @@ ListenerID InputManager::m_scrollMoveListener;
 std::unordered_map<EKey, EKeyState>					InputManager::m_keyEvents;
 std::unordered_map<EMouseButton, EMouseButtonState>	InputManager::m_mouseButtonEvents;
 
-Vector2 InputManager::m_mouse_position = Vector2::Zero;
-Vector2 InputManager::m_mouse_delta = Vector2::Zero;
-Vector2 InputManager::m_mouse_wheel_delta = Vector2::Zero;
-Vector2 InputManager::m_editor_viewport_offset = Vector2::Zero;
-bool InputManager::m_mouse_is_in_viewport = true;
+Vector2 InputManager::m_mousePosition = Vector2::Zero;
+Vector2 InputManager::m_mouseDelta = Vector2::Zero;
+Vector2 InputManager::m_mouseWheelDelta = Vector2::Zero;
+Vector2 InputManager::m_editorViewportOffset = Vector2::Zero;
+bool InputManager::m_mouseIsInViewport = true;
 
 void LitchiRuntime::InputManager::Initialize(Window* p_window)
 {
@@ -102,21 +102,21 @@ void LitchiRuntime::InputManager::Tick()
 	
 	Vector2 position = Vector2(static_cast<int>(x), static_cast<int>(y));
 	// Get delta
-	m_mouse_delta = position - m_mouse_position;
+	m_mouseDelta = position - m_mousePosition;
 
 	// Get position
-	m_mouse_position = position;
+	m_mousePosition = position;
 
-	/*DEBUG_LOG_INFO("mouse_position {},{}", m_mouse_position.x, m_mouse_position.y);
+	/*DEBUG_LOG_INFO("mouse_position {},{}", m_mousePosition.x, m_mousePosition.y);
 	DEBUG_LOG_INFO("window_position {},{}", window_x, window_y);*/
 	// DEBUG_LOG_INFO("mouse delta {}{}", position.x, position.y);
-	// DEBUG_LOG_INFO("mouse wheel delta {}{}", m_mouse_wheel_delta.x, m_mouse_wheel_delta.y);
+	// DEBUG_LOG_INFO("mouse wheel delta {}{}", m_mouseWheelDelta.x, m_mouseWheelDelta.y);
 
 }
 
 void LitchiRuntime::InputManager::ClearEvents()
 {
-	m_mouse_wheel_delta = Vector2::Zero;
+	m_mouseWheelDelta = Vector2::Zero;
 	m_keyEvents.clear();
 	m_mouseButtonEvents.clear();
 }
@@ -143,44 +143,44 @@ void LitchiRuntime::InputManager::OnMouseButtonReleased(int p_button)
 
 void LitchiRuntime::InputManager::OnScrollMove(int16_t x, int16_t y)
 {
-	m_mouse_wheel_delta = Vector2(x, y);
+	m_mouseWheelDelta = Vector2(x, y);
 }
 
 void LitchiRuntime::InputManager::SetMouseIsInViewport(const bool is_in_viewport)
 {
-	m_mouse_is_in_viewport = is_in_viewport;
+	m_mouseIsInViewport = is_in_viewport;
 }
 
 bool LitchiRuntime::InputManager::GetMouseIsInViewport()
 {
-	return m_mouse_is_in_viewport;
+	return m_mouseIsInViewport;
 }
 
 const Vector2& LitchiRuntime::InputManager::GetMousePosition()
 {
-	return m_mouse_position;
+	return m_mousePosition;
 }
 
 void LitchiRuntime::InputManager::SetMousePosition(const Vector2& position)
 {
 	glfwSetCursorPos(m_window->GetGlfwWindow(), position.x, position.y);
 
-	m_mouse_position = position;
+	m_mousePosition = position;
 }
 
 const Vector2& LitchiRuntime::InputManager::GetMouseDelta()
 {
-	return m_mouse_delta;
+	return m_mouseDelta;
 }
 
 const Vector2& LitchiRuntime::InputManager::GetMouseWheelDelta()
 {
-	return m_mouse_wheel_delta;
+	return m_mouseWheelDelta;
 }
 
 void LitchiRuntime::InputManager::SetEditorViewportOffset(const Vector2& offset)
 {
-	m_editor_viewport_offset = offset;
+	m_editorViewportOffset = offset;
 }
 
 bool LitchiRuntime::InputManager::GetMouseCursorVisible()
@@ -203,11 +203,11 @@ const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToWindow()
 	GLFWwindow* window = static_cast<GLFWwindow*>(ApplicationBase::Instance()->window->GetGlfwWindow());
 
 	glfwGetWindowPos(window, &window_x, &window_y);
-	// return Vector2(static_cast<float>(m_mouse_position.x - window_x), static_cast<float>(m_mouse_position.y - window_y));
-	return Vector2(static_cast<float>(m_mouse_position.x), static_cast<float>(m_mouse_position.y));
+	// return Vector2(static_cast<float>(m_mousePosition.x - window_x), static_cast<float>(m_mousePosition.y - window_y));
+	return Vector2(static_cast<float>(m_mousePosition.x), static_cast<float>(m_mousePosition.y));
 }
 
 const Vector2 LitchiRuntime::InputManager::GetMousePositionRelativeToEditorViewport()
 {
-	return GetMousePositionRelativeToWindow() - m_editor_viewport_offset;
+	return GetMousePositionRelativeToWindow() - m_editorViewportOffset;
 }

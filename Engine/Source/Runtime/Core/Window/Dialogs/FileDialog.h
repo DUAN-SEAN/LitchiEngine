@@ -10,8 +10,8 @@ struct tagOFNA;
 namespace LitchiRuntime
 {
 	/**
-	* Some flags that can be passed to FileDialog instances
-	*/
+	 * @brief Some flags that can be passed to FileDialog instances
+	 */
 	enum class EExplorerFlags
 	{
 		READONLY                 = 0x00000001,

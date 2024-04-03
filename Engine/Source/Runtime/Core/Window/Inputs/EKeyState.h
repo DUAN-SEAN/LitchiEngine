@@ -4,8 +4,8 @@
 namespace LitchiRuntime
 {
 	/**
-	* Defines some states that can be applied to keyboard keys
-	*/
+	 * @brief Defines some states that can be applied to keyboard keys
+	 */
 	enum class EKeyState
 	{
 		KEY_UP		= 0,

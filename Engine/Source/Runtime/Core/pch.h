@@ -1,10 +1,10 @@
 
 #pragma once
 
-// Engine macros
+/* Engine macros */
 #include "Definitions.h"
 
-//= STD =====================
+/* STD */
 #include <string>
 #include <algorithm>
 #include <type_traits>
@@ -35,8 +35,7 @@
 #include <unordered_set>
 //===========================
 
-//= RUNTIME ====================
-// Core
+/* Runtime */
 #include "Runtime/Core/Time/Time.h"
 
 #include "Runtime/Core/Tools/Eventing/Event.h"
@@ -56,11 +55,10 @@
 #include "Runtime/Core/Tools/Utils/String.h"
 #include "Runtime/Core/Tools/Utils/SystemCalls.h"
 
-//
-// Logging
 #include "Runtime/Core/Log/debug.h"
+//===========================
 
-// Math
+/* Math */
 #include "Math/Vector2.h"
 #include "Math/Vector3.h"
 #include "Math/Vector4.h"
@@ -73,15 +71,17 @@
 #include "Math/Frustum.h"
 #include "Math/Plane.h"
 #include "Math/MathHelper.h"
-//==============================
+//===========================
 
 #if !defined(_MSC_VER)
     #define FFX_GCC
 #endif
 
+/* PROFILER */
 #define USING_EASY_PROFILER
 
 #include <easy/details/profiler_colors.h>
 #include <easy/profiler.h>
+//===========================
 
 

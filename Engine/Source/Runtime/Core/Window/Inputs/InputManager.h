@@ -12,9 +12,9 @@
 
 namespace LitchiRuntime
 {
-	/// <summary>
-	/// Handles inputs (Mouse and keyboard)
-	/// </summary>
+	/**
+	 * @brief Handles inputs (Mouse and keyboard)
+	 */
 	class InputManager
 	{
 	public:
@@ -54,21 +54,24 @@ namespace LitchiRuntime
 		static EMouseButtonState GetMouseButtonState(EMouseButton p_button);
 
 		/**
-		* Return true if the given key has been pressed during the frame
-		* @param p_key
-		*/
+		 * @brief Return true if the given key has been pressed during the frame
+		 * @param p_key 
+		 * @return 
+		 */
 		static bool IsKeyPressed(EKey p_key);
 
 		/**
-		* Return true if the given key has been released during the frame
-		* @param p_key
-		*/
+		 * @brief Return true if the given key has been released during the frame
+		 * @param p_key 
+		 * @return 
+		 */
 		static bool IsKeyReleased(EKey p_key);
 
 		/**
-		* Return true if the given mouse button has been pressed during the frame
-		* @param p_button
-		*/
+		 * @brief Return true if the given mouse button has been pressed during the frame
+		 * @param p_button 
+		 * @return 
+		 */
 		static bool IsMouseButtonPressed(EMouseButton p_button);
 
 		/**
@@ -99,20 +102,28 @@ namespace LitchiRuntime
 	private:
 		static Window* m_window;
 
+		//// Listeners
 		static ListenerID m_keyPressedListener;
 		static ListenerID m_keyReleasedListener;
 		static ListenerID m_mouseButtonPressedListener;
 		static ListenerID m_mouseButtonReleasedListener;
 		static ListenerID m_scrollMoveListener;
 
+		/**
+		 * @brief key enum to key state dictionary
+		 */
 		static std::unordered_map<EKey, EKeyState>					m_keyEvents;
+
+		/**
+		 * @brief mouse button enum to mouse button state dictionary
+		 */
 		static std::unordered_map<EMouseButton, EMouseButtonState>	m_mouseButtonEvents;
 
 		//// Mouse
-		static Vector2 m_mouse_position;
-		static Vector2 m_mouse_delta;
-		static Vector2 m_mouse_wheel_delta;
-		static Vector2 m_editor_viewport_offset;
-		static bool m_mouse_is_in_viewport;
+		static Vector2 m_mousePosition;
+		static Vector2 m_mouseDelta;
+		static Vector2 m_mouseWheelDelta;
+		static Vector2 m_editorViewportOffset;
+		static bool m_mouseIsInViewport;
 	};
 }

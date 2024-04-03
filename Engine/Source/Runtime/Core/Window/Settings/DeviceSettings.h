@@ -7,6 +7,7 @@ namespace LitchiRuntime
 {
 	/**
 	* Contains device settings
+	* todo: remove
 	*/
 	struct DeviceSettings
 	{

@@ -6,28 +6,28 @@
 namespace LitchiRuntime
 {
 	/**
-	* Dialog window that asks the user to save a file to the disk
-	*/
+	 * @brief  Dialog window that asks the user to save a file to the disk
+	 */
 	class SaveFileDialog : public FileDialog
 	{
 	public:
 		/**
-		* Constructor
-		* @param p_dialogTitle
-		*/
+		 * @brief Constructor
+		 * @param p_dialogTitle 
+		 */
 		SaveFileDialog(const std::string& p_dialogTitle);
 
 		/**
-		* Show the file dialog
-		* @param p_flags
-		*/
+		 * @brief Show the file dialog
+		 * @param p_flags 
+		 */
 		virtual void Show(EExplorerFlags p_flags = EExplorerFlags::DONTADDTORECENT | EExplorerFlags::FILEMUSTEXIST | EExplorerFlags::HIDEREADONLY | EExplorerFlags::NOCHANGEDIR) override;
 
 		/**
-		* Define the extension of the saved file
-		* @param p_label
-		* @param p_extension
-		*/
+		 * @brief Define the extension of the saved file
+		 * @param p_label 
+		 * @param p_extension 
+		 */
 		void DefineExtension(const std::string& p_label, const std::string& p_extension);
 
 	private:

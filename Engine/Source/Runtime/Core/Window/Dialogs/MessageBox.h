@@ -11,16 +11,17 @@
 namespace LitchiRuntime
 {
 	/**
-	* Displays a modal dialog box that contains a system icon,
-	* a set of buttons, and a brief application-specific message,
-	* such as status or error information
-	*/
+	 * @brief Displays a modal dialog box that contains a system icon,
+	 * a set of buttons, and a brief application-specific message,
+	 * such as status or error information
+	 */
 	class MessageBox
 	{
 	public:
+
 		/**
-		* Defines some severity levels for MessageBox instances
-		*/
+		 * @brief Defines some severity levels for MessageBox instances
+		 */
 		enum class EMessageType
 		{
 			QUESTION	= 0x00000020L,
@@ -30,8 +31,8 @@ namespace LitchiRuntime
 		};
 
 		/**
-		* Defines some button layouts for MessageBox instances
-		*/
+		 * @brief Defines some button layouts for MessageBox instances
+		 */
 		enum class EButtonLayout
 		{
 			OK							= 0x00000000L,
@@ -45,8 +46,8 @@ namespace LitchiRuntime
 		};
 
 		/**
-		* Defines some actions that the MessageBox should provide
-		*/
+		 * @brief Defines some actions that the MessageBox should provide
+		 */
 		enum class EUserAction
 		{
 			OK			= 1,
@@ -60,23 +61,24 @@ namespace LitchiRuntime
 		};
 
 		/**
-		* Create the MessageBox
-		* @param p_title
-		* @param p_message
-		* @param p_messageType
-		* @param p_buttonLayout
-		* @param p_autoSpawn
-		*/
+		 * @brief Create the MessageBox
+		 * @param p_title 
+		 * @param p_message 
+		 * @param p_messageType 
+		 * @param p_buttonLayout 
+		 * @param p_autoSpawn 
+		 */
 		MessageBox(std::string p_title, std::string p_message, EMessageType p_messageType = EMessageType::INFORMATION, EButtonLayout p_buttonLayout = EButtonLayout::OK, bool p_autoSpawn = true);
 
 		/**
-		* Show the MessageBox on the screen
-		*/
+		 * @brief Show the MessageBox on the screen
+		 */
 		void Spawn();
 
 		/**
-		* Return the user action
-		*/
+		 * @brief Return the user action
+		 * @return 
+		 */
 		const EUserAction& GetUserAction() const;
 
 	private:

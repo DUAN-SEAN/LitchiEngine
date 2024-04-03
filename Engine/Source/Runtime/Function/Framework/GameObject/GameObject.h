@@ -15,13 +15,37 @@
 namespace LitchiRuntime
 {
 	class Scene;
+
+	/**
+	 * @brief GameObject, Attach to Scene or Prefab.
+	 * Composite some components, add or remove component
+	 * Drive component awake, update, destroy
+	 */
 	class GameObject :public ScriptObject {
 	public:
+
+		/**
+		 * @brief Default Constructor, reflect may call this
+		 */
 		GameObject() {}
+
+		/**
+		 * @brief Construct from name, id, isPlaying and attached scene
+		 * @param name game object name
+		 * @param id asset id, will store to serialize file
+		 * @param isPlaying is playing mode, not editor mode
+		 * @param scene attached scene
+		 */
 		GameObject(const std::string& name, int64_t& id, bool& isPlaying,Scene* scene);
 
+		/**
+		 * @brief 
+		 */
 		~GameObject();
 
+		/**
+		 * @brief Initialize gameObject, call after Constructor
+		 */
 		void Initialize();
 
 		std::string GetName() { return GetObjectName(); }
@@ -153,6 +177,11 @@ namespace LitchiRuntime
 		Scene* GetScene();
 		void SetScene(Scene* scene);
 
+		/**
+		 * @brief Add Component
+		 * @tparam T Component Type
+		 * @return Added Component pointer
+		 */
 		template <class T = Component>
 		T* AddComponent();
 

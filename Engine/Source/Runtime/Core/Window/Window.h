@@ -12,8 +12,8 @@
 namespace LitchiRuntime
 {
 	/**
-	* Some errors that the driver can return
-	*/
+	 * @brief Some errors that the driver can return
+	 */
 	enum class EWindowError
 	{
 		NOT_INITIALIZED = 0x00010001,
@@ -29,279 +29,314 @@ namespace LitchiRuntime
 	};
 
 	/**
-	* A simple OS-based window.
-	* It needs a Device (GLFW) to work
-	*/
+	 * @brief A simple OS-based window. It needs a Device (GLFW) to work
+	 */
 	class Window
 	{
 	public:
 
 		/**
-		* Create the window
-		* @param p_windowSettings
-		*/
+		 * @brief Create the window
+		 * @param p_windowSettings 
+		 */
 		Window(const WindowSettings& p_windowSettings);
 
 		/**
-		* Destructor of the window, responsible of the GLFW window memory free
-		*/
+		 * @brief Destructor of the window, responsible of the GLFW window memory free
+		 */
 		~Window();
 
 		/**
-		* Set Icon
-		* @param p_filePath
-		*/
+		 * @brief Set Icon
+		 * @param p_filePath 
+		 */
 		void SetIcon(const std::string& p_filePath) const;
 
 		/**
-		* Set Icon from memory
-		* @param p_data
-		* @param p_width
-		* @param p_height
-		*/
+		 * @brief Set Icon from memory
+		 * @param p_data 
+		 * @param p_width 
+		 * @param p_height 
+		 */
 		void SetIconFromMemory(uint8_t* p_data, uint32_t p_width, uint32_t p_height);
 
 		/**
-		* Find an instance of window with a given GLFWwindow
-		* @param p_glfwWindow
-		*/
+		 * @brief Find an instance of window with a given GLFWindow
+		 * @param p_glfwWindow 
+		 * @return 
+		 */
 		static Window* FindInstance(GLFWwindow* p_glfwWindow);
 
 		/**
-		* Resize the window
-		* @param p_width
-		* @param p_height
-		*/
+		 * @brief Resize the window
+		 * @param p_width 
+		 * @param p_height 
+		 */
 		void SetSize(uint16_t p_width, uint16_t p_height);
 
 		/**
-		* Defines a minimum size for the window
-		* @param p_minimumWidth
-		* @param p_minimumHeight
-		* @note -1 (WindowSettings::DontCare) value means no limitation
-		*/
+		 * @brief Defines a minimum size for the window
+		 * @param p_minimumWidth 
+		 * @param p_minimumHeight
+		 * @note -1 (WindowSettings::DontCare) value means no limitation
+		 */
 		void SetMinimumSize(int16_t p_minimumWidth, int16_t p_minimumHeight);
 
 		/**
-		* Defines a maximum size for the window
-		* @param p_maximumWidth
-		* @param p_maximumHeight
-		* @note -1 (WindowSettings::DontCare) value means no limitation
-		*/
+		 * @brief Defines a maximum size for the window
+		 * @param p_maximumWidth 
+		 * @param p_maximumHeight
+		 * @note -1 (WindowSettings::DontCare) value means no limitation
+		 */
 		void SetMaximumSize(int16_t p_maximumWidth, int16_t p_maximumHeight);
 
 		/**
-		* Define a position for the window
-		* @param p_x
-		* @param p_y
-		*/
+		 * @brief Define a position for the window
+		 * @param p_x 
+		 * @param p_y 
+		 */
 		void SetPosition(int16_t p_x, int16_t p_y);
 
 		/**
-		* Minimize the window
-		*/
+		 * @brief Minimize the window
+		 */
 		void Minimize() const;
 
 		/**
-		* Maximize the window
-		*/
+		 * @brief Maximize the window
+		 */
 		void Maximize() const;
 
 		/**
-		* Restore the window
-		*/
+		 * @brief Restore the window
+		 */
 		void Restore() const;
 
 		/**
-		* Hides the specified window if it was previously visible
-		*/
+		 * @brief Hides the specified window if it was previously visible
+		 */
 		void Hide() const;
 
 		/**
-		* Show the specified window if it was previously hidden
-		*/
+		 * @brief Show the specified window if it was previously hidden
+		 */
 		void Show() const;
 
 		/**
-		* Focus the window
-		*/
+		 * @brief Focus the window
+		 */
 		void Focus() const;
 
 		/**
-		* Set the should close flag of the window to true
-		* @param p_value
-		*/
+		 * @brief Set the should close flag of the window to true
+		 * @param p_value 
+		 */
 		void SetShouldClose(bool p_value) const;
 
 		/**
-		* Return true if the window should close
-		*/
+		 * @brief Return true if the window should close
+		 * @return 
+		 */
 		bool ShouldClose() const;
 
 		/**
-		* Set the window in fullscreen or windowed mode
-		* @param p_value (True for fullscreen mode, false for windowed)
-		*/
+		 * @brief Set the window in fullscreen or windowed mode
+		 * @param p_value (True for fullscreen mode, false for windowed)
+		 */
 		void SetFullscreen(bool p_value);
 
 		/**
-		* Switch the window to fullscreen or windowed mode depending
-		* on the current state
-		*/
+		 * @brief Switch the window to fullscreen or windowed mode depending on the current state
+		 */
 		void ToggleFullscreen();
 
 		/**
-		* Return true if the window is fullscreen
-		*/
+		 * @brief Return true if the window is fullscreen
+		 * @return 
+		 */
 		bool IsFullscreen() const;
 
 		/**
-		* Return true if the window is hidden
-		*/
+		 * @brief Return true if the window is hidden
+		 * @return 
+		 */
 		bool IsHidden() const;
 
 		/**
-		* Return true if the window is visible
-		*/
+		 * @brief Return true if the window is visible
+		 * @return 
+		 */
 		bool IsVisible() const;
 
 		/**
-		* Return true if the windows is maximized
-		*/
+		 * @brief Return true if the windows is maximized
+		 * @return 
+		 */
 		bool IsMaximized() const;
 
 		/**
-		* Return true if the windows is minimized
-		*/
+		 * @brief Return true if the windows is minimized
+		 * @return 
+		 */
 		bool IsMinimized() const;
 
 		/**
-		* Return true if the windows is focused
-		*/
+		 * @brief Return true if the windows is focused
+		 * @return 
+		 */
 		bool IsFocused() const;
 
 		/**
-		* Return true if the windows is resizable
-		*/
+		 * @brief Return true if the windows is resizable
+		 * @return 
+		 */
 		bool IsResizable() const;
 
 		/**
-		* Return true if the windows is decorated
-		*/
+		 * @brief Return true if the windows is decorated
+		 * @return 
+		 */
 		bool IsDecorated() const;
 
 		/**
-		* Define the window as the current context
-		*/
+		 * @brief Define the window as the current context
+		 */
 		void MakeCurrentContext() const;
 
 		/**
-		* Handle the buffer swapping with the current window
-		*/
+		 * @brief Handle the buffer swapping with the current window
+		 */
 		void SwapBuffers() const;
 
 		/**
-		* Define a mode for the mouse cursor
-		* @param p_cursorMode
-		*/
+		 * @brief Define a mode for the mouse cursor
+		 * @param p_cursorMode 
+		 */
 		void SetCursorMode(ECursorMode p_cursorMode);
 
 		/**
-		* Define a shape to apply to the current cursor
-		* @param p_cursorShape
-		*/
+		 * @brief Define a shape to apply to the current cursor
+		 * @param p_cursorShape 
+		 */
 		void SetCursorShape(ECursorShape p_cursorShape);
 
 		/**
-		* Move the cursor to the given position
-		*/
+		 * @brief Move the cursor to the given position
+		 * @param p_x 
+		 * @param p_y 
+		 */
 		void SetCursorPosition(int16_t p_x, int16_t p_y);
 
 		/**
-		* Define a title for the window
-		* @param p_title
-		*/
+		 * @brief Define a title for the window
+		 * @param p_title 
+		 */
 		void SetTitle(const std::string& p_title);
 
 		/**
-		* Defines a refresh rate (Use WindowSettings::DontCare to use the highest available refresh rate)
-		* @param p_refreshRate
-		* @note You need to switch to fullscreen mode to apply this effect (Or leave fullscreen and re-apply)
-		*/
+		 * @brief Defines a refresh rate (Use WindowSettings::DontCare to use the highest available refresh rate)
+		 * @param p_refreshRate You need to switch to fullscreen mode to apply this effect (Or leave fullscreen and re-apply)
+		 */
 		void SetRefreshRate(int32_t p_refreshRate);
 
 		/**
-		* Return the title of the window
-		*/
+		 * @brief Return the title of the window
+		 * @return 
+		 */
 		std::string GetTitle() const;
 
+		/**
+		 * @brief Get the window width 
+		 * @return 
+		 */
 		uint32_t GetWidth();
+
+		/**
+		 * @brief Get the window height
+		 * @return
+		 */
 		uint32_t GetHeight();
 
 		/**
-		* Return the current size of the window
-		*/
+		 * @brief Return the current size of the window
+		 * @return 
+		 */
 		std::pair<uint16_t, uint16_t> GetSize() const;
 
 		/**
-		* Return the current minimum size of the window
-		* @note -1 (WindowSettings::DontCare) values means no limitation
-		*/
+		 * @brief Return the current minimum size of the window
+		 * @return
+		 * @note -1 (WindowSettings::DontCare) values means no limitation
+		 */
 		std::pair<int16_t, int16_t> GetMinimumSize() const;
 
 		/**
-		* Return the current maximum size of the window
-		* @note -1 (WindowSettings::DontCare) values means no limitation
-		*/
+		 * @brief Return the current maximum size of the window
+		 * @return
+		 * @note -1 (WindowSettings::DontCare) values means no limitation
+		 */
 		std::pair<int16_t, int16_t> GetMaximumSize() const;
 
 		/**
-		* Return the current position of the window
-		*/
+		 * @brief Return the current position of the window
+		 * @return 
+		 */
 		std::pair<int16_t, int16_t> GetPosition() const;
 
 		/**
-		* Return the framebuffer size (Viewport size)
-		*/
+		 * @brief Return the framebuffer size (Viewport size)
+		 * @return 
+		 */
 		std::pair<uint16_t, uint16_t> GetFramebufferSize() const;
 
 		/**
-		* Return the current cursor mode
-		*/
+		 * @brief Return the current cursor mode
+		 * @return 
+		 */
 		ECursorMode GetCursorMode() const;
 
 		/**
-		* Return the current cursor shape
-		*/
+		 * @brief Return the current cursor shape
+		 * @return 
+		 */
 		ECursorShape GetCursorShape() const;
 
 		/**
-		* Return the current refresh rate (Only applied to the fullscreen mode).
-		* If the value is -1 (WindowSettings::DontCare) the highest refresh rate will be used
-		*/
+		 * @brief Return the current refresh rate (Only applied to the fullscreen mode).
+		 * If the value is -1 (WindowSettings::DontCare) the highest refresh rate will be used
+		 * @return 
+		 */
 		int32_t GetRefreshRate() const;
 
 		/**
-		* Return GLFW window
-		*/
+		 * @brief Return GLFW window
+		 * @return 
+		 */
 		GLFWwindow* GetGlfwWindow() const;
 
+		/**
+		 * @brief Get dpi scale
+		 * @return 
+		 */
 		float GetDpiScale();
 
 		/**
-		* Return the size, in pixels, of the primary monity
-		*/
+		 * @brief Return the size, in pixels, of the primary monity
+		 * @return 
+		 */
 		std::pair<int16_t, int16_t> GetMonitorSize() const;
 
 		/**
-		* Return an instance of GLFWcursor corresponding to the given shape
-		* @param p_cursorShape
-		*/
+		 * @brief Return an instance of GLFWcursor corresponding to the given shape
+		 * @param p_cursorShape 
+		 * @return 
+		 */
 		GLFWcursor* GetCursorInstance(ECursorShape p_cursorShape) const;
 
 		/**
-		* Return true if the vsync is currently enabled
-		*/
+		 * @brief Return true if the vsync is currently enabled
+		 * @return 
+		 */
 		bool HasVsync() const;
 
 		/**
@@ -309,17 +344,24 @@ namespace LitchiRuntime
 		* @note You must call this method after creating and defining a window as the current context
 		* @param p_value (True to enable vsync)
 		*/
+
+		/**
+		 * @brief Enable or disable the vsync
+		 * @note You must call this method after creating and defining a window as the current context
+		 * @param p_value (True to enable vsync)
+		 */
 		void SetVsync(bool p_value);
 
 		/**
-		* Enable the inputs and events managments with created windows
-		* @note Should be called every frames
-		*/
+		 * @brief Enable the inputs and events managments with created windows
+		 * @note Should be called every frames
+		 */
 		void PollEvents() const;
 
 		/**
-		* Returns the elapsed time since the device startup
-		*/
+		 * @brief Returns the elapsed time since the device startup
+		 * @return 
+		 */
 		float GetElapsedTime() const;
 
 	private:

@@ -4,9 +4,9 @@
 namespace LitchiRuntime
 {
 	/**
-	* Some cursor modes.
-	* They defines if the mouse pointer should be visible, locked or normal
-	*/
+	 * @brief Some cursor modes.
+	 * They defines if the mouse pointer should be visible, locked or normal
+	 */
 	enum class ECursorMode
 	{
 		NORMAL		= 0x00034001,
