@@ -1,6 +1,5 @@
 ﻿#pragma once
 
-#include "Runtime/Core/Log/debug.h"
 #include "rttr/registration"
 #include "Runtime/Function/Scripting/ScriptObject.h"
 
@@ -8,86 +7,129 @@ using namespace rttr;
 namespace LitchiRuntime
 {
     class GameObject;
+
+    /**
+     * @brief Component Base Class, All Component must Derived this
+    */
     class Component :public ScriptObject{
-    public:
-        Component();
-        virtual ~Component();
-
-        GameObject* GetGameObject() const  { return m_gameObject; }
-        void SetGameObject(GameObject* game_object) { m_gameObject = game_object; }
-
-    private:
-
     public:
 
         /**
-        * Called when the scene start right before OnStart
-        * It allows you to apply prioritized game logic on scene start
+         * @brief Default Constructor
+        */
+        Component();
+
+        /**
+         * @brief Default Destructor
+        */
+        ~Component() override;
+
+        /**
+         * @brief Set this Component belong GameObject
+         * @param game_object 
+        */
+        void SetGameObject(GameObject* game_object) { m_gameObject = game_object; }
+
+        /**
+         * @brief Get the game object to which this Component belongs 
+         * @return Belong GameObject pointer
+        */
+        GameObject* GetGameObject() const  { return m_gameObject; }
+
+        /**
+         * @brief Call before object resource change
+        */
+        void PostResourceModify() override;
+
+        /**
+         * @brief Call before object resource loaded
+         * when instantiate prefab, add component, resource loaded etc
+         * after call resource load completed
+        */
+        void PostResourceLoaded() override;
+    
+    public:
+
+        /**
+         * @brief Called when the scene start right before OnStart
+         * It allows you to apply prioritized game logic on scene start
         */
         virtual void OnAwake();
 
         /**
-        * Called when the components gets enabled (owner SetActive set to true) and after OnAwake() on scene starts
+         * @brief Called when the components gets enabled (owner SetActive set to true) and after OnAwake() on scene starts
         */
         virtual void OnEnable();
 
         /**
-        * Called when the scene start right after OnAwake
-        * It allows you to apply prioritized game logic on scene start
+         * @brief Called when the scene start right after OnAwake
+         * It allows you to apply prioritized game logic on scene start
         */
         virtual void OnStart();
 
         /**
-        * Called every frame
+         * @brief Called every frame, only editor mode
         */
         virtual void OnEditorUpdate(){}
 
         /**
-        * Called every frame
+         * @brief Called every frame
         */
         virtual void OnUpdate();
 
         /**
-        * Called every physics frame
+         * @brief Called every physics frame
         */
         virtual void OnFixedUpdate();
 
         /**
-        * Called every frame after OnUpdate
+         * @brief Called every frame after OnUpdate
         */
         virtual void OnLateUpdate() {}
 
         /**
-        * Called when the component gets disabled (owner SetActive set to false) and before OnDestroy() when the component get destroyed
+         * @brief Called when the component gets disabled (owner SetActive set to false) and before OnDestroy() when the component get destroyed
         */
         virtual void OnDisable();
 
         /**
-        * Called when the components gets destroyed
+         * @brief Called when the components gets destroyed
         */
         virtual void OnDestroy() {}
 
-        /// 渲染之前
+        /**
+         * @brief Called when render before
+        */
         virtual void OnPreRender();
 
-        /// 渲染之后
+        /**
+         * @brief Called when render after
+        */
         virtual void OnPostRender();
 
+        /**
+         * @brief Called when trigger enter other GameObject
+         * @param game_object 
+        */
         virtual void OnTriggerEnter(GameObject* game_object);
 
+        /**
+         * @brief Called when trigger exit other GameObject
+         * @param game_object 
+        */
         virtual void OnTriggerExit(GameObject* game_object);
 
+        /**
+         * @brief Called when trigger stay other GameObject
+         * @param game_object
+        */
         virtual void OnTriggerStay(GameObject* game_object);
 
-        // when 1. scene load on editor or game 、2. AddComponent will be call
-        void PostResourceLoaded() override;
+    private:
 
         /**
-         * \brief 当资源加载完成后调用
-         */
-        virtual void PostResourceModify() override;
-
-    private:
+         * @brief Belong GameObject
+        */
         GameObject* m_gameObject;
 
         RTTR_ENABLE(ScriptObject)

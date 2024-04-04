@@ -60,9 +60,9 @@ void UIText::PostResourceLoaded()
 
 void UIText::PostResourceModify()
 {
-    if(!m_font_path.empty())
+    if(!m_fontPath.empty())
     {
-        m_font = ApplicationBase::Instance()->fontManager->LoadResource(m_font_path);
+        m_font = ApplicationBase::Instance()->fontManager->LoadResource(m_fontPath);
     }
 }
 

@@ -18,10 +18,10 @@ namespace LitchiRuntime
     void SphereCollider::PostResourceModify()
     {
         Collider::PostResourceLoaded();
-        UpdateRadius(m_radius);
+        UpdateShapeRadius(m_radius);
     }
 
-    void SphereCollider::UpdateRadius(float radius)
+    void SphereCollider::UpdateShapeRadius(float radius)
     {
         m_radius = radius;
         UpdateShape();

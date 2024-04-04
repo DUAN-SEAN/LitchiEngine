@@ -8,33 +8,41 @@
 
 namespace LitchiRuntime
 {
+    /**
+     * @brief Transform Component
+     * @note The Transform class provides you with a variety of ways to work with a GameObject’s position, rotation and scale via script,
+     *       as well as its hierarchical relationship to parent and child GameObjects.
+    */
     class Transform : public Component {
     public:
-        Transform();
-        ~Transform();
 
-         //= ICOMPONENT ===============================
-        //void OnInitialize() override;
-        //void OnTick() override;
-        //============================================
+        /**
+         * @brief Default Constructor
+        */
+        Transform();
+
+        /**
+         * @brief Default Destructor
+        */
+        ~Transform() override;
 
         //= POSITION ======================================================================
         Vector3 GetPosition()             const { return m_matrix.GetTranslation(); }
-        const Vector3& GetPositionLocal() const { return m_position_local; }
+        const Vector3& GetPositionLocal() const { return m_localPosition; }
         void SetPosition(const Vector3& position);
         void SetPositionLocal(const Vector3& position);
         //=================================================================================
 
         //= ROTATION ======================================================================
         Quaternion GetRotation()             const { return m_matrix.GetRotation(); }
-        const Quaternion& GetRotationLocal() const { return m_rotation_local; }
+        const Quaternion& GetRotationLocal() const { return m_localRotation; }
         void SetRotation(const Quaternion& rotation);
         void SetRotationLocal(const Quaternion& rotation);
         //=================================================================================
 
         //= SCALE ================================================================
         Vector3 GetScale()             const { return m_matrix.GetScale(); }
-        const Vector3& GetScaleLocal() const { return m_scale_local; }
+        const Vector3& GetScaleLocal() const { return m_localScale; }
         void SetScale(const Vector3& scale);
         void SetScaleLocal(const Vector3& scale);
         //========================================================================
@@ -54,9 +62,9 @@ namespace LitchiRuntime
         //================================
 
         //= DIRTY CHECKS =================================================================
-        bool HasPositionChangedThisFrame() const { return m_position_changed_this_frame; }
-        bool HasRotationChangedThisFrame() const { return m_rotation_changed_this_frame; }
-        bool HasScaleChangedThisFrame()    const { return m_scale_changed_this_frame; }
+        bool HasPositionChangedThisFrame() const { return m_isPositionChangedThisFrame; }
+        bool HasRotationChangedThisFrame() const { return m_isRotationChangedThisFrame; }
+        bool HasScaleChangedThisFrame()    const { return m_isScaleChangedThisFrame; }
         //================================================================================
 
         //= HIERARCHY ======================================================================================
@@ -69,7 +77,6 @@ namespace LitchiRuntime
         bool IsDescendantOf(Transform* transform) const;
         void GetDescendants(std::vector<Transform*>* descendants);
         GameObject* GetDescendantPtrByName(const std::string& name);
-        // std::weak_ptr<GameObject> GetDescendantPtrWeakByName(const std::string& name);
         bool IsRoot()                          const { return m_parent == nullptr; }
         bool HasParent()                       const { return m_parent != nullptr; }
         bool HasChildren()                     const { return GetChildrenCount() > 0 ? true : false; }
@@ -80,12 +87,14 @@ namespace LitchiRuntime
         void MakeDirty() { m_is_dirty = true; }
         //==================================================================================================
 
+        //= MATRIX ======================================================================================
         const Matrix& GetMatrix()                    const { return m_matrix; }
-        const Matrix& GetLocalMatrix()               const { return m_matrix_local; }
-        const Matrix& GetMatrixPrevious()            const { return m_matrix_previous; }
-        void SetMatrixPrevious(const Matrix& matrix) { m_matrix_previous = matrix; }
+        const Matrix& GetLocalMatrix()               const { return m_localMatrix; }
+        const Matrix& GetMatrixPrevious()            const { return m_previousMatrix; }
+        void SetMatrixPrevious(const Matrix& matrix) { m_previousMatrix = matrix; }
 
     private:
+
         // Internal functions don't propagate changes throughout the hierarchy.
         // They just make enough changes so that the hierarchy can be resolved later (in one go).
         void SetParent_Internal(Transform* parent);
@@ -97,29 +106,24 @@ namespace LitchiRuntime
         bool m_is_dirty = false;
 
         // local
-        Vector3 m_position_local;
-        Quaternion m_rotation_local;
-        Vector3 m_scale_local;
+        Vector3 m_localPosition;
+        Quaternion m_localRotation;
+        Vector3 m_localScale;
 
         Matrix m_matrix;
-        Matrix m_matrix_local;
+        Matrix m_localMatrix;
 
         Transform* m_parent = nullptr; // the parent of this transform
         std::vector<Transform*> m_children; // the children of this transform
 
-        Matrix m_matrix_previous;
+        Matrix m_previousMatrix;
 
-        bool m_position_changed_this_frame = false;
-        bool m_rotation_changed_this_frame = false;
-        bool m_scale_changed_this_frame = false;
+        bool m_isPositionChangedThisFrame = false;
+        bool m_isRotationChangedThisFrame = false;
+        bool m_isScaleChangedThisFrame = false;
 
         // thread safety
-        std::mutex m_child_add_remove_mutex;
-
-
-    private:
-
-        // FTransform m_transform;
+        std::mutex m_childAddRemoveMutex;
 
         RTTR_ENABLE(Component)
     };

@@ -10,89 +10,230 @@ using namespace rttr;
 using namespace physx;
 namespace LitchiRuntime
 {
+	/**
+	 * @brief Physics Material Info
+	 * Contains the friction and elasticity coefficients of a physical object
+	*/
+	class PhysicMaterialRes {
+	public:
 
-    class PhysicMaterialRes {
-    public:
-        PhysicMaterialRes() {}
-        PhysicMaterialRes(float static_friction, float dynamic_friction, float restitution) : m_staticFriction(static_friction), m_dynamicFriction(dynamic_friction), m_restitution(restitution) {}
+		/**
+		 * @brief Default Constructor
+		*/
+		PhysicMaterialRes() {}
 
-        float GetStaticFriction()  { return m_staticFriction; }
-        void SetStaticFriction(float static_friction) { m_staticFriction = static_friction; }
+		/**
+		 * @brief Construct from static/dynamic friction and restitution
+		 * @param staticFriction
+		 * @param dynamicFriction
+		 * @param restitution
+		*/
+		PhysicMaterialRes(float staticFriction, float dynamicFriction, float restitution) : m_staticFriction(staticFriction), m_dynamicFriction(dynamicFriction), m_restitution(restitution) {}
 
-        float GetDynamicFriction()  { return m_dynamicFriction; }
-        void SetDynamicFriction(float dynamic_friction) { m_dynamicFriction = dynamic_friction; }
+		/**
+		 * @brief Set Coefficient of static friction
+		 * @return
+		*/
+		void SetStaticFriction(float staticFriction) { m_staticFriction = staticFriction; }
 
-        float GetRestitution()  { return m_restitution; }
-        void SetRestitution(float restitution) { m_restitution = restitution; }
+		/**
+		 * @brief Get Coefficient of static friction
+		 * @return
+		*/
+		float GetStaticFriction() { return m_staticFriction; }
 
-    private:
-        float m_staticFriction = 0.6f;
-        float m_dynamicFriction = 0.6f;
-        float m_restitution = 0.1f;
-    };
+		/**
+		 * @brief Set Coefficient of dynamic friction
+		 * @param dynamicFriction
+		*/
+		void SetDynamicFriction(float dynamicFriction) { m_dynamicFriction = dynamicFriction; }
 
-    class RigidActor;
-    class Collider : public Component {
-    public:
-        Collider();
-        ~Collider();
+		/**
+		 * @brief Get Coefficient of dynamic friction
+		 * @return
+		*/
+		float GetDynamicFriction() { return m_dynamicFriction; }
 
-        PxShape* px_shape() { return m_pxShape; }
+		/**
+		 * @brief Set Coefficient of restitution
+		 * @param restitution
+		*/
+		void SetRestitution(float restitution) { m_restitution = restitution; }
 
-        bool Istrigger() { return m_isTrigger; }
-        void SetIsTrigger(bool is_trigger) {
-            if (m_isTrigger == is_trigger) {
-                return;
-            }
-            m_isTrigger = is_trigger;
-            UpdateShape();
-        }
+		/**
+		 * @brief Get Coefficient of restitution
+		 * @return
+		*/
+		float GetRestitution() { return m_restitution; }
 
-    public:
-        void SetPhysicMaterial(PhysicMaterialRes physic_material_res)
-        {
-            m_physicMaterial = physic_material_res;
-        }
+	private:
+		float m_staticFriction = 0.6f;
+		float m_dynamicFriction = 0.6f;
+		float m_restitution = 0.1f;
+	};
 
-        PhysicMaterialRes GetPhysicMaterial()
-        {
-        	return m_physicMaterial;
+	class RigidActor;
+
+	/**
+	 * @brief Collider Component
+	*/
+	class Collider : public Component {
+	public:
+
+		/**
+		 * @brief Default Constructor
+		*/
+		Collider();
+
+		/**
+		 * @brief Default Destructor
+		*/
+		~Collider() override;
+
+		/**
+		 * @brief Set PhysicMaterial
+		 * @param physicMaterialRes
+		*/
+		void SetPhysicMaterial(PhysicMaterialRes physicMaterialRes)
+		{
+			m_physicMaterial = physicMaterialRes;
 		}
 
-    public:
-        /// Awake里反序列化给成员变量赋值。
-        void OnAwake() override;
+		/**
+		 * @brief Get PhysicMaterial
+		 * @return
+		*/
+		PhysicMaterialRes GetPhysicMaterial()
+		{
+			return m_physicMaterial;
+		}
 
-        void OnUpdate() override;
+		/**
+		 * @brief Set this Collider is trigger
+		 * @note Triggers can only collide with non-triggers
+		 * @param isTrigger
+		*/
+		void SetIsTrigger(bool isTrigger) {
+			if (m_isTrigger == isTrigger) {
+				return;
+			}
+			m_isTrigger = isTrigger;
+			UpdateShape();
+		}
 
-        void OnFixedUpdate() override;
+		/**
+		 * @brief Check this collider is trigger
+		 * @note Triggers can only collide with non-triggers
+		 * @return
+		*/
+		bool IsTrigger() { return m_isTrigger; }
 
-        virtual void CreatePhysicMaterial();
+		/**
+		 * @brief Get physX PxShape pointer
+		 * @return
+		*/
+		PxShape* GetPxShape() { return m_pxShape; }
 
-        void PostResourceLoaded() override;
-    	void PostResourceModify() override;
-    protected:
-        virtual void CreateShape();
-        /// 更新Shape 触发器 Filter
-        virtual void UpdateTriggerState();
-        virtual void RegisterToRigidActor();
-        virtual void UnRegisterToRigidActor();
+	public:
 
-        void UpdateShape();
+		/**
+		 * @brief Called when the scene start right before OnStart
+		 * It allows you to apply prioritized game logic on scene start
+	    */
+		void OnAwake() override;
 
-    private:
-        RigidActor* GetRigidActor();
+		/**
+         * @brief Called every frame
+        */
+		void OnUpdate() override;
 
-    protected:
-        PxShape* m_pxShape;
-        PxMaterial* m_pxMaterial;
-        bool m_isTrigger;// trigger collider not simulation
-        Vector3 m_offset;// relative local transform
+		/**
+		 * @brief Called every physics frame
+		*/
+		void OnFixedUpdate() override;
 
-    private:
-        RigidActor* m_rigidActor;
-        PhysicMaterialRes m_physicMaterial;
+		/**
+		 * @brief Call before object resource change
+		*/
+		void PostResourceModify() override;
 
-        RTTR_ENABLE(Component);
-    };
+		/**
+		 * @brief Call before object resource loaded
+		 * when instantiate prefab, add component, resource loaded etc
+		 * after call resource load completed
+		*/
+		void PostResourceLoaded() override;
+
+	protected:
+
+		/**
+		 * @brief Create PhysX Shape
+		 * @note This is abstract function, derived must implement
+		*/
+		virtual void CreateShape() = 0;
+
+		/**
+		 * @brief Create PhysicMaterial
+		*/
+		virtual void CreatePhysicMaterial();
+
+		/**
+		 * @brief Update trigger state
+		*/
+		virtual void UpdateTriggerState();
+
+		/**
+		 * @brief Register this Collider to physX rigidActor
+		*/
+		virtual void RegisterToRigidActor();
+
+		/**
+		 * @brief Unregister this Collider to physX rigidActor
+		*/
+		virtual void UnRegisterToRigidActor();
+
+		/**
+		 * @brief Update current physX Shape
+		*/
+		void UpdateShape();
+
+		/**
+		 * @brief Get PhysX RigidActor pointer
+		 * @return
+		*/
+		RigidActor* GetRigidActor();
+
+		/**
+		 * @brief PhysX PxShape pointer
+		*/
+		PxShape* m_pxShape;
+
+		/**
+		 * @brief PhysX PxMaterial pointer
+		*/
+		PxMaterial* m_pxMaterial;
+
+		/**
+		 * @brief Trigger collider
+		 * @note Triggers can only collide with non-triggers
+		*/
+		bool m_isTrigger;
+
+		/**
+		 * @brief Relative local transform
+		*/
+		Vector3 m_offset;
+
+		/**
+		 * @brief PhysX PxMaterial pointer
+		*/
+		RigidActor* m_rigidActor;
+
+		/**
+		 * @brief PhysicMaterialRes
+		*/
+		PhysicMaterialRes m_physicMaterial;
+
+		RTTR_ENABLE(Component);
+	};
 }

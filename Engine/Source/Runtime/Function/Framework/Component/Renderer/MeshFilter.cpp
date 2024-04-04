@@ -15,7 +15,7 @@ namespace LitchiRuntime
 {
 
     MeshFilter::MeshFilter()
-        :m_sub_mesh_index(0) {
+        :m_subMeshIndex(0) {
 
     }
 
@@ -54,13 +54,13 @@ namespace LitchiRuntime
     void MeshFilter::PostResourceModify()
     {
         // 资源加载后
-        if (m_mesh_Path.empty() || m_mesh_Path == "Empty")
+        if (m_meshPath.empty() || m_meshPath == "Empty")
         {
             return;
         }
 
         // 通过路径加载模型资源
-        auto mesh  = ApplicationBase::Instance()->modelManager->GetResource(m_mesh_Path);
+        auto mesh  = ApplicationBase::Instance()->modelManager->GetResource(m_meshPath);
         m_mesh = mesh;
         if (m_mesh == nullptr)
         {
@@ -68,27 +68,27 @@ namespace LitchiRuntime
         }
 
         bool result;
-        auto _ = m_mesh->GetSubMesh(m_sub_mesh_index, result);
+        auto _ = m_mesh->GetSubMesh(m_subMeshIndex, result);
         if(!result)
         {
             return;
         }
 
-        SetGeometry(mesh, m_sub_mesh_index);
+        SetGeometry(mesh, m_subMeshIndex);
     }
 
     void MeshFilter::SetGeometry(Mesh* mesh, int subMeshIndex /* = 0,*/, const BoundingBox aabb /* = BoundingBox::Undefined*/)
     {
         m_mesh = mesh;
-        m_sub_mesh_index = subMeshIndex;
-        m_mesh_Path = m_mesh->GetResourceFilePathAsset();
+        m_subMeshIndex = subMeshIndex;
+        m_meshPath = m_mesh->GetResourceFilePathAsset();
         bool result;
-        m_sub_mesh = m_mesh->GetSubMesh(subMeshIndex, result);
+        m_subMesh = m_mesh->GetSubMesh(subMeshIndex, result);
 
-        m_bounding_box = aabb;
-        if (m_bounding_box == BoundingBox::Undefined)
+        m_boundingBox = aabb;
+        if (m_boundingBox == BoundingBox::Undefined)
         {
-            m_bounding_box = m_mesh->GetAabb();
+            m_boundingBox = m_mesh->GetAabb();
         }
     }
 
@@ -96,19 +96,19 @@ namespace LitchiRuntime
 	{
 		LC_ASSERT_MSG(m_mesh != nullptr, "Invalid mesh");
 
-		m_mesh->GetGeometry(m_sub_mesh.m_geometry_index_offset, m_sub_mesh.m_geometry_index_count, m_sub_mesh.m_geometry_vertex_offset, m_sub_mesh.m_geometry_vertex_count, indices, vertices);
+		m_mesh->GetGeometry(m_subMesh.m_geometryIndexOffset, m_subMesh.m_geometryIndexCount, m_subMesh.m_geometryVertexOffset, m_subMesh.m_geometryVertexCount, indices, vertices);
 	}
 
 	const BoundingBox& MeshFilter::GetAAbb()
 	{
 		// update if dirty
-		if (m_last_transform != GetGameObject()->GetComponent<Transform>()->GetMatrix() || m_bounding_box_transformed == BoundingBox::Undefined)
+		if (m_lastTransform != GetGameObject()->GetComponent<Transform>()->GetMatrix() || m_boundingBoxTransformed == BoundingBox::Undefined)
 		{
-			m_bounding_box_transformed = m_bounding_box.Transform(GetGameObject()->GetComponent<Transform>()->GetMatrix());
-			m_last_transform = GetGameObject()->GetComponent<Transform>()->GetMatrix();
+			m_boundingBoxTransformed = m_boundingBox.Transform(GetGameObject()->GetComponent<Transform>()->GetMatrix());
+			m_lastTransform = GetGameObject()->GetComponent<Transform>()->GetMatrix();
 		}
 
-		return m_bounding_box_transformed;
+		return m_boundingBoxTransformed;
 	}
 
 }

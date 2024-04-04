@@ -9,62 +9,134 @@ namespace LitchiRuntime
 {
 	class RenderCamera;
 	class MeshFilter;
+
+	/**
+	 * @brief MeshRenderer Component
+	 * @note A Mesh Renderer component renders a mesh.
+	 *		 It works with a Mesh Filter component on the same GameObject;
+	 *		 the Mesh Renderer renders the mesh that the Mesh Filter references.
+	*/
 	class MeshRenderer :public Component {
 	public:
+
+		/**
+		 * @brief Default Constructor
+		*/
 		MeshRenderer();
-		~MeshRenderer();
 
+		/**
+		 * @brief Default Destructor
+		*/
+		~MeshRenderer() override;
 
-		// void RenderOld(RenderCamera* renderCamera);//渲染
-		// virtual void Render(RenderCamera* renderCamera, Matrix const* lightVPMat, Framebuffer4Depth* shadowMapFBO) ;
-		void OnUpdate() override;
-		void OnEditorUpdate() override;
-	public:
-		void PostResourceLoaded() override;
-		void PostResourceModify() override;
+		/**
+		 * @brief Set Material resource path
+		 * @param materialPath
+		*/
+		void SetMaterialPath(std::string materialPath) { m_materialPath = materialPath; }
 
-		void SetMaterialPath(std::string materialPath) { m_material_path = materialPath; }
-		std::string GetMaterialPath() {	return m_material_path;}
+		/**
+		 * @brief get Material resource path
+		 * @return
+		*/
+		std::string GetMaterialPath() { return m_materialPath; }
 
-		RTTR_ENABLE(Component)
-
-	public:
-	
-
-		//= MATERIAL ====================================================================
-		// Sets a material from memory (adds it to the resource cache by default)
+		/**
+		 * @brief Sets a material from memory (adds it to the resource cache by default)
+		 * @param material 
+		 * @return 
+		*/
 		Material* SetMaterial(Material* material);
 
-		// Loads a material and the sets it
-		Material* SetMaterial(const std::string& file_path);
+		/**
+		 * @brief Loads a material and the sets it
+		 * @param filePath 
+		 * @return 
+		*/
+		Material* SetMaterial(const std::string& filePath);
 
+		/**
+		 * @brief Set use default Material
+		*/
 		void SetDefaultMaterial();
-		std::string GetMaterialName() const;
+
+		/**
+		 * @brief Get Material pointer
+		 * @return 
+		*/
 		Material* GetMaterial()       const { return m_material; }
+
+		/**
+		 * @brief Get Material name
+		 * @return 
+		*/
+		std::string GetMaterialName() const;
+
+		/**
+		 * @brief Is load Material
+		 * @return 
+		*/
 		auto HasMaterial()            const { return m_material != nullptr; }
 		//===============================================================================
 
-		// Shadows
-		void SetCastShadows(const bool cast_shadows) { m_cast_shadows = cast_shadows; }
-		auto GetCastShadows() const { return m_cast_shadows; }
-	private:
-		unsigned int vertex_buffer_object_ = 0;//顶点缓冲区对象
-		unsigned int element_buffer_object_ = 0;//索引缓冲区对象
-		unsigned int vertex_array_object_ = 0;//顶点数组对象
+		/**
+		 * @brief Sets whether this Renderer casts a shadow
+		 * @param castShadows 
+		*/
+		void SetCastShadows(const bool castShadows) { m_castShadows = castShadows; }
+
+		/**
+		 * @brief Get this Renderer can casts a shadow
+		 * @return 
+		*/
+		auto GetCastShadows() const { return m_castShadows; }
+
+		/**
+		 * @brief Call before object resource change
+		*/
+		void PostResourceModify() override;
+
+		/**
+		 * @brief Call before object resource loaded
+		 * when instantiate prefab, add component, resource loaded etc
+		 * after call resource load completed
+		*/
+		void PostResourceLoaded() override;
 
 	public:
+
+		/**
+		 * @brief Called every frame
+		*/
+		void OnUpdate() override;
+
+		/**
+		 * @brief Called every frame, only editor mode
+		*/
+		void OnEditorUpdate() override;
 
 	protected:
 
 		/**
-		 * \brief 材质名称
-		 */
-		std::string m_material_path;
+		 * @brief Material resource path
+		*/
+		std::string m_materialPath;
 
-		// material
-		bool m_material_default = false;
+		/**
+		 * @brief Is Use default material
+		*/
+		bool m_useDefaultMaterial = false;
+
+		/**
+		 * @brief Material pointer
+		*/
 		Material* m_material = nullptr;
 
-		bool m_cast_shadows = true;
+		/**
+		 * @brief Is open shadow
+		*/
+		bool m_castShadows = true;
+
+		RTTR_ENABLE(Component)
 	};
 }

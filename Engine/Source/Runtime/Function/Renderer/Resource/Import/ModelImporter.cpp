@@ -742,10 +742,10 @@ namespace LitchiRuntime
 		mesh->AddIndices(indices, &index_offset);
 		mesh->AddVertices(vertices, &vertex_offset);
 		SubMesh subMesh;
-		subMesh.m_geometry_index_offset = index_offset;
-		subMesh.m_geometry_index_count = indices.size();
-		subMesh.m_geometry_vertex_offset = vertex_offset;
-		subMesh.m_geometry_vertex_count = vertices.size();
+		subMesh.m_geometryIndexOffset = index_offset;
+		subMesh.m_geometryIndexCount = indices.size();
+		subMesh.m_geometryVertexOffset = vertex_offset;
+		subMesh.m_geometryVertexCount = vertices.size();
 		int subMeshIndex;
 		mesh->AddSubMesh(subMesh, subMeshIndex);
 		// add a renderable component to this entity
@@ -825,10 +825,10 @@ namespace LitchiRuntime
 		mesh->AddIndices(indices, &index_offset);
 		mesh->AddVertices(vertices, &vertex_offset);
 		SubMesh subMesh;
-		subMesh.m_geometry_index_offset = index_offset;
-		subMesh.m_geometry_index_count = indices.size();
-		subMesh.m_geometry_vertex_offset = vertex_offset;
-		subMesh.m_geometry_vertex_count = vertices.size();
+		subMesh.m_geometryIndexOffset = index_offset;
+		subMesh.m_geometryIndexCount = indices.size();
+		subMesh.m_geometryVertexOffset = vertex_offset;
+		subMesh.m_geometryVertexCount = vertices.size();
 		int subMeshIndex;
 		mesh->AddSubMesh(subMesh, subMeshIndex);
 		// add a renderable component to this entity

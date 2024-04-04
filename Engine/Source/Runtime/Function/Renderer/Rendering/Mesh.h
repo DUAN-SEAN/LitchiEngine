@@ -28,10 +28,10 @@ namespace LitchiRuntime
 
     struct SubMesh
     {
-        uint32_t m_geometry_index_offset = 0;
-        uint32_t m_geometry_index_count = 0;
-        uint32_t m_geometry_vertex_offset = 0;
-        uint32_t m_geometry_vertex_count = 0;
+        uint32_t m_geometryIndexOffset = 0;
+        uint32_t m_geometryIndexCount = 0;
+        uint32_t m_geometryVertexOffset = 0;
+        uint32_t m_geometryVertexCount = 0;
     };
 
     class Mesh : public IResource
@@ -158,7 +158,7 @@ namespace LitchiRuntime
         std::vector<SubMesh> m_subMeshArr{};
 
 
-        //Bone/Animation Information
+        // Bone/Animation Information
         std::vector<BoneInfo> m_boneInfoArr;
         std::unordered_map<std::string, uint32_t> m_boneMap;
         std::unordered_map<std::string, AnimationClip> m_animationClipMap;

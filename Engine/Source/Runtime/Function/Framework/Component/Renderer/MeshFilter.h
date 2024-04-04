@@ -12,59 +12,167 @@ using std::string;
 
 namespace LitchiRuntime
 {
-    class MeshFilter :public Component {
-    public:
-        MeshFilter();
-        ~MeshFilter();
-    public:
-       
-    public:
+	/**
+	 * @brief MeshFilter Component
+	 * @note holds a reference to a mesh.
+	 *       It works with a Mesh Renderer component on the same GameObject
+	 *       the Mesh Renderer renders the mesh that the Mesh Filter references.
+	*/
+	class MeshFilter :public Component {
+	public:
 
-        void PostResourceLoaded() override;
-        void PostResourceModify() override;
+		/**
+		 * @brief Default Constructor
+		*/
+		MeshFilter();
 
-        RTTR_ENABLE(Component)
+		/**
+		 * @brief Default Destructor
+		*/
+		~MeshFilter() override;
 
+		/**
+		 * @brief Call before object resource change
+		*/
+		void PostResourceModify() override;
 
-    public:
-        // Geometry/Mesh
-        void SetGeometry(
-            Mesh* mesh,
-            int subMeshIndex = 0,
-            const BoundingBox aabb = BoundingBox::Undefined
-        );
+		/**
+		 * @brief Call before object resource loaded
+		 * when instantiate prefab, add component, resource loaded etc
+		 * after call resource load completed
+		*/
+		void PostResourceLoaded() override;
 
-        void GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const;
+	public:
 
-        // Properties
-        int GetSubMeshIndex() { return m_sub_mesh_index; }
-        void SetSubMeshIndex(int subMeshIndex) { m_sub_mesh_index = subMeshIndex; }
-        std::string GetMeshPath() { return m_mesh_Path; }
-        void SetMeshPath(std::string meshPath) { m_mesh_Path = meshPath; }
-        uint32_t GetIndexOffset()                 const { return m_sub_mesh.m_geometry_index_offset; }
-        uint32_t GetIndexCount()                  const { return m_sub_mesh.m_geometry_index_count; }
-        uint32_t GetVertexOffset()                const { return m_sub_mesh.m_geometry_vertex_offset; }
-        uint32_t GetVertexCount()                 const { return m_sub_mesh.m_geometry_vertex_count; }
-        SubMesh GetSubMesh()                           const { return m_sub_mesh; }
-        Mesh* GetMesh()                           const { return m_mesh; }
-        const BoundingBox& GetBoundingBox() const { return m_bounding_box; }
-        const BoundingBox& GetAAbb();
+		/**
+		 * @brief Set Geometry from mesh
+		 * @param mesh Mesh pointer
+		 * @param subMeshIndex SubMesh Index
+		 * @param aabb Mesh bounding box of aabb
+		*/
+		void SetGeometry(
+			Mesh* mesh,
+			int subMeshIndex = 0,
+			const BoundingBox aabb = BoundingBox::Undefined
+		);
 
-    private:
-        
-        SubMesh m_sub_mesh;
-        int m_sub_mesh_index;
+		/**
+		 * @brief Get Geometry indices and vertices
+		 * @param indices
+		 * @param vertices
+		*/
+		void GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const;
 
-        /**
-         * \brief 模型路径
-         */
-        std::string m_mesh_Path;
+		/**
+		 * @brief Get Mesh pointer
+		 * @return
+		*/
+		Mesh* GetMesh()                           const { return m_mesh; }
 
-        Mesh* m_mesh = nullptr;
-        BoundingBox m_bounding_box;
-        BoundingBox m_bounding_box_transformed;
+		/**
+		 * @brief Set subMesh index in mesh
+		 * @param subMeshIndex
+		*/
+		void SetSubMeshIndex(int subMeshIndex) { m_subMeshIndex = subMeshIndex; }
 
-        // misc
-        Matrix m_last_transform = Matrix::Identity;
-    };
+		/**
+		 * @brief Get subMesh index in mesh
+		 * @return
+		*/
+		int GetSubMeshIndex() { return m_subMeshIndex; }
+
+		/**
+		 * @brief Get SubMesh
+		 * @return
+		*/
+		SubMesh& GetSubMesh() { return m_subMesh; }
+
+		/**
+		 * @brief Get Index offset in mesh
+		 * @return
+		*/
+		uint32_t GetIndexOffset()                 const { return m_subMesh.m_geometryIndexOffset; }
+
+		/**
+		 * @brief Get Vertex Count in mesh
+		 * @return
+		*/
+		uint32_t GetIndexCount()                  const { return m_subMesh.m_geometryIndexCount; }
+
+		/**
+		 * @brief Get Vertex offset in mesh
+		 * @return
+		*/
+		uint32_t GetVertexOffset()                const { return m_subMesh.m_geometryVertexOffset; }
+
+		/**
+		 * @brief
+		 * @return
+		*/
+		uint32_t GetVertexCount()                 const { return m_subMesh.m_geometryVertexCount; }
+
+		/**
+		 * @brief Get Bounding Box of mesh
+		 * @return
+		*/
+		const BoundingBox& GetBoundingBox() const { return m_boundingBox; }
+
+		/**
+		 * @brief Get transformed Bounding Box of mesh
+		 * @return
+		*/
+		const BoundingBox& GetAAbb();
+
+		/**
+		 * @brief Set Mesh path
+		 * @param meshPath
+		*/
+		void SetMeshPath(std::string meshPath) { m_meshPath = meshPath; }
+
+		/**
+		 * @brief Get Mesh path
+		 * @return 
+		*/
+		std::string GetMeshPath() { return m_meshPath; }
+
+	private:
+
+		/**
+		 * @brief mesh pointer
+		*/
+		Mesh* m_mesh = nullptr;
+
+		/**
+		 * @brief SubMesh Index in Mesh
+		*/
+		int m_subMeshIndex;
+
+		/**
+		 * @brief SubMesh
+		*/
+		SubMesh m_subMesh;
+
+		/**
+		 * \brief Mesh resource path
+		 */
+		std::string m_meshPath;
+
+		/**
+		 * @brief mesh bounding box
+		*/
+		BoundingBox m_boundingBox;
+
+		/**
+		 * @brief transformed bounding box
+		*/
+		BoundingBox m_boundingBoxTransformed;
+
+		/**
+		 * @brief last transform
+		*/
+		Matrix m_lastTransform = Matrix::Identity;
+
+		RTTR_ENABLE(Component)
+	};
 }

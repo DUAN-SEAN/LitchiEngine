@@ -7,24 +7,66 @@
 using namespace rttr;
 namespace LitchiRuntime
 {
-    class SphereCollider : public Collider {
-    public:
-        SphereCollider();
-        ~SphereCollider();
-        float GetRadius()
-        {
-            return m_radius;
-        }
+	/**
+	 * @brief SphereCollider Component
+	*/
+	class SphereCollider : public Collider {
+	public:
 
-        void PostResourceModify() override;
-        void UpdateRadius(float radius);
-    protected:
-        void CreateShape() override;
+		/**
+		 * @brief Default Constructor
+		*/
+		SphereCollider();
 
-    private:
-        //~zh 球体碰撞器半径
-        float m_radius;
+		/**
+		 * @brief Default Destructor
+		*/
+		~SphereCollider() override;
 
-        RTTR_ENABLE(Collider);
-    };
+		/**
+		 * @brief Set SphereCollider Size
+		 * @param radius 
+		*/
+		void SetRadius(float radius)
+		{
+			m_radius = radius;
+		}
+
+		/**
+		 * @brief Get SphereCollider Size
+		 * @return
+		*/
+		float GetRadius()
+		{
+			return m_radius;
+		}
+
+		/**
+		 * @brief Call before object resource change
+		*/
+		void PostResourceModify() override;
+
+	protected:
+
+		/**
+		 * @brief Create PhysX Shape
+		*/
+		void CreateShape() override;
+
+		/**
+		 * @brief Update Collider shape sphere size
+		 * @param radius Current collider box size
+		*/
+		void UpdateShapeRadius(float radius);
+
+
+	private:
+
+		/**
+		 * @brief Radius of sphere collision body
+		*/
+		float m_radius;
+
+		RTTR_ENABLE(Collider);
+	};
 }

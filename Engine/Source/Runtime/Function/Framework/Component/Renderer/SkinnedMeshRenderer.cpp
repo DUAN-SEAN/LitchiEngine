@@ -65,7 +65,7 @@ void SkinnedMeshRenderer::OnUpdate()
 	for (size_t i = 0; i < defaultTransform.size(); i++)
 		animationClip->boneAnimations[i].defaultTransform = defaultTransform[i];
 
-	// calc bone trans to m_bone_arr
+	// calc bone trans to m_boneArr
 	CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets);
 
 	//uint32_t numBones = boneOffsets.size();
@@ -75,11 +75,11 @@ void SkinnedMeshRenderer::OnUpdate()
 	//for (uint32_t i = 1; i < numBones; i++) {
 	//	int parentIndex = boneHierarchy[i];
 	//	toRootTransforms[i] = toRootTransforms[parentIndex] * animationClip->boneAnimations[i].defaultTransform;
-	//	m_bone_arr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
+	//	m_boneArr.boneArr[i] = toRootTransforms[i] * boneOffsets[i];
 	//}
 	//
 	// updat cbuffer
-	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
+	m_boneConstantBuffer->UpdateWithReset(&m_boneArr);
 }
 
 void SkinnedMeshRenderer::PostResourceLoaded()
@@ -108,7 +108,7 @@ void SkinnedMeshRenderer::PostResourceLoaded()
 
 	CalcDefaultFinalTransform(boneHierarchy, defaultTransform);
 	// updat cbuffer
-	m_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
+	m_boneConstantBuffer->UpdateWithReset(&m_boneArr);
 
 	MeshRenderer::PostResourceLoaded();
 }
@@ -127,7 +127,7 @@ void SkinnedMeshRenderer::CalcDefaultFinalTransform(std::vector<int>& boneHierar
 	uint32_t numBones = nodelDefaultTransforms.size();
 	// 
 	for (uint32_t i = 0; i < numBones; i++) {
-		m_bone_arr.boneArr[i] = nodelDefaultTransforms[i];
+		m_boneArr.boneArr[i] = nodelDefaultTransforms[i];
 	}
 }
 
@@ -157,15 +157,15 @@ void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip,
 
 	// 
 	for (uint32_t i = 0; i < numBones; i++) {
-		m_bone_arr.boneArr[i] = boneOffsets[i]* toRootTransforms[i];
+		m_boneArr.boneArr[i] = boneOffsets[i]* toRootTransforms[i];
 	}
 
 }
 
 void LitchiRuntime::SkinnedMeshRenderer::CreateBoneBuffer()
 {
-	m_bone_constant_buffer = std::make_shared<RHI_ConstantBuffer>();
-	m_bone_constant_buffer->Create<Cb_Bone_Arr>(1);
+	m_boneConstantBuffer = std::make_shared<RHI_ConstantBuffer>();
+	m_boneConstantBuffer->Create<Cb_Bone_Arr>(1);
 
 	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
 
@@ -178,6 +178,6 @@ void LitchiRuntime::SkinnedMeshRenderer::CreateBoneBuffer()
 		return;
 	}
 
-	// m_bone_arr.boneCount = bones.size();
+	// m_boneArr.boneCount = bones.size();
 
 }

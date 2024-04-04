@@ -33,10 +33,6 @@ namespace LitchiRuntime
         }
     }
 
-    void Collider::CreateShape() {
-
-    }
-
     void Collider::UpdateTriggerState() {
         if (m_pxShape == nullptr) {
             return;

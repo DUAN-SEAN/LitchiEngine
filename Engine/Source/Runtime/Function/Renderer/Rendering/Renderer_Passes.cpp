@@ -676,7 +676,7 @@ namespace LitchiRuntime
 			{
 				for (const auto& subMesh : subMeshArr)
 				{
-					cmd_list->DrawIndexed(subMesh.m_geometry_index_count, subMesh.m_geometry_index_offset, subMesh.m_geometry_vertex_offset);
+					cmd_list->DrawIndexed(subMesh.m_geometryIndexCount, subMesh.m_geometryIndexOffset, subMesh.m_geometryVertexOffset);
 				}
 			}
 

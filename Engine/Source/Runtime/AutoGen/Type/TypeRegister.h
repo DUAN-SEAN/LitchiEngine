@@ -214,11 +214,32 @@ namespace LitchiRuntime {
 													 rttr::metadata("Polymorphic", true))
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr);
 
+		// Transform
+		registration::class_<Transform>("Transform")(rttr::metadata("Serializable", true),
+													 rttr::metadata("Polymorphic", true))
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("localPosition", &Transform::GetPositionLocal,
+					  &Transform::SetPositionLocal)(rttr::metadata("Serializable", true))
+			.property("localRotation", &Transform::GetRotationLocal,
+					  &Transform::SetRotationLocal)(rttr::metadata("QuatToEuler", true))
+			.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
+
 		// Camera
 		registration::class_<Camera>("Camera")
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("aperture", &Camera::GetAperture, &Camera::SetAperture)
 			.property("shutter speed", &Camera::GetShutterSpeed, &Camera::SetShutterSpeed);
+
+		// Light Base Component
+		registration::class_<Light>("Light")
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("lightType", &Light::GetLightType, &Light::SetLightType)
+			.property("color", &Light::GetColor, &Light::SetColor)
+			.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
+			.property("shadowsEnabled", &Light::GetShadowsEnabled, &Light::SetShadowsEnabled)
+			.property("shadowsTransparentEnabled", &Light::GetShadowsTransparentEnabled,
+				&Light::SetShadowsTransparentEnabled)
+			.property("bias", &Light::GetBias, &Light::SetBias);
 
 		// Animator
 		registration::class_<Animator>("Animator").constructor<>()(rttr::policy::ctor::as_raw_ptr);
@@ -237,22 +258,12 @@ namespace LitchiRuntime {
 
 		// MeshFilter
 		registration::class_<MeshFilter>("MeshFilter")(rttr::metadata("Serializable", true),
-													   rttr::metadata("Polymorphic", true))
+			rttr::metadata("Polymorphic", true))
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("MeshPath", &MeshFilter::GetMeshPath, &MeshFilter::SetMeshPath)(
 				rttr::metadata("AssetPath", true),
 				rttr::metadata("AssetType", PathParser::EFileType::MODEL))
 			.property("SubMeshIndex", &MeshFilter::GetSubMeshIndex, &MeshFilter::SetSubMeshIndex);
-
-		// Transform
-		registration::class_<Transform>("Transform")(rttr::metadata("Serializable", true),
-													 rttr::metadata("Polymorphic", true))
-			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-			.property("localPosition", &Transform::GetPositionLocal,
-					  &Transform::SetPositionLocal)(rttr::metadata("Serializable", true))
-			.property("localRotation", &Transform::GetRotationLocal,
-					  &Transform::SetRotationLocal)(rttr::metadata("QuatToEuler", true))
-			.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
 		// Rect Transform
 		registration::class_<RectTransform>("RectTransform")(rttr::metadata("Serializable", true))
@@ -261,7 +272,7 @@ namespace LitchiRuntime {
 					  &RectTransform::SetPos)(rttr::metadata("Serializable", true))
 			.property("rectSize", &RectTransform::GetSize, &RectTransform::SetSize);
 
-		// Rect Transform
+		// UICanvas
 		registration::class_<UICanvas>("UICanvas")(rttr::metadata("Serializable", true))
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("resolution", &UICanvas::GetResolution, &UICanvas::SetResolution);
@@ -281,16 +292,6 @@ namespace LitchiRuntime {
 				rttr::metadata("AssetType", PathParser::EFileType::TEXTURE))
 			.property("Color", &UIImage::GetColor, &UIImage::SetColor);
 
-		// Light Base Component
-		registration::class_<Light>("Light")
-			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-			.property("lightType", &Light::GetLightType, &Light::SetLightType)
-			.property("color", &Light::GetColor, &Light::SetColor)
-			.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
-			.property("shadowsEnabled", &Light::GetShadowsEnabled, &Light::SetShadowsEnabled)
-			.property("shadowsTransparentEnabled", &Light::GetShadowsTransparentEnabled,
-					  &Light::SetShadowsTransparentEnabled)
-			.property("bias", &Light::GetBias, &Light::SetBias);
 		// .property("light", &Light::GetLight, &Light::SetLight);
 
 		// RigidActor
@@ -298,7 +299,6 @@ namespace LitchiRuntime {
 
 		// Collider
 		registration::class_<Collider>("Collider")
-			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("physicsMaterial", &Collider::GetPhysicMaterial, &Collider::SetPhysicMaterial);
 
 		// RigidDynamic

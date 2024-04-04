@@ -37,7 +37,7 @@ namespace LitchiRuntime
 
 	template <class T>
 	inline T* GameObject::GetComponent() const {
-		//获取类名
+		// Get reflection type 
 		type t = type::get<T>();
 		std::string component_type_name = t.get_name().to_string();
 		std::vector<Component*> component_vec;
@@ -69,7 +69,7 @@ namespace LitchiRuntime
 
 	template <class T>
 	inline T* GameObject::GetComponent(const uint64_t unmanagedId) {
-		//获取类名
+		// Get reflection type 
 		type t = type::get<T>();
 		std::string component_type_name = t.get_name().to_string();
 		std::vector<Component*> component_vec;

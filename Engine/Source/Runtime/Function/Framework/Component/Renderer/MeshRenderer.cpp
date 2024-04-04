@@ -38,15 +38,15 @@ namespace LitchiRuntime
 	}
 	void MeshRenderer::PostResourceModify()
 	{
-		if (m_material_path.empty() || m_material_path == "Empty")
+		if (m_materialPath.empty() || m_materialPath == "Empty")
 		{
 			return;
 		}
 
-		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
+		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_materialPath);
 		if (!material)
 		{
-			DEBUG_LOG_WARN("Failed to load material from \"{}\"", m_material_path);
+			DEBUG_LOG_WARN("Failed to load material from \"{}\"", m_materialPath);
 			return;
 		}
 		SetMaterial(material);
@@ -63,21 +63,21 @@ namespace LitchiRuntime
 		m_material = material;
 
 		// set to false otherwise material won't serialize/deserialize
-		m_material_default = false;
+		m_useDefaultMaterial = false;
 
-		m_material_path = material->GetResourceFilePathAsset();
+		m_materialPath = material->GetResourceFilePathAsset();
 
 		return material;
 	}
 
-	Material* MeshRenderer::SetMaterial(const string& file_path)
+	Material* MeshRenderer::SetMaterial(const string& filePath)
 	{
 		// load the material
 		//auto material = make_shared<Material>();
-		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_material_path);
+		auto material = ApplicationBase::Instance()->materialManager->GetResource(m_materialPath);
 		if (!material)
 		{
-			DEBUG_LOG_WARN("Failed to load material from \"{}\"", file_path.c_str());
+			DEBUG_LOG_WARN("Failed to load material from \"{}\"", filePath.c_str());
 			return nullptr;
 		}
 
@@ -89,7 +89,7 @@ namespace LitchiRuntime
 	{
 		auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
 		SetMaterial(material);
-		m_material_default = true;
+		m_useDefaultMaterial = true;
 	}
 
 	string MeshRenderer::GetMaterialName() const

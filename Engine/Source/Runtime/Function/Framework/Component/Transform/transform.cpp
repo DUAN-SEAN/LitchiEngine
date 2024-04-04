@@ -11,12 +11,12 @@ namespace LitchiRuntime
 	Transform::Transform() :Component()
 		// , m_transform{}
 	{
-        m_position_local = Vector3::Zero;
-        m_rotation_local = Quaternion(0, 0, 0, 1);
-        m_scale_local = Vector3::One;
+        m_localPosition = Vector3::Zero;
+        m_localRotation = Quaternion(0, 0, 0, 1);
+        m_localScale = Vector3::One;
         m_matrix = Matrix::Identity;
-        m_matrix_local = Matrix::Identity;
-        m_matrix_previous = Matrix::Identity;
+        m_localMatrix = Matrix::Identity;
+        m_previousMatrix = Matrix::Identity;
         m_parent = nullptr;
         m_is_dirty = true;
 	}
@@ -27,16 +27,16 @@ namespace LitchiRuntime
     void Transform::UpdateTransform()
     {
         // Compute local transform
-        m_matrix_local = Matrix(m_position_local, m_rotation_local, m_scale_local);
+        m_localMatrix = Matrix(m_localPosition, m_localRotation, m_localScale);
 
         // Compute world transform
         if (m_parent)
         {
-            m_matrix = m_matrix_local * m_parent->GetMatrix();
+            m_matrix = m_localMatrix * m_parent->GetMatrix();
         }
         else
         {
-            m_matrix = m_matrix_local;
+            m_matrix = m_localMatrix;
         }
 
         // Update children
@@ -56,13 +56,13 @@ namespace LitchiRuntime
 
     void Transform::SetPositionLocal(const Vector3& position)
     {
-        if (m_position_local == position)
+        if (m_localPosition == position)
             return;
 
-        m_position_local = position;
+        m_localPosition = position;
         UpdateTransform();
 
-        m_position_changed_this_frame = true;
+        m_isPositionChangedThisFrame = true;
     }
 
     void Transform::SetRotation(const Quaternion& rotation)
@@ -75,13 +75,13 @@ namespace LitchiRuntime
 
     void Transform::SetRotationLocal(const Quaternion& rotation)
     {
-        if (m_rotation_local == rotation)
+        if (m_localRotation == rotation)
             return;
 
-        m_rotation_local = rotation;
+        m_localRotation = rotation;
         UpdateTransform();
 
-        m_rotation_changed_this_frame = true;
+        m_isRotationChangedThisFrame = true;
     }
 
     void Transform::SetScale(const Vector3& scale)
@@ -94,30 +94,30 @@ namespace LitchiRuntime
 
     void Transform::SetScaleLocal(const Vector3& scale)
     {
-        if (m_scale_local == scale)
+        if (m_localScale == scale)
             return;
 
-        m_scale_local = scale;
+        m_localScale = scale;
 
         // A scale of 0 will cause a division by zero when decomposing the world transform matrix.
-        m_scale_local.x = (m_scale_local.x == 0.0f) ? Math::Helper::EPSILON : m_scale_local.x;
-        m_scale_local.y = (m_scale_local.y == 0.0f) ? Math::Helper::EPSILON : m_scale_local.y;
-        m_scale_local.z = (m_scale_local.z == 0.0f) ? Math::Helper::EPSILON : m_scale_local.z;
+        m_localScale.x = (m_localScale.x == 0.0f) ? Math::Helper::EPSILON : m_localScale.x;
+        m_localScale.y = (m_localScale.y == 0.0f) ? Math::Helper::EPSILON : m_localScale.y;
+        m_localScale.z = (m_localScale.z == 0.0f) ? Math::Helper::EPSILON : m_localScale.z;
 
         UpdateTransform();
 
-        m_scale_changed_this_frame = true;
+        m_isScaleChangedThisFrame = true;
     }
 
     void Transform::Translate(const Vector3& delta)
     {
         if (!HasParent())
         {
-            SetPositionLocal(m_position_local + delta);
+            SetPositionLocal(m_localPosition + delta);
         }
         else
         {
-            SetPositionLocal(m_position_local + GetParent()->GetMatrix().Inverted() * delta);
+            SetPositionLocal(m_localPosition + GetParent()->GetMatrix().Inverted() * delta);
         }
     }
 
@@ -125,11 +125,11 @@ namespace LitchiRuntime
     {
         if (!HasParent())
         {
-            SetRotationLocal((m_rotation_local * delta).Normalized());
+            SetRotationLocal((m_localRotation * delta).Normalized());
         }
         else
         {
-            SetRotationLocal(m_rotation_local * GetRotation().Inverse() * delta * GetRotation());
+            SetRotationLocal(m_localRotation * GetRotation().Inverse() * delta * GetRotation());
         }
     }
 
@@ -298,7 +298,7 @@ namespace LitchiRuntime
         if (child->GetObjectId() == GetObjectId())
             return;
 
-        lock_guard lock(m_child_add_remove_mutex);
+        lock_guard lock(m_childAddRemoveMutex);
 
         // If this is not already a child, add it.
         if (!(find(m_children.begin(), m_children.end(), child) != m_children.end()))
@@ -315,7 +315,7 @@ namespace LitchiRuntime
         if (child->GetObjectId() == GetObjectId())
             return;
 
-        lock_guard lock(m_child_add_remove_mutex);
+        lock_guard lock(m_childAddRemoveMutex);
 
         // Remove the child
         m_children.erase(remove_if(m_children.begin(), m_children.end(), [child](Transform* vec_transform) { return vec_transform->GetObjectId() == child->GetObjectId(); }), m_children.end());

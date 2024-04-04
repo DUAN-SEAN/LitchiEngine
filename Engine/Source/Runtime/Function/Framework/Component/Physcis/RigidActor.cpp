@@ -35,21 +35,21 @@ namespace LitchiRuntime
         if (collider == nullptr) {
             return;
         }
-        PxShape* px_shape = collider->px_shape();
+        PxShape* px_shape = collider->GetPxShape();
         if(px_shape == nullptr)
         {
             return;
         }
 
         Physics::AttachShape(m_pxRigidActor, px_shape);
-        //    DEBUG_LOG_INFO("px_shape refCount: {}",px_shape->getReferenceCount());
+        //    DEBUG_LOG_INFO("GetPxShape refCount: {}",GetPxShape->getReferenceCount());
     }
 
     void RigidActor::DetachColliderShape(Collider* collider) {
         if (collider == nullptr) {
             return;
         }
-        PxShape* px_shape = collider->px_shape();
+        PxShape* px_shape = collider->GetPxShape();
         if (px_shape == nullptr)
         {
             return;

@@ -6,41 +6,68 @@
 namespace LitchiRuntime
 {
 	/**
-	 * \brief 脚本组件基类
-	 */
+	 * @brief Script Component
+	 * @note The ScriptComponent class is the base class from which every LitchiEngine script derives
+	*/
 	class ScriptComponent :public Component
 	{
 	public:
 
+		/**
+		 * @brief Set class name
+		 * @param className 
+		*/
 		void SetClassName(std::string className)
 		{
 			m_className = className;
 		}
 
+		/**
+		 * @brief Get class name
+		 * @return 
+		*/
 		std::string GetClassName() const
 		{
 			return m_className;
 		}
 
-		void PostResourceLoaded() override;
+		/**
+		 * @brief Call before object resource change
+		*/
 		void PostResourceModify() override;
 
-		void OnAwake() override;
-
-		void OnUpdate() override;
+		/**
+		 * @brief Call before object resource loaded
+		 * when instantiate prefab, add component, resource loaded etc
+		 * after call resource load completed
+		*/
+		void PostResourceLoaded() override;
 
 	public:
-		RTTR_ENABLE(Component);
+
+		/**
+		 * @brief Called when the scene start right before OnStart
+		 * It allows you to apply prioritized game logic on scene start
+		*/
+		void OnAwake() override;
+
+		/**
+		 * @brief Called when the components gets enabled (owner SetActive set to true) and after OnAwake() on scene starts
+		*/
+		void OnUpdate() override;
 
 	private:
+
 		/**
-		 * \brief 脚本类型
-		 */
+		 * @brief C# Script class name
+		*/
 		std::string m_className;
 
 		/**
-		 * \brief 脚本数据, Json实现
-		 */
+		 * @brief Script data, serialize to json
+		*/
 		std::string m_data;
+
+		RTTR_ENABLE(Component);
 	};
 }

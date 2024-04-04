@@ -16,7 +16,7 @@ namespace LitchiRuntime
 
     }
 
-    void BoxCollider::UpdateSize(const Vector3& size)
+    void BoxCollider::UpdateShapeSize(const Vector3& size)
     {
         m_size = size;
         UpdateShape();
@@ -26,7 +26,7 @@ namespace LitchiRuntime
     {
         Collider::PostResourceModify();
 
-        UpdateSize(m_size);
+        UpdateShapeSize(m_size);
     }
 
     void BoxCollider::CreateShape() {
