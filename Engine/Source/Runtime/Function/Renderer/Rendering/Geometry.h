@@ -9,45 +9,45 @@
 
 namespace LitchiRuntime::Geometry
 {
-    static void CreateCube(std::vector<RHI_Vertex_PosTexNorTan>* vertices, std::vector<uint32_t>* indices)
+    static void CreateCube(std::vector<RHI_Vertex_PosTexNorTan>* vertices, std::vector<uint32_t>* indices, float size = 1.0f)
     {
         using namespace Math;
 
         // front
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f), Vector2(0, 1), Vector3(0, 0, -1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f), Vector2(0, 0), Vector3(0, 0, -1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f), Vector2(1, 1), Vector3(0, 0, -1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f), Vector2(1, 0), Vector3(0, 0, -1), Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f) * size, Vector2(0, 1), Vector3(0, 0, -1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f) * size, Vector2(0, 0), Vector3(0, 0, -1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f) * size, Vector2(1, 1), Vector3(0, 0, -1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f) * size, Vector2(1, 0), Vector3(0, 0, -1) * size, Vector3(0, 1, 0));
 
         // bottom
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f), Vector2(0, 1), Vector3(0, -1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f), Vector2(0, 0), Vector3(0, -1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f), Vector2(1, 1), Vector3(0, -1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f), Vector2(1, 0), Vector3(0, -1, 0), Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f) * size, Vector2(0, 1), Vector3(0, -1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f) * size, Vector2(0, 0), Vector3(0, -1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f) * size, Vector2(1, 1), Vector3(0, -1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f) * size, Vector2(1, 0), Vector3(0, -1, 0) * size, Vector3(1, 0, 0));
 
         // back
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f), Vector2(1, 1), Vector3(0, 0, 1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f), Vector2(1, 0), Vector3(0, 0, 1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f), Vector2(0, 1), Vector3(0, 0, 1), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f), Vector2(0, 0), Vector3(0, 0, 1), Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f) * size, Vector2(1, 1), Vector3(0, 0, 1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f) * size, Vector2(1, 0), Vector3(0, 0, 1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f) * size, Vector2(0, 1), Vector3(0, 0, 1) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f) * size, Vector2(0, 0), Vector3(0, 0, 1) * size, Vector3(0, 1, 0));
 
         // top
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f), Vector2(0, 0), Vector3(0, 1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f), Vector2(0, 1), Vector3(0, 1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f), Vector2(1, 0), Vector3(0, 1, 0), Vector3(1, 0, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f), Vector2(1, 1), Vector3(0, 1, 0), Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f) * size, Vector2(0, 0), Vector3(0, 1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f) * size, Vector2(0, 1), Vector3(0, 1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f) * size, Vector2(1, 0), Vector3(0, 1, 0) * size, Vector3(1, 0, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f) * size, Vector2(1, 1), Vector3(0, 1, 0) * size, Vector3(1, 0, 0));
 
         // left
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f), Vector2(0, 1), Vector3(-1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f), Vector2(0, 0), Vector3(-1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f), Vector2(1, 1), Vector3(-1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f), Vector2(1, 0), Vector3(-1, 0, 0), Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, 0.5f) * size, Vector2(0, 1), Vector3(-1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, 0.5f) * size, Vector2(0, 0), Vector3(-1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, -0.5f, -0.5f) * size, Vector2(1, 1), Vector3(-1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(-0.5f, 0.5f, -0.5f) * size, Vector2(1, 0), Vector3(-1, 0, 0) * size, Vector3(0, 1, 0));
 
         // right
-        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f), Vector2(1, 1), Vector3(1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f), Vector2(1, 0), Vector3(1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f), Vector2(0, 1), Vector3(1, 0, 0), Vector3(0, 1, 0));
-        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f), Vector2(0, 0), Vector3(1, 0, 0), Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, 0.5f) * size, Vector2(1, 1), Vector3(1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, 0.5f) * size, Vector2(1, 0), Vector3(1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, -0.5f, -0.5f) * size, Vector2(0, 1), Vector3(1, 0, 0) * size, Vector3(0, 1, 0));
+        vertices->emplace_back(Vector3(0.5f, 0.5f, -0.5f) * size, Vector2(0, 0), Vector3(1, 0, 0) * size, Vector3(0, 1, 0));
 
         // front
         indices->emplace_back(0); indices->emplace_back(1); indices->emplace_back(2);

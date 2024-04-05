@@ -37,6 +37,8 @@ namespace LitchiRuntime
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 	Cb_Material Renderer::m_cb_material_cpu;
+	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_skyBox;
+	shared_ptr<RHI_IndexBuffer> Renderer::m_index_buffer_skyBox;
 
 	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
 
@@ -230,6 +232,7 @@ namespace LitchiRuntime
 		CreateStandardTextures();
 		CreateStandardMeshes();// todo:
 		LoadDefaultMaterials();
+		CreateSkyBoxMesh();
 
 		m_rendererPaths.clear();
 		for (size_t i = RendererPathType_Invalid + 1; i < RendererPathType_Count; i++)
@@ -472,6 +475,10 @@ namespace LitchiRuntime
 
 
 			bool is_transparent_pass = false;
+			EASY_BLOCK("Pass_SkyBox")
+			Pass_SkyBox(cmd_list, rendererPath);
+			EASY_END_BLOCK
+
 			EASY_BLOCK("Pass_ShadowMaps")
 			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK
@@ -557,6 +564,10 @@ namespace LitchiRuntime
 			
 			// opaque
 			bool is_transparent_pass = false;
+			EASY_BLOCK("Pass_SkyBox")
+			Pass_SkyBox(cmd_list, rendererPath);
+			EASY_END_BLOCK
+
 			EASY_BLOCK("Pass_ShadowMaps")
 			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK

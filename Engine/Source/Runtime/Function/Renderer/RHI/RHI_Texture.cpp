@@ -308,7 +308,8 @@ namespace LitchiRuntime
                 vector<string> file_paths = { file_path };
 
                 // if this is an array, try to find all the textures
-                if (m_resource_type == ResourceType::Texture2dArray)
+                if (m_resource_type == ResourceType::Texture2dArray ||
+                    m_resource_type == ResourceType::TextureCube)
                 {
                     string file_path_extension    = FileSystem::GetExtensionFromFilePath(file_path);
                     string file_path_no_extension = FileSystem::GetFilePathWithoutExtension(file_path);
@@ -322,7 +323,7 @@ namespace LitchiRuntime
                         file_path_guess = file_path_no_digit + to_string(++index) + file_path_extension;
                     }
                 }
-
+                
                 // load texture
                 for (uint32_t slice_index = 0; slice_index < static_cast<uint32_t>(file_paths.size()); slice_index++)
                 {

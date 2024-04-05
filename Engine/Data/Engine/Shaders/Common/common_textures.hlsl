@@ -57,3 +57,6 @@ Texture2D tex_font_atlas         : register(t37);
 // globallycoherent RWStructuredBuffer<uint> g_atomic_counter : register(u3);
 // globallycoherent RWTexture2D<float4> tex_uav_mips[12]      : register(u4);
 // RWTexture2DArray<float4> tex_uav4                          : register(u5);
+
+// SkyBox
+TextureCube tex_skyBox : register(t40);

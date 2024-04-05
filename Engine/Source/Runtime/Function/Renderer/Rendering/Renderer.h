@@ -105,7 +105,7 @@ namespace LitchiRuntime
 
 		// Get all
 		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
-		static std::array<std::shared_ptr<RHI_Shader>, 51>& GetShaders();
+		static std::array<std::shared_ptr<RHI_Shader>, 61>& GetShaders();
 		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 5>& GetConstantBuffers();
 
 		// Get individual
@@ -144,6 +144,7 @@ namespace LitchiRuntime
 		static void CreateFonts();
 		static void CreateStandardMeshes();
 		static void CreateStandardTextures();
+		static void CreateSkyBoxMesh();
 		static void CreateShaders();
 		static void CreateSamplers(const bool create_only_anisotropic = false);
 		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
@@ -154,6 +155,7 @@ namespace LitchiRuntime
 		static void Render4BuildInAssetView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath,const bool is_transparent_pass);
+		static void Pass_SkyBox(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
@@ -190,6 +192,8 @@ namespace LitchiRuntime
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static Cb_Material m_cb_material_cpu;
+		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_skyBox;
+		static std::shared_ptr<RHI_IndexBuffer> m_index_buffer_skyBox;
 
 		static bool m_brdf_specular_lut_rendered;
 

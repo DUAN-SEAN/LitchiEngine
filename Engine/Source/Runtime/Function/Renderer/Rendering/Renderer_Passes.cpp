@@ -238,6 +238,48 @@ namespace LitchiRuntime
 		cmd_list->EndTimeblock();
 	}
 
+	void Renderer::Pass_SkyBox(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		cmd_list->BeginTimeblock("Pass_SkyBox");
+
+		// define PipelineState
+		auto camera = rendererPath->GetRenderCamera();
+		static RHI_PipelineState pso;
+		pso.name = "Pass_SkyBox";
+		pso.shader_vertex = GetShader(Renderer_Shader::skybox_v).get();
+		pso.shader_pixel = GetShader(Renderer_Shader::skybox_p).get();
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_none).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
+		pso.clear_color[0] = rhi_color_load;
+		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		cmd_list->SetPipelineState(pso);
+
+		EASY_BLOCK("Render SkyBox")
+		cmd_list->BeginRenderPass();
+
+		// set skyBox mesh
+		cmd_list->SetBufferIndex(Renderer::m_index_buffer_skyBox.get());
+		cmd_list->SetBufferVertex(Renderer::m_vertex_buffer_skyBox.get());
+
+		// set skyBox cube
+		cmd_list->SetTexture(Renderer_BindingsSrv::tex_skyBox, GetStandardTexture(Renderer_StandardTexture::SkyBox));
+
+		// set skyBox Pos with current mainCamera's pos for render skybox
+		m_cb_pass_cpu.transform = Matrix::CreateTranslation(camera->GetPosition());
+		PushPassConstants(cmd_list);
+
+		// drawCall
+		cmd_list->DrawIndexed(Renderer::m_index_buffer_skyBox.get()->GetIndexCount(), 0, 0);
+
+		cmd_list->EndRenderPass();
+		EASY_END_BLOCK
+
+		cmd_list->EndTimeblock();
+	}
+
 	void Renderer::Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
 		auto camera = rendererPath->GetRenderCamera();
@@ -266,7 +308,7 @@ namespace LitchiRuntime
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
-		pso.clear_color[0] = camera->GetClearColor();
+		//pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
 
 		// begin render pass

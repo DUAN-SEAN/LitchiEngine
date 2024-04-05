@@ -130,7 +130,10 @@ namespace LitchiRuntime
         tex              = 35,
         tex2             = 36,
         font_atlas       = 37,
-        reflection_probe = 38
+        reflection_probe = 38,
+
+        //Sky Box
+        tex_skyBox = 40
     };
 
     enum class Renderer_BindingsUav
@@ -193,8 +196,10 @@ namespace LitchiRuntime
         reflection_probe_p,
         ffx_cas_c,
         ffx_spd_c,
+        skybox_v,
+        skybox_p,
         ui_image_v,
-        ui_image_p = 50,
+        ui_image_p = 60,
     };
     
     enum class Renderer_RenderTexture : uint8_t
@@ -272,7 +277,8 @@ namespace LitchiRuntime
         Gizmo_light_directional,
         Gizmo_light_point,
         Gizmo_light_spot,
-        Gizmo_audio_source
+        Gizmo_audio_source,
+        SkyBox
     };
 
     enum class Renderer_MeshType

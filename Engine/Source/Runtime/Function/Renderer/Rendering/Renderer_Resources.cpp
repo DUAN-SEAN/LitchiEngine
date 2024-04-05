@@ -7,6 +7,7 @@
 #include "../Resource/ResourceCache.h"
 #include "../RHI/RHI_Texture2D.h"
 #include "../RHI/RHI_Texture2DArray.h"
+#include "../RHI/RHI_TextureCube.h"
 #include "../RHI/RHI_Shader.h"
 #include "../RHI/RHI_Sampler.h"
 #include "../RHI/RHI_BlendState.h"
@@ -15,6 +16,7 @@
 #include "../RHI/RHI_DepthStencilState.h"
 #include "../RHI/RHI_StructuredBuffer.h"
 #include "../RHI/RHI_VertexBuffer.h"
+#include "../RHI/RHI_IndexBuffer.h"
 #include "../RHI/RHI_AMD_FidelityFX.h"
 #include "../RHI/RHI_Device.h"
 #include "../RHI/RHI_CommandPool.h"
@@ -37,13 +39,13 @@ namespace LitchiRuntime
 
         // renderer resources
         array<shared_ptr<RHI_Texture>, 28>       m_render_targets;
-        array<shared_ptr<RHI_Shader>, 51>        m_shaders;
+        array<shared_ptr<RHI_Shader>, 61>        m_shaders;
         array<shared_ptr<RHI_Sampler>, 7>        m_samplers;
         array<shared_ptr<RHI_ConstantBuffer>, 5> m_constant_buffers;
         shared_ptr<RHI_StructuredBuffer>         m_structured_buffer;
 
         // asset resources
-        array<shared_ptr<RHI_Texture>, 10> m_standard_textures;
+        array<shared_ptr<RHI_Texture>, 11> m_standard_textures;
     }
 
     void Renderer::CreateConstantBuffers()
@@ -251,6 +253,12 @@ namespace LitchiRuntime
     	shader(Renderer_Shader::forward_v)->Compile(RHI_Shader_Vertex, shader_dir + "forward.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
 		shader(Renderer_Shader::forward_p) = make_shared<RHI_Shader>();
 		shader(Renderer_Shader::forward_p)->Compile(RHI_Shader_Pixel, shader_dir + "forward.hlsl", async);
+
+        // SkyBox
+        shader(Renderer_Shader::skybox_v) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::skybox_v)->Compile(RHI_Shader_Vertex, shader_dir + "skyBox.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+        shader(Renderer_Shader::skybox_p) = make_shared<RHI_Shader>();
+        shader(Renderer_Shader::skybox_p)->Compile(RHI_Shader_Pixel, shader_dir + "skyBox.hlsl", async);
 
         //// G-Buffer
         //shader(Renderer_Shader::gbuffer_v) = make_shared<RHI_Shader>();
@@ -512,6 +520,25 @@ namespace LitchiRuntime
             standard_texture(Renderer_StandardTexture::Gizmo_audio_source) = make_shared<RHI_Texture2D>(RHI_Texture_Srv, "standard_icon_audio_source");
             standard_texture(Renderer_StandardTexture::Gizmo_audio_source)->LoadFromFile(dir_texture + "audio.png");
         }
+
+        // Sky Box
+        {
+            standard_texture(Renderer_StandardTexture::SkyBox) = make_shared<RHI_TextureCube>(RHI_Texture_Srv, "standard_skyBox");
+            standard_texture(Renderer_StandardTexture::SkyBox)->LoadFromFile(dir_texture + "skyBox_texture_0.png");
+        }
+    }
+
+    void Renderer::CreateSkyBoxMesh() {
+        // Create CubeMesh for skyBox
+        std::vector<RHI_Vertex_PosTexNorTan> vertices;
+        std::vector<uint32_t> indices;
+        Geometry::CreateCube(&vertices, &indices, 8);
+
+        m_vertex_buffer_skyBox = make_shared<RHI_VertexBuffer>(true, "skyBox");
+        m_index_buffer_skyBox = make_shared<RHI_IndexBuffer>(true, "skyBox");
+
+        m_vertex_buffer_skyBox->Create(vertices);
+        m_index_buffer_skyBox->Create(indices);
     }
 
     void Renderer::LoadDefaultMaterials()
@@ -535,7 +562,7 @@ namespace LitchiRuntime
         return m_render_targets;
     }
 
-    array<shared_ptr<RHI_Shader>, 51>& Renderer::GetShaders()
+    array<shared_ptr<RHI_Shader>, 61>& Renderer::GetShaders()
     {
         return m_shaders;
     }
