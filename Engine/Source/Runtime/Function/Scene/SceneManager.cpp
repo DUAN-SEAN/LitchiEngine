@@ -317,22 +317,29 @@ namespace LitchiRuntime
 
 	void SceneManager::LoadEmptyScene()
 	{
+		CreateEmptyScene();
+		SceneLoadEvent.Invoke();
+	}
+
+	void SceneManager::CreateEmptyScene()
+	{
 		UnloadCurrentScene();
 
 		m_currScene = new Scene("Empty Scene");
+
 	}
 
-	bool SceneManager::LoadScene(const std::string& p_path)
+	bool SceneManager::LoadScene(const std::string& path)
 	{
-		LoadEmptyScene();
+		CreateEmptyScene();
 
-		if(!AssetManager::LoadAsset(ApplicationBase::Instance()->configManager->GetAssetFolder()+p_path, m_currScene))
+		if(!AssetManager::LoadAsset(ApplicationBase::Instance()->configManager->GetAssetFolderFullPath()+path, m_currScene))
 		{
 			UnloadCurrentScene();
 			return false;
 		}
 
-		StoreCurrentSceneSourcePath(p_path);
+		StoreCurrentSceneSourcePath(path);
 
 		m_currScene->PostResourceLoaded();
 
@@ -343,7 +350,7 @@ namespace LitchiRuntime
 
 	bool SceneManager::LoadSceneFromMemory(std::string& p_doc)
 	{
-		LoadEmptyScene();
+		CreateEmptyScene();
 
 		if(!Serializer::DeserializeFromJson(p_doc,m_currScene))
 		{
@@ -402,7 +409,7 @@ namespace LitchiRuntime
 
 	void SceneManager::SaveCurrentScene(const std::string& path)
 	{
-		AssetManager::SaveAsset<Scene>(*m_currScene, ApplicationBase::Instance()->configManager->GetAssetFolder() + path);
+		AssetManager::SaveAsset<Scene>(*m_currScene, ApplicationBase::Instance()->configManager->GetAssetFolderFullPath() + path);
 
 		// 设置当前场景的本地路径
 		StoreCurrentSceneSourcePath(path);

@@ -440,6 +440,7 @@ namespace LitchiRuntime
 		auto camera = rendererPath->GetRenderCamera();
 		auto rendererables = rendererPath->GetRenderables();
 		auto canvas = rendererPath->GetCanvas();
+		auto scene = rendererPath->GetRenderScene();
 
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),0, 0, false, camera->GetClearColor());
 
@@ -456,7 +457,7 @@ namespace LitchiRuntime
 		//EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
-		if (camera)
+		if (camera && scene)
 		{
 			// determine if a transparent pass is required
 			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();

@@ -25,6 +25,7 @@ namespace LitchiEditor
 		void Update() override;
 
 		WindowSettings CreateWindowSettings() override;
+		void OnSceneLoaded() override;
 
 		/**
 		* Returns true if the app is running

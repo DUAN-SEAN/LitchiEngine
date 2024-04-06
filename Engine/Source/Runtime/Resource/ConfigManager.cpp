@@ -13,8 +13,8 @@ namespace LitchiRuntime
 	{
 		m_projectRootFolder = projectRootFolder;
 		auto path = m_projectRootFolder + ConfigFileName;
-		DEBUG_LOG_INFO("ConfigManager::Initialize path: "+ path);
-		if(!AssetManager::LoadAsset(path, m_config_res))
+		DEBUG_LOG_INFO("ConfigManager::Initialize path: " + path);
+		if (!AssetManager::LoadAsset(path, m_configRes))
 		{
 			DEBUG_LOG_INFO("ConfigManager::Create Default Config: " + path);
 
@@ -35,34 +35,43 @@ namespace LitchiRuntime
 		return true;
 	}
 
+	void ConfigManager::Tick(float delta)
+	{
+		if (m_isDirty)
+		{
+			Save();
+			m_isDirty = false;
+		}
+	}
+
 	const std::string& ConfigManager::GetRootFolder() const
 	{
 		return m_projectRootFolder;
 	}
 
-	const std::string ConfigManager::GetAssetFolder() const
+	const std::string ConfigManager::GetAssetFolderFullPath() const
 	{
-		return m_projectRootFolder+m_config_res.m_asset_folder;
+		return m_projectRootFolder + m_configRes.m_asset_folder;
 	}
 
-	const std::string ConfigManager::GetScriptFolder() const
+	const std::string ConfigManager::GetScriptFolderFullPath() const
 	{
-		return m_projectRootFolder+m_config_res.m_script_folder;
+		return m_projectRootFolder + m_configRes.m_script_folder;
 	}
 
 	const std::string ConfigManager::GetDefaultScenePath() const
 	{
-		return m_projectRootFolder+m_config_res.m_default_scene_path;
+		return m_configRes.m_default_scene_path;
 	}
 
 	const std::pair<int32_t, int32_t> ConfigManager::GetResolutionSize()
 	{
-		return std::pair(m_config_res.m_resolution_width, m_config_res.m_resolution_height);
+		return std::pair(m_configRes.m_resolution_width, m_configRes.m_resolution_height);
 	}
 
 	const bool ConfigManager::IsFullScreen()
 	{
-		return m_config_res.m_is_fullScreen;
+		return m_configRes.m_is_fullScreen;
 	}
 
 	bool ConfigManager::Save()
@@ -70,9 +79,9 @@ namespace LitchiRuntime
 		auto path = m_projectRootFolder + ConfigFileName;
 		DEBUG_LOG_INFO("ConfigManager::Save Config Path: {}", path);
 
-		if (!AssetManager::SaveAsset(m_config_res, path))
+		if (!AssetManager::SaveAsset(m_configRes, path))
 		{
-			DEBUG_LOG_INFO("ConfigManager::Save Config Fail Path: {}" ,path);
+			DEBUG_LOG_INFO("ConfigManager::Save Config Fail Path: {}", path);
 
 			return false;
 		}
@@ -82,11 +91,11 @@ namespace LitchiRuntime
 
 	void ConfigManager::InitDefaultConfig(const std::string& projectRootFolder)
 	{
-		m_config_res.m_asset_folder = "Assets/";
-		m_config_res.m_script_folder = "Scripts/";
-		m_config_res.m_resolution_width = 1920;
-		m_config_res.m_resolution_height = 1080;
-		m_config_res.m_is_fullScreen = true;
+		m_configRes.m_asset_folder = "Assets/";
+		m_configRes.m_script_folder = "Scripts/";
+		m_configRes.m_resolution_width = 1920;
+		m_configRes.m_resolution_height = 1080;
+		m_configRes.m_is_fullScreen = true;
 		// todo init 
 	}
 }

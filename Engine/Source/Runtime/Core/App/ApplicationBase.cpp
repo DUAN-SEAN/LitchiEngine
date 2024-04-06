@@ -66,7 +66,7 @@ namespace LitchiRuntime
 		std::string projectAssetsPath = "";
 		if (configManager)
 		{
-			projectAssetsPath = configManager->GetAssetFolder();
+			projectAssetsPath = configManager->GetAssetFolderFullPath();
 		}
 
 		FileSystem::SetAssetDirectoryPath(projectAssetsPath, m_engineAssetsPath);
@@ -125,6 +125,9 @@ namespace LitchiRuntime
 
 		// ScriptEngine::Init(m_projectPath);
 
+		// Register Event
+		ServiceLocator::Get<SceneManager>().SceneLoadEvent += std::bind(&ApplicationBase::OnSceneLoaded, this);
+
 		DEBUG_LOG_INFO("ApplicationBase Initialization End");
 
 		return true;
@@ -143,5 +146,9 @@ namespace LitchiRuntime
 
 	void ApplicationBase::Exit()
 	{
+	}
+	void ApplicationBase::OnSceneLoaded()
+	{
+		// donothing
 	}
 }

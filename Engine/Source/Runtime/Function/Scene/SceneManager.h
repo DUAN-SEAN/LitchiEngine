@@ -95,7 +95,7 @@ namespace LitchiRuntime
 
 	public:
 
-		std::vector<GameObject*> m_gameObjectList; //存储所有的GameObject。
+		std::vector<GameObject*> m_gameObjectList{}; //存储所有的GameObject。
 
 		/**
 		 * \brief 可用的id 用于id分配
@@ -123,8 +123,12 @@ namespace LitchiRuntime
 		//  Load an empty scene in memory 
 		void LoadEmptyScene();
 
+		// new api
+		//  Load an empty scene in memory 
+		void CreateEmptyScene();
+
 		// Load specific scene in memory
-		bool LoadScene(const std::string& p_path);
+		bool LoadScene(const std::string& path);
 
 		// Load specific scene in memory
 		bool LoadSceneFromMemory(std::string& p_doc);

@@ -116,6 +116,11 @@ namespace LitchiRuntime
 		virtual WindowSettings CreateWindowSettings() = 0;
 
 		/**
+		 * @brief Called callback function , When SceneManager Load Scene
+		*/
+		virtual void OnSceneLoaded();
+
+		/**
 		 * @brief Config Manager, Include Project Config
 		*/
 		std::unique_ptr<ConfigManager> configManager;

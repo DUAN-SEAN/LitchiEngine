@@ -555,6 +555,8 @@ namespace LitchiRuntime
         m_standard_textures.fill(nullptr);
         m_constant_buffers.fill(nullptr);
         m_structured_buffer = nullptr;
+        m_vertex_buffer_skyBox = nullptr;
+        m_index_buffer_skyBox = nullptr;
     }
 
     array<shared_ptr<RHI_Texture>, 28>& Renderer::GetRenderTargets()

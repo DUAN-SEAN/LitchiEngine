@@ -174,44 +174,44 @@ void LitchiEditor::ApplicationEditor::Run()
 
 void LitchiEditor::ApplicationEditor::Update()
 {
-	if (auto editorMode = m_editorActions.GetCurrentEditorMode(); editorMode == EditorActions::EEditorMode::PLAY || editorMode == EditorActions::EEditorMode::FRAME_BY_FRAME)
+	auto scene = this->sceneManager->GetCurrentScene();
+	if(scene)
 	{
-		auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
-		if(!gameView.IsFocused() || !gameView.IsOpened())
+		if (auto editorMode = m_editorActions.GetCurrentEditorMode(); editorMode == EditorActions::EEditorMode::PLAY || editorMode == EditorActions::EEditorMode::FRAME_BY_FRAME)
 		{
-			return;
+			auto& gameView = m_panelsManager.GetPanelAs<GameView>("Game View");
+			if (!gameView.IsFocused() || !gameView.IsOpened())
+			{
+				return;
+			}
+
+			// Physics Tick
+			m_restFixedTime += Time::GetDeltaTime();
+			float fixedDeltaTime = Time::GetFixedUpdateTime();
+			while (m_restFixedTime > fixedDeltaTime)
+			{
+				Physics::FixedUpdate(fixedDeltaTime);
+
+				scene->FixedUpdate();
+
+				m_restFixedTime -= fixedDeltaTime;
+			}
+
+			scene->Update();
+			scene->LateUpdate();
+
+			// Input::Update();
+			//Audio::Update();
+
 		}
-
-		auto scene = this->sceneManager->GetCurrentScene();
-
-		// Physics Tick
-		m_restFixedTime += Time::GetDeltaTime();
-		float fixedDeltaTime = Time::GetFixedUpdateTime();
-		while (m_restFixedTime > fixedDeltaTime)
+		else
 		{
-			Physics::FixedUpdate(fixedDeltaTime);
-
-			scene->FixedUpdate();
-
-			m_restFixedTime -= fixedDeltaTime;
+			scene->OnEditorUpdate();
+			// Edit Mode
 		}
-
-		scene->Update();
-		scene->LateUpdate();
-
-		// Input::Update();
-		//Audio::Update();
-
 	}
-	else
-	{
-		auto scene = this->sceneManager->GetCurrentScene();
-
-		scene->OnEditorUpdate();
-		// Edit Mode
-	}
-
-
+	
+	
 	auto& profiler = m_panelsManager.GetPanelAs<Profiler>("Profiler");
 	if(profiler.IsOpened())
 	{
@@ -229,6 +229,23 @@ WindowSettings LitchiEditor::ApplicationEditor::CreateWindowSettings()
 	windowSettings.minimumHeight = 1;
 	windowSettings.maximized = true;
 	return windowSettings;
+}
+
+void LitchiEditor::ApplicationEditor::OnSceneLoaded()
+{
+	const auto scene = sceneManager->GetCurrentScene();
+	if(m_rendererPath4SceneView)
+	{
+		m_rendererPath4SceneView->UpdateScene(scene);
+	}
+
+	if(m_rendererPath4GameView)
+	{
+		m_rendererPath4GameView->UpdateScene(scene);
+	}
+
+	scene->Resolve();
+	configManager->SetDefaultScenePath(sceneManager->GetCurrentSceneSourcePath());
 }
 
 bool LitchiEditor::ApplicationEditor::IsRunning() const
@@ -281,7 +298,6 @@ void LitchiEditor::ApplicationEditor::SelectActor(GameObject* p_target)
 		DEBUG_LOG_INFO("SelectGO name:{},position:({},{},{}),rotation:({},{},{})", name, position.x, position.y, position.z, rotationEuler.x, rotationEuler.y, rotationEuler.z);
 	}
 
-	// todo Inspector ѡ��
 	EDITOR_EXEC(SelectActor(p_target));
 }
 
@@ -358,7 +374,7 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 
 void LitchiEditor::ApplicationEditor::OnProjectOpen()
 {
-	ConsoleHelper::HideConsole();
+	// ConsoleHelper::HideConsole();
 
 	configManager = std::make_unique<ConfigManager>();
 	if (!configManager->Initialize(m_projectPath))
@@ -366,7 +382,7 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 		DEBUG_LOG_ERROR("ConfigManager::Initialize Fail! ProjectPath:{}", m_projectPath);
 	}
 
-	auto projectAssetsPath = configManager->GetAssetFolder();
+	auto projectAssetsPath = configManager->GetAssetFolderFullPath();
 
 	FileSystem::SetAssetDirectoryPath(projectAssetsPath,m_engineAssetsPath);
 
@@ -376,62 +392,16 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 	// Setup UI
 	SetupEditorUI();
 
-	/* below code is test process */
-
-	//// test 1
-	//{
-	//	auto font = fontManager->LoadResource("Engine\\Fonts\\Ruda-Bold.ttf");
-	//	font->AddText("Hello World", Vector2::Zero);
-
-	//	sceneManager->LoadEmptyScene();
-	//	auto* scene = sceneManager->GetCurrentScene();
-	//	// AssetManager::LoadAsset( projectAssetsPath + "Scenes\\New Scene3.scene", scene);
-
-	//	// create go from prefab
-	//	//auto mesh = modelManager->LoadResource("Engine\\Models\\Catwalk Walk Forward HighKnees.fbx");
-	//	//auto mesh_prefab = mesh->GetModelPrefab();
-	//	//auto instantiateGo = scene->InstantiatePrefab(mesh_prefab,nullptr);
-
-	//	// create camera
-	//	EDITOR_EXEC(CreateMonoComponentActor<Camera>(false, nullptr));
-
-	//	// create cube
-	//	EDITOR_EXEC(CreateActorWithModel("Engine\\Models\\Cube.fbx", true, nullptr, "Cube"));
-
-	//	auto lightObject = EDITOR_EXEC(CreateMonoComponentActor<Light>(false, nullptr));
-	//	lightObject->SetName("Directional Light");
-	//	lightObject->GetComponent<Transform>()->SetPosition(Vector3::Zero);
-	//	lightObject->GetComponent<Transform>()->SetRotation(Quaternion::FromEulerAngles(42, 0, 0));
-	//	lightObject->GetComponent<Light>()->SetLightType(LightType::Directional);
-	//	
-
-	//	auto canvas = EDITOR_EXEC(CreateMonoComponentActor<UICanvas>());
-	//	canvas->SetName("Canvas");
-	//	auto text = EDITOR_EXEC(CreateUIActor<UIText>(true, canvas));
-	//	text->SetName("Text");
-	//	text->GetComponent<UIText>()->SetFontPath("Engine\\Fonts\\Calibri.ttf");
-	//	text->GetComponent<UIText>()->SetText("Hello World !");
-	//	text->GetComponent<UIText>()->PostResourceModify();
-
-	//	auto image = EDITOR_EXEC(CreateUIActor<UIImage>(true, canvas));
-	//	image->SetName("Image");
-	//	image->GetComponent<UIImage>()->SetImagePath("Engine\\Textures\\liuyifei.png");
-	//	image->GetComponent<UIImage>()->PostResourceModify();
-	//	image->GetComponent<RectTransform>()->SetPos({ 960, 540,0.0f });
-	//	image->GetComponent<RectTransform>()->SetSize({ 500.0f, 500.0f });
-
-	//	scene->Resolve();
-	//	m_rendererPath4SceneView->SetScene(sceneManager->GetCurrentScene());
-	//	m_rendererPath4GameView->SetScene(sceneManager->GetCurrentScene());
-	//}
-
-	// test 2
+	// Load or Create Default Scene
 	{
-		sceneManager->LoadScene("Scenes\\New Scene4.scene");
-		sceneManager->GetCurrentScene()->Resolve();
-
-		m_rendererPath4SceneView->UpdateScene(sceneManager->GetCurrentScene());
-		m_rendererPath4GameView->UpdateScene(sceneManager->GetCurrentScene());
+		auto& defaultScene = configManager->GetDefaultScenePath();
+		if(!defaultScene.empty())
+		{
+			EDITOR_EXEC(LoadSceneFromDisk(defaultScene));
+		}else
+		{
+			EDITOR_EXEC(LoadEmptyScene());
+		}
 	}
 }
 
@@ -446,7 +416,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<SceneView>("Scene View", true, settings, m_rendererPath4SceneView);
 	m_panelsManager.CreatePanel<Hierarchy>("Hierarchy", true, settings);
 	m_panelsManager.CreatePanel<Inspector>("Inspector", true, settings);
-	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, GetEngineAssetsPath(), configManager->GetAssetFolder(), configManager->GetScriptFolder());
+	m_panelsManager.CreatePanel<AssetBrowser>("Asset Browser", true, settings, GetEngineAssetsPath(), configManager->GetAssetFolderFullPath(), configManager->GetScriptFolderFullPath());
 	m_panelsManager.CreatePanel<Profiler>("Profiler", true, settings, 0.25f);
 	m_panelsManager.CreatePanel<Console>("Console", true, settings);
 	m_panelsManager.CreatePanel<GameView>("Game View", true, settings, m_rendererPath4GameView);
