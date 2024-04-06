@@ -872,7 +872,8 @@ public:
 
 		editAction.ClickedEvent += [this]
 		{
-			EDITOR_EXEC(LoadSceneFromDisk(filePath,true));
+			std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
+			EDITOR_EXEC(LoadSceneFromDisk(resourcePath,true));
 		};
 
 		FileContextualMenu::CreateList();

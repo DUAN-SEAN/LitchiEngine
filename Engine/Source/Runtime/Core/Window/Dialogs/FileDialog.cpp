@@ -20,8 +20,8 @@ void LitchiRuntime::FileDialog::Show(EExplorerFlags p_flags)
 {
 	OPENFILENAME ofn;
 
-	if (!m_initialDirectory.empty())
-		m_filepath = m_initialDirectory;
+	/*if (!m_initialDirectory.empty())
+		m_filepath = m_initialDirectory;*/
 
 	m_filepath.resize(MAX_PATH);
 

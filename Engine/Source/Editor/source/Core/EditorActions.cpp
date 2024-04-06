@@ -85,7 +85,7 @@ void LitchiEditor::EditorActions::SaveSceneChanges()
 void LitchiEditor::EditorActions::SaveAs()
 {
 	SaveFileDialog dialog("New Scene");
-	dialog.SetInitialDirectory(LitchiEditor::ApplicationEditor::Instance()->configManager->GetAssetFolderFullPath() + "New Scene");
+	dialog.SetInitialDirectory(LitchiEditor::ApplicationEditor::Instance()->configManager->GetAssetFolderFullPath());
 	dialog.DefineExtension("Litchi Scene", ".scene");
 	dialog.Show();
 
