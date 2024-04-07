@@ -1365,7 +1365,7 @@ namespace LitchiRuntime
 		return VkDescriptorType::VK_DESCRIPTOR_TYPE_MAX_ENUM;
 	}
 
-	void RHI_Device::SetBindlessSamplers(const std::array<std::shared_ptr<RHI_Sampler>, 7>& samplers)
+	void RHI_Device::SetBindlessSamplers(const std::array<std::shared_ptr<RHI_Sampler>, 9>& samplers)
 	{
 		descriptors::pipelines.clear();
 
@@ -1395,12 +1395,14 @@ namespace LitchiRuntime
 
 			vector<shared_ptr<RHI_Sampler>> samplers_regular =
 			{
-				samplers[1], // point_clamp
-				samplers[2], // point_wrap
-				samplers[3], // bilinear_clamp
-				samplers[4], // bilinear_wrap
-				samplers[5], // trilinear_clamp
-				samplers[6]  // anisotropic_wrap
+				(samplers)[1], // point_clamp_edge
+				(samplers)[2], // point_clamp_border
+				(samplers)[3], // point_wrap
+				(samplers)[4], // bilinear_clamp_edge
+				(samplers)[5], // bilinear_clamp_border
+				(samplers)[6], // bilinear_wrap
+				(samplers)[7], // trilinear_clamp
+				(samplers)[8]  // anisotropic_wrap
 			};
 
 			descriptors::create_descriptor_set_samplers(samplers_regular, 1, RHI_Device_Resource::sampler_regular);

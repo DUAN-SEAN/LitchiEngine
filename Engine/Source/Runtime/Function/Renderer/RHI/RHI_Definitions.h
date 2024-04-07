@@ -117,8 +117,8 @@ namespace LitchiRuntime
     {
         Wrap,
         Mirror,
-        Clamp,
-        Border,
+        ClampToEdge,
+        ClampToBorder,
         MirrorOnce,
     };
 

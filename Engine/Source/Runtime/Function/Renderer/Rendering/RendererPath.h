@@ -81,9 +81,8 @@ namespace LitchiRuntime
 
 		bool CheckShadowMapNeedRecreate();
 		void CreateShadowMap();
-		void ComputeCascadeSplits(RenderCamera* renderCamera);
 		void ComputeLightViewMatrix();
-		void ComputeLightProjectionMatrix(uint32_t index = 0);
+		void ComputeLightProjectionMatrix();
 
 	private:
 
@@ -111,9 +110,9 @@ namespace LitchiRuntime
 		Light* m_mainLight = nullptr;
 		std::array<Matrix, 6> m_matrix_view;
 		std::array<Matrix, 6> m_matrix_projection;
+		std::array<Frustum, 6> m_frustums;
 
 		// shadow
-		uint32_t m_cascade_count = 4;
 		ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;

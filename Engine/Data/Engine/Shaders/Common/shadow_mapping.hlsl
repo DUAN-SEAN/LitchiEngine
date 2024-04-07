@@ -66,17 +66,17 @@ float shadow_sample_depth(float3 uv)
     if (light_is_directional())
     {
         // float3 -> uv, slice
-        return tex_light_directional_depth.SampleLevel(samplers[sampler_point_clamp], uv, 0).r;
+        return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
     }
     else if (light_is_point())
     {
         // float3 -> direction
-        return tex_light_point_depth.SampleLevel(samplers[sampler_point_clamp], uv, 0).r;
+        return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
     }
     else if (light_is_spot())
     {
         // float3 -> uv, 0
-        return tex_light_spot_depth.SampleLevel(samplers[sampler_point_clamp], uv.xy, 0).r;
+        return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
     }
     
     return 0.0f;
@@ -87,17 +87,17 @@ float3 shadow_sample_color(float3 uv)
     if (light_is_directional())
     {
         // float3 -> uv, slice
-        return tex_light_directional_color.SampleLevel(samplers[sampler_point_clamp], uv, 0).rgb;
+        return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
     }
     else if (light_is_point())
     {
         // float3 -> direction
-        return tex_light_point_color.SampleLevel(samplers[sampler_point_clamp], uv, 0).rgb;
+        return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
     }
     else if (light_is_spot())
     {
         // float3 -> uv, 0
-        return tex_light_spot_color.SampleLevel(samplers[sampler_point_clamp], uv.xy, 0).rgb;
+        return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
     }
     
     return 0.0f;
@@ -165,7 +165,7 @@ float Technique_Vogel(float3 uv, float compare)
     {
         // float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * get_shadow_texel_size() * g_shadow_filter_size * penumbra;
         // shadow += shadow_compare_depth(uv + float3(0.0f,0.0f, 0.0f), compare);
-        shadow += tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
+        shadow += tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_bilinear_clamp_border], uv, compare).r;
     }
 
     return shadow * g_shadow_samples_rpc;

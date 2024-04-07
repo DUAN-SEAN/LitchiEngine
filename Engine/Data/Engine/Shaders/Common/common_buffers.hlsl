@@ -58,8 +58,6 @@ struct LightBufferData
     // 10 0000:VolumetricEnabled
     uint options;
     float2 padding;
-    
-    //float3 cascade_ends;
     //float padding2;
 };
 

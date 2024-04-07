@@ -48,7 +48,6 @@ namespace LitchiRuntime
 	{
 		std::shared_ptr<RHI_Texture> texture_color;
 		std::shared_ptr<RHI_Texture> texture_depth;
-		std::vector<ShadowSlice> slices;
 	};
 	/**
 	* Base class for any light
