@@ -128,7 +128,6 @@ namespace LitchiRuntime
 		// Constant buffers
 		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, Cb_Frame& frameBufferData,const bool set = true);
 		static void PushPassConstants(RHI_CommandList* cmd_list);
-		static void UpdateConstantBufferLight(RHI_CommandList* cmd_list, Light* light, RendererPath* rendererPath);
 		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);
 		static void UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list,const int lightCount, RendererPath* rendererPath);
 		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);

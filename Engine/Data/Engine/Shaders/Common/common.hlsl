@@ -281,18 +281,18 @@ float3x3 make_world_to_tangent_matrix(float3 n, float3 t)
 /*------------------------------------------------------------------------------
     DEPTH
 ------------------------------------------------------------------------------*/
-// float get_depth(uint2 position)
-// {
-    // // out of bounds check
-    // position = clamp(position, uint2(0, 0), uint2(buffer_frame.resolution_render) - uint2(1, 1));
-    // return tex_depth[position].r;
-// }
+float get_depth(uint2 position)
+{
+     // out of bounds check
+    position = clamp(position, uint2(0, 0), uint2(buffer_frame.resolution_render) - uint2(1, 1));
+    return tex_depth[position].r;
+}
 
-// float get_depth(float2 uv)
-// {
-    // // effects like screen space shadows, can get artefacts if a point sampler is used
-    // return tex_depth.SampleLevel(samplers[sampler_bilinear_clamp], uv, 0).r;
-// }
+float get_depth(float2 uv)
+{
+     // effects like screen space shadows, can get artefacts if a point sampler is used
+    return tex_depth.SampleLevel(samplers[sampler_bilinear_clamp], uv, 0).r;
+}
 
 float get_linear_depth(float z, float near, float far)
 {
@@ -328,101 +328,101 @@ float3 get_position(float z, float2 uv)
     return pos_world.xyz / pos_world.w;
 }
 
-// float3 get_position(float2 uv)
-// {
-    // return get_position(get_depth(uv), uv);
-// }
+float3 get_position(float2 uv)
+{
+    return get_position(get_depth(uv), uv);
+}
 
-// float3 get_position(uint2 pos)
-// {
-    // const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
-    // return get_position(get_depth(pos), uv);
-// }
+float3 get_position(uint2 pos)
+{
+    const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
+    return get_position(get_depth(pos), uv);
+}
 
-// float3 get_position_view_space(uint2 pos)
-// {
-    // return mul(float4(get_position(pos), 1.0f), buffer_rendererPath.view).xyz;
-// }
+float3 get_position_view_space(uint2 pos)
+{
+    return mul(float4(get_position(pos), 1.0f), buffer_rendererPath.view).xyz;
+}
 
-// float3 get_position_view_space(float2 uv)
-// {
-    // return mul(float4(get_position(uv), 1.0f), buffer_rendererPath.view).xyz;
-// }
+float3 get_position_view_space(float2 uv)
+{
+    return mul(float4(get_position(uv), 1.0f), buffer_rendererPath.view).xyz;
+}
 
 /*------------------------------------------------------------------------------
     VIEW DIRECTION
 ------------------------------------------------------------------------------*/
-// float3 get_view_direction(float3 position_world)
-// {
-    // return normalize(position_world - buffer_rendererPath.camera_position.xyz);
-// }
+float3 get_view_direction(float3 position_world)
+{
+    return normalize(position_world - buffer_rendererPath.camera_position.xyz);
+}
 
-// float3 get_view_direction(float depth, float2 uv)
-// {
-    // return get_view_direction(get_position(depth, uv));
-// }
+float3 get_view_direction(float depth, float2 uv)
+{
+    return get_view_direction(get_position(depth, uv));
+}
 
-// float3 get_view_direction(float2 uv)
-// {
-    // return get_view_direction(get_position(uv));
-// }
+float3 get_view_direction(float2 uv)
+{
+    return get_view_direction(get_position(uv));
+}
 
-// float3 get_view_direction(uint2 pos)
-// {
-    // const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
-    // return get_view_direction(uv);
-// }
+float3 get_view_direction(uint2 pos)
+{
+    const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
+    return get_view_direction(uv);
+}
 
-// float3 get_view_direction_view_space(float2 uv)
-// {
-    // return mul(float4(get_view_direction(get_position(uv)), 0.0f), buffer_rendererPath.view).xyz;
-// }
+float3 get_view_direction_view_space(float2 uv)
+{
+    return mul(float4(get_view_direction(get_position(uv)), 0.0f), buffer_rendererPath.view).xyz;
+}
 
-// float3 get_view_direction_view_space(uint2 pos)
-// {
-    // const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
-    // return get_view_direction_view_space(uv);
-// }
+float3 get_view_direction_view_space(uint2 pos)
+{
+    const float2 uv = (pos + 0.5f) / pass_get_resolution_out();
+    return get_view_direction_view_space(uv);
+}
 
-// float3 get_view_direction_view_space(float3 position_world)
-// {
-    // return mul(float4(get_view_direction(position_world), 0.0f), buffer_rendererPath.view).xyz;
-// }
+float3 get_view_direction_view_space(float3 position_world)
+{
+    return mul(float4(get_view_direction(position_world), 0.0f), buffer_rendererPath.view).xyz;
+}
 
 /*------------------------------------------------------------------------------
     DIRECTION UV
 ------------------------------------------------------------------------------*/
-// float2 direction_sphere_uv(float3 direction)
-// {
-    // float n = length(direction.xz);
-    // float2 uv = float2((n > 0.0000001) ? direction.x / n : 0.0, direction.y);
-    // uv = acos(uv) * INV_PI;
-    // uv.x = (direction.z > 0.0) ? uv.x * 0.5 : 1.0 - (uv.x * 0.5);
-    // uv.x = 1.0 - uv.x;
+float2 direction_sphere_uv(float3 direction)
+{
+    float n = length(direction.xz);
+    float2 uv = float2((n > 0.0000001) ? direction.x / n : 0.0, direction.y);
+    uv = acos(uv) * INV_PI;
+    uv.x = (direction.z > 0.0) ? uv.x * 0.5 : 1.0 - (uv.x * 0.5);
+    uv.x = 1.0 - uv.x;
     
-    // return uv;
-// }
+    return uv;
+}
 
-// uint direction_to_cube_face_index(const float3 direction)
-// {
-    // float3 direction_abs = abs(direction);
-    // float max_coordinate = max3(direction_abs);
+uint direction_to_cube_face_index(const float3 direction)
+{
+    float3 direction_abs = abs(direction);
+    float max_coordinate = max3(direction_abs);
     
-    // if (max_coordinate == direction_abs.x)
-    // {
-        // return direction_abs.x == direction.x ? 0 : 1;
-    // }
-    // else if (max_coordinate == direction_abs.y)
-    // {
-        // return direction_abs.y == direction.y ? 2 : 3;
-    // }
-    // else
-    // {
-        // return direction_abs.z == direction.z ? 4 : 5;
-    // }
+    if (max_coordinate == direction_abs.x)
+    {
+        return direction_abs.x == direction.x ? 0 : 1;
+    }
+    else if (max_coordinate == direction_abs.y)
+    {
+        return direction_abs.y == direction.y ? 2 : 3;
+    }
+    else
+    {
+        return direction_abs.z == direction.z ? 4 : 5;
+    }
     
-    // return 0;
-// }
+    return 0;
+}
 
 /*------------------------------------------------------------------------------
     LUMINANCE

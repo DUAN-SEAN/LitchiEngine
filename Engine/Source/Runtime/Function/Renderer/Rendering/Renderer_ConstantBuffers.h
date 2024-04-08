@@ -13,13 +13,13 @@ namespace LitchiRuntime
 	// low frequency - updates once per frame
 	struct Cb_Frame
 	{
-	/*	Matrix view;
-		Matrix projection;
-		Matrix view_projection;
-		Matrix view_projection_inv;
-		Matrix view_projection_ortho;
-		Matrix view_projection_unjittered;
-		Matrix view_projection_previous;*/
+		/*	Matrix view;
+			Matrix projection;
+			Matrix view_projection;
+			Matrix view_projection_inv;
+			Matrix view_projection_ortho;
+			Matrix view_projection_unjittered;
+			Matrix view_projection_previous;*/
 
 		Vector2 resolution_render;
 		Vector2 resolution_output;
@@ -32,11 +32,11 @@ namespace LitchiRuntime
 		float gamma;
 		uint32_t options;
 
-	/*	Vector3 camera_position;
-		float camera_near;
+		/*	Vector3 camera_position;
+			float camera_near;
 
-		Vector3 camera_direction;
-		float camera_far;*/
+			Vector3 camera_direction;
+			float camera_far;*/
 
 		void set_bit(const bool set, const uint32_t bit)
 		{
@@ -80,13 +80,13 @@ namespace LitchiRuntime
 		Matrix view_projection_ortho;
 		Matrix view_projection_unjittered;
 		Matrix view_projection_previous;
-		
+
 		Vector3 camera_position;
 		float camera_near;
 
 		Vector3 camera_direction;
 		float camera_far;
-		
+
 		bool operator==(const Cb_RendererPath& rhs) const
 		{
 			return
@@ -110,13 +110,20 @@ namespace LitchiRuntime
 	struct Cb_Light
 	{
 		Matrix view_projection[6];
-		Vector4 intensity_range_angle_bias;
+
+		float intensity;
+		float range;
+		float angle;
+		float bias;
+
 		Color color;
-		Vector4 position;
-		Vector4 direction;
+
+		Vector3 position;
 		float normal_bias;
-		uint32_t options;
-		Vector2 padding;
+
+		Vector3 direction;
+		uint32_t flags;
+
 
 		bool operator==(const Cb_Light& rhs)
 		{
@@ -127,12 +134,15 @@ namespace LitchiRuntime
 				view_projection[3] == rhs.view_projection[3] &&
 				view_projection[4] == rhs.view_projection[4] &&
 				view_projection[5] == rhs.view_projection[5] &&
-				intensity_range_angle_bias == rhs.intensity_range_angle_bias &&
+				intensity == rhs.intensity &&
+				range == rhs.range &&
+				angle == rhs.angle &&
+				bias == rhs.bias &&
 				normal_bias == rhs.normal_bias &&
 				color == rhs.color &&
 				position == rhs.position &&
 				direction == rhs.direction &&
-				options == rhs.options;
+				flags == rhs.flags;
 		}
 	};
 
@@ -198,13 +208,13 @@ namespace LitchiRuntime
 				auto& light = lightArr[index];
 				auto& rhsLight = rhs.lightArr[index];
 
-				if(light == rhsLight)
+				if (light == rhsLight)
 				{
 					continue;
 				}
 
 				return  false;
-				
+
 			}
 
 			return true;

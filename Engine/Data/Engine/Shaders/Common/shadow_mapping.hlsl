@@ -151,7 +151,7 @@ float compute_penumbra(float vogel_angle, float3 uv, float compare)
 ///*------------------------------------------------------------------------------
 //    TECHNIQUE - VOGEL
 //------------------------------------------------------------------------------*/
-float Technique_Vogel(float3 uv, float compare)
+float Technique_Vogel(LightBufferData light ,float3 uv, float compare)
 {
     float shadow = 0.0f;
     // float temporal_offset = get_noise_interleaved_gradient(surface.uv * pass_get_resolution_out(), true, false);
@@ -164,8 +164,8 @@ float Technique_Vogel(float3 uv, float compare)
     for (uint i = 0; i < g_shadow_samples; i++)
     {
         // float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * get_shadow_texel_size() * g_shadow_filter_size * penumbra;
-        // shadow += shadow_compare_depth(uv + float3(0.0f,0.0f, 0.0f), compare);
-        shadow += tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_bilinear_clamp_border], uv, compare).r;
+        float2 offset = float2(0.0,0.0f);
+        shadow += light.compare_depth(uv + float3(offset, 0.0f), compare);
     }
 
     return shadow * g_shadow_samples_rpc;

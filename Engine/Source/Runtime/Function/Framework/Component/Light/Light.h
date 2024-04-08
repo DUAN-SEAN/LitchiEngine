@@ -77,20 +77,19 @@ namespace LitchiRuntime
         LightIntensity GetIntensity() const { return m_intensity; }
         float GetIntensityWatt(RenderCamera* camera) const;
 
-        bool GetVolumetricEnabled() const { return m_volumetric_enabled; }
-        void SetVolumetricEnabled(bool is_volumetric) { m_volumetric_enabled = is_volumetric; }
-
-        void SetRange(float range);
-        auto GetRange() const { return m_range; }
-
-        void SetAngle(float angle_rad);
-        auto GetAngle() const { return m_angle_rad; }
-
-        void SetBias(float value) { m_bias = value; }
-        float GetBias() const { return m_bias; }
-
+        // bias
+        static float GetBias() { return -0.0005f; } // small values to avoid disconnected shadows
+        static float GetBiasSlopeScaled() { return -2.0f; }
         void SetNormalBias(float value) { m_normal_bias = value; }
-        auto GetNormalBias() const { return m_normal_bias; }
+        auto GetNormalBias() { return m_normal_bias; }
+
+        // range
+        void SetRange(float range);
+        auto GetRange() { return m_range; }
+
+        // angle
+        void SetAngle(float angle_rad);
+        auto GetAngle()  { return m_angle_rad; }
 
         bool GetShadowsEnabled() const { return m_shadows_enabled; }
         void SetShadowsEnabled(bool cast_shadows);
@@ -103,6 +102,11 @@ namespace LitchiRuntime
         RTTR_ENABLE(Component)
 
     private:
+
+        bool m_initialized = false;
+
+        // Dirty checks
+        bool m_is_dirty = true;
 
         // Intensity
         LightIntensity m_intensity = LightIntensity::bulb_500_watt;
@@ -119,14 +123,8 @@ namespace LitchiRuntime
         LightType m_light_type = LightType::Directional;
         Color m_color_rgb = Color::standard_black;;
         float m_temperature_kelvin = 0.0f;
-        bool m_volumetric_enabled = true;
         float m_range = 10.0f;
         float m_angle_rad = 0.5f; // about 30 degrees
-        bool m_initialized = false;
-
-        // Dirty checks
-        bool m_is_dirty = true;
-        Matrix m_previous_camera_view = Matrix::Identity;
 	protected:
 	};
 }

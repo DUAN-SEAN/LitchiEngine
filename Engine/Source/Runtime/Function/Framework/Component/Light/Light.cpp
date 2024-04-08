@@ -186,8 +186,6 @@ void Light::SetShadowsTransparentEnabled(bool cast_transparent_shadows)
 
     m_shadows_transparent_enabled = cast_transparent_shadows;
     m_is_dirty = true;
-
-    // CreateShadowMap();
 }
 
 void Light::PostResourceLoaded()

@@ -1,16 +1,4 @@
 
-// // Material
-// Texture2D tex_material_albedo     : register (t0);
-// Texture2D tex_material_albedo_2   : register (t1);
-// Texture2D tex_material_roughness  : register (t2);
-// Texture2D tex_material_metallness : register (t3);
-// Texture2D tex_material_normal     : register (t4);
-// Texture2D tex_material_normal2    : register (t5);
-// Texture2D tex_material_height     : register (t6);
-// Texture2D tex_material_occlusion  : register (t7);
-// Texture2D tex_material_emission   : register (t8);
-// Texture2D tex_material_mask       : register (t9);
-
 // // G-buffer
 // Texture2D tex_albedo            : register(t10);
 // Texture2D tex_normal            : register(t11);
@@ -18,7 +6,7 @@
 // Texture2D tex_material_2        : register(t13);
 // Texture2D tex_velocity          : register(t14);
 // Texture2D tex_velocity_previous : register(t15);
-// Texture2D tex_depth             : register(t16);
+Texture2D tex_depth             : register(t16);
 
 // Texture2D tex_light_diffuse              : register(t17);
 // Texture2D tex_light_diffuse_transparent  : register(t18);

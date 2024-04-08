@@ -29,7 +29,7 @@ float3 CalcPointLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 s
     float3 lightPosition = light_buffer_data.position.xyz;
     float3 lightDir = light_buffer_data.direction.xyz;
     float3 lightColor = light_buffer_data.color.rgb;
-    float luminosity = light_buffer_data.intensity_range_angle_bias[0];
+    float luminosity = light_buffer_data.intensity;
 
 
     return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, lightDir, lightColor, luminosity);
@@ -45,41 +45,23 @@ float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, fl
 // return shadow ratio
 float ShadowCalculation(float3 fragWorldPos)
 {
-    // todo 只使用0
+    // todo only use index 0
 	// project into light space
     float shadow = 0.0f;
     int shadowIndex = 0;
-    int light_arr_size = 2;
     LightBufferData light = light_buffer_data_arr.lightBufferDataArr[shadowIndex];
     // 检查是否在视口范围内
-	
-    for (uint cascade_index = 0; cascade_index < light_arr_size; cascade_index++)
+
+    // project to light space
+    // uint slice_index = light.light_is_point() ? direction_to_cube_face_index(light.to_pixel) : 0;
+    uint slice_index = 0;
+    float3 pos_ndc = world_to_ndc(fragWorldPos, light.view_projection[slice_index]);
+    float2 pos_uv = ndc_to_uv(pos_ndc);
+
+    if (is_valid_uv(pos_uv))
     {
-        float3 pos_ndc = world_to_ndc(fragWorldPos, light.view_projection[cascade_index]);
-        float2 pos_uv = ndc_to_uv(pos_ndc);
-
-        if (is_saturated(pos_uv))
-        {
-			// 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
-            shadow = SampleShadowMap(float3(pos_uv, cascade_index), pos_ndc.z);
-            
-        	// If we are close to the edge a secondary cascade exists, lerp with it.
-            float cascade_fade = (max2(abs(pos_ndc.xy)) - 0.8f) * 4.0f;
-            uint cascade_index_next = cascade_index + 1;
-            if (cascade_fade > 0.0f && cascade_index_next < light_arr_size - 1)
-            {
-            	// Project into light space
-                pos_ndc = world_to_ndc(fragWorldPos, buffer_light.view_projection[cascade_index_next]);
-                pos_uv = ndc_to_uv(pos_ndc);
-
-            	// Sample secondary cascade
-                auto_bias(pos_ndc, 1.0f, 0.05, cascade_index_next);
-                float shadow_secondary = SampleShadowMap(float3(pos_uv, cascade_index_next), pos_ndc.z);
-
-            	// Blend cascades
-                shadow = lerp(shadow, shadow_secondary, cascade_fade);
-            }
-        }
+        // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+        shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
     }
 
     return shadow;

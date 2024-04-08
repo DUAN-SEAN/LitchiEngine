@@ -222,7 +222,16 @@ namespace LitchiRuntime
 					}
 
 					// Set pass constants with cascade transform
+
+					// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
+					m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
 					m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
+
+					/*m_pcb_pass_cpu.set_f3_value(
+						material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
+						material->HasTexture(MaterialTexture::Color) ? 1.0f : 0.0f
+					);*/
+
 					PushPassConstants(cmd_list);
 
 					cmd_list->DrawIndexed(renderable->GetIndexCount(), renderable->GetIndexOffset(), renderable->GetVertexOffset());
