@@ -23,8 +23,8 @@ namespace LitchiRuntime
 	namespace
 	{
 		float orthographic_depth = 1024.0; // depth of all cascades
-		float orthographic_extent = 20.0f;  // size of the near cascade
-		float far_cascade_scale = 5.0f;   // size of the far cascade compared to the near one
+		float orthographic_extent_near = 12.0f;
+		float orthographic_extent_far = 64.0f;
 	}
 
 	void sort_renderables(RenderCamera* camera, std::vector<GameObject*>* renderables, const bool are_transparent)
@@ -485,50 +485,29 @@ namespace LitchiRuntime
 		auto lightObject = m_mainLight->GetGameObject();
 		const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
 		const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
-
+		const Vector3 up = lightObject->GetComponent<Transform>()->GetUp();
 
 		if (m_mainLight->GetLightType()== LightType::Directional)
 		{
-			/*if (!m_shadow_map.slices.empty())
-			{
-				for (uint32_t i = 0; i < m_cascade_count; i++)
-				{
-					ShadowSlice& shadow_map = m_shadow_map.slices[i];
-					Vector3 position = shadow_map.center - lightObject->GetComponent<Transform>()->GetForward() * shadow_map.max.z;
-					Vector3 target = shadow_map.center;
-					Vector3 up = Vector3::Up;
-					m_matrix_view[i] = Matrix::CreateLookAtLH(position, target, up);
-				}
-			}*/
-
 			if (m_renderCamera)
 			{
 				Vector3 target = m_renderCamera->GetPosition();
 
 				// near cascade
-				Vector3 position = target - forward * m_mainLight->GetRange() * 0.5f; // center on camera
+				Vector3 position = target - forward * orthographic_depth * 0.8f;
 				m_matrix_view[0] = Matrix::CreateLookAtLH(position, target, Vector3::Up);
 
-
-				const float far_cascade_scale = 5.0f;   // size of the far cascade compared to the near one
 				// far cascade
-				position = target - forward * (m_mainLight->GetRange() * far_cascade_scale) * 0.5f;
-				m_matrix_view[1] = Matrix::CreateLookAtLH(position, target, Vector3::Up);
+				m_matrix_view[1] = m_matrix_view[0];
 			}
 		}
 		else if (m_mainLight->GetLightType() == LightType::Spot)
 		{
-			const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
-			const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
-			const Vector3 up = lightObject->GetComponent<Transform>()->GetUp();
-
 			// Compute
 			m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, up);
 		}
 		else if (m_mainLight->GetLightType() == LightType::Point)
 		{
-			const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
-
 			// Compute view for each side of the cube map
 			m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + Vector3::Right, Vector3::Up);       // x+
 			m_matrix_view[1] = Matrix::CreateLookAtLH(position, position + Vector3::Left, Vector3::Up);       // x-
@@ -546,8 +525,7 @@ namespace LitchiRuntime
 			for (uint32_t i = 0; i < 2; i++)
 			{
 				// determine the orthographic extent based on the cascade index
-				float cascade_extent_multiplier = (i == 0) ? 1.0f : far_cascade_scale;
-				float extent = orthographic_extent * cascade_extent_multiplier;
+				float extent = (i == 0) ? orthographic_extent_near : orthographic_extent_far;
 
 				// orthographic bounds
 				float left = -extent;
@@ -555,14 +533,7 @@ namespace LitchiRuntime
 				float bottom = -extent;
 				float top = extent;
 				float near_plane = 0.0f;
-				float far_plane = m_mainLight->GetRange() * cascade_extent_multiplier;
-
-				// snap the orthographic bounds to the nearest texel (to avoid shimmering)
-				//float world_units_per_texel = (2.0f * orthographic_extent) / static_cast<float>(m_texture_depth->GetWidth());
-				//left                        = floor(left / world_units_per_texel) * world_units_per_texel;
-				//right                       = floor(right / world_units_per_texel) * world_units_per_texel;
-				//bottom                      = floor(bottom / world_units_per_texel) * world_units_per_texel;
-				//top                         = floor(top / world_units_per_texel) * world_units_per_texel;
+				float far_plane = orthographic_depth;
 
 				m_matrix_projection[i] = Matrix::CreateOrthoOffCenterLH(left, right, bottom, top, far_plane, near_plane);
 				m_frustums[i] = Frustum(m_matrix_view[i], m_matrix_projection[i], far_plane - near_plane);

@@ -65,9 +65,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 0.00031005925848148763,
+                        "x": 0.00042907893657684326,
                         "y": 5.000004768371582,
-                        "z": -1.0004712343215943
+                        "z": -1.7071020603179932
                     },
                     "localRotation": {
                         "x": 0.0,
@@ -143,10 +143,12 @@
                         "b": 0.699999988079071,
                         "a": 1.0
                     },
-                    "intensityLumens": 1600.0,
+                    "intensityLumens": 2000.0,
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
-                    "bias": 0.0
+                    "range": 10.0,
+                    "angle": 0.0,
+                    "normalBias": 0.20000000298023225
                 }
             ]
         },

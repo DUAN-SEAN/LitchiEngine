@@ -737,10 +737,11 @@ namespace LitchiRuntime
 			m_cb_light_arr_cpu.lightArr[index].range = light->GetRange();
 			m_cb_light_arr_cpu.lightArr[index].angle = light->GetAngle();
 			m_cb_light_arr_cpu.lightArr[index].bias = light->GetBias();
-
 			m_cb_light_arr_cpu.lightArr[index].normal_bias = light->GetNormalBias();
+
 			m_cb_light_arr_cpu.lightArr[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
 			m_cb_light_arr_cpu.lightArr[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+
 			m_cb_light_arr_cpu.lightArr[index].flags = 0;
 			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
 			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
@@ -766,20 +767,10 @@ namespace LitchiRuntime
 				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
 			}
 
-			m_cb_light_arr_cpu.lightArr[index].color = Color::White;
-			m_cb_light_arr_cpu.lightArr[index].normal_bias = 5.0f;
-			m_cb_light_arr_cpu.lightArr[index].position = Vector3::Zero;
-			m_cb_light_arr_cpu.lightArr[index].direction = Quaternion::FromAngleAxis(30.0f,Vector3::Forward)* Vector3::Forward;
-			m_cb_light_arr_cpu.lightArr[index].flags = 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= (1 << 0);
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 3) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 4) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 5) : 0;
-
 			m_cb_light_arr_cpu.lightArr[index].intensity = 2500.0f;
 			m_cb_light_arr_cpu.lightArr[index].color = Color::White;
-			m_cb_light_arr_cpu.lightArr[index].range = 10.0f;
-			m_cb_light_arr_cpu.lightArr[index].angle = 60.0f;
+			m_cb_light_arr_cpu.lightArr[index].range = 200.0f;
+			m_cb_light_arr_cpu.lightArr[index].angle = 0.5;
 			m_cb_light_arr_cpu.lightArr[index].bias = 0.0005;
 
 			m_cb_light_arr_cpu.lightArr[index].normal_bias = 5.0;

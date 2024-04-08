@@ -40,69 +40,6 @@ float get_shadow_texel_size()
     LIGHT SHADOW MAP SAMPLING
 ------------------------------------------------------------------------------*/
 
-float shadow_compare_depth(float3 uv, float compare)
-{
-    if (light_is_directional())
-    {
-        // float3 -> uv, slice
-        return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
-    }
-    else if (light_is_point())
-    {
-        // float3 -> direction
-        return tex_light_point_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
-    }
-    else if (light_is_spot())
-    {
-        // float3 -> uv, 0
-        return tex_light_spot_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv.xy, compare).r;
-    }
-    
-    return 0.0f;
-}
-
-float shadow_sample_depth(float3 uv)
-{
-    if (light_is_directional())
-    {
-        // float3 -> uv, slice
-        return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
-    }
-    else if (light_is_point())
-    {
-        // float3 -> direction
-        return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
-    }
-    else if (light_is_spot())
-    {
-        // float3 -> uv, 0
-        return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
-    }
-    
-    return 0.0f;
-}
-
-float3 shadow_sample_color(float3 uv)
-{
-    if (light_is_directional())
-    {
-        // float3 -> uv, slice
-        return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
-    }
-    else if (light_is_point())
-    {
-        // float3 -> direction
-        return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
-    }
-    else if (light_is_spot())
-    {
-        // float3 -> uv, 0
-        return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
-    }
-    
-    return 0.0f;
-}
-
 /*------------------------------------------------------------------------------
     PENUMBRA
 ------------------------------------------------------------------------------*/
@@ -117,18 +54,18 @@ float2 vogel_disk_sample(uint sample_index, uint sample_count, float angle)
     return float2(cosine, sine) * r;
 }
 
-float compute_penumbra(float vogel_angle, float3 uv, float compare)
+float compute_penumbra(LightBufferData light, float vogel_angle, float3 uv, float compare)
 {
-    float penumbra          = 1.0f;
+    float penumbra = 1.0f;
     float blocker_depth_avg = 0.0f;
-    uint blocker_count      = 0;
+    uint blocker_count = 0;
 
-    for(uint i = 0; i < g_penumbra_samples; i ++)
+    for (uint i = 0; i < g_penumbra_samples; i++)
     {
         float2 offset = vogel_disk_sample(i, g_penumbra_samples, vogel_angle) * get_shadow_texel_size() * g_penumbra_filter_size;
-        float depth   = shadow_sample_depth(uv + float3(offset, 0.0f));
+        float depth = light.sample_depth(uv + float3(offset, 0.0f));
 
-        if(depth > compare)
+        if (depth > compare)
         {
             blocker_depth_avg += depth;
             blocker_count++;
@@ -137,15 +74,15 @@ float compute_penumbra(float vogel_angle, float3 uv, float compare)
 
     if (blocker_count != 0)
     {
-        blocker_depth_avg /= (float)blocker_count;
+        blocker_depth_avg /= (float) blocker_count;
 
-        // Compute penumbra
+        // compute penumbra
         penumbra = (compare - blocker_depth_avg) / (blocker_depth_avg + FLT_MIN);
         penumbra *= penumbra;
         penumbra *= 10.0f;
     }
     
-    return clamp(penumbra, 1.0f, FLT_MAX_16);
+    return saturate_16(penumbra);
 }
 
 ///*------------------------------------------------------------------------------
@@ -154,16 +91,16 @@ float compute_penumbra(float vogel_angle, float3 uv, float compare)
 float Technique_Vogel(LightBufferData light ,float3 uv, float compare)
 {
     float shadow = 0.0f;
-    // float temporal_offset = get_noise_interleaved_gradient(surface.uv * pass_get_resolution_out(), true, false);
-    // float temporal_angle = temporal_offset * PI2;
-    float temporal_angle = PI2;
-    float penumbra = light_is_directional() ? 1.0f : compute_penumbra(temporal_angle, uv, compare);
+    float temporal_offset = get_noise_interleaved_gradient(uv.xy * pass_get_resolution_out(), true, false);
+    float temporal_angle = temporal_offset * PI2;
+    float penumbra = light.light_is_directional() ? 1.0f : compute_penumbra(light,temporal_angle, uv, compare);
 
     // todo: in the case of the point light, the uv is the direction, filtering works ok but I could improved it.
 
     for (uint i = 0; i < g_shadow_samples; i++)
     {
         // float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * get_shadow_texel_size() * g_shadow_filter_size * penumbra;
+        // float2 offset = vogel_disk_sample(i, g_shadow_samples, temporal_angle) * 1.0f * g_shadow_filter_size * penumbra;
         float2 offset = float2(0.0,0.0f);
         shadow += light.compare_depth(uv + float3(offset, 0.0f), compare);
     }

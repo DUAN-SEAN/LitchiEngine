@@ -79,33 +79,16 @@ float4 mainPS(Pixel input) : SV_Target
     float3 normal = normalize(input.normal);
 
     int lightCount = light_buffer_data_arr.lightCount;
-    // int lightCount = 2;
     float3 lightSum = float3(0, 0, 0);
     for (int index = 0; index < lightCount; index++)
     {
         lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
 				materialData.u_shininess, -light_buffer_data_arr.lightBufferDataArr[index].direction.xyz, light_buffer_data_arr.lightBufferDataArr[index].color.xyz, light_buffer_data_arr.lightBufferDataArr[index].intensity);
     }
-
-    // float4 color = float4(lightSum, light_buffer_data_arr.lightCount);
-    // float4 color = diffuseTexel;
     
-    float shadow = 1.0f;
-    if (light_has_shadows())
-    {
-        shadow = ShadowCalculation(input.fragPos);
-    }
+    float shadow = ShadowCalculation(normal, input.fragPos);
 
-    //float3 shadowedColor = (1.0f - shadow) * lightSum;
     float3 shadowedColor = shadow * lightSum;
     float4 color = float4(shadowedColor, diffuseTexel.a);
     return color;
-    //return float4(shadow, shadow, shadow,1.0f);
-
-    //float3 pos_ndc = world_to_ndc(input.fragPos, light_buffer_data_arr.lightBufferDataArr[0].view_projection[0]);
-    //float2 pos_uv = ndc_to_uv(pos_ndc);
-    //float closestDepth = tex_light_directional_depth.SampleLevel(samplers[sampler_point_clamp], float3(pos_uv, 0), 0).r;
-    //// return float4(pos_uv, 1.0f, diffuseTexel.a);
-    //return float4(input.fragPos, diffuseTexel.a);
-
 }

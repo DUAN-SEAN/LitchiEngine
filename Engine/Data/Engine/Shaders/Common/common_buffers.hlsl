@@ -49,21 +49,6 @@ struct RendererPathBufferData
 
 struct LightBufferData
 {
-    //matrix view_projection[6];
-
-    //float4 intensity_range_angle_bias;
-    //float4 color;
-    //float4 position;
-    //float4 direction;
-
-    //float normal_bias;
-    //// 0001: Directional 0010:Point 0100:Spot
-    //// 1000: ShadowsEnabled 1 0000: ShadowsTransparentEnabled
-    //// 10 0000:VolumetricEnabled
-    //uint options;
-    //float2 padding;
-    ////float padding2;
-
     matrix view_projection[6];
     
     float intensity;
@@ -123,6 +108,39 @@ struct LightBufferData
         return 0.0f;
     }
     
+    float sample_depth(float3 uv)
+    {
+        // float3 -> uv, slice
+        if (light_is_directional())
+            return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
+        
+        // float3 -> direction
+        if (light_is_point())
+            return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
+    
+        // float3 -> uv, 0
+        if (light_is_spot())
+            return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
+    
+        return 0.0f;
+    }
+    
+    float3 sample_color(float3 uv)
+    {
+        // float3 -> uv, slice
+        if (light_is_directional())
+            return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
+    
+        // float3 -> direction
+        if (light_is_point())
+            return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
+    
+        // float3 -> uv, 0
+        if (light_is_spot())
+            return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
+        
+        return 0.0f;
+    }
 };
 
 struct MaterialBufferData
@@ -242,32 +260,6 @@ bool material_is_terrain()
 bool material_is_water()
 {
     return buffer_material.properties & uint(1U << 10);
-}
-
-// lighting properties
-bool light_is_directional()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 0);
-}
-bool light_is_point()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 1);
-}
-bool light_is_spot()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 2);
-}
-bool light_has_shadows()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 3);
-}
-bool light_has_shadows_transparent()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 4);
-}
-bool light_is_volumetric()
-{
-    return light_buffer_data_arr.lightBufferDataArr[0].flags & uint(1U << 5);
 }
 
 // frame properties

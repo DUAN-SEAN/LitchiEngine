@@ -441,6 +441,7 @@ namespace LitchiRuntime
 
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform
+			m_cb_pass_cpu.set_resolution_out(rendererPath->GetDepthRenderTarget().get());
 			m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 			PushPassConstants(cmd_list);
 			EASY_END_BLOCK
@@ -551,6 +552,7 @@ namespace LitchiRuntime
 
 				// set pass constants
 				// m_cb_pass_cpu.transform  UI Transform
+				m_cb_pass_cpu.set_resolution_out(rendererPath->GetDepthRenderTarget().get());
 				m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 
 				//m_cb_pass_cpu.set_resolution_out(tex_out);

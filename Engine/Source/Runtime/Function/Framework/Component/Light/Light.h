@@ -123,7 +123,7 @@ namespace LitchiRuntime
         LightType m_light_type = LightType::Directional;
         Color m_color_rgb = Color::standard_black;;
         float m_temperature_kelvin = 0.0f;
-        float m_range = 10.0f;
+        float m_range = 200.0f;
         float m_angle_rad = 0.5f; // about 30 degrees
 	protected:
 	};
