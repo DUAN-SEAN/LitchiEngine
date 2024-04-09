@@ -38,7 +38,6 @@ namespace LitchiRuntime
 		void ClearDescriptorData();
 		RHI_DescriptorSet* GetDescriptorSet();
 		const std::vector<RHI_Descriptor>& GetDescriptors() const { return m_descriptors; }
-		void NeedsToBind() { m_needs_to_bind = true; }
 		uint64_t GetHash()                                  const { return m_hash; }
 		void* GetRhiResource()                              const { return m_rhi_resource; }
 
@@ -47,7 +46,6 @@ namespace LitchiRuntime
 
 		void* m_rhi_resource = nullptr;
 		uint64_t m_hash = 0;
-		bool m_needs_to_bind = false;
 		std::vector<RHI_Descriptor> m_descriptors;
 	};
 }

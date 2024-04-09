@@ -1,12 +1,12 @@
 ﻿
 #pragma once
 
-struct sp_info
+struct Litchi_info
 {
     static constexpr char name[]           = "Litchi";
-    static constexpr int  version_major    = 1;
+    static constexpr int  version_major    = 0;
     static constexpr int  version_minor    = 0;
-    static constexpr int  version_revision = 0;
+    static constexpr int  version_revision = 1;
 };
 
 //= CLASS EXPORTING/IMPORTING =====================================

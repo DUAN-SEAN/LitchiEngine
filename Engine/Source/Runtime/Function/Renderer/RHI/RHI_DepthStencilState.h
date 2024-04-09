@@ -15,7 +15,7 @@ namespace LitchiRuntime
         RHI_DepthStencilState(
             const bool depth_test                                     = true,
             const bool depth_write                                    = true,
-            const RHI_Comparison_Function depth_comparison_function   = RHI_Comparison_Function::LessEqual,
+            const RHI_Comparison_Function depth_comparison_function   = RHI_Comparison_Function::LessEqual,// default 0.0 far, 1.0 near, so currDepth lessEqual depth will be record
             const bool stencil_test                                   = false,
             const bool stencil_write                                  = false,
             const RHI_Comparison_Function stencil_comparison_function = RHI_Comparison_Function::Always,

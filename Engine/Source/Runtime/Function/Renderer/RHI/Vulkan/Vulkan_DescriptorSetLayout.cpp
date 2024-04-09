@@ -26,12 +26,39 @@ namespace LitchiRuntime
         LC_ASSERT(m_rhi_resource == nullptr);
 
         // remove push constants since they are not part of the descriptor set layout
-        descriptors.erase(
-            std::remove_if(descriptors.begin(), descriptors.end(), [](RHI_Descriptor& descriptor)
-                { return descriptor.type == RHI_Descriptor_Type::PushConstantBuffer;}
-            ),
+        descriptors.erase
+        (
+            remove_if(descriptors.begin(), descriptors.end(), [](RHI_Descriptor& descriptor)
+                {
+                    return descriptor.type == RHI_Descriptor_Type::PushConstantBuffer ||          // push constants are not part of the descriptor set layout
+                        (descriptor.as_array && descriptor.array_length == rhi_max_array_size); // binldess arrays have their own layout
+                }),
             descriptors.end()
         );
+
+        // ensure unique binding numbers
+        {
+            unordered_set<uint32_t> unique_bindings;
+            vector<VkDescriptorSetLayoutBinding> duplicate_bindings;
+
+            for (const auto& descriptor : descriptors)
+            {
+                if (!unique_bindings.insert(descriptor.slot).second)
+                {
+                    // if insertion failed, the binding number is not unique, store it for inspection
+                    duplicate_bindings.push_back
+                    ({
+                        descriptor.slot,                                   // binding
+                        static_cast<VkDescriptorType>(descriptor.type),    // descriptorType
+                        descriptor.as_array ? descriptor.array_length : 1, // descriptorCount
+                        descriptor.stage,                                  // stageFlags
+                        nullptr                                            // pImmutableSamplers
+                        });
+                }
+            }
+
+            LC_ASSERT(duplicate_bindings.empty());
+        }
 
         // layout bindings
         constexpr uint8_t descriptors_max = 255;
@@ -43,14 +70,16 @@ namespace LitchiRuntime
             const RHI_Descriptor& descriptor = descriptors[i];
 
             // stage flags
-            VkShaderStageFlags stage_flags  = 0;
-            stage_flags                    |= (descriptor.stage & RHI_Shader_Vertex)  ? VK_SHADER_STAGE_VERTEX_BIT   : 0;
-            stage_flags                    |= (descriptor.stage & RHI_Shader_Pixel)   ? VK_SHADER_STAGE_FRAGMENT_BIT : 0;
-            stage_flags                    |= (descriptor.stage & RHI_Shader_Compute) ? VK_SHADER_STAGE_COMPUTE_BIT  : 0;
+            VkShaderStageFlags stage_flags = 0;
+            stage_flags |= (descriptor.stage & RHI_Shader_Vertex) ? VK_SHADER_STAGE_VERTEX_BIT : 0;
+            stage_flags |= (descriptor.stage & RHI_Shader_Hull) ? VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT : 0;
+            stage_flags |= (descriptor.stage & RHI_Shader_Domain) ? VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT : 0;
+            stage_flags |= (descriptor.stage & RHI_Shader_Pixel) ? VK_SHADER_STAGE_FRAGMENT_BIT : 0;
+            stage_flags |= (descriptor.stage & RHI_Shader_Compute) ? VK_SHADER_STAGE_COMPUTE_BIT : 0;
 
             layout_bindings[i].descriptorType     = static_cast<VkDescriptorType>(RHI_Device::GetDescriptorType(descriptor));
             layout_bindings[i].binding            = descriptor.slot;
-            layout_bindings[i].descriptorCount    = descriptor.IsArray() ? descriptor.array_length : 1;
+            layout_bindings[i].descriptorCount    = descriptor.as_array ? descriptor.array_length : 1;
             layout_bindings[i].stageFlags         = stage_flags;
             layout_bindings[i].pImmutableSamplers = nullptr;
 

@@ -16,6 +16,7 @@
 #include "../RHI_Fence.h"
 #include "../RHI_SwapChain.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_RasterizerState.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 //=====================================
 
@@ -402,6 +403,24 @@ namespace LitchiRuntime
             VkPipelineBindPoint pipeline_bind_point = m_pso.IsCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
             vkCmdBindPipeline(static_cast<VkCommandBuffer>(m_rhi_resource), pipeline_bind_point, vk_pipeline);
             EASY_END_BLOCK
+
+
+                // set some dynamic states
+                if (m_pso.IsGraphics())
+                {
+                    m_cull_mode = RHI_CullMode::Max;
+                    SetCullMode(m_pso.rasterizer_state->GetCullMode());
+
+                    Rectangle scissor_rect;
+                    scissor_rect.left = 0.0f;
+                    scissor_rect.top = 0.0f;
+                    scissor_rect.right = static_cast<float>(m_pso.GetWidth());
+                    scissor_rect.bottom = static_cast<float>(m_pso.GetHeight());
+                    SetScissorRectangle(scissor_rect);
+
+                    m_index_buffer_id = 0;
+                    m_vertex_buffer_id = 0;
+                }
 
             // Profile
             // Profiler::m_rhi_bindings_pipeline++;
@@ -1005,6 +1024,20 @@ namespace LitchiRuntime
         );
     }
 
+    void RHI_CommandList::SetCullMode(const RHI_CullMode cull_mode)
+    {
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        if (m_cull_mode == cull_mode)
+            return;
+
+        vkCmdSetCullMode(
+            static_cast<VkCommandBuffer>(m_rhi_resource),
+            vulkan_cull_mode[static_cast<uint32_t>(cull_mode)]
+        );
+
+        m_cull_mode = cull_mode;
+    }
+
     void RHI_CommandList::SetBufferVertex(const RHI_VertexBuffer* buffer)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
@@ -1150,11 +1183,11 @@ namespace LitchiRuntime
         RHI_Image_Layout current_layout = texture->GetLayout(mip_start);
 
         LC_ASSERT_MSG(texture->GetRhiSrv() != nullptr, "The texture has no srv"); // Vulkan only has SRVs
-        LC_ASSERT_MSG(current_layout != RHI_Image_Layout::Undefined && current_layout != RHI_Image_Layout::Preinitialized, "Invalid layout");
+        LC_ASSERT_MSG(current_layout != RHI_Image_Layout::Max && current_layout != RHI_Image_Layout::Preinitialized, "Invalid layout");
 
         // Transition to appropriate layout (if needed)
         {
-            RHI_Image_Layout target_layout = RHI_Image_Layout::Undefined;
+            RHI_Image_Layout target_layout = RHI_Image_Layout::Max;
 
             if (uav)
             {
@@ -1182,7 +1215,7 @@ namespace LitchiRuntime
             }
 
             // Verify that an appropriate layout has been deduced
-            LC_ASSERT(target_layout != RHI_Image_Layout::Undefined);
+            LC_ASSERT(target_layout != RHI_Image_Layout::Max);
 
             // Determine if a layout transition is needed
             bool transition_required = current_layout != target_layout;

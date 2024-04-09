@@ -73,7 +73,10 @@ namespace LitchiRuntime
         
         // Scissor
         void SetScissorRectangle(const Rectangle& scissor_rectangle) const;
-        
+
+        // cull mode
+        void SetCullMode(const RHI_CullMode cull_mode);
+
         // Vertex buffer
         void SetBufferVertex(const RHI_VertexBuffer* buffer);
         
@@ -141,7 +144,6 @@ namespace LitchiRuntime
 
         // Profiling
         const char* m_timeblock_active         = nullptr;
-        uint32_t m_timestamp_index             = 0;
         static const uint32_t m_max_timestamps = 512;
         std::array<uint64_t, m_max_timestamps> m_timestamps;
 
@@ -150,6 +152,7 @@ namespace LitchiRuntime
         uint64_t m_index_buffer_id  = 0;
 
         // Misc
+        uint32_t m_timestamp_index = 0;
         RHI_Pipeline* m_pipeline                             = nullptr;
         bool m_is_rendering                                  = false;
         bool m_pipeline_dirty                                = false;
@@ -157,6 +160,7 @@ namespace LitchiRuntime
         RHI_DescriptorSetLayout* m_descriptor_layout_current = nullptr;
         std::atomic<RHI_CommandListState> m_state            = RHI_CommandListState::Idle;
         RHI_Queue_Type m_queue_type                          = RHI_Queue_Type::Undefined;
+        RHI_CullMode m_cull_mode = RHI_CullMode::Max;
         static bool m_memory_query_support;
         std::mutex m_mutex_reset;
         RHI_PipelineState m_pso;

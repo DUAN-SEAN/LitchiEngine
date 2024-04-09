@@ -267,8 +267,7 @@ namespace ImGui::RHI
         pso.depth_stencil_state      = g_depth_stencil_state.get();
         pso.render_target_swapchain  = is_child_window ? window_data->swapchain.get() : Renderer::GetSwapChain();
         pso.clear_color[0]           = clear ? Color::standard_black : rhi_color_dont_care;
-        pso.dynamic_scissor          = true;
-        pso.primitive_topology       = RHI_PrimitiveTopology_Mode::TriangleList;
+        pso.primitive_topology       = RHI_PrimitiveTopology::TriangleList;
 
         // begin
         const char* name = is_child_window ? "imgui_window_child" : "imgui_window_main";

@@ -23,6 +23,7 @@ namespace LitchiRuntime
             mip          = descriptor.mip;
             array_length = descriptor.array_length;
             struct_size  = descriptor.struct_size;
+            as_array = descriptor.as_array;
             isMaterial = descriptor.isMaterial;
             uniformList = descriptor.uniformList;
         }
@@ -35,6 +36,7 @@ namespace LitchiRuntime
             const uint32_t array_length,
             const uint32_t stage,
             const uint32_t struct_size,
+            const bool as_array,
             const uint32_t isMaterial,
             std::vector<ShaderUniform>* uniformList
         )
@@ -46,6 +48,7 @@ namespace LitchiRuntime
             this->name         = name;
             this->array_length = array_length;
             this->struct_size  = struct_size;
+            this->as_array = as_array;
             this->isMaterial  = isMaterial;
             this->uniformList = uniformList;
         }
@@ -74,12 +77,13 @@ namespace LitchiRuntime
         void* data         = nullptr;
 
         // Properties that don't affect any hash
-        RHI_Descriptor_Type type = RHI_Descriptor_Type::Undefined;
-        RHI_Image_Layout layout  = RHI_Image_Layout::Undefined;
+        RHI_Descriptor_Type type = RHI_Descriptor_Type::Max;
+        RHI_Image_Layout layout  = RHI_Image_Layout::Max;
         uint64_t range           = 0;
         uint32_t array_length    = 0;
         uint32_t dynamic_offset  = 0;
         uint32_t struct_size     = 0;
+        bool as_array = false;
 
         // Debugging
         std::string name;

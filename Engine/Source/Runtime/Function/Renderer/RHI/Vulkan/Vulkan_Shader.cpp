@@ -170,7 +170,7 @@ namespace LitchiRuntime
 		)
 		{
 			// this only matters for textures
-			RHI_Image_Layout layout = RHI_Image_Layout::Undefined;
+			RHI_Image_Layout layout = RHI_Image_Layout::Max;
 			layout = descriptor_type == RHI_Descriptor_Type::TextureStorage ? RHI_Image_Layout::General : layout;
 			layout = descriptor_type == RHI_Descriptor_Type::Texture ? RHI_Image_Layout::Shader_Read_Only_Optimal : layout;
 
@@ -178,8 +178,10 @@ namespace LitchiRuntime
 			{
 				uint32_t slot = compiler.get_decoration(resource.id, spv::DecorationBinding);
 				auto name = compiler.get_name(resource.id);
-
 				SPIRType type = compiler.get_type(resource.type_id);
+				bool is_array = !type.array.empty();
+				uint32_t array_length = is_array ? type.array[0] : 0;
+
 				vector<ShaderUniform>* uniformList;
 				// check is material
 				bool isMaterial = CheckIsMaterialDescriptor(compiler, resource);
@@ -188,11 +190,15 @@ namespace LitchiRuntime
 					uniformList = spirv_constantBuffer_struct_uniformList(compiler, type);
 				}
 
-				uint32_t array_length = !type.array.empty() ? type.array[0] : 0;
 				uint32_t size = 0;
 				if (descriptor_type == RHI_Descriptor_Type::ConstantBuffer || descriptor_type == RHI_Descriptor_Type::PushConstantBuffer)
 				{
 					size = static_cast<uint32_t>(compiler.get_declared_struct_size(type));
+				}
+
+				if (is_array && array_length == 0)
+				{
+					array_length = rhi_max_array_size;
 				}
 
 				descriptors.emplace_back
@@ -204,6 +210,7 @@ namespace LitchiRuntime
 					array_length,    // array length
 					shader_stage,    // stage
 					size,             // struct size
+					is_array,
 					isMaterial,
 					uniformList
 				);
@@ -261,11 +268,11 @@ namespace LitchiRuntime
 			}
 
 			// debug: disable optimizations and embed HLSL source in the shaders
-			//#ifdef DEBUG
+			#ifdef _DEBUG
 			arguments.emplace_back("-Od");           // disable optimizations
 			arguments.emplace_back("-Zi");           // enable debug information
 			arguments.emplace_back("-Qembed_debug"); // embed PDB in shader container (must be used with -Zi)
-			// #endif
+			 #endif
 
 			// misc
 			arguments.emplace_back("-Zpc"); // pack matrices in column-major order
@@ -326,6 +333,7 @@ namespace LitchiRuntime
 
 		const CompilerHLSL compiler = CompilerHLSL(ptr, size);
 		ShaderResources resources = compiler.get_shader_resources();
+
 
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.separate_images, RHI_Descriptor_Type::Texture, shader_stage); // SRVs
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.storage_images, RHI_Descriptor_Type::TextureStorage, shader_stage); // UAVs

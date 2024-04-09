@@ -77,7 +77,7 @@ namespace LitchiRuntime
         SetGeometry(mesh, m_subMeshIndex);
     }
 
-    void MeshFilter::SetGeometry(Mesh* mesh, int subMeshIndex /* = 0,*/, const BoundingBox aabb /* = BoundingBox::Undefined*/)
+    void MeshFilter::SetGeometry(Mesh* mesh, int subMeshIndex /* = 0,*/, const BoundingBox aabb /* = BoundingBox::Max*/)
     {
         m_mesh = mesh;
         m_subMeshIndex = subMeshIndex;

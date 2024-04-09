@@ -525,10 +525,163 @@ namespace LitchiRuntime
 			{
 				descriptor_set_layout->ClearDescriptorData();
 			}
-			descriptor_set_layout->NeedsToBind();
 
 			EASY_BLOCK("get_or_create_descriptor_set_layout return ")
 			return descriptor_set_layout;
+		}
+	}
+	namespace device_features
+	{
+		VkPhysicalDeviceFeatures2 pNext = {};
+		VkPhysicalDeviceRobustness2FeaturesEXT robustness_features_2 = {};
+		VkPhysicalDeviceVulkan13Features features_1_3 = {};
+		VkPhysicalDeviceVulkan12Features features_1_2 = {};
+		VkPhysicalDeviceFragmentShadingRateFeaturesKHR shading_rate = {};
+
+		uint32_t enabled_graphics_shader_stages;
+
+		void detect(VkPhysicalDevice device_physical, bool* is_shading_rate_supported)
+		{
+			// structs which hold which features are enabled
+			robustness_features_2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT;
+			shading_rate.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR;
+			robustness_features_2.pNext = &shading_rate;
+			features_1_3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+			features_1_3.pNext = &robustness_features_2;
+			features_1_2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+			features_1_2.pNext = &features_1_3;
+			pNext.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			pNext.pNext = &features_1_2;
+
+			// structs which hold which features are supported
+			VkPhysicalDeviceFragmentShadingRateFeaturesKHR shading_rate_support = {};
+			shading_rate_support.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_FEATURES_KHR;
+			VkPhysicalDeviceRobustness2FeaturesEXT robustness_2_support = {};
+			robustness_2_support.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_ROBUSTNESS_2_FEATURES_EXT;
+			robustness_2_support.pNext = &shading_rate_support;
+			VkPhysicalDeviceVulkan13Features features_1_3_support = {};
+			features_1_3_support.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
+			features_1_3_support.pNext = &robustness_2_support;
+			VkPhysicalDeviceVulkan12Features features_1_2_support = {};
+			features_1_2_support.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
+			features_1_2_support.pNext = &features_1_3_support;
+			VkPhysicalDeviceFeatures2 features_support = {};
+			features_support.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
+			features_support.pNext = &features_1_2_support;
+			vkGetPhysicalDeviceFeatures2(device_physical, &features_support);
+
+			// check if certain features are supported and enable them
+			{
+				// tessellation
+				LC_ASSERT(features_support.features.tessellationShader == VK_TRUE);
+				pNext.features.tessellationShader = VK_TRUE;
+
+				// geometry
+				LC_ASSERT(features_support.features.geometryShader == VK_TRUE);
+				pNext.features.geometryShader = VK_TRUE;
+
+				// variable shading rate
+				*is_shading_rate_supported = shading_rate_support.attachmentFragmentShadingRate == VK_TRUE;
+				if (*is_shading_rate_supported)
+				{
+					// conditionally enable this as a lot of people have an NV 1080
+					// however NV didn't support this until the 1650 and later
+					// https://vulkan.gpuinfo.org/listdevicescoverage.php?platform=windows&extension=VK_KHR_fragment_shading_rate
+					shading_rate.attachmentFragmentShadingRate = VK_TRUE;
+				}
+
+				// depth clamp
+				LC_ASSERT(features_support.features.depthClamp == VK_TRUE);
+				pNext.features.depthClamp = VK_TRUE;
+
+				// anisotropic filtering
+				LC_ASSERT(features_support.features.samplerAnisotropy == VK_TRUE);
+				pNext.features.samplerAnisotropy = VK_TRUE;
+
+				// line and point rendering
+				LC_ASSERT(features_support.features.fillModeNonSolid == VK_TRUE);
+				pNext.features.fillModeNonSolid = VK_TRUE;
+
+				// lines with adjustable thickness
+				LC_ASSERT(features_support.features.wideLines == VK_TRUE);
+				pNext.features.wideLines = VK_TRUE;
+
+				// cubemaps
+				LC_ASSERT(features_support.features.imageCubeArray == VK_TRUE);
+				pNext.features.imageCubeArray = VK_TRUE;
+
+				// timeline semaphores
+				LC_ASSERT(features_1_2_support.timelineSemaphore == VK_TRUE);
+				features_1_2.timelineSemaphore = VK_TRUE;
+
+				// descriptors
+				{
+					LC_ASSERT(features_1_2_support.descriptorBindingVariableDescriptorCount == VK_TRUE);
+					features_1_2.descriptorBindingVariableDescriptorCount = VK_TRUE;
+
+					LC_ASSERT(features_1_2_support.descriptorBindingVariableDescriptorCount == VK_TRUE);
+					features_1_2.descriptorBindingVariableDescriptorCount = VK_TRUE;
+
+					LC_ASSERT(features_1_2_support.descriptorBindingSampledImageUpdateAfterBind == VK_TRUE);
+					features_1_2.descriptorBindingSampledImageUpdateAfterBind = VK_TRUE;
+
+					LC_ASSERT(features_1_2_support.descriptorBindingPartiallyBound == VK_TRUE);
+					features_1_2.descriptorBindingPartiallyBound = VK_TRUE;
+
+					LC_ASSERT(features_1_2_support.runtimeDescriptorArray == VK_TRUE);
+					features_1_2.runtimeDescriptorArray = VK_TRUE;
+
+					LC_ASSERT(robustness_2_support.nullDescriptor == VK_TRUE);
+					robustness_features_2.nullDescriptor = VK_TRUE;
+				}
+
+				// quality of life improvements to the API
+				{
+					// rendering without render passes and frame buffer objects
+					LC_ASSERT(features_1_3_support.dynamicRendering == VK_TRUE);
+					features_1_3.dynamicRendering = VK_TRUE;
+
+					LC_ASSERT(features_1_3_support.synchronization2 == VK_TRUE);
+					features_1_3.synchronization2 = VK_TRUE;
+				}
+
+				// FSR 2
+				{
+					// extended types (int8, int16, int64, etc) - SPD
+					LC_ASSERT(features_1_2_support.shaderSubgroupExtendedTypes == VK_TRUE);
+					features_1_2.shaderSubgroupExtendedTypes = VK_TRUE;
+
+					// float16 - If supported, FSR 2 will opt for it, so don't assert.
+					if (features_1_2_support.shaderFloat16 == VK_TRUE)
+					{
+						features_1_2.shaderFloat16 = VK_TRUE;
+					}
+
+					// int16 - If supported, FSR 2 will opt for it, so don't assert.
+					if (features_support.features.shaderInt16 == VK_TRUE)
+					{
+						pNext.features.shaderInt16 = VK_TRUE;
+					}
+
+					// wave64
+					LC_ASSERT(features_1_3_support.shaderDemoteToHelperInvocation == VK_TRUE);
+					features_1_3.shaderDemoteToHelperInvocation = VK_TRUE;
+
+					// wave64 - If supported, FSR 2 will opt for it, so don't assert.
+					if (features_1_3_support.subgroupSizeControl == VK_TRUE)
+					{
+						features_1_3.subgroupSizeControl = VK_TRUE;
+					}
+				}
+
+				// enable certain graphics shader stages
+				enabled_graphics_shader_stages = 0;
+				enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_VERTEX_SHADER_BIT;
+				enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT;
+				enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT;
+				enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
+				enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+			}
 		}
 	}
 
@@ -538,6 +691,8 @@ namespace LitchiRuntime
 
 		// #ifdef DEBUG
 			// Add validation related extensions
+
+		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT);
 		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
 		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT);
 		// Add debugging related extensions
@@ -555,9 +710,9 @@ namespace LitchiRuntime
 		VkApplicationInfo app_info = {};
 		{
 			app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-			app_info.pApplicationName = sp_info::name;
+			app_info.pApplicationName = Litchi_info::name;
 			app_info.pEngineName = app_info.pApplicationName;
-			app_info.engineVersion = VK_MAKE_VERSION(sp_info::version_major, sp_info::version_minor, sp_info::version_revision);
+			app_info.engineVersion = VK_MAKE_VERSION(Litchi_info::version_major, Litchi_info::version_minor, Litchi_info::version_revision);
 			app_info.applicationVersion = app_info.engineVersion;
 
 			// Deduce API version to use
@@ -585,14 +740,6 @@ namespace LitchiRuntime
 				// Choose the version which is supported by both the sdk and the driver
 				app_info.apiVersion = Helper::Min(sdk_version, driver_version);
 
-				// The following extensions have been promoted to 1.2 and 1.3.
-				// VK_KHR_timeline_semaphore                 - 1.2
-				// VK_KHR_dynamic_rendering                  - 1.3
-				// VK_EXT_subgroup_size_control              - 1.3
-				// VK_KHR_shader_float16_int8                - 1.2
-				// VK_EXT_shader_demote_to_helper_invocation - 1.3
-				// VK_KHR_synchronization2                   - 1.3
-				// We make Vulkan 1.3 the minimum required version and we enable those extensions from the core.
 				LC_ASSERT_MSG(app_info.apiVersion >= VK_API_VERSION_1_3, "Vulkan 1.3 is not supported");
 
 				// In case the SDK is not supported by the driver, prompt the user to update
@@ -679,6 +826,7 @@ namespace LitchiRuntime
 				{
 					VkDeviceQueueCreateInfo queue_create_info = {};
 					queue_create_info.sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
+					queue_create_info.flags = 0;
 					queue_create_info.queueFamilyIndex = queue_family;
 					queue_create_info.queueCount = 1;
 					queue_create_info.pQueuePriorities = &queue_priority;
@@ -688,9 +836,12 @@ namespace LitchiRuntime
 
 			// Detect device properties
 			{
+				VkPhysicalDeviceFragmentShadingRatePropertiesKHR shading_rate_properties = {};
+				shading_rate_properties.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FRAGMENT_SHADING_RATE_PROPERTIES_KHR;
+
 				VkPhysicalDeviceVulkan13Properties device_properties_1_3 = {};
 				device_properties_1_3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_PROPERTIES;
-				device_properties_1_3.pNext = nullptr;
+				device_properties_1_3.pNext = &shading_rate_properties;
 
 				VkPhysicalDeviceProperties2 properties_device = {};
 				properties_device.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_PROPERTIES_2;
@@ -698,7 +849,7 @@ namespace LitchiRuntime
 
 				vkGetPhysicalDeviceProperties2(static_cast<VkPhysicalDevice>(RHI_Context::device_physical), &properties_device);
 
-				// Save some properties
+				// save some properties
 				m_timestamp_period = properties_device.properties.limits.timestampPeriod;
 				m_min_uniform_buffer_offset_alignment = properties_device.properties.limits.minUniformBufferOffsetAlignment;
 				m_min_storage_buffer_offset_alignment = properties_device.properties.limits.minStorageBufferOffsetAlignment;
@@ -708,6 +859,8 @@ namespace LitchiRuntime
 				m_max_texture_cube_dimension = properties_device.properties.limits.maxImageDimensionCube;
 				m_max_texture_array_layers = properties_device.properties.limits.maxImageArrayLayers;
 				m_max_push_constant_size = properties_device.properties.limits.maxPushConstantsSize;
+				m_max_shading_rate_texel_size_x = shading_rate_properties.maxFragmentShadingRateAttachmentTexelSize.width;
+				m_max_shading_rate_texel_size_y = shading_rate_properties.maxFragmentShadingRateAttachmentTexelSize.height;
 
 				// Disable profiler if timestamps are not supported
 				if (RHI_Context::gpu_profiling && !properties_device.properties.limits.timestampComputeAndGraphics)
@@ -717,101 +870,7 @@ namespace LitchiRuntime
 				}
 			}
 
-			// Enable certain features
-			VkPhysicalDeviceVulkan13Features device_features_to_enable_1_3 = {};
-			device_features_to_enable_1_3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
-			VkPhysicalDeviceVulkan12Features device_features_to_enable_1_2 = {};
-			device_features_to_enable_1_2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-			device_features_to_enable_1_2.pNext = &device_features_to_enable_1_3;
-			VkPhysicalDeviceFeatures2 device_features_to_enable = {};
-			device_features_to_enable.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-			device_features_to_enable.pNext = &device_features_to_enable_1_2;
-			{
-				// Check feature support
-				VkPhysicalDeviceVulkan13Features features_supported_1_3 = {};
-				features_supported_1_3.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_3_FEATURES;
-				VkPhysicalDeviceVulkan12Features features_supported_1_2 = {};
-				features_supported_1_2.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_VULKAN_1_2_FEATURES;
-				features_supported_1_2.pNext = &features_supported_1_3;
-				VkPhysicalDeviceFeatures2 features_supported = {};
-				features_supported.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2;
-				features_supported.pNext = &features_supported_1_2;
-				vkGetPhysicalDeviceFeatures2(RHI_Context::device_physical, &features_supported);
-
-				// Check if certain features are supported and enable them
-				{
-					// Anisotropic filtering
-					LC_ASSERT(features_supported.features.samplerAnisotropy == VK_TRUE);
-					device_features_to_enable.features.samplerAnisotropy = VK_TRUE;
-
-					// Line and point rendering
-					LC_ASSERT(features_supported.features.fillModeNonSolid == VK_TRUE);
-					device_features_to_enable.features.fillModeNonSolid = VK_TRUE;
-
-					// Lines with adjustable thickness
-					LC_ASSERT(features_supported.features.wideLines == VK_TRUE);
-					device_features_to_enable.features.wideLines = VK_TRUE;
-
-					// Cubemaps
-					LC_ASSERT(features_supported.features.imageCubeArray == VK_TRUE);
-					device_features_to_enable.features.imageCubeArray = VK_TRUE;
-
-					// Partially bound descriptors
-					LC_ASSERT(features_supported_1_2.descriptorBindingPartiallyBound == VK_TRUE);
-					device_features_to_enable_1_2.descriptorBindingPartiallyBound = VK_TRUE;
-
-					// Runtime descriptor array
-					LC_ASSERT(features_supported_1_2.runtimeDescriptorArray == VK_TRUE);
-					device_features_to_enable_1_2.runtimeDescriptorArray = VK_TRUE;
-
-					// Timeline semaphores
-					LC_ASSERT(features_supported_1_2.timelineSemaphore == VK_TRUE);
-					device_features_to_enable_1_2.timelineSemaphore = VK_TRUE;
-
-					// Rendering without render passes and frame buffer objects
-					LC_ASSERT(features_supported_1_3.dynamicRendering == VK_TRUE);
-					device_features_to_enable_1_3.dynamicRendering = VK_TRUE;
-
-					// Extended types (int8, int16, int64, etc) - SPD
-					LC_ASSERT(features_supported_1_2.shaderSubgroupExtendedTypes == VK_TRUE);
-					device_features_to_enable_1_2.shaderSubgroupExtendedTypes = VK_TRUE;
-
-					// Wave64
-					LC_ASSERT(features_supported_1_3.shaderDemoteToHelperInvocation == VK_TRUE);
-					device_features_to_enable_1_3.shaderDemoteToHelperInvocation = VK_TRUE;
-
-					// Wave64 - If supported, FSR 2 will opt for it, so don't assert.
-					if (features_supported_1_3.subgroupSizeControl == VK_TRUE)
-					{
-						device_features_to_enable_1_3.subgroupSizeControl = VK_TRUE;
-					}
-
-					// Float16 - If supported, FSR 2 will opt for it, so don't assert.
-					if (features_supported_1_2.shaderFloat16 == VK_TRUE)
-					{
-						device_features_to_enable_1_2.shaderFloat16 = VK_TRUE;
-					}
-
-					// Int16 - If supported, FSR 2 will opt for it, so don't assert.
-					if (features_supported.features.shaderInt16 == VK_TRUE)
-					{
-						device_features_to_enable.features.shaderInt16 = VK_TRUE;
-					}
-				}
-			}
-
-			// Enable certain graphics shader stages
-			{
-				m_enabled_graphics_shader_stages = VK_PIPELINE_STAGE_VERTEX_SHADER_BIT | VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-				if (device_features_to_enable.features.geometryShader)
-				{
-					m_enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_GEOMETRY_SHADER_BIT;
-				}
-				if (device_features_to_enable.features.tessellationShader)
-				{
-					m_enabled_graphics_shader_stages |= VK_PIPELINE_STAGE_TESSELLATION_CONTROL_SHADER_BIT | VK_PIPELINE_STAGE_TESSELLATION_EVALUATION_SHADER_BIT;
-				}
-			}
+			device_features::detect(RHI_Context::device_physical, &m_is_shading_rate_supported);
 
 			// Get the supported extensions out of the requested extensions
 			vector<const char*> extensions_supported = get_physical_device_supported_extensions(RHI_Context::extensions_device, RHI_Context::device_physical);
@@ -822,7 +881,7 @@ namespace LitchiRuntime
 				create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 				create_info.queueCreateInfoCount = static_cast<uint32_t>(queue_create_infos.size());
 				create_info.pQueueCreateInfos = queue_create_infos.data();
-				create_info.pNext = &device_features_to_enable;
+				create_info.pNext = &device_features::pNext;
 				create_info.enabledExtensionCount = static_cast<uint32_t>(extensions_supported.size());
 				create_info.ppEnabledExtensionNames = extensions_supported.data();
 
@@ -852,7 +911,7 @@ namespace LitchiRuntime
 		vulkan_memory_allocator::initialize(app_info.apiVersion);
 
 		// Set the descriptor set capacity to an initial value
-		SetDescriptorSetCapacity(descriptors::descriptor_pool_max_sets);
+		CreateDescriptorPool();
 
 		// Detect and log version
 		{
@@ -862,8 +921,6 @@ namespace LitchiRuntime
 			string version = version_major + "." + version_minor + "." + version_patch;
 
 			DEBUG_LOG_INFO("Vulkan %s", version.c_str());
-
-			// Settings::RegisterThirdPartyLib("Vulkan", version_major + "." + version_minor + "." + version_patch, "https://vulkan.lunarg.com/");
 		}
 	}
 
@@ -889,6 +946,19 @@ namespace LitchiRuntime
 		// Descriptor pool
 		vkDestroyDescriptorPool(RHI_Context::device, descriptors::descriptor_pool, nullptr);
 		descriptors::descriptor_pool = nullptr;
+
+		// debug messenger
+		if (RHI_Context::validation)// TODO
+		{
+			validation_layer_logging::shutdown(RHI_Context::instance);
+		}
+
+		//// descriptors
+		//descriptors::release();
+
+		// the destructor of all the resources enqueues it's vk buffer memory for de-allocation
+		// this is where we actually go through them and de-allocate them
+		RHI_Device::DeletionQueueParse();
 
 		// Allocator
 		vulkan_memory_allocator::destroy();
@@ -1238,15 +1308,15 @@ namespace LitchiRuntime
 
 	// descriptors
 
-	void RHI_Device::SetDescriptorSetCapacity(uint32_t capacity)
+	void RHI_Device::CreateDescriptorPool()
 	{
 		static array<VkDescriptorPoolSize, 5> pool_sizes =
 		{
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLER,                descriptors::descriptor_pool_max_samplers },
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,          descriptors::descriptor_pool_max_textures },
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,          descriptors::descriptor_pool_max_storage_textures },
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, descriptors::descriptor_pool_max_storage_buffers_dynamic }, // aka structured buffer
-			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, descriptors::descriptor_pool_max_constant_buffers_dynamic }
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLER,                rhi_max_array_size * rhi_max_descriptor_set_count },
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE,          rhi_max_array_size * rhi_max_descriptor_set_count },
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_IMAGE,          rhi_max_array_size * rhi_max_descriptor_set_count },
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, rhi_max_array_size * rhi_max_descriptor_set_count }, // structured buffer
+			VkDescriptorPoolSize{ VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC, rhi_max_array_size * rhi_max_descriptor_set_count }
 		};
 
 		// describe
@@ -1255,18 +1325,13 @@ namespace LitchiRuntime
 		pool_create_info.flags = VK_DESCRIPTOR_POOL_CREATE_UPDATE_AFTER_BIND_BIT_EXT;
 		pool_create_info.poolSizeCount = static_cast<uint32_t>(pool_sizes.size());
 		pool_create_info.pPoolSizes = pool_sizes.data();
-		pool_create_info.maxSets = capacity;
+		pool_create_info.maxSets = rhi_max_descriptor_set_count;
 
 		// create
 		LC_ASSERT(descriptors::descriptor_pool == nullptr);
-		LC_VK_ASSERT_MSG(vkCreateDescriptorPool(RHI_Context::device, &pool_create_info, nullptr, &descriptors::descriptor_pool),
-			"Failed to create descriptor pool");
+		LC_VK_ASSERT_MSG(vkCreateDescriptorPool(RHI_Context::device, &pool_create_info, nullptr, &descriptors::descriptor_pool), "Failed to create descriptor pool");
 
-		descriptors::descriptor_pool_max_sets = capacity;
-		DEBUG_LOG_INFO("Capacity has been set to %d sets", capacity);
-
-		/* Profiler::m_descriptor_set_count    = 0;
-		 Profiler::m_descriptor_set_capacity = capacity;*/
+		// Profiler::m_descriptor_set_count = 0;
 	}
 
 	void RHI_Device::AllocateDescriptorSet(void*& resource, RHI_DescriptorSetLayout* descriptor_set_layout, const vector<RHI_Descriptor>& descriptors_)

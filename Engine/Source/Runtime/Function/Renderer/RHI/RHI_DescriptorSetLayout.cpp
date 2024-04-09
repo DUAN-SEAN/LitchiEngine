@@ -18,7 +18,7 @@ namespace LitchiRuntime
     RHI_DescriptorSetLayout::RHI_DescriptorSetLayout(const vector<RHI_Descriptor>& descriptors, const string& name)
     {
         m_descriptors = descriptors;
-        // m_object_name = name;
+        m_object_name = name;
 
         CreateRhiResource(m_descriptors);
 
@@ -34,10 +34,6 @@ namespace LitchiRuntime
         {
             if (descriptor.slot == slot + rhi_shader_shift_register_b)
             {
-                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
-                m_needs_to_bind = descriptor.data           != constant_buffer              ? true : m_needs_to_bind;
-                m_needs_to_bind = descriptor.dynamic_offset != constant_buffer->GetOffset() ? true : m_needs_to_bind;
-
                 // update
                 descriptor.data           = static_cast<void*>(constant_buffer); // needed for vkUpdateDescriptorSets()
                 descriptor.range          = constant_buffer->GetStride();        // needed for vkUpdateDescriptorSets()
@@ -57,11 +53,6 @@ namespace LitchiRuntime
         {
             if (descriptor.slot == slot + rhi_shader_shift_register_u)
             {
-                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
-                m_needs_to_bind = descriptor.data           != structured_buffer              ? true : m_needs_to_bind;
-                m_needs_to_bind = descriptor.dynamic_offset != structured_buffer->GetOffset() ? true : m_needs_to_bind;
-                m_needs_to_bind = descriptor.range          != structured_buffer->GetStride() ? true : m_needs_to_bind;
-
                 // update
                 descriptor.data           = static_cast<void*>(structured_buffer);
                 descriptor.dynamic_offset = structured_buffer->GetOffset();
@@ -78,9 +69,6 @@ namespace LitchiRuntime
         {
             if (descriptor.slot == slot + rhi_shader_shift_register_s)
             {
-                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
-                m_needs_to_bind = descriptor.data != sampler ? true : m_needs_to_bind;
-
                 // update
                 descriptor.data = static_cast<void*>(sampler);
 
@@ -111,11 +99,6 @@ namespace LitchiRuntime
 
             if (descriptor.slot == (slot + shift))
             {
-                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
-                m_needs_to_bind = descriptor.data      != texture   ? true : m_needs_to_bind;
-                m_needs_to_bind = descriptor.mip       != mip_index ? true : m_needs_to_bind;
-                m_needs_to_bind = descriptor.mip_range != mip_range ? true : m_needs_to_bind;
-
                 // update
                 descriptor.data      = static_cast<void*>(texture);
                 descriptor.layout    = layout;
@@ -133,9 +116,6 @@ namespace LitchiRuntime
         {
             if (descriptor.name == "Material")
             {
-                // determine if the descriptor set needs to bind (vkCmdBindDescriptorSets)
-                m_needs_to_bind = true;
-
                 descriptor.data = static_cast<void*>(constant_buffer); // needed for vkUpdateDescriptorSets()
                 descriptor.range = constant_buffer->GetStride();        // needed for vkUpdateDescriptorSets()
                 descriptor.dynamic_offset = constant_buffer->GetOffset();        // needed for vkCmdBindDescriptorSets
@@ -182,10 +162,9 @@ namespace LitchiRuntime
             // out
             descriptor_set = &descriptor_sets[hash];
         }
-        else if(m_needs_to_bind) // retrieve the existing one
+        else  // retrieve the existing one
         {
             descriptor_set  = &it->second;
-            m_needs_to_bind = false;
         }
 
         return descriptor_set;

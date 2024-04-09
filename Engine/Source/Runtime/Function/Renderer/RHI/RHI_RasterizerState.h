@@ -42,7 +42,7 @@ namespace LitchiRuntime
         }
 
     private:
-        RHI_CullMode m_cull_mode        = RHI_CullMode::Undefined;
+        RHI_CullMode m_cull_mode        = RHI_CullMode::Max;
         RHI_PolygonMode m_polygon_mode  = RHI_PolygonMode::Undefined;
         bool m_depth_clip_enabled       = false;
         bool m_scissor_enabled          = false;

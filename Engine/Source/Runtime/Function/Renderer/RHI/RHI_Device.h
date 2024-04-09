@@ -32,7 +32,7 @@ namespace LitchiRuntime
 		static void QueueSetIndex(const RHI_Queue_Type type, const uint32_t index);
 
 		// Descriptors
-		static void SetDescriptorSetCapacity(uint32_t descriptor_set_capacity);
+		static void CreateDescriptorPool();
 		static void AllocateDescriptorSet(void*& resource, RHI_DescriptorSetLayout* descriptor_set_layout, const std::vector<RHI_Descriptor>& descriptors);
 		static std::unordered_map<uint64_t, RHI_DescriptorSet>& GetDescriptorSets();
 		static void* GetDescriptorSet(const RHI_Device_Resource resource_type);
@@ -129,6 +129,9 @@ namespace LitchiRuntime
 		static uint32_t m_max_texture_cube_dimension;
 		static uint32_t m_max_texture_array_layers;
 		static uint32_t m_max_push_constant_size;
+		static uint32_t m_max_shading_rate_texel_size_x ;
+		static uint32_t m_max_shading_rate_texel_size_y ;
+		static bool m_is_shading_rate_supported ;
 
 		// Misc
 		static bool m_wide_lines;

@@ -22,6 +22,9 @@ namespace LitchiRuntime
     uint32_t RHI_Device::m_max_texture_cube_dimension          = 0;
     uint32_t RHI_Device::m_max_texture_array_layers            = 0;
     uint32_t RHI_Device::m_max_push_constant_size              = 0;
+    uint32_t RHI_Device::m_max_shading_rate_texel_size_x = 0;
+    uint32_t RHI_Device::m_max_shading_rate_texel_size_y = 0;
+    bool RHI_Device::m_is_shading_rate_supported = false;
 
     // Misc
     bool RHI_Device::m_wide_lines                          = false;

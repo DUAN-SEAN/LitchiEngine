@@ -48,12 +48,17 @@ namespace LitchiRuntime
                 { 
                     LC_ASSERT(descriptor.struct_size <= RHI_Device::PropertyGetMaxPushConstantSize());
 
-                    VkPushConstantRange push_constant_range  = {};
-                    push_constant_range.offset               = 0;
-                    push_constant_range.size                 = descriptor.struct_size;
-                    push_constant_range.stageFlags           = (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Vertex)  ? VK_SHADER_STAGE_VERTEX_BIT   : 0;
-                    push_constant_range.stageFlags          |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Pixel)   ? VK_SHADER_STAGE_FRAGMENT_BIT : 0;
-                    push_constant_range.stageFlags          |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Compute) ? VK_SHADER_STAGE_COMPUTE_BIT  : 0;
+                    VkPushConstantRange push_constant_range = {};
+                    push_constant_range.offset = 0;
+                    push_constant_range.size = descriptor.struct_size;
+                    push_constant_range.stageFlags = 0;
+                    push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Vertex) ? VK_SHADER_STAGE_VERTEX_BIT : 0;
+                    push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Hull) ? VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT : 0;
+                    push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Domain) ? VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT : 0;
+                    push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Pixel) ? VK_SHADER_STAGE_FRAGMENT_BIT : 0;
+                    push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Compute) ? VK_SHADER_STAGE_COMPUTE_BIT : 0;
+
+                    push_constant_ranges.emplace_back(push_constant_range);
 
                     push_constant_ranges.emplace_back(push_constant_range);
                 }
@@ -83,14 +88,13 @@ namespace LitchiRuntime
         VkRect2D scissor                                 = {};
         VkPipelineViewportStateCreateInfo viewport_state = {};
         {
-            // always allow dynamic viewport
-            dynamic_states.emplace_back(VK_DYNAMIC_STATE_VIEWPORT);
-
-            // If this is always on, Vulkan will expect you to set a scissor rectangle dynamically.
-            // Because of this, we just rely on dynamic_scissor.
-            if (m_state.dynamic_scissor)
+            // enable dynamic states
+            dynamic_states.push_back(VK_DYNAMIC_STATE_VIEWPORT);
+            if (m_state.IsGraphics())
             {
-                dynamic_states.emplace_back(VK_DYNAMIC_STATE_SCISSOR);
+                dynamic_states.push_back(VK_DYNAMIC_STATE_SCISSOR);
+                dynamic_states.push_back(VK_DYNAMIC_STATE_CULL_MODE);
+                dynamic_states.push_back(VK_DYNAMIC_STATE_FRAGMENT_SHADING_RATE_KHR);
             }
 
             // dynamic states
@@ -140,7 +144,39 @@ namespace LitchiRuntime
 
             shader_stages.push_back(shader_stage_info);
         }
-        
+
+        // shader - hull
+        if (m_state.shader_hull)
+        {
+            VkPipelineShaderStageCreateInfo shader_stage_info = {};
+            shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+            shader_stage_info.stage = VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
+            shader_stage_info.module = static_cast<VkShaderModule>(m_state.shader_hull->GetRhiResource());
+            shader_stage_info.pName = m_state.shader_hull->GetEntryPoint();
+
+            // validate shader stage
+            LC_ASSERT(shader_stage_info.module != nullptr);
+            LC_ASSERT(shader_stage_info.pName != nullptr);
+
+            shader_stages.push_back(shader_stage_info);
+        }
+
+        // shader - domain
+        if (m_state.shader_domain)
+        {
+            VkPipelineShaderStageCreateInfo shader_stage_info = {};
+            shader_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+            shader_stage_info.stage = VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT;
+            shader_stage_info.module = static_cast<VkShaderModule>(m_state.shader_domain->GetRhiResource());
+            shader_stage_info.pName = m_state.shader_domain->GetEntryPoint();
+
+            // validate shader stage
+            LC_ASSERT(shader_stage_info.module != nullptr);
+            LC_ASSERT(shader_stage_info.pName != nullptr);
+
+            shader_stages.push_back(shader_stage_info);
+        }
+
         // Shader - Pixel
         if (m_state.shader_pixel)
         {
@@ -180,9 +216,17 @@ namespace LitchiRuntime
         binding_description.stride                          = m_state.shader_vertex ? m_state.shader_vertex->GetVertexSize() : 0;
         
         // Vertex attributes description
+        vector<VkVertexInputBindingDescription> vertex_input_binding_descs;
         vector<VkVertexInputAttributeDescription> vertex_attribute_descs;
         if (m_state.shader_vertex)
         {
+            vertex_input_binding_descs.push_back
+            ({
+                0,
+                m_state.shader_vertex ? m_state.shader_vertex->GetVertexSize() : 0,
+                VK_VERTEX_INPUT_RATE_VERTEX
+                });
+
             if (RHI_InputLayout* input_layout = m_state.shader_vertex->GetInputLayout().get())
             {
                 vertex_attribute_descs.reserve(input_layout->GetAttributeDescriptions().size());
@@ -197,38 +241,68 @@ namespace LitchiRuntime
                         });
                 }
             }
+
+            //if (m_state.instancing)
+            //{
+            //    // hardcoded for now
+            //    vertex_input_binding_descs.push_back
+            //    ({
+            //        1,                            // binding
+            //        sizeof(Math::Matrix),         // stride
+            //        VK_VERTEX_INPUT_RATE_INSTANCE // inputRate
+            //        });
+            //}
+
+
+            //if (m_state.instancing)
+            //{
+            //    // update the attribute descriptions to pass the entire matrix
+            //    // each row of the matrix is treated as a separate attribute
+            //    for (uint32_t i = 0; i < 4; i++)
+            //    {
+            //        vertex_attribute_descs.push_back
+            //        ({
+            //            static_cast<uint32_t>(vertex_attribute_descs.size()), // location, assuming the next available location
+            //            1,                                                    // binding
+            //            VK_FORMAT_R32G32B32A32_SFLOAT,                        // format, assuming 32-bit float components
+            //            i * sizeof(Math::Vector4)                             // offset, assuming Math::Vector4 is the type of each row
+            //            });
+            //    }
+            //}
         }
 
         // Vertex input state
         VkPipelineVertexInputStateCreateInfo vertex_input_state = {};
         {
-            vertex_input_state.sType                           = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
-            vertex_input_state.vertexBindingDescriptionCount   = m_state.can_use_vertex_index_buffers ? 1 : 0;
-            vertex_input_state.pVertexBindingDescriptions      = m_state.can_use_vertex_index_buffers ? &binding_description : nullptr;
+            vertex_input_state.sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO;
+            vertex_input_state.vertexBindingDescriptionCount = static_cast<uint32_t>(vertex_input_binding_descs.size());
+            vertex_input_state.pVertexBindingDescriptions = vertex_input_binding_descs.data();
             vertex_input_state.vertexAttributeDescriptionCount = static_cast<uint32_t>(vertex_attribute_descs.size());
-            vertex_input_state.pVertexAttributeDescriptions    = vertex_attribute_descs.data();
+            vertex_input_state.pVertexAttributeDescriptions = vertex_attribute_descs.data();
         }
-        
-        // Input assembly
+
+
+        // input assembly state
         VkPipelineInputAssemblyStateCreateInfo input_assembly_state = {};
         {
-            input_assembly_state.sType                  = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
-            input_assembly_state.topology               = vulkan_primitive_topology[static_cast<uint32_t>(m_state.primitive_topology)];
+            input_assembly_state.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+            input_assembly_state.topology = m_state.HasTessellation() ? VK_PRIMITIVE_TOPOLOGY_PATCH_LIST : vulkan_primitive_topology[static_cast<uint32_t>(m_state.primitive_topology)];
             input_assembly_state.primitiveRestartEnable = VK_FALSE;
         }
-        
+
+        //// tessellation state
+        //VkPipelineTessellationStateCreateInfo tesselation_state = {};
+        //{
+        //    tesselation_state.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+        //    tesselation_state.patchControlPoints = 3;
+        //}
+
         // Rasterizer state
         VkPipelineRasterizationStateCreateInfo rasterizer_state             = {};
-        VkPipelineRasterizationDepthClipStateCreateInfoEXT depth_clip_state = {};
         if (m_state.rasterizer_state)
         {
-            depth_clip_state.sType           = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_DEPTH_CLIP_STATE_CREATE_INFO_EXT;
-            depth_clip_state.depthClipEnable = m_state.rasterizer_state->GetDepthClipEnabled();
-            depth_clip_state.pNext           = nullptr;
-
             rasterizer_state.sType                   = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
-            rasterizer_state.pNext                   = &depth_clip_state;
-            rasterizer_state.depthClampEnable        = VK_FALSE;
+            rasterizer_state.depthClampEnable        = m_state.rasterizer_state->GetDepthClipEnabled();
             rasterizer_state.rasterizerDiscardEnable = VK_FALSE;
             rasterizer_state.polygonMode             = vulkan_polygon_mode[static_cast<uint32_t>(m_state.rasterizer_state->GetPolygonMode())];
             rasterizer_state.lineWidth               = m_state.rasterizer_state->GetLineWidth();
@@ -322,6 +396,7 @@ namespace LitchiRuntime
                 // Enable dynamic rendering - VK_KHR_dynamic_rendering.
                 // This means no render passes and no frame buffer objects.
                 VkPipelineRenderingCreateInfoKHR pipeline_rendering_create_info = {};
+                VkPipelineFragmentShadingRateStateCreateInfoKHR fragment_shading_rate_state = {};
                 vector<VkFormat> attachment_formats_color;
                 VkFormat attachment_format_depth   = VK_FORMAT_UNDEFINED;
                 VkFormat attachment_format_stencil = VK_FORMAT_UNDEFINED;
@@ -351,11 +426,24 @@ namespace LitchiRuntime
                         attachment_format_stencil = tex_depth->IsStencilFormat() ? attachment_format_depth : VK_FORMAT_UNDEFINED;
                     }
 
+                    //// variable rate shading
+                    //if (m_state.vrs_input_texture)
+                    //{
+                    //    fragment_shading_rate_state.sType = VK_STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR;
+                    //    fragment_shading_rate_state.combinerOps[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
+                    //    fragment_shading_rate_state.combinerOps[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
+                    //    fragment_shading_rate_state.fragmentSize = { 1, 1 };
+
+                    //    pipeline_rendering_create_info.pNext = &fragment_shading_rate_state;
+                    //}
+
                     pipeline_rendering_create_info.sType                   = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
                     pipeline_rendering_create_info.colorAttachmentCount    = static_cast<uint32_t>(attachment_formats_color.size());
                     pipeline_rendering_create_info.pColorAttachmentFormats = attachment_formats_color.data();
                     pipeline_rendering_create_info.depthAttachmentFormat   = attachment_format_depth;
                     pipeline_rendering_create_info.stencilAttachmentFormat = attachment_format_stencil;
+
+
                 }
 
                 // Describe
@@ -366,6 +454,8 @@ namespace LitchiRuntime
                 pipeline_info.pStages                      = shader_stages.data();
                 pipeline_info.pVertexInputState            = &vertex_input_state;
                 pipeline_info.pInputAssemblyState          = &input_assembly_state;
+                // pipeline_info.pTessellationState = m_state.HasTessellation() ? &tesselation_state : nullptr;
+                pipeline_info.pTessellationState =nullptr;
                 pipeline_info.pDynamicState                = &dynamic_state;
                 pipeline_info.pViewportState               = &viewport_state;
                 pipeline_info.pRasterizationState          = &rasterizer_state;
@@ -374,6 +464,7 @@ namespace LitchiRuntime
                 pipeline_info.pDepthStencilState           = &depth_stencil_state;
                 pipeline_info.layout                       = static_cast<VkPipelineLayout>(m_resource_pipeline_layout);
                 pipeline_info.renderPass                   = nullptr;
+               // pipeline_info.flags = m_state.vrs_input_texture ? VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR : 0;
         
                 // Create
                 LC_VK_ASSERT_MSG(vkCreateGraphicsPipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),

@@ -105,12 +105,12 @@ namespace LitchiRuntime
 			// Define pipeline state
 			static RHI_PipelineState pso;
 			pso.shader_vertex = shader_v;
-			pso.shader_pixel = is_transparent_pass ? shader_p : nullptr;
+			pso.shader_pixel = shader_p ;
 			pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Disabled).get();
 			pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get() : GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 			pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
 			pso.render_target_depth_texture = tex_depth;
-			pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+			pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 			pso.name = "Pass_ShadowMaps";
 
 			for (uint32_t array_index = 0; array_index < tex_depth->GetArrayLength(); array_index++)
@@ -180,13 +180,13 @@ namespace LitchiRuntime
 					if (skinned_mesh_renderer)
 					{
 						pso.shader_vertex = shader_skin_v;
-						pso.shader_pixel = is_transparent_pass ? shader_skin_p : nullptr;
+						pso.shader_pixel = shader_skin_p ;
 
 					}
 					else
 					{
 						pso.shader_vertex = shader_v;
-						pso.shader_pixel = is_transparent_pass ? shader_p : nullptr;
+						pso.shader_pixel = shader_p;
 					}
 
 					cmd_list->SetPipelineState(pso);
@@ -261,7 +261,7 @@ namespace LitchiRuntime
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
 		pso.clear_color[0] = rhi_color_load;
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 		cmd_list->SetPipelineState(pso);
@@ -318,7 +318,7 @@ namespace LitchiRuntime
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
 		//pso.clear_color[0] = camera->GetClearColor();
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 
 		// begin render pass
 		bool isBeginRendererPass = false;
@@ -487,7 +487,7 @@ namespace LitchiRuntime
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Off).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.name = "Pass_UI";
 
 
@@ -589,7 +589,7 @@ namespace LitchiRuntime
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_color[0] = rhi_color_load;
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::LineList;
+		pso.primitive_topology = RHI_PrimitiveTopology::LineList;
 
 		cmd_list->BeginMarker("DebugGridPass");
 
@@ -683,7 +683,7 @@ namespace LitchiRuntime
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
 		pso.clear_color[0] = camera->GetClearColor();
-		pso.primitive_topology = RHI_PrimitiveTopology_Mode::TriangleList;
+		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.material_shader = selectMaterial->GetShader();
 
 		UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);

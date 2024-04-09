@@ -33,8 +33,6 @@ namespace LitchiRuntime
     {
         m_hash = 0;
 
-        m_hash = rhi_hash_combine(m_hash, static_cast<uint64_t>(dynamic_scissor));
-        m_hash = rhi_hash_combine(m_hash, static_cast<uint64_t>(can_use_vertex_index_buffers));
         m_hash = rhi_hash_combine(m_hash, static_cast<uint64_t>(primitive_topology));
         m_hash = rhi_hash_combine(m_hash, static_cast<uint64_t>(render_target_color_texture_array_index));
         m_hash = rhi_hash_combine(m_hash, static_cast<uint64_t>(render_target_depth_stencil_texture_array_index));
@@ -74,6 +72,16 @@ namespace LitchiRuntime
             if (shader_pixel)
             {
                 m_hash = rhi_hash_combine(m_hash, shader_pixel->GetHash());
+            }
+
+            if (shader_hull)
+            {
+                m_hash = rhi_hash_combine(m_hash, shader_hull->GetHash());
+            }
+
+            if (shader_domain)
+            {
+                m_hash = rhi_hash_combine(m_hash, shader_domain->GetHash());
             }
         }
 

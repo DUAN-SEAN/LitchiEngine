@@ -85,7 +85,7 @@ namespace LitchiRuntime
         Timestamp_Disjoint
     };
 
-    enum class RHI_PrimitiveTopology_Mode
+    enum class RHI_PrimitiveTopology
     {
         TriangleList,
         LineList,
@@ -97,7 +97,7 @@ namespace LitchiRuntime
         None,
         Front,
         Back,
-        Undefined
+        Max
     };
 
     enum class RHI_PolygonMode
@@ -255,7 +255,7 @@ namespace LitchiRuntime
         PushConstantBuffer,
         ConstantBuffer,
         StructuredBuffer,
-        Undefined
+        Max
     };
 
     enum class RHI_Image_Layout
@@ -270,7 +270,7 @@ namespace LitchiRuntime
         Transfer_Src_Optimal,
         Transfer_Dst_Optimal,
         Present_Src,
-        Undefined
+        Max
     };
 
     enum class RHI_Sync_State
@@ -283,9 +283,11 @@ namespace LitchiRuntime
     enum RHI_Shader_Stage : uint32_t
     {
         RHI_Shader_Unknown = 0,
-        RHI_Shader_Vertex  = 1 << 0,
-        RHI_Shader_Pixel   = 1 << 1,
-        RHI_Shader_Compute = 1 << 2,
+        RHI_Shader_Vertex = 1 << 0,
+        RHI_Shader_Hull = 1 << 1,
+        RHI_Shader_Domain = 1 << 2,
+        RHI_Shader_Pixel = 1 << 3,
+        RHI_Shader_Compute = 1 << 4,
     };
 
     const uint32_t rhi_all_mips = std::numeric_limits<uint32_t>::max();
@@ -306,8 +308,12 @@ namespace LitchiRuntime
     const uint32_t rhi_stencil_load              = std::numeric_limits<uint32_t>::infinity();
     const uint8_t  rhi_max_render_target_count   = 8;
     const uint8_t  rhi_max_constant_buffer_count = 8;
+    const uint32_t rhi_max_array_size = 16384;
+    const uint32_t rhi_max_array_size_lights = 128;
+    const uint32_t rhi_max_descriptor_set_count = 512;
     const uint32_t rhi_dynamic_offset_empty      = std::numeric_limits<uint32_t>::max();
-    const uint8_t  rhi_max_mip_count             = 13;
+    const uint8_t  rhi_max_mip_count             = 13;  const uint32_t rhi_max_queries_occlusion = 4096;
+    const uint32_t rhi_max_queries_timestamps = 512;
 
     static uint64_t rhi_hash_combine(uint64_t seed, uint64_t x)
     {
