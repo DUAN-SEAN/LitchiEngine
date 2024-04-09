@@ -11,6 +11,7 @@
 
 namespace LitchiRuntime
 {
+    // todo: changed
     class LC_CLASS RHI_PipelineState
     {
     public:
@@ -29,6 +30,8 @@ namespace LitchiRuntime
         //= STATIC - Can cause PSO generation ================================================
         MaterialShader* material_shader = nullptr;
         RHI_Shader* shader_vertex                     = nullptr;
+        RHI_Shader* shader_hull                       = nullptr;
+        RHI_Shader* shader_domain                     = nullptr;
         RHI_Shader* shader_pixel                      = nullptr;
         RHI_Shader* shader_compute                    = nullptr;
         RHI_RasterizerState* rasterizer_state         = nullptr;
