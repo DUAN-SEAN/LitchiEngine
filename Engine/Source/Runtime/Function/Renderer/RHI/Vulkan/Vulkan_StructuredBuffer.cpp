@@ -30,15 +30,13 @@ namespace LitchiRuntime
 
         // Define memory properties
         VkMemoryPropertyFlags flags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT; // mappable
-
         // Create buffer
         RHI_Device::MemoryBufferCreate(m_rhi_resource, m_object_size_gpu, VK_BUFFER_USAGE_STORAGE_BUFFER_BIT, flags, nullptr, name);
+        RHI_Device::SetResourceName(m_rhi_resource, RHI_Resource_Type::Buffer, name);
 
         // Get mapped data pointer
         m_mapped_data = RHI_Device::MemoryGetMappedDataFromBuffer(m_rhi_resource);
 
-        // Set debug name
-        RHI_Device::SetResourceName(m_rhi_resource, RHI_Resource_Type::Buffer, name);
     }
 
     RHI_StructuredBuffer::~RHI_StructuredBuffer()

@@ -51,6 +51,21 @@ namespace LitchiRuntime
 		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
 		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
 	}
+
+	void Renderer::SetStandardResources(RHI_CommandList* cmd_list)
+	{
+		EASY_FUNCTION(profiler::colors::Magenta);
+		// constant buffers
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
+		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
+
+		// textures todo: ÔÝÊ±Ã»ÓÐ
+		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
+		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
+	}
 	
 	void Renderer::Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
@@ -139,7 +154,7 @@ namespace LitchiRuntime
 				}
 
 				// Set pipeline state
-				//cmd_list->SetPipelineState(pso);
+				cmd_list->SetPipelineState(pso);
 
 				// State tracking
 				bool render_pass_active = false;
@@ -267,7 +282,6 @@ namespace LitchiRuntime
 		cmd_list->SetPipelineState(pso);
 
 		EASY_BLOCK("Render SkyBox")
-		cmd_list->BeginRenderPass();
 
 		// set skyBox mesh
 		cmd_list->SetBufferIndex(Renderer::m_index_buffer_skyBox.get());
@@ -283,7 +297,6 @@ namespace LitchiRuntime
 		// drawCall
 		cmd_list->DrawIndexed(Renderer::m_index_buffer_skyBox.get()->GetIndexCount(), 0, 0);
 
-		cmd_list->EndRenderPass();
 		EASY_END_BLOCK
 
 		cmd_list->EndTimeblock();

@@ -9,10 +9,10 @@ namespace LitchiRuntime
 {
     LitchiRuntime::RHI_DescriptorSet::RHI_DescriptorSet(const std::vector<RHI_Descriptor>& descriptors, RHI_DescriptorSetLayout* descriptor_set_layout, const char* name)
     {
-       /* if (name)
+        if (name)
         {
             m_object_name = name;
-        }*/
+        }
 
         // allocate
         {
@@ -21,5 +21,16 @@ namespace LitchiRuntime
         }
 
         Update(descriptors);
+    }
+
+    bool RHI_DescriptorSet::IsReferingToResource(void* resource)
+    {
+        for (RHI_Descriptor& descriptor : m_descriptors)
+        {
+            if (descriptor.data == resource)
+                return true;
+        }
+
+        return false;
     }
 }

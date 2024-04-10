@@ -5,16 +5,11 @@
 #include "RHI_PhysicalDevice.h"
 #include <memory>
 #include "RHI_Descriptor.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
 //=================================
 
 namespace LitchiRuntime
 {
-	enum class RHI_Device_Resource
-	{
-		sampler_comparison,
-		sampler_regular
-	};
-
 	class LC_CLASS RHI_Device
 	{
 	public:
@@ -37,7 +32,7 @@ namespace LitchiRuntime
 		static std::unordered_map<uint64_t, RHI_DescriptorSet>& GetDescriptorSets();
 		static void* GetDescriptorSet(const RHI_Device_Resource resource_type);
 		static void* GetDescriptorSetLayout(const RHI_Device_Resource resource_type);
-		static void SetBindlessSamplers(const std::array<std::shared_ptr<RHI_Sampler>, 9>& samplers);
+		static void UpdateBindlessResources(const std::array<std::shared_ptr<RHI_Sampler>, static_cast<uint32_t>(Renderer_Sampler::Max)>* samplers, std::array<RHI_Texture*, rhi_max_array_size>* textures);
 
 		// Pipelines
 		static void GetOrCreatePipeline(RHI_PipelineState& pso, RHI_Pipeline*& pipeline, RHI_DescriptorSetLayout*& descriptor_set_layout);
@@ -52,6 +47,7 @@ namespace LitchiRuntime
 		static void DeletionQueueAdd(const RHI_Resource_Type resource_type, void* resource);
 		static void DeletionQueueParse();
 		static bool DeletionQueueNeedsToParse();
+
 
 		static RHI_RenderPass* RenderPassCreate();
 
@@ -78,10 +74,10 @@ namespace LitchiRuntime
 		 */
 		static void MemoryBufferCreate(void*& resource, const uint64_t size, uint32_t usage, uint32_t memory_property_flags, const void* data_initial, const char* name);
 		static void MemoryBufferDestroy(void*& resource);
-		static void MemoryTextureCreate(void* vk_image_creat_info, void*& resource, const char* name);
+		static void MemoryTextureCreate(RHI_Texture* texture);
 		static void MemoryTextureDestroy(void*& resource);
 		static void MemoryMap(void* resource, void*& mapped_data);
-		static void MemoryUnmap(void* resource, void*& mapped_data);
+		static void MemoryUnmap(void* resource);
 		static uint32_t MemoryGetUsageMb();
 		static uint32_t MemoryGetBudgetMb();
 #endif 
@@ -89,7 +85,7 @@ namespace LitchiRuntime
 		static RHI_CommandList* CmdImmediateBegin(const RHI_Queue_Type queue_type);
 		static void CmdImmediateSubmit(RHI_CommandList* cmd_list);
 
-		// Properties (actual silicon properties)
+		// properties (actual silicon properties)
 		static float PropertyGetTimestampPeriod() { return m_timestamp_period; }
 		static uint64_t PropertyGetMinUniformBufferOffsetAllignment() { return m_min_uniform_buffer_offset_alignment; }
 		static uint64_t PropertyGetMinStorageBufferOffsetAllignment() { return m_min_storage_buffer_offset_alignment; }
@@ -99,6 +95,9 @@ namespace LitchiRuntime
 		static uint32_t PropertyGetMaxTextureCubeDimension() { return m_max_texture_cube_dimension; }
 		static uint32_t PropertyGetMaxTextureArrayLayers() { return m_max_texture_array_layers; }
 		static uint32_t PropertyGetMaxPushConstantSize() { return m_max_push_constant_size; }
+		static uint32_t PropertyGetMaxShadingRateTexelSizeX() { return m_max_shading_rate_texel_size_x; }
+		static uint32_t PropertyGetMaxShadingRateTexelSizeY() { return m_max_shading_rate_texel_size_y; }
+		static bool PropertyIsShadingRateSupported() { return m_is_shading_rate_supported; }
 
 		// Markers
 		static void MarkerBegin(RHI_CommandList* cmd_list, const char* name, const Vector4& color);
@@ -107,9 +106,11 @@ namespace LitchiRuntime
 		// Misc
 		static void SetResourceName(void* resource, const RHI_Resource_Type resource_type, const std::string name);
 		static bool IsValidResolution(const uint32_t width, const uint32_t height);
-		static uint32_t GetEnabledGraphicsStages() { return m_enabled_graphics_shader_stages; }
+		static uint32_t GetEnabledGraphicsStages();
 		static uint32_t GetDescriptorType(const RHI_Descriptor& descriptor);
 		static PhysicalDevice* GetPrimaryPhysicalDevice();
+		static void SetVariableRateShading(const RHI_CommandList* cmd_list, const bool enabled);
+		//static void SetVariableRateShading(const RHI_CommandList* cmd_list, const bool enabled);
 
 	private:
 		// Physical device
@@ -136,6 +137,5 @@ namespace LitchiRuntime
 		// Misc
 		static bool m_wide_lines;
 		static uint32_t m_physical_device_index;
-		static uint32_t m_enabled_graphics_shader_stages;
 	};
 }

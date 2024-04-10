@@ -68,7 +68,33 @@ namespace LitchiRuntime
             // DEBUG_LOG_INFO("%s (%d MB)", physical_device->GetName().c_str(), physical_device->GetMemory());
         }
     }
- 
+    //void RHI_Device::SetVariableRateShading(const RHI_CommandList* cmd_list, const bool enabled)
+    //{
+    //    if (!m_is_shading_rate_supported)
+    //        return;
+
+    //    // set the fragment shading rate state for the current pipeline
+    //    VkExtent2D fragment_size = { 1, 1 };
+    //    VkFragmentShadingRateCombinerOpKHR combiner_operatins[2];
+
+    //    // The combiners determine how the different shading rate values for the pipeline, primitives and attachment are combined
+    //    if (enabled)
+    //    {
+    //        // If shading rate from attachment is enabled, we set the combiner, so that the values from the attachment are used
+    //        // Combiner for pipeline (A) and primitive (B) - Not used in this sample
+    //        combiner_operatins[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+    //        // Combiner for pipeline (A) and attachment (B), replace the pipeline default value (fragment_size) with the fragment sizes stored in the attachment
+    //        combiner_operatins[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR;
+    //    }
+    //    else
+    //    {
+    //        // If shading rate from attachment is disabled, we keep the value set via the dynamic state
+    //        combiner_operatins[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+    //        combiner_operatins[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+    //    }
+
+    //    functions::set_fragment_shading_rate(static_cast<VkCommandBuffer>(cmd_list->GetRhiResource()), &fragment_size, combiner_operatins);
+    //}
     vector<PhysicalDevice>& RHI_Device::PhysicalDeviceGet()
     {
         return physical_devices;

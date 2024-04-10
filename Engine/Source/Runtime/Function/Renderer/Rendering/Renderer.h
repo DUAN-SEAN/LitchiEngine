@@ -60,8 +60,8 @@ namespace LitchiRuntime
 		template<typename T>
 		static T GetOption(const Renderer_Option option) { return static_cast<T>(GetOptions()[static_cast<uint32_t>(option)]); }
 		static void SetOption(Renderer_Option option, float value);
-		static std::array<float, 34>& GetOptions();
-		static void SetOptions(std::array<float, 34> options);
+		static std::unordered_map<Renderer_Option, float>& GetOptions();
+		static void SetOptions(const std::unordered_map<Renderer_Option, float>& options);
 
 		// Swapchain
 		static RHI_SwapChain* GetSwapChain();
@@ -74,6 +74,7 @@ namespace LitchiRuntime
 		// Misc
 		static void Flush();
 		static void SetGlobalShaderResources(RHI_CommandList* cmd_list);
+		static void SetStandardResources(RHI_CommandList* cmd_list);
 		static uint64_t GetFrameNum();
 		static RHI_Api_Type GetRhiApiType();
 

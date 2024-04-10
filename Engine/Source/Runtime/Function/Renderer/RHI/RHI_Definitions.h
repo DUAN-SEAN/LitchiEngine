@@ -76,7 +76,7 @@ namespace LitchiRuntime
         Graphics,
         Compute,
         Copy,
-        Undefined
+        Max
     };
 
     enum class RHI_Query_Type
@@ -170,7 +170,6 @@ namespace LitchiRuntime
         R16G16B16A16_Snorm,
         R16G16B16A16_Float,
         R32G32B32A32_Float,
-        R32G32B32A32_UINT,
         // Depth
         D16_Unorm,
         D32_Float,
@@ -181,7 +180,7 @@ namespace LitchiRuntime
         // Surface
         B8R8G8A8_Unorm,
         // End
-        Undefined
+        Max
     };
 
     enum class RHI_Resource_Type
@@ -202,7 +201,7 @@ namespace LitchiRuntime
         Pipeline,
         PipelineLayout,
         Queue,
-        Undefined
+        Max
     };
 
     enum class RHI_Vertex_Type
@@ -214,6 +213,7 @@ namespace LitchiRuntime
         PosUvNorTan,
         Pos2dUvCol8,
         PosUvNorTanBone,
+        Max
     };
 
     enum class RHI_Blend
@@ -262,14 +262,12 @@ namespace LitchiRuntime
     {
         General,
         Preinitialized,
-        Color_Attachment_Optimal,
-        Depth_Attachment_Optimal,
-        Depth_Stencil_Attachment_Optimal,
-        Depth_Stencil_Read_Only_Optimal,
-        Shader_Read_Only_Optimal,
-        Transfer_Src_Optimal,
-        Transfer_Dst_Optimal,
-        Present_Src,
+        Attachment,
+        Shading_Rate_Attachment,
+        Shader_Read,
+        Transfer_Source,
+        Transfer_Destination,
+        Present_Source,
         Max
     };
 
@@ -277,7 +275,7 @@ namespace LitchiRuntime
     {
         Idle,
         Submitted,
-        Undefined,
+        Max,
     };
 
     enum RHI_Shader_Stage : uint32_t
@@ -288,6 +286,13 @@ namespace LitchiRuntime
         RHI_Shader_Domain = 1 << 2,
         RHI_Shader_Pixel = 1 << 3,
         RHI_Shader_Compute = 1 << 4,
+    };
+
+    enum class RHI_Device_Resource
+    {
+        sampler_comparison,
+        sampler_regular,
+        //textures_material
     };
 
     const uint32_t rhi_all_mips = std::numeric_limits<uint32_t>::max();
@@ -402,7 +407,7 @@ namespace LitchiRuntime
             case RHI_Format::D32_Float:            return "RHI_Format_D32_Float";
             case RHI_Format::D32_Float_S8X24_Uint: return "RHI_Format_D32_Float_S8X24_Uint";
             case RHI_Format::BC7:                  return "RHI_Format_BC7";
-            case RHI_Format::Undefined:            return "RHI_Format_Undefined";
+            case RHI_Format::Max:            return "RHI_Format_Undefined";
         }
 
         assert(false && "Unsupported format");

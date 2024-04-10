@@ -65,7 +65,6 @@ namespace LitchiRuntime
         }
 
         bool IsStorage() const { return type == RHI_Descriptor_Type::TextureStorage; }
-        bool IsArray()   const { return array_length > 0; };
 
         // Properties that affect the descriptor hash (static - reflected)
         uint32_t slot  = 0;

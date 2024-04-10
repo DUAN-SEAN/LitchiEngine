@@ -38,8 +38,6 @@ namespace LitchiRuntime
 
         // Render pass
         void SetPipelineState(RHI_PipelineState& pso);
-        void BeginRenderPass();
-        void EndRenderPass();
 
         // Clear
         void ClearPipelineStateRenderTargets(RHI_PipelineState& pipeline_state);
@@ -55,13 +53,13 @@ namespace LitchiRuntime
 
         // Draw
         void Draw(uint32_t vertex_count, uint32_t vertex_start_index = 0);
-        void DrawIndexed(uint32_t index_count, uint32_t index_offset = 0, uint32_t vertex_offset = 0);
+        void DrawIndexed(const uint32_t index_count, const uint32_t index_offset = 0, const uint32_t vertex_offset = 0, const uint32_t instance_start_index = 0, const uint32_t instance_count = 1);
 
         // Dispatch
         void Dispatch(uint32_t x, uint32_t y, uint32_t z = 1, bool async = false);
 
-        // Blit
-        void Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips);
+        // blit
+        void Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips, const float source_scaling = 1.0f);
         void Blit(RHI_Texture* source, RHI_SwapChain* destination);
 
         // Copy
@@ -78,7 +76,7 @@ namespace LitchiRuntime
         void SetCullMode(const RHI_CullMode cull_mode);
 
         // Vertex buffer
-        void SetBufferVertex(const RHI_VertexBuffer* buffer);
+        void SetBufferVertex(const RHI_VertexBuffer* buffer, const uint32_t binding = 0);
         
         // Index buffer
         void SetBufferIndex(const RHI_IndexBuffer* buffer);
@@ -115,7 +113,13 @@ namespace LitchiRuntime
         // Timestamps
         uint32_t BeginTimestamp();
         void EndTimestamp();
-        float GetTimestampDuration(const uint32_t timestamp_index);
+        float GetTimestampResult(const uint32_t index_timestamp);
+
+        // occlusion queries
+        void BeginOcclusionQuery(const uint64_t entity_id);
+        void EndOcclusionQuery();
+        bool GetOcclusionQueryResult(const uint64_t entity_id);
+        void UpdateOcclusionQueries();
 
         // Timeblocks (Markers + Timestamps)
         void BeginTimeblock(const char* name, const bool gpu_marker = true, const bool gpu_timing = true);
@@ -125,49 +129,47 @@ namespace LitchiRuntime
         const RHI_CommandListState GetState() const { return m_state; }
         bool IsExecuting();
 
-        // Memory Barriers
-        void InsertMemoryBarrierImage(void* image, const uint32_t aspect_mask, const uint32_t mip_index, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new);
-        void InsertMemoryBarrierImage(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new);
-        void InsertMemoryBarrierImageWaitForWrite(RHI_Texture* texture);
+        // memory barriers
+        void InsertBarrierTexture(void* image, const uint32_t aspect_mask, const uint32_t mip_index, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new, const bool is_depth);
+        void InsertBarrierTexture(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new);
+        void InsertBarrierTextureReadWrite(RHI_Texture* texture);
 
         // Misc
-        RHI_Semaphore* GetSemaphoreProccessed() { return m_proccessed_semaphore.get(); }
+        RHI_Semaphore* GetSemaphoreProccessed() { return m_rendering_complete_semaphore.get(); }
         void* GetRhiResource() const { return m_rhi_resource; }
 
     private:
-        void OnDraw();
-        void GetDescriptorsFromPipelineState(RHI_PipelineState& pipeline_state, std::vector<RHI_Descriptor>& descriptors);
+        //void OnDraw();
+        //void GetDescriptorsFromPipelineState(RHI_PipelineState& pipeline_state, std::vector<RHI_Descriptor>& descriptors);
 
-        // Sync
-        std::shared_ptr<RHI_Fence> m_proccessed_fence;
-        std::shared_ptr<RHI_Semaphore> m_proccessed_semaphore;
+        void RenderPassBegin();
+        void RenderPassEnd();
 
-        // Profiling
-        const char* m_timeblock_active         = nullptr;
-        static const uint32_t m_max_timestamps = 512;
-        std::array<uint64_t, m_max_timestamps> m_timestamps;
+        // sync
+        std::shared_ptr<RHI_Fence> m_rendering_complete_fence;
+        std::shared_ptr<RHI_Semaphore> m_rendering_complete_semaphore;
 
-        // Variables to minimise state changes
+        // variables to minimise state changes
         uint64_t m_vertex_buffer_id = 0;
-        uint64_t m_index_buffer_id  = 0;
+        uint64_t m_index_buffer_id = 0;
 
-        // Misc
+        // misc
         uint32_t m_timestamp_index = 0;
-        RHI_Pipeline* m_pipeline                             = nullptr;
-        bool m_is_rendering                                  = false;
-        bool m_pipeline_dirty                                = false;
-        static const uint8_t m_resource_array_length_max     = 16;
+        RHI_Pipeline* m_pipeline = nullptr;
+        bool m_render_pass_active = false;
         RHI_DescriptorSetLayout* m_descriptor_layout_current = nullptr;
-        std::atomic<RHI_CommandListState> m_state            = RHI_CommandListState::Idle;
-        RHI_Queue_Type m_queue_type                          = RHI_Queue_Type::Undefined;
+        std::atomic<RHI_CommandListState> m_state = RHI_CommandListState::Idle;
+        RHI_Queue_Type m_queue_type = RHI_Queue_Type::Max;
+        const char* m_timeblock_active = nullptr;
         RHI_CullMode m_cull_mode = RHI_CullMode::Max;
         static bool m_memory_query_support;
         std::mutex m_mutex_reset;
         RHI_PipelineState m_pso;
 
-        // RHI Resources
-        void* m_rhi_resource          = nullptr;
+        // rhi resources
+        void* m_rhi_resource = nullptr;
         void* m_rhi_cmd_pool_resource = nullptr;
-        void* m_rhi_query_pool        = nullptr;
+        void* m_rhi_query_pool_timestamps = nullptr;
+        void* m_rhi_query_pool_occlusion = nullptr;
     };
 }

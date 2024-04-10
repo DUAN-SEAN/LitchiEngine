@@ -399,6 +399,7 @@ namespace LitchiRuntime
         static std::string api_version_str;
         static std::string api_type_str;
         static RHI_Api_Type api_type;
+
         static bool validation;
         static bool gpu_markers;
         static bool gpu_profiling;

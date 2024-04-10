@@ -289,10 +289,10 @@ namespace LitchiRuntime
                         1,
                         1,
                         RHI_Image_Layout::Max,
-                        RHI_Image_Layout::Color_Attachment_Optimal
+                        RHI_Image_Layout::Attachment
                     );
 
-                    m_layouts[i] = RHI_Image_Layout::Color_Attachment_Optimal;
+                    m_layouts[i] = RHI_Image_Layout::Attachment;
                 }
 
                 // End/flush
@@ -437,7 +437,7 @@ namespace LitchiRuntime
         // SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
         LC_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
         LC_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
-        LC_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Src,                            "Invalid layout");
+        LC_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Source,                            "Invalid layout");
 
         // Get the semaphores that present should wait for
         m_wait_semaphores.clear();

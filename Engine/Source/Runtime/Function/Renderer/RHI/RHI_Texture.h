@@ -13,16 +13,18 @@ namespace LitchiRuntime
 {
     enum RHI_Texture_Flags : uint32_t
     {
-        RHI_Texture_Srv          = 1U << 0,
-        RHI_Texture_Uav          = 1U << 1,
-        RHI_Texture_RenderTarget = 1U << 2,
-        RHI_Texture_ClearOrBlit  = 1U << 3,
-        RHI_Texture_PerMipViews  = 1U << 4,
-        RHI_Texture_Greyscale    = 1U << 5,
-        RHI_Texture_Transparent  = 1U << 6,
-        RHI_Texture_Srgb         = 1U << 7,
-        RHI_Texture_Mips         = 1U << 8,
-        RHI_Texture_Compressed   = 1U << 9
+        RHI_Texture_Srv = 1U << 0,
+        RHI_Texture_Uav = 1U << 1,
+        RHI_Texture_Rtv = 1U << 2,
+        RHI_Texture_Vrs = 1U << 3,
+        RHI_Texture_ClearBlit = 1U << 4,
+        RHI_Texture_PerMipViews = 1U << 5,
+        RHI_Texture_Greyscale = 1U << 6,
+        RHI_Texture_Transparent = 1U << 7,
+        RHI_Texture_Srgb = 1U << 8,
+        RHI_Texture_Mips = 1U << 9,
+        RHI_Texture_Compressed = 1U << 10,
+        RHI_Texture_Mappable = 1U << 11
     };
 
     enum RHI_Shader_View_Type : uint8_t
@@ -72,6 +74,7 @@ namespace LitchiRuntime
         void SetFormat(const RHI_Format format)                  { m_format = format; }
 
         std::shared_ptr<RHI_Texture> GetSharedPtr() { return shared_from_this(); }
+        //void SaveAsImage(const std::string& file_path);
 
         // Data
         uint32_t GetArrayLength()                          const { return m_array_length; }
@@ -82,16 +85,17 @@ namespace LitchiRuntime
         RHI_Texture_Mip& GetMip(const uint32_t array_index, const uint32_t mip_index);
         RHI_Texture_Slice& GetSlice(const uint32_t array_index);
 
-        // Flags
-        bool IsSrv()                      const { return m_flags & RHI_Texture_Srv; }
-        bool IsUav()                      const { return m_flags & RHI_Texture_Uav; }
-        bool IsRenderTarget()             const { return m_flags & RHI_Texture_RenderTarget; }
-        bool IsRenderTargetDepthStencil() const { return IsRenderTarget() && IsDepthStencilFormat(); }
-        bool IsRenderTargetColor()        const { return IsRenderTarget() && IsColorFormat(); }
-        bool HasPerMipViews()             const { return m_flags & RHI_Texture_PerMipViews; }
-        bool HasMips()                    const { return m_flags & RHI_Texture_Mips; }
-        bool IsGrayscale()                const { return m_flags & RHI_Texture_Greyscale; }
-        bool IsTransparent()              const { return m_flags & RHI_Texture_Transparent; }
+        // flags
+        bool IsSrv()           const { return m_flags & RHI_Texture_Srv; }
+        bool IsUav()           const { return m_flags & RHI_Texture_Uav; }
+        bool IsVrs()           const { return m_flags & RHI_Texture_Vrs; }
+        bool IsRt()            const { return m_flags & RHI_Texture_Rtv; }
+        bool IsDsv()           const { return IsRt() && IsDepthStencilFormat(); }
+        bool IsRtv()           const { return IsRt() && IsColorFormat(); }
+        bool HasPerMipViews()  const { return m_flags & RHI_Texture_PerMipViews; }
+        bool HasMips()         const { return m_flags & RHI_Texture_Mips; }
+        bool IsGrayscale()     const { return m_flags & RHI_Texture_Greyscale; }
+        bool IsTransparent()   const { return m_flags & RHI_Texture_Transparent; }
 
         // Format type
         bool IsDepthFormat()        const { return m_format == RHI_Format::D16_Unorm || m_format == RHI_Format::D32_Float || m_format == RHI_Format::D32_Float_S8X24_Uint; }
@@ -106,6 +110,18 @@ namespace LitchiRuntime
 
         // Viewport
         const auto& GetViewport() const { return m_viewport; }
+
+        // gpu resources
+        void*& GetRhiResource() { return m_rhi_resource; }
+        void* GetRhiSrv()                             const { return m_rhi_srv; }
+        void* GetRhiUav()                             const { return m_rhi_uav; }
+        void* GetRhiSrvMip(const uint32_t i)          const { return m_rhi_srv_mips[i]; }
+        void* GetRhiUavMip(const uint32_t i)          const { return m_rhi_uav_mips[i]; }
+        void* GetRhiDsv(const uint32_t i = 0)         const { return i < m_rhi_dsv.size() ? m_rhi_dsv[i] : nullptr; }
+        void* GetRhiDsvReadOnly(const uint32_t i = 0) const { return i < m_rhi_dsv_read_only.size() ? m_rhi_dsv_read_only[i] : nullptr; }
+        void* GetRhiRtv(const uint32_t i = 0)         const { return i < m_rhi_rtv.size() ? m_rhi_rtv[i] : nullptr; }
+        void RHI_DestroyResource(const bool destroy_main, const bool destroy_per_view);
+        void*& GetMappedData() { return m_mapped_data; }
 
 #if 1 GPU resources
 
@@ -152,7 +168,7 @@ namespace LitchiRuntime
         uint32_t m_channel_count    = 0;
         uint32_t m_array_length     = 1;
         uint32_t m_mip_count        = 1;
-        RHI_Format m_format         = RHI_Format::Undefined;
+        RHI_Format m_format         = RHI_Format::Max;
         RHI_Viewport m_viewport;
         std::vector<RHI_Texture_Slice> m_data;
         std::array<RHI_Image_Layout, rhi_max_mip_count> m_layout;
@@ -166,6 +182,7 @@ namespace LitchiRuntime
         std::array<void*, rhi_max_render_target_count> m_rhi_rtv;
         std::array<void*, rhi_max_render_target_count> m_rhi_dsv;
         std::array<void*, rhi_max_render_target_count> m_rhi_dsv_read_only;
+        void* m_mapped_data = nullptr;
 
     private:
         void ComputeMemoryUsage();

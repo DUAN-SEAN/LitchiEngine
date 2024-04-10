@@ -242,33 +242,33 @@ namespace LitchiRuntime
                 }
             }
 
-            //if (m_state.instancing)
-            //{
-            //    // hardcoded for now
-            //    vertex_input_binding_descs.push_back
-            //    ({
-            //        1,                            // binding
-            //        sizeof(Math::Matrix),         // stride
-            //        VK_VERTEX_INPUT_RATE_INSTANCE // inputRate
-            //        });
-            //}
+            if (m_state.instancing)
+            {
+                // hardcoded for now
+                vertex_input_binding_descs.push_back
+                ({
+                    1,                            // binding
+                    sizeof(Matrix),         // stride
+                    VK_VERTEX_INPUT_RATE_INSTANCE // inputRate
+                    });
+            }
 
 
-            //if (m_state.instancing)
-            //{
-            //    // update the attribute descriptions to pass the entire matrix
-            //    // each row of the matrix is treated as a separate attribute
-            //    for (uint32_t i = 0; i < 4; i++)
-            //    {
-            //        vertex_attribute_descs.push_back
-            //        ({
-            //            static_cast<uint32_t>(vertex_attribute_descs.size()), // location, assuming the next available location
-            //            1,                                                    // binding
-            //            VK_FORMAT_R32G32B32A32_SFLOAT,                        // format, assuming 32-bit float components
-            //            i * sizeof(Math::Vector4)                             // offset, assuming Math::Vector4 is the type of each row
-            //            });
-            //    }
-            //}
+            if (m_state.instancing)
+            {
+                // update the attribute descriptions to pass the entire matrix
+                // each row of the matrix is treated as a separate attribute
+                for (uint32_t i = 0; i < 4; i++)
+                {
+                    VkVertexInputAttributeDescription vertex_attribute_desc = {
+                        static_cast<uint32_t>(vertex_attribute_descs.size()), // location, assuming the next available location
+                            1,                                                    // binding
+                            VK_FORMAT_R32G32B32A32_SFLOAT,                        // format, assuming 32-bit float components
+                            i * static_cast<uint32_t>(sizeof(Vector4))                         // offset, assuming Math::Vector4 is the type of each row
+                    };
+                    vertex_attribute_descs.push_back(vertex_attribute_desc);
+                }
+            }
         }
 
         // Vertex input state
@@ -290,12 +290,12 @@ namespace LitchiRuntime
             input_assembly_state.primitiveRestartEnable = VK_FALSE;
         }
 
-        //// tessellation state
-        //VkPipelineTessellationStateCreateInfo tesselation_state = {};
-        //{
-        //    tesselation_state.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
-        //    tesselation_state.patchControlPoints = 3;
-        //}
+        // tessellation state
+        VkPipelineTessellationStateCreateInfo tesselation_state = {};
+        {
+            tesselation_state.sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO;
+            tesselation_state.patchControlPoints = 3;
+        }
 
         // Rasterizer state
         VkPipelineRasterizationStateCreateInfo rasterizer_state             = {};
@@ -426,16 +426,16 @@ namespace LitchiRuntime
                         attachment_format_stencil = tex_depth->IsStencilFormat() ? attachment_format_depth : VK_FORMAT_UNDEFINED;
                     }
 
-                    //// variable rate shading
-                    //if (m_state.vrs_input_texture)
-                    //{
-                    //    fragment_shading_rate_state.sType = VK_STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR;
-                    //    fragment_shading_rate_state.combinerOps[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
-                    //    fragment_shading_rate_state.combinerOps[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
-                    //    fragment_shading_rate_state.fragmentSize = { 1, 1 };
+                    // variable rate shading
+                    if (m_state.vrs_input_texture)
+                    {
+                        fragment_shading_rate_state.sType = VK_STRUCTURE_TYPE_PIPELINE_FRAGMENT_SHADING_RATE_STATE_CREATE_INFO_KHR;
+                        fragment_shading_rate_state.combinerOps[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
+                        fragment_shading_rate_state.combinerOps[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_MAX_KHR;
+                        fragment_shading_rate_state.fragmentSize = { 1, 1 };
 
-                    //    pipeline_rendering_create_info.pNext = &fragment_shading_rate_state;
-                    //}
+                        pipeline_rendering_create_info.pNext = &fragment_shading_rate_state;
+                    }
 
                     pipeline_rendering_create_info.sType                   = VK_STRUCTURE_TYPE_PIPELINE_RENDERING_CREATE_INFO_KHR;
                     pipeline_rendering_create_info.colorAttachmentCount    = static_cast<uint32_t>(attachment_formats_color.size());
@@ -454,8 +454,8 @@ namespace LitchiRuntime
                 pipeline_info.pStages                      = shader_stages.data();
                 pipeline_info.pVertexInputState            = &vertex_input_state;
                 pipeline_info.pInputAssemblyState          = &input_assembly_state;
-                // pipeline_info.pTessellationState = m_state.HasTessellation() ? &tesselation_state : nullptr;
-                pipeline_info.pTessellationState =nullptr;
+                pipeline_info.pTessellationState = m_state.HasTessellation() ? &tesselation_state : nullptr;
+                //pipeline_info.pTessellationState =nullptr;
                 pipeline_info.pDynamicState                = &dynamic_state;
                 pipeline_info.pViewportState               = &viewport_state;
                 pipeline_info.pRasterizationState          = &rasterizer_state;
@@ -464,14 +464,14 @@ namespace LitchiRuntime
                 pipeline_info.pDepthStencilState           = &depth_stencil_state;
                 pipeline_info.layout                       = static_cast<VkPipelineLayout>(m_resource_pipeline_layout);
                 pipeline_info.renderPass                   = nullptr;
-               // pipeline_info.flags = m_state.vrs_input_texture ? VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR : 0;
+                pipeline_info.flags = m_state.vrs_input_texture ? VK_PIPELINE_CREATE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR : 0;
         
                 // Create
                 LC_VK_ASSERT_MSG(vkCreateGraphicsPipelines(RHI_Context::device, nullptr, 1, &pipeline_info, nullptr, pipeline),
                     "Failed to create graphics pipeline");
 
                 // Disable naming until I can come up with a more meaningful name
-                // vulkan_utility::debug::set_name(*pipeline, m_state.pass_name);
+                //vulkan_utility::debug::set_name(*pipeline, m_state.pass_name);
             }
             else if (pipeline_state.IsCompute())
             {

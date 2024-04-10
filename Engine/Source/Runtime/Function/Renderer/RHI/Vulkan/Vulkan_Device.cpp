@@ -14,6 +14,7 @@
 #include "../RHI_Texture.h"
 #include "GLFW/glfw3.h"
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer.h"
 //#include "../../Profiling/Profiler.h"
 LC_WARNINGS_OFF
 #define VMA_IMPLEMENTATION
@@ -144,23 +145,45 @@ namespace LitchiRuntime
 			return extensions;
 		}
 
+		VkImageUsageFlags get_image_usage_flags(const RHI_Texture* texture)
+		{
+			VkImageUsageFlags flags = 0;
+
+			flags |= texture->IsSrv() ? VK_IMAGE_USAGE_SAMPLED_BIT : 0;
+			flags |= texture->IsUav() ? VK_IMAGE_USAGE_STORAGE_BIT : 0;
+			flags |= texture->IsVrs() ? VK_IMAGE_USAGE_SHADING_RATE_IMAGE_BIT_NV : 0;
+			flags |= texture->IsDsv() ? VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT : 0;
+			flags |= texture->IsRtv() ? VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT : 0;
+
+			// If the texture has data, it will be staged, so it needs transfer bits.
+			// If the texture participates in clear or blit operations, it needs transfer bits.
+			if (texture->HasData() || (texture->GetFlags() & RHI_Texture_ClearBlit) != 0)
+			{
+				flags |= VK_IMAGE_USAGE_TRANSFER_SRC_BIT; // source of a transfer command.
+				flags |= VK_IMAGE_USAGE_TRANSFER_DST_BIT; // destination of a transfer command
+			}
+
+			return flags;
+		}
+
 	}
 
 	namespace command_pools
 	{
-		static vector<shared_ptr<RHI_CommandPool>> regular;
-		static array<shared_ptr<RHI_CommandPool>, 3> immediate;
-		static mutex mutex_immediate_execution;
-		static condition_variable condition_variable_immediate_execution;
-		static bool is_immediate_executing = false;
+		vector<shared_ptr<RHI_CommandPool>> regular;
+		array<shared_ptr<RHI_CommandPool>, 3> immediate;
+		mutex mutex_immediate_execution;
+		condition_variable condition_variable_immediate_execution;
+		bool is_immediate_executing = false;
 	}
 
 	namespace queues
 	{
-		static mutex mutex_queue;
-		static void* graphics = nullptr;
-		static void* compute = nullptr;
-		static void* copy = nullptr;
+		mutex mutex_queue;
+		void* graphics = nullptr;
+		void* compute = nullptr;
+		void* copy = nullptr;
+
 		static uint32_t index_graphics = 0;
 		static uint32_t index_compute = 0;
 		static uint32_t index_copy = 0;
@@ -168,31 +191,35 @@ namespace LitchiRuntime
 
 	namespace functions
 	{
-		static PFN_vkCreateDebugUtilsMessengerEXT  create_messenger;
-		static PFN_vkDestroyDebugUtilsMessengerEXT destroy_messenger;
-		static PFN_vkSetDebugUtilsObjectTagEXT     set_object_tag;
-		static PFN_vkSetDebugUtilsObjectNameEXT    set_object_name;
-		static PFN_vkCmdBeginDebugUtilsLabelEXT    marker_begin;
-		static PFN_vkCmdEndDebugUtilsLabelEXT      marker_end;
+		PFN_vkCreateDebugUtilsMessengerEXT  create_messenger = nullptr;
+		PFN_vkDestroyDebugUtilsMessengerEXT destroy_messenger = nullptr;
+		PFN_vkSetDebugUtilsObjectTagEXT     set_object_tag = nullptr;
+		PFN_vkSetDebugUtilsObjectNameEXT    set_object_name = nullptr;
+		PFN_vkCmdBeginDebugUtilsLabelEXT    marker_begin = nullptr;
+		PFN_vkCmdEndDebugUtilsLabelEXT      marker_end = nullptr;
+		PFN_vkCmdSetFragmentShadingRateKHR  set_fragment_shading_rate = nullptr;
 
 		static void initialize(bool validation_enabled, bool gpu_markers_enabled)
 		{
 #define get_func(var, def)\
             var = reinterpret_cast<PFN_##def>(vkGetInstanceProcAddr(static_cast<VkInstance>(RHI_Context::instance), #def));\
             if (!var) DEBUG_LOG_ERROR("Failed to get function pointer for %s", #def);\
-
-			/* VK_EXT_debug_utils */
+ /* VK_EXT_debug_utils */
 			{
 				if (validation_enabled)
 				{
 					get_func(create_messenger, vkCreateDebugUtilsMessengerEXT);
 					get_func(destroy_messenger, vkDestroyDebugUtilsMessengerEXT);
+
+					LC_ASSERT(create_messenger && destroy_messenger);
 				}
 
 				if (gpu_markers_enabled)
 				{
 					get_func(marker_begin, vkCmdBeginDebugUtilsLabelEXT);
 					get_func(marker_end, vkCmdEndDebugUtilsLabelEXT);
+
+					LC_ASSERT(marker_begin && marker_end);
 				}
 			}
 
@@ -201,7 +228,12 @@ namespace LitchiRuntime
 			{
 				get_func(set_object_tag, vkSetDebugUtilsObjectTagEXT);
 				get_func(set_object_name, vkSetDebugUtilsObjectNameEXT);
+
+				LC_ASSERT(set_object_tag && set_object_name);
 			}
+
+			get_func(set_fragment_shading_rate, vkCmdSetFragmentShadingRateKHR);
+			LC_ASSERT(set_fragment_shading_rate);
 		}
 	}
 
@@ -217,19 +249,55 @@ namespace LitchiRuntime
 			void* p_user_data
 		)
 		{
+			// filter out certain things
+			{
+				// fidelityfx sdk
+				if (p_callback_data->messageIdNumber == 0xdc18ad6b)
+				{
+					// [ UNASSIGNED-BestPractices-vkAllocateMemory-small-allocation ] | MessageID = 0xdc18ad6b | vkAllocateMemory():
+					// Allocating a VkDeviceMemory of size 256. This is a very small allocation (current threshold is 262144 bytes).
+					// You should make large allocations and sub-allocate from one large VkDeviceMemory.
+					return VK_FALSE;
+				}
+
+				// occlusion queries
+				{
+					if (p_callback_data->messageIdNumber == 0xd39be754)
+					{
+						// Validation Warning :
+						// [BestPractices - QueryPool - Unavailable] Object 0 :
+						// handle = 0x980b0000000002e, name = query_pool_occlusion, type = VK_OBJECT_TYPE_QUERY_POOL; | MessageID = 0xd39be754 | vkGetQueryPoolResults() :
+						// QueryPool VkQueryPool 0x980b0000000002e[query_pool_occlusion] and query 0 : vkCmdBeginQuery() was never called.
+						return VK_FALSE;
+					}
+				}
+
+				if (p_callback_data->messageIdNumber == 0xe17ab4ae) // validation error - SYNC-HAZARD-PRESENT-AFTER-WRITE
+					return VK_FALSE;
+
+				if (p_callback_data->messageIdNumber == 0x42f2f4ed) // validation error - depth_ouput
+					return VK_FALSE;
+
+				if (p_callback_data->messageIdNumber == 0xe4d96472) // validation error - depth_ouput
+					return VK_FALSE;
+
+				if (p_callback_data->messageIdNumber == 0x5c0ec5d6) // validation error - depth_light
+					return VK_FALSE;
+			}
+
 			string msg = "Vulkan: " + string(p_callback_data->pMessage);
 
 			if (/*(msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT) ||*/ (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_INFO_BIT_EXT))
 			{
-				DEBUG_LOG_INFO(msg.c_str());
+				DEBUG_LOG_INFO(msg);
 			}
 			else if (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT)
 			{
-				DEBUG_LOG_WARN(msg.c_str());
+				DEBUG_LOG_WARN(msg);
 			}
 			else if (msg_severity & VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT)
 			{
-				DEBUG_LOG_ERROR(msg.c_str());
+				DEBUG_LOG_ERROR(msg);
 			}
 
 			return VK_FALSE;
@@ -339,90 +407,58 @@ namespace LitchiRuntime
 
 	namespace descriptors
 	{
-		static uint32_t allocated_descriptor_sets = 0;
-		static uint32_t descriptor_pool_max_sets = 4098;
-		static const uint16_t descriptor_pool_max_textures = 16536;
-		static const uint16_t descriptor_pool_max_storage_textures = 16536;
-		static const uint16_t descriptor_pool_max_storage_buffers_dynamic = 32;
-		static const uint16_t descriptor_pool_max_constant_buffers_dynamic = 32;
-		static const uint16_t descriptor_pool_max_samplers = 32;
-
-		static VkDescriptorPool descriptor_pool = nullptr;
+		mutex descriptor_pipeline_mutex;
+		uint32_t allocated_descriptor_sets = 0;
+		VkDescriptorPool descriptor_pool = nullptr;
 
 		// cache
-		static unordered_map<uint64_t, RHI_DescriptorSet> descriptor_sets;
-		static unordered_map<uint64_t, shared_ptr<RHI_DescriptorSetLayout>> descriptor_set_layouts;
-		static unordered_map<uint64_t, shared_ptr<RHI_Pipeline>> pipelines;
-		static array<VkDescriptorSet, 2> descriptor_sets_bindless;
-		static array<VkDescriptorSetLayout, 2> descriptor_set_layouts_bindless;
+		unordered_map<uint64_t, RHI_DescriptorSet> sets;
+		unordered_map<uint64_t, shared_ptr<RHI_DescriptorSetLayout>> layouts;
+		unordered_map<uint64_t, shared_ptr<RHI_Pipeline>> pipelines;
+		unordered_map<uint64_t, vector<RHI_Descriptor>> descriptor_cache;
 
-		static void create_descriptor_set_samplers(
-			const vector<shared_ptr<RHI_Sampler>>& samplers,
-			const uint32_t binding_slot,
-			const RHI_Device_Resource resource_type
-		)
+		void merge_descriptors(vector<RHI_Descriptor>& base_descriptors, const std::vector<RHI_Descriptor>& additional_descriptors)
 		{
-			string debug_name = resource_type == RHI_Device_Resource::sampler_comparison ? "samplers_comparison" : "samplers_regular";
-			VkDescriptorSet* descriptor_set = &descriptor_sets_bindless[static_cast<uint32_t>(resource_type)];
-			VkDescriptorSetLayout* descriptor_set_layout = &descriptor_set_layouts_bindless[static_cast<uint32_t>(resource_type)];
-			uint32_t sampler_count = static_cast<uint32_t>(samplers.size());
-			uint32_t binding = rhi_shader_shift_register_s + binding_slot;
-
-			// Create descriptor set layout
-			VkDescriptorSetLayoutBinding layout_binding = {};
-			layout_binding.binding = binding;
-			layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-			layout_binding.descriptorCount = sampler_count;
-			layout_binding.stageFlags = VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
-			layout_binding.pImmutableSamplers = nullptr;
-
-			VkDescriptorSetLayoutCreateInfo layout_info = {};
-			layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-			layout_info.bindingCount = 1;
-			layout_info.pBindings = &layout_binding;
-			layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
-
-			LC_VK_ASSERT_MSG(vkCreateDescriptorSetLayout(RHI_Context::device, &layout_info, nullptr, descriptor_set_layout), "Failed to create descriptor set layout");
-			RHI_Device::SetResourceName(static_cast<void*>(*descriptor_set_layout), RHI_Resource_Type::DescriptorSetLayout, debug_name);
-
-			// create descriptor set
-			VkDescriptorSetAllocateInfo allocInfo = {};
-			allocInfo.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
-			allocInfo.descriptorPool = descriptor_pool;
-			allocInfo.descriptorSetCount = 1;
-			allocInfo.pSetLayouts = descriptor_set_layout;
-
-			LC_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocInfo, descriptor_set), "Failed to allocate descriptor set");
-			RHI_Device::SetResourceName(static_cast<void*>(*descriptor_set), RHI_Resource_Type::DescriptorSet, debug_name);
-
-			// update descriptor set with samplers
-			vector<VkDescriptorImageInfo> image_infos(sampler_count);
-			for (uint32_t i = 0; i < sampler_count; i++)
+			for (const RHI_Descriptor& descriptor_additional : additional_descriptors)
 			{
-				image_infos[i].sampler = static_cast<VkSampler>(samplers[i]->GetRhiResource());
-				image_infos[i].imageView = nullptr;
-				image_infos[i].imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+				bool updated_existing = false;
+				for (RHI_Descriptor& descriptor_base : base_descriptors)
+				{
+					if (descriptor_base.slot == descriptor_additional.slot)
+					{
+						descriptor_base.stage |= descriptor_additional.stage;
+						updated_existing = true;
+						break;
+					}
+				}
+
+				// if no updating took place, this is an additional shader only resource, add it
+				if (!updated_existing)
+				{
+					base_descriptors.emplace_back(descriptor_additional);
+				}
 			}
-
-			VkWriteDescriptorSet descriptor_write = {};
-			descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-			descriptor_write.dstSet = *descriptor_set;
-			descriptor_write.dstBinding = binding;
-			descriptor_write.dstArrayElement = 0; // The starting element in that array
-			descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
-			descriptor_write.descriptorCount = sampler_count;
-			descriptor_write.pImageInfo = image_infos.data();
-
-			vkUpdateDescriptorSets(RHI_Context::device, 1, &descriptor_write, 0, nullptr);
 		}
 
-		static void get_descriptors_from_pipeline_state(RHI_PipelineState& pipeline_state, vector<RHI_Descriptor>& descriptors)
+		void get_descriptors_from_pipeline_state(RHI_PipelineState& pipeline_state, vector<RHI_Descriptor>& descriptors)
 		{
-			LC_ASSERT(pipeline_state.IsValid());
+			pipeline_state.Prepare();
 
-			EASY_BLOCK("Build Descriptors")
-			// descriptors.clear();
-			bool isNeedSort = false;
+			// use the hash of the pipeline state as the key for the cache
+			uint64_t pipeline_state_hash = pipeline_state.GetHash();
+
+			// check if descriptors for this pipeline state are already cached
+			auto cached_descriptors = descriptor_cache.find(pipeline_state_hash);
+			if (cached_descriptors != descriptor_cache.end())
+			{
+				// fetch from cache
+				descriptors = cached_descriptors->second;
+				return;
+			}
+
+			// if not cached, generate descriptors
+			descriptors.clear();
+
 			if (pipeline_state.IsCompute())
 			{
 				LC_ASSERT(pipeline_state.shader_compute->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
@@ -430,104 +466,226 @@ namespace LitchiRuntime
 			}
 			else if (pipeline_state.IsGraphics())
 			{
-				if(pipeline_state.material_shader)
+				LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+				descriptors = pipeline_state.shader_vertex->GetDescriptors();
+
+				if (pipeline_state.shader_pixel)
 				{
-					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
-				}else
-				{
-					LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-					descriptors = pipeline_state.shader_vertex->GetDescriptors();
-
-					// If there is a pixel shader, merge it's resources into our map as well
-					if (pipeline_state.shader_pixel)
-					{
-						LC_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-
-						for (const RHI_Descriptor& descriptor_pixel : pipeline_state.shader_pixel->GetDescriptors())
-						{
-							// Assume that the descriptor has been created in the vertex shader and only try to update it's shader stage
-							bool updated_existing = false;
-							for (RHI_Descriptor& descriptor_vertex : descriptors)
-							{
-								if (descriptor_vertex.slot == descriptor_pixel.slot)
-								{
-									descriptor_vertex.stage |= descriptor_pixel.stage;
-									updated_existing = true;
-									break;
-								}
-							}
-
-							// If no updating took place, this a pixel shader only resource, add it
-							if (!updated_existing)
-							{
-								isNeedSort = true;
-								descriptors.emplace_back(descriptor_pixel);
-							}
-						}
-					}
-					
+					LC_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					merge_descriptors(descriptors, pipeline_state.shader_pixel->GetDescriptors());
 				}
 
-			
+				if (pipeline_state.shader_hull)
+				{
+					LC_ASSERT(pipeline_state.shader_hull->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					merge_descriptors(descriptors, pipeline_state.shader_hull->GetDescriptors());
+				}
+
+				if (pipeline_state.shader_domain)
+				{
+					LC_ASSERT(pipeline_state.shader_domain->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					merge_descriptors(descriptors, pipeline_state.shader_domain->GetDescriptors());
+				}
 			}
-			EASY_END_BLOCK
 
-				EASY_BLOCK("Sort Descriptors")
-				if (isNeedSort)
+			// sort descriptors by slot
+			// this makes things easier to work with, for example dynamic offsets
+			// are expected as a list which should be ordered by a slot
+			sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
 				{
-					// sort descriptors by slot, this is because dynamic offsets (which are computed in a serialized
-					// manner in RHI_DescriptorSetLayout::GetDynamicOffsets(), need to be ordered by their slot
-					std::sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
-						{
-							return a.slot < b.slot;
-						});
-				}
-			EASY_END_BLOCK
+					return a.slot < b.slot;
+				});
+
+			// cache the newly created descriptors
+			descriptor_cache[pipeline_state_hash] = descriptors;
 		}
 
-		// temp descriptors 
-		static vector<RHI_Descriptor> descriptorsCache;
-		static shared_ptr<RHI_DescriptorSetLayout> get_or_create_descriptor_set_layout(RHI_PipelineState& pipeline_state)
+		shared_ptr<RHI_DescriptorSetLayout> get_or_create_descriptor_set_layout(RHI_PipelineState& pipeline_state)
 		{
 			// get descriptors from pipeline state
-			vector<RHI_Descriptor>& descriptors = descriptorsCache;
-			EASY_BLOCK("get_descriptors_from_pipeline_state") {
-				get_descriptors_from_pipeline_state(pipeline_state, descriptors);
-			}EASY_END_BLOCK
+			vector<RHI_Descriptor> descriptors;
+			get_descriptors_from_pipeline_state(pipeline_state, descriptors);
 
 			// compute a hash for the descriptors
 			uint64_t hash = 0;
-			EASY_BLOCK("compute descriptor hash")
+			for (RHI_Descriptor& descriptor : descriptors)
 			{
-				for (RHI_Descriptor& descriptor : descriptors)
-				{
-					hash = rhi_hash_combine(hash, descriptor.ComputeHash());
-				}
-			}EASY_END_BLOCK
+				hash = rhi_hash_combine(hash, static_cast<uint64_t>(descriptor.slot));
+				hash = rhi_hash_combine(hash, static_cast<uint64_t>(descriptor.stage));
+			}
 
 			// search for a descriptor set layout which matches this hash
-			auto it = descriptor_set_layouts.find(hash);
-			bool cached = it != descriptor_set_layouts.end();
+			auto it = layouts.find(hash);
+			bool cached = it != layouts.end();
 
 			// if there is no descriptor set layout for this particular hash, create one
 			if (!cached)
 			{
-				EASY_BLOCK("Create RHI_DescriptorSetLayout") {
-					// emplace a new descriptor set layout
-					it = descriptor_set_layouts.emplace(make_pair(hash, make_shared<RHI_DescriptorSetLayout>(descriptors, pipeline_state.name))).first;
-				}EASY_END_BLOCK
-
+				// emplace a new descriptor set layout
+				it = layouts.emplace(make_pair(hash, make_shared<RHI_DescriptorSetLayout>(descriptors, pipeline_state.name))).first;
 			}
 			shared_ptr<RHI_DescriptorSetLayout> descriptor_set_layout = it->second;
 
-			EASY_BLOCK("ClearDescriptorData")
 			if (cached)
 			{
 				descriptor_set_layout->ClearDescriptorData();
 			}
 
-			EASY_BLOCK("get_or_create_descriptor_set_layout return ")
 			return descriptor_set_layout;
+		}
+
+		namespace bindless
+		{
+			array<VkDescriptorSet, 2> sets;
+			array<VkDescriptorSetLayout, 2> layouts;
+			//array<VkDescriptorSet, 3> sets;
+			//array<VkDescriptorSetLayout, 3> layouts;
+
+			void create_layout(const RHI_Device_Resource resource_type, const uint32_t binding, const uint32_t resource_count, const string& debug_name)
+			{
+				VkDescriptorSetLayoutBinding layout_binding = {};
+				layout_binding.binding = binding;
+				//layout_binding.descriptorType = resource_type == RHI_Device_Resource::textures_material ? VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE : VK_DESCRIPTOR_TYPE_SAMPLER;
+				layout_binding.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+				layout_binding.descriptorCount = rhi_max_array_size;
+				layout_binding.stageFlags = VK_SHADER_STAGE_VERTEX_BIT | VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT | VK_SHADER_STAGE_TESSELLATION_EVALUATION_BIT | VK_SHADER_STAGE_FRAGMENT_BIT | VK_SHADER_STAGE_COMPUTE_BIT;
+				layout_binding.pImmutableSamplers = nullptr;
+
+				VkDescriptorBindingFlags binding_flags = VK_DESCRIPTOR_BINDING_PARTIALLY_BOUND_BIT | VK_DESCRIPTOR_BINDING_VARIABLE_DESCRIPTOR_COUNT_BIT;
+
+				VkDescriptorSetLayoutBindingFlagsCreateInfo layout_binding_flags = {};
+				layout_binding_flags.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_BINDING_FLAGS_CREATE_INFO;
+				layout_binding_flags.bindingCount = 1;
+				layout_binding_flags.pBindingFlags = &binding_flags;
+
+				VkDescriptorSetLayoutCreateInfo layout_info = {};
+				layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+				layout_info.bindingCount = 1;
+				layout_info.pBindings = &layout_binding;
+				layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_UPDATE_AFTER_BIND_POOL_BIT_EXT;
+				layout_info.pNext = &layout_binding_flags;
+
+				VkDescriptorSetLayout* layout = &layouts[static_cast<uint32_t>(resource_type)];
+				LC_VK_ASSERT_MSG(vkCreateDescriptorSetLayout(RHI_Context::device, &layout_info, nullptr, layout), "Failed to create descriptor set layout");
+				RHI_Device::SetResourceName(static_cast<void*>(*layout), RHI_Resource_Type::DescriptorSetLayout, debug_name);
+			}
+
+			void create_set(const RHI_Device_Resource resource_type, const uint32_t resource_count, const string& debug_name)
+			{
+				// allocate descriptor set with actual descriptor count
+				VkDescriptorSetVariableDescriptorCountAllocateInfoEXT real_descriptor_count_info = {};
+				real_descriptor_count_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_VARIABLE_DESCRIPTOR_COUNT_ALLOCATE_INFO_EXT;
+				real_descriptor_count_info.descriptorSetCount = 1;               // one descriptor set
+				real_descriptor_count_info.pDescriptorCounts = &resource_count; // actual number of textures being used
+
+				// allocate descriptor set
+				VkDescriptorSetAllocateInfo allocation_info = {};
+				allocation_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_ALLOCATE_INFO;
+				allocation_info.descriptorPool = descriptors::descriptor_pool;
+				allocation_info.descriptorSetCount = 1;
+				allocation_info.pSetLayouts = &layouts[static_cast<uint32_t>(resource_type)];
+				allocation_info.pNext = &real_descriptor_count_info;
+
+				// create
+				VkDescriptorSet* descriptor_set = &sets[static_cast<uint32_t>(resource_type)];
+				LC_VK_ASSERT_MSG(vkAllocateDescriptorSets(RHI_Context::device, &allocation_info, descriptor_set), "Failed to allocate descriptor set");
+				RHI_Device::SetResourceName(static_cast<void*>(*descriptor_set), RHI_Resource_Type::DescriptorSet, debug_name);
+			}
+
+			void update_samplers(const vector<shared_ptr<RHI_Sampler>>& samplers, const uint32_t binding_slot, const RHI_Device_Resource resource_type)
+			{
+				uint32_t sampler_count = static_cast<uint32_t>(samplers.size());
+				uint32_t binding = rhi_shader_shift_register_s + binding_slot;
+
+				// create layout and set (if needed)
+				if (layouts[static_cast<uint32_t>(resource_type)] == nullptr)
+				{
+					string debug_name = resource_type == RHI_Device_Resource::sampler_comparison ? "samplers_comparison" : "samplers_regular";
+
+					create_layout(resource_type, binding, sampler_count, debug_name);
+					create_set(resource_type, sampler_count, debug_name);
+				}
+
+				// update
+				{
+					vector<VkDescriptorImageInfo> image_infos(sampler_count);
+					for (uint32_t i = 0; i < sampler_count; i++)
+					{
+						image_infos[i].sampler = static_cast<VkSampler>(samplers[i]->GetRhiResource());
+						image_infos[i].imageView = nullptr;
+						image_infos[i].imageLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+					}
+
+					VkWriteDescriptorSet descriptor_write = {};
+					descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+					descriptor_write.dstSet = sets[static_cast<uint32_t>(resource_type)];
+					descriptor_write.dstBinding = binding;
+					descriptor_write.dstArrayElement = 0; // starting element in that array
+					descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLER;
+					descriptor_write.descriptorCount = sampler_count;
+					descriptor_write.pImageInfo = image_infos.data();
+
+					vkUpdateDescriptorSets(RHI_Context::device, 1, &descriptor_write, 0, nullptr);
+				}
+			}
+
+			void update_textures(const array<RHI_Texture*, rhi_max_array_size>* textures, const uint32_t binding_slot)
+			{
+				uint32_t texture_count = static_cast<uint32_t>(textures->size());
+				uint32_t binding = rhi_shader_shift_register_t + binding_slot;
+
+				//// create layout and set (if needed)
+				//if (layouts[static_cast<uint32_t>(RHI_Device_Resource::textures_material)] == nullptr)
+				//{
+				//	string debug_name = "textures_material";
+
+				//	create_layout(RHI_Device_Resource::textures_material, binding, texture_count, debug_name);
+				//	create_set(RHI_Device_Resource::textures_material, texture_count, debug_name);
+				//}
+
+				//// update
+				//{
+				//	vector<VkDescriptorImageInfo> image_infos(texture_count);
+				//	for (uint32_t i = 0; i < texture_count; ++i)
+				//	{
+				//		RHI_Texture* texture = (*textures)[i];
+				//		if (!texture)
+				//			continue;
+
+				//		// get texture, if unable to do so, fallback to a checkerboard texture, so we can spot it by eye
+				//		void* srv_default = Renderer::GetStandardTexture(Renderer_StandardTexture::Checkerboard)->GetRhiSrv();
+				//		void* resource = texture ? texture->GetRhiSrv() : srv_default;
+
+				//		image_infos[i].sampler = nullptr;
+				//		image_infos[i].imageView = static_cast<VkImageView>(resource);
+				//		image_infos[i].imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+				//	}
+
+				//	VkWriteDescriptorSet descriptor_write = {};
+				//	descriptor_write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+				//	descriptor_write.dstSet = sets[static_cast<uint32_t>(RHI_Device_Resource::textures_material)];
+				//	descriptor_write.dstBinding = binding;
+				//	descriptor_write.dstArrayElement = 0; // starting element in the array
+				//	descriptor_write.descriptorType = VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE;
+				//	descriptor_write.descriptorCount = texture_count;
+				//	descriptor_write.pImageInfo = image_infos.data();
+
+				//	vkUpdateDescriptorSets(RHI_Context::device, 1, &descriptor_write, 0, nullptr);
+				//}
+			}
+		}
+
+		void release()
+		{
+			sets.clear();
+			layouts.clear();
+			pipelines.clear();
+			descriptor_cache.clear();
+
+			for (uint32_t i = 0; i < static_cast<uint32_t>(bindless::layouts.size()); i++)
+			{
+				RHI_Device::DeletionQueueAdd(RHI_Resource_Type::DescriptorSetLayout, bindless::layouts[i]);
+			}
 		}
 	}
 	namespace device_features
@@ -691,20 +849,26 @@ namespace LitchiRuntime
 
 		// #ifdef DEBUG
 			// Add validation related extensions
-
-		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT);
-		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
-		RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT);
-		// Add debugging related extensions
-		RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_report");
-		RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_utils");
+		// todo:
+		if (RHI_Context::validation)
+		{
+			RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_GPU_ASSISTED_EXT);
+			RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_BEST_PRACTICES_EXT);
+			RHI_Context::validation_extensions.emplace_back(VK_VALIDATION_FEATURE_ENABLE_SYNCHRONIZATION_VALIDATION_EXT);
+			// Add debugging related extensions
+			RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_report");
+			RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_utils");
+		}else if(RHI_Context::gpu_markers)
+		{
+			RHI_Context::extensions_instance.emplace_back("VK_EXT_debug_utils");
+		}
 		// #endif
 
-		// TODO: 添加glfw扩展
-		uint32_t count;
-		const char** extensions = glfwGetRequiredInstanceExtensions(&count);
-		std::vector<const char*> extensionArr(extensions, extensions + count);
-		// RHI_Context::extensions_instance.emplace_back(*extensionArr.data());
+		//// TODO: 添加glfw扩展
+		//uint32_t count;
+		//const char** extensions = glfwGetRequiredInstanceExtensions(&count);
+		//std::vector<const char*> extensionArr(extensions, extensions + count);
+		//// RHI_Context::extensions_instance.emplace_back(*extensionArr.data());
 
 		// Create instance
 		VkApplicationInfo app_info = {};
@@ -755,14 +919,8 @@ namespace LitchiRuntime
 				RHI_Context::api_version_str = to_string(VK_API_VERSION_MAJOR(app_info.apiVersion)) + "." + to_string(VK_API_VERSION_MINOR(app_info.apiVersion)) + "." + to_string(VK_API_VERSION_PATCH(app_info.apiVersion));
 			}
 
-			// Get the supported extensions out of the requested extensions
+			// get the supported extensions out of the requested extensions
 			vector<const char*> extensions_supported = get_supported_extensions(RHI_Context::extensions_instance);
-
-			auto glfwRequiredExtensions = getGlfwRequiredExtensions();
-			for (auto glfw_required_extension : glfwRequiredExtensions)
-			{
-				extensions_supported.push_back(glfw_required_extension);
-			}
 
 			VkInstanceCreateInfo create_info = {};
 			create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
@@ -771,7 +929,7 @@ namespace LitchiRuntime
 			create_info.ppEnabledExtensionNames = extensions_supported.data();
 			create_info.enabledLayerCount = 0;
 
-			// Validation features
+			// validation features
 			VkValidationFeaturesEXT validation_features = {};
 			validation_features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
 			validation_features.enabledValidationFeatureCount = static_cast<uint32_t>(RHI_Context::validation_extensions.size());
@@ -863,10 +1021,9 @@ namespace LitchiRuntime
 				m_max_shading_rate_texel_size_y = shading_rate_properties.maxFragmentShadingRateAttachmentTexelSize.height;
 
 				// Disable profiler if timestamps are not supported
-				if (RHI_Context::gpu_profiling && !properties_device.properties.limits.timestampComputeAndGraphics)
+				if (RHI_Context::gpu_profiling)
 				{
-					DEBUG_LOG_ERROR("Device doesn't support timestamps, disabling gpu profiling...");
-					RHI_Context::gpu_profiling = false;
+					LC_ASSERT_MSG(properties_device.properties.limits.timestampComputeAndGraphics, "Device doesn't support timestamps");
 				}
 			}
 
@@ -953,8 +1110,8 @@ namespace LitchiRuntime
 			validation_layer_logging::shutdown(RHI_Context::instance);
 		}
 
-		//// descriptors
-		//descriptors::release();
+		// descriptors
+		descriptors::release();
 
 		// the destructor of all the resources enqueues it's vk buffer memory for de-allocation
 		// this is where we actually go through them and de-allocate them
@@ -1175,29 +1332,41 @@ namespace LitchiRuntime
 		if (signal_semaphore) LC_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "Signal semaphore is already in a signaled state.");
 		if (signal_fence)     LC_ASSERT_MSG(signal_fence->GetStateCpu() != RHI_Sync_State::Submitted, "Signal fence is already in a signaled state.");
 
-		// Get semaphores
-		array<VkSemaphore, 1> vk_wait_semaphore = { wait_semaphore ? static_cast<VkSemaphore>(wait_semaphore->GetRhiResource()) : nullptr };
-		array<VkSemaphore, 1> vk_signal_semaphore = { signal_semaphore ? static_cast<VkSemaphore>(signal_semaphore->GetRhiResource()) : nullptr };
+		VkSemaphoreSubmitInfoKHR wait_semaphore_info = {};
+		if (wait_semaphore)
+		{
+			wait_semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR;
+			wait_semaphore_info.semaphore = static_cast<VkSemaphore>(wait_semaphore->GetRhiResource());
+			wait_semaphore_info.stageMask = wait_flags; // the pipeline stage the semaphore waits at
+			wait_semaphore_info.value = 0;          // timeline semaphore value to wait for (ignored for binary semaphores)
+		}
 
-		// Submit info
-		VkSubmitInfo submit_info = {};
-		submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-		submit_info.pNext = nullptr;
-		submit_info.waitSemaphoreCount = wait_semaphore != nullptr ? 1 : 0;
-		submit_info.pWaitSemaphores = wait_semaphore != nullptr ? vk_wait_semaphore.data() : nullptr;
-		submit_info.signalSemaphoreCount = signal_semaphore != nullptr ? 1 : 0;
-		submit_info.pSignalSemaphores = signal_semaphore != nullptr ? vk_signal_semaphore.data() : nullptr;
-		submit_info.pWaitDstStageMask = &wait_flags;
-		submit_info.commandBufferCount = 1;
-		submit_info.pCommandBuffers = reinterpret_cast<VkCommandBuffer*>(&cmd_buffer);
+		VkSemaphoreSubmitInfoKHR signal_semaphore_info = {};
+		if (signal_semaphore)
+		{
+			signal_semaphore_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_SUBMIT_INFO_KHR;
+			signal_semaphore_info.semaphore = static_cast<VkSemaphore>(signal_semaphore->GetRhiResource());
+			signal_semaphore_info.value = 0; // timeline semaphore value to signal (ignored for binary semaphores)
+		}
 
-		// Get signal fence
-		void* vk_signal_fence = signal_fence ? signal_fence->GetRhiResource() : nullptr;
+		VkCommandBufferSubmitInfoKHR cmd_buffer_info = {};
+		cmd_buffer_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_SUBMIT_INFO_KHR;
+		cmd_buffer_info.commandBuffer = *reinterpret_cast<VkCommandBuffer*>(&cmd_buffer);
 
-		// The actual submit
-		LC_VK_ASSERT_MSG(vkQueueSubmit(static_cast<VkQueue>(QueueGet(type)), 1, &submit_info, static_cast<VkFence>(vk_signal_fence)), "Failed to submit");
+		VkSubmitInfo2 submit_info = {};
+		submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO_2;
+		submit_info.waitSemaphoreInfoCount = wait_semaphore ? 1 : 0;
+		submit_info.pWaitSemaphoreInfos = &wait_semaphore_info;
+		submit_info.signalSemaphoreInfoCount = signal_semaphore ? 1 : 0;
+		submit_info.pSignalSemaphoreInfos = &signal_semaphore_info;
+		submit_info.commandBufferInfoCount = 1;
+		submit_info.pCommandBufferInfos = &cmd_buffer_info;
 
-		// Update semaphore states
+		// submit
+		VkFence vk_signal_fence = static_cast<VkFence>(signal_fence ? signal_fence->GetRhiResource() : nullptr);
+		LC_VK_ASSERT_MSG(vkQueueSubmit2(static_cast<VkQueue>(QueueGet(type)), 1, &submit_info, vk_signal_fence), "Failed to submit");
+
+		// update semaphore states
 		if (wait_semaphore)   wait_semaphore->SetStateCpu(RHI_Sync_State::Idle);
 		if (signal_semaphore) signal_semaphore->SetStateCpu(RHI_Sync_State::Submitted);
 		if (signal_fence)     signal_fence->SetStateCpu(RHI_Sync_State::Submitted);
@@ -1275,17 +1444,18 @@ namespace LitchiRuntime
 	{
 		EASY_FUNCTION(profiler::colors::Magenta);
 		lock_guard<mutex> guard(mutex_deletion_queue);
-
 		for (const auto& it : deletion_queue)
 		{
 			for (void* resource : it.second)
 			{
-				switch (it.first)
+				RHI_Resource_Type resource_type = it.first;
+
+				switch (resource_type)
 				{
 				case RHI_Resource_Type::Texture:             MemoryTextureDestroy(resource); break;
 				case RHI_Resource_Type::TextureView:         vkDestroyImageView(RHI_Context::device, static_cast<VkImageView>(resource), nullptr);                     break;
 				case RHI_Resource_Type::Sampler:             vkDestroySampler(RHI_Context::device, reinterpret_cast<VkSampler>(resource), nullptr);                    break;
-				case RHI_Resource_Type::Buffer:              MemoryBufferDestroy(resource);                                                                                  break;
+				case RHI_Resource_Type::Buffer:              MemoryBufferDestroy(resource);                                                                            break;
 				case RHI_Resource_Type::Shader:              vkDestroyShaderModule(RHI_Context::device, static_cast<VkShaderModule>(resource), nullptr);               break;
 				case RHI_Resource_Type::Semaphore:           vkDestroySemaphore(RHI_Context::device, static_cast<VkSemaphore>(resource), nullptr);                     break;
 				case RHI_Resource_Type::Fence:               vkDestroyFence(RHI_Context::device, static_cast<VkFence>(resource), nullptr);                             break;
@@ -1295,6 +1465,24 @@ namespace LitchiRuntime
 				case RHI_Resource_Type::PipelineLayout:      vkDestroyPipelineLayout(RHI_Context::device, static_cast<VkPipelineLayout>(resource), nullptr);           break;
 				default:                                     LC_ASSERT_MSG(false, "Unknown resource");                                                                 break;
 				}
+
+				// delete descriptor sets which are now invalid (because they are referring to a deleted resource)
+				if (resource_type == RHI_Resource_Type::TextureView || resource_type == RHI_Resource_Type::Buffer || resource_type == RHI_Resource_Type::Sampler)
+				{
+					for (auto it = descriptors::sets.begin(); it != descriptors::sets.end();)
+					{
+						if (it->second.IsReferingToResource(resource))
+						{
+							it = descriptors::sets.erase(it);
+							// ideally the descriptor set pool is not oblivious to the fact that we don't use this set anymore
+							// maybe after a certain number of deletions we reset the entire pool to free memory
+						}
+						else
+						{
+							++it;
+						}
+					}
+				}
 			}
 		}
 
@@ -1303,7 +1491,7 @@ namespace LitchiRuntime
 
 	bool RHI_Device::DeletionQueueNeedsToParse()
 	{
-		return deletion_queue.size() > 0;
+		return deletion_queue.size() > 5;
 	}
 
 	// descriptors
@@ -1338,7 +1526,7 @@ namespace LitchiRuntime
 	{
 		// verify that an allocation is possible
 		{
-			LC_ASSERT_MSG(descriptors::allocated_descriptor_sets < descriptors::descriptor_pool_max_sets, "Reached descriptor set limit");
+			LC_ASSERT_MSG(descriptors::allocated_descriptor_sets < rhi_max_descriptor_set_count, "Reached descriptor set limit");
 
 			uint32_t textures = 0;
 			uint32_t storage_textures = 0;
@@ -1369,11 +1557,12 @@ namespace LitchiRuntime
 				}
 			}
 
-			LC_ASSERT_MSG(samplers <= descriptors::descriptor_pool_max_samplers, "Descriptor set requires more samplers");
-			LC_ASSERT_MSG(textures <= descriptors::descriptor_pool_max_textures, "Descriptor set requires more textures");
-			LC_ASSERT_MSG(storage_textures <= descriptors::descriptor_pool_max_storage_textures, "Descriptor set requires more storage textures");
-			LC_ASSERT_MSG(storage_buffers <= descriptors::descriptor_pool_max_storage_buffers_dynamic, "Descriptor set requires more dynamic storage buffers");
-			LC_ASSERT_MSG(dynamic_constant_buffers <= descriptors::descriptor_pool_max_constant_buffers_dynamic, "Descriptor set requires more dynamic constant buffers");
+
+			LC_ASSERT_MSG(samplers <= rhi_max_array_size, "Descriptor set requires more samplers");
+			LC_ASSERT_MSG(textures <= rhi_max_array_size, "Descriptor set requires more textures");
+			LC_ASSERT_MSG(storage_textures <= rhi_max_array_size, "Descriptor set requires more storage textures");
+			LC_ASSERT_MSG(storage_buffers <= rhi_max_array_size, "Descriptor set requires more dynamic storage buffers");
+			LC_ASSERT_MSG(dynamic_constant_buffers <= rhi_max_array_size, "Descriptor set requires more dynamic constant buffers");
 		}
 
 		// describe
@@ -1396,17 +1585,17 @@ namespace LitchiRuntime
 
 	void* RHI_Device::GetDescriptorSet(const RHI_Device_Resource resource_type)
 	{
-		return static_cast<void*>(descriptors::descriptor_sets_bindless[static_cast<uint32_t>(resource_type)]);
+		return static_cast<void*>(descriptors::bindless::sets[static_cast<uint32_t>(resource_type)]);
 	}
 
 	void* RHI_Device::GetDescriptorSetLayout(const RHI_Device_Resource resource_type)
 	{
-		return static_cast<void*>(descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(resource_type)]);
+		return static_cast<void*>(descriptors::bindless::layouts[static_cast<uint32_t>(resource_type)]);
 	}
 
 	unordered_map<uint64_t, RHI_DescriptorSet>& RHI_Device::GetDescriptorSets()
 	{
-		return descriptors::descriptor_sets;
+		return descriptors::sets;
 	}
 
 	uint32_t RHI_Device::GetDescriptorType(const RHI_Descriptor& descriptor)
@@ -1430,47 +1619,61 @@ namespace LitchiRuntime
 		return VkDescriptorType::VK_DESCRIPTOR_TYPE_MAX_ENUM;
 	}
 
-	void RHI_Device::SetBindlessSamplers(const std::array<std::shared_ptr<RHI_Sampler>, 9>& samplers)
+	void RHI_Device::UpdateBindlessResources(const array<shared_ptr<RHI_Sampler>, static_cast<uint32_t>(Renderer_Sampler::Max)>* samplers, array<RHI_Texture*, rhi_max_array_size>* textures)
 	{
 		descriptors::pipelines.clear();
 
-		// comparison
+		if (samplers)
 		{
-			if (descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_comparison)] != nullptr)
+			// comparison
 			{
-				RHI_Device::DeletionQueueAdd(RHI_Resource_Type::DescriptorSetLayout, descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_comparison)]);
-				descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_comparison)] = nullptr;
+				vector<shared_ptr<RHI_Sampler>> data =
+				{
+					(*samplers)[0],
+				};
+
+				descriptors::bindless::update_samplers(data, 0, RHI_Device_Resource::sampler_comparison);
 			}
 
-			vector<shared_ptr<RHI_Sampler>> samplers_comparison =
+			// regular
 			{
-				samplers[0], // comparison
-			};
+				vector<shared_ptr<RHI_Sampler>> data =
+				{
+					(*samplers)[1], // point_clamp_edge
+					(*samplers)[2], // point_clamp_border
+					(*samplers)[3], // point_wrap
+					(*samplers)[4], // bilinear_clamp_edge
+					(*samplers)[5], // bilinear_clamp_border
+					(*samplers)[6], // bilinear_wrap
+					(*samplers)[7], // trilinear_clamp
+					(*samplers)[8]  // anisotropic_wrap
+				};
 
-			descriptors::create_descriptor_set_samplers(samplers_comparison, 0, RHI_Device_Resource::sampler_comparison);
+				descriptors::bindless::update_samplers(data, 1, RHI_Device_Resource::sampler_regular);
+			}
 		}
 
-		// regular
+		// textures
 		{
-			if (descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_regular)] != nullptr)
-			{
-				RHI_Device::DeletionQueueAdd(RHI_Resource_Type::DescriptorSetLayout, descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_regular)]);
-				descriptors::descriptor_set_layouts_bindless[static_cast<uint32_t>(RHI_Device_Resource::sampler_regular)] = nullptr;
-			}
+			//const uint32_t binding_slot = static_cast<uint32_t>(Renderer_BindingsSrv::materials);
 
-			vector<shared_ptr<RHI_Sampler>> samplers_regular =
-			{
-				(samplers)[1], // point_clamp_edge
-				(samplers)[2], // point_clamp_border
-				(samplers)[3], // point_wrap
-				(samplers)[4], // bilinear_clamp_edge
-				(samplers)[5], // bilinear_clamp_border
-				(samplers)[6], // bilinear_wrap
-				(samplers)[7], // trilinear_clamp
-				(samplers)[8]  // anisotropic_wrap
-			};
+			//// by the time vkCmdBindDescriptorSets runs, we can't have a null descriptor set, so make sure there is something there
+			//{
+			//	bool first_run = descriptors::bindless::sets[static_cast<uint32_t>(RHI_Device_Resource::textures_material)] == nullptr;
+			//	bool no_textures = textures == nullptr;
 
-			descriptors::create_descriptor_set_samplers(samplers_regular, 1, RHI_Device_Resource::sampler_regular);
+			//	if (first_run && no_textures)
+			//	{
+			//		array<RHI_Texture*, rhi_max_array_size> array_dummy;
+			//		array_dummy.fill(nullptr);
+			//		descriptors::bindless::update_textures(&array_dummy, binding_slot);
+			//	}
+			//}
+
+			//if (textures)
+			//{
+			//	descriptors::bindless::update_textures(textures, binding_slot);
+			//}
 		}
 	}
 
@@ -1478,28 +1681,22 @@ namespace LitchiRuntime
 
 	void RHI_Device::GetOrCreatePipeline(RHI_PipelineState& pso, RHI_Pipeline*& pipeline, RHI_DescriptorSetLayout*& descriptor_set_layout)
 	{
-		LC_ASSERT(pso.IsValid());
+		pso.Prepare();
 
-		pso.ComputeHash();
-		EASY_BLOCK("descriptors::get_or_create_descriptor_set_layout")
+		lock_guard<mutex> lock(descriptors::descriptor_pipeline_mutex);
+
+		descriptor_set_layout = descriptors::get_or_create_descriptor_set_layout(pso).get();
+
+		// if no pipeline exists, create one
+		uint64_t hash = pso.GetHash();
+		auto it = descriptors::pipelines.find(hash);
+		if (it == descriptors::pipelines.end())
 		{
-			descriptor_set_layout = descriptors::get_or_create_descriptor_set_layout(pso).get();
-		}EASY_END_BLOCK
+			// create a new pipeline
+			it = descriptors::pipelines.emplace(make_pair(hash, make_shared<RHI_Pipeline>(pso, descriptor_set_layout))).first;
+		}
 
-		EASY_BLOCK("Create Pipeline")
-		{
-			// If no pipeline exists, create one
-			uint64_t hash = pso.GetHash();
-			auto it = descriptors::pipelines.find(hash);
-			if (it == descriptors::pipelines.end())
-			{
-				// Create a new pipeline
-				it = descriptors::pipelines.emplace(make_pair(hash, make_shared<RHI_Pipeline>(pso, descriptor_set_layout))).first;
-				DEBUG_LOG_INFO("A new pipeline has been created.");
-
-			}
-			pipeline = it->second.get();
-		}EASY_END_BLOCK
+		pipeline = it->second.get();
 
 	}
 
@@ -1609,24 +1806,55 @@ namespace LitchiRuntime
 		}
 	}
 
-	void RHI_Device::MemoryTextureCreate(void* vk_image_creat_info, void*& resource, const char* name)
+	void RHI_Device::MemoryTextureCreate(RHI_Texture* texture)
 	{
-		lock_guard<mutex> lock(vulkan_memory_allocator::mutex_allocator);
+		// describe image
+		VkImageCreateInfo create_info_image = {};
+		create_info_image.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
+		create_info_image.imageType = VK_IMAGE_TYPE_2D;
+		create_info_image.flags = texture->GetResourceType() == ResourceType::TextureCube ? VK_IMAGE_CREATE_CUBE_COMPATIBLE_BIT : 0;
+		create_info_image.usage = get_image_usage_flags(texture);
+		create_info_image.extent.width = texture->GetWidth();
+		create_info_image.extent.height = texture->GetHeight();
+		create_info_image.extent.depth = 1;
+		create_info_image.mipLevels = texture->GetMipCount();
+		create_info_image.arrayLayers = texture->GetArrayLength();
+		create_info_image.format = vulkan_format[rhi_format_to_index(texture->GetFormat())];
+		create_info_image.tiling = VK_IMAGE_TILING_OPTIMAL;
+		create_info_image.initialLayout = vulkan_image_layout[static_cast<uint8_t>(texture->GetLayout(0))];
+		create_info_image.samples = VK_SAMPLE_COUNT_1_BIT;
+		create_info_image.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 
-		VmaAllocationCreateInfo allocation_info = {};
-		allocation_info.usage = VMA_MEMORY_USAGE_AUTO;
+		// describe allocation
+		VmaAllocationCreateInfo create_info_allocation = {};
+		create_info_allocation.usage = VMA_MEMORY_USAGE_AUTO;
+		if (texture->GetFlags() & RHI_Texture_Mappable)
+		{
+			create_info_allocation.flags = VMA_ALLOCATION_CREATE_HOST_ACCESS_RANDOM_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT;
+		}
 
-		// Create image
+		// allocate
+		VmaAllocationInfo allocation_info;
 		VmaAllocation allocation;
+		void*& resource = texture->GetRhiResource();
 		LC_VK_ASSERT_MSG(vmaCreateImage(
 			vulkan_memory_allocator::allocator,
-			static_cast<VkImageCreateInfo*>(vk_image_creat_info), &allocation_info,
+			&create_info_image,
+			&create_info_allocation,
 			reinterpret_cast<VkImage*>(&resource),
 			&allocation,
-			nullptr),
+			&allocation_info),
 			"Failed to allocate texture");
 
-		vulkan_memory_allocator::save_allocation(resource, name, allocation);
+		// save mapped data pointer
+		if (texture->GetFlags() & RHI_Texture_Mappable)
+		{
+			void*& mapped_data = texture->GetMappedData();
+			mapped_data = allocation_info.pMappedData;
+		}
+
+		// save allocation
+		vulkan_memory_allocator::save_allocation(resource, texture->GetObjectName().c_str(), allocation);
 	}
 
 	void RHI_Device::MemoryTextureDestroy(void*& resource)
@@ -1649,14 +1877,11 @@ namespace LitchiRuntime
 		}
 	}
 
-	void RHI_Device::MemoryUnmap(void* resource, void*& mapped_data)
+	void RHI_Device::MemoryUnmap(void* resource)
 	{
-		LC_ASSERT_MSG(mapped_data, "Memory is already unmapped");
-
 		if (VmaAllocation allocation = static_cast<VmaAllocation>(vulkan_memory_allocator::get_allocation_from_resource(resource)))
 		{
 			vmaUnmapMemory(vulkan_memory_allocator::allocator, static_cast<VmaAllocation>(allocation));
-			mapped_data = nullptr;
 		}
 	}
 
@@ -1818,5 +2043,38 @@ namespace LitchiRuntime
 
 			functions::set_object_name(RHI_Context::device, &name_info);
 		}
+	}
+
+	uint32_t RHI_Device::GetEnabledGraphicsStages()
+	{
+		return device_features::enabled_graphics_shader_stages;
+	}
+
+	void RHI_Device::SetVariableRateShading(const RHI_CommandList* cmd_list, const bool enabled)
+	{
+		if (!m_is_shading_rate_supported)
+			return;
+
+		// set the fragment shading rate state for the current pipeline
+		VkExtent2D fragment_size = { 1, 1 };
+		VkFragmentShadingRateCombinerOpKHR combiner_operatins[2];
+
+		// The combiners determine how the different shading rate values for the pipeline, primitives and attachment are combined
+		if (enabled)
+		{
+			// If shading rate from attachment is enabled, we set the combiner, so that the values from the attachment are used
+			// Combiner for pipeline (A) and primitive (B) - Not used in this sample
+			combiner_operatins[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+			// Combiner for pipeline (A) and attachment (B), replace the pipeline default value (fragment_size) with the fragment sizes stored in the attachment
+			combiner_operatins[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_REPLACE_KHR;
+		}
+		else
+		{
+			// If shading rate from attachment is disabled, we keep the value set via the dynamic state
+			combiner_operatins[0] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+			combiner_operatins[1] = VK_FRAGMENT_SHADING_RATE_COMBINER_OP_KEEP_KHR;
+		}
+
+		functions::set_fragment_shading_rate(static_cast<VkCommandBuffer>(cmd_list->GetRhiResource()), &fragment_size, combiner_operatins);
 	}
 }

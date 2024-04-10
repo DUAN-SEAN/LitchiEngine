@@ -172,7 +172,7 @@ namespace LitchiRuntime
 			// this only matters for textures
 			RHI_Image_Layout layout = RHI_Image_Layout::Max;
 			layout = descriptor_type == RHI_Descriptor_Type::TextureStorage ? RHI_Image_Layout::General : layout;
-			layout = descriptor_type == RHI_Descriptor_Type::Texture ? RHI_Image_Layout::Shader_Read_Only_Optimal : layout;
+			layout = descriptor_type == RHI_Descriptor_Type::Texture ? RHI_Image_Layout::Shader_Read : layout;
 
 			for (const Resource& resource : resources)
 			{

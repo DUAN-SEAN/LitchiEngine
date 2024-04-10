@@ -11,40 +11,39 @@ namespace LitchiRuntime
 
     enum class Renderer_Option : uint32_t
     {
-        Debug_Aabb,
-        Debug_PickingRay,
-        Debug_Grid,
-        Debug_ReflectionProbes,
-        Debug_TransformHandle,
-        Debug_SelectionOutline,
-        Debug_Lights,
-        Debug_PerformanceMetrics,
-        Debug_Physics,
-        Debug_Wireframe,
+        Aabb,
+        PickingRay,
+        Grid,
+        TransformHandle,
+        SelectionOutline,
+        Lights,
+        PerformanceMetrics,
+        Physics,
+        Wireframe,
         Bloom,
-        VolumetricFog,
-        Ssgi,
+        Fog,
+        FogVolumetric,
+        ScreenSpaceGlobalIllumination,
         ScreenSpaceShadows,
         ScreenSpaceReflections,
         MotionBlur,
         DepthOfField,
         FilmGrain,
         ChromaticAberration,
-        Debanding,
-        DepthPrepass,
         Anisotropy,
         ShadowResolution,
-        Gamma,
         Exposure,
-        PaperWhite,
-        FogDensity,
+        WhitePoint,
         Antialiasing,
         Tonemapping,
         Upsampling,
-        UpsamplingSharpness,
         Sharpness,
         Hdr,
-        Vsync
+        Vsync,
+        VariableRateShading,
+        ResolutionScale,
+        DynamicResolution,
+        Max
     };
 
     enum class Renderer_Antialiasing : uint32_t
@@ -68,7 +67,7 @@ namespace LitchiRuntime
     enum class Renderer_Upsampling : uint32_t
     {
         Linear,
-        FSR2
+        Fsr2
     };
 
     enum class Renderer_BindingsCb

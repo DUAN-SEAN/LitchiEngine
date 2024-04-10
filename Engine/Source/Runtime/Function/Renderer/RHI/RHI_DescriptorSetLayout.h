@@ -31,8 +31,8 @@ namespace LitchiRuntime
 		void SetTexture(const uint32_t slot, RHI_Texture* texture, const uint32_t mip_index, const uint32_t mip_range);
 		void SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer);
 
-		// Dynamic offsets
-		void GetDynamicOffsets(std::vector<uint32_t>* offsets);
+		// dynamic offsets
+		void GetDynamicOffsets(std::array<uint32_t, 10>* offsets, uint32_t* count);
 
 		// Misc
 		void ClearDescriptorData();

@@ -18,12 +18,13 @@ namespace LitchiRuntime
         m_swap_chain_id = swap_chain_id;
         m_queue_type    = queue_type;
 
+
         // create command pools
         {
             VkCommandPoolCreateInfo cmd_pool_info = {};
-            cmd_pool_info.sType                   = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-            cmd_pool_info.queueFamilyIndex        = RHI_Device::QueueGetIndex(queue_type);
-            cmd_pool_info.flags                   = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT; // specifies that command buffers allocated from the pool will be short-lived
+            cmd_pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+            cmd_pool_info.queueFamilyIndex = RHI_Device::QueueGetIndex(queue_type);
+            cmd_pool_info.flags = VK_COMMAND_POOL_CREATE_TRANSIENT_BIT; // specifies that command buffers allocated from the pool will be short-lived
 
             // create the first one
             VkCommandPool cmd_pool = nullptr;
@@ -39,18 +40,13 @@ namespace LitchiRuntime
         }
 
         // create command lists
+        for (uint32_t i = 0; i < cmd_lists_per_pool; i++)
         {
-            string name = m_object_name + "_cmd_pool_0_0";
-            m_cmd_lists_0[0] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[0], name.c_str());
+            string name = m_object_name + "_cmd_pool_0_" + to_string(0);
+            m_cmd_lists_0[i] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[0], name.c_str());
 
-            name = m_object_name + "_cmd_pool_0_1";
-            m_cmd_lists_0[1] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[0], name.c_str());
-
-            name = m_object_name + "_cmd_pool_1_0";
-            m_cmd_lists_1[0] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[1], name.c_str());
-
-            name = m_object_name + "_cmd_pool_1_1";
-            m_cmd_lists_1[1] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[1], name.c_str());
+            name = m_object_name + "_cmd_pool_1_" + to_string(0);
+            m_cmd_lists_1[i] = make_shared<RHI_CommandList>(queue_type, m_swap_chain_id, m_rhi_resources[1], name.c_str());
         }
     }
 
@@ -60,30 +56,23 @@ namespace LitchiRuntime
         RHI_Device::QueueWait(m_queue_type);
 
         // free command lists
+        for (uint32_t i = 0; i < cmd_lists_per_pool; i++)
         {
-            for (shared_ptr<RHI_CommandList> cmd_list : m_cmd_lists_0)
-            {
-                VkCommandBuffer vk_cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_list->GetRhiResource());
+            VkCommandBuffer vk_cmd_buffer = reinterpret_cast<VkCommandBuffer>(m_cmd_lists_0[i]->GetRhiResource());
+            vkFreeCommandBuffers(
+                RHI_Context::device,
+                static_cast<VkCommandPool>(m_rhi_resources[0]),
+                1,
+                &vk_cmd_buffer
+            );
 
-                vkFreeCommandBuffers(
-                    RHI_Context::device,
-                    static_cast<VkCommandPool>(m_rhi_resources[0]),
-                    1,
-                    &vk_cmd_buffer
-                );
-            }
-
-            for (shared_ptr<RHI_CommandList> cmd_list : m_cmd_lists_1)
-            {
-                VkCommandBuffer vk_cmd_buffer = reinterpret_cast<VkCommandBuffer>(cmd_list->GetRhiResource());
-
-                vkFreeCommandBuffers(
-                    RHI_Context::device,
-                    static_cast<VkCommandPool>(m_rhi_resources[1]),
-                    1,
-                    &vk_cmd_buffer
-                );
-            }
+            vk_cmd_buffer = reinterpret_cast<VkCommandBuffer>(m_cmd_lists_1[i]->GetRhiResource());
+            vkFreeCommandBuffers(
+                RHI_Context::device,
+                static_cast<VkCommandPool>(m_rhi_resources[1]),
+                1,
+                &vk_cmd_buffer
+            );
         }
 
         // destroy commend pools
@@ -104,12 +93,12 @@ namespace LitchiRuntime
         m_index++;
 
         // if we have no more command lists, switch to the other pool
-        if (m_index == 2)
+        if (m_index == cmd_lists_per_pool)
         {
             // switch command pool
-            m_index            = 0;
-            m_using_pool_a     = !m_using_pool_a;
-            auto& cmd_lists    = m_using_pool_a ? m_cmd_lists_0 : m_cmd_lists_1;
+            m_index = 0;
+            m_using_pool_a = !m_using_pool_a;
+            auto& cmd_lists = m_using_pool_a ? m_cmd_lists_0 : m_cmd_lists_1;
             VkCommandPool pool = static_cast<VkCommandPool>(m_rhi_resources[m_using_pool_a ? 0 : 1]);
 
             // wait

@@ -139,7 +139,7 @@ namespace LitchiRuntime
 		//sampler(Renderer_Sampler::Anisotropic_wrap) = make_shared<RHI_Sampler>(RHI_Filter::Linear, RHI_Filter::Linear, RHI_Filter::Linear, RHI_Sampler_Address_Mode::Wrap, RHI_Comparison_Function::Always, anisotropy, false, mip_bias);
 
 		//// Make the samplers bindless and always present in the shaders
-		//RHI_Device::SetBindlessSamplers(samplers);
+		//RHI_Device::UpdateBindlessResources(samplers);
 #define sampler(type, filter_min, filter_mag, filter_mip, address_mode, comparison_func, anisotropy, comparison_enabled, mip_bias) \
         samplers[static_cast<uint8_t>(type)] = make_shared<RHI_Sampler>(filter_min, filter_mag, filter_mip, address_mode, comparison_func, anisotropy, comparison_enabled, mip_bias)
 
@@ -180,7 +180,7 @@ namespace LitchiRuntime
 			sampler(Renderer_Sampler::Anisotropic_wrap, RHI_Filter::Linear, RHI_Filter::Linear, RHI_Filter::Linear, RHI_Sampler_Address_Mode::Wrap, RHI_Comparison_Function::Always, anisotropy, false, mip_bias);
 		}
 	}
-	RHI_Device::SetBindlessSamplers(samplers);
+	RHI_Device::UpdateBindlessResources(samplers);
 	}
 
 	void Renderer::CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic)
@@ -285,7 +285,7 @@ namespace LitchiRuntime
 
 	void Renderer::CreateShaders()
 	{
-		const bool async = false;// Ä¬ÈÏÊ¹ÓÃÍ¬²½
+		const bool async = false;// Ä¬ï¿½ï¿½Ê¹ï¿½ï¿½Í¬ï¿½ï¿½
 		const string shader_dir = ApplicationBase::Instance()->GetEngineAssetsPath() + "Shaders/";
 #define shader(x) m_shaders[static_cast<uint8_t>(x)]
 

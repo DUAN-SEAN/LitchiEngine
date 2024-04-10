@@ -89,7 +89,7 @@ namespace LitchiRuntime
 		RHI_CommandList* cmd_current = nullptr;
 
 		// misc
-		array<float, 34> m_options;
+		unordered_map<Renderer_Option, float> m_options;
 		thread::id render_thread_id;
 		mutex mutex_entity_addition;
 		vector<GameObject*> m_entities_to_add;
@@ -186,38 +186,33 @@ namespace LitchiRuntime
 		//// AMD FidelityFX suite
 		//RHI_AMD_FidelityFX::Initialize();
 
-		// options
-		m_options.fill(0.0f);
-		SetOption(Renderer_Option::Hdr, swap_chain->IsHdr() ? 1.0f : 0.0f);                 // HDR is enabled by default if the swapchain is HDR
-		SetOption(Renderer_Option::Bloom, 0.05f);                                             // non-zero values activate it and define the blend factor.
+		  // options
+		m_options.clear();
+		SetOption(Renderer_Option::Hdr, swap_chain->IsHdr() ? 1.0f : 0.0f);
+		SetOption(Renderer_Option::WhitePoint, 350.0f);
+		//SetOption(Renderer_Option::Tonemapping, static_cast<float>(Renderer_Tonemapping::Max));
+		SetOption(Renderer_Option::Bloom, 0.03f);                                                // non-zero values activate it and define the blend factor
 		SetOption(Renderer_Option::MotionBlur, 1.0f);
-		SetOption(Renderer_Option::Ssgi, 1.0f);
-		SetOption(Renderer_Option::ScreenSpaceShadows, 1.0f);
+		SetOption(Renderer_Option::ScreenSpaceGlobalIllumination, 1.0f);
+		//SetOption(Renderer_Option::ScreenSpaceShadows, static_cast<float>(Renderer_ScreenspaceShadow::Bend));
 		SetOption(Renderer_Option::ScreenSpaceReflections, 1.0f);
 		SetOption(Renderer_Option::Anisotropy, 16.0f);
-		SetOption(Renderer_Option::ShadowResolution, 4096.0f);
-		SetOption(Renderer_Option::Tonemapping, static_cast<float>(Renderer_Tonemapping::Disabled));
-		SetOption(Renderer_Option::Gamma, 2.2f);
+		SetOption(Renderer_Option::ShadowResolution, 2048.0f);
 		SetOption(Renderer_Option::Exposure, 1.0f);
-		SetOption(Renderer_Option::Sharpness, 0.5f);
-		SetOption(Renderer_Option::FogDensity, 0.0f);
-		SetOption(Renderer_Option::Antialiasing, static_cast<float>(Renderer_Antialiasing::TaaFxaa)); // this is using FSR 2 for TAA
-		SetOption(Renderer_Option::Upsampling, static_cast<float>(Renderer_Upsampling::FSR2));
-		SetOption(Renderer_Option::UpsamplingSharpness, 1.0f);
+		SetOption(Renderer_Option::Sharpness, 0.5f);                                                 // becomes the upsampler's sharpness as well
+		SetOption(Renderer_Option::Fog, 0.3f);                                                 // controls the intensity of the volumetric fog as well
+		SetOption(Renderer_Option::FogVolumetric, 1.0f);                                                 // these is only a toggle for the volumetric fog
+		SetOption(Renderer_Option::Antialiasing, static_cast<float>(Renderer_Antialiasing::Taa));       // this is using fsr 2 for taa
+		SetOption(Renderer_Option::Upsampling, static_cast<float>(Renderer_Upsampling::Fsr2));
+		SetOption(Renderer_Option::ResolutionScale, 1.0f);
+		SetOption(Renderer_Option::VariableRateShading, 0.0f);
 		SetOption(Renderer_Option::Vsync, 0.0f);
-		SetOption(Renderer_Option::DepthPrepass, 0.0f);                                               // depth prepass is not always faster, so by default, it's disabled.
-		SetOption(Renderer_Option::Debanding, 0.0f);
-		SetOption(Renderer_Option::Debug_TransformHandle, 1.0f);
-		SetOption(Renderer_Option::Debug_SelectionOutline, 1.0f);
-		SetOption(Renderer_Option::Debug_Grid, 1.0f);
-		SetOption(Renderer_Option::Debug_ReflectionProbes, 1.0f);
-		SetOption(Renderer_Option::Debug_Lights, 1.0f);
-		SetOption(Renderer_Option::Debug_Physics, 0.0f);
-		SetOption(Renderer_Option::Debug_PerformanceMetrics, 1.0f);
-		// Buggy or unused options
-		//SetOption(Renderer_Option::PaperWhite,             150.0f);                                            // nits
-		//SetOption(RendererOption::DepthOfField,            1.0f);                                              // this is depth of field from ALDI, so until I improve it, it should be disabled by default.
-		//SetOption(RendererOption::VolumetricFog,           1.0f);                                              // disable by default because it's not that great, I need to do it with a voxelised approach.
+		SetOption(Renderer_Option::TransformHandle, 1.0f);
+		SetOption(Renderer_Option::SelectionOutline, 1.0f);
+		SetOption(Renderer_Option::Grid, 1.0f);
+		SetOption(Renderer_Option::Lights, 1.0f);
+		SetOption(Renderer_Option::Physics, 0.0f);
+		SetOption(Renderer_Option::PerformanceMetrics, 1.0f);
 
 		// resources
 		CreateConstantBuffers();
@@ -506,7 +501,7 @@ namespace LitchiRuntime
 
 		// transition the render target to a readable state so it can be rendered
 		// within the viewport or copied to the swap chain back buffer
-		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+		rt_output->SetLayout(RHI_Image_Layout::Shader_Read, cmd_list);
 	}
 
 	void Renderer::Render4BuildInAssetView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
@@ -536,7 +531,7 @@ namespace LitchiRuntime
 
 		// transition the render target to a readable state so it can be rendered
 		// within the viewport or copied to the swap chain back buffer
-		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+		rt_output->SetLayout(RHI_Image_Layout::Shader_Read, cmd_list);
 	}
 
 	void Renderer::Render4BuildInGameView(RHI_CommandList* cmd_list, RendererPath* rendererPath)
@@ -589,7 +584,7 @@ namespace LitchiRuntime
 
 		// transition the render target to a readable state so it can be rendered
 		// within the viewport or copied to the swap chain back buffer
-		rt_output->SetLayout(RHI_Image_Layout::Shader_Read_Only_Optimal, cmd_list);
+		rt_output->SetLayout(RHI_Image_Layout::Shader_Read, cmd_list);
 	}
 
 	void Renderer::OnSceneResolved(std::vector<GameObject*> gameObjectList)
@@ -956,126 +951,166 @@ namespace LitchiRuntime
 
 	void Renderer::SetOption(Renderer_Option option, float value)
 	{
-		// Clamp value
-		{
-			// Anisotropy
-			if (option == Renderer_Option::Anisotropy)
-			{
-				value = Helper::Clamp(value, 0.0f, 16.0f);
-			}
-			// Shadow resolution
-			else if (option == Renderer_Option::ShadowResolution)
-			{
-				value = Helper::Clamp(value, static_cast<float>(resolution_shadow_min), static_cast<float>(RHI_Device::PropertyGetMaxTexture2dDimension()));
-			}
-		}
+		  // clamp value
+        {
+            // anisotropy
+            if (option == Renderer_Option::Anisotropy)
+            {
+                value = Helper::Clamp(value, 0.0f, 16.0f);
+            }
+            // shadow resolution
+            else if (option == Renderer_Option::ShadowResolution)
+            {
+                value = Helper::Clamp(value, static_cast<float>(resolution_shadow_min), static_cast<float>(RHI_Device::PropertyGetMaxTexture2dDimension()));
+            }
+            else if (option == Renderer_Option::ResolutionScale)
+            {
+                value = Helper::Clamp(value, 0.5f, 1.0f);
+            }
+        }
 
-		// Early exit if the value is already set
-		if (m_options[static_cast<uint32_t>(option)] == value)
-			return;
+        // early exit if the value is already set
+        if ((m_options.find(option) != m_options.end()) && m_options[option] == value)
+            return;
 
-		// todo:
-		//// Reject changes (if needed)
-		//{
-		//    if (option == Renderer_Option::Hdr)
-		//    {
-		//        if (value == 1.0f && !Display::GetHdr())
-		//        {
-		//            DEBUG_LOG_INFO("This display doesn't support HDR");
-		//            return;
-		//        }
-		//    }
-		//}
+        // reject changes (if needed)
+        {
+           /* if (option == Renderer_Option::Hdr)
+            {
+                if (value == 1.0f)
+                {
+                    if (!Display::GetHdr())
+                    { 
+                        DEBUG_INFO("This display doesn't support HDR");
+                        return;
+                    }
+                }
+            }
+            else if (option == Renderer_Option::VariableRateShading)
+            {
+                if (value == 1.0f)
+                {
+                    if (!RHI_Device::PropertyIsShadingRateSupported())
+                    { 
+                        SP_LOG_INFO("This GPU doesn't support variable rate shading");
+                        return;
+                    }
+                }
+            }*/
+        }
 
-		// Set new value
-		m_options[static_cast<uint32_t>(option)] = value;
+        // set new value
+        m_options[option] = value;
 
-		// Handle cascading changes
-		{
-			// Antialiasing
-			if (option == Renderer_Option::Antialiasing)
-			{
-				bool taa_enabled = value == static_cast<float>(Renderer_Antialiasing::Taa) || value == static_cast<float>(Renderer_Antialiasing::TaaFxaa);
-				bool fsr_enabled = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling) == Renderer_Upsampling::FSR2;
+        // handle cascading changes
+        {
+            // antialiasing
+            if (option == Renderer_Option::Antialiasing)
+            {
+                bool taa_enabled = value == static_cast<float>(Renderer_Antialiasing::Taa) || value == static_cast<float>(Renderer_Antialiasing::TaaFxaa);
+                bool fsr_enabled = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling) == Renderer_Upsampling::Fsr2;
 
-				if (taa_enabled)
-				{
-					// Implicitly enable FSR since it's doing TAA.
-					if (!fsr_enabled)
-					{
-						m_options[static_cast<uint32_t>(Renderer_Option::Upsampling)] = static_cast<float>(Renderer_Upsampling::FSR2);
-						// RHI_AMD_FidelityFX::FSR2_ResetHistory();
-						DEBUG_LOG_INFO("Enabled FSR 2.0 since it's used for TAA.");
-					}
-				}
-				else
-				{
-					// Implicitly disable FSR since it's doing TAA
-					if (fsr_enabled)
-					{
-						m_options[static_cast<uint32_t>(Renderer_Option::Upsampling)] = static_cast<float>(Renderer_Upsampling::Linear);
-						DEBUG_LOG_INFO("Disabed FSR 2.0 since it's used for TAA.");
-					}
-				}
-			}
-			// Upsampling
-			else if (option == Renderer_Option::Upsampling)
-			{
-				bool taa_enabled = GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa;
+                if (taa_enabled)
+                {
+					// todo
+                    //// implicitly enable FSR since it's doing TAA.
+                    //if (!fsr_enabled)
+                    //{
+                    //    m_options[Renderer_Option::Upsampling] = static_cast<float>(Renderer_Upsampling::Fsr2);
+                    //    RHI_FidelityFX::FSR2_ResetHistory();
+                    //}
+                }
+                else
+                {
+                    // implicitly disable FSR since it's doing TAA
+                    if (fsr_enabled)
+                    {
+                        m_options[Renderer_Option::Upsampling] = static_cast<float>(Renderer_Upsampling::Linear);
+                    }
+                }
+            }
+            // upsampling
+            else if (option == Renderer_Option::Upsampling)
+            {
+                bool taa_enabled = GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa;
 
-				if (value == static_cast<float>(Renderer_Upsampling::Linear))
-				{
-					// Implicitly disable TAA since FSR 2.0 is doing it
-					if (taa_enabled)
-					{
-						m_options[static_cast<uint32_t>(Renderer_Option::Antialiasing)] = static_cast<float>(Renderer_Antialiasing::Disabled);
-						DEBUG_LOG_INFO("Disabled TAA since it's done by FSR 2.0.");
-					}
-				}
-				else if (value == static_cast<float>(Renderer_Upsampling::FSR2))
-				{
-					// Implicitly enable TAA since FSR 2.0 is doing it
-					if (!taa_enabled)
-					{
-						m_options[static_cast<uint32_t>(Renderer_Option::Antialiasing)] = static_cast<float>(Renderer_Antialiasing::Taa);
-						// RHI_AMD_FidelityFX::FSR2_ResetHistory();
-						DEBUG_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
-					}
-				}
-			}
-			//// Shadow resolution
-			//else if (option == Renderer_Option::ShadowResolution)
-			//{
-			//	const auto& light_entities = m_renderables[Renderer_Entity::Light];
-			//	for (const auto& light_entity : light_entities)
-			//	{
-			//		auto light = light_entity->GetComponent<Light>();
-			//		if (light->GetShadowsEnabled())
-			//		{
-			//			light->CreateShadowMap();
-			//		}
-			//	}
-			//}
-			else if (option == Renderer_Option::Hdr)
-			{
-				swap_chain->SetHdr(value == 1.0f);
-			}
-			else if (option == Renderer_Option::Vsync)
-			{
-				swap_chain->SetVsync(value == 1.0f);
-			}
-		}
+                if (value == static_cast<float>(Renderer_Upsampling::Linear))
+                {
+                    // Implicitly disable TAA since FSR 2.0 is doing it
+                    if (taa_enabled)
+                    {
+                        m_options[Renderer_Option::Antialiasing] = static_cast<float>(Renderer_Antialiasing::Disabled);
+                        DEBUG_LOG_INFO("Disabled TAA since it's done by FSR 2.0.");
+                    }
+                }
+      //          else if (value == static_cast<float>(Renderer_Upsampling::Fsr2))
+      //          {
+      //              // Implicitly enable TAA since FSR 2.0 is doing it
+      //              if (!taa_enabled)
+      //              {
+      //                  m_options[Renderer_Option::Antialiasing] = static_cast<float>(Renderer_Antialiasing::Taa);
+      //                  RHI_FidelityFX::FSR2_ResetHistory();
+						//DEBUG_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
+      //              }
+      //          }
+            }
+
+        	// shadow resolution
+            else if (option == Renderer_Option::ShadowResolution)
+            {
+				// todo:
+               /* const auto& light_entities = m_renderables[Renderer_Entity::Light];
+                for (const auto& light_entity : light_entities)
+                {
+                    auto light = light_entity->GetComponent<Light>();
+                    if (light->IsFlagSet(LightFlags::Shadows))
+                    {
+                        light->RefreshShadowMap();
+                    }
+                }*/
+            }
+            else if (option == Renderer_Option::Hdr)
+            {
+                if (swap_chain)
+                { 
+                    swap_chain->SetHdr(value == 1.0f);
+                }
+            }
+            else if (option == Renderer_Option::Vsync)
+            {
+                if (swap_chain)
+                {
+                    swap_chain->SetVsync(value == 1.0f);
+                }
+            }
+            else if (option == Renderer_Option::FogVolumetric || option == Renderer_Option::ScreenSpaceShadows)
+            {
+				// todo
+                // SP_FIRE_EVENT(EventType::LightOnChanged);
+            }
+            else if (option == Renderer_Option::PerformanceMetrics)
+            {
+               /* static bool enabled = false;
+                if (!enabled && value == 1.0f)
+                {
+                    Profiler::ClearMetrics();
+                }
+
+                enabled = value != 0.0f;*/
+            }
+        }
 	}
 
-	array<float, 34>& Renderer::GetOptions()
+	unordered_map<Renderer_Option, float>& Renderer::GetOptions()
 	{
 		return m_options;
 	}
 
-	void Renderer::SetOptions(array<float, 34> options)
+	void Renderer::SetOptions(const unordered_map<Renderer_Option, float>& options)
 	{
 		m_options = options;
 	}
+
 
 	RHI_SwapChain* Renderer::GetSwapChain()
 	{
@@ -1088,7 +1123,7 @@ namespace LitchiRuntime
 			return;
 
 		LC_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
-		LC_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Src);
+		LC_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Source);
 
 		swap_chain->Present();
 
@@ -1165,14 +1200,15 @@ namespace LitchiRuntime
 		cb_frame_cpu.resolution_render = m_resolution_render;
 		cb_frame_cpu.taa_jitter_previous = cb_frame_cpu.taa_jitter_current;
 		cb_frame_cpu.taa_jitter_current = jitter_offset;
+		// cb_frame_cpu.time = static_cast<float>(Timer::GetTimeSec());
 		cb_frame_cpu.delta_time = static_cast<float>(Time::GetDeltaTime());
-		cb_frame_cpu.gamma = GetOption<float>(Renderer_Option::Gamma);
+		//cb_frame_cpu.gamma = GetOption<float>(Renderer_Option:);
 		cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
 
 		// These must match what Common_Buffer.hlsl is reading
 		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
-		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
-		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
+		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
+		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
 		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
 		return cb_frame_cpu;
 	}

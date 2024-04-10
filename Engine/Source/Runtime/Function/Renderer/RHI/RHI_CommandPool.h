@@ -9,6 +9,8 @@
 
 namespace LitchiRuntime
 {
+    const uint32_t cmd_lists_per_pool = 3;
+
     class RHI_CommandPool : public Object
     {
     public:
@@ -29,6 +31,6 @@ namespace LitchiRuntime
         bool m_using_pool_a         = true;
         bool m_first_tick           = true;
         uint64_t m_swap_chain_id    = 0;
-        RHI_Queue_Type m_queue_type = RHI_Queue_Type::Undefined;
+        RHI_Queue_Type m_queue_type = RHI_Queue_Type::Max;
     };
 }

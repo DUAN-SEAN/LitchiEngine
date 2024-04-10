@@ -16,6 +16,7 @@
 #include "../RHI_Fence.h"
 #include "../RHI_SwapChain.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_DepthStencilState.h"
 #include "Runtime/Function/Renderer/RHI/RHI_RasterizerState.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 //=====================================
@@ -51,14 +52,23 @@ namespace LitchiRuntime
             return VK_ATTACHMENT_LOAD_OP_CLEAR;
         };
 
-        VkPipelineStageFlags layout_to_access_mask(const VkImageLayout layout, const bool is_destination_mask)
+        VkPipelineStageFlags2 layout_to_access_mask(const VkImageLayout layout, const bool is_destination_mask, const bool is_depth)
         {
-            VkPipelineStageFlags access_mask = 0;
+            VkPipelineStageFlags2 access_mask = 0;
 
             switch (layout)
             {
             case VK_IMAGE_LAYOUT_UNDEFINED:
-                LC_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_UNDEFINED.");
+                // a newly created swapchain will have an undefined layout and if use a 0 mask the validation layer
+                // will complain so we add a generic access mask that's harmless for VK_IMAGE_LAYOUT_UNDEFINED transitions
+                if (!is_destination_mask)
+                {
+                    access_mask = VK_ACCESS_MEMORY_READ_BIT | VK_ACCESS_MEMORY_WRITE_BIT;
+                }
+                else
+                {
+                    LC_ASSERT(!is_destination_mask && "The new layout used in a transition must not be VK_IMAGE_LAYOUT_UNDEFINED.");
+                }
                 break;
 
             case VK_IMAGE_LAYOUT_PREINITIALIZED:
@@ -79,12 +89,12 @@ namespace LitchiRuntime
                 access_mask = VK_ACCESS_TRANSFER_WRITE_BIT;
                 break;
 
-                // color attachments
+                // attachments
             case VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL:
                 access_mask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
                 break;
 
-                // depth attachments
+                // attachments - depth/stencil
             case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_OPTIMAL:
                 access_mask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
                 break;
@@ -99,6 +109,23 @@ namespace LitchiRuntime
 
             case VK_IMAGE_LAYOUT_DEPTH_ATTACHMENT_STENCIL_READ_ONLY_OPTIMAL:
                 access_mask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT;
+                break;
+
+                // attachments
+            case VK_IMAGE_LAYOUT_ATTACHMENT_OPTIMAL:
+                if (is_depth)
+                {
+                    access_mask = VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_READ_BIT_KHR | VK_ACCESS_2_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT_KHR;
+
+                }
+                else
+                {
+                    access_mask = VK_ACCESS_2_COLOR_ATTACHMENT_READ_BIT_KHR | VK_ACCESS_2_COLOR_ATTACHMENT_WRITE_BIT_KHR;
+                }
+                break;
+
+            case VK_IMAGE_LAYOUT_FRAGMENT_SHADING_RATE_ATTACHMENT_OPTIMAL_KHR:
+                access_mask = VK_ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR;
                 break;
 
                 // shader reads
@@ -119,21 +146,26 @@ namespace LitchiRuntime
                 break;
 
             default:
-                DEBUG_LOG_ERROR("Unexpected image layout");
+                LC_ASSERT_MSG(false, "Unhandled layout");
                 break;
             }
 
             return access_mask;
         }
 
-        VkPipelineStageFlags access_flags_to_pipeline_stage(VkAccessFlags access_flags)
+        VkPipelineStageFlags2 access_mask_to_pipeline_stage_mask(VkAccessFlags2 access_flags, bool is_swapchain)
         {
-            VkPipelineStageFlags stages = 0;
+            if (is_swapchain)
+            {
+                return VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+            }
+
+            VkPipelineStageFlags2 stages = 0;
             uint32_t enabled_graphics_stages = RHI_Device::GetEnabledGraphicsStages();
 
             while (access_flags != 0)
             {
-                VkAccessFlagBits access_flag = static_cast<VkAccessFlagBits>(access_flags & (~(access_flags - 1)));
+                VkAccessFlagBits2 access_flag = static_cast<VkAccessFlagBits2>(access_flags & (~(access_flags - 1)));
                 LC_ASSERT(access_flag != 0 && (access_flag & (access_flag - 1)) == 0);
                 access_flags &= ~access_flag;
 
@@ -168,7 +200,7 @@ namespace LitchiRuntime
                     stages |= enabled_graphics_stages | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
                     break;
 
-                    // color attachments
+                    // attachments - color
                 case VK_ACCESS_COLOR_ATTACHMENT_READ_BIT:
                     stages |= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
                     break;
@@ -177,9 +209,14 @@ namespace LitchiRuntime
                     stages |= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
                     break;
 
-                    // depth-stencil attachments
+                    // attachments - depth/stencil
                 case VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT:
                     stages |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+                    break;
+
+                    // attachments - shading rate
+                case VK_ACCESS_FRAGMENT_SHADING_RATE_ATTACHMENT_READ_BIT_KHR:
+                    stages |= VK_PIPELINE_STAGE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR;
                     break;
 
                 case VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT:
@@ -202,6 +239,19 @@ namespace LitchiRuntime
 
                 case VK_ACCESS_HOST_WRITE_BIT:
                     stages |= VK_PIPELINE_STAGE_HOST_BIT;
+                    break;
+
+                    // misc
+                case VK_ACCESS_MEMORY_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+                    break;
+
+                case VK_ACCESS_MEMORY_WRITE_BIT:
+                    stages |= VK_PIPELINE_STAGE_ALL_COMMANDS_BIT;
+                    break;
+
+                default:
+                    LC_ASSERT_MSG(false, "Unhandled access flag");
                     break;
                 }
             }
@@ -231,6 +281,165 @@ namespace LitchiRuntime
 
             return aspect_mask;
         }
+
+        namespace descriptor_sets
+        {
+            bool bind_dynamic = false;
+
+            void set_dynamic(const RHI_PipelineState pso, void* resource, void* pipeline_layout, RHI_DescriptorSetLayout* layout)
+            {
+                array<void*, 1> resources =
+                {
+                    layout->GetDescriptorSet()->GetResource()
+                };
+
+                // get dynamic offsets
+                array<uint32_t, 10> dynamic_offsets;
+                uint32_t dynamic_offset_count = 0;
+                layout->GetDynamicOffsets(&dynamic_offsets, &dynamic_offset_count);
+
+                VkPipelineBindPoint bind_point = pso.IsCompute() ? VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_COMPUTE : VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS;
+                vkCmdBindDescriptorSets
+                (
+                    static_cast<VkCommandBuffer>(resource),               // commandBuffer
+                    bind_point,                                           // pipelineBindPoint
+                    static_cast<VkPipelineLayout>(pipeline_layout),       // layout
+                    0,                                                    // firstSet
+                    static_cast<uint32_t>(resources.size()),              // descriptorSetCount
+                    reinterpret_cast<VkDescriptorSet*>(resources.data()), // pDescriptorSets
+                    dynamic_offset_count,                                 // dynamicOffsetCount
+                    dynamic_offsets.data()                                // pDynamicOffsets
+                );
+
+                bind_dynamic = false;
+                //Profiler::m_rhi_bindings_descriptor_set++;
+            }
+
+            void set_bindless(const RHI_PipelineState pso, void* resource, void* pipeline_layout)
+            {
+                //array<void*, 3> resources =
+                array<void*, 2> resources =
+                {
+                    //RHI_Device::GetDescriptorSet(RHI_Device_Resource::textures_material),
+                    RHI_Device::GetDescriptorSet(RHI_Device_Resource::sampler_comparison),
+                    RHI_Device::GetDescriptorSet(RHI_Device_Resource::sampler_regular)
+                };
+
+                VkPipelineBindPoint bind_point = pso.IsCompute() ? VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_COMPUTE : VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS;
+                vkCmdBindDescriptorSets
+                (
+                    static_cast<VkCommandBuffer>(resource),               // commandBuffer
+                    bind_point,                                           // pipelineBindPoint
+                    static_cast<VkPipelineLayout>(pipeline_layout),       // layout
+                    1,                                                    // firstSet
+                    static_cast<uint32_t>(resources.size()),              // descriptorSetCount
+                    reinterpret_cast<VkDescriptorSet*>(resources.data()), // pDescriptorSets
+                    0,                                                    // dynamicOffsetCount
+                    nullptr                                               // pDynamicOffsets
+                );
+
+                //Profiler::m_rhi_bindings_descriptor_set++;
+            }
+        }
+
+        namespace queries
+        {
+            namespace timestamp
+            {
+                array<uint64_t, rhi_max_queries_timestamps> data;
+
+                void update(void* query_pool, const uint32_t query_count)
+                {
+                    //if (Profiler::IsGpuTimingEnabled())
+                    //{
+                    //    vkGetQueryPoolResults(
+                    //        RHI_Context::device,                  // device
+                    //        static_cast<VkQueryPool>(query_pool), // queryPool
+                    //        0,                                    // firstQuery
+                    //        query_count,                          // queryCount
+                    //        query_count * sizeof(uint64_t),       // dataSize
+                    //        queries::timestamp::data.data(),      // pData
+                    //        sizeof(uint64_t),                     // stride
+                    //        VK_QUERY_RESULT_64_BIT                // flags
+                    //    );
+                    //}
+                }
+
+                void reset(void* cmd_list, void*& query_pool)
+                {
+                    vkCmdResetQueryPool(static_cast<VkCommandBuffer>(cmd_list), static_cast<VkQueryPool>(query_pool), 0, rhi_max_queries_timestamps);
+                }
+            }
+
+            namespace occlusion
+            {
+                array<uint64_t, rhi_max_queries_occlusion> data;
+                unordered_map<uint64_t, uint32_t> id_to_index;
+                uint32_t index = 0;
+                uint32_t index_active = 0;
+                bool occlusion_query_active = false;
+
+                void update(void* query_pool, const uint32_t query_count)
+                {
+                    vkGetQueryPoolResults(
+                        RHI_Context::device,                                 // device
+                        static_cast<VkQueryPool>(query_pool),                // queryPool
+                        0,                                                   // firstQuery
+                        query_count,                                         // queryCount
+                        query_count * sizeof(uint64_t),                      // dataSize
+                        queries::occlusion::data.data(),                     // pData
+                        sizeof(uint64_t),                                    // stride
+                        VK_QUERY_RESULT_64_BIT | VK_QUERY_RESULT_PARTIAL_BIT // flags
+                    );
+                }
+
+                void reset(void* cmd_list, void*& query_pool)
+                {
+                    vkCmdResetQueryPool(static_cast<VkCommandBuffer>(cmd_list), static_cast<VkQueryPool>(query_pool), 0, rhi_max_queries_occlusion);
+                }
+            }
+
+            void initialize(void*& pool_timestamp, void*& pool_occlusion)
+            {
+                //// timestamps
+                //if (Profiler::IsGpuTimingEnabled())
+                //{
+                //    VkQueryPoolCreateInfo query_pool_info = {};
+                //    query_pool_info.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+                //    query_pool_info.queryType = VK_QUERY_TYPE_TIMESTAMP;
+                //    query_pool_info.queryCount = rhi_max_queries_timestamps;
+
+                //    auto query_pool = reinterpret_cast<VkQueryPool*>(&pool_timestamp);
+                //    LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_info, nullptr, query_pool),
+                //        "Failed to created timestamp query pool");
+
+                //    RHI_Device::SetResourceName(pool_timestamp, RHI_Resource_Type::QueryPool, "query_pool_timestamp");
+                //}
+
+                // occlusion
+                {
+                    VkQueryPoolCreateInfo query_pool_info = {};
+                    query_pool_info.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+                    query_pool_info.queryType = VK_QUERY_TYPE_OCCLUSION;
+                    query_pool_info.queryCount = rhi_max_queries_occlusion;
+
+                    auto query_pool = reinterpret_cast<VkQueryPool*>(&pool_occlusion);
+                    LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_info, nullptr, query_pool),
+                        "Failed to created occlusion query pool");
+
+                    RHI_Device::SetResourceName(pool_occlusion, RHI_Resource_Type::QueryPool, "query_pool_occlusion");
+                }
+
+                timestamp::data.fill(0);
+                occlusion::data.fill(0);
+            }
+
+            void shutdown(void*& pool_timestamp, void*& pool_occlusion)
+            {
+                RHI_Device::DeletionQueueAdd(RHI_Resource_Type::QueryPool, pool_timestamp);
+                RHI_Device::DeletionQueueAdd(RHI_Resource_Type::QueryPool, pool_occlusion);
+            }
+        }
     }
 
     RHI_CommandList::RHI_CommandList(const RHI_Queue_Type queue_type, const uint32_t swapchain_id, void* cmd_pool, const char* name) : Object()
@@ -238,55 +447,42 @@ namespace LitchiRuntime
         m_queue_type  = queue_type;
         m_object_name = name;
 
-        // Command buffer
+        // command buffer
         {
+            // define
             VkCommandBufferAllocateInfo allocate_info = {};
-            allocate_info.sType                       = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-            allocate_info.commandPool                 = static_cast<VkCommandPool>(cmd_pool);
-            allocate_info.level                       = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-            allocate_info.commandBufferCount          = 1;
+            allocate_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+            allocate_info.commandPool = static_cast<VkCommandPool>(cmd_pool);
+            allocate_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+            allocate_info.commandBufferCount = 1;
 
-            // Allocate
+            // allocate
             LC_VK_ASSERT_MSG(vkAllocateCommandBuffers(RHI_Context::device, &allocate_info, reinterpret_cast<VkCommandBuffer*>(&m_rhi_resource)),
                 "Failed to allocate command buffer");
 
-            // Name
+            // name
             RHI_Device::SetResourceName(static_cast<void*>(m_rhi_resource), RHI_Resource_Type::CommandList, name);
         }
 
-        // Query pool
-        if (RHI_Context::gpu_profiling)
-        {
-            VkQueryPoolCreateInfo query_pool_create_info = {};
-            query_pool_create_info.sType                 = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-            query_pool_create_info.queryType             = VK_QUERY_TYPE_TIMESTAMP;
-            query_pool_create_info.queryCount            = m_max_timestamps;
+        // sync objects
+        m_rendering_complete_fence = make_shared<RHI_Fence>(name);
 
-            auto query_pool = reinterpret_cast<VkQueryPool*>(&m_rhi_query_pool);
-            LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_create_info, nullptr, query_pool),
-                "Failed to created query pool");
-
-            m_timestamps.fill(0);
-        }
-
-        // Sync objects
-        m_proccessed_fence = make_shared<RHI_Fence>(name);
-
-        // Semaphore
+        // semaphore
         bool presents_to_swapchain = swapchain_id != 0;
         if (presents_to_swapchain)
         {
-            m_proccessed_semaphore = make_shared<RHI_Semaphore>(false, name);
+            m_rendering_complete_semaphore = make_shared<RHI_Semaphore>(false, name);
         }
+
+        queries::initialize(m_rhi_query_pool_timestamps, m_rhi_query_pool_occlusion);
     }
 
     RHI_CommandList::~RHI_CommandList()
     {
-        if (m_rhi_query_pool)
-        {
-            RHI_Device::DeletionQueueAdd(RHI_Resource_Type::QueryPool, m_rhi_query_pool);
-            m_rhi_query_pool = nullptr;
-        }
+        m_rendering_complete_fence = nullptr;
+        m_rendering_complete_semaphore = nullptr;
+
+        queries::shutdown(m_rhi_query_pool_timestamps, m_rhi_query_pool_occlusion);
     }
 
     void RHI_CommandList::Begin()
@@ -294,57 +490,36 @@ namespace LitchiRuntime
         EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(m_state == RHI_CommandListState::Idle);
 
-        // Get queries
-        if (m_queue_type != RHI_Queue_Type::Copy)
+        if (m_queue_type != RHI_Queue_Type::Copy && m_timestamp_index != 0)
         {
-            if (RHI_Context::gpu_profiling)
-            {
-                if (m_rhi_query_pool)
-                {
-                    if (m_timestamp_index != 0)
-                    {
-                        const uint32_t query_count     = m_timestamp_index * 2;
-                        const size_t stride            = sizeof(uint64_t);
-                        const VkQueryResultFlags flags = VK_QUERY_RESULT_64_BIT;
-
-                        vkGetQueryPoolResults(
-                            RHI_Context::device,                    // device
-                            static_cast<VkQueryPool>(m_rhi_query_pool), // queryPool
-                            0,                                      // firstQuery
-                            query_count,                            // queryCount
-                            query_count * stride,                   // dataSize
-                            m_timestamps.data(),                    // pData
-                            stride,                                 // stride
-                            flags                                   // flags
-                        );
-                    }
-                }
-            }
-
-            m_timestamp_index = 0;
+            queries::timestamp::update(m_rhi_query_pool_timestamps, m_timestamp_index);
         }
 
-        // Begin command buffer
+        // begin command buffer
         VkCommandBufferBeginInfo begin_info = {};
-        begin_info.sType                    = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-        begin_info.flags                    = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
+        begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
         LC_ASSERT_MSG(vkBeginCommandBuffer(static_cast<VkCommandBuffer>(m_rhi_resource), &begin_info) == VK_SUCCESS, "Failed to begin command buffer");
 
-        // Reset query pool - Has to be done after vkBeginCommandBuffer or a VK_DEVICE_LOST will occur
+        // update states
+        m_state = RHI_CommandListState::Recording;
+        m_pso = RHI_PipelineState();
+
+        // queries
         if (m_queue_type != RHI_Queue_Type::Copy)
         {
-            vkCmdResetQueryPool(static_cast<VkCommandBuffer>(m_rhi_resource), static_cast<VkQueryPool>(m_rhi_query_pool), 0, m_max_timestamps);
+            // queries need to be reset before they are first used and they
+            // also need to be reset after every use, so we just reset them always
+            m_timestamp_index = 0;
+            queries::timestamp::reset(m_rhi_resource, m_rhi_query_pool_timestamps);
+            queries::occlusion::reset(m_rhi_resource, m_rhi_query_pool_occlusion);
         }
-
-        // Update states
-        m_state          = RHI_CommandListState::Recording;
-        m_pipeline_dirty = true;
     }
 
     void RHI_CommandList::End()
     {
         EASY_FUNCTION(profiler::colors::Magenta);
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        RenderPassEnd();
 
         LC_ASSERT_MSG(
             vkEndCommandBuffer(static_cast<VkCommandBuffer>(m_rhi_resource)) == VK_SUCCESS,
@@ -359,13 +534,21 @@ namespace LitchiRuntime
         EASY_FUNCTION(profiler::colors::Magenta);
         LC_ASSERT(m_state == RHI_CommandListState::Ended);
 
+        // we can reach this code path and have a submitted semaphore when exiting full screen
+          // it's okay to reset it manually here but ideally, we should find out why this happens
+        if (m_rendering_complete_semaphore && m_rendering_complete_semaphore->GetStateCpu() == RHI_Sync_State::Submitted)
+        {
+            m_rendering_complete_fence = make_shared<RHI_Fence>(m_object_name.c_str());
+            m_rendering_complete_semaphore = make_shared<RHI_Semaphore>(false, m_object_name.c_str());
+        }
+
         RHI_Device::QueueSubmit(
-            m_queue_type,                                  // queue
-            VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT, // wait flags
-            static_cast<VkCommandBuffer>(m_rhi_resource),  // cmd buffer
-            nullptr,                                       // wait semaphore
-            m_proccessed_semaphore.get(),                  // signal semaphore
-            m_proccessed_fence.get()                       // signal fence
+            m_queue_type,                                 // queue
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,            // wait flags
+            static_cast<VkCommandBuffer>(m_rhi_resource), // cmd buffer
+            nullptr,                                      // wait semaphore
+            m_rendering_complete_semaphore.get(),         // signal semaphore
+            m_rendering_complete_fence.get()              // signal fence
         );
 
         m_state = RHI_CommandListState::Submitted;
@@ -374,24 +557,33 @@ namespace LitchiRuntime
     void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso)
     {
         EASY_FUNCTION(profiler::colors::Brown600);
+
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        // determine if the pipeline is dirty
+        pso.Prepare();
+        if (m_pso.GetHash() == pso.GetHash())
+        {
+            if (m_pso.GetHashDynamic() != pso.GetHashDynamic())
+            {
+                m_pso = pso; // copy over the pso it can carry some dynamic state (clear values, etc)
+                RenderPassBegin();
+            }
+
+            return;
+        }
 
         EASY_BLOCK("GetOrCreatePipeline")
-        // get (or create) a pipeline which matches the requested pipeline state
+        // get (or create) a pipeline which matches the requested pipeline state  m_pso = pso;
         RHI_Device::GetOrCreatePipeline(pso, m_pipeline, m_descriptor_layout_current);
         EASY_END_BLOCK
 
         uint64_t hash_previous = m_pso.GetHash();
         m_pso                  = pso;
 
-        // Determine if the pipeline is dirty
-        if (!m_pipeline_dirty)
-        {
-            m_pipeline_dirty = hash_previous != m_pso.GetHash();
-        }
+        // (in case one is active)
+        EndOcclusionQuery();
 
         // Bind pipeline
-        if (m_pipeline_dirty)
         {
             EASY_BLOCK("vkCmdBindPipeline")
             // Get vulkan pipeline object
@@ -425,59 +617,64 @@ namespace LitchiRuntime
             // Profile
             // Profiler::m_rhi_bindings_pipeline++;
 
-            m_pipeline_dirty = false;
-
             // Also, If the pipeline changed, resources have to be set again
             m_vertex_buffer_id = 0;
             m_index_buffer_id  = 0;
         }
+
+        // bind descriptors
+        {
+            // set bindless descriptors
+            descriptor_sets::set_bindless(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout());
+
+            // set standard resources (dynamic descriptors)
+            Renderer::SetStandardResources(this);
+            descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
+        }
+
+        RenderPassBegin();
     }
 
-    void RHI_CommandList::BeginRenderPass()
+    void RHI_CommandList::RenderPassBegin()
     {
-        EASY_FUNCTION(profiler::colors::Magenta);
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
-        LC_ASSERT_MSG(m_pso.IsGraphics(), "You can't use a render pass with a compute pipeline");
-        LC_ASSERT_MSG(!m_is_rendering, "The command list is already rendering");
+        RenderPassEnd();
 
         if (!m_pso.IsGraphics())
             return;
 
-        VkRenderingInfo rendering_info      = {};
-        rendering_info.sType                = VK_STRUCTURE_TYPE_RENDERING_INFO_KHR;
-        rendering_info.renderArea           = { 0, 0, m_pso.GetWidth(), m_pso.GetHeight() };
-        rendering_info.layerCount           = 1;
+        VkRenderingInfo rendering_info = {};
+        rendering_info.sType = VK_STRUCTURE_TYPE_RENDERING_INFO_KHR;
+        rendering_info.renderArea = { 0, 0, m_pso.GetWidth(), m_pso.GetHeight() };
+        rendering_info.layerCount = 1;
         rendering_info.colorAttachmentCount = 0;
-        rendering_info.pColorAttachments    = nullptr;
-        rendering_info.pDepthAttachment     = nullptr;
-        rendering_info.pStencilAttachment   = nullptr;
+        rendering_info.pColorAttachments = nullptr;
+        rendering_info.pDepthAttachment = nullptr;
+        rendering_info.pStencilAttachment = nullptr;
 
-        // Color attachments
+        // color attachments
         vector<VkRenderingAttachmentInfo> attachments_color;
         {
-            // Swapchain buffer as a render target
+            // swapchain buffer as a render target
             RHI_SwapChain* swapchain = m_pso.render_target_swapchain;
             if (swapchain)
             {
-                // Transition to the appropriate layout
-                if (swapchain->GetLayout() != RHI_Image_Layout::Color_Attachment_Optimal)
-                {
-                    swapchain->SetLayout(RHI_Image_Layout::Color_Attachment_Optimal, this);
-                }
+                // transition to the appropriate layout
+                swapchain->SetLayout(RHI_Image_Layout::Attachment, this);
 
                 VkRenderingAttachmentInfo color_attachment = {};
-                color_attachment.sType                     = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
-                color_attachment.imageView                 = static_cast<VkImageView>(swapchain->GetRhiRtv());
-                color_attachment.imageLayout               = vulkan_image_layout[static_cast<uint8_t>(swapchain->GetLayout())];
-                color_attachment.loadOp                    = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-                color_attachment.storeOp                   = VK_ATTACHMENT_STORE_OP_STORE;
+                color_attachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
+                color_attachment.imageView = static_cast<VkImageView>(swapchain->GetRhiRtv());
+                color_attachment.imageLayout = vulkan_image_layout[static_cast<uint8_t>(swapchain->GetLayout())];
+                color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+                color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 
                 LC_ASSERT(color_attachment.imageView != nullptr);
 
                 attachments_color.push_back(color_attachment);
             }
-            else // Regular render target(s)
-            { 
+            else // regular render target(s)
+            {
                 for (uint32_t i = 0; i < rhi_max_render_target_count; i++)
                 {
                     RHI_Texture* rt = m_pso.render_target_color_textures[i];
@@ -485,21 +682,18 @@ namespace LitchiRuntime
                     if (rt == nullptr)
                         break;
 
-                    LC_ASSERT_MSG(rt->IsRenderTargetColor(), "The texture wasn't created with the RHI_Texture_RenderTarget flag and/or isn't a color format");
+                    LC_ASSERT_MSG(rt->IsRtv(), "The texture wasn't created with the RHI_Texture_RenderTarget flag and/or isn't a color format");
 
-                    // Transition to the appropriate layout
-                    if (rt->GetLayout(0) != RHI_Image_Layout::Color_Attachment_Optimal)
-                    {
-                        rt->SetLayout(RHI_Image_Layout::Color_Attachment_Optimal, this);
-                    }
+                    // transition to the appropriate layout
+                    rt->SetLayout(RHI_Image_Layout::Attachment, this);
 
                     VkRenderingAttachmentInfo color_attachment = {};
-                    color_attachment.sType                     = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
-                    color_attachment.imageView                 = static_cast<VkImageView>(rt->GetRhiRtv(m_pso.render_target_color_texture_array_index));
-                    color_attachment.imageLayout               = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
-                    color_attachment.loadOp                    = get_color_load_op(m_pso.clear_color[i]);
-                    color_attachment.storeOp                   = VK_ATTACHMENT_STORE_OP_STORE;
-                    color_attachment.clearValue.color          = { m_pso.clear_color[i].r, m_pso.clear_color[i].g, m_pso.clear_color[i].b, m_pso.clear_color[i].a };
+                    color_attachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
+                    color_attachment.imageView = static_cast<VkImageView>(rt->GetRhiRtv(m_pso.render_target_color_texture_array_index));
+                    color_attachment.imageLayout = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
+                    color_attachment.loadOp = get_color_load_op(m_pso.clear_color[i]);
+                    color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+                    color_attachment.clearValue.color = { m_pso.clear_color[i].r, m_pso.clear_color[i].g, m_pso.clear_color[i].b, m_pso.clear_color[i].a };
 
                     LC_ASSERT(color_attachment.imageView != nullptr);
 
@@ -507,72 +701,90 @@ namespace LitchiRuntime
                 }
             }
             rendering_info.colorAttachmentCount = static_cast<uint32_t>(attachments_color.size());
-            rendering_info.pColorAttachments    = attachments_color.data();
+            rendering_info.pColorAttachments = attachments_color.data();
         }
 
-        // Depth-stencil attachment
+        // depth-stencil attachment
         VkRenderingAttachmentInfoKHR attachment_depth_stencil = {};
         if (m_pso.render_target_depth_texture != nullptr)
         {
             RHI_Texture* rt = m_pso.render_target_depth_texture;
-
-            LC_ASSERT_MSG(rt->GetWidth() == rendering_info.renderArea.extent.width, "The depth buffer doesn't match the output resolution");
-            LC_ASSERT(rt->IsRenderTargetDepthStencil());
-
-            // Transition to the appropriate layout
-            RHI_Image_Layout layout = rt->IsStencilFormat() ? RHI_Image_Layout::Depth_Stencil_Attachment_Optimal : RHI_Image_Layout::Depth_Attachment_Optimal;
-            if (m_pso.render_target_depth_texture_read_only)
+            if (Renderer::GetOption<float>(Renderer_Option::ResolutionScale) == 1.0f)
             {
-                layout = RHI_Image_Layout::Depth_Stencil_Read_Only_Optimal;
+                LC_ASSERT_MSG(rt->GetWidth() == rendering_info.renderArea.extent.width, "The depth buffer doesn't match the output resolution");
             }
+            LC_ASSERT(rt->IsDsv());
+
+            // transition to the appropriate layout
+            RHI_Image_Layout layout = RHI_Image_Layout::Attachment;
             rt->SetLayout(layout, this);
 
-            attachment_depth_stencil.sType                           = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
-            attachment_depth_stencil.imageView                       = static_cast<VkImageView>(rt->GetRhiDsv(m_pso.render_target_depth_stencil_texture_array_index));
-            attachment_depth_stencil.imageLayout                     = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
-            attachment_depth_stencil.loadOp                          = get_depth_load_op(m_pso.clear_depth);
-            attachment_depth_stencil.storeOp                         = VK_ATTACHMENT_STORE_OP_STORE;
-            attachment_depth_stencil.clearValue.depthStencil.depth   = m_pso.clear_depth;
+            attachment_depth_stencil.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
+            attachment_depth_stencil.imageView = static_cast<VkImageView>(rt->GetRhiDsv(m_pso.render_target_depth_stencil_texture_array_index));
+            attachment_depth_stencil.imageLayout = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
+            attachment_depth_stencil.loadOp = get_depth_load_op(m_pso.clear_depth);
+            attachment_depth_stencil.storeOp = m_pso.depth_stencil_state->GetDepthWriteEnabled() ? VK_ATTACHMENT_STORE_OP_STORE : VK_ATTACHMENT_STORE_OP_NONE;
+            attachment_depth_stencil.clearValue.depthStencil.depth = m_pso.clear_depth;
             attachment_depth_stencil.clearValue.depthStencil.stencil = m_pso.clear_stencil;
 
             rendering_info.pDepthAttachment = &attachment_depth_stencil;
 
-            // We are using the combined depth-stencil approach.
-            // This means we can assign the depth attachment as the stencil attachment.
+            // we are using the combined depth-stencil approach
+            // this means we can assign the depth attachment as the stencil attachment
             if (m_pso.render_target_depth_texture->IsStencilFormat())
             {
                 rendering_info.pStencilAttachment = rendering_info.pDepthAttachment;
             }
         }
 
-        // Begin dynamic render pass instance
+        // variable rate shading
+        VkRenderingFragmentShadingRateAttachmentInfoKHR attachment_shading_rate = {};
+        if (m_pso.vrs_input_texture)
+        {
+            m_pso.vrs_input_texture->SetLayout(RHI_Image_Layout::Shading_Rate_Attachment, this);
+
+            attachment_shading_rate.sType = VK_STRUCTURE_TYPE_RENDERING_FRAGMENT_SHADING_RATE_ATTACHMENT_INFO_KHR;
+            attachment_shading_rate.imageView = static_cast<VkImageView>(m_pso.vrs_input_texture->GetRhiRtv());
+            attachment_shading_rate.imageLayout = vulkan_image_layout[static_cast<uint8_t>(m_pso.vrs_input_texture->GetLayout(0))];
+            attachment_shading_rate.shadingRateAttachmentTexelSize = { RHI_Device::PropertyGetMaxShadingRateTexelSizeX(), RHI_Device::PropertyGetMaxShadingRateTexelSizeY() };
+
+            rendering_info.pNext = &attachment_shading_rate;
+        }
+
+        // begin dynamic render pass
         vkCmdBeginRendering(static_cast<VkCommandBuffer>(m_rhi_resource), &rendering_info);
 
-        // Set viewport
-        RHI_Viewport viewport = RHI_Viewport(
-            0.0f, 0.0f,
-            static_cast<float>(m_pso.GetWidth()),
-            static_cast<float>(m_pso.GetHeight())
-        );
-        SetViewport(viewport);
+        // set dynamic states
+        {
+            // variable rate shading
+            //RHI_Device::SetVariableRateShading(this, m_pso.vrs_input_texture != nullptr);
 
-        m_is_rendering = true;
+            // set viewport
+            RHI_Viewport viewport = RHI_Viewport(
+                0.0f, 0.0f,
+                static_cast<float>(m_pso.GetWidth()),
+                static_cast<float>(m_pso.GetHeight())
+            );
+            SetViewport(viewport);
+        }
+
+        m_render_pass_active = true;
     }
 
-    void RHI_CommandList::EndRenderPass()
+    void RHI_CommandList::RenderPassEnd()
     {
-        EASY_FUNCTION(profiler::colors::Magenta);
-        if (m_is_rendering)
-        {
-            vkCmdEndRendering(static_cast<VkCommandBuffer>(m_rhi_resource));
-            m_is_rendering = false;
-        }
+        if (!m_render_pass_active)
+            return;
+
+        vkCmdEndRendering(static_cast<VkCommandBuffer>(m_rhi_resource));
+        m_render_pass_active = false;
 
         if (m_pso.render_target_swapchain)
         {
-            m_pso.render_target_swapchain->SetLayout(RHI_Image_Layout::Present_Src, this);
+            m_pso.render_target_swapchain->SetLayout(RHI_Image_Layout::Present_Source, this);
         }
     }
+
 
     void RHI_CommandList::ClearPipelineStateRenderTargets(RHI_PipelineState& pipeline_state)
     {
@@ -642,17 +854,11 @@ namespace LitchiRuntime
     )
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT(m_state == RHI_CommandListState::Recording);
-        LC_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-
-        if (!texture || !texture->GetRhiSrv())
-        {
-            DEBUG_LOG_ERROR("Texture is null.");
-            return;
-        }
+        LC_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearBlit flag");
+        LC_ASSERT(texture && texture->GetRhiSrv());
 
         // One of the required layouts for clear functions
-        texture->SetLayout(RHI_Image_Layout::Transfer_Dst_Optimal, this);
+        texture->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
         VkImageSubresourceRange image_subresource_range = {};
         image_subresource_range.baseMipLevel            = 0;
@@ -691,10 +897,16 @@ namespace LitchiRuntime
         EASY_FUNCTION(profiler::colors::Magenta);
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        // Ensure correct state before attempting to draw
-        OnDraw();
+        if (!m_render_pass_active)
+        {
+            RenderPassBegin();
+        }
 
-        // Draw
+        if (descriptor_sets::bind_dynamic)
+        {
+            descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
+        }
+
         vkCmdDraw(
             static_cast<VkCommandBuffer>(m_rhi_resource), // commandBuffer
             vertex_count,                                 // vertexCount
@@ -709,109 +921,110 @@ namespace LitchiRuntime
         }*/
     }
 
-    void RHI_CommandList::DrawIndexed(const uint32_t index_count, const uint32_t index_offset, const uint32_t vertex_offset)
+    void RHI_CommandList::DrawIndexed(const uint32_t index_count, const uint32_t index_offset, const uint32_t vertex_offset, const uint32_t instance_start_index, const uint32_t instance_count)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        // Ensure correct state before attempting to draw
-        OnDraw();
+        if (!m_render_pass_active)
+        {
+            RenderPassBegin();
+        }
 
-        // Draw
+        if (descriptor_sets::bind_dynamic)
+        {
+            descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
+        }
+
         vkCmdDrawIndexed(
             static_cast<VkCommandBuffer>(m_rhi_resource), // commandBuffer
             index_count,                                  // indexCount
-            1,                                            // instanceCount
+            instance_count,                               // instanceCount
             index_offset,                                 // firstIndex
             vertex_offset,                                // vertexOffset
-            0                                             // firstInstance
+            instance_start_index                          // firstInstance
         );
 
-        //// Profile
-        //if (Profiler::m_granularity == ProfilerGranularity::Full)
-        //{
-        //    Profiler::m_rhi_draw++;
-        //}
+        //Profiler::m_rhi_draw++;
     }
+
 
     void RHI_CommandList::Dispatch(uint32_t x, uint32_t y, uint32_t z /*= 1*/, bool async /*= false*/)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
-        // Ensure correct state before attempting to dispatch
-        OnDraw();
+        if (descriptor_sets::bind_dynamic)
+        {
+            descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
+        }
 
-        // Dispatch
         vkCmdDispatch(static_cast<VkCommandBuffer>(m_rhi_resource), x, y, z);
-
         // Profiler::m_rhi_dispatch++;
     }
 
-    void RHI_CommandList::Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
+    void RHI_CommandList::Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips, const float source_scaling)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0,      "The texture needs the RHI_Texture_ClearOrBlit flag");
-        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         if (blit_mips)
         {
             LC_ASSERT_MSG(source->GetMipCount() == destination->GetMipCount(),
                 "If the mips are blitted, then the mip count between the source and the destination textures must match");
         }
 
-        // Compute a blit region for each mip
-        array<VkOffset3D,  rhi_max_mip_count> blit_offsets_source     = {};
+        // compute a blit region for each mip
+        array<VkOffset3D, rhi_max_mip_count> blit_offsets_source = {};
         array<VkOffset3D, rhi_max_mip_count> blit_offsets_destination = {};
-        array<VkImageBlit, rhi_max_mip_count> blit_regions            = {};
-        uint32_t blit_region_count                                    = blit_mips ? source->GetMipCount() : 1;
+        array<VkImageBlit, rhi_max_mip_count> blit_regions = {};
+        uint32_t blit_region_count = blit_mips ? source->GetMipCount() : 1;
         for (uint32_t mip_index = 0; mip_index < blit_region_count; mip_index++)
         {
             VkOffset3D& source_blit_size = blit_offsets_source[mip_index];
-            source_blit_size.x           = source->GetWidth()  >> mip_index;
-            source_blit_size.y           = source->GetHeight() >> mip_index;
-            source_blit_size.z           = 1;
+            source_blit_size.x = static_cast<int32_t>(source->GetWidth() * source_scaling) >> mip_index;
+            source_blit_size.y = static_cast<int32_t>(source->GetHeight() * source_scaling) >> mip_index;
+            source_blit_size.z = 1;
 
             VkOffset3D& destination_blit_size = blit_offsets_destination[mip_index];
-            destination_blit_size.x           = destination->GetWidth()  >> mip_index;
-            destination_blit_size.y           = destination->GetHeight() >> mip_index;
-            destination_blit_size.z           = 1;
+            destination_blit_size.x = destination->GetWidth() >> mip_index;
+            destination_blit_size.y = destination->GetHeight() >> mip_index;
+            destination_blit_size.z = 1;
 
             LC_ASSERT_MSG(source_blit_size.x <= destination_blit_size.x && source_blit_size.y <= destination_blit_size.y,
                 "The source texture dimension(s) are larger than the those of the destination texture");
 
-            VkImageBlit& blit_region                  = blit_regions[mip_index];
-            blit_region.srcSubresource.mipLevel       = mip_index;
+            VkImageBlit& blit_region = blit_regions[mip_index];
+            blit_region.srcSubresource.mipLevel = mip_index;
             blit_region.srcSubresource.baseArrayLayer = 0;
-            blit_region.srcSubresource.layerCount     = 1;
-            blit_region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-            blit_region.srcOffsets[0]                 = { 0, 0, 0 };
-            blit_region.srcOffsets[1]                 = source_blit_size;
-            blit_region.dstSubresource.mipLevel       = mip_index;
+            blit_region.srcSubresource.layerCount = 1;
+            blit_region.srcSubresource.aspectMask = get_aspect_mask(source);
+            blit_region.srcOffsets[0] = { 0, 0, 0 };
+            blit_region.srcOffsets[1] = source_blit_size;
+            blit_region.dstSubresource.mipLevel = mip_index;
             blit_region.dstSubresource.baseArrayLayer = 0;
-            blit_region.dstSubresource.layerCount     = 1;
-            blit_region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-            blit_region.dstOffsets[0]                 = { 0, 0, 0 };
-            blit_region.dstOffsets[1]                 = destination_blit_size;
+            blit_region.dstSubresource.layerCount = 1;
+            blit_region.dstSubresource.aspectMask = get_aspect_mask(destination);
+            blit_region.dstOffsets[0] = { 0, 0, 0 };
+            blit_region.dstOffsets[1] = destination_blit_size;
         }
 
-        // Save the initial layouts
-        array<RHI_Image_Layout, rhi_max_mip_count> layouts_initial_source      = source->GetLayouts();
+        // save the initial layouts
+        array<RHI_Image_Layout, rhi_max_mip_count> layouts_initial_source = source->GetLayouts();
         array<RHI_Image_Layout, rhi_max_mip_count> layouts_initial_destination = destination->GetLayouts();
 
-        // Transition to blit appropriate layouts
-        source->SetLayout(RHI_Image_Layout::Transfer_Src_Optimal,      this);
-        destination->SetLayout(RHI_Image_Layout::Transfer_Dst_Optimal, this);
+        // transition to blit appropriate layouts
+        source->SetLayout(RHI_Image_Layout::Transfer_Source, this);
+        destination->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
-        // Blit
+        // blit
         vkCmdBlitImage(
             static_cast<VkCommandBuffer>(m_rhi_resource),
-            static_cast<VkImage>(source->GetRhiResource()),      VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+            static_cast<VkImage>(source->GetRhiResource()), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
             static_cast<VkImage>(destination->GetRhiResource()), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             blit_region_count, &blit_regions[0],
-            vulkan_filter[static_cast<uint32_t>(RHI_Filter::Linear)]
+            vulkan_filter[static_cast<uint32_t>(destination->IsDepthFormat() ? RHI_Filter::Nearest : RHI_Filter::Linear)]
         );
 
-        // Transition to the initial layouts
+        // transition to the initial layouts
         if (blit_mips)
         {
             for (uint32_t i = 0; i < source->GetMipCount(); i++)
@@ -829,44 +1042,43 @@ namespace LitchiRuntime
 
     void RHI_CommandList::Blit(RHI_Texture* source, RHI_SwapChain* destination)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-      /*  SP_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
-            "The source texture dimension(s) are larger than the those of the destination texture");*/
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG(source->GetWidth() <= destination->GetWidth() && source->GetHeight() <= destination->GetHeight(),
+            "The source texture dimension(s) are larger than the those of the destination texture");
 
         VkOffset3D source_blit_size = {};
-        source_blit_size.x          = source->GetWidth();
-        source_blit_size.y          = source->GetHeight();
-        source_blit_size.z          = 1;
+        source_blit_size.x = source->GetWidth();
+        source_blit_size.y = source->GetHeight();
+        source_blit_size.z = 1;
 
         VkOffset3D destination_blit_size = {};
-        destination_blit_size.x          = destination->GetWidth();
-        destination_blit_size.y          = destination->GetHeight();
-        destination_blit_size.z          = 1;
+        destination_blit_size.x = destination->GetWidth();
+        destination_blit_size.y = destination->GetHeight();
+        destination_blit_size.z = 1;
 
-        VkImageBlit blit_region                   = {};
-        blit_region.srcSubresource.mipLevel       = 0;
+        VkImageBlit blit_region = {};
+        blit_region.srcSubresource.mipLevel = 0;
         blit_region.srcSubresource.baseArrayLayer = 0;
-        blit_region.srcSubresource.layerCount     = 1;
-        blit_region.srcSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit_region.srcOffsets[0]                 = { 0, 0, 0 };
-        blit_region.srcOffsets[1]                 = source_blit_size;
-        blit_region.dstSubresource.mipLevel       = 0;
+        blit_region.srcSubresource.layerCount = 1;
+        blit_region.srcSubresource.aspectMask = get_aspect_mask(source);
+        blit_region.srcOffsets[0] = { 0, 0, 0 };
+        blit_region.srcOffsets[1] = source_blit_size;
+        blit_region.dstSubresource.mipLevel = 0;
         blit_region.dstSubresource.baseArrayLayer = 0;
-        blit_region.dstSubresource.layerCount     = 1;
-        blit_region.dstSubresource.aspectMask     = VK_IMAGE_ASPECT_COLOR_BIT;
-        blit_region.dstOffsets[0]                 = { 0, 0, 0 };
-        blit_region.dstOffsets[1]                 = destination_blit_size;
+        blit_region.dstSubresource.layerCount = 1;
+        blit_region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        blit_region.dstOffsets[0] = { 0, 0, 0 };
+        blit_region.dstOffsets[1] = destination_blit_size;
 
         // save the initial layout
         RHI_Image_Layout source_layout_initial = source->GetLayout(0);
 
         // transition to blit appropriate layouts
-        source->SetLayout(RHI_Image_Layout::Transfer_Src_Optimal,      this);
-        destination->SetLayout(RHI_Image_Layout::Transfer_Dst_Optimal, this);
+        source->SetLayout(RHI_Image_Layout::Transfer_Source, this);
+        destination->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
         // deduce filter
-        bool width_equal  = source->GetWidth() == destination->GetWidth();
+        bool width_equal = source->GetWidth() == destination->GetWidth();
         bool height_equal = source->GetHeight() == destination->GetHeight();
         RHI_Filter filter = width_equal && height_equal ? RHI_Filter::Nearest : RHI_Filter::Linear;
 
@@ -874,21 +1086,20 @@ namespace LitchiRuntime
         vkCmdBlitImage(
             static_cast<VkCommandBuffer>(m_rhi_resource),
             static_cast<VkImage>(source->GetRhiResource()), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            static_cast<VkImage>(destination->GetRhiRt()),  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            static_cast<VkImage>(destination->GetRhiRt()), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             1, &blit_region,
             vulkan_filter[static_cast<uint32_t>(filter)]
         );
 
-        // Transition to the initial layouts
+        // transition to the initial layouts
         source->SetLayout(source_layout_initial, this);
-        destination->SetLayout(RHI_Image_Layout::Present_Src, this);
+        destination->SetLayout(RHI_Image_Layout::Present_Source, this);
     }
 
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
-        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((destination->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         LC_ASSERT(source->GetWidth() == destination->GetWidth());
         LC_ASSERT(source->GetHeight() == destination->GetHeight());
         LC_ASSERT(source->GetFormat() == destination->GetFormat());
@@ -899,19 +1110,19 @@ namespace LitchiRuntime
         }
 
         array<VkImageCopy, rhi_max_mip_count> copy_regions = {};
-        uint32_t copy_region_count                         = blit_mips ? source->GetMipCount() : 1;
+        uint32_t copy_region_count = blit_mips ? source->GetMipCount() : 1;
         for (uint32_t mip_index = 0; mip_index < copy_region_count; mip_index++)
         {
-            VkImageCopy& copy_region              = copy_regions[mip_index];
+            VkImageCopy& copy_region = copy_regions[mip_index];
             copy_region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            copy_region.srcSubresource.mipLevel   = mip_index;
+            copy_region.srcSubresource.mipLevel = mip_index;
             copy_region.srcSubresource.layerCount = 1;
             copy_region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-            copy_region.dstSubresource.mipLevel   = mip_index;
+            copy_region.dstSubresource.mipLevel = mip_index;
             copy_region.dstSubresource.layerCount = 1;
-            copy_region.extent.width              = source->GetWidth()  >> mip_index;
-            copy_region.extent.height             = source->GetHeight() >> mip_index;
-            copy_region.extent.depth              = 1;
+            copy_region.extent.width = source->GetWidth() >> mip_index;
+            copy_region.extent.height = source->GetHeight() >> mip_index;
+            copy_region.extent.depth = 1;
         }
 
         // save the initial layouts
@@ -919,8 +1130,8 @@ namespace LitchiRuntime
         array<RHI_Image_Layout, rhi_max_mip_count> layouts_initial_destination = destination->GetLayouts();
 
         // transition to blit appropriate layouts
-        source->SetLayout(RHI_Image_Layout::Transfer_Src_Optimal, this);
-        destination->SetLayout(RHI_Image_Layout::Transfer_Dst_Optimal, this);
+        source->SetLayout(RHI_Image_Layout::Transfer_Source, this);
+        destination->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
         vkCmdCopyImage(
             static_cast<VkCommandBuffer>(m_rhi_resource),
@@ -948,38 +1159,38 @@ namespace LitchiRuntime
     void RHI_CommandList::Copy(RHI_Texture* source, RHI_SwapChain* destination)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearOrBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
+        LC_ASSERT_MSG((source->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearOrBlit flag");
         LC_ASSERT(source->GetWidth() == destination->GetWidth());
         LC_ASSERT(source->GetHeight() == destination->GetHeight());
         LC_ASSERT(source->GetFormat() == destination->GetFormat());
 
-        VkImageCopy copy_region               = {};
+        VkImageCopy copy_region = {};
         copy_region.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        copy_region.srcSubresource.mipLevel   = 0;
+        copy_region.srcSubresource.mipLevel = 0;
         copy_region.srcSubresource.layerCount = 1;
         copy_region.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-        copy_region.dstSubresource.mipLevel   = 0;
+        copy_region.dstSubresource.mipLevel = 0;
         copy_region.dstSubresource.layerCount = 1;
-        copy_region.extent.width              = source->GetWidth();
-        copy_region.extent.height             = source->GetHeight();
-        copy_region.extent.depth              = 1;
+        copy_region.extent.width = source->GetWidth();
+        copy_region.extent.height = source->GetHeight();
+        copy_region.extent.depth = 1;
 
         // Transition to blit appropriate layouts
         RHI_Image_Layout layout_initial_source = source->GetLayout(0);
-        source->SetLayout(RHI_Image_Layout::Transfer_Src_Optimal, this);
-        destination->SetLayout(RHI_Image_Layout::Transfer_Dst_Optimal, this);
+        source->SetLayout(RHI_Image_Layout::Transfer_Source, this);
+        destination->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
         // Blit
         vkCmdCopyImage(
             static_cast<VkCommandBuffer>(m_rhi_resource),
             static_cast<VkImage>(source->GetRhiResource()), VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
-            static_cast<VkImage>(destination->GetRhiRt()),  VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+            static_cast<VkImage>(destination->GetRhiRt()), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
             1, &copy_region
         );
 
         // Transition to the initial layout
         source->SetLayout(layout_initial_source, this);
-        destination->SetLayout(RHI_Image_Layout::Present_Src, this);
+        destination->SetLayout(RHI_Image_Layout::Present_Source, this);
     }
 
     void RHI_CommandList::SetViewport(const RHI_Viewport& viewport) const
@@ -1038,7 +1249,7 @@ namespace LitchiRuntime
         m_cull_mode = cull_mode;
     }
 
-    void RHI_CommandList::SetBufferVertex(const RHI_VertexBuffer* buffer)
+    void RHI_CommandList::SetBufferVertex(const RHI_VertexBuffer* buffer, const uint32_t binding /*= 0*/)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
@@ -1052,7 +1263,7 @@ namespace LitchiRuntime
 
         vkCmdBindVertexBuffers(
             static_cast<VkCommandBuffer>(m_rhi_resource), // commandBuffer
-            0,                                            // firstBinding
+            binding,                                      // firstBinding
             1,                                            // bindingCount
             vertex_buffers,                               // pBuffers
             offsets                                       // pOffsets
@@ -1159,7 +1370,7 @@ namespace LitchiRuntime
     void RHI_CommandList::SetTexture(const uint32_t slot, RHI_Texture* texture, const uint32_t mip_index /*= all_mips*/, uint32_t mip_range /*= 0*/, const bool uav /*= false*/)
     {
         EASY_FUNCTION(profiler::colors::Brown200)
-        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+            LC_ASSERT(m_state == RHI_CommandListState::Recording);
 
         if (mip_index != rhi_all_mips)
         {
@@ -1168,7 +1379,7 @@ namespace LitchiRuntime
 
         if (!m_descriptor_layout_current)
         {
-            DEBUG_LOG_WARN("Descriptor layout not set, try setting texture {} within a render pass", texture->GetObjectName().c_str());
+            DEBUG_LOG_WARN("Descriptor layout not set, try setting texture \"{}\" within a render pass", texture->GetObjectName());
             return;
         }
 
@@ -1176,48 +1387,35 @@ namespace LitchiRuntime
         if (!texture || !texture->IsReadyForUse())
             return;
 
-        // Get some texture info
-        const uint32_t mip_count        = texture->GetMipCount();
-        const bool mip_specified        = mip_index != rhi_all_mips;
-        const uint32_t mip_start        = mip_specified ? mip_index : 0;
+        // get some texture info
+        const uint32_t mip_count = texture->GetMipCount();
+        const bool mip_specified = mip_index != rhi_all_mips;
+        const uint32_t mip_start = mip_specified ? mip_index : 0;
         RHI_Image_Layout current_layout = texture->GetLayout(mip_start);
 
-        LC_ASSERT_MSG(texture->GetRhiSrv() != nullptr, "The texture has no srv"); // Vulkan only has SRVs
         LC_ASSERT_MSG(current_layout != RHI_Image_Layout::Max && current_layout != RHI_Image_Layout::Preinitialized, "Invalid layout");
 
-        // Transition to appropriate layout (if needed)
+        // transition to appropriate layout (if needed)
         {
             RHI_Image_Layout target_layout = RHI_Image_Layout::Max;
-
             if (uav)
             {
                 LC_ASSERT(texture->IsUav());
-                
-                // According to section 13.1 of the Vulkan spec, storage textures have to be in a general layout.
+
+                // according to section 13.1 of the Vulkan spec, storage textures have to be in a general layout.
                 // https://www.khronos.org/registry/vulkan/specs/1.1-extensions/html/vkspec.html#descriptorsets-storageimage
                 target_layout = RHI_Image_Layout::General;
             }
             else
             {
                 LC_ASSERT(texture->IsSrv());
-
-                // Color
-                if (texture->IsColorFormat())
-                {
-                    target_layout = RHI_Image_Layout::Shader_Read_Only_Optimal;
-                }
-
-                // Depth
-                if (texture->IsDepthFormat())
-                {
-                    target_layout = RHI_Image_Layout::Depth_Stencil_Read_Only_Optimal;
-                }
+                target_layout = RHI_Image_Layout::Shader_Read;
             }
 
-            // Verify that an appropriate layout has been deduced
+            // verify that an appropriate layout has been deduced
             LC_ASSERT(target_layout != RHI_Image_Layout::Max);
 
-            // Determine if a layout transition is needed
+            // determine if a layout transition is needed
             bool transition_required = current_layout != target_layout;
             {
                 bool rest_mips_have_same_layout = true;
@@ -1234,16 +1432,19 @@ namespace LitchiRuntime
                 transition_required = !rest_mips_have_same_layout ? true : transition_required;
             }
 
-            // Transition
+            // transition
             if (transition_required)
             {
-                LC_ASSERT(!m_is_rendering && "Can't transition to a different layout while rendering");
+                RenderPassEnd(); // transitioning to a different layout must happen outside of a render pass
                 texture->SetLayout(target_layout, this, mip_index, mip_range);
             }
         }
 
         // Set (will only happen if it's not already set)
         m_descriptor_layout_current->SetTexture(slot, texture, mip_index, mip_range);
+
+        // todo: detect if there are changes, otherwise don't bother binding
+        descriptor_sets::bind_dynamic = true;
     }
 
     void RHI_CommandList::SetStructuredBuffer(const uint32_t slot, RHI_StructuredBuffer* structured_buffer) const
@@ -1258,6 +1459,9 @@ namespace LitchiRuntime
         }
 
         m_descriptor_layout_current->SetStructuredBuffer(slot, structured_buffer);
+
+        // todo: detect if there are changes, otherwise don't bother binding
+        descriptor_sets::bind_dynamic = true;
     }
 
     void RHI_CommandList::SetMaterialGlobalBuffer(RHI_ConstantBuffer* constant_buffer) const
@@ -1272,6 +1476,8 @@ namespace LitchiRuntime
         }
 
         m_descriptor_layout_current->SetMaterialGlobalBuffer(constant_buffer);
+        // todo: detect if there are changes, otherwise don't bother binding
+        descriptor_sets::bind_dynamic = true;
     }
 
     void RHI_CommandList::BeginMarker(const char* name)
@@ -1293,12 +1499,15 @@ namespace LitchiRuntime
     uint32_t RHI_CommandList::BeginTimestamp()
     {
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
-        LC_ASSERT(RHI_Context::gpu_profiling);
-        LC_ASSERT(m_rhi_query_pool != nullptr);
 
         uint32_t timestamp_index = m_timestamp_index;
-        vkCmdWriteTimestamp(static_cast<VkCommandBuffer>(m_rhi_resource), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, static_cast<VkQueryPool>(m_rhi_query_pool), timestamp_index);
-        m_timestamp_index++;
+
+        vkCmdWriteTimestamp(
+            static_cast<VkCommandBuffer>(m_rhi_resource),
+            VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+            static_cast<VkQueryPool>(m_rhi_query_pool_timestamps),
+            m_timestamp_index++
+        );
 
         return timestamp_index;
     }
@@ -1306,31 +1515,80 @@ namespace LitchiRuntime
     void RHI_CommandList::EndTimestamp()
     {
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
-        LC_ASSERT(RHI_Context::gpu_profiling);
-        LC_ASSERT(m_rhi_query_pool != nullptr);
 
-        vkCmdWriteTimestamp(static_cast<VkCommandBuffer>(m_rhi_resource), VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT, static_cast<VkQueryPool>(m_rhi_query_pool), m_timestamp_index++);
+        vkCmdWriteTimestamp(
+            static_cast<VkCommandBuffer>(m_rhi_resource),
+            VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            static_cast<VkQueryPool>(m_rhi_query_pool_timestamps),
+            m_timestamp_index++
+        );
     }
 
-    float RHI_CommandList::GetTimestampDuration(const uint32_t timestamp_index)
+    float RHI_CommandList::GetTimestampResult(const uint32_t index_timestamp)
     {
-        if (timestamp_index + 1 >= m_timestamps.size())
-        {
-            DEBUG_LOG_ERROR("Pass index out of timestamp array range");
-            return 0.0f;
-        }
+        LC_ASSERT_MSG(index_timestamp + 1 < queries::timestamp::data.size(), "index out of range");
 
-        uint64_t start = m_timestamps[timestamp_index];
-        uint64_t end   = m_timestamps[timestamp_index + 1];
-
-        // If end has not been acquired yet (zero), early exit
-        if (end < start)
-            return 0.0f;
-
+        uint64_t start = queries::timestamp::data[index_timestamp];
+        uint64_t end = queries::timestamp::data[index_timestamp + 1];
         uint64_t duration = Math::Helper::Clamp<uint64_t>(end - start, 0, numeric_limits<uint64_t>::max());
         float duration_ms = static_cast<float>(duration * RHI_Device::PropertyGetTimestampPeriod() * 1e-6f);
 
-        return duration_ms;
+        return Math::Helper::Clamp<float>(duration_ms, 0.0f, numeric_limits<float>::max());
+    }
+    void RHI_CommandList::BeginOcclusionQuery(const uint64_t entity_id)
+    {
+        LC_ASSERT_MSG(m_pso.IsGraphics(), "Occlusion queries are only supported in graphics pipelines");
+
+        queries::occlusion::index_active = queries::occlusion::id_to_index[entity_id];
+        if (queries::occlusion::index_active == 0)
+        {
+            queries::occlusion::index_active = ++queries::occlusion::index;
+            queries::occlusion::id_to_index[entity_id] = queries::occlusion::index;
+        }
+
+        if (!m_render_pass_active)
+        {
+            RenderPassBegin();
+        }
+
+        vkCmdBeginQuery(
+            static_cast<VkCommandBuffer>(m_rhi_resource),
+            static_cast<VkQueryPool>(m_rhi_query_pool_occlusion),
+            queries::occlusion::index_active,
+            0
+        );
+
+        queries::occlusion::occlusion_query_active = true;
+    }
+
+    void RHI_CommandList::EndOcclusionQuery()
+    {
+        if (!queries::occlusion::occlusion_query_active)
+            return;
+
+        vkCmdEndQuery(
+            static_cast<VkCommandBuffer>(m_rhi_resource),
+            static_cast<VkQueryPool>(m_rhi_query_pool_occlusion),
+            queries::occlusion::index_active
+        );
+
+        queries::occlusion::occlusion_query_active = false;
+    }
+
+    bool RHI_CommandList::GetOcclusionQueryResult(const uint64_t entity_id)
+    {
+        if (queries::occlusion::id_to_index.find(entity_id) == queries::occlusion::id_to_index.end())
+            return false;
+
+        uint32_t index = queries::occlusion::id_to_index[entity_id];
+        uint64_t result = queries::occlusion::data[index]; // visible pixel count
+
+        return result == 0;
+    }
+
+    void RHI_CommandList::UpdateOcclusionQueries()
+    {
+        queries::occlusion::update(m_rhi_query_pool_occlusion, rhi_max_queries_occlusion);
     }
 
     void RHI_CommandList::BeginTimeblock(const char* name, const bool gpu_marker, const bool gpu_timing)
@@ -1374,169 +1632,53 @@ namespace LitchiRuntime
         m_timeblock_active = nullptr;
     }
 
-    void RHI_CommandList::OnDraw()
-    {
-        EASY_FUNCTION(profiler::colors::Magenta);
-        LC_ASSERT(m_state == RHI_CommandListState::Recording);
-
-        EASY_BLOCK("SetGlobalShaderResources")
-        Renderer::SetGlobalShaderResources(this);//
-    	EASY_END_BLOCK
-
-        // bind descriptor sets - If the descriptor set is null, it means we don't need to bind anything.
-        if (RHI_DescriptorSet* descriptor_set = m_descriptor_layout_current->GetDescriptorSet())
-        {
-            // get descriptor sets
-            array<void*, 3> descriptor_sets =
-            {
-                descriptor_set->GetResource(),
-                RHI_Device::GetDescriptorSet(RHI_Device_Resource::sampler_comparison),
-                RHI_Device::GetDescriptorSet(RHI_Device_Resource::sampler_regular)
-            };
-
-            EASY_BLOCK("GetDynamicOffsets")
-            // get dynamic offsets
-            vector<uint32_t> dynamic_offsets;
-            m_descriptor_layout_current->GetDynamicOffsets(&dynamic_offsets);
-            EASY_END_BLOCK
-
-            VkPipelineBindPoint bind_point = m_pso.IsCompute() ?
-                VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_COMPUTE :
-                VkPipelineBindPoint::VK_PIPELINE_BIND_POINT_GRAPHICS;
-
-            EASY_BLOCK("vkCmdBindDescriptorSets")
-            // bind descriptor set
-            vkCmdBindDescriptorSets
-            (
-                static_cast<VkCommandBuffer>(m_rhi_resource),                            // commandBuffer
-                bind_point,                                                              // pipelineBindPoint
-                static_cast<VkPipelineLayout>(m_pipeline->GetResource_PipelineLayout()), // layout
-                0,                                                                       // firstSet
-                static_cast<uint32_t>(descriptor_sets.size()),                           // descriptorSetCount
-                reinterpret_cast<VkDescriptorSet*>(descriptor_sets.data()),              // pDescriptorSets
-                static_cast<uint32_t>(dynamic_offsets.size()),                           // dynamicOffsetCount
-                dynamic_offsets.data()                                                   // pDynamicOffsets
-            );
-            EASY_END_BLOCK
-
-            // Profiler::m_rhi_bindings_descriptor_set++;
-        }
-    }
-
-    void RHI_CommandList::InsertMemoryBarrierImage(void* image, const uint32_t aspect_mask,
+    void RHI_CommandList::InsertBarrierTexture(void* image, const uint32_t aspect_mask,
         const uint32_t mip_index, const uint32_t mip_range, const uint32_t array_length,
-        const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new
+        const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new, const bool is_depth
     )
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
         LC_ASSERT(image != nullptr);
+        RenderPassEnd();
 
-        VkImageMemoryBarrier image_barrier            = {};
-        image_barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        image_barrier.pNext                           = nullptr;
-        image_barrier.oldLayout                       = vulkan_image_layout[static_cast<VkImageLayout>(layout_old)];
-        image_barrier.newLayout                       = vulkan_image_layout[static_cast<VkImageLayout>(layout_new)];
-        image_barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-        image_barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-        image_barrier.image                           = static_cast<VkImage>(image);
-        image_barrier.subresourceRange.aspectMask     = aspect_mask;
-        image_barrier.subresourceRange.baseMipLevel   = mip_index;
-        image_barrier.subresourceRange.levelCount     = mip_range;
+        bool is_swapchain = layout_old == RHI_Image_Layout::Present_Source || layout_new == RHI_Image_Layout::Present_Source;
+
+        VkImageMemoryBarrier2 image_barrier = {};
+        image_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR;
+        image_barrier.pNext = nullptr;
+        image_barrier.oldLayout = vulkan_image_layout[static_cast<VkImageLayout>(layout_old)];
+        image_barrier.newLayout = vulkan_image_layout[static_cast<VkImageLayout>(layout_new)];
+        image_barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+        image_barrier.image = static_cast<VkImage>(image);
+        image_barrier.subresourceRange.aspectMask = aspect_mask;
+        image_barrier.subresourceRange.baseMipLevel = mip_index;
+        image_barrier.subresourceRange.levelCount = mip_range;
         image_barrier.subresourceRange.baseArrayLayer = 0;
-        image_barrier.subresourceRange.layerCount     = array_length;
-        image_barrier.srcAccessMask                   = layout_to_access_mask(image_barrier.oldLayout, false);
-        image_barrier.dstAccessMask                   = layout_to_access_mask(image_barrier.newLayout, true);
+        image_barrier.subresourceRange.layerCount = array_length;
+        image_barrier.srcAccessMask = layout_to_access_mask(image_barrier.oldLayout, false, is_depth);               // operations that must complete before the barrier
+        image_barrier.srcStageMask = access_mask_to_pipeline_stage_mask(image_barrier.srcAccessMask, is_swapchain); // stage at which the barrier applies, on the source side
+        image_barrier.dstAccessMask = layout_to_access_mask(image_barrier.newLayout, true, is_depth);                // operations that must wait for the barrier, on the new layout
+        image_barrier.dstStageMask = access_mask_to_pipeline_stage_mask(image_barrier.dstAccessMask, is_swapchain); // stage at which the barrier applies, on the destination side
 
-        VkPipelineStageFlags source_stage_mask = 0;
-        {
-            if (image_barrier.oldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
-            {
-                source_stage_mask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
-            }
-            else if (image_barrier.oldLayout == VK_IMAGE_LAYOUT_UNDEFINED)
-            {
-                source_stage_mask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            }
-            else
-            {
-                source_stage_mask = access_flags_to_pipeline_stage(image_barrier.srcAccessMask);
-            }
-        }
+        VkDependencyInfo dependency_info = {};
+        dependency_info.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR;
+        dependency_info.imageMemoryBarrierCount = 1;
+        dependency_info.pImageMemoryBarriers = &image_barrier;
 
-        VkPipelineStageFlags destination_stage_mask = 0;
-        {
-            if (image_barrier.newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
-            {
-                destination_stage_mask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
-            }
-            else
-            {
-                destination_stage_mask = access_flags_to_pipeline_stage(image_barrier.dstAccessMask);
-            }
-        }
-
-        vkCmdPipelineBarrier
-        (
-            static_cast<VkCommandBuffer>(m_rhi_resource), // commandBuffer
-            source_stage_mask,                            // srcStageMask
-            destination_stage_mask,                       // dstStageMask
-            0,                                            // dependencyFlags
-            0,                                            // memoryBarrierCount
-            nullptr,                                      // pMemoryBarriers
-            0,                                            // bufferMemoryBarrierCount
-            nullptr,                                      // pBufferMemoryBarriers
-            1,                                            // imageMemoryBarrierCount
-            &image_barrier                                // pImageMemoryBarriers
-        );
-
-        // Profiler::m_rhi_pipeline_barriers++;
+        vkCmdPipelineBarrier2(static_cast<VkCommandBuffer>(m_rhi_resource), &dependency_info);
+        //Profiler::m_rhi_pipeline_barriers++;
     }
 
-    void RHI_CommandList::InsertMemoryBarrierImage(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new)
+    void RHI_CommandList::InsertBarrierTexture(RHI_Texture* texture, const uint32_t mip_start, const uint32_t mip_range, const uint32_t array_length, const RHI_Image_Layout layout_old, const RHI_Image_Layout layout_new)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(texture != nullptr);
-        InsertMemoryBarrierImage(texture->GetRhiResource(), get_aspect_mask(texture), mip_start, mip_range, array_length, layout_old, layout_new);
+        InsertBarrierTexture(texture->GetRhiResource(), get_aspect_mask(texture), mip_start, mip_range, array_length, layout_old, layout_new, texture->IsDsv());
     }
 
-    void RHI_CommandList::InsertMemoryBarrierImageWaitForWrite(RHI_Texture* texture)
+    void RHI_CommandList::InsertBarrierTextureReadWrite(RHI_Texture* texture)
     {
-        EASY_FUNCTION(profiler::colors::Brown200)
         LC_ASSERT(texture != nullptr);
-
-        VkImageMemoryBarrier image_barrier            = {};
-        image_barrier.sType                           = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
-        image_barrier.pNext                           = nullptr;
-        image_barrier.oldLayout                       = vulkan_image_layout[static_cast<VkImageLayout>(texture->GetLayout(0))];
-        image_barrier.newLayout                       = vulkan_image_layout[static_cast<VkImageLayout>(texture->GetLayout(0))];
-        image_barrier.srcQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-        image_barrier.dstQueueFamilyIndex             = VK_QUEUE_FAMILY_IGNORED;
-        image_barrier.image                           = static_cast<VkImage>(texture->GetRhiResource());
-        image_barrier.subresourceRange.aspectMask     = get_aspect_mask(texture);
-        image_barrier.subresourceRange.baseMipLevel   = 0;
-        image_barrier.subresourceRange.levelCount     = texture->GetMipCount();
-        image_barrier.subresourceRange.baseArrayLayer = 0;
-        image_barrier.subresourceRange.layerCount     = texture->GetArrayLength();
-        image_barrier.srcAccessMask                   = VK_ACCESS_SHADER_WRITE_BIT;
-        image_barrier.dstAccessMask                   = VK_ACCESS_SHADER_READ_BIT;
-
-        VkPipelineStageFlags source_stage_mask      = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-        VkPipelineStageFlags destination_stage_mask = VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
-
-        vkCmdPipelineBarrier
-        (
-            static_cast<VkCommandBuffer>(m_rhi_resource),
-            source_stage_mask,
-            destination_stage_mask,
-            0,
-            0,
-            nullptr,
-            0,
-            nullptr,
-            1,
-            &image_barrier
-        );
-
-        // Profiler::m_rhi_pipeline_barriers++;
+        InsertBarrierTexture(texture->GetRhiResource(), get_aspect_mask(texture), 0, 1, 1, texture->GetLayout(0), texture->GetLayout(0), texture->IsDsv());
     }
 }

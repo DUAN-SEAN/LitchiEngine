@@ -82,11 +82,7 @@ namespace LitchiRuntime
         bool mip_specified = mip_index != rhi_all_mips;
         RHI_Image_Layout layout = texture->GetLayout(mip_specified ? mip_index : 0);
 
-         // Validate layout
-        LC_ASSERT(layout == RHI_Image_Layout::General || layout == RHI_Image_Layout::Shader_Read_Only_Optimal || layout == RHI_Image_Layout::Depth_Stencil_Read_Only_Optimal);
-
-        // Validate type
-        LC_ASSERT(texture->IsSrv());
+        LC_ASSERT(layout == RHI_Image_Layout::General || layout == RHI_Image_Layout::Shader_Read);
 
         for (RHI_Descriptor& descriptor : m_descriptors)
         {
@@ -170,15 +166,16 @@ namespace LitchiRuntime
         return descriptor_set;
     }
 
-    void RHI_DescriptorSetLayout::GetDynamicOffsets(vector<uint32_t>* offsets)
+    void RHI_DescriptorSetLayout::GetDynamicOffsets(std::array<uint32_t, 10>* offsets, uint32_t* count)
     {
         // offsets should be ordered by the binding slots in the descriptor
         // set layouts, so m_descriptors should already be sorted by slot
+
         for (RHI_Descriptor& descriptor : m_descriptors)
         {
             if (descriptor.type == RHI_Descriptor_Type::StructuredBuffer || descriptor.type == RHI_Descriptor_Type::ConstantBuffer)
             {
-                (*offsets).emplace_back(descriptor.dynamic_offset);
+                (*offsets)[(*count)++] = descriptor.dynamic_offset;
             }
         }
     }
