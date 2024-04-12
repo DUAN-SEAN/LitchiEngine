@@ -358,6 +358,7 @@ namespace LitchiRuntime
         {
             string name = (string("swapchain_image_acquired_") + to_string(i));
             m_image_acquired_semaphore[i] = make_shared<RHI_Semaphore>(false, name.c_str());
+            m_image_acquired_fence[i] = make_shared<RHI_Fence>(name.c_str());
         }
     }
 

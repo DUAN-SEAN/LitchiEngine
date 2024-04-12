@@ -401,20 +401,20 @@ namespace LitchiRuntime
 
             void initialize(void*& pool_timestamp, void*& pool_occlusion)
             {
-                //// timestamps
-                //if (Profiler::IsGpuTimingEnabled())
-                //{
-                //    VkQueryPoolCreateInfo query_pool_info = {};
-                //    query_pool_info.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
-                //    query_pool_info.queryType = VK_QUERY_TYPE_TIMESTAMP;
-                //    query_pool_info.queryCount = rhi_max_queries_timestamps;
+                // timestamps
+                if (true) // todo
+                {
+                    VkQueryPoolCreateInfo query_pool_info = {};
+                    query_pool_info.sType = VK_STRUCTURE_TYPE_QUERY_POOL_CREATE_INFO;
+                    query_pool_info.queryType = VK_QUERY_TYPE_TIMESTAMP;
+                    query_pool_info.queryCount = rhi_max_queries_timestamps;
 
-                //    auto query_pool = reinterpret_cast<VkQueryPool*>(&pool_timestamp);
-                //    LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_info, nullptr, query_pool),
-                //        "Failed to created timestamp query pool");
+                    auto query_pool = reinterpret_cast<VkQueryPool*>(&pool_timestamp);
+                    LC_VK_ASSERT_MSG(vkCreateQueryPool(RHI_Context::device, &query_pool_info, nullptr, query_pool),
+                        "Failed to created timestamp query pool");
 
-                //    RHI_Device::SetResourceName(pool_timestamp, RHI_Resource_Type::QueryPool, "query_pool_timestamp");
-                //}
+                    RHI_Device::SetResourceName(pool_timestamp, RHI_Resource_Type::QueryPool, "query_pool_timestamp");
+                }
 
                 // occlusion
                 {

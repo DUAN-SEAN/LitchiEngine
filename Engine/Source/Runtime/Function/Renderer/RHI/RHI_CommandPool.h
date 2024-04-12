@@ -23,8 +23,8 @@ namespace LitchiRuntime
         uint64_t GetSwapchainId()                const { return m_swap_chain_id; }
 
     private:
-        std::array<std::shared_ptr<RHI_CommandList>, 2> m_cmd_lists_0;
-        std::array<std::shared_ptr<RHI_CommandList>, 2> m_cmd_lists_1;
+        std::array<std::shared_ptr<RHI_CommandList>, cmd_lists_per_pool> m_cmd_lists_0;
+        std::array<std::shared_ptr<RHI_CommandList>, cmd_lists_per_pool> m_cmd_lists_1;
         std::array<void*, 2> m_rhi_resources;
 
         uint32_t m_index            = 0;

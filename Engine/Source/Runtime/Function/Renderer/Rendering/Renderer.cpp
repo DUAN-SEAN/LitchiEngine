@@ -112,11 +112,11 @@ namespace LitchiRuntime
 			uint32_t width = size.first;
 			uint32_t height = size.second;
 
-			// The resolution of the actual rendering
-			SetResolutionRender(width, height, false);
-
 			// The resolution of the output frame *we can upscale to that linearly or with FSR 2)
 			SetResolutionOutput(width, height, false);
+
+			// The resolution of the actual rendering
+			SetResolutionRender(width, height, false);
 
 			//// The resolution/size of the editor's viewport. This is overridden by the editor based on the actual viewport size
 			//SetViewport(static_cast<float>(width), static_cast<float>(height));
@@ -497,7 +497,7 @@ namespace LitchiRuntime
 
 		if (width > m_resolution_output.x || height > m_resolution_output.y)
 		{
-			DEBUG_LOG_WARN("Can't set %dx%d as it's larger then the output resolution %dx%d",
+			DEBUG_LOG_WARN("Can't set {}x{} as it's larger then the output resolution {}x{}",
 				width, height, static_cast<uint32_t>(m_resolution_output.x), static_cast<uint32_t>(m_resolution_output.y));
 			return;
 		}
