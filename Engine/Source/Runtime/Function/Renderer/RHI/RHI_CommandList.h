@@ -57,6 +57,7 @@ namespace LitchiRuntime
 
         // Dispatch
         void Dispatch(uint32_t x, uint32_t y, uint32_t z = 1, bool async = false);
+        void Dispatch(RHI_Texture* texture);
 
         // blit
         void Blit(RHI_Texture* source, RHI_Texture* destination, const bool blit_mips, const float source_scaling = 1.0f);

@@ -170,6 +170,7 @@ namespace LitchiRuntime
         R16G16B16A16_Snorm,
         R16G16B16A16_Float,
         R32G32B32A32_Float,
+        R32G32B32A32_UINT,
         // Depth
         D16_Unorm,
         D32_Float,

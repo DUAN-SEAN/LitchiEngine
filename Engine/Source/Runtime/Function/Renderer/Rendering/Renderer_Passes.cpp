@@ -28,37 +28,64 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-	namespace
+	namespace 
 	{
-		mutex mutex_generate_mips;
+		// called by: Pass_ShadowMaps(), Pass_Depth_Prepass(), Pass_GBuffer()
+		void draw_renderable(RHI_CommandList* cmd_list, RHI_PipelineState& pso,RendererPath* rendererPath, GameObject* entity, uint32_t array_index = 0)
+		{
+			RenderCamera* camera = rendererPath->GetRenderCamera();
 
-		const float thread_group_count = 8.0f;
-#define thread_group_count_x(tex) static_cast<uint32_t>(Math::Helper::Ceil(static_cast<float>(tex->GetWidth())  / thread_group_count))
-#define thread_group_count_y(tex) static_cast<uint32_t>(Math::Helper::Ceil(static_cast<float>(tex->GetHeight()) / thread_group_count))
+			MeshFilter* renderable = entity->GetComponent<MeshFilter>();
+			MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
+			SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>();
+
+			if (skinned_mesh_renderer)
+			{
+				meshRenderer = skinned_mesh_renderer;
+			}
+
+			if (!meshRenderer)
+				return;
+
+			// Skip meshes that don't cast shadows
+			if (!meshRenderer->GetCastShadows())
+				return;
+
+			// Acquire geometry
+			Mesh* mesh = renderable->GetMesh();
+			if (!mesh || !mesh->GetVertexBuffer() || !mesh->GetIndexBuffer())
+				return;
+
+			// Acquire material
+			Material* material = meshRenderer->GetMaterial();
+			if (!material)
+				return;
+
+			// Skip objects outside of the view frustum
+			if (!rendererPath->IsInLightViewFrustum(renderable, array_index))
+				return;
+
+
+			// Bind geometry
+			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
+			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
+
+			// 如果是skinnedMesh 更新蒙皮数据
+			if (skinned_mesh_renderer)
+			{
+				auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();
+				cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
+			}
+
+			cmd_list->DrawIndexed(renderable->GetIndexCount(), renderable->GetIndexOffset(), renderable->GetVertexOffset());
+		}
+
 	}
-
-	void Renderer::SetGlobalShaderResources(RHI_CommandList* cmd_list)
-	{
-		EASY_FUNCTION(profiler::colors::Magenta);
-		// constant buffers
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
-
-		// textures todo: 暂时没有
-		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
-		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
-	}
-
 	void Renderer::SetStandardResources(RHI_CommandList* cmd_list)
 	{
 		EASY_FUNCTION(profiler::colors::Magenta);
 		// constant buffers
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::light, GetConstantBuffer(Renderer_ConstantBuffer::Light));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
 
@@ -74,7 +101,7 @@ namespace LitchiRuntime
 		// Transparent objects read the opaque depth but don't write their own, instead, they write their color information using a pixel shader.
 
 		auto camera = rendererPath->GetRenderCamera();
-		auto rendererables = rendererPath->GetRenderables();
+		auto& rendererables = rendererPath->GetRenderables();
 
 		// Acquire shaders
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::depth_light_V).get();
@@ -87,8 +114,9 @@ namespace LitchiRuntime
 			return;
 
 		// Get entities
-		vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
-		if (entities.empty())
+		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
+		const vector<GameObject*>& entities4Skin = rendererables[is_transparent_pass ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry];
+		if (entities.empty() && entities4Skin.empty())
 			return;
 
 		cmd_list->BeginTimeblock(is_transparent_pass ? "shadow_maps_color" : "shadow_maps_depth");
@@ -154,107 +182,58 @@ namespace LitchiRuntime
 				}
 
 				// Set pipeline state
+				pso.shader_vertex = shader_v;
+				pso.shader_pixel = shader_p;
 				cmd_list->SetPipelineState(pso);
 
-				// State tracking
-				bool render_pass_active = false;
-
-				for (GameObject* entity : entities)
+				if(!entities.empty())
 				{
-					// Acquire renderable component
-					MeshFilter* renderable = entity->GetComponent<MeshFilter>();
-					MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
-					SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>();
-
-					if (skinned_mesh_renderer)
+					// draw non skin go
+					for (GameObject* entity : entities)
 					{
-						meshRenderer = skinned_mesh_renderer;
+
+						draw_renderable(cmd_list, pso, rendererPath, entity);
+						// Set pass constants with cascade transform
+
+						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
+						m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
+						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
+
+						/*m_pcb_pass_cpu.set_f3_value(
+							material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
+							material->HasTexture(MaterialTexture::Color) ? 1.0f : 0.0f
+						);*/
+
+						PushPassConstants(cmd_list);
 					}
-
-					if (!meshRenderer)
-						continue;
-
-					// Skip meshes that don't cast shadows
-					if (!meshRenderer->GetCastShadows())
-						continue;
-
-					// Acquire geometry
-					Mesh* mesh = renderable->GetMesh();
-					if (!mesh || !mesh->GetVertexBuffer() || !mesh->GetIndexBuffer())
-						continue;
-
-					// Acquire material
-					Material* material = meshRenderer->GetMaterial();
-					if (!material)
-						continue;
-
-					// Skip objects outside of the view frustum
-					if (!rendererPath->IsInLightViewFrustum(renderable, array_index))
-						continue;
-
-					if (skinned_mesh_renderer)
-					{
-						pso.shader_vertex = shader_skin_v;
-						pso.shader_pixel = shader_skin_p ;
-
-					}
-					else
-					{
-						pso.shader_vertex = shader_v;
-						pso.shader_pixel = shader_p;
-					}
-
-					cmd_list->SetPipelineState(pso);
-					auto hash = pso.ComputeHash();
-
-					if (!render_pass_active)
-					{
-						cmd_list->BeginRenderPass();
-						render_pass_active = true;
-					}
-
-					// todo:
-					// Bind material (only for transparents)
-					//if (is_transparent_pass)
-					//{
-					//	// Bind material textures
-					//	RHI_Texture* tex_albedo = material->GetTexture(MaterialTexture::Color);
-					//	cmd_list->SetTexture(Renderer_BindingsSrv::tex, tex_albedo ? tex_albedo : GetStandardTexture(Renderer_StandardTexture::White).get());
-
-					//	// Set pass constants with material properties
-					//	UpdateConstantBufferMaterial(cmd_list, material);
-					//}
-
-					// Bind geometry
-					cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
-					cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
-
-					// 如果是skinnedMesh 更新蒙皮数据
-					if (skinned_mesh_renderer)
-					{
-						auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();
-						cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
-					}
-
-					// Set pass constants with cascade transform
-
-					// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
-					m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
-					m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
-
-					/*m_pcb_pass_cpu.set_f3_value(
-						material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
-						material->HasTexture(MaterialTexture::Color) ? 1.0f : 0.0f
-					);*/
-
-					PushPassConstants(cmd_list);
-
-					cmd_list->DrawIndexed(renderable->GetIndexCount(), renderable->GetIndexOffset(), renderable->GetVertexOffset());
 				}
+				
+				// draw has skin go
+				pso.shader_vertex = shader_skin_v;
+				pso.shader_pixel = shader_skin_p;
+				pso.clear_depth = rhi_depth_load;// reverse-z
+				cmd_list->SetPipelineState(pso);
 
-				if (render_pass_active)
+				// draw non skin go
+				if (!entities4Skin.empty())
 				{
-					cmd_list->EndRenderPass();
+					for (GameObject* entity : entities)
+					{
+
+						draw_renderable(cmd_list, pso, rendererPath, entity);
+						// Set pass constants with cascade transform
+
+						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
+						m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
+						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
+
+						/*m_pcb_pass_cpu.set_f3_value(
+							material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
+							material->HasTexture(MaterialTexture::Color) ? 1.0f : 0.0f
+						);*/
+
+						PushPassConstants(cmd_list);
+					}
 				}
 			}
 		}
@@ -305,14 +284,14 @@ namespace LitchiRuntime
 	void Renderer::Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
 		auto camera = rendererPath->GetRenderCamera();
+		auto& rendererables = rendererPath->GetRenderables();
 
-		// acquire entities
-		// auto& entities = m_renderables[Renderer_Entity::Geometry];
-		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::Geometry);
-		if (entities.empty())
-		{
+		// Get entities
+		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
+		const vector<GameObject*>& entities4Skin = rendererables[is_transparent_pass ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry];
+		if (entities.empty() && entities4Skin.empty())
 			return;
-		}
+
 
 		cmd_list->BeginTimeblock(!is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent");
 		
@@ -325,9 +304,9 @@ namespace LitchiRuntime
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
-		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTexture::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
-		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTarget::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
 		//pso.clear_color[0] = camera->GetClearColor();
@@ -373,7 +352,7 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("Render Entities")
 
-		// 绘制所有的实体
+		// draw non skin gameObject
 		for (GameObject* entity : entities)
 		{
 			EASY_BLOCK("Render Entity")
@@ -421,15 +400,6 @@ namespace LitchiRuntime
 			cmd_list->SetPipelineState(pso);
 			EASY_END_BLOCK
 
-			if(!isBeginRendererPass)
-			{
-				EASY_BLOCK("BeginRenderPass")
-				cmd_list->BeginRenderPass();
-				isBeginRendererPass = true;
-				EASY_END_BLOCK
-
-			}
-
 			EASY_BLOCK("SetBuffer")
 			// Bind geometry
 			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
@@ -467,13 +437,6 @@ namespace LitchiRuntime
 		}
 		EASY_END_BLOCK
 
-		if (isBeginRendererPass)
-		{
-			EASY_BLOCK("EndRenderPass")
-			cmd_list->EndRenderPass();
-			EASY_END_BLOCK
-		}
-
 		cmd_list->EndTimeblock();
 	}
 
@@ -503,8 +466,6 @@ namespace LitchiRuntime
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.name = "Pass_UI";
 
-
-		bool isBeginRenderPass = false;
 		auto& entities = rendererPath->GetRenderables().at(Renderer_Entity::UI);
 		for (auto entity : entities)
 		{
@@ -525,11 +486,6 @@ namespace LitchiRuntime
 				pso.shader_vertex = shader_v_font;
 				pso.shader_pixel = shader_p_font;
 				cmd_list->SetPipelineState(pso);
-				if(!isBeginRenderPass)
-				{
-					cmd_list->BeginRenderPass();
-					isBeginRenderPass = true;
-				}
 
 				// set pass constants
 				// m_cb_pass_cpu.transform  UI Transform
@@ -557,11 +513,6 @@ namespace LitchiRuntime
 				pso.shader_vertex = shader_v_image;
 				pso.shader_pixel = shader_p_image;
 				cmd_list->SetPipelineState(pso);
-				if (!isBeginRenderPass)
-				{
-					cmd_list->BeginRenderPass();
-					isBeginRenderPass = true;
-				}
 
 				// set pass constants
 				// m_cb_pass_cpu.transform  UI Transform
@@ -579,11 +530,6 @@ namespace LitchiRuntime
 			}
 		}
 
-		if(isBeginRenderPass)
-		{
-			cmd_list->EndRenderPass();
-		}
-
 		cmd_list->EndMarker();
 	}
 
@@ -593,6 +539,7 @@ namespace LitchiRuntime
 		RHI_Shader* shader_p = GetShader(Renderer_Shader::line_p).get();
 
 		auto camera = rendererPath->GetRenderCamera();
+		auto grid = GetStandardMesh(Renderer_MeshType::Grid);
 
 		// define the pipeline state
 		static RHI_PipelineState pso;
@@ -611,19 +558,28 @@ namespace LitchiRuntime
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
 		cmd_list->SetPipelineState(pso);
-		cmd_list->BeginRenderPass();
 		// push pass constants
 		{
 			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
 			if (camera)
 			{
-				m_cb_pass_cpu.transform = m_world_grid->ComputeWorldMatrix(camera->GetPosition());
+				// To get the grid to feel infinite, it has to follow the camera,
+				// but only by increments of the grid's spacing size. This gives the illusion 
+				// that the grid never moves and if the grid is large enough, the user can't tell.
+				const float grid_spacing = 1.0f;
+				const Vector3 translation = Vector3
+				(
+					static_cast<int>(camera->GetPosition().x / grid_spacing) * grid_spacing,
+					0.0f,
+					static_cast<int>(camera->GetPosition().z / grid_spacing) * grid_spacing
+				);
+
+				m_cb_pass_cpu.transform = Matrix::CreateScale(grid_spacing) * Matrix::CreateTranslation(translation);
 			}
 			PushPassConstants(cmd_list);
 		}
-		cmd_list->SetBufferVertex(m_world_grid->GetVertexBuffer().get());
-		cmd_list->Draw(m_world_grid->GetVertexCount());
-		cmd_list->EndRenderPass();
+		cmd_list->SetBufferVertex(grid->GetVertexBuffer());
+		cmd_list->Draw(grid->GetVertexCount());
 		cmd_list->EndMarker();
 
 	}
@@ -640,16 +596,17 @@ namespace LitchiRuntime
 		int indexCount;
 		Matrix transform = Matrix::CreateScale(1) * Matrix::CreateTranslation(Vector3::Zero) * Matrix::CreateRotation(Quaternion::Identity);
 		std::shared_ptr<RHI_ConstantBuffer> selectedMeshBoneConstantBuffer;
-		
+
+		auto worldMatrix = Matrix::CreateScale(1) * Matrix::CreateTranslation(Vector3::Zero) * Matrix::CreateRotation(Quaternion::Identity);
 
 		switch (selectedResType) {
 		case SelectedResourceType_None:
 			return;
 		case SelectedResourceType_Material:
-			m_vertex_buffer = m_geom_sphere->GetVertexBuffer().get();
-			m_index_buffer = m_geom_sphere->GetIndexBuffer().get();
-			indexCount = m_geom_sphere->GetIndexCount();
-			transform = m_geom_sphere->GetWorldMatrix();
+			m_vertex_buffer = GetStandardMesh(Renderer_MeshType::Sphere)->GetVertexBuffer();
+			m_index_buffer = GetStandardMesh(Renderer_MeshType::Sphere)->GetIndexBuffer();
+			indexCount = GetStandardMesh(Renderer_MeshType::Sphere)->GetIndexCount();
+			transform = worldMatrix;
 			break;
 		case SelectedResourceType_Mesh:
 			m_vertex_buffer = selectedMesh->GetVertexBuffer();
@@ -661,10 +618,10 @@ namespace LitchiRuntime
 			break;
 		case SelectedResourceType_Texture2D:
 
-			m_vertex_buffer = m_geom_plane->GetVertexBuffer().get();
-			m_index_buffer = m_geom_plane->GetIndexBuffer().get();
-			indexCount = m_geom_plane->GetIndexCount();
-			transform = m_geom_plane->GetWorldMatrix();
+			m_vertex_buffer = GetStandardMesh(Renderer_MeshType::Quad)->GetVertexBuffer();
+			m_index_buffer = GetStandardMesh(Renderer_MeshType::Quad)->GetIndexBuffer();
+			indexCount = GetStandardMesh(Renderer_MeshType::Quad)->GetIndexCount();
+			transform = worldMatrix;
 			selectMaterial = m_default_standard_material;
 			selectMaterial->SetTexture("u_diffuseMap", selectedTexture2d);
 			break;
@@ -707,7 +664,6 @@ namespace LitchiRuntime
 		// pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
 		cmd_list->SetPipelineState(pso);
-		cmd_list->BeginRenderPass();
 		// push pass constants
 		{
 			/*m_cb_pass_cpu.set_resolution_out(GetResolutionRender());*/
@@ -752,8 +708,13 @@ namespace LitchiRuntime
 		}
 		EASY_END_BLOCK
 
-		cmd_list->EndRenderPass();
 		cmd_list->EndMarker();
 	}
+
+
+	void Renderer::Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture)
+	{
+	}
+
 
 }

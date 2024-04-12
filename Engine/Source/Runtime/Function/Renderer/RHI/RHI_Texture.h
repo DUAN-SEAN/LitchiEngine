@@ -123,41 +123,6 @@ namespace LitchiRuntime
         void RHI_DestroyResource(const bool destroy_main, const bool destroy_per_view);
         void*& GetMappedData() { return m_mapped_data; }
 
-#if 1 GPU resources
-
-        /**
-         * \brief Get RHI Res Handle
-         * \return Return Handle
-         */
-        void*& GetRhiResource()                             { return m_rhi_resource; }
-        /**
-         * \brief Get Shader Buffer
-         * \return 
-         */
-        void* GetRhiSrv()                             const { return m_rhi_srv; }
-        /**
-         * \brief Get Un order Buffer View
-         * \return
-         */
-    	void* GetRhiUav()                             const { return m_rhi_uav; }
-        void* GetRhiSrvMip(const uint32_t i)          const { return m_rhi_srv_mips[i]; }
-        void* GetRhiUavMip(const uint32_t i)          const { return m_rhi_uav_mips[i]; }
-        /**
-         * \brief Get Depth or Stencil Buffer View
-         * \param i index
-         * \return 
-         */
-        void* GetRhiDsv(const uint32_t i = 0)         const { return i < m_rhi_dsv.size()           ? m_rhi_dsv[i]           : nullptr; }
-        void* GetRhiDsvReadOnly(const uint32_t i = 0) const { return i < m_rhi_dsv_read_only.size() ? m_rhi_dsv_read_only[i] : nullptr; }
-        /**
-         * \brief Get Render Target Buffer View
-         * \param i 
-         * \return 
-         */
-        void* GetRhiRtv(const uint32_t i = 0)         const { return i < m_rhi_rtv.size()           ? m_rhi_rtv[i]           : nullptr; }
-        void RHI_DestroyResource(const bool destroy_main, const bool destroy_per_view);
-#endif
-
     protected:
         bool RHI_CreateResource();
         void RHI_SetLayout(const RHI_Image_Layout new_layout, RHI_CommandList* cmd_list, const uint32_t mip_index, const uint32_t mip_range);

@@ -106,7 +106,7 @@ namespace LitchiRuntime
         LC_ASSERT(bits_per_channel != 0);
         LC_ASSERT(channel_count != 0);
 
-        RHI_Format format = RHI_Format::Undefined;
+        RHI_Format format = RHI_Format::Max;
 
         if (channel_count == 1)
         {
@@ -149,7 +149,7 @@ namespace LitchiRuntime
             }
         }
 
-        LC_ASSERT(format != RHI_Format::Undefined);
+        LC_ASSERT(format != RHI_Format::Max);
 
         return format;
     }

@@ -36,23 +36,20 @@ namespace LitchiRuntime
 	Pcb_Pass Renderer::m_cb_pass_cpu;
 	Cb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
-	Cb_Material Renderer::m_cb_material_cpu;
-	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_skyBox;
-	shared_ptr<RHI_IndexBuffer> Renderer::m_index_buffer_skyBox;
 
 	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;
+	uint32_t Renderer::m_resource_index = 0;
 
 	std::unordered_map<RendererPathType, RendererPath*> Renderer::m_rendererPaths;
 
 	bool Renderer::m_brdf_specular_lut_rendered;
 
-	unique_ptr<Font> Renderer::m_font;
-	unique_ptr<Grid> Renderer::m_world_grid;
-	std::unique_ptr<SphereGeometry> Renderer::m_geom_sphere;
-	std::unique_ptr<PlaneGeometry> Renderer::m_geom_plane;
 	Material* Renderer::m_default_standard_material;
 	Material* Renderer::m_default_standard_skin_material;
+	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_skyBox;
+	shared_ptr<RHI_IndexBuffer> Renderer::m_index_buffer_skyBox;
 
+	// line rendering
 	shared_ptr<RHI_VertexBuffer> Renderer::m_vertex_buffer_lines;
 	vector<RHI_Vertex_PosCol> Renderer::m_line_vertices;
 	vector<float> Renderer::m_lines_duration;
@@ -61,21 +58,12 @@ namespace LitchiRuntime
 
 	namespace
 	{
-		bool is_game_mode = true;
-
-		// states
-		atomic<bool> is_rendering_allowed = true;
-		atomic<bool> flush_requested = false;
-		bool dirty_orthographic_projection = true;
+		bool is_standalone = true;
 
 		// resolution & viewport
 		Vector2 m_resolution_render = Vector2::Zero;
 		Vector2 m_resolution_output = Vector2::Zero;
 		//RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
-
-		// environment texture
-		shared_ptr<RHI_Texture> environment_texture;
-		mutex mutex_environment_texture;
 
 		// swapchain
 		const uint8_t swap_chain_buffer_count = 2;
@@ -90,49 +78,19 @@ namespace LitchiRuntime
 
 		// misc
 		unordered_map<Renderer_Option, float> m_options;
-		thread::id render_thread_id;
-		mutex mutex_entity_addition;
 		uint64_t frame_num = 0;
 		Vector2 jitter_offset = Vector2::Zero;
 		const uint32_t resolution_shadow_min = 128;
 		float near_plane = 0.0f;
 		float far_plane = 1.0f;
 
-		void sort_renderables(RenderCamera* camera, vector<GameObject*>* renderables, const bool are_transparent)
-		{
-			if (!camera || renderables->size() <= 2)
-				return;
-
-			auto comparison_op = [camera](GameObject* entity)
-			{
-				auto renderable = entity->GetComponent<MeshFilter>();
-				if (!renderable)
-					return 0.0f;
-
-				return (renderable->GetAAbb().GetCenter() - camera->GetPosition()).LengthSquared();
-			};
-
-			// sort by depth
-			sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
-				{
-					if (are_transparent)
-					{
-						return comparison_op(a) > comparison_op(b); // back-to-front for transparent
-					}
-					else
-					{
-						return comparison_op(a) < comparison_op(b); // front-to-back for opaque
-					}
-				});
-		}
 	}
 
 	void Renderer::Initialize()
 	{
-		render_thread_id = this_thread::get_id();
 		m_brdf_specular_lut_rendered = false;
 
-		is_game_mode = ApplicationBase::Instance()->GetApplicationType() == LitchiApplicationType::Game;
+		is_standalone = ApplicationBase::Instance()->GetApplicationType() == LitchiApplicationType::Game;
 
 		// Display::DetectDisplayModes();
 
@@ -219,7 +177,7 @@ namespace LitchiRuntime
 		CreateDepthStencilStates();
 		CreateRasterizerStates();
 		CreateBlendStates();
-		CreateRenderTextures(true, true, true, true);
+		CreateRenderTargets(true, true, true);
 		CreateFonts();
 		CreateSamplers(false);
 		CreateStructuredBuffers();
@@ -251,27 +209,13 @@ namespace LitchiRuntime
 
 	void Renderer::Shutdown()
 	{
-		// todo:
-		//// console doesn't render anymore, log to file
-		// Log::SetLogToFile(true);
-
-		// todo:
-		//// Fire event
-		//SP_FIRE_EVENT(EventType::RendererOnShutdown);
-
 		// Manually invoke the deconstructors so that ParseDeletionQueue(), releases their RHI resources.
 		{
 			DestroyResources();
 
-			m_world_grid.reset();
-			m_geom_sphere.reset();
-			m_geom_plane.reset();
-
 			m_default_standard_material = nullptr;// unload by resourceManager
-			m_font.reset();
 			swap_chain = nullptr;
 			m_vertex_buffer_lines = nullptr;
-			environment_texture = nullptr;
 		}
 
 		// RHI_RenderDoc::Shutdown();
@@ -288,17 +232,6 @@ namespace LitchiRuntime
 			// SP_FIRE_EVENT(EventType::RendererOnFirstFrameCompleted); //TODO 第一帧后界面显示
 		}
 
-		EASY_BLOCK("Renderer::Flush")
-		// happens when core resources are created/destroyed
-		if (flush_requested)
-		{
-			Flush();
-		}
-		EASY_END_BLOCK;
-
-		if (!is_rendering_allowed)
-			return;
-
 		EASY_BLOCK("Device::Tick")
 		RHI_Device::Tick(LitchiRuntime::frame_num);
 		EASY_END_BLOCK
@@ -311,10 +244,6 @@ namespace LitchiRuntime
 		EASY_END_BLOCK
 
 		OnSyncPoint(cmd_current);
-
-		EASY_BLOCK("OnFrameStart")
-		OnFrameStart(cmd_current);
-		EASY_END_BLOCK
 
 		EASY_BLOCK("Render4BuildInSceneView")
 		// 绘制SceneView Path
@@ -370,28 +299,32 @@ namespace LitchiRuntime
 
 
 		// blit to back buffer when in full screen
-		if (is_game_mode)
+		if (is_standalone)
 		{
-			cmd_current->BeginMarker("game_mode_copy_to_back_buffer");
-
 			// todo temp code
 			if(rendererPath4GameView!=nullptr)
 			{
 				auto colorTargetTexture = rendererPath4GameView->GetColorRenderTarget();
-				cmd_current->Blit(colorTargetTexture.get(), swap_chain.get());
+
+				BlitToBackBuffer(cmd_current, colorTargetTexture.get());
 			}else
 			{
-				cmd_current->Blit(GetRenderTarget(Renderer_RenderTexture::frame_output).get(), swap_chain.get());
+				DEBUG_LOG_ERROR("GameViewRendererPath is Null");
 			}
-			cmd_current->EndMarker();
+
 		}
 
-		OnFrameEnd(cmd_current);
 		EASY_BLOCK("CommandList::Submit")
 		// submit
 		cmd_current->End();
 		cmd_current->Submit();
 		EASY_END_BLOCK
+
+		// present
+		if (is_standalone)
+		{
+			swap_chain->Present();
+		}
 
 		// track frame
 		LitchiRuntime::frame_num++;
@@ -548,40 +481,6 @@ namespace LitchiRuntime
 		rt_output->SetLayout(RHI_Image_Layout::Shader_Read, cmd_list);
 	}
 
-	void Renderer::OnSceneResolved(std::vector<GameObject*> gameObjectList)
-	{
-		/*lock_guard lock(mutex_entity_addition);
-		m_entities_to_add.clear();
-
-		for (GameObject* entity : gameObjectList)
-		{
-			LC_ASSERT_MSG(entity != nullptr, "Entity is null");
-
-			if (entity->GetActive())
-			{
-				m_entities_to_add.emplace_back(entity);
-			}
-		}*/
-	}
-
-	/*const RHI_Viewport& Renderer::GetViewport()
-	{
-		return m_viewport;
-	}
-
-	void Renderer::SetViewport(float width, float height)
-	{
-		SP_ASSERT_MSG(width != 0, "Width can't be zero");
-		SP_ASSERT_MSG(height != 0, "Height can't be zero");
-
-		if (m_viewport.width != width || m_viewport.height != height)
-		{
-			m_viewport.width = width;
-			m_viewport.height = height;
-			dirty_orthographic_projection = true;
-		}
-	}*/
-
 	const Vector2& Renderer::GetResolutionRender()
 	{
 		return m_resolution_render;
@@ -596,6 +495,13 @@ namespace LitchiRuntime
 			return;
 		}
 
+		if (width > m_resolution_output.x || height > m_resolution_output.y)
+		{
+			DEBUG_LOG_WARN("Can't set %dx%d as it's larger then the output resolution %dx%d",
+				width, height, static_cast<uint32_t>(m_resolution_output.x), static_cast<uint32_t>(m_resolution_output.y));
+			return;
+		}
+
 		// Early exit if the resolution is already set
 		if (m_resolution_render.x == width && m_resolution_render.y == height)
 			return;
@@ -607,7 +513,7 @@ namespace LitchiRuntime
 		if (recreate_resources)
 		{
 			// Re-create render textures
-			CreateRenderTextures(true, false, false, true);
+			CreateRenderTargets(true, false, true);
 
 			// Re-create samplers
 			CreateSamplers(true);
@@ -646,7 +552,7 @@ namespace LitchiRuntime
 		if (recreate_resources)
 		{
 			// Re-create render textures
-			CreateRenderTextures(false, true, false, true);
+			CreateRenderTargets(false, true, true);
 
 			// Re-create samplers
 			CreateSamplers(true);
@@ -731,45 +637,6 @@ namespace LitchiRuntime
 		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material)
-	{
-		// Set
-		/*m_cb_material_cpu.color.x = material->GetProperty(MaterialProperty::ColorR);
-		m_cb_material_cpu.color.y = material->GetProperty(MaterialProperty::ColorG);
-		m_cb_material_cpu.color.z = material->GetProperty(MaterialProperty::ColorB);
-		m_cb_material_cpu.color.w = material->GetProperty(MaterialProperty::ColorA);
-		m_cb_material_cpu.tiling_uv.x = material->GetProperty(MaterialProperty::UvTilingX);
-		m_cb_material_cpu.tiling_uv.y = material->GetProperty(MaterialProperty::UvTilingY);
-		m_cb_material_cpu.offset_uv.x = material->GetProperty(MaterialProperty::UvOffsetX);
-		m_cb_material_cpu.offset_uv.y = material->GetProperty(MaterialProperty::UvOffsetY);
-		m_cb_material_cpu.roughness_mul = material->GetProperty(MaterialProperty::RoughnessMultiplier);
-		m_cb_material_cpu.metallic_mul = material->GetProperty(MaterialProperty::MetalnessMultiplier);
-		m_cb_material_cpu.normal_mul = material->GetProperty(MaterialProperty::NormalMultiplier);
-		m_cb_material_cpu.height_mul = material->GetProperty(MaterialProperty::HeightMultiplier);
-		m_cb_material_cpu.anisotropic = material->GetProperty(MaterialProperty::Anisotropic);
-		m_cb_material_cpu.anisitropic_rotation = material->GetProperty(MaterialProperty::AnisotropicRotation);
-		m_cb_material_cpu.clearcoat = material->GetProperty(MaterialProperty::Clearcoat);
-		m_cb_material_cpu.clearcoat_roughness = material->GetProperty(MaterialProperty::Clearcoat_Roughness);
-		m_cb_material_cpu.sheen = material->GetProperty(MaterialProperty::Sheen);
-		m_cb_material_cpu.sheen_tint = material->GetProperty(MaterialProperty::SheenTint);
-		m_cb_material_cpu.properties = 0;
-		m_cb_material_cpu.properties |= material->GetProperty(MaterialProperty::SingleTextureRoughnessMetalness) ? (1U << 0) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Height) ? (1U << 1) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Normal) ? (1U << 2) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Color) ? (1U << 3) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Roughness) ? (1U << 4) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Metalness) ? (1U << 5) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::AlphaMask) ? (1U << 6) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Emission) ? (1U << 7) : 0;
-		m_cb_material_cpu.properties |= material->HasTexture(MaterialTexture::Occlusion) ? (1U << 8) : 0;*/
-
-		// Update
-		GetConstantBuffer(Renderer_ConstantBuffer::Material)->Update(&m_cb_material_cpu);
-
-		// Bind because the offset just changed
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::material, GetConstantBuffer(Renderer_ConstantBuffer::Material));
-	}
-
 	void Renderer::UpdateMaterial(RHI_CommandList* cmd_list, Material* material)
 	{
 		EASY_BLOCK("SetMaterialGlobalBuffer")
@@ -801,65 +668,6 @@ namespace LitchiRuntime
 		//cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, constantBuffer);
 	}
 
-	// todo: 
-	//void Renderer::OnWorldResolved(sp_variant data)
-	//{
-	//    // note: m_renderables is a vector of shared pointers.
-	//    // this ensures that if any entities are deallocated by the world.
-	//    // we'll still have some valid pointers until the are overridden by m_renderables_world.
-
-	//    vector<shared_ptr<Entity>> entities = get<vector<shared_ptr<Entity>>>(data);
-
-	//    lock_guard lock(mutex_entity_addition);
-	//    m_entities_to_add.clear();
-
-	//    for (shared_ptr<Entity> entity : entities)
-	//    {
-	//        SP_ASSERT_MSG(entity != nullptr, "Entity is null");
-
-	//        if (entity->IsActiveRecursively())
-	//        {
-	//            m_entities_to_add.emplace_back(entity);
-	//        }
-	//    }
-	//}
-
-	void Renderer::OnClear()
-	{
-		// Flush to remove references to entity resources that will be deallocated
-		Flush();
-	}
-
-	// todo: remove
-	//void Renderer::OnFullScreenToggled()
-	//{
-	//	static float    width_previous_viewport = 0;
-	//	static float    height_previous_viewport = 0;
-	//	static uint32_t width_previous_output = 0;
-	//	static uint32_t height_previous_output = 0;
-
-	//	if (ApplicationBase::Instance()->window->IsFullscreen())
-	//	{
-	//		uint32_t width = ApplicationBase::Instance()->window->GetWidth();
-	//		uint32_t height = ApplicationBase::Instance()->window->GetHeight();
-
-	//		width_previous_viewport = m_viewport.width;
-	//		height_previous_viewport = m_viewport.height;
-	//		SetViewport(static_cast<float>(width), static_cast<float>(height));
-
-	//		width_previous_output = static_cast<uint32_t>(m_viewport.width);
-	//		height_previous_output = static_cast<uint32_t>(m_viewport.height);
-	//		SetResolutionOutput(width, height);
-	//	}
-	//	else
-	//	{
-	//		SetViewport(width_previous_viewport, height_previous_viewport);
-	//		SetResolutionOutput(width_previous_output, height_previous_output);
-	//	}
-
-	//	//  InputManager::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
-	//}
-
 	void Renderer::OnSyncPoint(RHI_CommandList* cmd_list)
 	{	
 		// is_sync_point: the command pool has exhausted its command lists and 
@@ -876,7 +684,9 @@ namespace LitchiRuntime
 			{
 				constant_buffer->ResetOffset();
 			}
-			GetStructuredBuffer()->ResetOffset();
+
+			// reset dynamic buffer offsets
+			GetStructuredBuffer(Renderer_StructuredBuffer::Spd)->ResetOffset();
 
 			// delete any rhi resources that have accumulated
 			if (RHI_Device::DeletionQueueNeedsToParse())
@@ -885,7 +695,8 @@ namespace LitchiRuntime
 				RHI_Device::DeletionQueueParse();
 				DEBUG_LOG_INFO("Parsed deletion queue");
 			}
-
+			{
+			
 			// reset dynamic buffer offsets
 	/*		GetStructuredBuffer(Renderer_StructuredBuffer::Spd)->ResetOffset();
 			GetConstantBufferFrame()->ResetOffset();*/
@@ -894,7 +705,8 @@ namespace LitchiRuntime
 			{
 				RHI_Device::UpdateBindlessResources(nullptr, &bindless_textures);
 				bindless_materials_dirty = false;
-			}*/
+			}*/	
+			}
 		}
 
 		// update frame constant buffer // todo
@@ -940,45 +752,6 @@ namespace LitchiRuntime
 				}
 			}*/
 		}
-	}
-
-	void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
-	{
-		// 全量更新
-
-		// generate mips
-		{
-			lock_guard lock(mutex_mip_generation);
-			for (RHI_Texture* texture : textures_mip_generation)
-			{
-				Pass_GenerateMips(cmd_list, texture);
-			}
-			textures_mip_generation.clear();
-		}
-
-		// Lines_OneFrameStart(); // todo
-	}
-
-	void Renderer::OnFrameEnd(RHI_CommandList* cmd_list)
-	{
-		// Lines_OnFrameEnd(); // todo
-	}
-
-	bool Renderer::IsCallingFromOtherThread()
-	{
-		return render_thread_id != this_thread::get_id();
-	}
-
-	const shared_ptr<RHI_Texture> Renderer::GetEnvironmentTexture()
-	{
-		return environment_texture ? environment_texture : GetStandardTexture(Renderer_StandardTexture::Black);
-	}
-
-	void Renderer::SetEnvironment(Environment* environment)
-	{
-		// todo:
-		/*lock_guard lock(mutex_environment_texture);
-		environment_texture = environment->GetTexture();*/
 	}
 
 	void Renderer::SetOption(Renderer_Option option, float value)
@@ -1149,54 +922,17 @@ namespace LitchiRuntime
 		return swap_chain.get();
 	}
 
-	void Renderer::Present()
+	void Renderer::BlitToBackBuffer(RHI_CommandList* cmd_list, RHI_Texture* texture)
 	{
-		if (!is_rendering_allowed)
-			return;
-
-		LC_ASSERT_MSG(!ApplicationBase::Instance()->window->IsMinimized(), "Don't call present if the window is minimized");
-		LC_ASSERT(swap_chain->GetLayout() == RHI_Image_Layout::Present_Source);
-
-		swap_chain->Present();
-
-		// SP_FIRE_EVENT(EventType::RendererPostPresent);
-	}
-
-	void Renderer::Flush()
-	{
-		// The external thread requests a flush from the renderer thread (to avoid a myriad of thread issues and Vulkan errors)
-		if (IsCallingFromOtherThread())
-		{
-			is_rendering_allowed = false;
-			flush_requested = true;
-
-			while (flush_requested)
-			{
-				DEBUG_LOG_INFO("External thread is waiting for the renderer thread to flush...");
-				this_thread::sleep_for(chrono::milliseconds(16));
-			}
-
-			return;
-		}
-
-		// Flushing
-		if (!is_rendering_allowed)
-		{
-			DEBUG_LOG_INFO("Renderer thread is flushing...");
-			RHI_Device::QueueWaitAll();
-		}
-
-		flush_requested = false;
+		cmd_list->BeginMarker("blit_to_back_buffer");
+		cmd_list->Blit(texture, swap_chain.get());
+		cmd_list->EndMarker();
 	}
 
 	void Renderer::AddTextureForMipGeneration(RHI_Texture* texture)
 	{
 		lock_guard<mutex> guard(mutex_mip_generation);
 		textures_mip_generation.push_back(texture);
-	}
-
-	void Renderer::Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture)
-	{
 	}
 
 	RHI_CommandList* Renderer::GetCmdList()
@@ -1211,7 +947,7 @@ namespace LitchiRuntime
 
 	RHI_Texture* Renderer::GetFrameTexture()
 	{
-		return GetRenderTarget(Renderer_RenderTexture::frame_output).get();
+		return GetRenderTarget(Renderer_RenderTarget::frame_output).get();
 	}
 
 	uint64_t Renderer::GetFrameNum()
@@ -1223,7 +959,6 @@ namespace LitchiRuntime
 	{
 		m_rendererPaths[rendererPathType] = rendererPath;
 	}
-
 
 	Cb_Frame Renderer::BuildFrameBufferData()
 	{
@@ -1254,7 +989,6 @@ namespace LitchiRuntime
 			{
 				near_plane = camera->GetNearPlane();
 				far_plane = camera->GetFarPlane();
-				dirty_orthographic_projection = true;
 			}
 
 			rendererPathBufferData.view = camera->GetViewMatrix();
@@ -1271,7 +1005,6 @@ namespace LitchiRuntime
 				// near clip does not affect depth accuracy in orthographic projection, so set it to 0 to avoid problems which can result an infinitely small [3,2] (NaN) after the multiplication below.
 				Matrix projection_ortho = Matrix::CreateOrthographicLH(canvasResolutionWidth, canvasResolutionHeight, 0.0f, far_plane);
 				rendererPathBufferData.view_projection_ortho = Matrix::CreateLookAtLH(Vector3(0, 0, -near_plane), Vector3::Forward, Vector3::Up) * projection_ortho;
-				dirty_orthographic_projection = false;
 			}
 
 		}
@@ -1291,10 +1024,4 @@ namespace LitchiRuntime
 
 		return rendererPathBufferData;
 	}
-
-
-	/*RenderCamera* Renderer::GetMainCamera()
-	{
-		return m_main_camera;
-	}*/
 }

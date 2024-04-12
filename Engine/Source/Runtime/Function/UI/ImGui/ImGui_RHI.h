@@ -298,7 +298,6 @@ namespace ImGui::RHI
         cmd_list->SetBufferVertex(vertex_buffer);
         cmd_list->SetBufferIndex(index_buffer);
         cmd_list->SetPipelineState(pso);
-        cmd_list->BeginRenderPass();
 
         // render
         {
@@ -405,14 +404,13 @@ namespace ImGui::RHI
         }
 
         // submit
-        cmd_list->EndRenderPass();
         cmd_list->EndTimeblock();
         cmd_list->End();
         cmd_list->Submit();
 
         if (!is_child_window)
         {
-            Renderer::Present();
+            Renderer::GetSwapChain()->Present();
         }
     }
 
@@ -429,6 +427,7 @@ namespace ImGui::RHI
             static_cast<uint32_t>(viewport->Size.y),
             RHI_Present_Mode::Immediate,
             2,
+            false,
             (string("swapchain_child_") + string(to_string(viewport->ID))).c_str()
         );
 

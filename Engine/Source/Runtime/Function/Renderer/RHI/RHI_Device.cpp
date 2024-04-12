@@ -29,7 +29,6 @@ namespace LitchiRuntime
     // Misc
     bool RHI_Device::m_wide_lines                          = false;
     uint32_t  RHI_Device::m_physical_device_index          = 0;
-    uint32_t  RHI_Device::m_enabled_graphics_shader_stages = 0;
     static vector<PhysicalDevice> physical_devices;
 
     void RHI_Device::PhysicalDeviceRegister(const PhysicalDevice& physical_device)

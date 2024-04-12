@@ -193,17 +193,23 @@ namespace LitchiRuntime
 
 	void RendererPath::CreateColorRenderTarget()
 	{
+		// typical flags
+		uint32_t flags_standard = RHI_Texture_Uav | RHI_Texture_Srv;
+		uint32_t flags_render_target = flags_standard | RHI_Texture_Rtv;
+
 		std::string rtName = GetRenderPathName() + std::string("_frame_output");
-		m_colorRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::R16G16B16A16_Float, RHI_Texture_RenderTarget | RHI_Texture_Uav | RHI_Texture_Srv | RHI_Texture_ClearOrBlit, rtName.c_str());
+		m_colorRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::R16G16B16A16_Float, flags_render_target | RHI_Texture_ClearBlit , rtName.c_str());
 
 	}
 
 	void RendererPath::CreateDepthRenderTarget()
 	{
+		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv;
 		std::string rtName = GetRenderPathName() + std::string("_frame_depth");
+
 		static float resolutionWidth = 4096;
 		static float resolutionHeight = 4096;
-		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, RHI_Texture_RenderTarget | RHI_Texture_Srv, rtName.c_str());
+		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, flags_depth_buffer, rtName.c_str());
 	}
 
 	std::string RendererPath::GetRenderPathName() const
@@ -245,6 +251,8 @@ namespace LitchiRuntime
 		m_renderables.clear();
 		m_renderables[Renderer_Entity::Geometry];
 		m_renderables[Renderer_Entity::GeometryTransparent];
+		m_renderables[Renderer_Entity::SkinGeometry];
+		m_renderables[Renderer_Entity::SkinGeometryTransparent];
 		m_renderables[Renderer_Entity::Camera];
 		m_renderables[Renderer_Entity::Light];
 		m_renderables[Renderer_Entity::UI];
@@ -265,7 +273,7 @@ namespace LitchiRuntime
 
 				if (is_visible)
 				{
-					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
+					m_renderables[is_transparent ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry].emplace_back(entity);
 				}
 			}else
 			{
@@ -414,32 +422,33 @@ namespace LitchiRuntime
 		RHI_Format format_depth = RHI_Format::D32_Float;
 		RHI_Format format_color = RHI_Format::R8G8B8A8_Unorm;
 
+		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv;
 		if (m_mainLight->GetLightType() == LightType::Directional)
 		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_directional");
+			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, flags_depth_buffer, "shadow_map_directional");
 
 			if (shadowsTransparentEnabled)
 			{
-				m_shadow_map.texture_color = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_color, 2, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_directional_color");
+				m_shadow_map.texture_color = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_color, 2, flags_depth_buffer, "shadow_map_directional_color");
 			}
 
 		}
 		else if (m_mainLight->GetLightType() == LightType::Point)
 		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_TextureCube>(resolution, resolution, format_depth, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_point_color");
+			m_shadow_map.texture_depth = std::make_unique<RHI_TextureCube>(resolution, resolution, format_depth, flags_depth_buffer, "shadow_map_point_color");
 
 			if (shadowsTransparentEnabled)
 			{
-				m_shadow_map.texture_color = std::make_unique<RHI_TextureCube>(resolution, resolution, format_color, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_point_color");
+				m_shadow_map.texture_color = std::make_unique<RHI_TextureCube>(resolution, resolution, format_color, flags_depth_buffer, "shadow_map_point_color");
 			}
 		}
 		else if (m_mainLight->GetLightType() == LightType::Spot)
 		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_depth, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_spot_color");
+			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_depth, flags_depth_buffer, "shadow_map_spot_color");
 
 			if (shadowsTransparentEnabled)
 			{
-				m_shadow_map.texture_color = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_color, RHI_Texture_RenderTarget | RHI_Texture_Srv, "shadow_map_spot_color");
+				m_shadow_map.texture_color = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_color, flags_depth_buffer, "shadow_map_spot_color");
 			}
 		}
 	}

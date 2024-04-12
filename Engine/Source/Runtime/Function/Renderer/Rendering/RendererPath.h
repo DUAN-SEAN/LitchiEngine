@@ -54,7 +54,7 @@ namespace LitchiRuntime
 
 		void UpdateScene(Scene* scene);
 		Scene* GetRenderScene() { return m_renderScene; }
-		const std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
+		std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 		UICanvas* GetCanvas();
 
 		void UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d);

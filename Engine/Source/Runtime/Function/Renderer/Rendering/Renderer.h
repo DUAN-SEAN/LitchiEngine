@@ -53,27 +53,22 @@ namespace LitchiRuntime
 		static void DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 		static void DrawPlane(const Plane& plane, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
 
-		// Scene
-		static void OnSceneResolved(std::vector<GameObject*> gameObjectList);
-
 		// Options
 		template<typename T>
-		static T GetOption(const Renderer_Option option) { return static_cast<T>(GetOptions()[static_cast<uint32_t>(option)]); }
+		static T GetOption(const Renderer_Option option) { return static_cast<T>(GetOptions()[option]); }
 		static void SetOption(Renderer_Option option, float value);
 		static std::unordered_map<Renderer_Option, float>& GetOptions();
 		static void SetOptions(const std::unordered_map<Renderer_Option, float>& options);
 
 		// Swapchain
 		static RHI_SwapChain* GetSwapChain();
-		static void Present();
+		static void BlitToBackBuffer(RHI_CommandList* cmd_list, RHI_Texture* texture);
 
 		// Mip generation
 		static void AddTextureForMipGeneration(RHI_Texture* texture);
 		static void Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture);
 
 		// Misc
-		static void Flush();
-		static void SetGlobalShaderResources(RHI_CommandList* cmd_list);
 		static void SetStandardResources(RHI_CommandList* cmd_list);
 		static uint64_t GetFrameNum();
 		static RHI_Api_Type GetRhiApiType();
@@ -92,11 +87,6 @@ namespace LitchiRuntime
 		static void SetResolutionOutput(uint32_t width, uint32_t height, bool recreate_resources = true);
 		//===============================================================================================
 
-		//= ENVIRONMENT ==================================================
-		static const std::shared_ptr<RHI_Texture> GetEnvironmentTexture();
-		static void SetEnvironment(Environment* environment);
-		//================================================================
-
 		//= RHI RESOURCES====================
 		static RHI_CommandList* GetCmdList();
 		//===================================
@@ -105,20 +95,22 @@ namespace LitchiRuntime
 		static RHI_Texture* GetFrameTexture();
 
 		// Get all
-		static std::array<std::shared_ptr<RHI_Texture>, 28>& GetRenderTargets();
-		static std::array<std::shared_ptr<RHI_Shader>, 61>& GetShaders();
-		static std::array<std::shared_ptr<RHI_ConstantBuffer>, 5>& GetConstantBuffers();
+		static std::array<std::shared_ptr<RHI_Texture>, static_cast<uint32_t>(Renderer_RenderTarget::max)>& GetRenderTargets();
+		static std::array<std::shared_ptr<RHI_Shader>, static_cast<uint32_t>(Renderer_Shader::max)>& GetShaders();
+		static std::array<std::shared_ptr<RHI_ConstantBuffer>, static_cast<uint32_t>(Renderer_ConstantBuffer::Max)>& GetConstantBuffers();
+		static std::array<std::shared_ptr<RHI_StructuredBuffer>, 2>& GetStructuredBuffers();
 
 		// Get individual
 		static std::shared_ptr<RHI_RasterizerState> GetRasterizerState(const Renderer_RasterizerState type);
 		static std::shared_ptr<RHI_DepthStencilState> GetDepthStencilState(const Renderer_DepthStencilState type);
 		static std::shared_ptr<RHI_BlendState> GetBlendState(const Renderer_BlendState type);
-		static std::shared_ptr<RHI_Texture> GetRenderTarget(const Renderer_RenderTexture type);
+		static std::shared_ptr<RHI_Texture> GetRenderTarget(const Renderer_RenderTarget type);
 		static std::shared_ptr<RHI_Shader> GetShader(const Renderer_Shader type);
 		static std::shared_ptr<RHI_Sampler> GetSampler(const Renderer_Sampler type);
 		static std::shared_ptr<RHI_ConstantBuffer> GetConstantBuffer(const Renderer_ConstantBuffer type);
-		static std::shared_ptr<RHI_StructuredBuffer> GetStructuredBuffer();
+		static std::shared_ptr<RHI_StructuredBuffer> GetStructuredBuffer(const Renderer_StructuredBuffer type);
 		static std::shared_ptr<RHI_Texture> GetStandardTexture(const Renderer_StandardTexture type);
+		static std::shared_ptr<Mesh> GetStandardMesh(const Renderer_MeshType type);
 		//=======================================================================================================
 
 		// RendererPath
@@ -130,7 +122,6 @@ namespace LitchiRuntime
 		static void PushPassConstants(RHI_CommandList* cmd_list);
 		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);
 		static void UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list,const int lightCount, RendererPath* rendererPath);
-		static void UpdateConstantBufferMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData);
 
@@ -146,7 +137,7 @@ namespace LitchiRuntime
 		static void CreateSkyBoxMesh();
 		static void CreateShaders();
 		static void CreateSamplers(const bool create_only_anisotropic = false);
-		static void CreateRenderTextures(const bool create_render, const bool create_output, const bool create_fixed, const bool create_dynamic);
+		static void CreateRenderTargets(const bool create_render, const bool create_output, const bool create_dynamic);
 		static void LoadDefaultMaterials();
 
 		// Passes - Core
@@ -165,21 +156,9 @@ namespace LitchiRuntime
 		static Cb_RendererPath BuildRendererPathFrameBufferData(RenderCamera* camera, UICanvas* canvas);
 
 		// Event handlers
-		// static void OnWorldResolved(sp_variant data);
-		static void OnClear();
 		// static void OnFullScreenToggled();
 		static void OnSyncPoint(RHI_CommandList* cmd_list);
 
-		// Lines
-	/*	static void Lines_OneFrameStart();*/
-		static void Lines_OnFrameEnd();
-
-		// Frame
-		static void OnFrameStart(RHI_CommandList* cmd_list);
-		static void OnFrameEnd(RHI_CommandList* cmd_list);
-
-		// Misc
-		static bool IsCallingFromOtherThread();
 		static void DestroyResources();
 
 		static RHI_CommandPool* m_cmd_pool;
@@ -191,7 +170,6 @@ namespace LitchiRuntime
 		static Pcb_Pass m_cb_pass_cpu;
 		static Cb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
-		static Cb_Material m_cb_material_cpu;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_skyBox;
 		static std::shared_ptr<RHI_IndexBuffer> m_index_buffer_skyBox;
 
@@ -203,10 +181,6 @@ namespace LitchiRuntime
 		static uint32_t m_lines_index_depth_off;
 		static uint32_t m_lines_index_depth_on;
 
-		static std::unique_ptr<Font> m_font;
-		static std::unique_ptr<Grid> m_world_grid;
-		static std::unique_ptr<SphereGeometry> m_geom_sphere;
-		static std::unique_ptr<PlaneGeometry> m_geom_plane;
 		static Material* m_default_standard_material;
 		static Material* m_default_standard_skin_material;
 	};

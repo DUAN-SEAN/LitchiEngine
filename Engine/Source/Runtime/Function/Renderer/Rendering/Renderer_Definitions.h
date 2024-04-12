@@ -11,6 +11,7 @@ namespace LitchiRuntime
 
     // we are using double buffering so 5 is enough
     constexpr uint8_t resources_frame_lifetime = 5;
+    constexpr uint8_t renderer_path_max = 10;
 
     enum class Renderer_Option : uint32_t
     {
@@ -151,95 +152,39 @@ namespace LitchiRuntime
     {
         forward_v,
         forward_p,
-        gbuffer_v,
-        gbuffer_p,
-        depth_prepass_v,
-        depth_prepass_p,
         depth_light_V,
         depth_light_p,
         depth_light_skin_V,
         depth_light_skin_p,
-        fullscreen_triangle_v,
         quad_v,
         quad_p,
-        fxaa_c,
-        film_grain_c,
-        motion_blur_c,
-        dof_downsample_coc_c,
-        dof_bokeh_c,
-        dof_tent_c,
-        dof_upscale_blend_c,
-        chromatic_aberration_c,
-        bloom_luminance_c,
-        bloom_downsample_c,
-        bloom_blend_frame_c,
-        bloom_upsample_blend_mip_c,
-        tonemapping_gamma_correction_c,
-        debanding_c,
-        debug_reflection_probe_v,
-        debug_reflection_probe_p,
-        brdf_specular_lut_c,
-        light_c,
-        light_composition_c,
-        light_image_based_p,
         line_v,
         line_p,
-        outline_v,
-        outline_p,
-        outline_c,
-        font_v,
-        font_p,
-        ssgi_c,
-        ssr_c,
-        temporal_filter_c,
-        blur_gaussian_c,
-        blur_gaussian_bilaterial_c,
-        reflection_probe_v,
-        reflection_probe_p,
-        ffx_cas_c,
-        ffx_spd_c,
         skybox_v,
         skybox_p,
+        font_v,
+        font_p,
         ui_image_v,
-        ui_image_p = 60,
+        ui_image_p,
+        max,
     };
     
-    enum class Renderer_RenderTexture : uint8_t
+    enum class Renderer_RenderTarget : uint8_t
     {
         undefined,
-        gbuffer_albedo,
-        gbuffer_normal,
-        gbuffer_material,
-        gbuffer_material_2,
-        gbuffer_velocity,
-        gbuffer_velocity_previous,
-        gbuffer_depth,
-        brdf_specular_lut,
-        light_diffuse,
-        light_diffuse_transparent,
-        light_specular,
-        light_specular_transparent,
-        light_volumetric,
         frame_render,
         frame_render_2,
         frame_output,
         frame_output_2,
-        dof_half,
-        dof_half_2,
-        ssgi,
-        ssgi_filtered,
-        ssr,
-        bloom,
-        blur,
-        fsr2_mask_reactive,
-        fsr2_mask_transparency,
-        outline
+        max
     };
     
     enum class Renderer_Entity
     {
         Geometry,
         GeometryTransparent,
+        SkinGeometry,
+        SkinGeometryTransparent,
         Light,
         Camera,
         ReflectionProbe,
@@ -265,10 +210,15 @@ namespace LitchiRuntime
     enum class Renderer_ConstantBuffer
     {
         Frame,
-        Light,
-        Material,
         LightArr,
         RendererPath,
+        Max
+    };
+
+    enum class Renderer_StructuredBuffer
+    {
+        Spd,
+        Lights
     };
 
     enum class Renderer_StandardTexture
@@ -291,6 +241,7 @@ namespace LitchiRuntime
         NotAssigned,
         Cube,
         Quad,
+        Grid,
         Sphere,
         Cylinder,
         Cone,
