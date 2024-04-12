@@ -13,10 +13,11 @@
 #define GLFW_EXPOSE_NATIVE_WIN32
 #include "GLFW/glfw3native.h"
 #include "Runtime/Core/App/ApplicationBase.h"
+#include "Runtime/Function/Renderer/RHI/RHI_Fence.h"
 
-//SP_WARNINGS_OFF
+//LC_WARNINGS_OFF
 //#include <SDL_vulkan.h>
-//SP_WARNINGS_ON
+//LC_WARNINGS_ON
 //================================
 
 //= NAMESPACES ===============
@@ -27,28 +28,46 @@ using namespace LitchiRuntime::Math;
 namespace LitchiRuntime
 {
     namespace
-    { 
-        static VkColorSpaceKHR get_color_space(bool is_hdr)
+    {
+        VkColorSpaceKHR get_color_space(const RHI_Format format)
         {
-            // VK_COLOR_SPACE_HDR10_ST2084_EXT represents the HDR10 color space with the ST.2084 (PQ)electro - optical transfer function.
-            // This is the most common HDR format used for HDR TVs and monitors.
+            VkColorSpaceKHR color_space = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;                                                       // SDR
+            color_space = format == RHI_Format::R10G10B10A2_Unorm ? VK_COLOR_SPACE_HDR10_ST2084_EXT : color_space; // HDR
 
-            // VK_COLOR_SPACE_SRGB_NONLINEAR_KHR represents the sRGB color space.
-            // This is the standard color space for the web and is supported by most modern displays.
-            // sRGB is a nonlinear color space, which means that the values stored in an image are not directly proportional to the perceived brightness of the colors.
-            // When displaying an image in sRGB, the values must be converted to linear space before they are displayed.
-
-            return is_hdr ? VK_COLOR_SPACE_HDR10_ST2084_EXT : VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+            return color_space;
         }
 
-        static VkSurfaceCapabilitiesKHR get_surface_capabilities(const VkSurfaceKHR surface)
+        void set_hdr_metadata(const VkSwapchainKHR& swapchain)
+        {
+            VkHdrMetadataEXT hdr_metadata = {};
+            hdr_metadata.sType = VK_STRUCTURE_TYPE_HDR_METADATA_EXT;
+            hdr_metadata.displayPrimaryRed.x = 0.708f;
+            hdr_metadata.displayPrimaryRed.y = 0.292f;
+            hdr_metadata.displayPrimaryGreen.x = 0.170f;
+            hdr_metadata.displayPrimaryGreen.y = 0.797f;
+            hdr_metadata.displayPrimaryBlue.x = 0.131f;
+            hdr_metadata.displayPrimaryBlue.y = 0.046f;
+            hdr_metadata.whitePoint.x = 0.3127f;
+            hdr_metadata.whitePoint.y = 0.3290f;
+            const float nits_to_lumin = 10000.0f;
+            //hdr_metadata.maxLuminance = Display::GetLuminanceMax() * nits_to_lumin;
+            hdr_metadata.minLuminance = 0.001f * nits_to_lumin;
+            hdr_metadata.maxContentLightLevel = 2000.0f;
+            hdr_metadata.maxFrameAverageLightLevel = 500.0f;
+
+            PFN_vkSetHdrMetadataEXT pfnVkSetHdrMetadataEXT = (PFN_vkSetHdrMetadataEXT)vkGetDeviceProcAddr(RHI_Context::device, "vkSetHdrMetadataEXT");
+            LC_ASSERT(pfnVkSetHdrMetadataEXT != nullptr);
+            pfnVkSetHdrMetadataEXT(RHI_Context::device, 1, &swapchain, &hdr_metadata);
+        }
+
+        VkSurfaceCapabilitiesKHR get_surface_capabilities(const VkSurfaceKHR surface)
         {
             VkSurfaceCapabilitiesKHR surface_capabilities;
             vkGetPhysicalDeviceSurfaceCapabilitiesKHR(RHI_Context::device_physical, surface, &surface_capabilities);
             return surface_capabilities;
         }
 
-        static vector<VkPresentModeKHR> get_supported_present_modes(const VkSurfaceKHR surface)
+        vector<VkPresentModeKHR> get_supported_present_modes(const VkSurfaceKHR surface)
         {
             uint32_t present_mode_count;
             vkGetPhysicalDeviceSurfacePresentModesKHR(RHI_Context::device_physical, surface, &present_mode_count, nullptr);
@@ -58,9 +77,9 @@ namespace LitchiRuntime
             return surface_present_modes;
         }
 
-        static VkPresentModeKHR get_present_mode(const VkSurfaceKHR surface, const RHI_Present_Mode present_mode)
+        VkPresentModeKHR get_present_mode(const VkSurfaceKHR surface, const RHI_Present_Mode present_mode)
         {
-            // Convert RHI_Present_Mode to VkPresentModeKHR
+            // convert RHI_Present_Mode to VkPresentModeKHR
             VkPresentModeKHR vk_present_mode = VK_PRESENT_MODE_FIFO_KHR;
             if (present_mode == RHI_Present_Mode::Immediate)
             {
@@ -71,7 +90,7 @@ namespace LitchiRuntime
                 vk_present_mode = VK_PRESENT_MODE_MAILBOX_KHR;
             }
 
-            // Return the present mode as is if the surface supports it
+            // return the present mode as is if the surface supports it
             vector<VkPresentModeKHR> surface_present_modes = get_supported_present_modes(surface);
             for (const VkPresentModeKHR supported_present_mode : surface_present_modes)
             {
@@ -86,7 +105,7 @@ namespace LitchiRuntime
             return VK_PRESENT_MODE_FIFO_KHR;
         }
 
-        static vector<VkSurfaceFormatKHR> get_supported_surface_formats(const VkSurfaceKHR surface)
+        vector<VkSurfaceFormatKHR> get_supported_surface_formats(const VkSurfaceKHR surface)
         {
             uint32_t format_count;
             LC_VK_ASSERT_MSG(vkGetPhysicalDeviceSurfaceFormatsKHR(RHI_Context::device_physical, surface, &format_count, nullptr),
@@ -99,7 +118,7 @@ namespace LitchiRuntime
             return surface_formats;
         }
 
-        static bool is_format_and_color_space_supported(const VkSurfaceKHR surface, RHI_Format* format, VkColorSpaceKHR color_space)
+        bool is_format_and_color_space_supported(const VkSurfaceKHR surface, RHI_Format* format, VkColorSpaceKHR color_space)
         {
             // Get supported surface formats
             vector<VkSurfaceFormatKHR> supported_formats = get_supported_surface_formats(surface);
@@ -112,7 +131,7 @@ namespace LitchiRuntime
 
             for (const VkSurfaceFormatKHR& supported_format : supported_formats)
             {
-                bool support_format      = supported_format.format == vulkan_format[rhi_format_to_index(*format)];
+                bool support_format = supported_format.format == vulkan_format[rhi_format_to_index(*format)];
                 bool support_color_space = supported_format.colorSpace == color_space;
 
                 if (support_format && support_color_space)
@@ -122,7 +141,7 @@ namespace LitchiRuntime
             return false;
         }
 
-        static VkCompositeAlphaFlagBitsKHR get_supported_composite_alpha_format(const VkSurfaceKHR surface)
+        VkCompositeAlphaFlagBitsKHR get_supported_composite_alpha_format(const VkSurfaceKHR surface)
         {
             vector<VkCompositeAlphaFlagBitsKHR> composite_alpha_flags =
             {
@@ -157,13 +176,14 @@ namespace LitchiRuntime
         const uint32_t height,
         const RHI_Present_Mode present_mode,
         const uint32_t buffer_count,
+        const bool hdr,
         const char* name
     )
     {
         LC_ASSERT_MSG(RHI_Device::IsValidResolution(width, height), "Invalid resolution");
 
         // Copy parameters
-        m_format       = format_sdr; // for now, we use SDR by default as HDR doesn't look rigth - Display::GetHdr() ? format_hdr : format_sdr;
+        m_format = hdr ? format_hdr : format_sdr;
         m_buffer_count = buffer_count;
         m_width        = width;
         m_height       = height;
@@ -174,8 +194,8 @@ namespace LitchiRuntime
         Create();
         AcquireNextImage();
 
-       /* SP_SUBSCRIBE_TO_EVENT(EventType::WindowResized, SP_EVENT_HANDLER(ResizeToWindowSize));
-        SP_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreen, SP_EVENT_HANDLER(ResizeToWindowSize));*/
+       /* LC_SUBSCRIBE_TO_EVENT(EventType::WindowResized, LC_EVENT_HANDLER(ResizeToWindowSize));
+        LC_SUBSCRIBE_TO_EVENT(EventType::WindowFullscreen, LC_EVENT_HANDLER(ResizeToWindowSize));*/
 
         ApplicationBase::Instance()->window->ResizeEvent.AddListener(std::bind(&RHI_SwapChain::OnResize, this, std::placeholders::_1, std::placeholders::_2));
     }
@@ -192,7 +212,7 @@ namespace LitchiRuntime
         // Create surface
         VkSurfaceKHR surface = nullptr;
         {
-           /* SP_ASSERT_MSG(
+           /* LC_ASSERT_MSG(
                 SDL_Vulkan_CreateSurface(static_cast<SDL_Window*>(m_glfw_window), RHI_Context::instance, &surface),
                 "Failed to created window surface");*/
 
@@ -226,7 +246,7 @@ namespace LitchiRuntime
         VkSurfaceCapabilitiesKHR capabilities = get_surface_capabilities(surface);
 
         // Ensure that the surface supports the requested format and color space
-        VkColorSpaceKHR color_space = get_color_space(IsHdr());
+        VkColorSpaceKHR color_space = get_color_space(m_format);
         LC_ASSERT_MSG(is_format_and_color_space_supported(surface, &m_format, color_space), "The surface doesn't support the requested format");
 
         // Clamp size between the supported min and max
@@ -269,6 +289,10 @@ namespace LitchiRuntime
 
             LC_VK_ASSERT_MSG(vkCreateSwapchainKHR(RHI_Context::device, &create_info, nullptr, &swap_chain),
                 "Failed to create swapchain");
+
+
+            // todo: set hdr
+            // set_hdr_metadata(swap_chain);
         }
 
         // Images
@@ -277,25 +301,26 @@ namespace LitchiRuntime
             LC_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, nullptr), "Failed to get swapchain image count");
             LC_VK_ASSERT_MSG(vkGetSwapchainImagesKHR(RHI_Context::device, swap_chain, &image_count, reinterpret_cast<VkImage*>(m_rhi_rt.data())), "Failed to get swapchain image count");
 
-            // Transition layouts to VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
+        	// transition layouts to VK_IMAGE_LAYOUT_PRESENT_SRC_KHR
             if (RHI_CommandList* cmd_list = RHI_Device::CmdImmediateBegin(RHI_Queue_Type::Graphics))
             {
                 for (uint32_t i = 0; i < m_buffer_count; i++)
                 {
-                    cmd_list->InsertMemoryBarrierImage(
+                    cmd_list->InsertBarrierTexture(
                         m_rhi_rt[i],
                         VK_IMAGE_ASPECT_COLOR_BIT,
                         0,
                         1,
                         1,
                         RHI_Image_Layout::Max,
-                        RHI_Image_Layout::Attachment
+                        RHI_Image_Layout::Attachment,
+                        false
                     );
 
                     m_layouts[i] = RHI_Image_Layout::Attachment;
                 }
 
-                // End/flush
+                // end/flush
                 RHI_Device::CmdImmediateSubmit(cmd_list);
             }
         }
@@ -332,7 +357,7 @@ namespace LitchiRuntime
         for (uint32_t i = 0; i < m_buffer_count; i++)
         {
             string name = (string("swapchain_image_acquired_") + to_string(i));
-            m_acquire_semaphore[i] = make_shared<RHI_Semaphore>(false, name.c_str());
+            m_image_acquired_semaphore[i] = make_shared<RHI_Semaphore>(false, name.c_str());
         }
     }
 
@@ -347,7 +372,7 @@ namespace LitchiRuntime
         }
 
         m_rhi_rtv.fill(nullptr);
-        m_acquire_semaphore.fill(nullptr);
+        m_image_acquired_semaphore.fill(nullptr);
 
         RHI_Device::QueueWaitAll();
 
@@ -380,7 +405,6 @@ namespace LitchiRuntime
 
         // Reset image index
         m_image_index          = numeric_limits<uint32_t>::max();
-        m_image_index_previous = m_image_index;
 
         Destroy();
         Create();
@@ -398,33 +422,29 @@ namespace LitchiRuntime
 
     void RHI_SwapChain::AcquireNextImage()
     {
-        // This is a blocking function, it will stop execution until an image becomes available
-        constexpr uint64_t timeout = numeric_limits<uint64_t>::max();
+        if (m_sync_index != numeric_limits<uint32_t>::max())
+        {
+            m_image_acquired_fence[m_sync_index]->Wait();
+            m_image_acquired_fence[m_sync_index]->Reset();
+        }
 
-        // Return if the swapchain has a single buffer and it has already been acquired
-        if (m_buffer_count == 1 && m_image_index != numeric_limits<uint32_t>::max())
-            return;
-
-        // Get signal semaphore
+        // get sync objects
         m_sync_index = (m_sync_index + 1) % m_buffer_count;
-        RHI_Semaphore* signal_semaphore = m_acquire_semaphore[m_sync_index].get();
-
-        // Ensure semaphore state
+        RHI_Semaphore* signal_semaphore = m_image_acquired_semaphore[m_sync_index].get();
+        RHI_Fence* signal_fence = m_image_acquired_fence[m_sync_index].get();
         LC_ASSERT_MSG(signal_semaphore->GetStateCpu() != RHI_Sync_State::Submitted, "The semaphore is already signaled");
 
-        m_image_index_previous = m_image_index;
-
-        // Acquire next image
+        // acquire next image
         LC_VK_ASSERT_MSG(vkAcquireNextImageKHR(
             RHI_Context::device,                                          // device
             static_cast<VkSwapchainKHR>(m_rhi_swapchain),                 // swapchain
-            timeout,                                                      // timeout
+            numeric_limits<uint64_t>::max(),                              // timeout - wait/block
             static_cast<VkSemaphore>(signal_semaphore->GetRhiResource()), // signal semaphore
-            nullptr,                                                      // signal fence
+            static_cast<VkFence>(signal_fence->GetRhiResource()),         // signal fence
             &m_image_index                                                // pImageIndex
         ), "Failed to acquire next image");
 
-        // Update semaphore state
+        // update sync state
         signal_semaphore->SetStateCpu(RHI_Sync_State::Submitted);
     }
 
@@ -434,9 +454,8 @@ namespace LitchiRuntime
     }
     void RHI_SwapChain::Present()
     {
-        // SP_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
+        // LC_ASSERT_MSG(!(SDL_GetWindowFlags(static_cast<SDL_Window*>(m_glfw_window)) & SDL_WINDOW_MINIMIZED), "Present should not be called for a minimized window");
         LC_ASSERT_MSG(m_rhi_swapchain != nullptr,                                                           "Invalid swapchain");
-        LC_ASSERT_MSG(m_image_index != m_image_index_previous,                                              "No image was acquired");
         LC_ASSERT_MSG(m_layouts[m_image_index] == RHI_Image_Layout::Present_Source,                            "Invalid layout");
 
         // Get the semaphores that present should wait for
@@ -458,7 +477,7 @@ namespace LitchiRuntime
             LC_ASSERT_MSG(!m_wait_semaphores.empty(), "Present() present should not be called if no work is to be presented");
 
             // Semaphore that's signaled when the image is acquired
-            RHI_Semaphore* semaphore_image_aquired = m_acquire_semaphore[m_sync_index].get();
+            RHI_Semaphore* semaphore_image_aquired = m_image_acquired_semaphore[m_sync_index].get();
             LC_ASSERT(semaphore_image_aquired->GetStateCpu() == RHI_Sync_State::Submitted);
             m_wait_semaphores.emplace_back(semaphore_image_aquired);
         }
@@ -472,11 +491,12 @@ namespace LitchiRuntime
         if (m_layouts[m_image_index] == layout)
             return;
 
-        cmd_list->InsertMemoryBarrierImage(
+        cmd_list->InsertBarrierTexture(
             m_rhi_rt[m_image_index],
             VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 1,
             m_layouts[m_image_index],
-            layout
+            layout,
+            false
         );
 
         m_layouts[m_image_index] = layout;
@@ -486,7 +506,7 @@ namespace LitchiRuntime
     {
        /* if (enabled)
         {
-            SP_ASSERT_MSG(Display::GetHdr(), "This display doesn't support HDR");
+            LC_ASSERT_MSG(Display::GetHdr(), "This display doesn't support HDR");
         }*/
 
         RHI_Format new_format = enabled ? format_hdr : format_sdr;
@@ -508,7 +528,7 @@ namespace LitchiRuntime
             m_present_mode = enabled ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate;
             Resize(m_width, m_height, true);
             //Timer::OnVsyncToggled(enabled);// TODO:change
-            DEBUG_LOG_INFO("VSync has been %s", enabled ? "enabled" : "disabled");
+            DEBUG_LOG_INFO("VSync has been {}", enabled ? "enabled" : "disabled");
         }
     }
 

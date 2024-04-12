@@ -9,6 +9,9 @@ namespace LitchiRuntime
 {
     #define DEBUG_COLOR Vector4(0.41f, 0.86f, 1.0f, 1.0f)
 
+    // we are using double buffering so 5 is enough
+    constexpr uint8_t resources_frame_lifetime = 5;
+
     enum class Renderer_Option : uint32_t
     {
         Aabb,

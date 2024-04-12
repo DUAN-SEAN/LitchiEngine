@@ -127,7 +127,6 @@ namespace LitchiRuntime
 
 	private:
 		// Constant buffers
-		static void UpdateConstantBufferFrame(RHI_CommandList* cmd_list, Cb_Frame& frameBufferData,const bool set = true);
 		static void PushPassConstants(RHI_CommandList* cmd_list);
 		static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);
 		static void UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list,const int lightCount, RendererPath* rendererPath);
@@ -169,6 +168,7 @@ namespace LitchiRuntime
 		// static void OnWorldResolved(sp_variant data);
 		static void OnClear();
 		// static void OnFullScreenToggled();
+		static void OnSyncPoint(RHI_CommandList* cmd_list);
 
 		// Lines
 	/*	static void Lines_OneFrameStart();*/
@@ -183,7 +183,7 @@ namespace LitchiRuntime
 		static void DestroyResources();
 
 		static RHI_CommandPool* m_cmd_pool;
-		static const uint32_t m_frames_in_flight = 5;
+		static uint32_t m_resource_index;
 
 		// RendererPath container
 		static std::unordered_map<RendererPathType, RendererPath*> m_rendererPaths;

@@ -52,7 +52,14 @@ namespace LitchiRuntime
         LC_ASSERT_MSG(m_offset + m_stride <= m_object_size_gpu, "Out of memory");
 
         // advance offset
-        m_offset += m_stride;
+        if (first_update)
+        {
+            first_update = false;
+        }
+        else
+        {
+            m_offset += m_stride;
+        }
 
         // we are using persistent mapping, so we can only copy
         memcpy(reinterpret_cast<std::byte*>(m_mapped_data) + m_offset, reinterpret_cast<std::byte*>(data_cpu), m_stride);

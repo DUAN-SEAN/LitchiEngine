@@ -92,13 +92,11 @@ namespace LitchiRuntime
 		unordered_map<Renderer_Option, float> m_options;
 		thread::id render_thread_id;
 		mutex mutex_entity_addition;
-		vector<GameObject*> m_entities_to_add;
 		uint64_t frame_num = 0;
 		Vector2 jitter_offset = Vector2::Zero;
 		const uint32_t resolution_shadow_min = 128;
 		float near_plane = 0.0f;
 		float far_plane = 1.0f;
-		uint32_t buffers_frames_since_last_reset = 0;
 
 		void sort_renderables(RenderCamera* camera, vector<GameObject*>* renderables, const bool are_transparent)
 		{
@@ -177,6 +175,7 @@ namespace LitchiRuntime
 				// Present mode: For v-sync, we could Mailbox for lower latency, but Fifo is always supported, so we'll assume that
 				GetOption<bool>(Renderer_Option::Vsync) ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate,
 				swap_chain_buffer_count,
+				false,// temp
 				"renderer"
 			);
 
@@ -264,7 +263,6 @@ namespace LitchiRuntime
 		{
 			DestroyResources();
 
-			m_entities_to_add.clear();
 			m_world_grid.reset();
 			m_geom_sphere.reset();
 			m_geom_plane.reset();
@@ -279,7 +277,6 @@ namespace LitchiRuntime
 		// RHI_RenderDoc::Shutdown();
 		RHI_Device::QueueWaitAll();
 		// RHI_AMD_FidelityFX::Destroy();
-		RHI_Device::DeletionQueueParse();
 		RHI_Device::Destroy();
 	}
 
@@ -302,32 +299,6 @@ namespace LitchiRuntime
 		if (!is_rendering_allowed)
 			return;
 
-		EASY_BLOCK("Device::DeletionQueueParse")
-		// delete any RHI resources that have accumulated
-		if (RHI_Device::DeletionQueueNeedsToParse())
-		{
-			RHI_Device::QueueWaitAll();
-			RHI_Device::DeletionQueueParse();
-			DEBUG_LOG_INFO("Parsed deletion queue");
-		}
-		EASY_END_BLOCK;
-
-		// reset buffer offsets
-		{
-			if (buffers_frames_since_last_reset == m_frames_in_flight)
-			{
-				for (shared_ptr<RHI_ConstantBuffer> constant_buffer : GetConstantBuffers())
-				{
-					constant_buffer->ResetOffset();
-				}
-				GetStructuredBuffer()->ResetOffset();
-
-				buffers_frames_since_last_reset = true;
-			}
-
-			buffers_frames_since_last_reset++;
-		}
-
 		EASY_BLOCK("Device::Tick")
 		RHI_Device::Tick(LitchiRuntime::frame_num);
 		EASY_END_BLOCK
@@ -339,14 +310,10 @@ namespace LitchiRuntime
 		cmd_current->Begin();
 		EASY_END_BLOCK
 
+		OnSyncPoint(cmd_current);
+
 		EASY_BLOCK("OnFrameStart")
 		OnFrameStart(cmd_current);
-		EASY_END_BLOCK
-
-		// update frame constant buffer
-		EASY_BLOCK("Build cb_frame")
-		Cb_Frame frameBufferData = BuildFrameBufferData();
-		UpdateConstantBufferFrame(cmd_current, frameBufferData, false);
 		EASY_END_BLOCK
 
 		EASY_BLOCK("Render4BuildInSceneView")
@@ -444,12 +411,6 @@ namespace LitchiRuntime
 		Cb_RendererPath rendererPathBufferData = BuildRendererPathFrameBufferData(camera, canvas);
 		UpdateConstantBufferRenderPath(cmd_list, rendererPath, rendererPathBufferData);
 		EASY_END_BLOCK
-
-		//// update frame constant buffer
-		//EASY_BLOCK("Build cb_frame")
-		//Cb_Frame frameBufferData = BuildFrameBufferData();
-		//UpdateConstantBufferFrame(cmd_list, frameBufferData, false);
-		//EASY_END_BLOCK
 
 		auto rt_output = rendererPath->GetColorRenderTarget().get();
 		if (camera && scene)
@@ -589,7 +550,7 @@ namespace LitchiRuntime
 
 	void Renderer::OnSceneResolved(std::vector<GameObject*> gameObjectList)
 	{
-		lock_guard lock(mutex_entity_addition);
+		/*lock_guard lock(mutex_entity_addition);
 		m_entities_to_add.clear();
 
 		for (GameObject* entity : gameObjectList)
@@ -600,7 +561,7 @@ namespace LitchiRuntime
 			{
 				m_entities_to_add.emplace_back(entity);
 			}
-		}
+		}*/
 	}
 
 	/*const RHI_Viewport& Renderer::GetViewport()
@@ -693,17 +654,6 @@ namespace LitchiRuntime
 
 		// Log
 		DEBUG_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
-	}
-
-	void Renderer::UpdateConstantBufferFrame(RHI_CommandList* cmd_list,Cb_Frame& frameBufferData, const bool set /*= true*/)
-	{
-		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&frameBufferData);
-
-		// Bind because the offset just changed
-		if (set)
-		{
-			cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
-		}
 	}
 
 	void Renderer::PushPassConstants(RHI_CommandList* cmd_list)
@@ -910,6 +860,88 @@ namespace LitchiRuntime
 	//	//  InputManager::SetMouseCursorVisible(!ApplicationBase::Instance()->window->IsFullscreen());
 	//}
 
+	void Renderer::OnSyncPoint(RHI_CommandList* cmd_list)
+	{	
+		// is_sync_point: the command pool has exhausted its command lists and 
+		// is about to reset them, this is an opportune moment for us to perform
+		// certain operations, knowing that no rendering commands are currently
+		// executing and no resources are being used by any command list
+		m_resource_index++;
+		bool is_sync_point = m_resource_index == resources_frame_lifetime;
+		if (is_sync_point)
+		{
+			m_resource_index = 0;
+
+			for (shared_ptr<RHI_ConstantBuffer> constant_buffer : GetConstantBuffers())
+			{
+				constant_buffer->ResetOffset();
+			}
+			GetStructuredBuffer()->ResetOffset();
+
+			// delete any rhi resources that have accumulated
+			if (RHI_Device::DeletionQueueNeedsToParse())
+			{
+				RHI_Device::QueueWaitAll();
+				RHI_Device::DeletionQueueParse();
+				DEBUG_LOG_INFO("Parsed deletion queue");
+			}
+
+			// reset dynamic buffer offsets
+	/*		GetStructuredBuffer(Renderer_StructuredBuffer::Spd)->ResetOffset();
+			GetConstantBufferFrame()->ResetOffset();*/
+
+			/*if (bindless_materials_dirty)
+			{
+				RHI_Device::UpdateBindlessResources(nullptr, &bindless_textures);
+				bindless_materials_dirty = false;
+			}*/
+		}
+
+		// update frame constant buffer // todo
+		EASY_BLOCK("Build cb_frame")
+		Cb_Frame frameBufferData = BuildFrameBufferData();
+		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&frameBufferData);
+		EASY_END_BLOCK
+
+		// generate mips - if any
+		{
+			lock_guard lock(mutex_mip_generation);
+			for (RHI_Texture* texture : textures_mip_generation)
+			{
+				Pass_GenerateMips(cmd_list, texture);
+			}
+			textures_mip_generation.clear();
+		}
+
+		// filter environment on directional light change
+		{
+		/*	static Quaternion rotation;
+			static float intensity;
+			static Color color;
+
+			for (const shared_ptr<Entity>& entity : m_renderables[Renderer_Entity::Light])
+			{
+				if (const shared_ptr<Light>& light = entity->GetComponent<Light>())
+				{
+					if (light->GetLightType() == LightType::Directional)
+					{
+						if (light->GetEntity()->GetRotation() != rotation ||
+							light->GetIntensityLumens() != intensity ||
+							light->GetColor() != color
+							)
+						{
+							rotation = light->GetEntity()->GetRotation();
+							intensity = light->GetIntensityLumens();
+							color = light->GetColor();
+
+							m_environment_mips_to_filter_count = GetRenderTarget(Renderer_RenderTarget::skysphere)->GetMipCount() - 1;
+						}
+					}
+				}
+			}*/
+		}
+	}
+
 	void Renderer::OnFrameStart(RHI_CommandList* cmd_list)
 	{
 		// 全量更新
@@ -924,12 +956,12 @@ namespace LitchiRuntime
 			textures_mip_generation.clear();
 		}
 
-		// Lines_OneFrameStart();
+		// Lines_OneFrameStart(); // todo
 	}
 
 	void Renderer::OnFrameEnd(RHI_CommandList* cmd_list)
 	{
-		// Lines_OnFrameEnd();
+		// Lines_OnFrameEnd(); // todo
 	}
 
 	bool Renderer::IsCallingFromOtherThread()
