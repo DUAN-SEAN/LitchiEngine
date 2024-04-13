@@ -146,8 +146,6 @@ namespace LitchiRuntime
 
 			// Define pipeline state
 			static RHI_PipelineState pso;
-			pso.shader_vertex = shader_v;
-			pso.shader_pixel = shader_p ;
 			pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Disabled).get();
 			pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get() : GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
 			pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
@@ -180,6 +178,8 @@ namespace LitchiRuntime
 					pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Light_point_spot).get();
 				}
 
+				bool needBeginRenderPass = true;
+
 				if(!entities.empty())
 				{
 					// draw non skin go
@@ -190,16 +190,15 @@ namespace LitchiRuntime
 							// draw has skin go
 							pso.shader_vertex = shader_skin_v;
 							pso.shader_pixel = shader_skin_p;
-							pso.clear_depth = rhi_depth_load;// reverse-z
 						}else
 						{
 							// Set pipeline state
 							pso.shader_vertex = shader_v;
 							pso.shader_pixel = shader_p;
-							pso.clear_depth = rhi_depth_load;// reverse-z
 						}
 
-						cmd_list->SetPipelineState(pso,true);
+						cmd_list->SetPipelineState(pso, needBeginRenderPass);
+						needBeginRenderPass = false;
 
 						draw_renderable(cmd_list, pso, rendererPath, entity);
 						// Set pass constants with cascade transform
@@ -328,6 +327,7 @@ namespace LitchiRuntime
 
 		EASY_BLOCK("Render Entities")
 
+		bool needBeginRenderPass = true;
 		// draw non skin gameObject
 		for (GameObject* entity : entities)
 		{
@@ -373,7 +373,8 @@ namespace LitchiRuntime
 			pso.shader_vertex = material->GetVertexShader();
 			pso.shader_pixel = material->GetPixelShader();
 			pso.material_shader = material->GetShader();
-			cmd_list->SetPipelineState(pso,true);
+			cmd_list->SetPipelineState(pso, needBeginRenderPass);
+			needBeginRenderPass = false;
 			EASY_END_BLOCK
 
 			EASY_BLOCK("SetBuffer")
@@ -533,7 +534,7 @@ namespace LitchiRuntime
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
-		cmd_list->SetPipelineState(pso);
+		cmd_list->SetPipelineState(pso,true);
 		// push pass constants
 		{
 			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
@@ -639,7 +640,7 @@ namespace LitchiRuntime
 		// set pipeline state
 		// pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
 
-		cmd_list->SetPipelineState(pso);
+		cmd_list->SetPipelineState(pso,true);
 		// push pass constants
 		{
 			/*m_cb_pass_cpu.set_resolution_out(GetResolutionRender());*/

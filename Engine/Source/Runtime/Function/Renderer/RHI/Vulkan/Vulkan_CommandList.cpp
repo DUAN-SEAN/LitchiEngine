@@ -635,15 +635,8 @@ namespace LitchiRuntime
         RenderPassBegin();
     }
 
-    void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso, bool inSameRenderPass)
+    void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso, bool needBeginRenderPass)
     {
-        // if in Same RendererPass, jump begin render pass
-        if(!inSameRenderPass)
-        {
-            SetPipelineState(pso);
-            return;
-        }
-
         EASY_FUNCTION(profiler::colors::Brown600);
 
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
@@ -667,6 +660,12 @@ namespace LitchiRuntime
 
         uint64_t hash_previous = m_pso.GetHash();
         m_pso = pso;
+
+        // if in Same RendererPass, jump begin render pass
+        if (needBeginRenderPass)
+        {
+            RenderPassBegin();
+        }
 
         // (in case one is active)
         EndOcclusionQuery();
@@ -720,11 +719,11 @@ namespace LitchiRuntime
             descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
         }
 
-        // if render pass no active, begin render pass
-        if(inSameRenderPass && !m_render_pass_active)
-        {
-            RenderPassBegin();
-        }
+        //// if render pass no active, begin render pass
+        //if(needBeginRenderPass && !m_render_pass_active)
+        //{
+        //    RenderPassBegin();
+        //}
     }
 
     void RHI_CommandList::RenderPassBegin()
