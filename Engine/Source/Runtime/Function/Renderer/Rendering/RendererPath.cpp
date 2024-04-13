@@ -418,7 +418,7 @@ namespace LitchiRuntime
 		}
 
 		RHI_Format format_depth = RHI_Format::D32_Float;
-		RHI_Format format_color = RHI_Format::R8G8B8A8_Unorm;
+		RHI_Format format_color = RHI_Format::R16G16B16A16_Float;// same other
 
 		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv;
 		if (m_mainLight->GetLightType() == LightType::Directional)
