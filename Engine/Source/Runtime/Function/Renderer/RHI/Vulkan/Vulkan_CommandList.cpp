@@ -1398,6 +1398,9 @@ namespace LitchiRuntime
 
         // Set (will only happen if it's not already set)
         m_descriptor_layout_current->SetConstantBuffer(slot, constant_buffer);
+
+        // todo: detect if there are changes, otherwise don't bother binding
+        descriptor_sets::bind_dynamic = true;
     }
 
     void RHI_CommandList::PushConstants(const uint32_t offset, const uint32_t size, const void* data)
@@ -1456,6 +1459,9 @@ namespace LitchiRuntime
 
         // Set (will only happen if it's not already set)
         m_descriptor_layout_current->SetSampler(slot, sampler);
+
+        // todo: detect if there are changes, otherwise don't bother binding
+        descriptor_sets::bind_dynamic = true;
     }
 
     void RHI_CommandList::SetTexture(const uint32_t slot, RHI_Texture* texture, const uint32_t mip_index /*= all_mips*/, uint32_t mip_range /*= 0*/, const bool uav /*= false*/)

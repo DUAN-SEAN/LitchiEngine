@@ -1,6 +1,7 @@
 #include "RendererPath.h"
 
 #include <memory>
+#include <memory>
 #include <easy/profiler.h>
 #include <easy/details/profiler_colors.h>
 
@@ -13,6 +14,7 @@
 #include "Runtime/Function/Framework/Component/UI/UIText.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_StructuredBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2D.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Texture2DArray.h"
@@ -74,6 +76,8 @@ namespace LitchiRuntime
 			CreateColorRenderTarget();
 			CreateDepthRenderTarget();
 		}
+
+		CreateLightBuffer();
 	}
 
 	RendererPath::~RendererPath()
@@ -86,6 +90,7 @@ namespace LitchiRuntime
 
 		m_depthRenderTarget = nullptr;
 		m_colorRenderTarget = nullptr;
+		m_light_structure_buffer = nullptr;
 
 		if(m_selectedMesh_bone_constant_buffer)
 		{
@@ -143,6 +148,15 @@ namespace LitchiRuntime
 		}
 
 		return nullptr;
+	}
+
+	size_t RendererPath::GetLightCount() const
+	{
+		if (this->m_renderables.find(Renderer_Entity::Light) != m_renderables.end())
+		{
+			return this->m_renderables.at(Renderer_Entity::Light).size();
+		}
+		return 0;
 	}
 
 	void RendererPath::UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d)
@@ -210,6 +224,12 @@ namespace LitchiRuntime
 		static float resolutionWidth = 4096;
 		static float resolutionHeight = 4096;
 		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, flags_depth_buffer, rtName.c_str());
+	}
+
+	void RendererPath::CreateLightBuffer()
+	{
+		uint32_t stride = static_cast<uint32_t>(sizeof(Cb_Light)) * rhi_max_array_size_lights;
+		m_light_structure_buffer = std::make_shared<RHI_StructuredBuffer>(stride, 1, "lights");
 	}
 
 	std::string RendererPath::GetRenderPathName() const
@@ -339,7 +359,7 @@ namespace LitchiRuntime
 		sort_renderables(m_renderCamera, &m_renderables[Renderer_Entity::GeometryTransparent], true);
 	}
 
-	void RendererPath::UpdateLightShadow()
+	void RendererPath::UpdateLight()
 	{
 		if(this->m_renderables.size()>0)
 		{
@@ -372,6 +392,8 @@ namespace LitchiRuntime
 			ComputeLightViewMatrix();
 			ComputeLightProjectionMatrix();
 		}
+
+		UpdateLightBuffer();
 	}
 
 	const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
@@ -466,6 +488,53 @@ namespace LitchiRuntime
 		const bool ignore_near_plane = (m_mainLight->GetLightType() == LightType::Directional) ? true : false;
 
 		return m_frustums[index].IsVisible(center, extents, ignore_near_plane);
+	}
+
+	void RendererPath::UpdateLightBuffer()
+	{
+		if(GetLightCount()==0)
+		{
+			return;
+		}
+
+		static std::array<Cb_Light, rhi_max_array_size_lights> properties;
+
+		const auto& lightEntities = GetRenderables().at(Renderer_Entity::Light);
+		size_t lightCount = lightEntities.size();
+		for (int index = 0; index < lightCount; index++)
+		{
+			const auto light = lightEntities[index]->GetComponent<Light>();
+			
+			// todo only one light(m_mainLight) has shadow
+			for (uint32_t i = 0; i < GetShadowArraySize(); i++)
+			{
+				properties[index].view_projection[i] = GetLightViewMatrix(i) * GetLightProjectionMatrix(i);
+			}
+
+			properties[index].intensity = light->GetIntensityWatt(m_renderCamera);
+			properties[index].color = light->GetColor();
+			properties[index].range = light->GetRange();
+			properties[index].angle = light->GetAngle();
+			properties[index].bias = light->GetBias();
+			properties[index].normal_bias = light->GetNormalBias();
+
+			properties[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+			properties[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+
+			properties[index].flags = 0;
+			properties[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
+			properties[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
+			properties[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
+			properties[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
+			properties[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
+			/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
+			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
+		}
+
+		// cpu to gpu
+		uint32_t update_size = static_cast<uint32_t>(sizeof(Cb_Light)) * lightCount;
+		m_light_structure_buffer->ResetOffset();
+		m_light_structure_buffer->Update(&properties[0], update_size);
 	}
 
 	bool RendererPath::CheckShadowMapNeedRecreate()

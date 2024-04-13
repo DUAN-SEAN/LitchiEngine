@@ -66,7 +66,7 @@ namespace LitchiRuntime
 		//RHI_Viewport m_viewport = RHI_Viewport(0, 0, 0, 0);
 
 		// swapchain
-		const uint8_t swap_chain_buffer_count = 2;
+		const uint8_t swap_chain_buffer_count = 3;
 		shared_ptr<RHI_SwapChain> swap_chain;
 
 		// mip generation
@@ -131,9 +131,10 @@ namespace LitchiRuntime
 				static_cast<uint32_t>(m_resolution_output.x),
 				static_cast<uint32_t>(m_resolution_output.y),
 				// Present mode: For v-sync, we could Mailbox for lower latency, but Fifo is always supported, so we'll assume that
-				GetOption<bool>(Renderer_Option::Vsync) ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate,
+				// GetOption<bool>(Renderer_Option::Vsync) ? RHI_Present_Mode::Fifo : RHI_Present_Mode::Immediate,
+				RHI_Present_Mode::Mailbox,
 				swap_chain_buffer_count,
-				false,// temp
+				false,// temp close hdr
 				"renderer"
 			);
 
@@ -251,7 +252,7 @@ namespace LitchiRuntime
 		if (rendererPath4SceneView && rendererPath4SceneView->GetActive())
 		{
 			rendererPath4SceneView->UpdateRenderableGameObject();
-			rendererPath4SceneView->UpdateLightShadow();
+			rendererPath4SceneView->UpdateLight();
 
 			// Render SceneView
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
@@ -265,7 +266,7 @@ namespace LitchiRuntime
 		if (rendererPath4AssetView && rendererPath4AssetView->GetActive())
 		{
 			rendererPath4AssetView->UpdateRenderableGameObject();
-			rendererPath4AssetView->UpdateLightShadow();
+			rendererPath4AssetView->UpdateLight();
 
 			// Render SceneView
 			Render4BuildInAssetView(cmd_current, rendererPath4AssetView);
@@ -290,7 +291,7 @@ namespace LitchiRuntime
 			}
 
 			rendererPath4GameView->UpdateRenderableGameObject();
-			rendererPath4GameView->UpdateLightShadow();
+			rendererPath4GameView->UpdateLight();
 
 			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
@@ -569,75 +570,75 @@ namespace LitchiRuntime
 		cmd_list->PushConstants(0, sizeof(Pcb_Pass), &m_cb_pass_cpu);
 	}
 
-	void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RendererPath* rendererPath)
-	{
-		// GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->ResetOffset();
+	//void Renderer::UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr, const int lightCount, RendererPath* rendererPath)
+	//{
+	//	// GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->ResetOffset();
 
-		m_cb_light_arr_cpu.lightCount = lightCount;
+	//	m_cb_light_arr_cpu.lightCount = lightCount;
 
-		for (int index = 0; index < lightCount; index++)
-		{
-			const auto light = lightArr[index];
+	//	for (int index = 0; index < lightCount; index++)
+	//	{
+	//		const auto light = lightArr[index];
 
-			// todo only one light has shadow, is temp code
-			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
-			{
-				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
-			}
+	//		// todo only one light has shadow, is temp code
+	//		for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
+	//		{
+	//			m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
+	//		}
 
-			m_cb_light_arr_cpu.lightArr[index].intensity = light->GetIntensityWatt(rendererPath->GetRenderCamera());
-			m_cb_light_arr_cpu.lightArr[index].color = light->GetColor();
-			m_cb_light_arr_cpu.lightArr[index].range = light->GetRange();
-			m_cb_light_arr_cpu.lightArr[index].angle = light->GetAngle();
-			m_cb_light_arr_cpu.lightArr[index].bias = light->GetBias();
-			m_cb_light_arr_cpu.lightArr[index].normal_bias = light->GetNormalBias();
+	//		m_cb_light_arr_cpu.lightArr[index].intensity = light->GetIntensityWatt(rendererPath->GetRenderCamera());
+	//		m_cb_light_arr_cpu.lightArr[index].color = light->GetColor();
+	//		m_cb_light_arr_cpu.lightArr[index].range = light->GetRange();
+	//		m_cb_light_arr_cpu.lightArr[index].angle = light->GetAngle();
+	//		m_cb_light_arr_cpu.lightArr[index].bias = light->GetBias();
+	//		m_cb_light_arr_cpu.lightArr[index].normal_bias = light->GetNormalBias();
 
-			m_cb_light_arr_cpu.lightArr[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
-			m_cb_light_arr_cpu.lightArr[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+	//		m_cb_light_arr_cpu.lightArr[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+	//		m_cb_light_arr_cpu.lightArr[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
 
-			m_cb_light_arr_cpu.lightArr[index].flags = 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
-			/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
-		}
+	//		m_cb_light_arr_cpu.lightArr[index].flags = 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
+	//		/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
+	//	}
 
-		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
-	}
+	//	GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
+	//}
 
-	void Renderer::UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list, const int lightCount, RendererPath* rendererPath)
-	{
-		m_cb_light_arr_cpu.lightCount = lightCount;
+	//void Renderer::UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list, const int lightCount, RendererPath* rendererPath)
+	//{
+	//	m_cb_light_arr_cpu.lightCount = lightCount;
 
-		for (int index = 0; index < lightCount; index++)
-		{
-			// todo only one light has shadow, is temp code
-			for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
-			{
-				m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
-			}
+	//	for (int index = 0; index < lightCount; index++)
+	//	{
+	//		// todo only one light has shadow, is temp code
+	//		for (uint32_t i = 0; i < rendererPath->GetShadowArraySize(); i++)
+	//		{
+	//			m_cb_light_arr_cpu.lightArr[index].view_projection[i] = rendererPath->GetLightViewMatrix(i) * rendererPath->GetLightProjectionMatrix(i);
+	//		}
 
-			m_cb_light_arr_cpu.lightArr[index].intensity = 2500.0f;
-			m_cb_light_arr_cpu.lightArr[index].color = Color::White;
-			m_cb_light_arr_cpu.lightArr[index].range = 200.0f;
-			m_cb_light_arr_cpu.lightArr[index].angle = 0.5;
-			m_cb_light_arr_cpu.lightArr[index].bias = 0.0005;
+	//		m_cb_light_arr_cpu.lightArr[index].intensity = 2500.0f;
+	//		m_cb_light_arr_cpu.lightArr[index].color = Color::White;
+	//		m_cb_light_arr_cpu.lightArr[index].range = 200.0f;
+	//		m_cb_light_arr_cpu.lightArr[index].angle = 0.5;
+	//		m_cb_light_arr_cpu.lightArr[index].bias = 0.0005;
 
-			m_cb_light_arr_cpu.lightArr[index].normal_bias = 5.0;
-			m_cb_light_arr_cpu.lightArr[index].position = Vector3::Zero;
-			m_cb_light_arr_cpu.lightArr[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
-			m_cb_light_arr_cpu.lightArr[index].flags = 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= (1 << 0);
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 3) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 4) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 5) : 0;
-		}
+	//		m_cb_light_arr_cpu.lightArr[index].normal_bias = 5.0;
+	//		m_cb_light_arr_cpu.lightArr[index].position = Vector3::Zero;
+	//		m_cb_light_arr_cpu.lightArr[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
+	//		m_cb_light_arr_cpu.lightArr[index].flags = 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= (1 << 0);
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 3) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 4) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= false ? (1 << 5) : 0;
+	//	}
 
-		GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
-	}
+	//	GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
+	//}
 
 	void Renderer::UpdateMaterial(RHI_CommandList* cmd_list, Material* material)
 	{

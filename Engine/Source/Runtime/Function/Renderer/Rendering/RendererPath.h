@@ -37,26 +37,27 @@ namespace LitchiRuntime
 		~RendererPath();
 	public:
 
-		RendererPathType GetRendererPathType() { return m_rendererPathType; }
-
-		bool GetActive()const { return m_active; }
-		void SetActive(bool isActive) { m_active = isActive; }
-
-		RenderCamera* GetRenderCamera(){return m_renderCamera;}
-		void UpdateRenderCamera(RenderCamera* camera);
-
-		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
-		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
-
+		void UpdateScene(Scene* scene);
 		void UpdateRenderTarget(float width, float height);
 		void UpdateRenderableGameObject();
-		void UpdateLightShadow();
+		void UpdateLight();
 
-		void UpdateScene(Scene* scene);
+		RendererPathType GetRendererPathType() { return m_rendererPathType; }
+		bool GetActive()const { return m_active; }
+		void SetActive(bool isActive) { m_active = isActive; }
+		RenderCamera* GetRenderCamera(){return m_renderCamera;}
+		void UpdateRenderCamera(RenderCamera* camera);
+		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
+		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
+		std::shared_ptr<RHI_StructuredBuffer> GetLightBuffer() { return m_light_structure_buffer; }
+
 		Scene* GetRenderScene() { return m_renderScene; }
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 		UICanvas* GetCanvas();
+		Light* GetMainLight() const { return m_mainLight; }
+		size_t GetLightCount() const;
 
+		//-- SelectedAsset  --//
 		void UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d);
 		Material* GetSelectedMaterial() const { return m_selectedMaterial; }
 		Mesh* GetSelectedMesh() const { return m_selectedMesh; }
@@ -68,17 +69,22 @@ namespace LitchiRuntime
 		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
 		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
 		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }
-		std::shared_ptr<RHI_ConstantBuffer>  GetSelectedMeshBoneConstantBuffer() { return m_selectedMesh_bone_constant_buffer; }
 		uint32_t GetShadowArraySize() const;
 		bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
+
+		// Bone
+		std::shared_ptr<RHI_ConstantBuffer>  GetSelectedMeshBoneConstantBuffer() { return m_selectedMesh_bone_constant_buffer; }
 
 	private:
 
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
+		void CreateLightBuffer();
+
 		std::string GetRenderPathName() const;
 		bool CheckIsBuildInRendererCamera();
 
+		void UpdateLightBuffer();
 		bool CheckShadowMapNeedRecreate();
 		void CreateShadowMap();
 		void ComputeLightViewMatrix();
@@ -86,44 +92,43 @@ namespace LitchiRuntime
 
 	private:
 
+		//-- Common --//
 		bool m_active{ false };
-
 		RendererPathType m_rendererPathType = RendererPathType_Invalid;
 		RenderCamera* m_renderCamera = nullptr;
-
 		// scene 
 		Scene* m_renderScene = nullptr;
+		// renderables
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
-
 		// UI provide Camera
 		RenderCamera* m_renderCamera4UI;
-
+		float m_width, m_height;
 		// rt
-		float m_width;
-		float m_height;
 		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
 		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
 
+		//-- Light --//
+		// Light buffer
+		std::shared_ptr<RHI_StructuredBuffer> m_light_structure_buffer;
 		// one camera to light
-
-		// Light
 		Light* m_mainLight = nullptr;
 		std::array<Matrix, 6> m_matrix_view;
 		std::array<Matrix, 6> m_matrix_projection;
 		std::array<Frustum, 6> m_frustums;
-
 		// shadow
 		ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;
 
+		//-- Selected Asset --//
 		// Select Material
 		Material* m_selectedMaterial = nullptr;
 		RHI_Texture2D* m_selectedTexture2D = nullptr;
 		Mesh* m_selectedMesh = nullptr;
-		std::shared_ptr<RHI_ConstantBuffer> m_selectedMesh_bone_constant_buffer;
 		SelectedResourceType m_selectedResType{SelectedResourceType_None};
 
+		// Bone
+		std::shared_ptr<RHI_ConstantBuffer> m_selectedMesh_bone_constant_buffer;
 	};
 
 }

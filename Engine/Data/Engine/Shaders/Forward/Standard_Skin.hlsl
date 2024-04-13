@@ -77,13 +77,17 @@ float4 mainPS(Pixel input) : SV_Target
     float4 diffuseTexel = u_diffuseMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * materialData.u_diffuse;
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
     float3 normal = normalize(input.normal);
-
-    int lightCount = light_buffer_data_arr.lightCount;
+    
+    uint index_light = (uint) pass_get_f3_value2().y;
+    uint index_array = (uint) pass_get_f3_value2().x;
+    uint lightCount = (uint) pass_get_f3_value2().z;
+    
     float3 lightSum = float3(0, 0, 0);
     for (int index = 0; index < lightCount; index++)
     {
         lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -light_buffer_data_arr.lightBufferDataArr[index].direction.xyz, light_buffer_data_arr.lightBufferDataArr[index].color.xyz, light_buffer_data_arr.lightBufferDataArr[index].intensity);
+				materialData.u_shininess, -buffer_lights[index].direction.xyz, buffer_lights[index].color.xyz,
+        buffer_lights[index].intensity);
     }
     
     // temp code

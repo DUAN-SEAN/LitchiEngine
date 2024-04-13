@@ -142,6 +142,7 @@ struct LightBufferData
         return 0.0f;
     }
 };
+RWStructuredBuffer<LightBufferData> buffer_lights : register(u1);
 
 struct MaterialBufferData
 {
@@ -194,10 +195,10 @@ cbuffer BufferMaterial : register(b2)
 {
     MaterialBufferData buffer_material;
 }; // medium frequency - updates per material during the g-buffer pass
-cbuffer BufferLightArr : register(b3)
-{
-    LightBufferDataArr light_buffer_data_arr;
-}
+//cbuffer BufferLightArr : register(b3)
+//{
+//    LightBufferDataArr light_buffer_data_arr;
+//}
 cbuffer BoneDataArr : register(b4)
 {
     BoneDataArr bone_data_arr;

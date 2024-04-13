@@ -61,10 +61,11 @@ float3 compute_direction(LightBufferData light, float3 fragment_position)
 float ShadowCalculation(float3 fragWorldNormal,float3 fragWorldPos)
 {
     float shadow = 1.0f;
-    if (light_buffer_data_arr.lightBufferDataArr[0].light_has_shadows())
+    int mainLightIndex = 0;
+    if (buffer_lights[mainLightIndex].light_has_shadows())
     {
         int shadowIndex = 0;
-        LightBufferData light = light_buffer_data_arr.lightBufferDataArr[shadowIndex];
+        LightBufferData light = buffer_lights[mainLightIndex];
         // 检查是否在视口范围内
 
         // project to light space

@@ -38,7 +38,13 @@ namespace LitchiRuntime
 
         // Render pass
         void SetPipelineState(RHI_PipelineState& pso);
-        // Render pass
+        
+        /**
+         * @brief SetPipelineState, Manual Control Begin New RenderPass
+         *        if RenderPass not change, set needBeginRenderPass = true, Avoid Like Forward Renderer Use different Material
+         * @param pso 
+         * @param needBeginRenderPass if any renderPass param change, Need Begin New RenderPass, Must set param = true
+         */
         void SetPipelineState(RHI_PipelineState& pso, bool needBeginRenderPass);
 
         // Clear

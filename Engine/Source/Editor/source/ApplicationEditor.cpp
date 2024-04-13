@@ -156,7 +156,6 @@ void LitchiEditor::ApplicationEditor::Run()
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderUI") {
-					// ��ȾUI
 					RenderUI();
 				}  EASY_END_BLOCK;
 

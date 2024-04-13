@@ -83,13 +83,13 @@ namespace LitchiRuntime
 	}
 	void Renderer::SetStandardResources(RHI_CommandList* cmd_list)
 	{
-		EASY_FUNCTION(profiler::colors::Magenta);
+		EASY_FUNCTION(profiler::colors::Magenta)
 		// constant buffers
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::frame, GetConstantBuffer(Renderer_ConstantBuffer::Frame));
-		cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
+		//cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
 
-		// textures todo: 暂时没有
+		// textures todo: 
 		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
 		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
 	}
@@ -122,7 +122,8 @@ namespace LitchiRuntime
 
 		// Go through all of the lights
 		const auto& entities_light = rendererables[Renderer_Entity::Light];
-		for (uint32_t light_index = 0; light_index < entities_light.size(); light_index++)
+		size_t lightCount = entities_light.size();
+		for (uint32_t light_index = 0; light_index < lightCount; light_index++)
 		{
 			Light* light = entities_light[light_index]->GetComponent<Light>();
 
@@ -204,7 +205,7 @@ namespace LitchiRuntime
 						// Set pass constants with cascade transform
 
 						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
-						m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
+						m_cb_pass_cpu.set_light(static_cast<float>(array_index), static_cast<float>(light_index), lightCount);
 						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
 
 						/*m_pcb_pass_cpu.set_f3_value(
@@ -292,39 +293,6 @@ namespace LitchiRuntime
 		//pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 
-		EASY_BLOCK("UpdateConstantBufferLight")
-		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
-		std::vector<Light*> lightArr;
-		size_t lightCount = lightEntities.size();
-		if (!lightEntities.empty())
-		{
-			if (lightCount > MaxLightCount)
-			{
-				lightCount = MaxLightCount;
-				DEBUG_LOG_WARN("Light Count Limit Count, lightCount:{}, MaxLightCount:{}", lightCount, MaxLightCount);
-			}
-
-			for (size_t index = 0; index < lightCount; index++)
-			{
-				auto lightGameObject = lightEntities[index];
-				auto mainLight = lightGameObject->GetComponent<Light>();
-				lightArr.push_back(mainLight);
-			}
-
-			// 暂时只支持一个平行光绘制阴影
-			auto mainLightObj = lightEntities[0];
-			auto mainLight = mainLightObj->GetComponent<Light>();
-			auto depthTexture = rendererPath->GetShadowDepthTexture();
-			if(depthTexture!=nullptr)
-			{
-				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, depthTexture);
-			}
-
-		}
-		UpdateConstantBufferLightArr(cmd_list, lightArr.data(), lightCount, rendererPath);
-
-		EASY_END_BLOCK
-
 		EASY_BLOCK("Render Entities")
 
 		bool needBeginRenderPass = true;
@@ -394,13 +362,16 @@ namespace LitchiRuntime
 				cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
 			}
 
-			// 暂时只支持一个平行光绘制阴影
-			auto mainLightObj = lightEntities[0];
-			auto mainLight = mainLightObj->GetComponent<Light>();
-			cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
+			if(rendererPath->GetMainLight()!=nullptr)
+			{
+				// just main light
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
+				m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
+				cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
+				
+			}
 
 			EASY_BLOCK("PushPassConstants")
-			// Set pass constants with cascade transform
 			m_cb_pass_cpu.set_resolution_out(rendererPath->GetDepthRenderTarget().get());
 			m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 			PushPassConstants(cmd_list);
@@ -633,7 +604,8 @@ namespace LitchiRuntime
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.material_shader = selectMaterial->GetShader();
 
-		UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
+		// todo: 
+		//UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
 
 		cmd_list->BeginMarker("Pass_SelectedAssetViewResourcePass");
 

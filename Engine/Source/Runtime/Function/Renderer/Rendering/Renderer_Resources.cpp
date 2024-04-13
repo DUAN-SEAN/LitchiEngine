@@ -59,9 +59,9 @@ namespace LitchiRuntime
 		constant_buffer(Renderer_ConstantBuffer::Frame) = make_shared<RHI_ConstantBuffer>(string("frame"));
 		constant_buffer(Renderer_ConstantBuffer::Frame)->Create<Cb_Frame>(renderer_path_max * element_count);
 
-		// will be remove
-		constant_buffer(Renderer_ConstantBuffer::LightArr) = make_shared<RHI_ConstantBuffer>(string("lightArr"));
-		constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(renderer_path_max * element_count);// three view 
+		//// will be remove
+		//constant_buffer(Renderer_ConstantBuffer::LightArr) = make_shared<RHI_ConstantBuffer>(string("lightArr"));
+		//constant_buffer(Renderer_ConstantBuffer::LightArr)->Create<Cb_Light_Arr>(renderer_path_max * element_count);// three view 
 
 		constant_buffer(Renderer_ConstantBuffer::RendererPath) = make_shared<RHI_ConstantBuffer>(string("rendererPath"));
 		constant_buffer(Renderer_ConstantBuffer::RendererPath)->Create<Cb_RendererPath>(renderer_path_max * element_count);// three view 
@@ -83,9 +83,6 @@ namespace LitchiRuntime
 			uint32_t counter_value = 0;
 			structured_buffer(Renderer_StructuredBuffer::Spd)->Update(&counter_value);
 		}
-
-		uint32_t stride = static_cast<uint32_t>(sizeof(Cb_Light)) * rhi_max_array_size_lights;
-		structured_buffer(Renderer_StructuredBuffer::Lights) = make_shared<RHI_StructuredBuffer>(stride, renderer_path_max, "lights");
 	}
 
 	void Renderer::CreateDepthStencilStates()

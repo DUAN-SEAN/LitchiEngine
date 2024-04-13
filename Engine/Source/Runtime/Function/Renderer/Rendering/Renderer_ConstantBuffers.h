@@ -236,6 +236,11 @@ namespace LitchiRuntime
 		Matrix transform = Matrix::Identity;
 		Matrix m_value = Matrix::Identity;
 
+		// 00 - 30 //  (value.x)          (f4.value.x)           (value2.x)                    ( out.height)
+		// 01 - 31 //  (value.y)          (f4.value.y)           (value2.y)                    (value2.z) 
+		// 02 - 32 //  (value.z)          (f4.value.z)           (resolution.in.y)
+		// 03 - 33 // £¨resolution.in.x£© (f4.value.w)           (out.width)                   (is_transparent)
+
 		void set_transform_previous(const Matrix& transform_previous)
 		{
 			m_value = transform_previous;
@@ -314,6 +319,11 @@ namespace LitchiRuntime
 		void set_is_transparent(const bool is_transparent)
 		{
 			m_value.m33 = is_transparent ? 1.0f : 0.0f;
+		}
+
+		void set_light(int array_index,int light_index,int light_count)
+		{
+			set_f3_value2(array_index, light_index, light_count);
 		}
 
 		bool operator==(const Pcb_Pass& rhs) const

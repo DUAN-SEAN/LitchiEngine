@@ -31,39 +31,36 @@ namespace LitchiRuntime
         bool HasTessellation() const { return shader_domain != nullptr && shader_hull != nullptr; }
         
         //= STATIC - Can cause PSO generation ================================================
-        MaterialShader* material_shader = nullptr;
-        RHI_Shader* shader_vertex                     = nullptr;
-        RHI_Shader* shader_hull                       = nullptr;
-        RHI_Shader* shader_domain                     = nullptr;
-        RHI_Shader* shader_pixel                      = nullptr;
-        RHI_Shader* shader_compute                    = nullptr;
-        RHI_RasterizerState* rasterizer_state         = nullptr;
-        RHI_BlendState* blend_state                   = nullptr;
-        RHI_DepthStencilState* depth_stencil_state    = nullptr;
-        RHI_SwapChain* render_target_swapchain        = nullptr;
-        RHI_PrimitiveTopology primitive_topology = RHI_PrimitiveTopology::TriangleList;
-        bool can_use_vertex_index_buffers             = true;  // todo
-        bool instancing                               = false;
+        MaterialShader* material_shader = nullptr; // pipeline Level
+        RHI_Shader* shader_vertex                     = nullptr; // pipeline Level
+        RHI_Shader* shader_hull                       = nullptr; // pipeline Level
+        RHI_Shader* shader_domain                     = nullptr; // pipeline Level
+        RHI_Shader* shader_pixel                      = nullptr; // pipeline Level
+        RHI_Shader* shader_compute                    = nullptr; // pipeline Level
+        RHI_RasterizerState* rasterizer_state         = nullptr; // pipeline Level
+        RHI_BlendState* blend_state                   = nullptr; // pipeline Level
+        RHI_DepthStencilState* depth_stencil_state    = nullptr; // renderPass pipeline Level
+        RHI_SwapChain* render_target_swapchain        = nullptr; // renderPass pipeline Level
+        RHI_PrimitiveTopology primitive_topology = RHI_PrimitiveTopology::TriangleList; // pipeline Level
+        bool instancing                               = false; // pipeline Level
+        bool resolution_scale = false; // renderPass pipeline Level
 
         // RTs
-        std::array<RHI_Texture*, rhi_max_render_target_count> render_target_color_textures;
-        RHI_Texture* render_target_depth_texture = nullptr;
-        RHI_Texture* vrs_input_texture = nullptr;
+        std::array<RHI_Texture*, rhi_max_render_target_count> render_target_color_textures; // renderPass pipeline Level
+        RHI_Texture* render_target_depth_texture = nullptr; // renderPass pipeline Level
+        RHI_Texture* vrs_input_texture = nullptr; // renderPass pipeline Level
         //====================================================================================
 
         //= DYNAMIC - will not cause pso generation =================
-        uint32_t render_target_color_texture_array_index = 0;
-        uint32_t render_target_depth_stencil_texture_array_index = 0;
+        uint32_t render_target_color_texture_array_index = 0; // renderPass Level
+        uint32_t render_target_depth_stencil_texture_array_index = 0; // renderPass Level
 
         // Clear Param
-        float clear_depth      = rhi_depth_load;
-        uint32_t clear_stencil = rhi_stencil_load;
-        std::array<Color, rhi_max_render_target_count> clear_color;
-
-        // bool render_target_depth_texture_read_only = false; // todo
+        float clear_depth      = rhi_depth_load; // renderPass Level
+        uint32_t clear_stencil = rhi_stencil_load; // renderPass Level
+        std::array<Color, rhi_max_render_target_count> clear_color; // renderPass Level
 
         std::string name;
-        bool resolution_scale = false;
         //=========================================================
 
     private:

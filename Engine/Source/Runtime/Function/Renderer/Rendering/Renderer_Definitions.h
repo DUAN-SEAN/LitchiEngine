@@ -79,7 +79,7 @@ namespace LitchiRuntime
         frame    = 0,
         light    = 1,
         material = 2,
-        lightArr = 3,
+        //lightArr = 3,
         boneArr = 4,
         rendererPath = 5,
     };
@@ -110,11 +110,8 @@ namespace LitchiRuntime
 
     enum class Renderer_BindingsUav
     {
-        tex            = 0,
-        tex2           = 1,
-        tex3           = 2,
+        sb_lights = 1,
         atomic_counter = 3,
-        tex_array      = 4
     };
 
     enum class Renderer_Shader : uint8_t
@@ -177,7 +174,7 @@ namespace LitchiRuntime
     enum class Renderer_ConstantBuffer
     {
         Frame,
-        LightArr,
+        //LightArr,
         RendererPath,
         Max
     };
@@ -185,7 +182,6 @@ namespace LitchiRuntime
     enum class Renderer_StructuredBuffer
     {
         Spd,
-        Lights
     };
 
     enum class Renderer_StandardTexture
