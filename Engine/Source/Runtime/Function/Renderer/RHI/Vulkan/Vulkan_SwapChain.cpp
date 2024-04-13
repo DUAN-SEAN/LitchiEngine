@@ -516,7 +516,7 @@ namespace LitchiRuntime
         {
             m_format = new_format;
             Resize(m_width, m_height, true);
-            DEBUG_LOG_INFO("HDR has been %s", enabled ? "enabled" : "disabled");
+            DEBUG_LOG_INFO("HDR has been {}", enabled ? "enabled" : "disabled");
         }
     }
 

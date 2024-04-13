@@ -261,7 +261,7 @@ namespace LitchiRuntime
 				arguments.emplace_back("-fvk-use-dx-position-w"); // reciprocate SV_Position.w after reading from stage input in PS to accommodate the difference between Vulkan and DirectX
 
 				// Negate SV_Position.y before writing to stage output in VS/DS/GS to accommodate Vulkan's coordinate system
-				if (m_shader_type == RHI_Shader_Vertex)
+				if (m_shader_type == RHI_Shader_Vertex || m_shader_type == RHI_Shader_Domain)
 				{
 					arguments.emplace_back("-fvk-invert-y");
 				}
@@ -334,7 +334,6 @@ namespace LitchiRuntime
 		const CompilerHLSL compiler = CompilerHLSL(ptr, size);
 		ShaderResources resources = compiler.get_shader_resources();
 
-
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.separate_images, RHI_Descriptor_Type::Texture, shader_stage); // SRVs
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.storage_images, RHI_Descriptor_Type::TextureStorage, shader_stage); // UAVs
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.storage_buffers, RHI_Descriptor_Type::StructuredBuffer, shader_stage);
@@ -364,10 +363,10 @@ namespace LitchiRuntime
 		//	}
 		//}
 
-		// pre sort
-		sort(m_descriptors.begin(), m_descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
-			{
-				return a.slot < b.slot;
-			});
+		//// pre sort
+		//sort(m_descriptors.begin(), m_descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
+		//	{
+		//		return a.slot < b.slot;
+		//	});
 	}
 }

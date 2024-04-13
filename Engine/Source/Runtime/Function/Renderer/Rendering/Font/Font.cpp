@@ -60,7 +60,7 @@ namespace LitchiRuntime
             m_char_max_height   = Helper::Max<int>(char_info.second.height, m_char_max_height);
         }
         
-        DEBUG_LOG_INFO("Loading {} took %d ms", FileSystem::GetFileNameFromFilePath(file_path).c_str(), static_cast<int>(timer.GetElapsedTimeMs()));
+        DEBUG_LOG_INFO("Loading {} took {} ms", FileSystem::GetFileNameFromFilePath(file_path).c_str(), static_cast<int>(timer.GetElapsedTimeMs()));
         return true;
     }
 

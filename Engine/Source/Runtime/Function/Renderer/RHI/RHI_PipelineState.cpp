@@ -70,6 +70,11 @@ namespace LitchiRuntime
 
             // shaders
             {
+                if(pso.material_shader)
+                {
+                    hash = rhi_hash_combine(hash, pso.material_shader->GetHash());
+                }
+
                 if (pso.shader_vertex)
                 {
                     hash = rhi_hash_combine(hash, pso.shader_vertex->GetHash());

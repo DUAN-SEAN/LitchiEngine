@@ -363,7 +363,6 @@ namespace LitchiRuntime
 
 			// opaque
 
-
 			bool is_transparent_pass = false;
 			EASY_BLOCK("Pass_SkyBox")
 			Pass_SkyBox(cmd_list, rendererPath);
@@ -373,11 +372,14 @@ namespace LitchiRuntime
 			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK
 
+			// Get All Geometry Depth 
+			// Pass_ForwardPass_Depth
+
 			EASY_BLOCK("Pass_ForwardPass")
 			Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
 			EASY_END_BLOCK
 
-			EASY_BLOCK("Pass_ForwardPass")
+			EASY_BLOCK("Pass_UIPass")
 			Pass_UIPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
@@ -559,7 +561,7 @@ namespace LitchiRuntime
 		}
 
 		// Log
-		DEBUG_LOG_INFO("Output resolution output has been set to %dx%d", width, height);
+		DEBUG_LOG_INFO("Output resolution output has been set to {}x{}", width, height);
 	}
 
 	void Renderer::PushPassConstants(RHI_CommandList* cmd_list)

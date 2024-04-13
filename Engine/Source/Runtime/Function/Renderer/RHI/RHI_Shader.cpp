@@ -22,9 +22,12 @@ namespace LitchiRuntime
         )
         {
             string type_str = "unknown";
-            type_str = (shader_stage & RHI_Shader_Vertex)  ? "vertex"  : type_str;
-            type_str = (shader_stage & RHI_Shader_Pixel)   ? "pixel"   : type_str;
+            type_str = (shader_stage & RHI_Shader_Vertex) ? "vertex" : type_str;
+            type_str = (shader_stage & RHI_Shader_Hull) ? "hull" : type_str;
+            type_str = (shader_stage & RHI_Shader_Domain) ? "domain" : type_str;
+            type_str = (shader_stage & RHI_Shader_Pixel) ? "pixel" : type_str;
             type_str = (shader_stage & RHI_Shader_Compute) ? "compute" : type_str;
+
 
             string defines_str;
             for (const auto& define : defines)
@@ -240,6 +243,8 @@ namespace LitchiRuntime
     {
         if (m_shader_type == RHI_Shader_Vertex)  return "mainVS";
         if (m_shader_type == RHI_Shader_Pixel)   return "mainPS";
+        if (m_shader_type == RHI_Shader_Hull)    return "mainHS";
+        if (m_shader_type == RHI_Shader_Domain)  return "mainDS";
         if (m_shader_type == RHI_Shader_Compute) return "mainCS";
 
         return nullptr;
@@ -248,6 +253,8 @@ namespace LitchiRuntime
     const char* RHI_Shader::GetTargetProfile() const
     {
         if (m_shader_type == RHI_Shader_Vertex)  return "vs_6_7";
+        if (m_shader_type == RHI_Shader_Hull)    return "hs_6_7";
+        if (m_shader_type == RHI_Shader_Domain)  return "ds_6_7";
         if (m_shader_type == RHI_Shader_Pixel)   return "ps_6_7";
         if (m_shader_type == RHI_Shader_Compute) return "cs_6_7";
 

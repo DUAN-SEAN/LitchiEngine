@@ -59,8 +59,6 @@ namespace LitchiRuntime
                     push_constant_range.stageFlags |= (descriptor.stage & RHI_Shader_Stage::RHI_Shader_Compute) ? VK_SHADER_STAGE_COMPUTE_BIT : 0;
 
                     push_constant_ranges.emplace_back(push_constant_range);
-
-                    push_constant_ranges.emplace_back(push_constant_range);
                 }
             }
          

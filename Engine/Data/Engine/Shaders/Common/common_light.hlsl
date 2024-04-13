@@ -1,6 +1,6 @@
-
-#include "../Common/common.hlsl"
-#include "../Common/shadow_mapping.hlsl"
+  
+#include "common.hlsl"
+#include "shadow_mapping.hlsl"
 
 /**
  * \brief Light Render Model For BilinnPhong

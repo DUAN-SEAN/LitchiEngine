@@ -251,8 +251,6 @@ namespace LitchiRuntime
 		m_renderables.clear();
 		m_renderables[Renderer_Entity::Geometry];
 		m_renderables[Renderer_Entity::GeometryTransparent];
-		m_renderables[Renderer_Entity::SkinGeometry];
-		m_renderables[Renderer_Entity::SkinGeometryTransparent];
 		m_renderables[Renderer_Entity::Camera];
 		m_renderables[Renderer_Entity::Light];
 		m_renderables[Renderer_Entity::UI];
@@ -273,7 +271,7 @@ namespace LitchiRuntime
 
 				if (is_visible)
 				{
-					m_renderables[is_transparent ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry].emplace_back(entity);
+					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
 				}
 			}else
 			{

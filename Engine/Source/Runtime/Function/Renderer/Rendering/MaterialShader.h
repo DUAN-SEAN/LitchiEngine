@@ -16,14 +16,7 @@ namespace LitchiRuntime
 	{
 		MaterialShader() = default;
 
-		MaterialShader(std::string shaderPath, RHI_Shader* vertex_shader, RHI_Shader* pixel_shader):
-			m_invalidTextureDescriptor(), m_globalMaterial{}
-		{
-			m_shaderPath = shaderPath;
-			m_vertex_shader = vertex_shader;
-			m_pixel_shader = pixel_shader;
-			LoadMaterialDescriptors();
-		}
+		MaterialShader(std::string shaderPath, RHI_Shader* vertex_shader, RHI_Shader* pixel_shader);
 
 		//= IResource ===========================================
 		bool LoadFromFile(const std::string& file_path);
@@ -40,12 +33,14 @@ namespace LitchiRuntime
 		const std::unordered_map<std::string, RHI_Descriptor>& GetTextureDescriptorDict();
 		std::vector<RHI_Descriptor>& GetMaterialDescriptors() { return m_materialDescriptors; }
 		int GetGlobalSize();
+		uint64_t GetHash()                                       const { return m_hash; }
 
 		std::string m_shaderPath;
 
 		/* shader */
 		RHI_Shader* m_vertex_shader;
 		RHI_Shader* m_pixel_shader;
+		uint64_t m_hash = 0;
 
 		RHI_Descriptor m_globalMaterial;
 		std::unordered_map<std::string, ShaderUniform> m_globalUniformDict;

@@ -13,6 +13,26 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
+	MaterialShader::MaterialShader(std::string shaderPath, RHI_Shader* vertex_shader, RHI_Shader* pixel_shader) :
+		m_invalidTextureDescriptor(), m_globalMaterial{}
+	{
+		m_shaderPath = shaderPath;
+		m_vertex_shader = vertex_shader;
+		m_pixel_shader = pixel_shader;
+
+		if (m_vertex_shader)
+		{
+			m_hash = rhi_hash_combine(m_hash, m_vertex_shader->GetHash());
+		}
+
+		if (m_pixel_shader)
+		{
+			m_hash = rhi_hash_combine(m_hash, m_pixel_shader->GetHash());
+		}
+
+		LoadMaterialDescriptors();
+	}
+
 	bool MaterialShader::LoadFromFile(const std::string& file_path)
 	{
 		// todo: Ä¬ÈÏ¶¼ÊÇ

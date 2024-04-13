@@ -71,8 +71,17 @@ float4 mainPS(Pixel input) : SV_Target
         lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
 				materialData.u_shininess, -light_buffer_data_arr.lightBufferDataArr[index].direction.xyz, light_buffer_data_arr.lightBufferDataArr[index].color.xyz, light_buffer_data_arr.lightBufferDataArr[index].intensity);
     }
-    
-    float shadow = ShadowCalculation(normal, input.fragPos);
+
+    // temp code
+    float shadow = 0;
+    bool t = pass_is_transparent();
+    if (t)
+    {
+        shadow = ShadowCalculation(normal, input.fragPos);
+    }else
+    {
+        shadow = ShadowCalculation(normal, input.fragPos);
+    }
 
     float3 shadowedColor = (shadow) * lightSum;
     float4 color = float4(shadowedColor, diffuseTexel.a);

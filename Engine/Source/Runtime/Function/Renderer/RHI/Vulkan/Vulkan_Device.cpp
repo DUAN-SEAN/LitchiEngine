@@ -466,25 +466,31 @@ namespace LitchiRuntime
 			}
 			else if (pipeline_state.IsGraphics())
 			{
-				LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-				descriptors = pipeline_state.shader_vertex->GetDescriptors();
-
-				if (pipeline_state.shader_pixel)
+				if (pipeline_state.material_shader)
 				{
-					LC_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-					merge_descriptors(descriptors, pipeline_state.shader_pixel->GetDescriptors());
-				}
-
-				if (pipeline_state.shader_hull)
+					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
+				}else
 				{
-					LC_ASSERT(pipeline_state.shader_hull->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-					merge_descriptors(descriptors, pipeline_state.shader_hull->GetDescriptors());
-				}
+					LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+					descriptors = pipeline_state.shader_vertex->GetDescriptors();
 
-				if (pipeline_state.shader_domain)
-				{
-					LC_ASSERT(pipeline_state.shader_domain->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
-					merge_descriptors(descriptors, pipeline_state.shader_domain->GetDescriptors());
+					if (pipeline_state.shader_pixel)
+					{
+						LC_ASSERT(pipeline_state.shader_pixel->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+						merge_descriptors(descriptors, pipeline_state.shader_pixel->GetDescriptors());
+					}
+
+					if (pipeline_state.shader_hull)
+					{
+						LC_ASSERT(pipeline_state.shader_hull->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+						merge_descriptors(descriptors, pipeline_state.shader_hull->GetDescriptors());
+					}
+
+					if (pipeline_state.shader_domain)
+					{
+						LC_ASSERT(pipeline_state.shader_domain->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
+						merge_descriptors(descriptors, pipeline_state.shader_domain->GetDescriptors());
+					}
 				}
 			}
 
@@ -1077,7 +1083,7 @@ namespace LitchiRuntime
 			string version_patch = to_string(VK_VERSION_PATCH(app_info.apiVersion));
 			string version = version_major + "." + version_minor + "." + version_patch;
 
-			DEBUG_LOG_INFO("Vulkan %s", version.c_str());
+			DEBUG_LOG_INFO("Vulkan {}", version);
 		}
 	}
 

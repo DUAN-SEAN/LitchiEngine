@@ -86,32 +86,7 @@ namespace LitchiRuntime
     
     enum class Renderer_BindingsSrv
     {
-        // Material
-        material_albedo    = 0,
-        material_roughness = 1,
-        material_metallic  = 2,
-        material_normal    = 3,
-        material_height    = 4,
-        material_occlusion = 5,
-        material_emission  = 6,
-        material_mask      = 7,
-    
-        // G-buffer
-        gbuffer_albedo            = 8,
-        gbuffer_normal            = 9,
-        gbuffer_material          = 10,
-        gbuffer_material_2        = 11,
-        gbuffer_velocity          = 12,
-        gbuffer_velocity_previous = 13,
-        gbuffer_depth             = 14,
-    
-        // Lighting
-        light_diffuse              = 15,
-        light_diffuse_transparent  = 16,
-        light_specular             = 17,
-        light_specular_transparent = 18,
-        light_volumetric           = 19,
-    
+        forward_pass_depth = 16,
         // Light depth/color maps
         light_directional_depth = 20,
         light_directional_color = 21,
@@ -125,15 +100,9 @@ namespace LitchiRuntime
         noise_blue   = 27,
     
         // Misc
-        lutIbl           = 28,
-        environment      = 31,
-        ssgi             = 32,
-        ssr              = 33,
         frame            = 34,
         tex              = 35,
-        tex2             = 36,
         font_atlas       = 37,
-        reflection_probe = 38,
 
         //Sky Box
         tex_skyBox = 40
@@ -183,8 +152,6 @@ namespace LitchiRuntime
     {
         Geometry,
         GeometryTransparent,
-        SkinGeometry,
-        SkinGeometryTransparent,
         Light,
         Camera,
         ReflectionProbe,

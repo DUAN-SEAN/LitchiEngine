@@ -38,6 +38,8 @@ namespace LitchiRuntime
 
         // Render pass
         void SetPipelineState(RHI_PipelineState& pso);
+        // Render pass
+        void SetPipelineState(RHI_PipelineState& pso, bool inSameRenderPass);
 
         // Clear
         void ClearPipelineStateRenderTargets(RHI_PipelineState& pipeline_state);

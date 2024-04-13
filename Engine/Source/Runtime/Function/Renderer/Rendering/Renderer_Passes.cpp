@@ -115,8 +115,7 @@ namespace LitchiRuntime
 
 		// Get entities
 		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
-		const vector<GameObject*>& entities4Skin = rendererables[is_transparent_pass ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry];
-		if (entities.empty() && entities4Skin.empty())
+		if (entities.empty())
 			return;
 
 		cmd_list->BeginTimeblock(is_transparent_pass ? "shadow_maps_color" : "shadow_maps_depth");
@@ -181,16 +180,26 @@ namespace LitchiRuntime
 					pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Light_point_spot).get();
 				}
 
-				// Set pipeline state
-				pso.shader_vertex = shader_v;
-				pso.shader_pixel = shader_p;
-				cmd_list->SetPipelineState(pso);
-
 				if(!entities.empty())
 				{
 					// draw non skin go
 					for (GameObject* entity : entities)
 					{
+						if(SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>())
+						{
+							// draw has skin go
+							pso.shader_vertex = shader_skin_v;
+							pso.shader_pixel = shader_skin_p;
+							pso.clear_depth = rhi_depth_load;// reverse-z
+						}else
+						{
+							// Set pipeline state
+							pso.shader_vertex = shader_v;
+							pso.shader_pixel = shader_p;
+							pso.clear_depth = rhi_depth_load;// reverse-z
+						}
+
+						cmd_list->SetPipelineState(pso,true);
 
 						draw_renderable(cmd_list, pso, rendererPath, entity);
 						// Set pass constants with cascade transform
@@ -208,33 +217,6 @@ namespace LitchiRuntime
 					}
 				}
 				
-				// draw has skin go
-				pso.shader_vertex = shader_skin_v;
-				pso.shader_pixel = shader_skin_p;
-				pso.clear_depth = rhi_depth_load;// reverse-z
-				cmd_list->SetPipelineState(pso);
-
-				// draw non skin go
-				if (!entities4Skin.empty())
-				{
-					for (GameObject* entity : entities)
-					{
-
-						draw_renderable(cmd_list, pso, rendererPath, entity);
-						// Set pass constants with cascade transform
-
-						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
-						m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), 0, 0.0f);
-						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
-
-						/*m_pcb_pass_cpu.set_f3_value(
-							material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
-							material->HasTexture(MaterialTexture::Color) ? 1.0f : 0.0f
-						);*/
-
-						PushPassConstants(cmd_list);
-					}
-				}
 			}
 		}
 
@@ -288,8 +270,7 @@ namespace LitchiRuntime
 
 		// Get entities
 		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
-		const vector<GameObject*>& entities4Skin = rendererables[is_transparent_pass ? Renderer_Entity::SkinGeometryTransparent : Renderer_Entity::SkinGeometry];
-		if (entities.empty() && entities4Skin.empty())
+		if (entities.empty())
 			return;
 
 
@@ -304,18 +285,13 @@ namespace LitchiRuntime
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
 		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
-		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::gbuffer_depth).get();// 不需要输出深度蒙版缓冲
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::forward_pass_depth).get();// 不需要输出深度蒙版缓冲
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTarget::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z
 		//pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
-
-		// begin render pass
-		bool isBeginRendererPass = false;
-		// cmd_list->SetPipelineState(pso);
-
 
 		EASY_BLOCK("UpdateConstantBufferLight")
 		auto& lightEntities = rendererPath->GetRenderables().at(Renderer_Entity::Light);
@@ -342,7 +318,7 @@ namespace LitchiRuntime
 			auto depthTexture = rendererPath->GetShadowDepthTexture();
 			if(depthTexture!=nullptr)
 			{
-				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, depthTexture);
 			}
 
 		}
@@ -397,7 +373,7 @@ namespace LitchiRuntime
 			pso.shader_vertex = material->GetVertexShader();
 			pso.shader_pixel = material->GetPixelShader();
 			pso.material_shader = material->GetShader();
-			cmd_list->SetPipelineState(pso);
+			cmd_list->SetPipelineState(pso,true);
 			EASY_END_BLOCK
 
 			EASY_BLOCK("SetBuffer")

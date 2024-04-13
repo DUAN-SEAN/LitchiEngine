@@ -635,6 +635,98 @@ namespace LitchiRuntime
         RenderPassBegin();
     }
 
+    void RHI_CommandList::SetPipelineState(RHI_PipelineState& pso, bool inSameRenderPass)
+    {
+        // if in Same RendererPass, jump begin render pass
+        if(!inSameRenderPass)
+        {
+            SetPipelineState(pso);
+            return;
+        }
+
+        EASY_FUNCTION(profiler::colors::Brown600);
+
+        LC_ASSERT(m_state == RHI_CommandListState::Recording);
+        // determine if the pipeline is dirty
+        pso.Prepare();
+        if (m_pso.GetHash() == pso.GetHash())
+        {
+            if (m_pso.GetHashDynamic() != pso.GetHashDynamic())
+            {
+                m_pso = pso; // copy over the pso it can carry some dynamic state (clear values, etc)
+                RenderPassBegin();
+            }
+
+            return;
+        }
+
+        EASY_BLOCK("GetOrCreatePipeline")
+        // get (or create) a pipeline which matches the requested pipeline state  m_pso = pso;
+        RHI_Device::GetOrCreatePipeline(pso, m_pipeline, m_descriptor_layout_current);
+        EASY_END_BLOCK
+
+        uint64_t hash_previous = m_pso.GetHash();
+        m_pso = pso;
+
+        // (in case one is active)
+        EndOcclusionQuery();
+
+        // Bind pipeline
+        {
+            EASY_BLOCK("vkCmdBindPipeline")
+            // Get vulkan pipeline object
+            LC_ASSERT(m_pipeline != nullptr);
+            VkPipeline vk_pipeline = static_cast<VkPipeline>(m_pipeline->GetResource_Pipeline());
+            LC_ASSERT(vk_pipeline != nullptr);
+
+            // Bind
+            VkPipelineBindPoint pipeline_bind_point = m_pso.IsCompute() ? VK_PIPELINE_BIND_POINT_COMPUTE : VK_PIPELINE_BIND_POINT_GRAPHICS;
+            vkCmdBindPipeline(static_cast<VkCommandBuffer>(m_rhi_resource), pipeline_bind_point, vk_pipeline);
+            EASY_END_BLOCK
+
+
+                // set some dynamic states
+                if (m_pso.IsGraphics())
+                {
+                    m_cull_mode = RHI_CullMode::Max;
+                    SetCullMode(m_pso.rasterizer_state->GetCullMode());
+
+                    Rectangle scissor_rect;
+                    scissor_rect.left = 0.0f;
+                    scissor_rect.top = 0.0f;
+                    scissor_rect.right = static_cast<float>(m_pso.GetWidth());
+                    scissor_rect.bottom = static_cast<float>(m_pso.GetHeight());
+                    SetScissorRectangle(scissor_rect);
+
+                    m_index_buffer_id = 0;
+                    m_vertex_buffer_id = 0;
+                }
+
+            // Profile
+            // Profiler::m_rhi_bindings_pipeline++;
+
+            // Also, If the pipeline changed, resources have to be set again
+            m_vertex_buffer_id = 0;
+            m_index_buffer_id = 0;
+        }
+
+        // bind descriptors
+        {
+            // set bindless descriptors
+            descriptor_sets::set_bindless(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout());
+
+            // set standard resources (dynamic descriptors)
+            Renderer::SetStandardResources(this);
+            descriptor_sets::set_dynamic(m_pso, m_rhi_resource, m_pipeline->GetResource_PipelineLayout(), m_descriptor_layout_current);
+        }
+
+        // if render pass no active, begin render pass
+        if(inSameRenderPass && !m_render_pass_active)
+        {
+            RenderPassBegin();
+        }
+    }
+
     void RHI_CommandList::RenderPassBegin()
     {
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
