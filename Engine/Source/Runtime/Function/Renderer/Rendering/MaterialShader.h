@@ -21,7 +21,7 @@ namespace LitchiRuntime
 		//= IResource ===========================================
 		bool LoadFromFile(const std::string& file_path);
 		bool SaveToFile(const std::string& file_path);
-		void LoadMaterialDescriptors();
+		bool LoadMaterialDescriptors();
 
 		// default type=PosUvNorTan
 		void ChangeVertexType(RHI_Vertex_Type vertexType);

@@ -23,10 +23,9 @@ namespace LitchiRuntime
 	{
 		vector<ShaderUniform>* spirv_constantBuffer_struct_uniformList(const CompilerHLSL& compiler, const SPIRType parentType)
 		{
-			vector<ShaderUniform>* uniformList = new vector<ShaderUniform>();
-			uniformList->resize(0);
+			vector<ShaderUniform>* uniformList = nullptr;
 			unsigned member_count = parentType.member_types.size();
-
+			DEBUG_LOG_INFO("spirv_constantBuffer_struct_uniformList memberCount:{}",member_count);
 			for (unsigned i = 0; i < member_count; i++)
 			{
 				auto& member_type = compiler.get_type(parentType.member_types[i]);
@@ -130,6 +129,11 @@ namespace LitchiRuntime
 					uniformInfo.memberUniform = spirv_constantBuffer_struct_uniformList(compiler, member_type);
 				}
 
+				if(uniformList ==nullptr)
+				{
+					uniformList  = new vector<ShaderUniform>();
+				}
+
 				uniformList->push_back(uniformInfo);
 				//if (!member_type.array.empty())
 				//{
@@ -182,7 +186,7 @@ namespace LitchiRuntime
 				bool is_array = !type.array.empty();
 				uint32_t array_length = is_array ? type.array[0] : 0;
 
-				vector<ShaderUniform>* uniformList;
+				vector<ShaderUniform>* uniformList = nullptr;
 				// check is material
 				bool isMaterial = CheckIsMaterialDescriptor(compiler, resource);
 				if (isMaterial && type.basetype == SPIRType::Struct)
@@ -201,6 +205,17 @@ namespace LitchiRuntime
 					array_length = rhi_max_array_size;
 				}
 
+				if(isMaterial)
+				{
+					DEBUG_LOG_ERROR("Material Descriptor :{},{}", descriptor_type, name);
+					if(uniformList==nullptr || uniformList->size() == 0)
+					{
+						DEBUG_LOG_ERROR("UniformList = null or Size = 0 descriptor_type:{}", descriptor_type);
+					}else
+					{
+						DEBUG_LOG_ERROR("UniformList Size = {}", uniformList->size());
+					}
+				}
 				descriptors.emplace_back
 				(
 					name,   // name
@@ -341,6 +356,10 @@ namespace LitchiRuntime
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.push_constant_buffers, RHI_Descriptor_Type::PushConstantBuffer, shader_stage);
 		spirv_resources_to_descriptors(compiler, m_descriptors, resources.separate_samplers, RHI_Descriptor_Type::Sampler, shader_stage);
 
+		for (auto descriptor : m_descriptors)
+		{
+			DEBUG_LOG_INFO("Reflect {}", descriptor.name);
+		}
 		// todo try auto calc input layout vertex type
 		//auto size111 = sizeof(RHI_Vertex_PosTexNorTan);
 		//if(shader_stage == RHI_Shader_Vertex)

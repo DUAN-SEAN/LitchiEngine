@@ -466,10 +466,10 @@ namespace LitchiRuntime
 			}
 			else if (pipeline_state.IsGraphics())
 			{
-				if (pipeline_state.material_shader)
+				/*if (pipeline_state.material_shader)
 				{
 					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
-				}else
+				}else*/
 				{
 					LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
 					descriptors = pipeline_state.shader_vertex->GetDescriptors();

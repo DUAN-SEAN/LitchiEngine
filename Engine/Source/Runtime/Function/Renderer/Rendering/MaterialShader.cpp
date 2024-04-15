@@ -35,31 +35,45 @@ namespace LitchiRuntime
 
 	bool MaterialShader::LoadFromFile(const std::string& file_path)
 	{
-		// todo: 默认都是
 		auto vertexShader = new RHI_Shader();
 		vertexShader->Compile(RHI_Shader_Stage::RHI_Shader_Vertex, file_path, false, RHI_Vertex_Type::PosUvNorTan);
+		DEBUG_LOG_INFO("GetGlobalDescriptor descriptorSize:{}", vertexShader->GetDescriptors().size());
 		auto pixelShader = new RHI_Shader();
 		pixelShader->Compile(RHI_Shader_Stage::RHI_Shader_Pixel, file_path, false, RHI_Vertex_Type::PosUvNorTan);
 
 		m_shaderPath = FileSystem::GetRelativePathAssetFromNative(file_path);
 		m_vertex_shader = vertexShader;
 		m_pixel_shader = pixelShader;
+		if(!LoadMaterialDescriptors())
+		{
+			DEBUG_LOG_ERROR("MaterialShader::LoadMaterialDescriptors Fail :{}", file_path);
+			return false;
+		}
 
-		LoadMaterialDescriptors();
-
+		DEBUG_LOG_INFO("MaterialShader::LoadFromFile Done :{}", file_path);
 		return true;
 	}
 	bool MaterialShader::SaveToFile(const std::string& file_path)
 	{
 		return true;
 	}
-	void MaterialShader::LoadMaterialDescriptors()
+	bool MaterialShader::LoadMaterialDescriptors()
 	{
-		// 加载全局desc
-		m_globalMaterial = m_vertex_shader->GetGlobalDescriptor();
+		// load material desc
+		bool isGlobalMaterial = m_vertex_shader->GetGlobalDescriptor(m_globalMaterial);
+		if(!isGlobalMaterial)
+		{
+			isGlobalMaterial = m_pixel_shader->GetGlobalDescriptor(m_globalMaterial);
+			if(!isGlobalMaterial)
+			{
+				return false;
+			}
+		}
+
 		auto uniformList = *(m_globalMaterial.uniformList->at(0).memberUniform);
 		for (auto uniform : uniformList)
 		{
+			DEBUG_LOG_INFO("MaterialShader::LoadMaterialDescriptors globalUniform name :{}", uniform.name);
 			m_globalUniformDict[uniform.name] = uniform;
 		}
 
@@ -73,7 +87,24 @@ namespace LitchiRuntime
 				m_textureDescriptorDict[rhi_descriptor.name] = rhi_descriptor;
 			}
 		}
+		if(m_pixel_shader)
+		{
+			auto& pixelDescriptors = m_pixel_shader->GetDescriptors();
 
+			for (auto& rhi_descriptor : pixelDescriptors)
+			{
+				if (rhi_descriptor.type == RHI_Descriptor_Type::Texture && rhi_descriptor.slot >= rhi_shader_shift_register_material_t)
+				{
+					m_textureDescriptorDict[rhi_descriptor.name] = rhi_descriptor;
+				}
+			}
+		}
+		for (auto desc: m_textureDescriptorDict)
+		{
+			DEBUG_LOG_INFO("MaterialShader::LoadMaterialDescriptors m_textureDescriptorDict name :{}", desc.first);
+		}
+
+		DEBUG_LOG_INFO("LoadMaterialDescriptors3:{}", m_shaderPath);
 		// 合并desc
 		m_materialDescriptors = m_vertex_shader->GetDescriptors();
 		bool isNeedSort = false;
@@ -110,6 +141,8 @@ namespace LitchiRuntime
 					return a.slot < b.slot;
 				});
 		}
+
+		return true;
 	}
 	void MaterialShader::ChangeVertexType(RHI_Vertex_Type vertexType)
 	{

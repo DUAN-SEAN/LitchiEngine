@@ -226,17 +226,18 @@ namespace LitchiRuntime
         return m_input_layout->GetVertexSize();
     }
 
-    const RHI_Descriptor& RHI_Shader::GetGlobalDescriptor()
+    bool RHI_Shader::GetGlobalDescriptor(RHI_Descriptor& globalDescriptor)
     {
-	    for (const auto& descriptor : m_descriptors)
-	    {
-		    if(descriptor.name == "Material")
-		    {
-                return descriptor;
-		    }
-	    }
+        for (const auto& descriptor : m_descriptors)
+        {
+            if (descriptor.name == "Material")
+            {
+                globalDescriptor =  descriptor;
+                return true;
+            }
+        }
 
-        return RHI_Descriptor();
+        return false;
     }
 
     const char* RHI_Shader::GetEntryPoint() const
