@@ -1126,12 +1126,6 @@ namespace LitchiRuntime
 		// Allocator
 		vulkan_memory_allocator::destroy();
 
-		// Debug messenger
-		if (RHI_Context::validation)
-		{
-			validation_layer_logging::shutdown(RHI_Context::instance);
-		}
-
 		// Device and instance
 		vkDestroyDevice(RHI_Context::device, nullptr);
 		vkDestroyInstance(RHI_Context::instance, nullptr);

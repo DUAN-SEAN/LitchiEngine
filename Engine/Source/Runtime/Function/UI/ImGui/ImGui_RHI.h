@@ -166,7 +166,7 @@ namespace ImGui::RHI
         }
 
         // setup back-end capabilities flags
-        ImGuiIO& io             = GetIO();
+        ImGuiIO& io       = GetIO();
         io.BackendFlags        |= ImGuiBackendFlags_RendererHasViewports;
         io.BackendFlags        |= ImGuiBackendFlags_RendererHasVtxOffset;
         io.BackendRendererName  = "RHI";
@@ -178,7 +178,7 @@ namespace ImGui::RHI
         // SP_SUBSCRIBE_TO_EVENT(EventType::RendererOnShutdown, SP_EVENT_HANDLER_STATIC(destroy_rhi_resources));
     }
 
-    static void shutdown()
+    static void shutdown()      
     {
         // todo temp code this
         destroy_rhi_resources();

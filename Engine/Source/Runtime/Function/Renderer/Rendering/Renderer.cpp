@@ -219,9 +219,6 @@ namespace LitchiRuntime
 			m_vertex_buffer_lines = nullptr;
 		}
 
-		// RHI_RenderDoc::Shutdown();
-		RHI_Device::QueueWaitAll();
-		// RHI_AMD_FidelityFX::Destroy();
 		RHI_Device::Destroy();
 	}
 

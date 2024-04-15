@@ -282,6 +282,87 @@ namespace LitchiRuntime
             return aspect_mask;
         }
 
+        VkPipelineStageFlags access_flags_to_pipeline_stage(VkAccessFlags access_flags)
+        {
+            VkPipelineStageFlags stages = 0;
+            uint32_t enabled_graphics_stages = RHI_Device::GetEnabledGraphicsStages();
+
+            while (access_flags != 0)
+            {
+                VkAccessFlagBits access_flag = static_cast<VkAccessFlagBits>(access_flags & (~(access_flags - 1)));
+                LC_ASSERT(access_flag != 0 && (access_flag & (access_flag - 1)) == 0);
+                access_flags &= ~access_flag;
+
+                switch (access_flag)
+                {
+                case VK_ACCESS_INDIRECT_COMMAND_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_DRAW_INDIRECT_BIT;
+                    break;
+
+                case VK_ACCESS_INDEX_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+                    break;
+
+                case VK_ACCESS_VERTEX_ATTRIBUTE_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_VERTEX_INPUT_BIT;
+                    break;
+
+                case VK_ACCESS_UNIFORM_READ_BIT:
+                    stages |= enabled_graphics_stages | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+                    break;
+
+                case VK_ACCESS_INPUT_ATTACHMENT_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+                    break;
+
+                    // shader
+                case VK_ACCESS_SHADER_READ_BIT:
+                    stages |= enabled_graphics_stages | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+                    break;
+
+                case VK_ACCESS_SHADER_WRITE_BIT:
+                    stages |= enabled_graphics_stages | VK_PIPELINE_STAGE_COMPUTE_SHADER_BIT;
+                    break;
+
+                    // color attachments
+                case VK_ACCESS_COLOR_ATTACHMENT_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                    break;
+
+                case VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT:
+                    stages |= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+                    break;
+
+                    // depth-stencil attachments
+                case VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+                    break;
+
+                case VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT:
+                    stages |= VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT;
+                    break;
+
+                    // transfer
+                case VK_ACCESS_TRANSFER_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_TRANSFER_BIT;
+                    break;
+
+                case VK_ACCESS_TRANSFER_WRITE_BIT:
+                    stages |= VK_PIPELINE_STAGE_TRANSFER_BIT;
+                    break;
+
+                    // host
+                case VK_ACCESS_HOST_READ_BIT:
+                    stages |= VK_PIPELINE_STAGE_HOST_BIT;
+                    break;
+
+                case VK_ACCESS_HOST_WRITE_BIT:
+                    stages |= VK_PIPELINE_STAGE_HOST_BIT;
+                    break;
+                }
+            }
+            return stages;
+        }
         namespace descriptor_sets
         {
             bool bind_dynamic = false;
@@ -1740,8 +1821,9 @@ namespace LitchiRuntime
 
         bool is_swapchain = layout_old == RHI_Image_Layout::Present_Source || layout_new == RHI_Image_Layout::Present_Source;
 
-        VkImageMemoryBarrier2 image_barrier = {};
-        image_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR;
+        VkImageMemoryBarrier image_barrier = {};
+        image_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
+        //image_barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2_KHR;
         image_barrier.pNext = nullptr;
         image_barrier.oldLayout = vulkan_image_layout[static_cast<VkImageLayout>(layout_old)];
         image_barrier.newLayout = vulkan_image_layout[static_cast<VkImageLayout>(layout_new)];
@@ -1754,16 +1836,58 @@ namespace LitchiRuntime
         image_barrier.subresourceRange.baseArrayLayer = 0;
         image_barrier.subresourceRange.layerCount = array_length;
         image_barrier.srcAccessMask = layout_to_access_mask(image_barrier.oldLayout, false, is_depth);               // operations that must complete before the barrier
-        image_barrier.srcStageMask = access_mask_to_pipeline_stage_mask(image_barrier.srcAccessMask, is_swapchain); // stage at which the barrier applies, on the source side
+        //image_barrier.srcStageMask = access_mask_to_pipeline_stage_mask(image_barrier.srcAccessMask, is_swapchain); // stage at which the barrier applies, on the source side
         image_barrier.dstAccessMask = layout_to_access_mask(image_barrier.newLayout, true, is_depth);                // operations that must wait for the barrier, on the new layout
-        image_barrier.dstStageMask = access_mask_to_pipeline_stage_mask(image_barrier.dstAccessMask, is_swapchain); // stage at which the barrier applies, on the destination side
+        //image_barrier.dstStageMask = access_mask_to_pipeline_stage_mask(image_barrier.dstAccessMask, is_swapchain); // stage at which the barrier applies, on the destination side
 
-        VkDependencyInfo dependency_info = {};
+      /*  VkDependencyInfo dependency_info = {};
         dependency_info.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO_KHR;
         dependency_info.imageMemoryBarrierCount = 1;
-        dependency_info.pImageMemoryBarriers = &image_barrier;
+        dependency_info.pImageMemoryBarriers = &image_barrier;*/
 
-        vkCmdPipelineBarrier2(static_cast<VkCommandBuffer>(m_rhi_resource), &dependency_info);
+        VkPipelineStageFlags destination_stage_mask = 0;
+        {
+            if (image_barrier.newLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
+            {
+                destination_stage_mask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            }
+            else
+            {
+                destination_stage_mask = access_flags_to_pipeline_stage(image_barrier.dstAccessMask);
+            }
+        }
+        VkPipelineStageFlags source_stage_mask = 0;
+        {
+            if (image_barrier.oldLayout == VK_IMAGE_LAYOUT_PRESENT_SRC_KHR)
+            {
+                source_stage_mask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+            }
+            else if (image_barrier.oldLayout == VK_IMAGE_LAYOUT_UNDEFINED)
+            {
+                source_stage_mask = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
+            }
+            else
+            {
+                source_stage_mask = access_flags_to_pipeline_stage(image_barrier.srcAccessMask);
+            }
+        }
+        vkCmdPipelineBarrier
+        (
+            static_cast<VkCommandBuffer>(m_rhi_resource), // commandBuffer
+            source_stage_mask,                            // srcStageMask
+            destination_stage_mask,                       // dstStageMask
+            0,                                            // dependencyFlags
+            0,                                            // memoryBarrierCount
+            nullptr,                                      // pMemoryBarriers
+            0,                                            // bufferMemoryBarrierCount
+            nullptr,                                      // pBufferMemoryBarriers
+            1,                                            // imageMemoryBarrierCount
+            &image_barrier                                // pImageMemoryBarriers
+        );
+
+
+
+        //vkCmdPipelineBarrier2(static_cast<VkCommandBuffer>(m_rhi_resource), &dependency_info);
         //Profiler::m_rhi_pipeline_barriers++;
     }
 
