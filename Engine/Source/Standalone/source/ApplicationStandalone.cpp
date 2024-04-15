@@ -113,7 +113,6 @@ namespace LitchiStandalone
 					if(!ApplicationBase::Instance()->window->IsMinimized())
 					{
 						Renderer::Tick();
-						Renderer::Present();
 					}
 				}  EASY_END_BLOCK;
 
