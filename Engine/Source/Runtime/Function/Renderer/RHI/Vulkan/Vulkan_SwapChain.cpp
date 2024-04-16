@@ -406,6 +406,7 @@ namespace LitchiRuntime
 
         // Reset image index
         m_image_index          = numeric_limits<uint32_t>::max();
+    	m_sync_index = std::numeric_limits<uint32_t>::max();
 
         Destroy();
         Create();
