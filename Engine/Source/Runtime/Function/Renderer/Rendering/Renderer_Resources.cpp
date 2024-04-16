@@ -34,7 +34,7 @@ namespace LitchiRuntime
 	{
 		// graphics states
 		array<shared_ptr<RHI_RasterizerState>, 5>   rasterizer_states;
-		array<shared_ptr<RHI_DepthStencilState>, 5> depth_stencil_states;
+		array<shared_ptr<RHI_DepthStencilState>, 3> depth_stencil_states;
 		array<shared_ptr<RHI_BlendState>, 3>        blend_states;
 
 		// renderer resources
@@ -87,15 +87,12 @@ namespace LitchiRuntime
 
 	void Renderer::CreateDepthStencilStates()
 	{
-		RHI_Comparison_Function reverse_z_aware_comp_func = RHI_Comparison_Function::GreaterEqual; // reverse-z
-
 #define depth_stencil_state(x) depth_stencil_states[static_cast<uint8_t>(x)]
+
 		// arguments: depth_test, depth_write, depth_function, stencil_test, stencil_write, stencil_function
-		depth_stencil_state(Renderer_DepthStencilState::Off) = make_shared<RHI_DepthStencilState>(false, false, RHI_Comparison_Function::Never, false, false, RHI_Comparison_Function::Never);
-		depth_stencil_state(Renderer_DepthStencilState::Depth_read_write_stencil_read) = make_shared<RHI_DepthStencilState>(true, true, reverse_z_aware_comp_func, false, false, RHI_Comparison_Function::Never);
-		depth_stencil_state(Renderer_DepthStencilState::Depth_read) = make_shared<RHI_DepthStencilState>(true, false, reverse_z_aware_comp_func, false, false, RHI_Comparison_Function::Never);
-		depth_stencil_state(Renderer_DepthStencilState::Stencil_read) = make_shared<RHI_DepthStencilState>(false, false, RHI_Comparison_Function::Never, true, false, RHI_Comparison_Function::Equal);
-		depth_stencil_state(Renderer_DepthStencilState::Depth_read_write_stencil_write) = make_shared<RHI_DepthStencilState>(true, true, reverse_z_aware_comp_func, false, true, RHI_Comparison_Function::Always);
+		depth_stencil_state(Renderer_DepthStencilState::Off) = make_shared<RHI_DepthStencilState>(false, false, RHI_Comparison_Function::Never);
+		depth_stencil_state(Renderer_DepthStencilState::Read) = make_shared<RHI_DepthStencilState>(true, false, RHI_Comparison_Function::GreaterEqual);
+		depth_stencil_state(Renderer_DepthStencilState::ReadWrite) = make_shared<RHI_DepthStencilState>(true, true, RHI_Comparison_Function::GreaterEqual);
 	}
 
 	void Renderer::CreateRasterizerStates()
@@ -118,7 +115,7 @@ namespace LitchiRuntime
 	{
 #define blend_state(x) blend_states[static_cast<uint8_t>(x)]
 		// blend_enabled, source_blend, dest_blend, blend_op, source_blend_alpha, dest_blend_alpha, blend_op_alpha, blend_factor
-		blend_state(Renderer_BlendState::Disabled) = make_shared<RHI_BlendState>(false);
+		blend_state(Renderer_BlendState::Off) = make_shared<RHI_BlendState>(false);
 		blend_state(Renderer_BlendState::Alpha) = make_shared<RHI_BlendState>(true, RHI_Blend::Src_Alpha, RHI_Blend::Inv_Src_Alpha, RHI_Blend_Operation::Add, RHI_Blend::One, RHI_Blend::One, RHI_Blend_Operation::Add, 0.0f);
 		blend_state(Renderer_BlendState::Additive) = make_shared<RHI_BlendState>(true, RHI_Blend::One, RHI_Blend::One, RHI_Blend_Operation::Add, RHI_Blend::One, RHI_Blend::One, RHI_Blend_Operation::Add, 1.0f);
 	}
@@ -270,6 +267,13 @@ namespace LitchiRuntime
 		shader(Renderer_Shader::line_v)->Compile(RHI_Shader_Vertex, shader_dir + "line.hlsl", async, RHI_Vertex_Type::PosCol);
 		shader(Renderer_Shader::line_p) = make_shared<RHI_Shader>();
 		shader(Renderer_Shader::line_p)->Compile(RHI_Shader_Pixel, shader_dir + "line.hlsl", async);
+
+		// Grid
+		shader(Renderer_Shader::grid_v) = make_shared<RHI_Shader>();
+		shader(Renderer_Shader::grid_v)->Compile(RHI_Shader_Vertex, shader_dir + "grid.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+
+		shader(Renderer_Shader::grid_p) = make_shared<RHI_Shader>();
+		shader(Renderer_Shader::grid_p)->Compile(RHI_Shader_Pixel, shader_dir + "grid.hlsl", async);
 	}
 
 	void Renderer::CreateFonts()

@@ -147,8 +147,8 @@ namespace LitchiRuntime
 
 			// Define pipeline state
 			static RHI_PipelineState pso;
-			pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Disabled).get();
-			pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get() : GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
+			pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Off).get();
+			pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Read).get() : GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
 			pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
 			pso.render_target_depth_texture = tex_depth;
 			pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
@@ -239,7 +239,7 @@ namespace LitchiRuntime
 		pso.clear_color[0] = rhi_color_load;
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Read).get();
 		cmd_list->SetPipelineState(pso);
 
 		EASY_BLOCK("Render SkyBox")
@@ -283,8 +283,8 @@ namespace LitchiRuntime
 		//pso.shader_vertex = shader_v;
 		//pso.shader_pixel = shader_p; // 
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
-		pso.blend_state = GetBlendState(Renderer_BlendState::Disabled).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Off).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::forward_pass_depth).get();// 不需要输出深度蒙版缓冲
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTarget::frame_output).get();
@@ -481,6 +481,49 @@ namespace LitchiRuntime
 		cmd_list->EndMarker();
 	}
 
+	void Renderer::Pass_Grid(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		// acquire resources
+		RHI_Shader* shader_v = GetShader(Renderer_Shader::grid_v).get();
+		RHI_Shader* shader_p = GetShader(Renderer_Shader::grid_p).get();
+		if (!shader_v->IsCompiled() || !shader_p->IsCompiled())
+			return;
+
+		cmd_list->BeginTimeblock("grid");
+
+		// set pipeline state
+		static RHI_PipelineState pso;
+		pso.shader_vertex = shader_v;
+		pso.shader_pixel = shader_p;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_none).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Read).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
+		cmd_list->SetPipelineState(pso);
+
+		// set transform
+		{
+			// follow camera in world unit increments so that the grid appears stationary in relation to the camera
+			const float grid_spacing = 1.0f;
+			const Vector3& camera_position = rendererPath->GetRenderCamera()->GetPosition();
+			const Vector3 translation = Vector3(
+				floor(camera_position.x / grid_spacing) * grid_spacing,
+				0.0f,
+				floor(camera_position.z / grid_spacing) * grid_spacing
+			);
+
+			m_cb_pass_cpu.transform = Matrix::CreateScale(Vector3(1000.0f, 1.0f, 1000.0f)) * Matrix::CreateTranslation(translation);
+			cmd_list->PushConstants(m_cb_pass_cpu);
+		}
+
+		cmd_list->SetBufferVertex(GetStandardMesh(Renderer_MeshType::Quad)->GetVertexBuffer());
+		cmd_list->SetBufferIndex(GetStandardMesh(Renderer_MeshType::Quad)->GetIndexBuffer());
+		cmd_list->DrawIndexed(6);
+
+		cmd_list->EndTimeblock();
+	}
+
 	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::line_v).get();
@@ -503,7 +546,7 @@ namespace LitchiRuntime
 
 		// set pipeline state
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Read).get();
 
 		cmd_list->SetPipelineState(pso,true);
 		// push pass constants
@@ -596,7 +639,7 @@ namespace LitchiRuntime
 		pso.shader_pixel = shader_p;
 		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read_write_stencil_read).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
 		pso.clear_depth = 0.0f; // reverse-z

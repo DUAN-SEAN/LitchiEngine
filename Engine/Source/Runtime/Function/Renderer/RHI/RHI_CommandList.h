@@ -96,6 +96,8 @@ namespace LitchiRuntime
 
         // Push constant buffer
         void PushConstants(const uint32_t offset, const uint32_t size, const void* data);
+        template<typename T>
+        void PushConstants(const T& data) { PushConstants(0, sizeof(T), &data); }
 
         // Sampler
         void SetSampler(const uint32_t slot, RHI_Sampler* sampler) const;

@@ -132,6 +132,8 @@ namespace LitchiRuntime
         font_p,
         ui_image_v,
         ui_image_p,
+        grid_v,
+        grid_p,
         max,
     };
     
@@ -223,15 +225,13 @@ namespace LitchiRuntime
     enum class Renderer_DepthStencilState
     {
         Off,
-        Stencil_read,
-        Depth_read_write_stencil_read,
-        Depth_read,
-        Depth_read_write_stencil_write
+        Read,
+        ReadWrite,
     };
 
     enum class Renderer_BlendState
     {
-        Disabled,
+        Off,
         Alpha,
         Additive
     };

@@ -382,7 +382,8 @@ namespace LitchiRuntime
 			EASY_END_BLOCK
 
 			EASY_BLOCK("Pass_DebugGridPass")
-			Pass_DebugGridPass(cmd_list, rendererPath);
+			//Pass_DebugGridPass(cmd_list, rendererPath); 
+			Pass_Grid(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
 

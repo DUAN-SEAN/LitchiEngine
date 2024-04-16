@@ -148,6 +148,8 @@ namespace LitchiRuntime
 		static void Pass_SkyBox(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_ForwardPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass);
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		// passes - debug/editor
+		static void Pass_Grid(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
