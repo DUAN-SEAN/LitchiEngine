@@ -466,10 +466,10 @@ namespace LitchiRuntime
 			}
 			else if (pipeline_state.IsGraphics())
 			{
-				/*if (pipeline_state.material_shader)
+				if (pipeline_state.material_shader) // fast descriptor path, avoid merge
 				{
 					descriptors = pipeline_state.material_shader->GetMaterialDescriptors();
-				}else*/
+				}else
 				{
 					LC_ASSERT(pipeline_state.shader_vertex->GetCompilationState() == RHI_ShaderCompilationState::Succeeded);
 					descriptors = pipeline_state.shader_vertex->GetDescriptors();
@@ -494,13 +494,16 @@ namespace LitchiRuntime
 				}
 			}
 
-			// sort descriptors by slot
-			// this makes things easier to work with, for example dynamic offsets
-			// are expected as a list which should be ordered by a slot
-			sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
-				{
-					return a.slot < b.slot;
-				});
+			if(!pipeline_state.material_shader)
+			{
+				// sort descriptors by slot
+				// this makes things easier to work with, for example dynamic offsets
+				// are expected as a list which should be ordered by a slot
+				sort(descriptors.begin(), descriptors.end(), [](const RHI_Descriptor& a, const RHI_Descriptor& b)
+					{
+						return a.slot < b.slot;
+					});
+			}
 
 			// cache the newly created descriptors
 			descriptor_cache[pipeline_state_hash] = descriptors;

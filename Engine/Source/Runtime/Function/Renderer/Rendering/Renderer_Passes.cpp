@@ -703,10 +703,7 @@ namespace LitchiRuntime
 		cmd_list->EndMarker();
 	}
 
-
 	void Renderer::Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture)
 	{
 	}
-
-
 }
