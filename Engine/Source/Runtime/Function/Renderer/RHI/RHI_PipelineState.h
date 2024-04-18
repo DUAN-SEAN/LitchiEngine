@@ -43,7 +43,6 @@ namespace LitchiRuntime
         RHI_SwapChain* render_target_swapchain        = nullptr; // renderPass pipeline Level
         RHI_PrimitiveTopology primitive_topology = RHI_PrimitiveTopology::TriangleList; // pipeline Level
         bool instancing                               = false; // pipeline Level
-        bool resolution_scale = false; // renderPass pipeline Level
 
         // RTs
         std::array<RHI_Texture*, rhi_max_render_target_count> render_target_color_textures; // renderPass pipeline Level
@@ -51,15 +50,12 @@ namespace LitchiRuntime
         RHI_Texture* vrs_input_texture = nullptr; // renderPass pipeline Level
         //====================================================================================
 
-        //= DYNAMIC - will not cause pso generation =================
-        uint32_t render_target_color_texture_array_index = 0; // renderPass Level
-        uint32_t render_target_depth_stencil_texture_array_index = 0; // renderPass Level
-
         // Clear Param
+        bool resolution_scale = false; // renderPass pipeline Level
+        uint32_t render_target_array_index = 0;
         float clear_depth      = rhi_depth_load; // renderPass Level
         uint32_t clear_stencil = rhi_stencil_load; // renderPass Level
         std::array<Color, rhi_max_render_target_count> clear_color; // renderPass Level
-
         std::string name;
         //=========================================================
 

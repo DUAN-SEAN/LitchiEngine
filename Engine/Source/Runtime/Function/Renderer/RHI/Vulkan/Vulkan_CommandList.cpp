@@ -584,6 +584,22 @@ namespace LitchiRuntime
         // update states
         m_state = RHI_CommandListState::Recording;
         m_pso = RHI_PipelineState();
+        m_cull_mode = RHI_CullMode::Max;
+
+        // set dynamic states
+        if (m_queue_type == RHI_Queue_Type::Graphics)
+        {
+            // cull mode
+            SetCullMode(RHI_CullMode::Back);
+
+            // scissor rectangle
+            static Rectangle scissor_rect;
+            scissor_rect.left = 0.0f;
+            scissor_rect.top = 0.0f;
+            scissor_rect.right = static_cast<float>(m_pso.GetWidth());
+            scissor_rect.bottom = static_cast<float>(m_pso.GetHeight());
+            SetScissorRectangle(scissor_rect);
+        }
 
         // queries
         if (m_queue_type != RHI_Queue_Type::Copy)
@@ -644,9 +660,10 @@ namespace LitchiRuntime
         pso.Prepare();
         if (m_pso.GetHash() == pso.GetHash())
         {
-            if (m_pso.GetHashDynamic() != pso.GetHashDynamic())
+            // if the index of the render target array has changed, we need to begin a new render pass
+            if (m_pso.render_target_array_index != pso.render_target_array_index)
             {
-                m_pso = pso; // copy over the pso it can carry some dynamic state (clear values, etc)
+                m_pso.render_target_array_index = pso.render_target_array_index;
                 RenderPassBegin();
             }
 
@@ -861,7 +878,7 @@ namespace LitchiRuntime
 
                     VkRenderingAttachmentInfo color_attachment = {};
                     color_attachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
-                    color_attachment.imageView = static_cast<VkImageView>(rt->GetRhiRtv(m_pso.render_target_color_texture_array_index));
+                    color_attachment.imageView = static_cast<VkImageView>(rt->GetRhiRtv(m_pso.render_target_array_index));
                     color_attachment.imageLayout = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
                     color_attachment.loadOp = get_color_load_op(m_pso.clear_color[i]);
                     color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -892,7 +909,7 @@ namespace LitchiRuntime
             rt->SetLayout(layout, this);
 
             attachment_depth_stencil.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO_KHR;
-            attachment_depth_stencil.imageView = static_cast<VkImageView>(rt->GetRhiDsv(m_pso.render_target_depth_stencil_texture_array_index));
+            attachment_depth_stencil.imageView = static_cast<VkImageView>(rt->GetRhiDsv(m_pso.render_target_array_index));
             attachment_depth_stencil.imageLayout = vulkan_image_layout[static_cast<uint8_t>(rt->GetLayout(0))];
             attachment_depth_stencil.loadOp = get_depth_load_op(m_pso.clear_depth);
             attachment_depth_stencil.storeOp = m_pso.depth_stencil_state->GetDepthWriteEnabled() ? VK_ATTACHMENT_STORE_OP_STORE : VK_ATTACHMENT_STORE_OP_NONE;
@@ -1017,9 +1034,6 @@ namespace LitchiRuntime
     }
 
     void RHI_CommandList::ClearRenderTarget(RHI_Texture* texture,
-        const uint32_t color_index          /*= 0*/,
-        const uint32_t depth_stencil_index  /*= 0*/,
-        const bool storage                  /*= false*/,
         const Color& clear_color            /*= rhi_color_load*/,
         const float clear_depth             /*= rhi_depth_load*/,
         const uint32_t clear_stencil        /*= rhi_stencil_load*/
@@ -1029,14 +1043,14 @@ namespace LitchiRuntime
         LC_ASSERT_MSG((texture->GetFlags() & RHI_Texture_ClearBlit) != 0, "The texture needs the RHI_Texture_ClearBlit flag");
         LC_ASSERT(texture && texture->GetRhiSrv());
 
-        // One of the required layouts for clear functions
+        // one of the required layouts for clear functions
         texture->SetLayout(RHI_Image_Layout::Transfer_Destination, this);
 
         VkImageSubresourceRange image_subresource_range = {};
-        image_subresource_range.baseMipLevel            = 0;
-        image_subresource_range.levelCount              = 1;
-        image_subresource_range.baseArrayLayer          = 0;
-        image_subresource_range.layerCount              = 1;
+        image_subresource_range.baseMipLevel = 0;
+        image_subresource_range.levelCount = VK_REMAINING_MIP_LEVELS;
+        image_subresource_range.baseArrayLayer = 0;
+        image_subresource_range.layerCount = VK_REMAINING_ARRAY_LAYERS;
 
         if (texture->IsColorFormat())
         {

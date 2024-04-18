@@ -124,25 +124,40 @@ namespace LitchiRuntime
 			return extensions_supported;
 		}
 
-
-		std::vector<const char*> getGlfwRequiredExtensions()
+		VkImageTiling get_format_tiling(const RHI_Texture* texture)
 		{
-			uint32_t     glfwExtensionCount = 0;
-			const char** glfwExtensions;
-			glfwExtensions = glfwGetRequiredInstanceExtensions(&glfwExtensionCount);
+			VkFormatProperties2 format_properties2 = {};
+			format_properties2.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_2;
 
-			std::vector<const char*> extensions(glfwExtensions, glfwExtensions + glfwExtensionCount);
-			//
-			//			if (m_enable_validation_Layers || m_enable_debug_utils_label)
-			//			{
-			//				extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME);
-			//			}
-			//
-			//#if defined(__MACH__)
-			//			extensions.push_back(VK_KHR_GET_PHYSICAL_DEVICE_PROPERTIES_2_EXTENSION_NAME);
-			//#endif
+			VkFormatProperties3 format_properties3 = {};
+			format_properties3.sType = VK_STRUCTURE_TYPE_FORMAT_PROPERTIES_3;
+			format_properties2.pNext = &format_properties3;
 
-			return extensions;
+			VkFormatFeatureFlagBits2 format_flags = 0;
+			format_flags |= texture->IsSrv() ? VK_FORMAT_FEATURE_2_SAMPLED_IMAGE_BIT : 0;
+			format_flags |= texture->IsUav() ? VK_FORMAT_FEATURE_2_STORAGE_IMAGE_BIT : 0;
+			format_flags |= texture->IsRtv() ? VK_FORMAT_FEATURE_2_COLOR_ATTACHMENT_BIT : 0;
+			format_flags |= texture->IsDsv() ? VK_FORMAT_FEATURE_2_DEPTH_STENCIL_ATTACHMENT_BIT : 0;
+			format_flags |= texture->IsVrs() ? VK_FORMAT_FEATURE_2_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR : 0;
+
+			vkGetPhysicalDeviceFormatProperties2(RHI_Context::device_physical, vulkan_format[rhi_format_to_index(texture->GetFormat())], &format_properties2);
+
+			// check for optimal support
+			VkImageTiling tiling = VK_IMAGE_TILING_MAX_ENUM;
+			if (format_properties3.optimalTilingFeatures & format_flags)
+			{
+				tiling = VK_IMAGE_TILING_OPTIMAL;
+			}
+			// check for linear support
+			else if (format_properties3.linearTilingFeatures & format_flags)
+			{
+				tiling = VK_IMAGE_TILING_LINEAR;
+			}
+
+			LC_ASSERT_MSG(tiling != VK_IMAGE_TILING_MAX_ENUM, "The GPU doesn't support this format");
+			LC_ASSERT_MSG(tiling == VK_IMAGE_TILING_OPTIMAL, "This format doesn't support optimal tiling, switch to a more efficient format");
+
+			return tiling;
 		}
 
 		VkImageUsageFlags get_image_usage_flags(const RHI_Texture* texture)
@@ -1823,10 +1838,28 @@ namespace LitchiRuntime
 		create_info_image.mipLevels = texture->GetMipCount();
 		create_info_image.arrayLayers = texture->GetArrayLength();
 		create_info_image.format = vulkan_format[rhi_format_to_index(texture->GetFormat())];
-		create_info_image.tiling = VK_IMAGE_TILING_OPTIMAL;
+		create_info_image.tiling = get_format_tiling(texture);
 		create_info_image.initialLayout = vulkan_image_layout[static_cast<uint8_t>(texture->GetLayout(0))];
 		create_info_image.samples = VK_SAMPLE_COUNT_1_BIT;
 		create_info_image.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
+
+
+		// check physical device format support
+		{
+			VkPhysicalDeviceImageFormatInfo2 info = {};
+			info.sType = VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_IMAGE_FORMAT_INFO_2;
+			info.format = create_info_image.format;
+			info.type = create_info_image.imageType;
+			info.tiling = create_info_image.tiling;
+			info.usage = create_info_image.usage;
+			info.flags = create_info_image.flags;
+
+			VkImageFormatProperties2 properties = {};
+			properties.sType = VK_STRUCTURE_TYPE_IMAGE_FORMAT_PROPERTIES_2;
+
+			VkResult result = vkGetPhysicalDeviceImageFormatProperties2(RHI_Context::device_physical, &info, &properties);
+			LC_ASSERT_MSG(result != VK_ERROR_FORMAT_NOT_SUPPORTED, "The GPU doesn't support this image format with the specified properties");
+		}
 
 		// describe allocation
 		VmaAllocationCreateInfo create_info_allocation = {};

@@ -120,6 +120,13 @@ namespace LitchiRuntime
 
 		cmd_list->BeginTimeblock(is_transparent_pass ? "shadow_maps_color" : "shadow_maps_depth");
 
+		// Define pipeline state
+		static RHI_PipelineState pso;
+		pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Off).get();
+		pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Read).get() : GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
+		pso.name = "Pass_ShadowMaps";
+
+
 		// Go through all of the lights
 		const auto& entities_light = rendererables[Renderer_Entity::Light];
 		size_t lightCount = entities_light.size();
@@ -145,39 +152,35 @@ namespace LitchiRuntime
 			if (!tex_depth)
 				continue;
 
-			// Define pipeline state
-			static RHI_PipelineState pso;
-			pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Off).get();
-			pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Read).get() : GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
-			pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
-			pso.render_target_depth_texture = tex_depth;
-			pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
-			pso.name = "Pass_ShadowMaps";
-
-			for (uint32_t array_index = 0; array_index < tex_depth->GetArrayLength(); array_index++)
+			// define light pso
 			{
-				// Set render target texture array index
-				pso.render_target_color_texture_array_index = array_index;
-				pso.render_target_depth_stencil_texture_array_index = array_index;
-
-				// Set clear values
-				pso.clear_color[0] = Color::standard_white;
-				pso.clear_depth = is_transparent_pass ? rhi_depth_load : 0.0f; // reverse-z
-
-				const Matrix& view_projection = rendererPath->GetLightViewMatrix(array_index) * rendererPath->GetLightProjectionMatrix(array_index);
-
-				// Set appropriate rasterizer state
+				pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
+				pso.render_target_depth_texture = tex_depth;
 				if (light->GetLightType() == LightType::Directional)
 				{
-					// "Pancaking" - https://www.gamedev.net/forums/topic/639036-shadow-mapping-and-high-up-objects/
-					// It's basically a way to capture the silhouettes of potential shadow casters behind the light's view point.
-					// Of course we also have to make sure that the light doesn't cull them in the first place (this is done automatically by the light)
+					// disable depth clipping so that we can capture silhouettes even behind the light
 					pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Light_directional).get();
 				}
 				else
 				{
 					pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Light_point_spot).get();
 				}
+
+			}
+
+			// clear here and not via the render pass, which can dynamically start and end based on various toggles
+			{
+				if (pso.render_target_color_textures[0])
+				{
+					cmd_list->ClearRenderTarget(pso.render_target_color_textures[0], Color::standard_white);
+				}
+				cmd_list->ClearRenderTarget(pso.render_target_depth_texture, rhi_color_dont_care, 0.0f);
+			}
+
+
+			for (uint32_t array_index = 0; array_index < tex_depth->GetArrayLength(); array_index++)
+			{
+				const Matrix& view_projection = rendererPath->GetLightViewMatrix(array_index) * rendererPath->GetLightProjectionMatrix(array_index);
 
 				bool needBeginRenderPass = true;
 
@@ -197,6 +200,8 @@ namespace LitchiRuntime
 							pso.shader_vertex = shader_v;
 							pso.shader_pixel = shader_p;
 						}
+
+						pso.render_target_array_index = array_index;
 
 						cmd_list->SetPipelineState(pso, needBeginRenderPass);
 						needBeginRenderPass = false;

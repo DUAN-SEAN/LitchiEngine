@@ -335,7 +335,7 @@ namespace LitchiRuntime
 		auto canvas = rendererPath->GetCanvas();
 		auto scene = rendererPath->GetRenderScene();
 
-		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),0, 0, false, camera->GetClearColor());
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), camera->GetClearColor());
 
 		// update rendererPath buffer
 		EASY_BLOCK("Build cb_rendererPath")
@@ -391,7 +391,7 @@ namespace LitchiRuntime
 		else
 		{
 			// if there is no camera, clear to black and and render the performance metrics
-			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
+			GetCmdList()->ClearRenderTarget(rt_output, Color::standard_black);
 		}
 
 		// transition the render target to a readable state so it can be rendered
@@ -403,7 +403,7 @@ namespace LitchiRuntime
 	{
 		auto camera = rendererPath->GetRenderCamera();
 
-		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),camera->GetClearColor());
 
 		// update rendererPath buffer
 		EASY_BLOCK("Build cb_rendererPath")
@@ -421,7 +421,7 @@ namespace LitchiRuntime
 		else
 		{
 			// if there is no camera, clear to black and and render the performance metrics
-			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
+			GetCmdList()->ClearRenderTarget(rt_output,  Color::standard_black);
 		}
 
 		// transition the render target to a readable state so it can be rendered
@@ -439,7 +439,7 @@ namespace LitchiRuntime
 			return;
 		}
 
-		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), 0, 0, false, camera->GetClearColor());
+		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(),camera->GetClearColor());
 
 		// update rendererPath buffer
 		EASY_BLOCK("Build cb_rendererPath")
@@ -474,7 +474,7 @@ namespace LitchiRuntime
 		else
 		{
 			// if there is no camera, clear to black and and render the performance metrics
-			GetCmdList()->ClearRenderTarget(rt_output, 0, 0, false, Color::standard_black);
+			GetCmdList()->ClearRenderTarget(rt_output,Color::standard_black);
 		}
 
 		// transition the render target to a readable state so it can be rendered

@@ -297,6 +297,7 @@ namespace ImGui::RHI
         cmd_list->BeginTimeblock(name, true, gpu_timing);
         cmd_list->SetBufferVertex(vertex_buffer);
         cmd_list->SetBufferIndex(index_buffer);
+        cmd_list->SetCullMode(RHI_CullMode::None);
         cmd_list->SetPipelineState(pso);
 
         // render

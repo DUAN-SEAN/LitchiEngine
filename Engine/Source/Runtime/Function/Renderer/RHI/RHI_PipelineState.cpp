@@ -132,8 +132,6 @@ namespace LitchiRuntime
         {
             uint64_t hash = 0;
 
-            hash = rhi_hash_combine(hash, static_cast<uint64_t>(pso.render_target_color_texture_array_index));
-            hash = rhi_hash_combine(hash, static_cast<uint64_t>(pso.render_target_depth_stencil_texture_array_index));
             hash = rhi_hash_combine(hash, static_cast<uint64_t>(pso.clear_depth));
             hash = rhi_hash_combine(hash, static_cast<uint64_t>(pso.clear_stencil));
             for (uint32_t i = 0; i < rhi_max_render_target_count; i++)

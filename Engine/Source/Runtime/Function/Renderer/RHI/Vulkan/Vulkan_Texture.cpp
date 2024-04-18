@@ -17,23 +17,6 @@ namespace LitchiRuntime
 {
     namespace
     {
-        VkImageTiling get_format_tiling(const RHI_Format format, VkFormatFeatureFlags feature_flags)
-        {
-            // get format properties
-            VkFormatProperties format_properties;
-            vkGetPhysicalDeviceFormatProperties(RHI_Context::device_physical, vulkan_format[rhi_format_to_index(format)], &format_properties);
-
-            // check for optimal support
-            if (format_properties.optimalTilingFeatures & feature_flags)
-                return VK_IMAGE_TILING_OPTIMAL;
-
-            // check for linear support
-            if (format_properties.linearTilingFeatures & feature_flags)
-                return VK_IMAGE_TILING_LINEAR;
-
-            return VK_IMAGE_TILING_MAX_ENUM;
-        }
-
         VkImageAspectFlags get_aspect_mask(const RHI_Texture* texture, const bool only_depth = false, const bool only_stencil = false)
         {
             VkImageAspectFlags aspect_mask = 0;
@@ -56,26 +39,6 @@ namespace LitchiRuntime
             }
 
             return aspect_mask;
-        }
-
-        void create_image(RHI_Texture* texture)
-        {
-            // deduce format flags
-            bool is_render_target_depth_stencil = texture->IsDsv();
-            VkFormatFeatureFlags format_flags = is_render_target_depth_stencil ? VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT : VK_FORMAT_FEATURE_COLOR_ATTACHMENT_BIT;
-            format_flags = (texture->GetFlags() & RHI_Texture_Vrs) ? VK_FORMAT_FEATURE_FRAGMENT_SHADING_RATE_ATTACHMENT_BIT_KHR : format_flags;
-
-            // deduce image tiling
-            RHI_Format format = texture->GetFormat();
-            VkImageTiling image_tiling = get_format_tiling(format, format_flags);
-
-            LC_ASSERT_MSG(image_tiling != VK_IMAGE_TILING_MAX_ENUM, "The GPU doesn't support this format");
-            LC_ASSERT_MSG(image_tiling == VK_IMAGE_TILING_OPTIMAL, "This format doesn't support optimal tiling, switch to a more efficient format");
-
-            // set layout to preinitialised - required by vulkan
-            texture->SetLayout(RHI_Image_Layout::Preinitialized, nullptr);
-
-            RHI_Device::MemoryTextureCreate(texture);
         }
 
         void create_image_view(
@@ -307,7 +270,11 @@ namespace LitchiRuntime
         LC_ASSERT_MSG(m_width != 0, "Width can't be zero");
         LC_ASSERT_MSG(m_height != 0, "Height can't be zero");
 
-        create_image(this);
+        // as per vulkan
+        SetLayout(RHI_Image_Layout::Preinitialized, nullptr);
+
+        // create image
+        RHI_Device::MemoryTextureCreate(this);
 
         // if the texture has any data, stage it
         if (HasData())
