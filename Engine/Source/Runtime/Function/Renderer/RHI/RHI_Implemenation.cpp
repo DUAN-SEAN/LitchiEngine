@@ -45,7 +45,7 @@ namespace LitchiRuntime
             gpu_markers = false;
             gpu_profiling = false;
             renderdoc = false;*/
-            validation    = true;
+            validation    = false;
             gpu_markers   = false;
             gpu_profiling = false;
             renderdoc     = false;

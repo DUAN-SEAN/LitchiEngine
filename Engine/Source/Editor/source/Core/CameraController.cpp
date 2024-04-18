@@ -100,11 +100,6 @@ float GetActorFocusDist(GameObject* p_actor)
 
 void LitchiEditor::CameraController::HandleInputs(float p_deltaTime, bool p_isFocus, bool p_isHovered)
 {
-	if(!p_isFocus)
-	{
-		return;
-	}
-
 	if (!m_cameraDestinations.empty())
 	{
 		//m_currentMovementSpeed = LitchiRuntime::Math::Zero;
@@ -130,6 +125,11 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime, bool p_isFo
 		return;
 	}
 
+	if(!p_isFocus)
+	{
+		return;
+	}
+
 	static const float movement_speed_max = 5.0f;
 	static float movement_acceleration = 1.0f;
 	static const float movement_drag = 10.0f;
@@ -141,9 +141,11 @@ void LitchiEditor::CameraController::HandleInputs(float p_deltaTime, bool p_isFo
 	{
 		// Initiate control only when the mouse is within the viewport
 		m_is_controlled_by_keyboard_mouse = false;
-		if ((InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN ||
+		/*if ((InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN ||
 			InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_MIDDLE) == EMouseButtonState::MOUSE_DOWN) &&
-			p_isHovered)
+			p_isHovered)*/
+		if ((InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_RIGHT) == EMouseButtonState::MOUSE_DOWN ||
+			InputManager::GetMouseButtonState(EMouseButton::MOUSE_BUTTON_MIDDLE) == EMouseButtonState::MOUSE_DOWN))
 		{
 			m_is_controlled_by_keyboard_mouse = true;
 		}
