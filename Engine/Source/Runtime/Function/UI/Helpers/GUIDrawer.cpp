@@ -150,14 +150,15 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data : (__EMPTY_TEXTURE ), Vector2{ 75, 75 });
 
 	// TODO:
-	/*widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
+	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
 	{
 		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::TEXTURE)
 		{
 			if (auto resource = OVSERVICE(LitchiRuntime::TextureManager).GetResource(p_receivedData.first); resource)
 			{
 				p_data = resource;
-				widget.textureID.id = resource->id;
+				//widget.textureID.id = resource->id;
+				widget.renderTarget = resource;
 				if (p_updateNotifier)
 					p_updateNotifier->Invoke();
 			}
@@ -171,12 +172,11 @@ Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std
 	resetButton.ClickedEvent += [&widget, &p_data, p_updateNotifier]
 	{
 		p_data = nullptr;
-		widget.textureID.id = (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0);
+		//widget.textureID.id = (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0);
+		widget.renderTarget = __EMPTY_TEXTURE;
 		if (p_updateNotifier)
 			p_updateNotifier->Invoke();
-	};*/
-
-	
+	};
 
 	return widget;
 }
