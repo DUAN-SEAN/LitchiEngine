@@ -206,7 +206,6 @@ namespace LitchiRuntime
 						cmd_list->SetPipelineState(pso, needBeginRenderPass);
 						needBeginRenderPass = false;
 
-						draw_renderable(cmd_list, pso, rendererPath, entity);
 						// Set pass constants with cascade transform
 
 						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
@@ -219,6 +218,8 @@ namespace LitchiRuntime
 						);*/
 
 						PushPassConstants(cmd_list);
+
+						draw_renderable(cmd_list, pso, rendererPath, entity);
 					}
 				}
 				

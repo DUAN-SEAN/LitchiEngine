@@ -740,16 +740,20 @@ namespace LitchiRuntime
         LC_ASSERT(m_state == RHI_CommandListState::Recording);
         // determine if the pipeline is dirty
         pso.Prepare();
-        if (m_pso.GetHash() == pso.GetHash())
-        {
-            if (m_pso.GetHashDynamic() != pso.GetHashDynamic())
-            {
-                m_pso = pso; // copy over the pso it can carry some dynamic state (clear values, etc)
-                RenderPassBegin();
-            }
 
-            return;
-        }
+        
+            if (m_pso.GetHash() == pso.GetHash())
+            {
+                // if the index of the render target array has changed, we need to begin a new render pass
+                if (m_pso.render_target_array_index != pso.render_target_array_index)
+                {
+                    m_pso.render_target_array_index = pso.render_target_array_index;
+                    RenderPassBegin();
+                }
+
+                return;
+            }
+        
 
         EASY_BLOCK("GetOrCreatePipeline")
         // get (or create) a pipeline which matches the requested pipeline state  m_pso = pso;
