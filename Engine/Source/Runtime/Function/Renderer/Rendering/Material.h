@@ -218,6 +218,8 @@ namespace LitchiRuntime
 		int CalcValueSize();
 		void ClearMaterialRes();
 
+		void UpdateRenderData();
+
 		/* shader */
 		MaterialShader* m_shader = nullptr;
 
