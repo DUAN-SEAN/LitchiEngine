@@ -24,6 +24,7 @@
 #include "Runtime/Core/Tools/Utils/String.h"
 #include "Runtime/Function/UI/Plugins/DDTarget.h"
 #include "Runtime/Function/UI/Widgets/Texts/TextClickable.h"
+#include "Runtime/Resource/AssetManager.h"
 
 
 #define FILENAMES_CHARS LitchiEditor::AssetBrowser::__FILENAMES_CHARS
@@ -200,10 +201,7 @@ public:
 			auto& createShaderMenu = createMenu.CreateWidget<MenuList>("Shader");
 			auto& createMaterialMenu = createMenu.CreateWidget<MenuList>("Material");
 
-			auto& createStandardShaderMenu = createShaderMenu.CreateWidget<MenuList>("Standard template");
-			auto& createStandardPBRShaderMenu = createShaderMenu.CreateWidget<MenuList>("Standard PBR template");
-			auto& createUnlitShaderMenu = createShaderMenu.CreateWidget<MenuList>("Unlit template");
-			auto& createLambertShaderMenu = createShaderMenu.CreateWidget<MenuList>("Lambert template");
+			auto& createStandardShaderMenu = createShaderMenu.CreateWidget<MenuList>("Standard_Lambert template");
 
 			auto& createStandardMaterialMenu = createMaterialMenu.CreateWidget<MenuList>("Standard_Lambert");
 			auto& createStandardSkinMaterialMenu = createMaterialMenu.CreateWidget<MenuList>("Standard_Lambert_Skin");
@@ -219,16 +217,10 @@ public:
 			auto& createStandardTextMaterial = createStandardTextMaterialMenu.CreateWidget<InputText>("");
 
 			auto& createStandardShader = createStandardShaderMenu.CreateWidget<InputText>("");
-			auto& createStandardPBRShader = createStandardPBRShaderMenu.CreateWidget<InputText>("");
-			auto& createUnlitShader = createUnlitShaderMenu.CreateWidget<InputText>("");
-			auto& createLambertShader = createLambertShaderMenu.CreateWidget<InputText>("");
 
 			createFolderMenu.ClickedEvent += [&createFolder] { createFolder.content = ""; };
 			createSceneMenu.ClickedEvent += [&createScene] { createScene.content = ""; };
 			createStandardShaderMenu.ClickedEvent += [&createStandardShader] { createStandardShader.content = ""; };
-			createStandardPBRShaderMenu.ClickedEvent += [&createStandardPBRShader] { createStandardPBRShader.content = ""; };
-			createUnlitShaderMenu.ClickedEvent += [&createUnlitShader] { createUnlitShader.content = ""; };
-			createLambertShaderMenu.ClickedEvent += [&createLambertShader] { createLambertShader.content = ""; };
 			createStandardMaterialMenu.ClickedEvent += [&createStandardMaterial] { createStandardMaterial.content = ""; };
 			createStandardSkinMaterialMenu.ClickedEvent += [&createStandardSkinMaterial] { createStandardSkinMaterial.content = ""; };
 			createStandardImageMaterialMenu.ClickedEvent += [&createStandardImageMaterial] { createStandardImageMaterial.content = ""; };
@@ -259,14 +251,17 @@ public:
 
 				do
 				{
-					finalPath = filePath + (!fails ? newSceneName : newSceneName + " (" + std::to_string(fails) + ')') + ".ovscene";
+					finalPath = filePath + (!fails ? newSceneName : newSceneName + " (" + std::to_string(fails) + ')') + ".scene";
 
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::ofstream outfile(finalPath);
-				outfile << "" << std::endl; // Empty scene content
+				Scene* scene = new Scene(newSceneName);
+				scene->CreateGameObject("Light")->AddComponent<Light>();
+				scene->CreateGameObject("Camera")->AddComponent<Camera>();
+				AssetManager::SaveAsset(*scene, finalPath);
 
+				delete scene;
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
@@ -283,58 +278,7 @@ public:
 					++fails;
 				} while (std::filesystem::exists(finalPath));
 
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Standard.glsl", finalPath);
-				ItemAddedEvent.Invoke(finalPath);
-				Close();
-			};
-
-			createStandardPBRShader.EnterPressedEvent += [this](std::string newShaderName)
-			{
-				size_t fails = 0;
-				std::string finalPath;
-
-				do
-				{
-					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
-
-					++fails;
-				} while (std::filesystem::exists(finalPath));
-
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/StandardPBR.glsl", finalPath);
-				ItemAddedEvent.Invoke(finalPath);
-				Close();
-			};
-
-			createUnlitShader.EnterPressedEvent += [this](std::string newShaderName)
-			{
-				size_t fails = 0;
-				std::string finalPath;
-
-				do
-				{
-					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
-
-					++fails;
-				} while (std::filesystem::exists(finalPath));
-
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Unlit.glsl", finalPath);
-				ItemAddedEvent.Invoke(finalPath);
-				Close();
-			};
-
-			createLambertShader.EnterPressedEvent += [this](std::string newShaderName)
-			{
-				size_t fails = 0;
-				std::string finalPath;
-
-				do
-				{
-					finalPath = filePath + '/' + (!fails ? newShaderName : newShaderName + " (" + std::to_string(fails) + ')') + ".glsl";
-
-					++fails;
-				} while (std::filesystem::exists(finalPath));
-
-				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + "Shaders/Lambert.glsl", finalPath);
+				std::filesystem::copy_file(LitchiEditor::ApplicationEditor::Instance()->GetEngineAssetsPath() + ":Shaders/Forward/Standard.hlsl", finalPath);
 				ItemAddedEvent.Invoke(finalPath);
 				Close();
 			};
