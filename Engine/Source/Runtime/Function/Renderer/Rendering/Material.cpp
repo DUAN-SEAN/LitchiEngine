@@ -8,6 +8,7 @@
 #include "../RHI/RHI_TextureCube.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_InputLayout.h"
 #include "Runtime/Function/Renderer/RHI/RHI_Shader.h"
 #include "Runtime/Resource/AssetManager.h"
 #include "Runtime/Resource/ShaderManager.h"
@@ -22,6 +23,15 @@ namespace LitchiRuntime
 {
 	Material::Material() : IResource(ResourceType::Material)
 	{
+		m_object_name = "Material";
+		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName() + "CBuffer");
+	}
+
+	Material::~Material()
+	{
+		m_valueConstantBuffer = nullptr;
+		ClearMaterialRes();
+		delete m_value;
 	}
 
 	bool Material::LoadFromFile(const string& file_path)
@@ -193,6 +203,8 @@ namespace LitchiRuntime
 		{
 			m_uniformDataList[name] = std::make_any<RHI_Texture*>(texture);
 		}
+
+		m_isValueDirty = true;
 	}
 
 	void Material::SetShader(MaterialShader* shader)
@@ -218,13 +230,7 @@ namespace LitchiRuntime
 	{
 		if(m_isValueDirty)
 		{
-			// todo: 每帧只用更新一次
-			EASY_FUNCTION(profiler::colors::Brown200)
-			for (auto& uniform : m_uniformDataList)
-			{
-				UpdateValue(uniform.first);
-			}
-			m_isValueDirty = false;
+			DEBUG_LOG_WARN("GetValues Data is Dirty");
 		}
 		size = m_valueSize;
 
@@ -233,28 +239,12 @@ namespace LitchiRuntime
 
 	std::map<int, RHI_Texture*> Material::GetTextures4DescriptorSet()
 	{
-		std::map<int, RHI_Texture*> textureMap;
-		for (auto& uniform : m_uniformDataList)
-		{
-			auto name = uniform.first;
-			auto& descriptor = m_shader->GetTextureDescriptor(name);
-			if (descriptor.type == RHI_Descriptor_Type::Texture)
-			{
-				auto slot = descriptor.slot;
-				if(uniform.second.type() == typeid(RHI_Texture*))
-				{
-					textureMap[slot] = any_cast<RHI_Texture*>(uniform.second);
-				}
-			}
-		}
-
-		return textureMap;
+		return m_textureMap;
 	}
 
 	void Material::PostResourceModify()
 	{
-		// check shader is change
-		// if change rebuild material
+		m_isValueDirty = true;
 	}
 
 	void Material::PostResourceLoaded()
@@ -346,26 +336,9 @@ namespace LitchiRuntime
 			}
 		}
 
-		// init constantBuffer
-		uint32_t size;
-		auto value = GetValues4DescriptorSet(size);
-		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName()+"CBuffer");
-		m_valueConstantBuffer->Create(size,1);
-		m_valueConstantBuffer->ResetOffset();
-		m_valueConstantBuffer->Update(value);
-
 		// modify vertexType
 		m_shader->ChangeVertexType(m_materialRes->vertexType);
-	}
 
-	void Material::Tick()
-	{
-		m_isValueDirty = true;
-	}
-	
-	void Material::UpdateValue(const std::string& name)
-	{
-		EASY_FUNCTION(profiler::colors::Brown200)
 		// malloc value 
 		if (m_value == nullptr)
 		{
@@ -374,9 +347,65 @@ namespace LitchiRuntime
 			m_valueSize = size;
 			memset(m_value, 0, size);
 
-			DEBUG_LOG_INFO("UpdateValue Malloc Value size:{}", size);
+			DEBUG_LOG_INFO("SyncToDataBuffer Malloc Value size:{}", size);
 		}
 
+		// init constantBuffer
+		uint32_t size;
+		auto value = GetValues4DescriptorSet(size);
+		m_valueConstantBuffer->Create(size, 1);
+		m_valueConstantBuffer->ResetOffset();
+		m_valueConstantBuffer->Update(value);
+
+	}
+
+	void Material::Tick()
+	{
+		if(m_isValueDirty)
+		{
+			EASY_FUNCTION(profiler::colors::Brown200)
+
+			// update value buffer
+			for (auto& uniform : m_uniformDataList)
+			{
+				SyncToDataBuffer(uniform.first);
+			}
+
+			m_valueConstantBuffer->UpdateWithReset(m_value);
+
+			// update texture 
+			m_textureMap.clear();
+			for (auto& uniform : m_uniformDataList)
+			{
+				auto name = uniform.first;
+				auto& descriptor = m_shader->GetTextureDescriptor(name);
+				if (descriptor.type == RHI_Descriptor_Type::Texture)
+				{
+					int slot = descriptor.slot;
+					if (uniform.second.type() == typeid(RHI_Texture*))
+					{
+						m_textureMap[slot] = any_cast<RHI_Texture*>(uniform.second);
+					}
+				}
+			}
+
+			// update vertex type
+			if (m_shader->m_vertex_shader && m_shader->m_vertex_shader->GetInputLayout())
+			{
+				if (m_materialRes->vertexType != RHI_Vertex_Type::Undefined && m_materialRes->vertexType != m_shader->m_vertex_shader->GetInputLayout()->GetVertexType())
+				{
+					m_shader->ChangeVertexType(m_materialRes->vertexType);
+				}
+			}
+
+			m_isValueDirty = false;
+		}
+	}
+	
+	void Material::SyncToDataBuffer(const std::string& name)
+	{
+		EASY_FUNCTION(profiler::colors::Brown200)
+	
 		// check name is valid 
 		if (m_uniformDataList.find(name) == m_uniformDataList.end())
 		{
@@ -452,7 +481,7 @@ namespace LitchiRuntime
 		case UniformType::UNIFORM_Unknown:
 		default:
 		{
-			// DEBUG_LOG_ERROR("UpdateValue no support type name:{} type:{}", name, uniformType);
+			// DEBUG_LOG_ERROR("SyncToDataBuffer no support type name:{} type:{}", name, uniformType);
 			break;
 		}
 		}

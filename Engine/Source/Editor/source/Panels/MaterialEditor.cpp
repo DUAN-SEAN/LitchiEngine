@@ -15,19 +15,19 @@
 #include "Runtime/Resource/MaterialManager.h"
 
 
-void DrawHybridVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step, float p_min, float p_max)
+void DrawHybridVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier = nullptr)
 {
 	GUIDrawer::CreateTitle(p_root, p_name);
 
 	auto& rightSide = p_root.CreateWidget<LitchiRuntime::Group>();
 
 	auto& xyzWidget = rightSide.CreateWidget<DragMultipleScalars<float, 3>>(GUIDrawer::GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GUIDrawer::GetFormat<float>());
-	auto& xyzDispatcher = xyzWidget.AddPlugin<DataDispatcher<std::array<float, 3>>>();
+	auto& xyzDispatcher = xyzWidget.AddPlugin<DataDispatcher<std::array<float, 3>>>(p_updateNotifier);
 	xyzDispatcher.RegisterReference(reinterpret_cast<std::array<float, 3>&>(p_data));
 	xyzWidget.lineBreak = false;
 
 	auto& rgbWidget = rightSide.CreateWidget<ColorEdit>(false, Color{ p_data.x, p_data.y, p_data.z });
-	auto& rgbDispatcher = rgbWidget.AddPlugin<DataDispatcher<Color>>();
+	auto& rgbDispatcher = rgbWidget.AddPlugin<DataDispatcher<Color>>(p_updateNotifier);
 	rgbDispatcher.RegisterReference(reinterpret_cast<Color&>(p_data));
 	rgbWidget.enabled = false;
 	rgbWidget.lineBreak = false;
@@ -52,19 +52,19 @@ void DrawHybridVec3(WidgetContainer& p_root, const std::string& p_name, Vector3&
 	};
 }
 
-void DrawHybridVec4(WidgetContainer& p_root, const std::string& p_name, Vector4& p_data, float p_step, float p_min, float p_max)
+void DrawHybridVec4(WidgetContainer& p_root, const std::string& p_name, Vector4& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier = nullptr)
 {
 	GUIDrawer::CreateTitle(p_root, p_name);
 
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& xyzWidget = rightSide.CreateWidget<DragMultipleScalars<float, 4>>(GUIDrawer::GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GUIDrawer::GetFormat<float>());
-	auto& xyzDispatcher = xyzWidget.AddPlugin<DataDispatcher<std::array<float, 4>>>();
+	auto& xyzDispatcher = xyzWidget.AddPlugin<DataDispatcher<std::array<float, 4>>>(p_updateNotifier);
 	xyzDispatcher.RegisterReference(reinterpret_cast<std::array<float, 4>&>(p_data));
 	xyzWidget.lineBreak = false;
 
 	auto& rgbaWidget = rightSide.CreateWidget<ColorEdit>(true, Color{ p_data.x, p_data.y, p_data.z, p_data.w });
-	auto& rgbaDispatcher = rgbaWidget.AddPlugin<DataDispatcher<Color>>();
+	auto& rgbaDispatcher = rgbaWidget.AddPlugin<DataDispatcher<Color>>(p_updateNotifier);
 	rgbaDispatcher.RegisterReference(reinterpret_cast<Color&>(p_data));
 	rgbaWidget.enabled = false;
 	rgbaWidget.lineBreak = false;
@@ -110,6 +110,7 @@ LitchiEditor::MaterialEditor::MaterialEditor
 
 	m_materialDroppedEvent	+= std::bind(&MaterialEditor::OnMaterialDropped, this);
 	m_shaderDroppedEvent	+= std::bind(&MaterialEditor::OnShaderDropped, this);
+	m_shaderDataChangedEvent	+= std::bind(&MaterialEditor::OnShaderDataChanged, this);
 }
 
 void LitchiEditor::MaterialEditor::Refresh()
@@ -194,6 +195,14 @@ void LitchiEditor::MaterialEditor::OnShaderDropped()
 	else
 	{
 		m_shaderSettingsColumns->RemoveAllWidgets();
+	}
+}
+
+void LitchiEditor::MaterialEditor::OnShaderDataChanged()
+{
+	if(m_target)
+	{
+		m_target->PostResourceModify();
 	}
 }
 
@@ -307,6 +316,8 @@ std::string UniformFormat(const std::string& p_string)
 void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 {
 	m_shaderSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
+
+	// Draw VertexType
 	auto getString = [this]
 		{
 			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().value_to_name(m_target->GetMaterialRes()->vertexType);
@@ -324,7 +335,7 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 	{
 		enumValueList.push_back(enumName.to_string());
 	}
-	GUIDrawer::DrawEnum(*m_shaderSettingsColumns, "VertexType", enumValueList, getString, setString);
+	GUIDrawer::DrawEnum(*m_shaderSettingsColumns, "VertexType", enumValueList, getString, setString, &m_shaderDataChangedEvent);
 
 	std::multimap<int, std::pair<std::string, std::any*>> sortedUniformsData;
 
@@ -370,13 +381,13 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 		{
 			switch (uniformData.type)
 			{
-			case UniformType::UNIFORM_BOOL:			GUIDrawer::DrawBoolean(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<bool&>(*info.second));																	break;
-			case UniformType::UNIFORM_INT:			GUIDrawer::DrawScalar<int>(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<int&>(*info.second));																break;
-			case UniformType::UNIFORM_FLOAT:		GUIDrawer::DrawScalar<float>(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<float&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);		break;
-			case UniformType::UNIFORM_FLOAT_VEC2:	GUIDrawer::DrawVec2(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector2&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);	break;
-			case UniformType::UNIFORM_FLOAT_VEC3:	DrawHybridVec3(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector3&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);			break;
-			case UniformType::UNIFORM_FLOAT_VEC4:	DrawHybridVec4(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector4&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);			break;
-			case UniformType::UNIFORM_TEXTURE:	GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second));																break;
+			case UniformType::UNIFORM_BOOL:			GUIDrawer::DrawBoolean(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<bool&>(*info.second), &m_shaderDataChangedEvent);																	break;
+			case UniformType::UNIFORM_INT:			GUIDrawer::DrawScalar<int>(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<int&>(*info.second),10.f, std::numeric_limits<int>::min(), std::numeric_limits<int>::max(), &m_shaderDataChangedEvent);break;
+			case UniformType::UNIFORM_FLOAT:		GUIDrawer::DrawScalar<float>(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<float&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT, &m_shaderDataChangedEvent);		break;
+			case UniformType::UNIFORM_FLOAT_VEC2:	GUIDrawer::DrawVec2(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector2&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT, &m_shaderDataChangedEvent);	break;
+			case UniformType::UNIFORM_FLOAT_VEC3:	DrawHybridVec3(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector3&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT, &m_shaderDataChangedEvent);			break;
+			case UniformType::UNIFORM_FLOAT_VEC4:	DrawHybridVec4(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector4&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT, &m_shaderDataChangedEvent);			break;
+			case UniformType::UNIFORM_TEXTURE:	GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second), &m_shaderDataChangedEvent);																break;
 			default: 
 				DEBUG_LOG_ERROR("no support uniform draw type:{}", uniformData.type)
 				;
@@ -386,7 +397,7 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 			auto textureDesc = m_target->GetShader()->GetTextureDescriptor(info.first);
 			if (textureDesc.type == RHI_Descriptor_Type::Texture)
 			{
-				GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second));
+				GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second), &m_shaderDataChangedEvent);
 			}
 		}
 	}

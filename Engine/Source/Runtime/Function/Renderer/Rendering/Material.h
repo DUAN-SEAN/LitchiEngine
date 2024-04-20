@@ -178,7 +178,7 @@ namespace LitchiRuntime
 	{
 	public:
 		Material();
-		~Material() = default;
+		~Material();
 
 		//= IResource ===========================================
 		bool LoadFromFile(const std::string& file_path) override;
@@ -214,7 +214,7 @@ namespace LitchiRuntime
 
 	private:
 
-		void UpdateValue(const std::string& name);
+		void SyncToDataBuffer(const std::string& name);
 		int CalcValueSize();
 		void ClearMaterialRes();
 
@@ -227,6 +227,7 @@ namespace LitchiRuntime
 		std::map<std::string, std::any> m_uniformDataList;
 
 		/* global cbuffer */
+		std::map<int, RHI_Texture*> m_textureMap;
 		void* m_value = nullptr;
 		int m_valueSize = 0;
 
@@ -245,7 +246,7 @@ namespace LitchiRuntime
 		if (m_uniformDataList.find(name) != m_uniformDataList.end())
 		{
 			m_uniformDataList[name] = std::any(value);
-			UpdateValue(name);
+			m_isValueDirty = true;
 		}
 	}
 

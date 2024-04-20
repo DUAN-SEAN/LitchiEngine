@@ -60,6 +60,7 @@ namespace LitchiEditor
 	private:
 		void OnMaterialDropped();
 		void OnShaderDropped();
+		void OnShaderDataChanged();
 
 		void CreateHeaderButtons();
 		void CreateMaterialSelector();
@@ -79,6 +80,7 @@ namespace LitchiEditor
 
 		Event<> m_materialDroppedEvent;
 		Event<> m_shaderDroppedEvent;
+		Event<> m_shaderDataChangedEvent;
 
 		Group* m_settings			= nullptr;
 		Group* m_materialSettings	= nullptr;

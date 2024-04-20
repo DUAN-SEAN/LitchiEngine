@@ -641,16 +641,12 @@ namespace LitchiRuntime
 	void Renderer::UpdateMaterial(RHI_CommandList* cmd_list, Material* material)
 	{
 		EASY_BLOCK("SetMaterialGlobalBuffer")
-			// todo: if material state change, maybe not update to shader !
-			uint32_t size;
-		auto cbuffer = material->GetValuesCBuffer().get();
-		cbuffer->UpdateWithReset(material->GetValues4DescriptorSet(size));
 		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
 		EASY_END_BLOCK
 
 		EASY_BLOCK("SetTextures")
-		auto textureMap = material->GetTextures4DescriptorSet();
-		for (auto texture_map : textureMap)
+		const auto& textureMap = material->GetTextures4DescriptorSet();
+		for (const auto& texture_map : textureMap)
 		{
 			cmd_list->SetTexture(texture_map.first, texture_map.second);
 		}

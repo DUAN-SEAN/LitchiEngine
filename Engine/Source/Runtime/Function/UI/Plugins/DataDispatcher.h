@@ -4,6 +4,7 @@
 #include <functional>
 
 #include "Runtime/Function/UI//Plugins/IPlugin.h"
+#include "Runtime/Core/Tools/Eventing/Event.h"
 
 #define TRY_GATHER(type, output)	if (auto plugin = GetPlugin<LitchiRuntime::DataDispatcher<type>>(); plugin) output = plugin->Gather();
 #define TRY_PROVIDE(type, output)	if (auto plugin = GetPlugin<LitchiRuntime::DataDispatcher<type>>(); plugin) plugin->Provide(output);
@@ -18,6 +19,11 @@ namespace LitchiRuntime
 	class DataDispatcher : public LitchiRuntime::IPlugin
 	{
 	public:
+
+		DataDispatcher() = default;
+
+		DataDispatcher(Event<>* p_updateNotifier);
+
 		/**
 		* Register a reference
 		* @param p_reference
@@ -58,6 +64,10 @@ namespace LitchiRuntime
 				else
 					m_provider(p_data);
 
+				if(m_updateNotifier)
+				{
+					m_updateNotifier->Invoke();
+				}
 				m_valueChanged = false;
 			}
 		}
@@ -88,5 +98,12 @@ namespace LitchiRuntime
 		T* m_dataPointer = nullptr;
 		std::function<void(T)> m_provider;
 		std::function<T(void)> m_gatherer;
+		Event<>* m_updateNotifier = nullptr;
 	};
+
+	template<typename T>
+	inline DataDispatcher<T>::DataDispatcher(Event<>* p_updateNotifier)
+	{
+		m_updateNotifier = p_updateNotifier;
+	}
 }

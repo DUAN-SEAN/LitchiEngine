@@ -38,12 +38,12 @@ namespace LitchiRuntime
 		static void CreateTitle(WidgetContainer& p_root, const std::string& p_name);
 
 		template <typename T>
-		static void DrawScalar(WidgetContainer& p_root, const std::string& p_name, T& p_data, float p_step = 1.f, T p_min = std::numeric_limits<T>::min(), T p_max = std::numeric_limits<T>::max());
-		static void DrawBoolean(WidgetContainer& p_root, const std::string& p_name, bool& p_data);
-		static void DrawVec2(WidgetContainer& p_root, const std::string& p_name, Vector2& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
-		static void DrawVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
-		static void DrawVec4(WidgetContainer& p_root, const std::string& p_name, Vector4& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
-		static void DrawQuat(WidgetContainer& p_root, const std::string& p_name, Quaternion& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
+		static void DrawScalar(WidgetContainer& p_root, const std::string& p_name, T& p_data, float p_step = 1.f, T p_min = std::numeric_limits<T>::min(), T p_max = std::numeric_limits<T>::max(), Event<>* p_updateNotifier = nullptr);
+		static void DrawBoolean(WidgetContainer& p_root, const std::string& p_name, bool& p_data, Event<>* p_updateNotifier = nullptr);
+		static void DrawVec2(WidgetContainer& p_root, const std::string& p_name, Vector2& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT, Event<>* p_updateNotifier = nullptr);
+		static void DrawVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT, Event<>* p_updateNotifier = nullptr);
+		static void DrawVec4(WidgetContainer& p_root, const std::string& p_name, Vector4& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT, Event<>* p_updateNotifier = nullptr);
+		static void DrawQuat(WidgetContainer& p_root, const std::string& p_name, Quaternion& p_data, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT, Event<>* p_updateNotifier = nullptr);
 		static void DrawString(WidgetContainer& p_root, const std::string& p_name, std::string& p_data);
 		static void DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha = false);
 		static Text& DrawMesh(WidgetContainer& p_root, const std::string& p_name, Mesh*& p_data, Event<>* p_updateNotifier = nullptr);
@@ -54,7 +54,7 @@ namespace LitchiRuntime
 		// static Text& DrawAsset(WidgetContainer& p_root, const std::string& p_name, std::string& p_data, Event<>* p_updateNotifier = nullptr);
 
 		template <typename T>
-		static void DrawScalar(WidgetContainer& p_root, const std::string& p_name, std::function<T(void)> p_gatherer, std::function<void(T)> p_provider, float p_step = 1.f, T p_min = std::numeric_limits<T>::min(), T p_max = std::numeric_limits<T>::max());
+		static void DrawScalar(WidgetContainer& p_root, const std::string& p_name, std::function<T(void)> p_gatherer, std::function<void(T)> p_provider, float p_step = 1.f, T p_min = std::numeric_limits<T>::min(), T p_max = std::numeric_limits<T>::max(), Event<>* p_updateNotifier = nullptr);
 		static void DrawBoolean(WidgetContainer& p_root, const std::string& p_name, std::function<bool(void)> p_gatherer, std::function<void(bool)> p_provider);
 		static void DrawVec2(WidgetContainer& p_root, const std::string& p_name, std::function<Vector2(void)> p_gatherer, std::function<void(Vector2)> p_provider, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
 		static void DrawVec3(WidgetContainer& p_root, const std::string& p_name, std::function<Vector3(void)> p_gatherer, std::function<void(Vector3)> p_provider, float p_step = 1.f, float p_min = _MIN_FLOAT, float p_max = _MAX_FLOAT);
@@ -70,7 +70,7 @@ namespace LitchiRuntime
 		static void DrawInputField4Float(WidgetContainer& p_root, const std::string& p_name, std::function<float(void)> p_gatherer, std::function<void(float)> p_provider);
 		static void DrawInputField4Double(WidgetContainer& p_root, const std::string& p_name, std::function<double(void)> p_gatherer, std::function<void(double)> p_provider);
 
-		static void DrawEnum(WidgetContainer& p_root, const std::string& p_name, std::vector<std::string> enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider);
+		static void DrawEnum(WidgetContainer& p_root, const std::string& p_name, std::vector<std::string> enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier = nullptr);
 
 		template <typename T>
 		static ImGuiDataType_ GetDataType();
