@@ -40,12 +40,12 @@ void LitchiRuntime::GUIDrawer::ProvideEmptyTexture(RHI_Texture& p_emptyTexture)
 	__EMPTY_TEXTURE = &p_emptyTexture;
 }
 
-void LitchiRuntime::GUIDrawer::CreateTitle(WidgetContainer& p_root, const std::string & p_name)
+void LitchiRuntime::GUIDrawer::CreateTitle(WidgetContainer& p_root, const std::string& p_name)
 {
 	p_root.CreateWidget<TextColored>(p_name, TitleColor);
 }
 
-void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer & p_root, const std::string & p_name, bool & p_data, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer& p_root, const std::string& p_name, bool& p_data, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<CheckBox>();
@@ -53,7 +53,7 @@ void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer & p_root, const std::
 	dispatcher.RegisterReference(reinterpret_cast<bool&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, Vector2 & p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer& p_root, const std::string& p_name, Vector2& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 2>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -61,7 +61,7 @@ void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 2>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, Vector3 & p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer& p_root, const std::string& p_name, Vector3& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 3>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -69,7 +69,7 @@ void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 3>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, Vector4& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer& p_root, const std::string& p_name, Vector4& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -77,7 +77,7 @@ void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 4>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, Quaternion & p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer& p_root, const std::string& p_name, Quaternion& p_data, float p_step, float p_min, float p_max, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
@@ -85,7 +85,7 @@ void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::str
 	dispatcher.RegisterReference(reinterpret_cast<std::array<float, 4>&>(p_data));
 }
 
-void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::string & p_name, std::string & p_data)
+void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer& p_root, const std::string& p_name, std::string& p_data)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<InputText>("");
@@ -93,7 +93,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 	dispatcher.RegisterReference(p_data);
 }
 
-void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::string & p_name, Color & p_color, bool p_hasAlpha)
+void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer& p_root, const std::string& p_name, Color& p_color, bool p_hasAlpha)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<ColorEdit>(p_hasAlpha);
@@ -101,7 +101,7 @@ void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::st
 	dispatcher.RegisterReference(p_color);
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::Mesh*& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::Mesh*& p_data, Event<>* p_updateNotifier)
 {
 	// TODO:
 	CreateTitle(p_root, p_name);
@@ -140,52 +140,52 @@ Text& LitchiRuntime::GUIDrawer::DrawMesh(WidgetContainer & p_root, const std::st
 	return widget;
 }
 
-Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer & p_root, const std::string & p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier)
+Image& LitchiRuntime::GUIDrawer::DrawTexture(WidgetContainer& p_root, const std::string& p_name, LitchiRuntime::RHI_Texture*& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
 	std::string displayedText = (p_data ? p_data->GetResourceFilePath() : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
-	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data : (__EMPTY_TEXTURE ), Vector2{ 75, 75 });
+	auto& widget = rightSide.CreateWidget<Image>(p_data ? p_data : (__EMPTY_TEXTURE), Vector2{ 75, 75 });
 
 	// TODO:
 	widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [&widget, &p_data, p_updateNotifier](auto p_receivedData)
-	{
-		if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::TEXTURE)
 		{
-			if (auto resource = OVSERVICE(LitchiRuntime::TextureManager).GetResource(p_receivedData.first); resource)
+			if (PathParser::GetFileType(p_receivedData.first) == PathParser::EFileType::TEXTURE)
 			{
-				p_data = resource;
-				//widget.textureID.id = resource->id;
-				widget.renderTarget = resource;
-				if (p_updateNotifier)
-					p_updateNotifier->Invoke();
+				if (auto resource = OVSERVICE(LitchiRuntime::TextureManager).GetResource(p_receivedData.first); resource)
+				{
+					p_data = resource;
+					//widget.textureID.id = resource->id;
+					widget.renderTarget = resource;
+					if (p_updateNotifier)
+						p_updateNotifier->Invoke();
+				}
 			}
-		}
-	};
+		};
 
 	widget.lineBreak = false;
 
 	auto& resetButton = rightSide.CreateWidget<Button>("Clear");
 	resetButton.idleBackgroundColor = ClearButtonColor;
 	resetButton.ClickedEvent += [&widget, &p_data, p_updateNotifier]
-	{
-		p_data = nullptr;
-		//widget.textureID.id = (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0);
-		widget.renderTarget = __EMPTY_TEXTURE;
-		if (p_updateNotifier)
-			p_updateNotifier->Invoke();
-	};
+		{
+			p_data = nullptr;
+			//widget.textureID.id = (__EMPTY_TEXTURE ? __EMPTY_TEXTURE->id : 0);
+			widget.renderTarget = __EMPTY_TEXTURE;
+			if (p_updateNotifier)
+				p_updateNotifier->Invoke();
+		};
 
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::string & p_name, MaterialShader*& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer& p_root, const std::string& p_name, MaterialShader*& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
-	std::string displayedText = (p_data ? p_data->m_shaderPath: std::string("Empty"));
+	std::string displayedText = (p_data ? p_data->m_shaderPath : std::string("Empty"));
 	auto& rightSide = p_root.CreateWidget<Group>();
 
 	auto& widget = rightSide.CreateWidget<Text>(displayedText);
@@ -219,7 +219,7 @@ Text& LitchiRuntime::GUIDrawer::DrawShader(WidgetContainer & p_root, const std::
 	return widget;
 }
 
-Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std::string & p_name, Material *& p_data, Event<>* p_updateNotifier)
+Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer& p_root, const std::string& p_name, Material*& p_data, Event<>* p_updateNotifier)
 {
 	CreateTitle(p_root, p_name);
 
@@ -248,12 +248,12 @@ Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std
 	auto& resetButton = rightSide.CreateWidget<ButtonSmall>("Clear");
 	resetButton.idleBackgroundColor = ClearButtonColor;
 	resetButton.ClickedEvent += [&widget, &p_data, p_updateNotifier]
-	{
-		p_data = nullptr;
-		widget.content = "Empty";
-		if (p_updateNotifier)
-			p_updateNotifier->Invoke();
-	};
+		{
+			p_data = nullptr;
+			widget.content = "Empty";
+			if (p_updateNotifier)
+				p_updateNotifier->Invoke();
+		};
 
 	return widget;
 }
@@ -328,96 +328,96 @@ Text& LitchiRuntime::GUIDrawer::DrawMaterial(WidgetContainer & p_root, const std
 //    return widget;
 //}
 
-void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer & p_root, const std::string & p_name, std::function<bool(void)> p_gatherer, std::function<void(bool)> p_provider)
+void LitchiRuntime::GUIDrawer::DrawBoolean(WidgetContainer& p_root, const std::string& p_name, std::function<bool(void)> p_gatherer, std::function<void(bool)> p_provider)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<CheckBox>();
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<bool>>();
 
 	dispatcher.RegisterGatherer([p_gatherer]()
-	{
-		bool value = p_gatherer();
-		return reinterpret_cast<bool&>(value);
-	});
+		{
+			bool value = p_gatherer();
+			return reinterpret_cast<bool&>(value);
+		});
 
 	dispatcher.RegisterProvider([p_provider](bool p_value)
-	{
-		p_provider(reinterpret_cast<bool&>(p_value));
-	});
+		{
+			p_provider(reinterpret_cast<bool&>(p_value));
+		});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer & p_root, const std::string & p_name, std::function<Vector2(void)> p_gatherer, std::function<void(Vector2)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec2(WidgetContainer& p_root, const std::string& p_name, std::function<Vector2(void)> p_gatherer, std::function<void(Vector2)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 2>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<std::array<float, 2>>>();
-	
+
 	dispatcher.RegisterGatherer([p_gatherer]()
-	{
-		Vector2 value = p_gatherer();
-		return reinterpret_cast<const std::array<float, 2>&>(value);
-	});
+		{
+			Vector2 value = p_gatherer();
+			return reinterpret_cast<const std::array<float, 2>&>(value);
+		});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 2> p_value)
-	{
-		p_provider(reinterpret_cast<Vector2&>(p_value));
-	});
+		{
+			p_provider(reinterpret_cast<Vector2&>(p_value));
+		});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer & p_root, const std::string & p_name, std::function<Vector3(void)> p_gatherer, std::function<void(Vector3)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec3(WidgetContainer& p_root, const std::string& p_name, std::function<Vector3(void)> p_gatherer, std::function<void(Vector3)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 3>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<std::array<float, 3>>>();
 
 	dispatcher.RegisterGatherer([p_gatherer]()
-	{
-		Vector3 value = p_gatherer();
-		return reinterpret_cast<const std::array<float, 3>&>(value);
-	});
+		{
+			Vector3 value = p_gatherer();
+			return reinterpret_cast<const std::array<float, 3>&>(value);
+		});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 3> p_value)
-	{
-		p_provider(reinterpret_cast<Vector3&>(p_value));
-	});
+		{
+			p_provider(reinterpret_cast<Vector3&>(p_value));
+		});
 }
 
-void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer & p_root, const std::string & p_name, std::function<Vector4(void)> p_gatherer, std::function<void(Vector4)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawVec4(WidgetContainer& p_root, const std::string& p_name, std::function<Vector4(void)> p_gatherer, std::function<void(Vector4)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<std::array<float, 4>>>();
-	
+
 	dispatcher.RegisterGatherer([p_gatherer]()
-	{
-		Vector4 value = p_gatherer();
-		return reinterpret_cast<const std::array<float, 4>&>(value);
-	});
+		{
+			Vector4 value = p_gatherer();
+			return reinterpret_cast<const std::array<float, 4>&>(value);
+		});
 
 	dispatcher.RegisterProvider([p_provider](std::array<float, 4> p_value)
-	{
-		p_provider(reinterpret_cast<Vector4&>(p_value));
-	});
+		{
+			p_provider(reinterpret_cast<Vector4&>(p_value));
+		});
 }
 
-void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer & p_root, const std::string & p_name, std::function<Quaternion(void)> p_gatherer, std::function<void(Quaternion)> p_provider, float p_step, float p_min, float p_max)
+void LitchiRuntime::GUIDrawer::DrawQuat(WidgetContainer& p_root, const std::string& p_name, std::function<Quaternion(void)> p_gatherer, std::function<void(Quaternion)> p_provider, float p_step, float p_min, float p_max)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<DragMultipleScalars<float, 4>>(GetDataType<float>(), p_min, p_max, 0.f, p_step, "", GetFormat<float>());
 	auto& dispatcher = widget.AddPlugin<DataDispatcher<std::array<float, 4>>>();
-	
+
 	dispatcher.RegisterGatherer([p_gatherer]()
-	{
-		Quaternion value = p_gatherer();
-		return reinterpret_cast<const std::array<float, 4>&>(value);
-	});
+		{
+			Quaternion value = p_gatherer();
+			return reinterpret_cast<const std::array<float, 4>&>(value);
+		});
 
 	dispatcher.RegisterProvider([&dispatcher, p_provider](std::array<float, 4> p_value)
-	{
-		auto& rotation = reinterpret_cast<Quaternion&>(p_value);
-		rotation.Normalize();
-		p_provider(rotation);
-	});
+		{
+			auto& rotation = reinterpret_cast<Quaternion&>(p_value);
+			rotation.Normalize();
+			p_provider(rotation);
+		});
 }
 
 void LitchiRuntime::GUIDrawer::DrawDDString(WidgetContainer& p_root, const std::string& p_name,
@@ -432,13 +432,13 @@ void LitchiRuntime::GUIDrawer::DrawDDString(WidgetContainer& p_root, const std::
 
 	auto& ddTarget = widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>(p_identifier);
 	ddTarget.DataReceivedEvent += [&widget, &dispatcher](std::pair<std::string, Group*> p_data)
-	{
-		widget.content = p_data.first;
-		dispatcher.NotifyChange();
-	};
+		{
+			widget.content = p_data.first;
+			dispatcher.NotifyChange();
+		};
 }
 
-void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::string & p_name, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider)
+void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer& p_root, const std::string& p_name, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<InputText>("");
@@ -447,7 +447,7 @@ void LitchiRuntime::GUIDrawer::DrawString(WidgetContainer & p_root, const std::s
 	dispatcher.RegisterProvider(p_provider);
 }
 
-void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer & p_root, const std::string & p_name, std::function<Color(void)> p_gatherer, std::function<void(Color)> p_provider, bool p_hasAlpha)
+void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer& p_root, const std::string& p_name, std::function<Color(void)> p_gatherer, std::function<void(Color)> p_provider, bool p_hasAlpha)
 {
 	CreateTitle(p_root, p_name);
 	auto& widget = p_root.CreateWidget<ColorEdit>(p_hasAlpha);
@@ -500,30 +500,24 @@ void LitchiRuntime::GUIDrawer::DrawInputField4Double(WidgetContainer& p_root, co
 	dispatcher.RegisterProvider(p_provider);
 }
 
-void LitchiRuntime::GUIDrawer::DrawEnum(WidgetContainer& p_root, const std::string& p_name, std::vector<std::string> enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier /*= nullptr*/)
+void LitchiRuntime::GUIDrawer::DrawEnum(WidgetContainer& p_root, const std::string& p_name, const std::vector<std::string>& enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier /*= nullptr*/)
 {
 	CreateTitle(p_root, p_name);
 	auto currName = p_gatherer();
-	auto& widget = p_root.CreateWidget<MenuList>(currName);
-	for (auto enumName : enumValueList)
+	auto& menuList = p_root.CreateWidget<MenuList>(currName, false);
+	for (const auto& enumName : enumValueList)
 	{
 		bool isSelect = enumName == currName;
-		auto& menuItem = widget.CreateWidget<MenuItem>(enumName,"",false,isSelect);
-	/*	auto& dispatcher = menuItem.AddPlugin<DataDispatcher<std::string>>();
-		dispatcher.RegisterGatherer(p_gatherer);
-		dispatcher.RegisterProvider(p_provider);*/
-		menuItem.ClickedEvent += [&widget,p_provider, enumName,p_updateNotifier]
-		{
-			widget.name = enumName;
-			p_provider(enumName);
-			if(p_updateNotifier)
+		auto& menuItem = menuList.CreateWidget<MenuItem>(enumName, "", false, isSelect);
+		menuItem.ClickedEvent += [&menuList, p_provider, enumName, p_updateNotifier]
 			{
-				p_updateNotifier->Invoke();
-			}
-		};
-		//auto& dispatcher = widget.AddPlugin<DataDispatcher<std::string>>();
-		//dispatcher.RegisterGatherer(p_gatherer);
-		//dispatcher.RegisterProvider(p_provider);
+				menuList.name = enumName;
+				p_provider(enumName);
+				if (p_updateNotifier)
+				{
+					p_updateNotifier->Invoke();
+				}
+			};
 	}
 
 }

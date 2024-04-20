@@ -487,7 +487,7 @@ namespace LitchiRuntime
 		cmd_list->EndMarker();
 	}
 
-	void Renderer::Pass_Grid(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	void Renderer::Pass_GridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		// acquire resources
 		RHI_Shader* shader_v = GetShader(Renderer_Shader::grid_v).get();
@@ -530,55 +530,109 @@ namespace LitchiRuntime
 		cmd_list->EndTimeblock();
 	}
 
-	void Renderer::Pass_DebugGridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	void Renderer::Pass_IconPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& rendererPathBufferData)
 	{
-		RHI_Shader* shader_v = GetShader(Renderer_Shader::line_v).get();
-		RHI_Shader* shader_p = GetShader(Renderer_Shader::line_p).get();
 
 		auto camera = rendererPath->GetRenderCamera();
-		auto grid = GetStandardMesh(Renderer_MeshType::Grid);
+		if(camera==nullptr)
+		{
+			return;
+		}
 
-		// define the pipeline state
+		// acquire shaders
+		RHI_Shader* shader_v = GetShader(Renderer_Shader::quad_v).get();
+		RHI_Shader* shader_p = GetShader(Renderer_Shader::quad_p).get();
+		if (!shader_v->IsCompiled() || !shader_p->IsCompiled())
+			return;
+
+		// acquire entities
+		auto& lights = rendererPath->GetRenderables()[Renderer_Entity::Light];
+		auto& cameras = rendererPath->GetRenderables()[Renderer_Entity::Camera];
+		auto& audio_sources = rendererPath->GetRenderables()[Renderer_Entity::AudioSource];
+		if ((lights.empty() && audio_sources.empty())&& cameras.empty()|| !rendererPath->GetRenderCamera())
+			return;
+
+		cmd_list->BeginTimeblock("icons");
+
+		// define pipeline state
 		static RHI_PipelineState pso;
 		pso.shader_vertex = shader_v;
 		pso.shader_pixel = shader_p;
-		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_none).get();
+		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Off).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
-		pso.clear_color[0] = rhi_color_load;
-		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
-		pso.primitive_topology = RHI_PrimitiveTopology::LineList;
-
-		cmd_list->BeginMarker("DebugGridPass");
 
 		// set pipeline state
-		pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Read).get();
+		cmd_list->SetPipelineState(pso);
 
-		cmd_list->SetPipelineState(pso,true);
-		// push pass constants
-		{
-			m_cb_pass_cpu.set_resolution_out(GetResolutionRender());
-			if (camera)
+		auto draw_icon = [&cmd_list, &rendererPathBufferData, camera](GameObject* entity, RHI_Texture* texture)
 			{
-				// To get the grid to feel infinite, it has to follow the camera,
-				// but only by increments of the grid's spacing size. This gives the illusion 
-				// that the grid never moves and if the grid is large enough, the user can't tell.
-				const float grid_spacing = 1.0f;
-				const Vector3 translation = Vector3
-				(
-					static_cast<int>(camera->GetPosition().x / grid_spacing) * grid_spacing,
-					0.0f,
-					static_cast<int>(camera->GetPosition().z / grid_spacing) * grid_spacing
-				);
+				const Vector3 pos_world = entity->GetComponent<Transform>()->GetPosition();
+				const Vector3 pos_world_camera = camera->GetPosition();
+				const Vector3 camera_to_light = (pos_world - pos_world_camera).Normalized();
+				const float v_dot_l = Vector3::Dot(camera->GetForward(), camera_to_light);
 
-				m_cb_pass_cpu.transform = Matrix::CreateScale(grid_spacing) * Matrix::CreateTranslation(translation);
-			}
-			PushPassConstants(cmd_list);
+				// only draw if it's inside our view
+				if (v_dot_l > 0.5f)
+				{
+					// compute transform
+					{
+						// use the distance from the camera to scale the icon, this will
+						// cancel out perspective scaling, hence keeping the icon scale constant
+						const float distance = (pos_world_camera - pos_world).Length();
+						const float scale = distance * 0.04f;
+
+						// 1st rotation: The quad's normal is parallel to the world's Y axis, so we rotate to make it camera facing
+						Quaternion rotation_reorient_quad = Quaternion::FromEulerAngles(-90.0f, 0.0f, 0.0f);
+						// 2nd rotation: Rotate the camera facing quad with the camera, so that it remains a camera facing quad
+						Quaternion rotation_camera_billboard = Quaternion::FromLookRotation(pos_world - pos_world_camera);
+
+						Matrix transform = Matrix(pos_world, rotation_camera_billboard * rotation_reorient_quad, scale);
+
+						// set transform
+						m_cb_pass_cpu.transform = transform * rendererPathBufferData.view_projection_unjittered;
+						cmd_list->PushConstants(m_cb_pass_cpu);
+					}
+
+					// draw rectangle
+					cmd_list->SetTexture(Renderer_BindingsSrv::tex, texture);
+					cmd_list->SetBufferVertex(GetStandardMesh(Renderer_MeshType::Quad)->GetVertexBuffer());
+					cmd_list->SetBufferIndex(GetStandardMesh(Renderer_MeshType::Quad)->GetIndexBuffer());
+					cmd_list->DrawIndexed(6);
+				}
+			};
+
+		// draw audio source icons
+		for (GameObject* entity : audio_sources)
+		{
+			draw_icon(entity, GetStandardTexture(Renderer_StandardTexture::Gizmo_audio_source).get());
 		}
-		cmd_list->SetBufferVertex(grid->GetVertexBuffer());
-		cmd_list->Draw(grid->GetVertexCount());
-		cmd_list->EndMarker();
 
+		// draw audio source icons
+		for (GameObject* entity : cameras)
+		{
+			draw_icon(entity, GetStandardTexture(Renderer_StandardTexture::Gizmo_camera).get());
+		}
+
+		// draw light icons
+		for (GameObject* entity : lights)
+		{
+			RHI_Texture* texture = nullptr;
+
+			// light can be null if it just got removed and our buffer doesn't update till the next frame
+			if (auto light = entity->GetComponent<Light>())
+			{
+				// get the texture
+				if (light->GetLightType() == LightType::Directional) texture = GetStandardTexture(Renderer_StandardTexture::Gizmo_light_directional).get();
+				else if (light->GetLightType() == LightType::Point)  texture = GetStandardTexture(Renderer_StandardTexture::Gizmo_light_point).get();
+				else if (light->GetLightType() == LightType::Spot)   texture = GetStandardTexture(Renderer_StandardTexture::Gizmo_light_spot).get();
+			}
+
+			draw_icon(entity, texture);
+		}
+
+		cmd_list->EndTimeblock();
 	}
 
 	void Renderer::Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath)

@@ -198,7 +198,9 @@ namespace LitchiRuntime
         Gizmo_light_point,
         Gizmo_light_spot,
         Gizmo_audio_source,
-        SkyBox
+        Gizmo_camera,
+        SkyBox,
+        Max
     };
 
     enum class Renderer_MeshType

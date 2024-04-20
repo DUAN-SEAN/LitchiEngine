@@ -381,9 +381,9 @@ namespace LitchiRuntime
 			Pass_UIPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
-			EASY_BLOCK("Pass_DebugGridPass")
-			//Pass_DebugGridPass(cmd_list, rendererPath); 
-			Pass_Grid(cmd_list, rendererPath);
+			EASY_BLOCK("Pass_Debug_Pass")
+			Pass_GridPass(cmd_list, rendererPath);
+			Pass_IconPass(cmd_list, rendererPath, rendererPathBufferData);
 			EASY_END_BLOCK
 
 

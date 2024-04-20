@@ -45,7 +45,7 @@ namespace LitchiRuntime
 		array<shared_ptr<RHI_StructuredBuffer>, 2>                                        structured_buffers;
 
         // asset resources
-		array<shared_ptr<RHI_Texture>, 11> standard_textures;
+		array<shared_ptr<RHI_Texture>, static_cast<size_t>(Renderer_StandardTexture::Max)> standard_textures;
 		array<shared_ptr<Mesh>, 7>         standard_meshes;
 		shared_ptr<Font>                   standard_font;
 		shared_ptr<Material>               standard_material;
@@ -271,9 +271,15 @@ namespace LitchiRuntime
 		// Grid
 		shader(Renderer_Shader::grid_v) = make_shared<RHI_Shader>();
 		shader(Renderer_Shader::grid_v)->Compile(RHI_Shader_Vertex, shader_dir + "grid.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
-
 		shader(Renderer_Shader::grid_p) = make_shared<RHI_Shader>();
 		shader(Renderer_Shader::grid_p)->Compile(RHI_Shader_Pixel, shader_dir + "grid.hlsl", async);
+
+
+		// Grid
+		shader(Renderer_Shader::quad_v) = make_shared<RHI_Shader>();
+		shader(Renderer_Shader::quad_v)->Compile(RHI_Shader_Vertex, shader_dir + "quad.hlsl", async, RHI_Vertex_Type::PosUvNorTan);
+		shader(Renderer_Shader::quad_p) = make_shared<RHI_Shader>();
+		shader(Renderer_Shader::quad_p)->Compile(RHI_Shader_Pixel, shader_dir + "quad.hlsl", async);
 	}
 
 	void Renderer::CreateFonts()
@@ -389,6 +395,9 @@ namespace LitchiRuntime
 
 			standard_texture(Renderer_StandardTexture::Gizmo_audio_source) = make_shared<RHI_Texture2D>(RHI_Texture_Srv, "standard_icon_audio_source");
 			standard_texture(Renderer_StandardTexture::Gizmo_audio_source)->LoadFromFile(dir_texture + "audio.png");
+
+			standard_texture(Renderer_StandardTexture::Gizmo_camera) = make_shared<RHI_Texture2D>(RHI_Texture_Srv, "standard_icon_camera_source");
+			standard_texture(Renderer_StandardTexture::Gizmo_camera)->LoadFromFile(dir_texture + "camera.png");
 		}
 
 		// Sky Box

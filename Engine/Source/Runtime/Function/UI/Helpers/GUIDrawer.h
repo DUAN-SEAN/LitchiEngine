@@ -70,7 +70,7 @@ namespace LitchiRuntime
 		static void DrawInputField4Float(WidgetContainer& p_root, const std::string& p_name, std::function<float(void)> p_gatherer, std::function<void(float)> p_provider);
 		static void DrawInputField4Double(WidgetContainer& p_root, const std::string& p_name, std::function<double(void)> p_gatherer, std::function<void(double)> p_provider);
 
-		static void DrawEnum(WidgetContainer& p_root, const std::string& p_name, std::vector<std::string> enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier = nullptr);
+		static void DrawEnum(WidgetContainer& p_root, const std::string& p_name, const std::vector<std::string>& enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier = nullptr);
 
 		template <typename T>
 		static ImGuiDataType_ GetDataType();
