@@ -216,6 +216,7 @@ namespace LitchiRuntime
 
 		void UpdateValue(const std::string& name);
 		int CalcValueSize();
+		void ClearMaterialRes();
 
 		/* shader */
 		MaterialShader* m_shader = nullptr;
@@ -234,7 +235,7 @@ namespace LitchiRuntime
 	private:
 
 		/* serialize data */
-		MaterialRes* m_materialRes;
+		MaterialRes* m_materialRes{nullptr};
 		RTTR_ENABLE(Object)
 	};
 

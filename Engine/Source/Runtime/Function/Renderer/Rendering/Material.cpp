@@ -36,6 +36,12 @@ namespace LitchiRuntime
 		LC_ASSERT_MSG(materialRes->vertexType != RHI_Vertex_Type::Undefined, "Load Material Not Specify VertexType");
 
 		SetResourceFilePath(file_path);
+		if(m_materialRes!=nullptr)
+		{
+			ClearMaterialRes();
+			delete m_materialRes;
+		}
+
 		m_materialRes = materialRes;
 
 		// load shader
@@ -57,15 +63,10 @@ namespace LitchiRuntime
 
 		if (m_shader)
 		{
+			ClearMaterialRes();
+
 			// save data to materialRes
 			m_materialRes->shaderPath = m_shader->m_shaderPath;
-
-			// 清理已存在的uniformData
-			for (auto value : m_materialRes->uniformInfoList)
-			{
-				delete value;
-			}
-			m_materialRes->uniformInfoList.clear();
 
 			for (auto& [name, value] : m_uniformDataList)
 			{
@@ -462,135 +463,16 @@ namespace LitchiRuntime
 		return m_shader->GetGlobalSize();
 	}
 
-	//void Material::SetTexture(const MaterialTexture texture_type, RHI_Texture* texture)
-	//{
-	//    uint32_t type_int = static_cast<uint32_t>(texture_type);
-
-	//    if (texture)
-	//    {
-	//        // Cache the texture to ensure scene serialization/deserialization
-	//        m_textures[type_int] = ResourceCache::Cache(texture->GetSharedPtr());
-	//    }
-	//    else
-	//    {
-	//        m_textures[type_int] = nullptr;
-	//    }
-
-	//    // Set the correct multiplier
-	//    float multiplier = texture != nullptr;
-	//    if (texture_type == MaterialTexture::Roughness)
-	//    {
-	//        SetProperty(MaterialProperty::RoughnessMultiplier, multiplier);
-	//    }
-	//    else if (texture_type == MaterialTexture::Metalness)
-	//    {
-	//        SetProperty(MaterialProperty::MetalnessMultiplier, multiplier);
-	//    }
-	//    else if (texture_type == MaterialTexture::Normal)
-	//    {
-	//        SetProperty(MaterialProperty::NormalMultiplier, multiplier);
-	//    }
-	//    else if (texture_type == MaterialTexture::Height)
-	//    {
-	//        SetProperty(MaterialProperty::HeightMultiplier, multiplier);
-	//    }
-	//}
-
-	//void Material::SetTexture(const MaterialTexture texture_type, shared_ptr<RHI_Texture> texture)
-	//{
-	//    SetTexture(texture_type, texture.get());
-	//}
-
-	//void Material::SetTexture(const MaterialTexture type, shared_ptr<RHI_Texture2D> texture)
-	//{
-	//    SetTexture(type, static_pointer_cast<RHI_Texture>(texture));
-	//}
-
-	//void Material::SetTexture(const MaterialTexture type, shared_ptr<RHI_TextureCube> texture)
-	//{
-	//    SetTexture(type, static_pointer_cast<RHI_Texture>(texture));
-	//}
-
-	//bool Material::HasTexture(const string& path) const
-	//{
-	//    for (const auto& texture : m_textures)
-	//    {
-	//        if (!texture)
-	//            continue;
-
-	//        if (texture->GetResourceFilePathNative() == path)
-	//            return true;
-	//    }
-
-	//    return false;
-	//}
-
-	//bool Material::HasTexture(const MaterialTexture texture_type) const
-	//{
-	//    return m_textures[static_cast<uint32_t>(texture_type)] != nullptr;
-	//}
-
-	//string Material::GetTexturePathByType(const MaterialTexture texture_type)
-	//{
-	//    if (!HasTexture(texture_type))
-	//        return "";
-
-	//    return m_textures[static_cast<uint32_t>(texture_type)]->GetResourceFilePathNative();
-	//}
-
-	//vector<string> Material::GetTexturePaths()
-	//{
-	//    vector<string> paths;
-	//    for (const auto& texture : m_textures)
-	//    {
-	//        if (!texture)
-	//            continue;
-
-	//        paths.emplace_back(texture->GetResourceFilePathNative());
-	//    }
-
-	//    return paths;
-	//}
-
-	//RHI_Texture* Material::GetTexture(const MaterialTexture texture_type)
-	//{
-	//    return GetTexture_PtrShared(texture_type).get();
-	//}
-
-	//shared_ptr<RHI_Texture>& Material::GetTexture_PtrShared(const MaterialTexture texture_type)
-	//{
-	//    static shared_ptr<RHI_Texture> texture_empty;
-	//    return HasTexture(texture_type) ? m_textures[static_cast<uint32_t>(texture_type)] : texture_empty;
-	//}
-
-	//void Material::SetProperty(const MaterialProperty property_type, const float value)
-	//{
-	//    if (m_properties[static_cast<uint32_t>(property_type)] == value)
-	//        return;
-
-	//    if (property_type == MaterialProperty::ColorA)
-	//    {
-	//        // If an object switches from opaque to transparent or vice versa, make the world update so that the renderer
-	//        // goes through the entities and makes the ones that use this material, render in the correct mode.
-	//        float current_alpha = m_properties[static_cast<uint32_t>(property_type)];
-	//        if ((current_alpha != 1.0f && value == 1.0f) || (current_alpha == 1.0f && value != 1.0f))
-	//        {
-	//            // todo:
-	//            // World::Resolve();
-	//        }
-
-	//        // Transparent objects are typically see-through (low roughness) so use the alpha as the roughness multiplier.
-	//        m_properties[static_cast<uint32_t>(MaterialProperty::RoughnessMultiplier)] = value * 0.5f;
-	//    }
-
-	//    m_properties[static_cast<uint32_t>(property_type)] = value;
-	//}
-
-	//void Material::SetColor(const Color& color)
-	//{
-	//    SetProperty(MaterialProperty::ColorR, color.r);
-	//    SetProperty(MaterialProperty::ColorG, color.g);
-	//    SetProperty(MaterialProperty::ColorB, color.b);
-	//    SetProperty(MaterialProperty::ColorA, color.a);
-	//}
+	void Material::ClearMaterialRes()
+	{
+		// 清理已存在的uniformData
+		for (auto value : m_materialRes->uniformInfoList)
+		{
+			if(value)
+			{
+				delete value;
+			}
+		}
+		m_materialRes->uniformInfoList.clear();
+	}
 }

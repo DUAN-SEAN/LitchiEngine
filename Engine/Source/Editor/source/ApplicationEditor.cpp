@@ -38,6 +38,7 @@
 #include "Runtime/Resource/FontManager.h"
 
 #include "Runtime/Core/Tools/Utils/ConsoleHelper.h"
+#include "Runtime/Function/Renderer/RHI/RHI_SwapChain.h"
 
 LitchiEditor::ApplicationEditor* LitchiEditor::ApplicationEditor::instance_;
 
@@ -222,8 +223,8 @@ WindowSettings LitchiEditor::ApplicationEditor::CreateWindowSettings()
 {
 	WindowSettings windowSettings;
 	windowSettings.title = "Litchi Editor";
-	windowSettings.width = 1920;
-	windowSettings.height = 1080;
+	windowSettings.width = 1000;
+	windowSettings.height = 580;
 	windowSettings.minimumWidth = 1;
 	windowSettings.minimumHeight = 1;
 	windowSettings.maximized = true;
@@ -325,6 +326,7 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 	window->SetPosition(50.0f,50.0f);
 	auto panelSize = m_mainPanel->GetSize();
 	window->SetSize(static_cast<uint16_t>(panelSize.x), static_cast<uint16_t>(panelSize.y));
+	Renderer::GetSwapChain()->ResizeToWindowSize();
 
 	while (true)
 	{
@@ -348,7 +350,7 @@ void LitchiEditor::ApplicationEditor::RunProjectHub()
 				}  EASY_END_BLOCK;
 
 				EASY_BLOCK("RenderUI") {
-					// ��ȾUI
+		
 					RenderUI();
 				}  EASY_END_BLOCK;
 			}

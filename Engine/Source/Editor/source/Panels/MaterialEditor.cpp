@@ -377,6 +377,9 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 			case UniformType::UNIFORM_FLOAT_VEC3:	DrawHybridVec3(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector3&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);			break;
 			case UniformType::UNIFORM_FLOAT_VEC4:	DrawHybridVec4(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<Vector4&>(*info.second), 0.01f, GUIDrawer::_MIN_FLOAT, GUIDrawer::_MAX_FLOAT);			break;
 			case UniformType::UNIFORM_TEXTURE:	GUIDrawer::DrawTexture(*m_shaderSettingsColumns, UniformFormat(info.first), reinterpret_cast<RHI_Texture*&>(*info.second));																break;
+			default: 
+				DEBUG_LOG_ERROR("no support uniform draw type:{}", uniformData.type)
+				;
 			}
 		}else
 		{
