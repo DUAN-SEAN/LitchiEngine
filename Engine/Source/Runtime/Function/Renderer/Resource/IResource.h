@@ -43,8 +43,8 @@ namespace LitchiRuntime
             {
                 if (!LitchiRuntime::FileSystem::IsFile(obsoultePath))
                 {
-                    DEBUG_LOG_ERROR("{} is not a valid file path", obsoultePath.c_str());
-                    return;
+                    DEBUG_LOG_INFO("{} is not a valid file path", obsoultePath.c_str());
+                    // return; // if memory asset lazy store to disk
                 }
             }
 

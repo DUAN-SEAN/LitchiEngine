@@ -27,6 +27,13 @@ namespace LitchiRuntime
 		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName() + "CBuffer");
 	}
 
+
+	Material::Material(const std::string& obsolutePath):Material()
+	{
+		m_materialRes = new MaterialRes();
+		SetResourceFilePath(obsolutePath);
+	}
+
 	Material::~Material()
 	{
 		m_valueConstantBuffer = nullptr;
@@ -87,73 +94,53 @@ namespace LitchiRuntime
 					switch (shaderUniform.type)
 					{
 					case UniformType::UNIFORM_BOOL:
-						if (value.type() == typeid(bool))
 						{
 							auto uniformBool = new UniformInfoBool();
 							uniformBool->name = shaderUniform.name;
-							uniformBool->value = std::any_cast<bool>(value);
+							uniformBool->value = value.type() == typeid(bool) ? std::any_cast<bool>(value) : false;
 							m_materialRes->uniformInfoList.push_back(uniformBool);
 						}
 						break;
 					case UniformType::UNIFORM_INT:
-						if (value.type() == typeid(int))
 						{
 							auto uniformInt = new UniformInfoInt();
 							uniformInt->name = shaderUniform.name;
-							uniformInt->value = std::any_cast<int>(value);
+							uniformInt->value = value.type() == typeid(int) ? std::any_cast<int>(value) : 0;
 							m_materialRes->uniformInfoList.push_back(uniformInt);
-
 						}
 						break;
 					case UniformType::UNIFORM_FLOAT:
-						if (value.type() == typeid(float))
 						{
 							auto uniformFloat = new UniformInfoFloat();
 							uniformFloat->name = shaderUniform.name;
-							uniformFloat->value = std::any_cast<float>(value);
+							uniformFloat->value = value.type() == typeid(float)?std::any_cast<float>(value):0.0f;
 							m_materialRes->uniformInfoList.push_back(uniformFloat);
 						}
 						break;
 					case UniformType::UNIFORM_FLOAT_VEC2:
-						if (value.type() == typeid(Vector2))
 						{
 							auto uniformVec2 = new UniformInfoVector2();
 							uniformVec2->name = shaderUniform.name;
-							uniformVec2->vector = std::any_cast<Vector2>(value);
+							uniformVec2->vector = value.type() == typeid(Vector2)?std::any_cast<Vector2>(value):Vector2::Zero;
 							m_materialRes->uniformInfoList.push_back(uniformVec2);
 						}
 						break;
 					case UniformType::UNIFORM_FLOAT_VEC3:
-						if (value.type() == typeid(Vector3))
 						{
 							auto uniformVec3 = new UniformInfoVector3();
 							uniformVec3->name = shaderUniform.name;
-							uniformVec3->vector = std::any_cast<Vector3>(value);
+							uniformVec3->vector = value.type() == typeid(Vector3)?std::any_cast<Vector3>(value):Vector3::Zero;
 							m_materialRes->uniformInfoList.push_back(uniformVec3);
 						}
 						break;
 					case UniformType::UNIFORM_FLOAT_VEC4:
-						if (value.type() == typeid(Vector4))
 						{
 							auto uniformVec4 = new UniformInfoVector4();
 							uniformVec4->name = shaderUniform.name;
-							uniformVec4->vector = std::any_cast<Vector4>(value);
+							uniformVec4->vector = value.type() == typeid(Vector4)?std::any_cast<Vector4>(value):Vector4::Zero;
 							m_materialRes->uniformInfoList.push_back(uniformVec4);
 						}
 						break;
-						//case UniformType::UNIFORM_TEXTURE:
-						//	// if (value.type() == typeid(RHI_Texture*))
-						//{
-						//	auto uniformPath = new UniformInfoTexture();
-						//	uniformPath->name = shaderUniform.name;
-						//	uniformPath->path = "";
-						//	if (auto tex = std::any_cast<RHI_Texture*>(value); tex)
-						//	{
-						//		uniformPath->path = tex->GetResourceFilePath();
-						//	}
-						//	m_materialRes->uniformInfoList.push_back(uniformPath);
-						//}
-						//break;
 					default:
 						DEBUG_LOG_ERROR("RebuildResourceFromMemory Not Found UniformType type:{}", shaderUniform.type);
 						break;
@@ -209,18 +196,7 @@ namespace LitchiRuntime
 
 	void Material::SetShader(MaterialShader* shader)
 	{
-		if (!shader)
-		{
-			return;
-		}
-
-		if (m_shader)
-		{
-			delete m_shader;
-		}
-
 		m_shader = shader;
-
 		// todo: update value and texture
 		// m_valueMap
 		// m_textureMap

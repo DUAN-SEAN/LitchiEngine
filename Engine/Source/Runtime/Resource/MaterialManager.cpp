@@ -32,5 +32,14 @@ namespace LitchiRuntime
 			DEBUG_LOG_ERROR("ReloadResource Fail path:{}", p_path);
 		}
 	}
+
+	Material* MaterialManager::CreateMaterial(const std::string& p_path)
+	{
+		std::string realPath = GetRealPath(p_path);
+		Material* prefab = new Material(realPath);
+		RegisterResource(p_path, prefab);
+
+		return prefab;
+	}
 	
 }

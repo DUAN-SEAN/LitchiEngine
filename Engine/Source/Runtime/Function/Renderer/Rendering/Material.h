@@ -178,6 +178,7 @@ namespace LitchiRuntime
 	{
 	public:
 		Material();
+		Material(const std::string& obsolutePath);
 		~Material();
 
 		//= IResource ===========================================
@@ -220,25 +221,23 @@ namespace LitchiRuntime
 
 		void UpdateRenderData();
 
-		/* shader */
-		MaterialShader* m_shader = nullptr;
-
-		std::shared_ptr<RHI_ConstantBuffer> m_valueConstantBuffer;
-
-		/* material resource */
-		std::map<std::string, std::any> m_uniformDataList;
-
-		/* global cbuffer */
-		std::map<int, RHI_Texture*> m_textureMap;
-		void* m_value = nullptr;
-		int m_valueSize = 0;
-
-		bool m_isValueDirty = true;
 
 	private:
 
 		/* serialize data */
-		MaterialRes* m_materialRes{nullptr};
+		MaterialRes* m_materialRes{ nullptr };
+
+		/* shader */
+		MaterialShader* m_shader = nullptr;
+		std::map<std::string, std::any> m_uniformDataList; // material resource from shader
+
+		/* global cbuffer */
+		std::shared_ptr<RHI_ConstantBuffer> m_valueConstantBuffer;
+		std::map<int, RHI_Texture*> m_textureMap;
+		void* m_value = nullptr;
+		int m_valueSize = 0;
+		bool m_isValueDirty = true;
+
 		RTTR_ENABLE(Object)
 	};
 

@@ -30,5 +30,8 @@ namespace LitchiRuntime
 		* @param p_path
 		*/
 		virtual void ReloadResource(LitchiRuntime::Material* p_resource, const std::string& p_path) override;
+	public:
+
+		Material* CreateMaterial(const std::string& p_path);
 	};
 }
