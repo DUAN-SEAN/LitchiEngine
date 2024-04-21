@@ -194,7 +194,7 @@
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": ":Materials/Standard4Phong.mat"
+                    "materialPath": ":Materials/PBRTest.mat"
                 }
             ]
         }
