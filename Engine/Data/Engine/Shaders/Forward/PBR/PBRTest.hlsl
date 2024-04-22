@@ -55,8 +55,8 @@ float4 mainPS(Pixel input) : SV_Target
 {
 	float PI = 3.14;
 	float3 colorSpaceDielectricSpecRgb = float3(0.04, 0.04, 0.04);
-	input.normal = normalize(input.normal);
-
+	//input.normal = normalize(input.normal);
+	
 	// sample for texture
 	float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
 	float4 albedo = u_albedo.Sample(samplers[sampler_point_wrap], g_TexCoords);
@@ -66,8 +66,14 @@ float4 mainPS(Pixel input) : SV_Target
 	float squareRoughness = roughness * roughness;
 	float lerpSquareRoughness = pow(lerp(0.002, 1, roughness), 2);
 
+	// get normal by sample
+	float3 sampleNormal = u_normal.Sample(samplers[sampler_point_wrap], g_TexCoords).xyz;
+	float3 binormal = cross(normalize(input.normal), normalize(input.tangent));
+	float3x3 rotation = float3x3(input.tangent, binormal, sampleNormal);
+	float3 normal = mul(rotation, sampleNormal);
+
 	float3 viewDir = normalize(buffer_rendererPath.camera_position.xyz - input.fragPos.xyz);
-	float nv = max(saturate(dot(input.normal, viewDir)), 0.000001);
+	float nv = max(saturate(dot(normal, viewDir)), 0.000001);
 
 	// calculate for each light source
 	uint index_light = (uint)pass_get_f3_value2().y;
@@ -81,10 +87,10 @@ float4 mainPS(Pixel input) : SV_Target
 		float3 lightColor = lightBufferData.color.xyz;
 		float3 halfVector = normalize(lightDir + viewDir);
 
-		float nl = max(saturate(dot(input.normal, lightDir)), 0.000001);
+		float nl = max(saturate(dot(normal, lightDir)), 0.000001);
 		float lh = max(saturate(dot(lightDir, halfVector)), 0.000001);
 		float vh = max(saturate(dot(viewDir, halfVector)), 0.000001);
-		float nh = max(saturate(dot(input.normal, halfVector)), 0.000001);
+		float nh = max(saturate(dot(normal, halfVector)), 0.000001);
 
 		// calculate D F G for Specular
 		float D = lerpSquareRoughness / (pow((pow(nh, 2) * (lerpSquareRoughness - 1) + 1), 2) * PI);
