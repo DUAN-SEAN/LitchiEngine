@@ -94,6 +94,7 @@ namespace LitchiRuntime
 
         // Frustum
         bool IsInViewFrustum(MeshFilter* renderable) const;
+        bool IsInViewFrustum(const BoundingBox& bounding_box) const;
         bool IsInViewFrustum(const Vector3& center, const Vector3& extents) const;
         
         // Clear color

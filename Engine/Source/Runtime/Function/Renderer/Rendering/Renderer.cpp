@@ -248,8 +248,7 @@ namespace LitchiRuntime
 		auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
 		if (rendererPath4SceneView && rendererPath4SceneView->GetActive())
 		{
-			rendererPath4SceneView->UpdateRenderableGameObject();
-			rendererPath4SceneView->UpdateLight();
+			rendererPath4SceneView->Update();
 
 			// Render SceneView
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
@@ -262,8 +261,7 @@ namespace LitchiRuntime
 		auto rendererPath4AssetView = m_rendererPaths[RendererPathType_AssetView];
 		if (rendererPath4AssetView && rendererPath4AssetView->GetActive())
 		{
-			rendererPath4AssetView->UpdateRenderableGameObject();
-			rendererPath4AssetView->UpdateLight();
+			rendererPath4AssetView->Update();
 
 			// Render SceneView
 			Render4BuildInAssetView(cmd_current, rendererPath4AssetView);
@@ -278,17 +276,16 @@ namespace LitchiRuntime
 		if (rendererPath4GameView && rendererPath4GameView->GetActive())
 		{
 			// todo: only camera change need prepare camera
-			rendererPath4GameView->UpdateRenderableGameObject();
+			rendererPath4GameView->Update();
 			auto cameras = rendererPath4GameView->GetRenderables().at(Renderer_Entity::Camera);
 			if (cameras.size() > 0)
 			{
 				// Get First Camera
 				auto firstCamera = cameras[0]->GetComponent<Camera>()->GetRenderCamera();
-				rendererPath4GameView->UpdateRenderCamera(firstCamera);
+				rendererPath4GameView->SetRenderCamera(firstCamera);
 			}
 
-			rendererPath4GameView->UpdateRenderableGameObject();
-			rendererPath4GameView->UpdateLight();
+			rendererPath4GameView->Update();
 
 			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
@@ -347,7 +344,7 @@ namespace LitchiRuntime
 		if (camera && scene)
 		{
 			// determine if a transparent pass is required
-			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
+			// const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
 
 			// shadow maps
 			{
@@ -451,7 +448,7 @@ namespace LitchiRuntime
 		if (camera)
 		{
 			// determine if a transparent pass is required
-			const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
+			//const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
 			
 			// opaque
 			bool is_transparent_pass = false;

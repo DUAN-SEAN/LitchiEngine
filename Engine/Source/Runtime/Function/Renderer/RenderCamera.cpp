@@ -84,9 +84,21 @@ namespace LitchiRuntime
     bool RenderCamera::IsInViewFrustum(MeshFilter* renderable) const
     {
         EASY_FUNCTION(profiler::colors::Blue600)
-        const BoundingBox& box = renderable->GetAAbb();
-        const Vector3 center = box.GetCenter();
-        const Vector3 extents = box.GetExtents();
+	    BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances :BoundingBoxType::Transformed;
+        const BoundingBox& box = renderable->GetBoundingBox(type);
+        return IsInViewFrustum(box);
+    }
+
+    bool RenderCamera::IsInViewFrustum(const BoundingBox& bounding_box) const
+    {
+        if (bounding_box == BoundingBox::Undefined)
+        {
+            DEBUG_LOG_WARN("Undefined bounding box, treating as outside of the view frustum");
+            return false;
+        }
+
+        const Vector3 center = bounding_box.GetCenter();
+        const Vector3 extents = bounding_box.GetExtents();
 
         return m_frustum.IsVisible(center, extents);
     }
@@ -127,7 +139,7 @@ namespace LitchiRuntime
                     continue;
 
                 // Get object oriented bounding box
-                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetAAbb();
+                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetBoundingBox(BoundingBoxType::Transformed);
 
                 // Compute hit distance
                 float distance = m_ray.HitDistance(aabb);

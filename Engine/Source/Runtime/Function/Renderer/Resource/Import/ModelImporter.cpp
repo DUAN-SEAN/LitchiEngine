@@ -647,13 +647,13 @@ namespace LitchiRuntime
 		{
 			// todo:
 
-			//// get aiMaterial
-			//const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
+			// get aiMaterial
+			const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
 
-			//// convert it and add it to the model
-			//Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
+			// convert it and add it to the model
+			Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
 
-			//mesh->AddMaterial(material, entity_parent);
+			mesh->AddMaterial(material, entity_parent);
 
 			
 		}

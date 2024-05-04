@@ -339,6 +339,11 @@ namespace LitchiRuntime
 			m_isValueDirty = false;
 		}
 	}
+
+	bool Material::IsTransparent()
+	{
+		return false;
+	}
 	
 	int Material::CalcValueSize()
 	{

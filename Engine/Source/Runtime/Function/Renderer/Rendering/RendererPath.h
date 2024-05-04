@@ -37,22 +37,31 @@ namespace LitchiRuntime
 		~RendererPath();
 	public:
 
-		void UpdateScene(Scene* scene);
-		void UpdateRenderTarget(float width, float height);
-		void UpdateRenderableGameObject();
-		void UpdateLight();
+		void Update();
 
+		// Basic
 		RendererPathType GetRendererPathType() { return m_rendererPathType; }
-		bool GetActive()const { return m_active; }
 		void SetActive(bool isActive) { m_active = isActive; }
+		bool GetActive()const { return m_active; }
+
+		// Scene
+		void SetScene(Scene* scene);
+		Scene* GetRenderScene() { return m_renderScene; }
+		std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
+		int64_t GetMeshIndexTransparent() const {return m_meshIndexTransparent; }
+		int64_t GetMeshIndexNonInstancedOpaque()const { return m_meshIndexNonInstancedOpaque; }
+		int64_t GetMeshIndexNonInstancedTransparent()const { return m_meshIndexNonInstancedTransparent; }
+
+		// Camera
+		void SetRenderCamera(RenderCamera* camera);
 		RenderCamera* GetRenderCamera(){return m_renderCamera;}
-		void UpdateRenderCamera(RenderCamera* camera);
+
+		// RT
+		void SetRenderTarget(float width, float height);
 		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
 		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
 		std::shared_ptr<RHI_StructuredBuffer> GetLightBuffer() { return m_light_structure_buffer; }
 
-		Scene* GetRenderScene() { return m_renderScene; }
-		std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
 		UICanvas* GetCanvas();
 		Light* GetMainLight() const { return m_mainLight; }
 		size_t GetLightCount() const;
@@ -77,6 +86,9 @@ namespace LitchiRuntime
 
 	private:
 
+		void UpdateSceneObject();
+		void UpdateLight();
+
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
 		void CreateLightBuffer();
@@ -90,6 +102,11 @@ namespace LitchiRuntime
 		void ComputeLightViewMatrix();
 		void ComputeLightProjectionMatrix();
 
+
+        float GetSquaredDistance(const GameObject* entity);
+        void FrustumCulling(std::vector<GameObject*>& renderables);
+        void Sort(std::vector<GameObject*>& renderables);
+        void FrustumCullAndSort(std::vector<GameObject*>& renderables);
 	private:
 
 		//-- Common --//
@@ -100,6 +117,11 @@ namespace LitchiRuntime
 		Scene* m_renderScene = nullptr;
 		// renderables
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>> m_renderables;
+		std::unordered_map<uint64_t, float> distances_squared;
+		int64_t m_meshIndexTransparent = 0;
+		int64_t m_meshIndexNonInstancedOpaque = 0;
+		int64_t m_meshIndexNonInstancedTransparent = 0;
+
 		// UI provide Camera
 		RenderCamera* m_renderCamera4UI;
 		float m_width, m_height;
@@ -129,6 +151,7 @@ namespace LitchiRuntime
 
 		// Bone
 		std::shared_ptr<RHI_ConstantBuffer> m_selectedMesh_bone_constant_buffer;
+
 	};
 
 }

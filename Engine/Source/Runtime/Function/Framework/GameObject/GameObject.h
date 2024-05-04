@@ -14,6 +14,8 @@
 
 namespace LitchiRuntime
 {
+	class Transform;
+	class MeshRenderer;
 	class Scene;
 
 	/**
@@ -118,6 +120,9 @@ namespace LitchiRuntime
 		 * @return 
 		*/
 		std::list<GameObject*> GetChildren();
+
+		Transform* GetTransform();
+		MeshRenderer* GetMeshRenderer();
 
 		/* Some events that are triggered when an action occur on the actor instance */
 		Event<Component*>	ComponentAddedEvent;

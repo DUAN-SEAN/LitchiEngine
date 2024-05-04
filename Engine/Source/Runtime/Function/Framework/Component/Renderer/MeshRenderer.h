@@ -10,6 +10,12 @@ namespace LitchiRuntime
 	class RenderCamera;
 	class MeshFilter;
 
+	enum class MeshRendererType
+	{
+		MeshRenderer,
+		SkinMeshRenderer
+	};
+
 	/**
 	 * @brief MeshRenderer Component
 	 * @note A Mesh Renderer component renders a mesh.
@@ -77,7 +83,12 @@ namespace LitchiRuntime
 		 * @return 
 		*/
 		auto HasMaterial()            const { return m_material != nullptr; }
-		//===============================================================================
+
+		/**
+		 * @brief Get MeshRendererType
+		 * @return
+		*/
+		virtual MeshRendererType GetMeshRendererType() const { return MeshRendererType::MeshRenderer; }
 
 		/**
 		 * @brief Sets whether this Renderer casts a shadow

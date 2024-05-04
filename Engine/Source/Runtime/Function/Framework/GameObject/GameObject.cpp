@@ -5,6 +5,7 @@
 #include "rttr/registration"
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
+#include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Scene/SceneManager.h"
 #include "Runtime/Function/Scripting/ScriptEngine.h"
 
@@ -114,6 +115,18 @@ namespace LitchiRuntime
 
 		return dadList;
 	}
+
+	Transform* GameObject::GetTransform()
+	{
+		return GetComponent<Transform>();
+
+	}
+
+	MeshRenderer* GameObject::GetMeshRenderer()
+	{
+		return GetComponent<MeshRenderer>();
+	}
+
 	void GameObject::PostResourceLoaded()
 	{
 		//// 创建非托管对象

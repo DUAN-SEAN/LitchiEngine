@@ -29,34 +29,6 @@ namespace LitchiRuntime
 		float orthographic_extent_far = 64.0f;
 	}
 
-	void sort_renderables(RenderCamera* camera, std::vector<GameObject*>* renderables, const bool are_transparent)
-	{
-		if (!camera || renderables->size() <= 2)
-			return;
-
-		auto comparison_op = [camera](GameObject* entity)
-			{
-				auto renderable = entity->GetComponent<MeshFilter>();
-				if (!renderable)
-					return 0.0f;
-
-				return (renderable->GetAAbb().GetCenter() - camera->GetPosition()).LengthSquared();
-			};
-
-		// sort by depth
-		sort(renderables->begin(), renderables->end(), [&comparison_op, &are_transparent](GameObject* a, GameObject* b)
-			{
-				if (are_transparent)
-				{
-					return comparison_op(a) > comparison_op(b); // back-to-front for transparent
-				}
-				else
-				{
-					return comparison_op(a) < comparison_op(b); // front-to-back for opaque
-				}
-			});
-	}
-
 	RendererPath::RendererPath(RendererPathType rendererPathType)
 	{
 		m_rendererPathType = rendererPathType;
@@ -98,13 +70,13 @@ namespace LitchiRuntime
 		}
 	}
 
-	void RendererPath::UpdateScene(Scene* scene)
+	void RendererPath::SetScene(Scene* scene)
 	{
 		m_renderScene = scene;
 		m_mainLight = nullptr;
 	}
 
-	void RendererPath::UpdateRenderCamera(RenderCamera* camera)
+	void RendererPath::SetRenderCamera(RenderCamera* camera)
 	{
 		if(CheckIsBuildInRendererCamera())
 		{
@@ -127,7 +99,7 @@ namespace LitchiRuntime
 	}
 
 
-	void RendererPath::UpdateRenderTarget(float width, float height)
+	void RendererPath::SetRenderTarget(float width, float height)
 	{
 		m_width = width;
 		m_height = height;
@@ -251,9 +223,22 @@ namespace LitchiRuntime
 		return true;
 	}
 
-	void RendererPath::UpdateRenderableGameObject()
+	void RendererPath::Update()
 	{
-		if(!m_renderScene)
+		// TODO: TEST
+		// m_renderScene->ResetResolve();
+
+		UpdateSceneObject();
+
+		// Sort
+		FrustumCullAndSort(m_renderables[Renderer_Entity::Mesh]);
+
+		UpdateLight();
+	}
+
+	void RendererPath::UpdateSceneObject()
+	{
+		if (!m_renderScene)
 		{
 			return;
 		}
@@ -266,8 +251,7 @@ namespace LitchiRuntime
 
 		// clear previous state
 		m_renderables.clear();
-		m_renderables[Renderer_Entity::Geometry];
-		m_renderables[Renderer_Entity::GeometryTransparent];
+		m_renderables[Renderer_Entity::Mesh];
 		m_renderables[Renderer_Entity::Camera];
 		m_renderables[Renderer_Entity::Light];
 		m_renderables[Renderer_Entity::UI];
@@ -277,7 +261,6 @@ namespace LitchiRuntime
 		{
 			if (auto renderable = entity->GetComponent<SkinnedMeshRenderer>())
 			{
-				bool is_transparent = false;
 				bool is_visible = true;
 
 				/*if (const Material* material = renderable->GetMaterial())
@@ -288,13 +271,13 @@ namespace LitchiRuntime
 
 				if (is_visible)
 				{
-					m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
+					m_renderables[Renderer_Entity::Mesh].emplace_back(entity);
 				}
-			}else
+			}
+			else
 			{
 				if (auto renderable = entity->GetComponent<MeshRenderer>())
 				{
-					bool is_transparent = false;
 					bool is_visible = true;
 
 					/*if (const Material* material = renderable->GetMaterial())
@@ -305,12 +288,12 @@ namespace LitchiRuntime
 
 					if (is_visible)
 					{
-						m_renderables[is_transparent ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry].emplace_back(entity);
+						m_renderables[Renderer_Entity::Mesh].emplace_back(entity);
 					}
 				}
 			}
 
-		
+
 			if (auto light = entity->GetComponent<Light>())
 			{
 				m_renderables[Renderer_Entity::Light].emplace_back(entity);
@@ -322,7 +305,7 @@ namespace LitchiRuntime
 				m_renderables[Renderer_Entity::Camera].emplace_back(entity);
 			}
 
-			if(auto text = entity->GetComponent<UIText>())
+			if (auto text = entity->GetComponent<UIText>())
 			{
 				m_renderables[Renderer_Entity::UI].emplace_back(entity);
 			}
@@ -348,12 +331,6 @@ namespace LitchiRuntime
 			 }*/
 		}
 
-		// TODO: TEST
-		// m_renderScene->ResetResolve();
-
-		// sort them by distance
-		sort_renderables(m_renderCamera, &m_renderables[Renderer_Entity::Geometry], false);
-		sort_renderables(m_renderCamera, &m_renderables[Renderer_Entity::GeometryTransparent], true);
 	}
 
 	void RendererPath::UpdateLight()
@@ -477,7 +454,8 @@ namespace LitchiRuntime
 			return true;
 		}
 
-		const auto box = renderable->GetAAbb();
+		BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+		const BoundingBox& box = renderable->GetBoundingBox(type);
 		const auto center = box.GetCenter();
 		const auto extents = box.GetExtents();
 
@@ -626,4 +604,97 @@ namespace LitchiRuntime
 		}
 	}
 
+	float RendererPath::GetSquaredDistance(const GameObject* entity)
+	{
+		Vector3 camera_position = m_renderCamera->GetPosition();
+		uint64_t entity_id = entity->GetObjectId();
+
+		auto it = distances_squared.find(entity_id);
+		if (it != distances_squared.end())
+		{
+			return it->second;
+		}
+		else
+		{
+			auto* renderable = entity->GetComponent<MeshFilter>();
+			BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+			Vector3 position = renderable->GetBoundingBox(type).GetCenter();
+			float distance_squared = (position - camera_position).LengthSquared();
+			distances_squared[entity_id] = distance_squared;
+
+			return distance_squared;
+		}
+	}
+
+	void RendererPath::FrustumCulling(std::vector<GameObject*>& renderables)
+	{
+		/*for (auto entity : renderables)
+		{
+			shared_ptr<Renderable> renderable = entity->GetComponent<Renderable>();
+			renderable->SetFlag(RenderableFlags::OccludedCpu, !Renderer::GetCamera()->IsInViewFrustum(renderable));
+			renderable->SetFlag(RenderableFlags::Occluder, false);
+		}*/
+	}
+
+	void RendererPath::Sort(std::vector<GameObject*>& renderables)
+	{ // 1. sort by depth
+		sort(renderables.begin(), renderables.end(), [this](GameObject* a, const GameObject* b)
+			{
+				//// skip entities which are outside of the view frustum
+				//if (a->GetComponent<Renderable>()->HasFlag(OccludedCpu) || b->GetComponent<Renderable>()->HasFlag(OccludedCpu))
+				//	return false;
+
+				// front-to-back for opaque (todo, handle inverse sorting for transparents)
+				return GetSquaredDistance(a) < GetSquaredDistance(b);
+			});
+
+		// 2. sort by instancing, instanced objects go to the front
+		stable_sort(renderables.begin(), renderables.end(), [](GameObject* a, const GameObject* b)
+			{
+				return a->GetComponent<MeshFilter>()->HasInstancing() > b->GetComponent<MeshFilter>()->HasInstancing();
+			});
+
+		// 3. sort by transparency, transparent materials go to the end
+		stable_sort(renderables.begin(), renderables.end(), [](GameObject* a, const GameObject* b)
+			{
+				bool a_transparent = a->GetComponent<MeshRenderer>()->GetMaterial()->IsTransparent();
+				bool b_transparent = b->GetComponent<MeshRenderer>()->GetMaterial()->IsTransparent();
+
+				// non-transparent objects should come first, so invert the condition
+				return !a_transparent && b_transparent;
+			});
+	}
+
+	void RendererPath::FrustumCullAndSort(std::vector<GameObject*>& renderables)
+	{
+		FrustumCulling(renderables);
+		Sort(renderables);
+
+		// find transparent index
+		auto transparent_start = find_if(renderables.begin(), renderables.end(), [](GameObject* entity)
+			{
+				return entity->GetComponent<MeshRenderer>()->GetMaterial()->IsTransparent();
+			});
+		m_meshIndexTransparent = distance(renderables.begin(), transparent_start);
+
+		// find non-instanced index for opaque objects
+		auto non_instanced_opaque_start = find_if(renderables.begin(), renderables.end(), [&](GameObject* entity)
+			{
+				MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
+				bool is_transparent = meshRenderer->GetMaterial()->IsTransparent();
+
+				MeshFilter* meshFilter = entity->GetComponent<MeshFilter>();
+				bool is_instanced = meshFilter->HasInstancing();
+
+				return !is_transparent && !is_instanced;
+			});
+		m_meshIndexNonInstancedOpaque = distance(renderables.begin(), non_instanced_opaque_start);
+
+		// find non-instanced index for transparent objects
+		auto non_instanced_transparent_start = find_if(transparent_start, renderables.end(), [&](GameObject* entity)
+			{
+				return !entity->GetComponent<MeshFilter>()->HasInstancing();
+			});
+		m_meshIndexNonInstancedTransparent = distance(renderables.begin(), non_instanced_transparent_start);
+	}
 }

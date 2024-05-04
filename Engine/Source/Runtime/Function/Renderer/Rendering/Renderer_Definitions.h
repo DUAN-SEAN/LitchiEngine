@@ -149,8 +149,7 @@ namespace LitchiRuntime
     
     enum class Renderer_Entity
     {
-        Geometry,
-        GeometryTransparent,
+        Mesh,
         Light,
         Camera,
         ReflectionProbe,

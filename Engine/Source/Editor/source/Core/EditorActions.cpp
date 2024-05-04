@@ -479,7 +479,7 @@ void LitchiEditor::EditorActions::StartPlaying()
 			m_panelsManager.GetPanelAs<LitchiEditor::GameView>("Game View").Focus();
 			currScene->Play();
 			SetEditorMode(EEditorMode::PLAY);
-			ApplicationEditor::Instance()->m_rendererPath4GameView->UpdateScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
+			ApplicationEditor::Instance()->m_rendererPath4GameView->SetScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
 			ApplicationEditor::Instance()->m_rendererPath4GameView->SetActive(true);
 
 		}
@@ -524,7 +524,7 @@ void LitchiEditor::EditorActions::StopPlaying()
 		LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene()->Resolve();
 		EDITOR_PANEL(Hierarchy, "Hierarchy").Refresh();
 
-		ApplicationEditor::Instance()->m_rendererPath4SceneView->UpdateScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
+		ApplicationEditor::Instance()->m_rendererPath4SceneView->SetScene(LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentScene());
 
 		ApplicationEditor::Instance()->m_rendererPath4GameView->SetActive(false);
 

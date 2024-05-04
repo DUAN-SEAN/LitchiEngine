@@ -236,12 +236,12 @@ void LitchiEditor::ApplicationEditor::OnSceneLoaded()
 	const auto scene = sceneManager->GetCurrentScene();
 	if(m_rendererPath4SceneView)
 	{
-		m_rendererPath4SceneView->UpdateScene(scene);
+		m_rendererPath4SceneView->SetScene(scene);
 	}
 
 	if(m_rendererPath4GameView)
 	{
-		m_rendererPath4GameView->UpdateScene(scene);
+		m_rendererPath4GameView->SetScene(scene);
 	}
 
 	scene->Resolve();

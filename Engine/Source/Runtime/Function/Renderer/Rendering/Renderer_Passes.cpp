@@ -114,7 +114,7 @@ namespace LitchiRuntime
 			return;
 
 		// Get entities
-		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
+		const vector<GameObject*>& entities = rendererables[Renderer_Entity::Mesh];
 		if (entities.empty())
 			return;
 
@@ -275,7 +275,7 @@ namespace LitchiRuntime
 		auto& rendererables = rendererPath->GetRenderables();
 
 		// Get entities
-		const vector<GameObject*>& entities = rendererables[is_transparent_pass ? Renderer_Entity::GeometryTransparent : Renderer_Entity::Geometry];
+		const vector<GameObject*>& entities = rendererables[Renderer_Entity::Mesh];
 		if (entities.empty())
 			return;
 
@@ -587,6 +587,11 @@ namespace LitchiRuntime
 						Quaternion rotation_reorient_quad = Quaternion::FromEulerAngles(-90.0f, 0.0f, 0.0f);
 						// 2nd rotation: Rotate the camera facing quad with the camera, so that it remains a camera facing quad
 						Quaternion rotation_camera_billboard = Quaternion::FromLookRotation(pos_world - pos_world_camera);
+
+						//auto xAngle = 0.0f;
+						//auto xAxis = Vector3::Right;
+						//entity->GetComponent<Transform>()->GetRotation().ToAngleAxis(xAngle, xAxis);
+						//Quaternion::FromAngleAxis(xAngle, xAxis)
 
 						Matrix transform = Matrix(pos_world, rotation_camera_billboard * rotation_reorient_quad, scale);
 

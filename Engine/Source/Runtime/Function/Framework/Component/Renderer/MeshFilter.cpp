@@ -79,17 +79,30 @@ namespace LitchiRuntime
 
     void MeshFilter::SetGeometry(Mesh* mesh, int subMeshIndex /* = 0,*/, const BoundingBox aabb /* = BoundingBox::Max*/)
     {
+        bool result;
         m_mesh = mesh;
         m_subMeshIndex = subMeshIndex;
+        m_bounding_box_untransformed = aabb;
         m_meshPath = m_mesh->GetResourceFilePathAsset();
-        bool result;
         m_subMesh = m_mesh->GetSubMesh(subMeshIndex, result);
 
-        m_boundingBox = aabb;
-        if (m_boundingBox == BoundingBox::Undefined)
+        if (m_subMesh.m_geometryIndexCount == 0)
         {
-            m_boundingBox = m_mesh->GetAabb();
+            m_subMesh.m_geometryIndexCount = m_mesh->GetIndexCount();
         }
+
+        if (m_subMesh.m_geometryVertexCount == 0)
+        {
+            m_subMesh.m_geometryVertexCount = m_mesh->GetVertexCount();
+        }
+
+        if (m_bounding_box_untransformed == BoundingBox::Undefined)
+        {
+            m_bounding_box_untransformed = m_mesh->GetAabb();
+        }
+
+        LC_ASSERT(m_subMesh.m_geometryIndexCount != 0)
+        LC_ASSERT(m_subMesh.m_geometryVertexCount != 0)
     }
 
 	void MeshFilter::GetGeometry(std::vector<uint32_t>* indices, std::vector<RHI_Vertex_PosTexNorTan>* vertices) const
@@ -99,16 +112,74 @@ namespace LitchiRuntime
 		m_mesh->GetGeometry(m_subMesh.m_geometryIndexOffset, m_subMesh.m_geometryIndexCount, m_subMesh.m_geometryVertexOffset, m_subMesh.m_geometryVertexCount, indices, vertices);
 	}
 
-	const BoundingBox& MeshFilter::GetAAbb()
-	{
-		// update if dirty
-		if (m_lastTransform != GetGameObject()->GetComponent<Transform>()->GetMatrix() || m_boundingBoxTransformed == BoundingBox::Undefined)
-		{
-			m_boundingBoxTransformed = m_boundingBox.Transform(GetGameObject()->GetComponent<Transform>()->GetMatrix());
-			m_lastTransform = GetGameObject()->GetComponent<Transform>()->GetMatrix();
-		}
+    const BoundingBox& MeshFilter::GetBoundingBox(const BoundingBoxType type, const uint32_t instance_group_index)
+    {
+        auto transform = GetGameObject()->GetComponent<Transform>()->GetMatrix();
 
-		return m_boundingBoxTransformed;
-	}
+        // compute if dirty
+        if (m_bounding_box_dirty || m_transform_previous != transform)
+        {
+            // transformed
+            {
+                m_boundingBox = m_bounding_box_untransformed.Transform(transform);
+            }
+
+            //// transformed instances
+            //{
+            //    // loop through each instance and expand the bounding box
+            //    m_bounding_box_instances = BoundingBox::Undefined;
+            //    for (const Matrix& instance_transform : m_instances)
+            //    {
+            //        // transform * instance_transform, this is not the order of operation the engine is using but in this case it works
+            //        // possibly due to how the transform is calculated, the space it's in and relative to what
+            //        BoundingBox bounding_box_instance = m_bounding_box_untransformed.Transform(transform * instance_transform);
+            //        m_bounding_box_instances.Merge(bounding_box_instance);
+            //    }
+            //}
+
+            //// transformed instance groups
+            //{
+            //    // loop through each group end index
+            //    m_bounding_box_instance_group.clear();
+            //    uint32_t start_index = 0;
+            //    for (const uint32_t group_end_index : m_instance_group_end_indices)
+            //    {
+            //        // loop through the instances in this group
+            //        BoundingBox bounding_box_group = BoundingBox::Undefined;
+            //        for (uint32_t i = start_index; i < group_end_index; i++)
+            //        {
+            //            BoundingBox bounding_box_instance = m_bounding_box_untransformed.Transform(transform * m_instances[i]);
+            //            bounding_box_group.Merge(bounding_box_instance);
+            //        }
+
+            //        m_bounding_box_instance_group.push_back(bounding_box_group);
+            //        start_index = group_end_index;
+            //    }
+            //}
+
+            m_transform_previous = transform;
+            m_bounding_box_dirty = false;
+        }
+
+        // return
+        if (type == BoundingBoxType::Untransformed)
+        {
+            return m_bounding_box_untransformed;
+        }
+        else if (type == BoundingBoxType::Transformed)
+        {
+            return m_boundingBox;
+        }
+        else if (type == BoundingBoxType::TransformedInstances)
+        {
+            return m_bounding_box_instances;
+        }
+        else if (type == BoundingBoxType::TransformedInstanceGroup)
+        {
+            return m_bounding_box_instance_group[instance_group_index];
+        }
+
+        return BoundingBox::Undefined;
+    }
 
 }

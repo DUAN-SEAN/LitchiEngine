@@ -212,6 +212,7 @@ namespace LitchiRuntime
 		void PostResourceLoaded() override;
 
 		void Tick();
+		bool IsTransparent();
 
 	private:
 

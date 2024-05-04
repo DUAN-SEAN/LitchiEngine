@@ -100,7 +100,8 @@ namespace LitchiRuntime
 
     bool Camera::IsInViewFrustum(MeshFilter* renderable) const
     {
-        const BoundingBox& box = renderable->GetAAbb();
+        BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+        const BoundingBox& box = renderable->GetBoundingBox(type);
         const Vector3 center = box.GetCenter();
         const Vector3 extents = box.GetExtents();
 
@@ -141,7 +142,7 @@ namespace LitchiRuntime
                     continue;
 
                 // Get object oriented bounding box
-                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetAAbb();
+                const BoundingBox& aabb = entity->GetComponent<MeshFilter>()->GetBoundingBox(BoundingBoxType::Transformed);
 
                 // Compute hit distance
                 float distance = m_ray.HitDistance(aabb);
@@ -519,7 +520,8 @@ namespace LitchiRuntime
             // ...otherwise we apply a simple offset so that the rotation vector doesn't suffer
             if (auto renderable = entity->GetComponent<MeshFilter>())
             {
-                m_lerp_to_target_position -= target_direction * renderable->GetAAbb().GetExtents().Length() * 2.0f;
+                BoundingBoxType bounding_box_type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+                m_lerp_to_target_position -= target_direction * renderable->GetBoundingBox(bounding_box_type).GetExtents().Length() * 2.0f;
             }
             else
             {

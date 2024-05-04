@@ -1,6 +1,6 @@
 {
     "name": "Empty Scene",
-    "availableID": 7,
+    "availableID": 8,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -17,10 +17,10 @@
                         "z": 0.0
                     },
                     "localRotation": {
-                        "x": 0.040240928530693057,
-                        "y": 0.5722128748893738,
-                        "z": -0.46624499559402468,
-                        "w": 0.6734751462936401
+                        "x": 0.6943694353103638,
+                        "y": -0.09552391618490219,
+                        "z": 0.09720584005117417,
+                        "w": 0.7065954804420471
                     },
                     "localScale": {
                         "x": 1.0,
@@ -37,10 +37,12 @@
                         "b": 1.0,
                         "a": 1.0
                     },
-                    "intensityLumens": 2600.0,
+                    "intensityLumens": 2300.0,
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
-                    "bias": 0.0
+                    "range": 200.0,
+                    "angle": 0.5,
+                    "normalBias": 5.0
                 }
             ]
         },
@@ -88,7 +90,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 0.0,
+                        "y": 5.484270095825195,
                         "z": 0.0
                     },
                     "localRotation": {
@@ -98,9 +100,9 @@
                         "w": 0.70710688829422
                     },
                     "localScale": {
-                        "x": 0.0014799245400354267,
-                        "y": 0.0010000000474974514,
-                        "z": 0.0014798693591728807
+                        "x": 0.009999999776482582,
+                        "y": 0.009997440502047539,
+                        "z": 0.009997440502047539
                     }
                 }
             ]
@@ -171,9 +173,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 0.0,
-                        "y": 170.74671936035157,
-                        "z": -419.3126220703125
+                        "x": 0.00006632041913690045,
+                        "y": -232.23997497558595,
+                        "z": -437.7192687988281
                     },
                     "localRotation": {
                         "x": 0.0,
@@ -183,8 +185,8 @@
                     },
                     "localScale": {
                         "x": 1.0,
-                        "y": 0.9999433159828186,
-                        "z": 0.9999539256095886
+                        "y": 0.9996472001075745,
+                        "z": 0.9996578097343445
                     }
                 },
                 {
@@ -195,6 +197,43 @@
                 {
                     "Type": "MeshRenderer",
                     "materialPath": ":Materials/PBRTest.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 7,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Plane",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 5.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 100.0,
+                        "y": 100.0,
+                        "z": 100.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Plane.fbx",
+                    "SubMeshIndex": 0
                 }
             ]
         }

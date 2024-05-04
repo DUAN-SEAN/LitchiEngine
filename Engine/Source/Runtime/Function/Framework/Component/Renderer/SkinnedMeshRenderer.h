@@ -32,6 +32,12 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_ConstantBuffer> GetBoneConstantBuffer() { return m_boneConstantBuffer; }
 
 		/**
+		 * @brief Get MeshRendererType
+		 * @return
+		*/
+		MeshRendererType GetMeshRendererType() const override { return MeshRendererType::SkinMeshRenderer; }
+
+		/**
 		 * @brief Call before object resource change
 		*/
 		void PostResourceModify() override;

@@ -12,6 +12,14 @@ using std::string;
 
 namespace LitchiRuntime
 {
+	enum class BoundingBoxType
+	{
+		Untransformed,            // the bounding box of the mesh
+		Transformed,              // the transformed bounding box of the mesh
+		TransformedInstances,     // the transformed bounding box of all the instances
+		TransformedInstanceGroup, // the transformed bounding box of an instance group
+	};
+
 	/**
 	 * @brief MeshFilter Component
 	 * @note holds a reference to a mesh.
@@ -113,17 +121,16 @@ namespace LitchiRuntime
 		uint32_t GetVertexCount()                 const { return m_subMesh.m_geometryVertexCount; }
 
 		/**
+		 * @brief GPU Instance Object
+		 * @return
+		*/
+		bool HasInstancing() const { return false; }
+		/**
 		 * @brief Get Bounding Box of mesh
 		 * @return
 		*/
 		const BoundingBox& GetBoundingBox() const { return m_boundingBox; }
-
-		/**
-		 * @brief Get transformed Bounding Box of mesh
-		 * @return
-		*/
-		const BoundingBox& GetAAbb();
-
+		const BoundingBox& GetBoundingBox(const BoundingBoxType type, const uint32_t instance_group_index = 0);
 		/**
 		 * @brief Set Mesh path
 		 * @param meshPath
@@ -162,16 +169,13 @@ namespace LitchiRuntime
 		 * @brief mesh bounding box
 		*/
 		BoundingBox m_boundingBox;
+		bool m_bounding_box_dirty = true;
+		BoundingBox m_bounding_box_untransformed;
+		BoundingBox m_bounding_box_instances;
+		std::vector<BoundingBox> m_bounding_box_instance_group;
 
-		/**
-		 * @brief transformed bounding box
-		*/
-		BoundingBox m_boundingBoxTransformed;
-
-		/**
-		 * @brief last transform
-		*/
-		Matrix m_lastTransform = Matrix::Identity;
+		// misc
+		Matrix m_transform_previous = Matrix::Identity;
 
 		RTTR_ENABLE(Component)
 	};
