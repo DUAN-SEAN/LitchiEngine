@@ -7,11 +7,6 @@ struct MaterialData
 	// Global Var
 	float2 u_textureTiling;
 	float2 u_textureOffset;
-	float4 u_diffuse;
-	float u_shininess;
-	float3 u_specular;
-	float u_heightScale;
-	float3 padding;
 };
 
 // Material Buffer Name Must Be "Material"

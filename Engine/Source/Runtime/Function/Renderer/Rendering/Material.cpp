@@ -5,7 +5,6 @@
 #include "Renderer.h"
 #include "../Resource/ResourceCache.h"
 #include "../RHI/RHI_Texture2D.h"
-#include "../RHI/RHI_TextureCube.h"
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_InputLayout.h"
@@ -21,12 +20,37 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
+	namespace 
+	{
+		std::string GetPBRUniformNameFromMaterialTextureType(MaterialTexture textureType)
+		{
+			switch (textureType) {
+			case MaterialTexture::Color:
+				return "u_albedo";
+			case MaterialTexture::Roughness:
+				return "u_roughness";
+			case MaterialTexture::Metalness:
+				return "u_metallic";
+			case MaterialTexture::Normal:
+				return "u_normal";
+			case MaterialTexture::Occlusion:
+				return "u_aO";
+			case MaterialTexture::Emission:// zi fa guang
+			case MaterialTexture::Height:
+			case MaterialTexture::AlphaMask:
+			case MaterialTexture::Undefined:
+				break;
+			}
+			return "";
+		}
+
+	}
+
 	Material::Material() : IResource(ResourceType::Material)
 	{
 		m_object_name = "Material";
 		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName() + "CBuffer");
 	}
-
 
 	Material::Material(const std::string& obsolutePath):Material()
 	{
@@ -67,9 +91,7 @@ namespace LitchiRuntime
 			return true;
 		}
 
-		m_shader = ApplicationBase::Instance()->shaderManager->LoadResource(m_materialRes->shaderPath);
-
-		PostResourceLoaded();
+		SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(m_materialRes->shaderPath));
 
 		return true;
 	}
@@ -194,12 +216,31 @@ namespace LitchiRuntime
 		m_isValueDirty = true;
 	}
 
-	void Material::SetShader(MaterialShader* shader)
+	void Material::SetTexture(MaterialTexture textureType, RHI_Texture* texture)
+	{
+		auto name = GetPBRUniformNameFromMaterialTextureType(textureType);
+		if(name.empty())
+		{
+			DEBUG_LOG_WARN("Not support TextureType In PBR textureType:{}", textureType);
+			return;
+		}
+
+		SetTexture(name, texture);
+	}
+
+	void Material::SetProperty(MaterialProperty materialProperty, float value)
+	{
+
+	}
+
+	void Material::SetShader(MaterialShader* shader, RHI_Vertex_Type vertexType)
 	{
 		m_shader = shader;
-		// todo: update value and texture
-		// m_valueMap
-		// m_textureMap
+		if(vertexType != RHI_Vertex_Type::Undefined)
+		{
+			m_materialRes->vertexType = vertexType;
+		}
+		PostResourceLoaded();
 	}
 
 	void* Material::GetValues4DescriptorSet(uint32_t& size)
@@ -352,15 +393,18 @@ namespace LitchiRuntime
 
 	void Material::ClearMaterialRes()
 	{
-		// clear uniform Data
-		for (auto value : m_materialRes->uniformInfoList)
+		if(m_materialRes)
 		{
-			if(value)
+			// clear uniform Data
+			for (auto value : m_materialRes->uniformInfoList)
 			{
-				delete value;
+				if (value)
+				{
+					delete value;
+				}
 			}
+			m_materialRes->uniformInfoList.clear();
 		}
-		m_materialRes->uniformInfoList.clear();
 	}
 
 	void Material::UpdateRenderData()

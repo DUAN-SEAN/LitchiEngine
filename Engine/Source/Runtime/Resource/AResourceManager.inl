@@ -12,13 +12,15 @@ namespace LitchiRuntime
 	template<typename T>
 	inline T* AResourceManager<T>::LoadResource(const std::string & p_path)
 	{
-		if (auto resource = GetResource(p_path, false); resource)
+		std::string resPath = GetRelativePath(p_path);
+
+		if (auto resource = GetResource(resPath, false); resource)
 			return resource;
 		else
 		{
-			auto newResource = CreateResource(p_path);
+			auto newResource = CreateResource(resPath);
 			if (newResource)
-				return RegisterResource(p_path, newResource);
+				return RegisterResource(resPath, newResource);
 			else
 				return nullptr;
 		}
@@ -27,9 +29,11 @@ namespace LitchiRuntime
 	template<typename T>
 	inline void AResourceManager<T>::UnloadResource(const std::string & p_path)
 	{
-		if (auto resource = GetResource(p_path, false); resource)
+		std::string resPath = GetRelativePath(p_path);
+
+		if (auto resource = GetResource(resPath, false); resource)
 		{
-			auto tempPath = p_path;
+			auto tempPath = resPath;
 			DestroyResource(resource);
 			UnregisterResource(tempPath);
 		}
@@ -52,16 +56,19 @@ namespace LitchiRuntime
 	template<typename T>
 	inline void AResourceManager<T>::ReloadResource(const std::string& p_path)
 	{
-		if (auto resource = GetResource(p_path, false); resource)
+		std::string resPath = GetRelativePath(p_path);
+
+		if (auto resource = GetResource(resPath, false); resource)
 		{
-			ReloadResource(resource, p_path);
+			ReloadResource(resource, resPath);
 		}
 	}
 
 	template<typename T>
 	inline bool AResourceManager<T>::IsResourceRegistered(const std::string & p_path)
 	{
-		return m_resources.find(p_path) != m_resources.end();
+		std::string resPath = GetRelativePath(p_path);
+		return m_resources.find(resPath) != m_resources.end();
 	}
 
 	template<typename T>
@@ -126,6 +133,11 @@ namespace LitchiRuntime
 	{
 		std::string result;
 
+		if(FileSystem::IsFullPath(p_path))
+		{
+			return p_path;
+		}
+
 		if (p_path[0] == ':') // The path is an engine path
 		{
 			result = FileSystem::GetEngineAssetDirectoryPath() + std::string(p_path.data() + 1, p_path.data() + p_path.size());
@@ -136,5 +148,16 @@ namespace LitchiRuntime
 		}
 
 		return result;
+	}
+	template<typename T>
+	inline std::string AResourceManager<T>::GetRelativePath(const std::string& p_path) const
+	{
+		std::string resPath = p_path;
+		if (FileSystem::IsFullPath(resPath))
+		{
+			resPath = FileSystem::GetRelativePathAssetFromNative(p_path);
+		}
+
+		return resPath;
 	}
 }

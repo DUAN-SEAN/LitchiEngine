@@ -102,7 +102,7 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
 	if (ext == "fbx" || ext == "obj")											return EFileType::MODEL;
-	else if (ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "tga")		return EFileType::TEXTURE;
+	else if (ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "tga" || ext == "tif")		return EFileType::TEXTURE;
 	else if (ext == "glsl" || ext == "vs" || ext  == "fs")														return EFileType::SHADER;
 	else if (ext == "mat")													return EFileType::MATERIAL;
 	else if (ext == "wav" || ext == "mp3" || ext == "ogg")						return EFileType::SOUND;

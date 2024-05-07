@@ -13,6 +13,7 @@ namespace LitchiRuntime {
 	public:
         // Strings
         static bool IsEmptyOrWhitespace(const std::string& var);
+        static bool IsFullPath(const std::string path);
         static bool IsAlphanumeric(const std::string& var);
         static std::string RemoveIllegalCharacters(const std::string& text);
         static std::string GetStringBeforeExpression(const std::string& str, const std::string& exp);
@@ -79,7 +80,7 @@ namespace LitchiRuntime {
     
 
     static const char* EXTENSION_WORLD = ".world";
-    static const char* EXTENSION_MATERIAL = ".material";
+    static const char* EXTENSION_MATERIAL = ".mat";
     static const char* EXTENSION_MODEL = ".model";
     static const char* EXTENSION_PREFAB = ".prefab";
     static const char* EXTENSION_SHADER = ".shader";

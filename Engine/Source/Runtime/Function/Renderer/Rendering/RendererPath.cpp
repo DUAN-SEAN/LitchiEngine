@@ -64,7 +64,7 @@ namespace LitchiRuntime
 		m_colorRenderTarget = nullptr;
 		m_light_structure_buffer = nullptr;
 
-		if(m_selectedMesh_bone_constant_buffer)
+		if (m_selectedMesh_bone_constant_buffer)
 		{
 			m_selectedMesh_bone_constant_buffer.reset();
 		}
@@ -78,12 +78,12 @@ namespace LitchiRuntime
 
 	void RendererPath::SetRenderCamera(RenderCamera* camera)
 	{
-		if(CheckIsBuildInRendererCamera())
+		if (CheckIsBuildInRendererCamera())
 		{
 			return;
 		}
 
-		if(camera ==nullptr || m_renderCamera == camera)
+		if (camera == nullptr || m_renderCamera == camera)
 		{
 			return;
 		}
@@ -109,7 +109,7 @@ namespace LitchiRuntime
 
 	UICanvas* RendererPath::GetCanvas()
 	{
-		if (this->m_renderables.find(Renderer_Entity::Canvas) !=	m_renderables.end())
+		if (this->m_renderables.find(Renderer_Entity::Canvas) != m_renderables.end())
 		{
 			auto canvass = this->m_renderables.at(Renderer_Entity::Canvas);
 			if (canvass.size() > 0)
@@ -138,17 +138,17 @@ namespace LitchiRuntime
 		m_selectedMesh = mesh;
 		m_selectedTexture2D = texture_2d;
 
-		if(m_selectedMaterial != nullptr)
+		if (m_selectedMaterial != nullptr)
 		{
 			m_selectedResType = SelectedResourceType_Material;
 			m_selectedMesh_bone_constant_buffer.reset();
 			m_selectedMesh_bone_constant_buffer = nullptr;
 		}
-		else if(m_selectedMesh != nullptr)
+		else if (m_selectedMesh != nullptr)
 		{
 			m_selectedResType = SelectedResourceType_Mesh;
 
-			if(m_selectedMesh_bone_constant_buffer == nullptr)
+			if (m_selectedMesh_bone_constant_buffer == nullptr)
 			{
 				m_selectedMesh_bone_constant_buffer = std::make_unique<RHI_ConstantBuffer>();
 				m_selectedMesh_bone_constant_buffer->Create<Cb_Bone_Arr>(1);
@@ -169,7 +169,7 @@ namespace LitchiRuntime
 			// update cbuffer
 			m_selectedMesh_bone_constant_buffer->UpdateWithReset(&m_bone_arr);
 		}
-		else if(m_selectedTexture2D != nullptr)
+		else if (m_selectedTexture2D != nullptr)
 		{
 			m_selectedResType = SelectedResourceType_Texture2D;
 			m_selectedMesh_bone_constant_buffer.reset();
@@ -331,43 +331,49 @@ namespace LitchiRuntime
 			 }*/
 		}
 
+		// Reset
+		m_renderScene->ResetResolve();
 	}
 
 	void RendererPath::UpdateLight()
 	{
-		if(this->m_renderables.size()>0)
+		if (m_rendererPathType == RendererPathType_AssetView)
 		{
-			auto& lights = this->m_renderables.at(Renderer_Entity::Light);
-			if(!lights.empty())
+			UpdateDefaultLightBuffer();
+		}
+		else
+		{
+
+			if (GetLightCount() == 0)
+			{
+				m_mainLight = nullptr;
+			}
+			else
 			{
 				auto lightObject = this->m_renderables.at(Renderer_Entity::Light)[0];
 				m_mainLight = lightObject->GetComponent<Light>();
-			}else
-			{
-				// todo clear?
-				m_mainLight = nullptr;
 			}
-		}
 
-		if(!m_mainLight)
-		{
-			return;
-		}
+			if (!m_mainLight)
+			{
+				return;
+			}
 
-		// check need Create New ShadowMap
-		if(CheckShadowMapNeedRecreate())
-		{
-			CreateShadowMap();
-		}
+			// check need Create New ShadowMap
+			if (CheckShadowMapNeedRecreate())
+			{
+				CreateShadowMap();
+			}
 
-		// Update Light Shader
-		if(m_mainLight && m_mainLight->GetShadowsEnabled() && m_renderCamera)
-		{
-			ComputeLightViewMatrix();
-			ComputeLightProjectionMatrix();
-		}
+			// Update Light Shader
+			if (m_mainLight && m_mainLight->GetShadowsEnabled() && m_renderCamera)
+			{
+				ComputeLightViewMatrix();
+				ComputeLightProjectionMatrix();
+			}
 
-		UpdateLightBuffer();
+			UpdateLightBuffer();
+		}
 	}
 
 	const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
@@ -394,7 +400,7 @@ namespace LitchiRuntime
 		// Early exit if there is no change in shadow map resolution
 		const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
 
-		if(m_shadow_map.texture_depth)
+		if (m_shadow_map.texture_depth)
 		{
 			const bool resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
 			if (!resolution_changed)
@@ -416,7 +422,7 @@ namespace LitchiRuntime
 		RHI_Format format_depth = RHI_Format::D32_Float;
 		RHI_Format format_color = RHI_Format::R16G16B16A16_Float;// same other
 
-		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv| RHI_Texture_ClearBlit;
+		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv | RHI_Texture_ClearBlit;
 		if (m_mainLight->GetLightType() == LightType::Directional)
 		{
 			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, flags_depth_buffer, "shadow_map_directional");
@@ -449,7 +455,7 @@ namespace LitchiRuntime
 
 	bool RendererPath::IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const
 	{
-		if(!m_mainLight)
+		if (!m_mainLight)
 		{
 			return true;
 		}
@@ -467,7 +473,7 @@ namespace LitchiRuntime
 
 	void RendererPath::UpdateLightBuffer()
 	{
-		if(GetLightCount()==0)
+		if (GetLightCount() == 0)
 		{
 			return;
 		}
@@ -479,7 +485,7 @@ namespace LitchiRuntime
 		for (int index = 0; index < lightCount; index++)
 		{
 			const auto light = lightEntities[index]->GetComponent<Light>();
-			
+
 			// todo only one light(m_mainLight) has shadow
 			for (uint32_t i = 0; i < GetShadowArraySize(); i++)
 			{
@@ -512,14 +518,37 @@ namespace LitchiRuntime
 		m_light_structure_buffer->Update(&properties[0], update_size);
 	}
 
+	void RendererPath::UpdateDefaultLightBuffer()
+	{
+		static std::array<Cb_Light, rhi_max_array_size_lights> properties;
+		int32_t index = 0;
+		properties[index].intensity = 2500.0f;
+		properties[index].color = Color::White;
+		properties[index].range = 200.0f;
+		properties[index].angle = 0.5;
+		properties[index].bias = 0.0005;
+		properties[index].normal_bias = 5.0;
+
+		properties[index].position = Vector3::Zero;
+		properties[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
+
+		properties[index].flags = 0;
+		properties[index].flags |= (1 << 0);
+
+		// cpu to gpu
+		uint32_t update_size = static_cast<uint32_t>(sizeof(Cb_Light)) * 1;
+		m_light_structure_buffer->ResetOffset();
+		m_light_structure_buffer->Update(&properties[0], update_size);
+	}
+
 	bool RendererPath::CheckShadowMapNeedRecreate()
 	{
-		if(!m_mainLight)
+		if (!m_mainLight)
 		{
 			return false;
 		}
 
-		if(m_mainLight->GetShadowsEnabled() == m_last_shadows_enabled &&
+		if (m_mainLight->GetShadowsEnabled() == m_last_shadows_enabled &&
 			m_mainLight->GetShadowsTransparentEnabled() == m_last_shadows_transparent_enabled)
 		{
 			return false;
@@ -538,7 +567,7 @@ namespace LitchiRuntime
 		const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
 		const Vector3 up = lightObject->GetComponent<Transform>()->GetUp();
 
-		if (m_mainLight->GetLightType()== LightType::Directional)
+		if (m_mainLight->GetLightType() == LightType::Directional)
 		{
 			if (m_renderCamera)
 			{

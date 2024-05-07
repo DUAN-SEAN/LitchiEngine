@@ -113,6 +113,13 @@ void SkinnedMeshRenderer::PostResourceLoaded()
 	MeshRenderer::PostResourceLoaded();
 }
 
+void LitchiRuntime::SkinnedMeshRenderer::SetDefaultMaterial()
+{
+	Material* material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/StandardSkinn4Phong.mat");
+	SetMaterial(material);
+	m_useDefaultMaterial = true;
+}
+
 void SkinnedMeshRenderer::PostResourceModify()
 {
 	MeshRenderer::PostResourceModify();

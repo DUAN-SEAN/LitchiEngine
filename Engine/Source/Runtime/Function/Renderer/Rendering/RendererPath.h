@@ -97,6 +97,7 @@ namespace LitchiRuntime
 		bool CheckIsBuildInRendererCamera();
 
 		void UpdateLightBuffer();
+		void UpdateDefaultLightBuffer();
 		bool CheckShadowMapNeedRecreate();
 		void CreateShadowMap();
 		void ComputeLightViewMatrix();

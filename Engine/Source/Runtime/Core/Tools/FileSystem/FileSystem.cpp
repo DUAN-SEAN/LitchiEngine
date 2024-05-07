@@ -53,6 +53,11 @@ namespace LitchiRuntime {
         return true;
     }
 
+    bool FileSystem::IsFullPath(const std::string path)
+    {
+        return filesystem::path(path).is_absolute();
+    }
+
     bool FileSystem::IsAlphanumeric(const string& var)
     {
         if (IsEmptyOrWhitespace(var))
@@ -72,7 +77,7 @@ namespace LitchiRuntime {
         string text_legal = text;
 
         // Remove characters which are illegal for both names and paths
-        string illegal = ":?\"<>|";
+        string illegal = "?\"<>|";
         for (auto it = text_legal.begin(); it < text_legal.end(); ++it)
         {
             if (illegal.find(*it) != string::npos)
@@ -85,15 +90,15 @@ namespace LitchiRuntime {
         if (IsDirectory(text_legal))
             return text_legal;
 
-        // Remove slashes which are illegal characters for names
-        illegal = "\\/";
-        for (auto it = text_legal.begin(); it < text_legal.end(); ++it)
-        {
-            if (illegal.find(*it) != string::npos)
-            {
-                *it = '_';
-            }
-        }
+        //// Remove slashes which are illegal characters for names
+        //illegal = "\\/";
+        //for (auto it = text_legal.begin(); it < text_legal.end(); ++it)
+        //{
+        //    if (illegal.find(*it) != string::npos)
+        //    {
+        //        *it = '_';
+        //    }
+        //}
 
         return text_legal;
     }

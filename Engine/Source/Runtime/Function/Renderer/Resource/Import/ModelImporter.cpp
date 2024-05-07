@@ -271,14 +271,29 @@ namespace LitchiRuntime
 	{
 		LC_ASSERT(material_assimp != nullptr);
 
-		Material* material = new Material();
-
 		// NAME
 		aiString name;
 		aiGetMaterialString(material_assimp, AI_MATKEY_NAME, &name);
 
-		// Set a resource file path so it can be used by the resource cache
-		material->SetResourceFilePath(FileSystem::RemoveIllegalCharacters(FileSystem::GetDirectoryFromFilePath(file_path) + string(name.C_Str()) + EXTENSION_MATERIAL));
+		auto materialPath = FileSystem::RemoveIllegalCharacters(FileSystem::GetDirectoryFromFilePath(file_path) + string(name.C_Str()) + EXTENSION_MATERIAL);
+		if(auto material = ApplicationBase::Instance()->materialManager->LoadResource(materialPath))
+		{
+			return material;
+		}
+
+		Material* material = ApplicationBase::Instance()->materialManager->CreateMaterial(materialPath);
+		RHI_Vertex_Type vertexType = model_has_animation? RHI_Vertex_Type::PosUvNorTanBone:RHI_Vertex_Type::PosUvNorTan;
+		material->SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(":Shaders/Forward/PBR/PBRTest.hlsl"), vertexType);
+
+		//                                                                         texture type,                texture type assimp (pbr),       texture type assimp (legacy/fallback)
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Color, aiTextureType_BASE_COLOR, aiTextureType_DIFFUSE);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Roughness, aiTextureType_DIFFUSE_ROUGHNESS, aiTextureType_SHININESS); // use specular as fallback
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Metalness, aiTextureType_METALNESS, aiTextureType_NONE);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Normal, aiTextureType_NORMAL_CAMERA, aiTextureType_NORMALS);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Occlusion, aiTextureType_AMBIENT_OCCLUSION, aiTextureType_LIGHTMAP);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Emission, aiTextureType_EMISSION_COLOR, aiTextureType_EMISSIVE);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Height, aiTextureType_HEIGHT, aiTextureType_NONE);
+		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::AlphaMask, aiTextureType_OPACITY, aiTextureType_NONE);
 
 		// COLOR
 		aiColor4D color_diffuse(1.0f, 1.0f, 1.0f, 1.0f);
@@ -290,23 +305,17 @@ namespace LitchiRuntime
 
 		// todo:
 		// Set color and opacity
-	  /*  material->SetProperty(MaterialProperty::ColorR, color_diffuse.r);
+	    material->SetProperty(MaterialProperty::ColorR, color_diffuse.r);
 		material->SetProperty(MaterialProperty::ColorG, color_diffuse.g);
 		material->SetProperty(MaterialProperty::ColorB, color_diffuse.b);
-		material->SetProperty(MaterialProperty::ColorA, opacity.r);*/
-
-		//                                                                         Texture type,                Texture type Assimp (PBR),       Texture type Assimp (Legacy/fallback)
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Color, aiTextureType_BASE_COLOR, aiTextureType_DIFFUSE);
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Roughness, aiTextureType_DIFFUSE_ROUGHNESS, aiTextureType_SHININESS); // Use specular as fallback
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Metalness, aiTextureType_METALNESS, aiTextureType_AMBIENT);   // Use ambient as fallback
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Normal, aiTextureType_NORMAL_CAMERA, aiTextureType_NORMALS);
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Occlusion, aiTextureType_AMBIENT_OCCLUSION, aiTextureType_LIGHTMAP);
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Emission, aiTextureType_EMISSION_COLOR, aiTextureType_EMISSIVE);
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Height, aiTextureType_HEIGHT, aiTextureType_NONE);
-		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::AlphaMask, aiTextureType_OPACITY, aiTextureType_NONE);
+		material->SetProperty(MaterialProperty::ColorA, opacity.r);
 
 		// todo:
 		// material->SetProperty(MaterialProperty::SingleTextureRoughnessMetalness, static_cast<float>(is_gltf));
+
+		// Set a resource file path so it can be used by the resource cache
+		material->SetResourceFilePath(FileSystem::RemoveIllegalCharacters(FileSystem::GetDirectoryFromFilePath(file_path) + string(name.C_Str()) + EXTENSION_MATERIAL));
+		material->SaveToFile(materialPath);
 
 		return material;
 	}
@@ -626,20 +635,16 @@ namespace LitchiRuntime
 			ParseMeshWithoutBone(assimp_mesh, entity_parent);
 		}
 
-		// todo temp
+
 		if (!model_has_animation)
 		{
 			// Create a Renderable and pass the material to it
-
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
-			entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
+			entity_parent->AddComponent<MeshRenderer>()->SetDefaultMaterial();
 		}
 		else
 		{
 			// Create a Renderable and pass the material to it
-
-			auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/StandardSkinn4Phong.mat");
-			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
+			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetDefaultMaterial();
 		}
 
 		// material
@@ -654,8 +659,29 @@ namespace LitchiRuntime
 			Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
 
 			mesh->AddMaterial(material, entity_parent);
+		}
+		else
+		{
+			// todo temp
+			if (!model_has_animation)
+			{
+				// Create a Renderable and pass the material to it
 
-			
+				auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
+
+				mesh->AddMaterial(material, entity_parent);
+				//entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
+			}
+			else
+			{
+				// Create a Renderable and pass the material to it
+
+				auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/StandardSkinn4Phong.mat");
+
+				mesh->AddMaterial(material, entity_parent);
+				//entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
+			}
+
 		}
 
 	}

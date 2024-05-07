@@ -5,6 +5,7 @@
 #include <any>
 #include <memory>
 #include <array>
+#include <assimp/color4.h>
 
 #include "MaterialShader.h"
 #include "../RHI/RHI_Definitions.h"
@@ -13,9 +14,6 @@
 #include "Runtime/Core/Math/Vector2.h"
 #include "Runtime/Core/Math/Vector3.h"
 #include "Runtime/Core/Math/Vector4.h"
-#include "Runtime/Core/Math/Matrix.h"
-#include "ShaderUniform.h"
-#include "Runtime/Function/Renderer/RHI/RHI_Descriptor.h"
 //=================================
 
 namespace LitchiRuntime
@@ -187,9 +185,11 @@ namespace LitchiRuntime
 
 		/* Set Texture Resource */
 		void SetTexture(const std::string& name, RHI_Texture* texture);
+		void SetTexture(MaterialTexture textureType, RHI_Texture* texture);
 
 		/* Set Variable with not resource */
 		template<typename T> void SetValue(const std::string& name, const T& value);
+		void SetProperty(MaterialProperty materialProperty, float value);
 
 		/**
 		* Set a shader uniform value
@@ -200,7 +200,7 @@ namespace LitchiRuntime
 		MaterialRes* GetMaterialRes() { return m_materialRes; }
 		RHI_Shader* GetVertexShader() { return m_shader->m_vertex_shader; }
 		RHI_Shader* GetPixelShader() { return m_shader->m_pixel_shader; }
-		void SetShader(MaterialShader* shader);
+		void SetShader(MaterialShader* shader,RHI_Vertex_Type vertexType = RHI_Vertex_Type::Undefined);
 		MaterialShader* GetShader() { return m_shader; }
 		std::map<std::string, std::any>& GetUniformsData() { return m_uniformDataList; }
 

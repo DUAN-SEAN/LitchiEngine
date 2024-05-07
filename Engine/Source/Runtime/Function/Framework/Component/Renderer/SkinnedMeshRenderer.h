@@ -37,6 +37,13 @@ namespace LitchiRuntime
 		*/
 		MeshRendererType GetMeshRendererType() const override { return MeshRendererType::SkinMeshRenderer; }
 
+
+		/**
+		 * @brief Set Default PBR Material
+		 * @return
+		*/
+		void SetDefaultMaterial() override;
+
 		/**
 		 * @brief Call before object resource change
 		*/

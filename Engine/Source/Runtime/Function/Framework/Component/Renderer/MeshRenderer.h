@@ -64,7 +64,7 @@ namespace LitchiRuntime
 		/**
 		 * @brief Set use default Material
 		*/
-		void SetDefaultMaterial();
+		virtual void SetDefaultMaterial();
 
 		/**
 		 * @brief Get Material pointer
