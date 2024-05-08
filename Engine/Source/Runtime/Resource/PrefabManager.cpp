@@ -37,9 +37,10 @@ namespace LitchiRuntime
 
 	Prefab* PrefabManager::CreatePrefab(const std::string& p_path)
 	{
-		std::string realPath = GetRealPath(p_path);
+		auto relativePath = GetRelativePath(p_path);
+		std::string realPath = GetRealPath(relativePath);
 		Prefab* prefab = new Prefab(realPath);
-		RegisterResource(p_path, prefab);
+		RegisterResource(relativePath, prefab);
 
 		return prefab;
 	}

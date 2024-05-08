@@ -283,7 +283,8 @@ namespace LitchiRuntime
 
 		Material* material = ApplicationBase::Instance()->materialManager->CreateMaterial(materialPath);
 		RHI_Vertex_Type vertexType = model_has_animation? RHI_Vertex_Type::PosUvNorTanBone:RHI_Vertex_Type::PosUvNorTan;
-		material->SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(":Shaders/Forward/PBR/PBRTest.hlsl"), vertexType);
+		material->SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(model_has_animation?":Shaders/Forward/PBR/PBRTest_Skin.hlsl":":Shaders/Forward/PBR/PBRTest.hlsl"), vertexType);
+		material->PostResourceLoaded();
 
 		//                                                                         texture type,                texture type assimp (pbr),       texture type assimp (legacy/fallback)
 		load_material_texture(mesh, file_path, is_gltf, material, material_assimp, MaterialTexture::Color, aiTextureType_BASE_COLOR, aiTextureType_DIFFUSE);
@@ -310,6 +311,10 @@ namespace LitchiRuntime
 		material->SetProperty(MaterialProperty::ColorB, color_diffuse.b);
 		material->SetProperty(MaterialProperty::ColorA, opacity.r);
 
+		material->SetProperty(MaterialProperty::UvOffsetX, 0.0f);
+		material->SetProperty(MaterialProperty::UvOffsetY, 0.0f);
+		material->SetProperty(MaterialProperty::UvTilingX, 1.0f);
+		material->SetProperty(MaterialProperty::UvTilingY, 1.0f);
 		// todo:
 		// material->SetProperty(MaterialProperty::SingleTextureRoughnessMetalness, static_cast<float>(is_gltf));
 

@@ -17,6 +17,7 @@
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 #include "Runtime/Function/Renderer/RHI/RHI_ConstantBuffer.h"
 #include "Runtime/Function/Renderer/RHI/RHI_IndexBuffer.h"
+#include "Runtime/Function/Renderer/RHI/RHI_InputLayout.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/Image.h"
 //==============================================
@@ -643,6 +644,13 @@ namespace LitchiRuntime
 	void Renderer::Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
 	{
 		Material* selectMaterial = rendererPath->GetSelectedMaterial();
+
+		// todo now only support posUvNorTan
+		if(selectMaterial!=nullptr && selectMaterial->GetShader()->m_vertex_shader->GetInputLayout()->GetVertexType() != RHI_Vertex_Type::PosUvNorTan)
+		{
+			return;
+		}
+
 		Mesh* selectedMesh = rendererPath->GetSelectedMesh();
 		RHI_Texture2D* selectedTexture2d = rendererPath->GetSelectedTexture2D();
 		SelectedResourceType selectedResType  = rendererPath->GetSelectedResourceType();

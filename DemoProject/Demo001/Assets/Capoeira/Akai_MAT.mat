@@ -1,0 +1,47 @@
+{
+  "vertexType": "PosUvNorTanBone",
+  "shaderPath": ":Shaders/Forward/PBR/PBRTest_Skin.hlsl",
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_aO",
+      "path": ":Textures/white.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_albedo",
+      "path": "Capoeira/rp_sophia_animated_003_dif.jpg"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_metallic",
+      "path": ":Textures/white.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_normal",
+      "path": "Capoeira/rp_sophia_animated_003_dif.jpg"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_roughness",
+      "path": "Capoeira/rp_sophia_animated_003_gloss.jpg"
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureOffset",
+      "vector": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureTiling",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0
+      }
+    }
+  ]
+}

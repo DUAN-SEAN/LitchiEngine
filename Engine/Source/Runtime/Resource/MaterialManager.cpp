@@ -35,9 +35,10 @@ namespace LitchiRuntime
 
 	Material* MaterialManager::CreateMaterial(const std::string& p_path)
 	{
-		std::string realPath = GetRealPath(p_path);
+		auto relativePath = GetRelativePath(p_path);
+		std::string realPath = GetRealPath(relativePath);
 		Material* prefab = new Material(realPath);
-		RegisterResource(p_path, prefab);
+		RegisterResource(relativePath, prefab);
 
 		return prefab;
 	}

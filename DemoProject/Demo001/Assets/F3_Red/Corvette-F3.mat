@@ -1,0 +1,47 @@
+{
+    "vertexType": "PosUvNorTan",
+    "shaderPath": ":Shaders/Forward/PBR/PBRTest.hlsl",
+    "uniformInfoList": [
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_aO",
+            "path": ""
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_albedo",
+            "path": "F3_Red/F3_Red.tif"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_metallic",
+            "path": ""
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_normal",
+            "path": "F3_Red/F3_normal.tif"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_roughness",
+            "path": "F3_Red/F3_roughness.tif"
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_textureOffset",
+            "vector": {
+                "x": 0.0,
+                "y": 0.0
+            }
+        },
+        {
+            "Type": "UniformInfoVector2",
+            "name": "u_textureTiling",
+            "vector": {
+                "x": 1.0,
+                "y": 1.0
+            }
+        }
+    ]
+}

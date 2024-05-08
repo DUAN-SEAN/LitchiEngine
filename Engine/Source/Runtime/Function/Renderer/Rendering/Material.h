@@ -255,10 +255,21 @@ namespace LitchiRuntime
 	template<typename T>
 	inline const T& Material::GetValue(const std::string p_key)
 	{
-		if (m_uniformDataList.find(p_key) != m_uniformDataList.end())
+		if (m_uniformDataList.find(p_key) == m_uniformDataList.end())
+		{
 			return T();
+		}
 		else
-			return std::any_cast<T>(m_uniformDataList.at(p_key));
+		{
+			std::any a = m_uniformDataList.at(p_key);
+			if(a.type() == typeid(T))
+			{
+				return std::any_cast<T>(a);
+			}else
+			{
+				return T();
+			}
+		}
 	}
 
 	/*

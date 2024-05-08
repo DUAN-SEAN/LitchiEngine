@@ -93,6 +93,8 @@ namespace LitchiRuntime
 
 		SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(m_materialRes->shaderPath));
 
+		PostResourceLoaded();
+
 		return true;
 	}
 
@@ -230,7 +232,56 @@ namespace LitchiRuntime
 
 	void Material::SetProperty(MaterialProperty materialProperty, float value)
 	{
+		switch (materialProperty) {
+		case MaterialProperty::UvTilingX:
+			{
 
+			auto tilingX = GetValue<Vector2>("u_textureTiling");
+			tilingX.x = value;
+			SetValue<Vector2>("u_textureTiling", tilingX);
+			}
+			break;
+		case MaterialProperty::UvTilingY:
+			{
+			auto tilingY = GetValue<Vector2>("u_textureTiling");
+			tilingY.y = value;
+			SetValue<Vector2>("u_textureTiling", tilingY); }
+			break;
+		case MaterialProperty::UvOffsetX:
+			{
+			auto offsetX = GetValue<Vector2>("u_textureOffset");
+			offsetX.x = value;
+			SetValue<Vector2>("u_textureOffset", offsetX);
+			}
+			break;
+		case MaterialProperty::UvOffsetY:
+			{
+			auto offsetY = GetValue<Vector2>("u_textureOffset");
+			offsetY.y = value;
+			SetValue<Vector2>("u_textureOffset", offsetY);
+				
+			}
+			break;
+		case MaterialProperty::Clearcoat:
+		case MaterialProperty::Clearcoat_Roughness:
+		case MaterialProperty::Anisotropic:
+		case MaterialProperty::AnisotropicRotation:
+		case MaterialProperty::Sheen:
+		case MaterialProperty::SheenTint:
+		case MaterialProperty::ColorTint:
+		case MaterialProperty::ColorR:
+		case MaterialProperty::ColorG:
+		case MaterialProperty::ColorB:
+		case MaterialProperty::ColorA:
+		case MaterialProperty::RoughnessMultiplier:
+		case MaterialProperty::MetalnessMultiplier:
+		case MaterialProperty::NormalMultiplier:
+		case MaterialProperty::HeightMultiplier:
+		case MaterialProperty::SingleTextureRoughnessMetalness:
+		case MaterialProperty::CanBeEdited:
+		case MaterialProperty::Undefined:
+			break;
+		}
 	}
 
 	void Material::SetShader(MaterialShader* shader, RHI_Vertex_Type vertexType)
@@ -240,7 +291,6 @@ namespace LitchiRuntime
 		{
 			m_materialRes->vertexType = vertexType;
 		}
-		PostResourceLoaded();
 	}
 
 	void* Material::GetValues4DescriptorSet(uint32_t& size)
