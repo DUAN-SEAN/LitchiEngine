@@ -45,6 +45,18 @@ Pixel mainVS(Vertex_PosUvNorTan input)
 	return output;
 }
 
+static const float gamma_sdr = 2.2f; // SDR monitors are likely old, and aim for a simplistic gamma 2.2 curve
+static const float gamma_hdr = 2.4f; // HDR monitors are more likely to aim for the actual sRGB standard, which has a curve that for mid tones to high lights resembles a gamma of 2.4
+
+float3 srgb_to_linear(float3 color)
+{
+    float gamma = lerp(gamma_sdr, gamma_hdr, 0.0f);
+    float3 linear_low = color / 12.92;
+    float3 linear_high = pow((color + 0.055) / 1.055, gamma);
+    float3 is_high = step(0.0404482362771082, color);
+    return lerp(linear_low, linear_high, is_high);
+}
+
 
 float4 mainPS(Pixel input) : SV_Target
 {
@@ -55,6 +67,9 @@ float4 mainPS(Pixel input) : SV_Target
 	// sample for texture
 	float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
 	float4 albedo = u_albedo.Sample(samplers[sampler_point_wrap], g_TexCoords);
+    float3 albedoLinear = srgb_to_linear(albedo.xyz);
+    albedo = float4(albedoLinear, albedo.a);
+	
 	float metallic = u_metallic.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
 	float perceptualRoughness = 1 - u_roughness.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
 	float roughness = perceptualRoughness * perceptualRoughness;
@@ -78,7 +93,8 @@ float4 mainPS(Pixel input) : SV_Target
 	for (int index = 0; index < lightCount; index++) {
 		LightBufferData lightBufferData = buffer_lights[index];
 
-		float3 lightDir = normalize(lightBufferData.direction.xyz).xyz;
+		float3 lightDir = normalize(-lightBufferData.direction.xyz).xyz;
+        // float3 lightDir = normalize(lightBufferData.position - input.fragPos.xyz);
 		float3 lightColor = lightBufferData.color.xyz;
 		float3 halfVector = normalize(lightDir + viewDir);
 
@@ -116,5 +132,8 @@ float4 mainPS(Pixel input) : SV_Target
 		lightSum += directLightResult + indirectResult;
 	}
 
-	return float4(lightSum.x, lightSum.y, lightSum.z,1);
+    // float3 color = lightSum + float3(0.03) * albedo.xyz * ao;
+    float3 color = lightSum + float3(0.03,0.03,0.03) * albedo.xyz;
+	
+    return float4(color.x, color.y, color.z, 1);
 }
