@@ -95,7 +95,7 @@ float4 mainPS(Pixel input) : SV_Target
 
 		float3 lightDir = normalize(-lightBufferData.direction.xyz).xyz;
         // float3 lightDir = normalize(lightBufferData.position - input.fragPos.xyz);
-		float3 lightColor = lightBufferData.color.xyz;
+        float3 lightColor = lightBufferData.color.xyz * lightBufferData.intensity;
 		float3 halfVector = normalize(lightDir + viewDir);
 
 		float nl = max(saturate(dot(normal, lightDir)), 0.000001);
@@ -118,11 +118,9 @@ float4 mainPS(Pixel input) : SV_Target
 		float3 kd = (1 - F) * (1 - metallic);
 
 		// calculate directLightResult with diffuse and specular
-        float3 diffColor = kd * albedo.xyz/PI * lightColor * nl;
-        float3 specularResult = (D * G * F) / (4 * max((nv * nl), 0.000001) + 0.000001);
-		//float3 specColor = specularResult * lightColor * nl * PI;
-		float3 specColor = specularResult * lightColor * nl;
-		float3 directLightResult = diffColor + specColor;
+        float3 diffColor = kd * albedo.xyz / PI;
+        float3 specColor = (D * G * F) / (4 * nv * nl);
+        float3 directLightResult = (diffColor + specColor) * lightColor * nl;
 
 		// calculate indirectLightResult todo
 		float3 iblDiffuseResult = 0;

@@ -5,27 +5,27 @@
         {
             "Type": "UniformInfoTexture",
             "name": "u_aO",
-            "path": ":Textures/black.png"
+            "path": ""
         },
         {
             "Type": "UniformInfoTexture",
             "name": "u_albedo",
-            "path": "NPC_female_020/NPC_female_020/NPC_female_013_col.tga"
+            "path": ""
         },
         {
             "Type": "UniformInfoTexture",
             "name": "u_metallic",
-            "path": ":Textures/black.png"
+            "path": ""
         },
         {
             "Type": "UniformInfoTexture",
             "name": "u_normal",
-            "path": "NPC_female_020/NPC_female_020/NPC_female_013_Hair_nml.tga"
+            "path": ""
         },
         {
             "Type": "UniformInfoTexture",
             "name": "u_roughness",
-            "path": "Capoeira/rp_sophia_animated_003_gloss.jpg"
+            "path": ""
         },
         {
             "Type": "UniformInfoVector2",

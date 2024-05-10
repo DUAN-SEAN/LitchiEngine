@@ -1,6 +1,6 @@
 {
     "name": "Empty Scene",
-    "availableID": 103,
+    "availableID": 255,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -58,12 +58,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
+                    "MeshPath": "NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
                     "SubMeshIndex": 1
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013_hair_mat.mat"
+                    "materialPath": "NPC_female_020/NPC_female_020/NPC_female_013_hair_mat.mat"
                 }
             ]
         },
@@ -95,12 +95,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
+                    "MeshPath": "NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
                     "SubMeshIndex": 0
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013_mat.mat"
+                    "materialPath": "NPC_female_020/NPC_female_020/NPC_female_013_mat.mat"
                 }
             ]
         },
@@ -2859,19 +2859,19 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 1.5174416303634644,
+                        "z": -2.0042266845703127
                     },
                     "localRotation": {
-                        "x": 0.258819043636322,
+                        "x": 0.9556273818016052,
                         "y": 0.0,
                         "z": 0.0,
-                        "w": 0.9659258127212524
+                        "w": 0.2945781946182251
                     },
                     "localScale": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "x": 0.9999999403953552,
+                        "y": 0.9999672174453735,
+                        "z": 0.9999672174453735
                     }
                 },
                 {
@@ -2883,12 +2883,4331 @@
                         "b": 1.0,
                         "a": 1.0
                     },
-                    "intensityLumens": 2600.0,
+                    "intensityLumens": 4000.0,
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
                     "range": 200.0,
                     "angle": 0.5,
                     "normalBias": 5.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 103,
+            "parentId": 0,
+            "layer": 1,
+            "name": "F3_Red",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.251678228378296,
+                        "y": 0.6784908771514893,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071066498756409,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.0014799245400354267,
+                        "y": 0.0014796521281823516,
+                        "z": 0.0014796521281823516
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 104,
+            "parentId": 103,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_Rotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 105,
+            "parentId": 104,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_GeometricRotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 106,
+            "parentId": 105,
+            "layer": 1,
+            "name": "Corvette-F3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "F3_Red/F3_Red.FBX",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "F3_Red/Corvette-F3.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 107,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Plane",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": -2.3342761993408205,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 5.430897235870361,
+                        "y": 1.0,
+                        "z": 6.819654941558838
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Plane.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 108,
+            "parentId": 0,
+            "layer": 1,
+            "name": "NPC_female_024out",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.0716698169708253,
+                        "y": 0.0,
+                        "z": -0.5272241830825806
+                    },
+                    "localRotation": {
+                        "x": 0.7071066498756409,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.009963140822947026,
+                        "y": 0.009960834868252278,
+                        "z": 0.009960834868252278
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 109,
+            "parentId": 108,
+            "layer": 1,
+            "name": "mesh4",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "SubMeshIndex": 4
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_BD_mat.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 110,
+            "parentId": 108,
+            "layer": 1,
+            "name": "mesh3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "SubMeshIndex": 3
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_Hair_high_mat.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 111,
+            "parentId": 108,
+            "layer": 1,
+            "name": "mesh2",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "SubMeshIndex": 2
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_Hair_low_mat.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 112,
+            "parentId": 108,
+            "layer": 1,
+            "name": "mesh1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "SubMeshIndex": 1
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "NPC_female_024/NPC_female_024/W_9007_eyeline_Mat.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 113,
+            "parentId": 108,
+            "layer": 1,
+            "name": "mesh0",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_HD_mat.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 114,
+            "parentId": 108,
+            "layer": 1,
+            "name": "DummyRoot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 115,
+            "parentId": 114,
+            "layer": 1,
+            "name": "Bip001",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": -2.630563735961914,
+                        "z": -99.9800033569336
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.7071069478988648,
+                        "w": 0.7071065902709961
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 116,
+            "parentId": 115,
+            "layer": 1,
+            "name": "Bip001-Pelvis",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.5000000596046448,
+                        "y": 0.5000000596046448,
+                        "z": -0.49999934434890749,
+                        "w": 0.5000006556510925
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 117,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Bag",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.81685209274292,
+                        "y": 11.592897415161133,
+                        "z": -8.743659973144532
+                    },
+                    "localRotation": {
+                        "x": 0.15555429458618165,
+                        "y": 0.9660772085189819,
+                        "z": -0.201323002576828,
+                        "w": -0.044347524642944339
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 118,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Acc",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.378545761108398,
+                        "y": 7.633994102478027,
+                        "z": 12.55710506439209
+                    },
+                    "localRotation": {
+                        "x": 0.12193983048200607,
+                        "y": 0.9252332448959351,
+                        "z": 0.35926729440689089,
+                        "w": 0.0010980353690683842
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 119,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_L00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5546683073043823,
+                        "y": 0.21034996211528779,
+                        "z": -16.18199920654297
+                    },
+                    "localRotation": {
+                        "x": -0.029082827270030977,
+                        "y": -0.7050891518592835,
+                        "z": 0.7063344120979309,
+                        "w": -0.055634740740060809
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999998807907105
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 120,
+            "parentId": 119,
+            "layer": 1,
+            "name": "B_Skirt_L01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 12.373720169067383,
+                        "y": -0.0000026002594495366795,
+                        "z": -1.5032028954919952e-7
+                    },
+                    "localRotation": {
+                        "x": -0.001879584277048707,
+                        "y": -0.0026208986528217794,
+                        "z": -0.07531769573688507,
+                        "w": 0.9971544146537781
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 121,
+            "parentId": 120,
+            "layer": 1,
+            "name": "B_Skirt_L02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.413904190063477,
+                        "y": 0.00011293635907350108,
+                        "z": 0.000007455363629560452
+                    },
+                    "localRotation": {
+                        "x": -0.0016960038337856532,
+                        "y": -0.005749228876084089,
+                        "z": 0.02907707914710045,
+                        "w": 0.999559223651886
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 122,
+            "parentId": 121,
+            "layer": 1,
+            "name": "B_Skirt_L03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.805057525634767,
+                        "y": -0.0000041695943764352709,
+                        "z": -0.000007477429790014867
+                    },
+                    "localRotation": {
+                        "x": -0.003962877672165632,
+                        "y": -0.005320785567164421,
+                        "z": 0.016429943963885309,
+                        "w": 0.9998430013656616
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 123,
+            "parentId": 122,
+            "layer": 1,
+            "name": "B_Skirt_L04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.79450035095215,
+                        "y": -0.0000029664238354598639,
+                        "z": 0.000003906526671926258
+                    },
+                    "localRotation": {
+                        "x": -0.00010144381667487323,
+                        "y": 0.0002185478515457362,
+                        "z": 0.003123634960502386,
+                        "w": 0.9999951124191284
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 124,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_BL00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.1320391297340393,
+                        "y": -10.590222358703614,
+                        "z": -4.892011642456055
+                    },
+                    "localRotation": {
+                        "x": -0.02459559589624405,
+                        "y": -0.04427945986390114,
+                        "z": 0.9977553486824036,
+                        "w": -0.043803077191114429
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 125,
+            "parentId": 124,
+            "layer": 1,
+            "name": "B_Skirt_BL01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 12.207886695861817,
+                        "y": -0.000008555663953302428,
+                        "z": 0.000007671774255868513
+                    },
+                    "localRotation": {
+                        "x": -0.0001523081009509042,
+                        "y": -0.009140526875853539,
+                        "z": -0.08646629750728607,
+                        "w": 0.9962128400802612
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999998807907105,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 126,
+            "parentId": 125,
+            "layer": 1,
+            "name": "B_Skirt_BL02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.499966621398926,
+                        "y": 0.000108579799416475,
+                        "z": -0.000007411586921080016
+                    },
+                    "localRotation": {
+                        "x": -0.004757193848490715,
+                        "y": -0.010471383109688759,
+                        "z": 0.06348570436239243,
+                        "w": 0.9979165196418762
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 127,
+            "parentId": 126,
+            "layer": 1,
+            "name": "B_Skirt_BL03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.016700744628908,
+                        "y": -0.0000013658733450938599,
+                        "z": 0.000007479700343537843
+                    },
+                    "localRotation": {
+                        "x": 0.001766156405210495,
+                        "y": -0.012631701305508614,
+                        "z": 0.023633411154150964,
+                        "w": 0.9996393322944641
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 128,
+            "parentId": 127,
+            "layer": 1,
+            "name": "B_Skirt_BL04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.610002517700197,
+                        "y": 0.000014412230484595057,
+                        "z": 0.00003875079710269347
+                    },
+                    "localRotation": {
+                        "x": -0.006854664534330368,
+                        "y": 0.006351099815219641,
+                        "z": 0.003135253908112645,
+                        "w": 0.9999514222145081
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 129,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_FL00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.0667298436164856,
+                        "y": 12.413660049438477,
+                        "z": -5.597987174987793
+                    },
+                    "localRotation": {
+                        "x": 0.022501640021800996,
+                        "y": 0.9985558986663818,
+                        "z": -0.04428328573703766,
+                        "w": 0.02046681009232998
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 130,
+            "parentId": 129,
+            "layer": 1,
+            "name": "B_Skirt_FL01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.875870704650879,
+                        "y": -0.000002929622496594675,
+                        "z": -0.000007385899607470492
+                    },
+                    "localRotation": {
+                        "x": -9.204907769344572e-7,
+                        "y": 2.459365191498364e-7,
+                        "z": -0.007752103265374899,
+                        "w": 0.9999699592590332
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 131,
+            "parentId": 130,
+            "layer": 1,
+            "name": "B_Skirt_FL02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.45730209350586,
+                        "y": -0.000008903177331376355,
+                        "z": -0.00003818077311734669
+                    },
+                    "localRotation": {
+                        "x": -0.000003821422069449909,
+                        "y": 9.945571264324827e-7,
+                        "z": -0.01057438738644123,
+                        "w": 0.9999440908432007
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 132,
+            "parentId": 131,
+            "layer": 1,
+            "name": "B_Skirt_FL03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.94894790649414,
+                        "y": -0.000005318578132573748,
+                        "z": 0.00006476410635514185
+                    },
+                    "localRotation": {
+                        "x": -0.0000031524473342869898,
+                        "y": -0.0000010401978443042026,
+                        "z": -0.003275154158473015,
+                        "w": 0.9999946355819702
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 133,
+            "parentId": 132,
+            "layer": 1,
+            "name": "B_Skirt_FL04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.406124114990236,
+                        "y": -0.000007524005013692658,
+                        "z": 0.000007544502750533866
+                    },
+                    "localRotation": {
+                        "x": -0.000007275007192220073,
+                        "y": -3.352977273607394e-8,
+                        "z": 0.004608850926160812,
+                        "w": 0.99998939037323
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 134,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_BR00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.1320543885231018,
+                        "y": -10.59023380279541,
+                        "z": 6.303666591644287
+                    },
+                    "localRotation": {
+                        "x": 0.024596884846687318,
+                        "y": 0.044278357177972797,
+                        "z": 0.9977553486824036,
+                        "w": -0.043803099542856219
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 135,
+            "parentId": 134,
+            "layer": 1,
+            "name": "B_Skirt_BR01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 12.207880020141602,
+                        "y": -0.0000054614497457805559,
+                        "z": -1.33956859826867e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0001524477993370965,
+                        "y": 0.0091404365375638,
+                        "z": -0.08646630495786667,
+                        "w": 0.9962128400802612
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999998807907105,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 136,
+            "parentId": 135,
+            "layer": 1,
+            "name": "B_Skirt_BR02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.499978065490723,
+                        "y": 0.00011214415280846879,
+                        "z": -0.000003054178705497179
+                    },
+                    "localRotation": {
+                        "x": 0.0047571915201842789,
+                        "y": 0.010471419431269169,
+                        "z": 0.06348571926355362,
+                        "w": 0.9979165196418762
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 137,
+            "parentId": 136,
+            "layer": 1,
+            "name": "B_Skirt_BR03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.016706466674806,
+                        "y": -0.0000012456207514333074,
+                        "z": -0.000004798654117621481
+                    },
+                    "localRotation": {
+                        "x": -0.001766682369634509,
+                        "y": 0.012631719931960106,
+                        "z": 0.023633308708667756,
+                        "w": 0.9996393322944641
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 138,
+            "parentId": 137,
+            "layer": 1,
+            "name": "B_Skirt_BR04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.61002540588379,
+                        "y": 0.000017783340808819049,
+                        "z": -0.000031047577067511159
+                    },
+                    "localRotation": {
+                        "x": 0.006854931358247995,
+                        "y": -0.0063510979525744919,
+                        "z": 0.0031353652011603119,
+                        "w": 0.9999514222145081
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 139,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_R00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5547140836715698,
+                        "y": 0.2103165239095688,
+                        "z": 16.181556701660158
+                    },
+                    "localRotation": {
+                        "x": 0.02908390574157238,
+                        "y": 0.7050880789756775,
+                        "z": 0.7063353657722473,
+                        "w": -0.055635690689086917
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 140,
+            "parentId": 139,
+            "layer": 1,
+            "name": "B_Skirt_R01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 12.373723983764649,
+                        "y": -0.000006771460448362632,
+                        "z": -0.0000017540995713716257
+                    },
+                    "localRotation": {
+                        "x": 0.0018798020901158453,
+                        "y": 0.0026210299693048,
+                        "z": -0.07531769573688507,
+                        "w": 0.9971544146537781
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 141,
+            "parentId": 140,
+            "layer": 1,
+            "name": "B_Skirt_R02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.413894653320313,
+                        "y": 0.00011195247498108074,
+                        "z": -0.0000032551818094361808
+                    },
+                    "localRotation": {
+                        "x": 0.0016960137290880085,
+                        "y": 0.005749215371906757,
+                        "z": 0.02907693199813366,
+                        "w": 0.999559223651886
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 142,
+            "parentId": 141,
+            "layer": 1,
+            "name": "B_Skirt_R03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.805057525634767,
+                        "y": 8.584699457969691e-7,
+                        "z": 9.945915024900387e-8
+                    },
+                    "localRotation": {
+                        "x": 0.003963223192840815,
+                        "y": 0.005320840515196323,
+                        "z": 0.01643003709614277,
+                        "w": 0.9998430013656616
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 143,
+            "parentId": 142,
+            "layer": 1,
+            "name": "B_Skirt_R04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.794496536254884,
+                        "y": -0.0000052603909352910709,
+                        "z": 0.000003661755954453838
+                    },
+                    "localRotation": {
+                        "x": 0.00010125333210453391,
+                        "y": -0.00021846037998329848,
+                        "z": 0.0031237592920660974,
+                        "w": 0.9999951124191284
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 144,
+            "parentId": 116,
+            "layer": 1,
+            "name": "B_Skirt_FR00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.06670695543289185,
+                        "y": 12.41364860534668,
+                        "z": 5.598069667816162
+                    },
+                    "localRotation": {
+                        "x": 0.022501612082123758,
+                        "y": 0.9985557794570923,
+                        "z": 0.04428497329354286,
+                        "w": -0.02046802081167698
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 145,
+            "parentId": 144,
+            "layer": 1,
+            "name": "B_Skirt_FR01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.87588119506836,
+                        "y": -4.4404913523976577e-7,
+                        "z": 0.000005803926796943415
+                    },
+                    "localRotation": {
+                        "x": 0.0000014660130318588927,
+                        "y": -1.1364855723172696e-8,
+                        "z": -0.007751987315714359,
+                        "w": 0.9999699592590332
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 146,
+            "parentId": 145,
+            "layer": 1,
+            "name": "B_Skirt_FR02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 15.457298278808594,
+                        "y": -0.000008017237632884644,
+                        "z": 0.000022440228349296377
+                    },
+                    "localRotation": {
+                        "x": 0.000003456747663221904,
+                        "y": -0.0000011029285360564245,
+                        "z": -0.010574286803603173,
+                        "w": 0.9999440908432007
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 147,
+            "parentId": 146,
+            "layer": 1,
+            "name": "B_Skirt_FR03",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 18.94894790649414,
+                        "y": -0.000007414355877699563,
+                        "z": -0.00005677447552443482
+                    },
+                    "localRotation": {
+                        "x": 0.000003472571734164376,
+                        "y": 0.0000011875995369337034,
+                        "z": -0.003275153925642371,
+                        "w": 0.9999946355819702
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 148,
+            "parentId": 147,
+            "layer": 1,
+            "name": "B_Skirt_FR04",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.406124114990236,
+                        "y": -0.000005582016910921084,
+                        "z": -2.6700399757828566e-7
+                    },
+                    "localRotation": {
+                        "x": 0.000007725843715888914,
+                        "y": 3.560760575282984e-8,
+                        "z": 0.004608847200870514,
+                        "w": 0.99998939037323
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 149,
+            "parentId": 116,
+            "layer": 1,
+            "name": "Bip001-R-Thigh",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.000018708256902755239,
+                        "y": -0.000009351018888992258,
+                        "z": 9.808832168579102
+                    },
+                    "localRotation": {
+                        "x": -0.0006473717512562871,
+                        "y": 0.9999396204948425,
+                        "z": -0.0018393576610833407,
+                        "w": -0.010811585932970047
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 150,
+            "parentId": 149,
+            "layer": 1,
+            "name": "H_B_R-Hip",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.0012810785556212068,
+                        "y": -0.005414028652012348,
+                        "z": -0.004228443838655949,
+                        "w": 0.9999755620956421
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 151,
+            "parentId": 150,
+            "layer": 1,
+            "name": "Bone_Hip_R_00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.100902557373047,
+                        "y": 0.03098044916987419,
+                        "z": 0.731383204460144
+                    },
+                    "localRotation": {
+                        "x": -0.7071067094802856,
+                        "y": 0.7071068286895752,
+                        "z": 3.0908619663705397e-8,
+                        "w": -3.0908616110991718e-8
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 152,
+            "parentId": 149,
+            "layer": 1,
+            "name": "Bone_Knee_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 43.41939163208008,
+                        "y": -9.383295918041768e-8,
+                        "z": -2.0602558947757644e-7
+                    },
+                    "localRotation": {
+                        "x": 1.0308785647339391e-7,
+                        "y": 9.57388124334102e-7,
+                        "z": 0.6817308068275452,
+                        "w": 0.7316030859947205
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 153,
+            "parentId": 149,
+            "layer": 1,
+            "name": "Bip001-R-Calf",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 43.41939163208008,
+                        "y": -9.383295918041768e-8,
+                        "z": -2.0602558947757644e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.03796664625406265,
+                        "w": 0.9992790222167969
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 154,
+            "parentId": 153,
+            "layer": 1,
+            "name": "Bip001-R-Foot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 42.548831939697269,
+                        "y": 0.000001190201032841287,
+                        "z": 0.000001237265792042308
+                    },
+                    "localRotation": {
+                        "x": -0.004685313906520605,
+                        "y": -0.010998813435435295,
+                        "z": 0.03857565298676491,
+                        "w": 0.9991841316223145
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 155,
+            "parentId": 154,
+            "layer": 1,
+            "name": "Bip001-R-Toe0",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 14.12049388885498,
+                        "y": 5.016594409942627,
+                        "z": -6.648659791608225e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.7071067690849304,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 156,
+            "parentId": 116,
+            "layer": 1,
+            "name": "Bip001-L-Thigh",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -0.000011809318493760657,
+                        "y": 0.000017986529201152736,
+                        "z": -9.808830261230469
+                    },
+                    "localRotation": {
+                        "x": -0.0006473845569416881,
+                        "y": 0.9999396204948425,
+                        "z": 0.0018407871248200536,
+                        "w": 0.010810120962560177
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 157,
+            "parentId": 156,
+            "layer": 1,
+            "name": "H_B_L-Hip",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0012813291978091002,
+                        "y": 0.005413284059613943,
+                        "z": -0.004228381905704737,
+                        "w": 0.9999755620956421
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 158,
+            "parentId": 157,
+            "layer": 1,
+            "name": "Bone_Hip_L_00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.1008996963500978,
+                        "y": 0.03098038211464882,
+                        "z": -0.7315215468406677
+                    },
+                    "localRotation": {
+                        "x": -0.7071067690849304,
+                        "y": 0.7071067690849304,
+                        "z": 1.3767878215276142e-7,
+                        "w": -1.376787679419067e-7
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 159,
+            "parentId": 156,
+            "layer": 1,
+            "name": "Bone_Knee_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 43.41938781738281,
+                        "y": -3.617145125645038e-7,
+                        "z": -0.0000010908413514698623
+                    },
+                    "localRotation": {
+                        "x": 0.7316010594367981,
+                        "y": 0.6817330121994019,
+                        "z": -5.372151576921169e-7,
+                        "w": 0.0000012555643706946285
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 160,
+            "parentId": 156,
+            "layer": 1,
+            "name": "Bip001-L-Calf",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 43.41938781738281,
+                        "y": -3.617145125645038e-7,
+                        "z": -0.0000010908413514698623
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.03796664997935295,
+                        "w": 0.9992790222167969
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 161,
+            "parentId": 160,
+            "layer": 1,
+            "name": "Bip001-L-Foot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 42.548831939697269,
+                        "y": 4.414014540543576e-7,
+                        "z": -0.0000014295281971499208
+                    },
+                    "localRotation": {
+                        "x": 0.004685317166149616,
+                        "y": 0.010998725891113282,
+                        "z": 0.03857565298676491,
+                        "w": 0.9991841316223145
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 162,
+            "parentId": 161,
+            "layer": 1,
+            "name": "Bip001-L-Toe0",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 14.120491981506348,
+                        "y": 5.016594409942627,
+                        "z": -4.795302288584935e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.7071067690849304,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 163,
+            "parentId": 116,
+            "layer": 1,
+            "name": "Bip001-Spine",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.950594902038575,
+                        "y": -0.11027458310127258,
+                        "z": -0.000018520859157433735
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 164,
+            "parentId": 163,
+            "layer": 1,
+            "name": "Bip001-Spine1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.041621208190918,
+                        "y": -0.006293544080108404,
+                        "z": 2.944572941032675e-8
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 165,
+            "parentId": 164,
+            "layer": 1,
+            "name": "Bip001-Spine2",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.90382719039917,
+                        "y": -0.015682687982916833,
+                        "z": 1.4558737326808569e-8
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 166,
+            "parentId": 165,
+            "layer": 1,
+            "name": "Bone_Breast_R_00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 5.493135452270508,
+                        "y": 2.3099942207336427,
+                        "z": 3.1239843368530275
+                    },
+                    "localRotation": {
+                        "x": 0.6788915395736694,
+                        "y": 0.7082228064537048,
+                        "z": 0.1398380845785141,
+                        "w": -0.13405999541282655
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 167,
+            "parentId": 165,
+            "layer": 1,
+            "name": "Bone_Breast_L_00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 5.49315881729126,
+                        "y": 2.309682607650757,
+                        "z": -3.1240017414093019
+                    },
+                    "localRotation": {
+                        "x": 0.6788906455039978,
+                        "y": 0.7082234621047974,
+                        "z": -0.13983815908432008,
+                        "w": 0.13406071066856385
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 168,
+            "parentId": 165,
+            "layer": 1,
+            "name": "Bip001-Neck",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 19.68267822265625,
+                        "y": -1.951353907585144,
+                        "z": 3.05971184388909e-7
+                    },
+                    "localRotation": {
+                        "x": -4.220784433073277e-8,
+                        "y": 3.3820813882812219e-7,
+                        "z": 0.12383778393268585,
+                        "w": 0.9923024773597717
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 169,
+            "parentId": 168,
+            "layer": 1,
+            "name": "Bip001-R-Clavicle",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.520907402038574,
+                        "y": 0.5730071067810059,
+                        "z": 2.185960292816162
+                    },
+                    "localRotation": {
+                        "x": 0.6957436203956604,
+                        "y": -0.12625440955162049,
+                        "z": 0.7053954601287842,
+                        "w": 0.049172140657901767
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 170,
+            "parentId": 169,
+            "layer": 1,
+            "name": "Point_shoulder_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.244073867797852,
+                        "y": 6.157951020213659e-7,
+                        "z": -0.0000050848698265326679
+                    },
+                    "localRotation": {
+                        "x": -0.04500696808099747,
+                        "y": 0.37678539752960207,
+                        "z": 0.043358493596315387,
+                        "w": 0.9241899847984314
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 171,
+            "parentId": 170,
+            "layer": 1,
+            "name": "Bone_shoulder_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071064114570618,
+                        "y": -1.7752969938555908e-7,
+                        "z": 1.775295430661572e-7,
+                        "w": 0.7071071267127991
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 172,
+            "parentId": 169,
+            "layer": 1,
+            "name": "Bip001-R-UpperArm",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.244071006774903,
+                        "y": 2.779494536753191e-7,
+                        "z": -0.00000508538914800738
+                    },
+                    "localRotation": {
+                        "x": -0.13640478253364564,
+                        "y": 0.5142785906791687,
+                        "z": 0.10691618174314499,
+                        "w": 0.8399286866188049
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 173,
+            "parentId": 172,
+            "layer": 1,
+            "name": "Bip001-R-ForeTwist",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 27.418289184570314,
+                        "y": 6.249531452340307e-7,
+                        "z": 0.000004635262939700624
+                    },
+                    "localRotation": {
+                        "x": 0.13419421017169953,
+                        "y": -0.026836173608899118,
+                        "z": -0.19425246119499207,
+                        "w": 0.9713587164878845
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 174,
+            "parentId": 172,
+            "layer": 1,
+            "name": "Bip001-R-Forearm",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 27.418289184570314,
+                        "y": 6.249531452340307e-7,
+                        "z": 0.000004635262939700624
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.19609740376472474,
+                        "w": 0.980584442615509
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 175,
+            "parentId": 174,
+            "layer": 1,
+            "name": "Bone_Forearm_TW_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.081793785095215,
+                        "y": -0.0000013529607940654387,
+                        "z": 0.000005852914455317659
+                    },
+                    "localRotation": {
+                        "x": -0.4889051914215088,
+                        "y": 4.7173551820378636e-7,
+                        "z": 2.6438630129632659e-7,
+                        "w": 0.8723369240760803
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 176,
+            "parentId": 174,
+            "layer": 1,
+            "name": "Bip001-R-Hand",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 20.83317756652832,
+                        "y": 6.936170962035249e-7,
+                        "z": -0.0000046112681957311
+                    },
+                    "localRotation": {
+                        "x": -0.48809871077537539,
+                        "y": 0.0287783145904541,
+                        "z": 0.03338702395558357,
+                        "w": 0.8716747164726257
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 177,
+            "parentId": 176,
+            "layer": 1,
+            "name": "Bip001-R-Finger4",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.0331501960754398,
+                        "y": 0.6711536049842835,
+                        "z": 2.870901346206665
+                    },
+                    "localRotation": {
+                        "x": -0.34102627635002139,
+                        "y": -0.13060808181762696,
+                        "z": 0.2884550988674164,
+                        "w": 0.8851193785667419
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 178,
+            "parentId": 177,
+            "layer": 1,
+            "name": "Bip001-R-Finger41",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.0669143199920656,
+                        "y": -0.0000026874142804445,
+                        "z": -0.000001646218493078777
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.1704661250114441,
+                        "w": 0.9853635430335999
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 179,
+            "parentId": 178,
+            "layer": 1,
+            "name": "Bip001-R-Finger42",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.4979822635650635,
+                        "y": 0.0000031886022497928936,
+                        "z": 2.8910102400914186e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.026144566014409066,
+                        "w": 0.9996581673622131
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 180,
+            "parentId": 176,
+            "layer": 1,
+            "name": "Bip001-R-Finger3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.894291877746582,
+                        "y": -0.4453609585762024,
+                        "z": 1.2229788303375245
+                    },
+                    "localRotation": {
+                        "x": -0.14871802926063538,
+                        "y": -0.07693997770547867,
+                        "z": 0.20943619310855866,
+                        "w": 0.9633793234825134
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 181,
+            "parentId": 180,
+            "layer": 1,
+            "name": "Bip001-R-Finger31",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.082561492919922,
+                        "y": 0.0000027086557565780824,
+                        "z": -1.4160917771732785e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.26632943749427798,
+                        "w": 0.9638820886611939
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 182,
+            "parentId": 181,
+            "layer": 1,
+            "name": "Bip001-R-Finger32",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.3683619499206545,
+                        "y": -0.00000739021288609365,
+                        "z": -6.264901912800269e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.06368052959442139,
+                        "w": 0.9979703426361084
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 183,
+            "parentId": 176,
+            "layer": 1,
+            "name": "Bip001-R-Finger2",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.43998908996582,
+                        "y": -0.9712694883346558,
+                        "z": -0.4110810160636902
+                    },
+                    "localRotation": {
+                        "x": -0.046067386865615848,
+                        "y": -0.030356906354427339,
+                        "z": 0.14942330121994019,
+                        "w": 0.9872329831123352
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 184,
+            "parentId": 183,
+            "layer": 1,
+            "name": "Bip001-R-Finger21",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.336332321166992,
+                        "y": 0.000005359842361940537,
+                        "z": -3.5775576634478059e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.2388547658920288,
+                        "w": 0.9710553288459778
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 185,
+            "parentId": 184,
+            "layer": 1,
+            "name": "Bip001-R-Finger22",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.544832468032837,
+                        "y": -0.000004128746695641894,
+                        "z": -3.5267976272734816e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.03839125856757164,
+                        "w": 0.9992627501487732
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 186,
+            "parentId": 176,
+            "layer": 1,
+            "name": "Bip001-R-Finger1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.59204387664795,
+                        "y": -1.0197573900222779,
+                        "z": -2.5862200260162355
+                    },
+                    "localRotation": {
+                        "x": 0.0404559001326561,
+                        "y": -0.024107828736305238,
+                        "z": 0.14867383241653443,
+                        "w": 0.9877642393112183
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 187,
+            "parentId": 186,
+            "layer": 1,
+            "name": "Bip001-R-Finger11",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.058404922485352,
+                        "y": 0.000003666262500701123,
+                        "z": 0.0000029587056360469434
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.12804634869098664,
+                        "w": 0.9917681813240051
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 188,
+            "parentId": 187,
+            "layer": 1,
+            "name": "Bip001-R-Finger12",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.107009172439575,
+                        "y": 0.00001190964030683972,
+                        "z": -0.000002245033101644367
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.02902180701494217,
+                        "w": 0.9995787739753723
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 189,
+            "parentId": 176,
+            "layer": 1,
+            "name": "Bip001-R-Finger0",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.201968193054199,
+                        "y": 0.4130368232727051,
+                        "z": -2.261643648147583
+                    },
+                    "localRotation": {
+                        "x": 0.5909542441368103,
+                        "y": 0.2969946563243866,
+                        "z": -0.07918084412813187,
+                        "w": 0.7458536624908447
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 190,
+            "parentId": 189,
+            "layer": 1,
+            "name": "Bip001-R-Finger01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.588197231292725,
+                        "y": 0.0000036500209716905376,
+                        "z": 0.000002325808054592926
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.11169585585594177,
+                        "w": 0.9937424659729004
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 191,
+            "parentId": 190,
+            "layer": 1,
+            "name": "Bip001-R-Finger02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.7461800575256349,
+                        "y": 0.000002281302613482694,
+                        "z": -0.000006045826921763364
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.14500658214092256,
+                        "w": 0.9894306659698486
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 192,
+            "parentId": 168,
+            "layer": 1,
+            "name": "Bip001-L-Clavicle",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.520901679992676,
+                        "y": 0.5729942321777344,
+                        "z": -2.185953140258789
+                    },
+                    "localRotation": {
+                        "x": -0.6957437992095947,
+                        "y": 0.1262562870979309,
+                        "z": 0.7053951025009155,
+                        "w": 0.049170222133398059
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0000001192092896,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 193,
+            "parentId": 192,
+            "layer": 1,
+            "name": "Point_shoulder_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.244063377380371,
+                        "y": 1.959014639396628e-7,
+                        "z": 0.000008255449756688904
+                    },
+                    "localRotation": {
+                        "x": 0.04500661417841911,
+                        "y": -0.37678542733192446,
+                        "z": 0.04335774481296539,
+                        "w": 0.9241900444030762
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 194,
+            "parentId": 193,
+            "layer": 1,
+            "name": "Bone_shoulder_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.7071068286895752,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067094802856
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 195,
+            "parentId": 192,
+            "layer": 1,
+            "name": "Bip001-L-UpperArm",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.24406909942627,
+                        "y": 2.1988957144003508e-7,
+                        "z": 0.000008254916792793665
+                    },
+                    "localRotation": {
+                        "x": 0.13640405237674714,
+                        "y": -0.5142789483070374,
+                        "z": 0.10691502690315247,
+                        "w": 0.8399287462234497
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 196,
+            "parentId": 195,
+            "layer": 1,
+            "name": "Bip001-L-ForeTwist",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 27.418277740478517,
+                        "y": -4.293272013455862e-7,
+                        "z": -0.000010270750863128342
+                    },
+                    "localRotation": {
+                        "x": -0.13419410586357118,
+                        "y": 0.02683616243302822,
+                        "z": -0.19425250589847566,
+                        "w": 0.9713587164878845
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 197,
+            "parentId": 195,
+            "layer": 1,
+            "name": "Bip001-L-Forearm",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 27.418277740478517,
+                        "y": -4.293272013455862e-7,
+                        "z": -0.000010270750863128342
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.1960974484682083,
+                        "w": 0.980584442615509
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 198,
+            "parentId": 197,
+            "layer": 1,
+            "name": "Bone_Forearm_TW_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.081774711608887,
+                        "y": -0.00000655110443403828,
+                        "z": 0.000014175121577864047
+                    },
+                    "localRotation": {
+                        "x": 0.4889052212238312,
+                        "y": 6.772589813408558e-7,
+                        "z": -1.2279782879431878e-7,
+                        "w": 0.8723369240760803
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 199,
+            "parentId": 197,
+            "layer": 1,
+            "name": "Bip001-L-Hand",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 20.83316993713379,
+                        "y": -0.000004831319529330358,
+                        "z": -0.0000012943974070367404
+                    },
+                    "localRotation": {
+                        "x": 0.4880986511707306,
+                        "y": -0.028778327628970147,
+                        "z": 0.03338700905442238,
+                        "w": 0.8716747164726257
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 200,
+            "parentId": 199,
+            "layer": 1,
+            "name": "Bip001-L-Finger4",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.033153057098389,
+                        "y": 0.6711649298667908,
+                        "z": -2.870901107788086
+                    },
+                    "localRotation": {
+                        "x": 0.34102627635002139,
+                        "y": 0.13060805201530457,
+                        "z": 0.28845512866973879,
+                        "w": 0.8851193785667419
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 201,
+            "parentId": 200,
+            "layer": 1,
+            "name": "Bip001-L-Finger41",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.0669219493865969,
+                        "y": -1.5022835953004688e-7,
+                        "z": 1.1527431809099653e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.1704661101102829,
+                        "w": 0.9853635430335999
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 202,
+            "parentId": 201,
+            "layer": 1,
+            "name": "Bip001-L-Finger42",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.4979784488677979,
+                        "y": 0.000002441441665723687,
+                        "z": 2.616354208839766e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.026144590228796006,
+                        "w": 0.9996581673622131
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 203,
+            "parentId": 199,
+            "layer": 1,
+            "name": "Bip001-L-Finger3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.894289016723633,
+                        "y": -0.44535964727401736,
+                        "z": -1.2229788303375245
+                    },
+                    "localRotation": {
+                        "x": 0.1487179845571518,
+                        "y": 0.07693994790315628,
+                        "z": 0.20943622291088105,
+                        "w": 0.9633793234825134
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 204,
+            "parentId": 203,
+            "layer": 1,
+            "name": "Bip001-L-Finger31",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.082555294036865,
+                        "y": -1.457268581361859e-7,
+                        "z": 4.0649169363859985e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.2663293778896332,
+                        "w": 0.9638820886611939
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 205,
+            "parentId": 204,
+            "layer": 1,
+            "name": "Bip001-L-Finger32",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.3683605194091799,
+                        "y": -0.0000028108245260227706,
+                        "z": -9.551602033752716e-7
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0636804848909378,
+                        "w": 0.9979703426361084
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 206,
+            "parentId": 199,
+            "layer": 1,
+            "name": "Bip001-L-Finger2",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.43999195098877,
+                        "y": -0.9712657928466797,
+                        "z": 0.4110778570175171
+                    },
+                    "localRotation": {
+                        "x": 0.046067334711551669,
+                        "y": 0.03035685606300831,
+                        "z": 0.14942330121994019,
+                        "w": 0.9872329831123352
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 207,
+            "parentId": 206,
+            "layer": 1,
+            "name": "Bip001-L-Finger21",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.336337566375732,
+                        "y": 0.000008788343620835804,
+                        "z": 2.1004439076932614e-7
+                    },
+                    "localRotation": {
+                        "x": -6.564862076174905e-8,
+                        "y": -1.6147881254369169e-8,
+                        "z": 0.2388547658920288,
+                        "w": 0.9710553288459778
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 208,
+            "parentId": 207,
+            "layer": 1,
+            "name": "Bip001-L-Finger22",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.544832468032837,
+                        "y": -0.000002882533181036706,
+                        "z": -5.039870529799373e-7
+                    },
+                    "localRotation": {
+                        "x": -6.984876677051943e-8,
+                        "y": -2.6835631494748215e-9,
+                        "z": 0.03839130327105522,
+                        "w": 0.9992627501487732
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 209,
+            "parentId": 199,
+            "layer": 1,
+            "name": "Bip001-L-Finger1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.592060089111329,
+                        "y": -1.01974356174469,
+                        "z": 2.586216926574707
+                    },
+                    "localRotation": {
+                        "x": -0.04045594856142998,
+                        "y": 0.02410777471959591,
+                        "z": 0.14867383241653443,
+                        "w": 0.9877642393112183
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 210,
+            "parentId": 209,
+            "layer": 1,
+            "name": "Bip001-L-Finger11",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.058400630950928,
+                        "y": 0.0000012973972616237007,
+                        "z": 0.0000011623558293649695
+                    },
+                    "localRotation": {
+                        "x": -6.76912179642386e-8,
+                        "y": -8.739556633940993e-9,
+                        "z": 0.12804636359214784,
+                        "w": 0.9917681813240051
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 211,
+            "parentId": 210,
+            "layer": 1,
+            "name": "Bip001-L-Finger12",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.1070210933685304,
+                        "y": -0.000006227273388503818,
+                        "z": -8.813549357000738e-7
+                    },
+                    "localRotation": {
+                        "x": -8.34565412333177e-8,
+                        "y": -2.4230806250358229e-9,
+                        "z": 0.029021810740232469,
+                        "w": 0.9995787739753723
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 212,
+            "parentId": 199,
+            "layer": 1,
+            "name": "Bip001-L-Finger0",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.2019739151000978,
+                        "y": 0.4130466878414154,
+                        "z": 2.2616422176361086
+                    },
+                    "localRotation": {
+                        "x": -0.5909542441368103,
+                        "y": -0.2969946265220642,
+                        "z": -0.07918090373277664,
+                        "w": 0.7458536624908447
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 213,
+            "parentId": 212,
+            "layer": 1,
+            "name": "Bip001-L-Finger01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 4.58819580078125,
+                        "y": -0.00000758047053750488,
+                        "z": 0.0000013187213880883065
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.111695796251297,
+                        "w": 0.9937424659729004
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 214,
+            "parentId": 213,
+            "layer": 1,
+            "name": "Bip001-L-Finger02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 2.74617600440979,
+                        "y": 0.0000020753900571435226,
+                        "z": -0.000002101065547321923
+                    },
+                    "localRotation": {
+                        "x": 6.01922849341463e-8,
+                        "y": 8.82151596215408e-9,
+                        "z": 0.14500659704208375,
+                        "w": 0.9894306659698486
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 215,
+            "parentId": 168,
+            "layer": 1,
+            "name": "Bip001-Head",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 11.25354290008545,
+                        "y": -0.2860182821750641,
+                        "z": -4.213196973523736e-7
+                    },
+                    "localRotation": {
+                        "x": -5.83180508328951e-7,
+                        "y": -5.068953328191128e-7,
+                        "z": -0.12383778393268585,
+                        "w": 0.9923024773597717
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 216,
+            "parentId": 215,
+            "layer": 1,
+            "name": "B_Hair_FR00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 17.322612762451173,
+                        "y": 7.774733543395996,
+                        "z": 2.0294952392578127
+                    },
+                    "localRotation": {
+                        "x": 0.13785140216350556,
+                        "y": 0.8155010938644409,
+                        "z": 0.5244380235671997,
+                        "w": -0.20228633284568788
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 217,
+            "parentId": 216,
+            "layer": 1,
+            "name": "B_Hair_FR01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.508139610290528,
+                        "y": 0.00004319877552916296,
+                        "z": 1.4686429494759069e-7
+                    },
+                    "localRotation": {
+                        "x": -0.00131870002951473,
+                        "y": -0.052511151880025867,
+                        "z": -0.15105706453323365,
+                        "w": 0.9871284365653992
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 218,
+            "parentId": 217,
+            "layer": 1,
+            "name": "B_Hair_FR02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.624689102172852,
+                        "y": -6.727703407705121e-7,
+                        "z": -5.215156306803692e-7
+                    },
+                    "localRotation": {
+                        "x": -0.012275309301912785,
+                        "y": -0.03146500140428543,
+                        "z": -0.056159164756536487,
+                        "w": 0.9978504180908203
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 219,
+            "parentId": 215,
+            "layer": 1,
+            "name": "B_Hair_FL00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 16.459217071533204,
+                        "y": 10.255803108215332,
+                        "z": -2.7162017822265627
+                    },
+                    "localRotation": {
+                        "x": 0.10117845982313156,
+                        "y": 0.9265608787536621,
+                        "z": -0.3398582637310028,
+                        "w": 0.1254761517047882
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 220,
+            "parentId": 219,
+            "layer": 1,
+            "name": "B_Hair_FL01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.459108352661133,
+                        "y": 0.00003424515307415277,
+                        "z": -7.34550326342287e-7
+                    },
+                    "localRotation": {
+                        "x": 0.002486121142283082,
+                        "y": 0.038412079215049747,
+                        "z": -0.1651345044374466,
+                        "w": 0.9855196475982666
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 221,
+            "parentId": 220,
+            "layer": 1,
+            "name": "B_Hair_FL02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.8242974281311039,
+                        "y": -0.0000021109547105879757,
+                        "z": -2.537878458497289e-7
+                    },
+                    "localRotation": {
+                        "x": 0.009906190447509289,
+                        "y": 0.030352381989359857,
+                        "z": -0.12143120169639588,
+                        "w": 0.9920862317085266
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 1.0,
+                        "z": 0.9999999403953552
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 222,
+            "parentId": 215,
+            "layer": 1,
+            "name": "Face_COM",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 223,
+            "parentId": 222,
+            "layer": 1,
+            "name": "P_eye",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.669113636016846,
+                        "y": 23.76462745666504,
+                        "z": -0.000006611176104343031
+                    },
+                    "localRotation": {
+                        "x": 0.707107424736023,
+                        "y": -3.0908591241995967e-8,
+                        "z": -0.7071061134338379,
+                        "w": -3.090864097998747e-8
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 224,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Lip_Tail_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5500307679176331,
+                        "y": 9.035866737365723,
+                        "z": 1.9195666313171387
+                    },
+                    "localRotation": {
+                        "x": 0.7071073055267334,
+                        "y": 0.7071062326431274,
+                        "z": 0.000004817666649614694,
+                        "w": -0.000006104540716478368
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 225,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Lip_Tail_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.5496065020561218,
+                        "y": 9.035922050476075,
+                        "z": -1.9199974536895753
+                    },
+                    "localRotation": {
+                        "x": 0.7071069478988648,
+                        "y": 0.7071065902709961,
+                        "z": 0.0000048723677537054759,
+                        "w": -0.000005484897883434314
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 226,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Cheek_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.9011313915252686,
+                        "y": 7.086002349853516,
+                        "z": 4.403640270233154
+                    },
+                    "localRotation": {
+                        "x": 0.7071065902709961,
+                        "y": 0.7071069478988648,
+                        "z": 0.000003641212288130191,
+                        "w": -0.000003703031097757048
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 227,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Cheek_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.9011075496673585,
+                        "y": 7.086149215698242,
+                        "z": -4.403202533721924
+                    },
+                    "localRotation": {
+                        "x": 0.7071069478988648,
+                        "y": 0.7071065902709961,
+                        "z": 0.000004092271410627291,
+                        "w": -0.000003816911885223817
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 228,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Jaw",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.4013134241104127,
+                        "y": 3.2165629863739015,
+                        "z": 0.0000573186953261029
+                    },
+                    "localRotation": {
+                        "x": 0.4902229905128479,
+                        "y": 0.8715970516204834,
+                        "z": 0.000004597732640831964,
+                        "w": -0.000002913933712989092
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 229,
+            "parentId": 228,
+            "layer": 1,
+            "name": "B_Lip_Down_M",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.19282865524292,
+                        "y": 2.450978994369507,
+                        "z": -0.00003611799547798
+                    },
+                    "localRotation": {
+                        "x": -2.8477469982135519e-7,
+                        "y": 0.0000019009804645975237,
+                        "z": 0.2696725130081177,
+                        "w": 0.9629520773887634
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 230,
+            "parentId": 228,
+            "layer": 1,
+            "name": "B_Lip_Down_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.025755405426025,
+                        "y": 2.3439583778381349,
+                        "z": 1.0621238946914673
+                    },
+                    "localRotation": {
+                        "x": -6.429494874282682e-7,
+                        "y": 0.000002295857029821491,
+                        "z": 0.2696725130081177,
+                        "w": 0.9629520773887634
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 231,
+            "parentId": 228,
+            "layer": 1,
+            "name": "B_Lip_Down_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.025755405426025,
+                        "y": 2.343937397003174,
+                        "z": -1.062353253364563
+                    },
+                    "localRotation": {
+                        "x": -4.776595119437843e-7,
+                        "y": 0.0000025897375053318685,
+                        "z": 0.2696725130081177,
+                        "w": 0.9629520773887634
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 232,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Lip_Up_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.0011602640151978,
+                        "y": 9.897974967956543,
+                        "z": -1.1301456689834595
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000004966526375937974,
+                        "w": -0.000005579053322435357
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 233,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Lip_Up_M",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.9901580214500427,
+                        "y": 10.093714714050293,
+                        "z": 0.0001660635753069073
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000006059706720407121,
+                        "w": -0.000005615755981125403
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 234,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Lip_Up_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.001143217086792,
+                        "y": 9.897943496704102,
+                        "z": 1.130459189414978
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.00000587139265917358,
+                        "w": -0.000005427441919891862
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 235,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Nose_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.1096346378326418,
+                        "y": 9.444059371948243,
+                        "z": -1.3609992265701295
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000013628971828438808,
+                        "w": -0.00001424148831574712
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 236,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Nose",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.638320207595825,
+                        "y": 9.445467948913575,
+                        "z": 0.00012144629727117717
+                    },
+                    "localRotation": {
+                        "x": 0.7071067690849304,
+                        "y": 0.7071067690849304,
+                        "z": 0.000003544305855029961,
+                        "w": -0.000003988251137343468
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 237,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Nose_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 3.1096019744873049,
+                        "y": 9.444026947021485,
+                        "z": 1.3612258434295655
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000013723128176934552,
+                        "w": -0.000014335644664242864
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 238,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eye_Down_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 5.988602161407471,
+                        "y": 8.517651557922364,
+                        "z": -3.01300048828125
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000008073707249423024,
+                        "w": -0.00000868623101268895
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 239,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eye_Down_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 5.988887310028076,
+                        "y": 8.517571449279786,
+                        "z": 3.013493061065674
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.00000816786450741347,
+                        "w": -0.000008780388270679396
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 240,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyebrows_In_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.821595191955566,
+                        "y": 9.729659080505371,
+                        "z": -1.786002278327942
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000004966526375937974,
+                        "w": -0.000005579053322435357
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 241,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyebrows_Out_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.119599342346192,
+                        "y": 8.340254783630371,
+                        "z": -4.0190019607543949
+                    },
+                    "localRotation": {
+                        "x": 0.7071069478988648,
+                        "y": 0.7071065902709961,
+                        "z": 0.000004797937435796484,
+                        "w": -0.0000057476418078294959
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 242,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eye_Up_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.911056995391846,
+                        "y": 8.627501487731934,
+                        "z": -2.9520010948181154
+                    },
+                    "localRotation": {
+                        "x": 0.7071069478988648,
+                        "y": 0.7071065902709961,
+                        "z": 0.0000076127826105221178,
+                        "w": -0.00000839389849716099
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 243,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyebrows_In_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.82136344909668,
+                        "y": 9.72961139678955,
+                        "z": 1.7857407331466675
+                    },
+                    "localRotation": {
+                        "x": 0.7071071863174439,
+                        "y": 0.707106351852417,
+                        "z": 0.000004966526375937974,
+                        "w": -0.000005579053322435357
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 244,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyebrows_Out_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.119593620300293,
+                        "y": 8.340203285217286,
+                        "z": 4.019298553466797
+                    },
+                    "localRotation": {
+                        "x": 0.7071067690849304,
+                        "y": 0.7071067690849304,
+                        "z": 7.223471811812487e-7,
+                        "w": -7.841644560357963e-7
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 245,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyeball_L",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.626555919647217,
+                        "y": 7.646693706512451,
+                        "z": -2.9260008335113527
+                    },
+                    "localRotation": {
+                        "x": 0.7071071267127991,
+                        "y": 0.7071064114570618,
+                        "z": 0.000004966526375937974,
+                        "w": -0.0000055790542319300588
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 246,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eyeball_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.62658166885376,
+                        "y": 7.6466217041015629,
+                        "z": 2.9264817237854006
+                    },
+                    "localRotation": {
+                        "x": 0.7071069478988648,
+                        "y": 0.7071065902709961,
+                        "z": 0.000004966525466443272,
+                        "w": -0.00000557905514142476
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 247,
+            "parentId": 222,
+            "layer": 1,
+            "name": "B_Eye_Up_R",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.910625457763672,
+                        "y": 8.627941131591797,
+                        "z": 2.952021598815918
+                    },
+                    "localRotation": {
+                        "x": 0.7071070075035095,
+                        "y": 0.7071065306663513,
+                        "z": 0.000007791234565956984,
+                        "w": -0.000008403762876696419
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 248,
+            "parentId": 215,
+            "layer": 1,
+            "name": "B_Hair_B00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.303047180175782,
+                        "y": -9.231308937072754,
+                        "z": 0.00001429178701073397
+                    },
+                    "localRotation": {
+                        "x": 2.2790123921367923e-7,
+                        "y": 0.0000012074619917257224,
+                        "z": 0.9982935786247253,
+                        "w": -0.05839524418115616
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 249,
+            "parentId": 248,
+            "layer": 1,
+            "name": "B_Hair_B01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.888102531433106,
+                        "y": 0.000003885888872900978,
+                        "z": -0.000016131809388753028
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.03365054354071617,
+                        "w": 0.9994336366653442
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 250,
+            "parentId": 249,
+            "layer": 1,
+            "name": "B_Hair_B02",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.416949272155762,
+                        "y": -0.000003993610334873665,
+                        "z": -0.00003179004124831408
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.001353885279968381,
+                        "w": 0.9999991059303284
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 251,
+            "parentId": 215,
+            "layer": 1,
+            "name": "B_Hair_R00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.834772109985352,
+                        "y": -2.933173656463623,
+                        "z": 7.210504531860352
+                    },
+                    "localRotation": {
+                        "x": 0.021809853613376619,
+                        "y": 0.49952369928359988,
+                        "z": 0.8652013540267944,
+                        "w": -0.03777577728033066
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0000001192092896
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 252,
+            "parentId": 251,
+            "layer": 1,
+            "name": "B_Hair_R01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.791629791259766,
+                        "y": -6.842496418357769e-7,
+                        "z": -2.2869770077704744e-7
+                    },
+                    "localRotation": {
+                        "x": 7.792926481897666e-8,
+                        "y": 1.0259608274054699e-8,
+                        "z": 0.13052654266357423,
+                        "w": 0.9914448261260986
+                    },
+                    "localScale": {
+                        "x": 0.9999999403953552,
+                        "y": 0.9999999403953552,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 253,
+            "parentId": 215,
+            "layer": 1,
+            "name": "B_Hair_L00",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 10.83475399017334,
+                        "y": -2.933183431625366,
+                        "z": -7.210478782653809
+                    },
+                    "localRotation": {
+                        "x": -0.021809492260217668,
+                        "y": -0.4995240867137909,
+                        "z": 0.8652011752128601,
+                        "w": -0.037775591015815738
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 254,
+            "parentId": 253,
+            "layer": 1,
+            "name": "B_Hair_L01",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 8.791633605957032,
+                        "y": 0.000003263626240368467,
+                        "z": 0.00001488868201704463
+                    },
+                    "localRotation": {
+                        "x": 3.519774693927502e-8,
+                        "y": -2.673533856523136e-7,
+                        "z": 0.13052619993686677,
+                        "w": 0.9914448857307434
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
                 }
             ]
         }
