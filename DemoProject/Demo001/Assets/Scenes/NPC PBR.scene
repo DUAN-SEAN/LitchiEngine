@@ -58,12 +58,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
                     "SubMeshIndex": 1
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_020/NPC_female_020/NPC_female_013_hair_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013_hair_mat.mat"
                 }
             ]
         },
@@ -95,12 +95,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013out.fbx",
                     "SubMeshIndex": 0
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_020/NPC_female_020/NPC_female_013_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_020/NPC_female_020/NPC_female_013_mat.mat"
                 }
             ]
         },
@@ -2863,15 +2863,15 @@
                         "z": -2.0042266845703127
                     },
                     "localRotation": {
-                        "x": 0.9556273818016052,
+                        "x": 0.2894122004508972,
                         "y": 0.0,
                         "z": 0.0,
-                        "w": 0.2945781946182251
+                        "w": 0.9572045803070068
                     },
                     "localScale": {
                         "x": 0.9999999403953552,
-                        "y": 0.9999672174453735,
-                        "z": 0.9999672174453735
+                        "y": 0.9999480843544006,
+                        "z": 0.9999480843544006
                     }
                 },
                 {
@@ -3004,12 +3004,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "F3_Red/F3_Red.FBX",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/F3_Red/F3_Red.FBX",
                     "SubMeshIndex": 0
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "F3_Red/Corvette-F3.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/F3_Red/Corvette-F3.mat"
                 }
             ]
         },
@@ -3106,12 +3106,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
                     "SubMeshIndex": 4
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_BD_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024_BD_mat.mat"
                 }
             ]
         },
@@ -3143,12 +3143,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
                     "SubMeshIndex": 3
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_Hair_high_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024_Hair_high_mat.mat"
                 }
             ]
         },
@@ -3180,12 +3180,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
                     "SubMeshIndex": 2
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_Hair_low_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024_Hair_low_mat.mat"
                 }
             ]
         },
@@ -3217,12 +3217,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
                     "SubMeshIndex": 1
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_024/NPC_female_024/W_9007_eyeline_Mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/W_9007_eyeline_Mat.mat"
                 }
             ]
         },
@@ -3254,12 +3254,12 @@
                 },
                 {
                     "Type": "MeshFilter",
-                    "MeshPath": "NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
+                    "MeshPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024out.fbx",
                     "SubMeshIndex": 0
                 },
                 {
                     "Type": "MeshRenderer",
-                    "materialPath": "NPC_female_024/NPC_female_024/NPC_female_024_HD_mat.mat"
+                    "materialPath": ":../../../../../DemoProject/Demo001/Assets/NPC_female_024/NPC_female_024/NPC_female_024_HD_mat.mat"
                 }
             ]
         },

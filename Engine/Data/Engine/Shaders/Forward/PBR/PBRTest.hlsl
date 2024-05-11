@@ -57,6 +57,14 @@ float3 srgb_to_linear(float3 color)
     return lerp(linear_low, linear_high, is_high);
 }
 
+float3 linear_to_srgb(float3 color)
+{
+    float gamma = lerp(gamma_sdr, gamma_hdr, 0.0f);
+    float3 srgb_low = color * 12.92;
+    float3 srgb_high = 1.055 * pow(color, 1.0 / gamma) - 0.055;
+    float3 is_high = step(0.00313066844250063, color);
+    return lerp(srgb_low, srgb_high, is_high);
+}
 
 float4 mainPS(Pixel input) : SV_Target
 {
@@ -81,6 +89,7 @@ float4 mainPS(Pixel input) : SV_Target
 	float3 binormal = cross(normalize(input.normal), normalize(input.tangent));
 	float3x3 rotation = float3x3(input.tangent, binormal, sampleNormal);
 	float3 normal = mul(rotation, sampleNormal);
+    normal = normalize(input.normal);
 
 	float3 viewDir = normalize(buffer_rendererPath.camera_position.xyz - input.fragPos.xyz);
 	float nv = max(saturate(dot(normal, viewDir)), 0.000001);
@@ -131,7 +140,7 @@ float4 mainPS(Pixel input) : SV_Target
 	}
 
     // float3 color = lightSum + float3(0.03) * albedo.xyz * ao;
-    float3 color = lightSum + float3(0.03,0.03,0.03) * albedo.xyz;
+    float3 color = linear_to_srgb(lightSum + float3(0.03, 0.03, 0.03) * albedo.xyz);
 	
-    return float4(color.x, color.y, color.z, 1);
+    return float4(color.x, color.y, color.z, albedo.a);
 }
