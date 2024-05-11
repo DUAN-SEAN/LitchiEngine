@@ -10,6 +10,13 @@ namespace LitchiRuntime {
 	std::string FileSystem::ProjectAssetDirectoryPath = "";
 	std::string FileSystem::EngineAssetDirectoryPath = "";
 
+	bool is_subpath(const std::filesystem::path& path,
+        const std::filesystem::path& base)
+    {
+        auto rel = std::filesystem::relative(path, base);
+        return !rel.empty() && rel.native()[0] != '.';
+    }
+
 	Buffer FileSystem::ReadFileBinary(const std::filesystem::path& filepath)
 	{
 		std::ifstream stream(filepath, std::ios::binary | std::ios::ate);
@@ -446,9 +453,11 @@ namespace LitchiRuntime {
 
     bool FileSystem::IsEngineFile(const string& path)
     {
-        const filesystem::path p = filesystem::absolute(path);
+        auto result = is_subpath(filesystem::absolute(path), EngineAssetDirectoryPath);
+        return result;
+       /* const filesystem::path p = filesystem::absolute(path);
         int result = p.compare(EngineAssetDirectoryPath);
-        return result>0;
+        return result>0;*/
 
       /*  return
             IsEnginePrefabFile(path) ||

@@ -66,10 +66,10 @@ namespace LitchiRuntime
     static uint32_t get_bits_per_channel(FIBITMAP* bitmap)
     {
         LC_ASSERT(bitmap != nullptr);
-    
+
         const FREE_IMAGE_TYPE type = FreeImage_GetImageType(bitmap);
         uint32_t size = 0;
-    
+
         if (type == FIT_BITMAP)
         {
             size = sizeof(BYTE);
@@ -262,41 +262,52 @@ namespace LitchiRuntime
         return bitmap;
     }
 
-    static void get_bits_from_bitmap(RHI_Texture_Mip* mip, FIBITMAP* bitmap, const uint32_t width, const uint32_t height, const uint32_t channel_count, const uint32_t bits_per_channel)
+    void free_image_error_handler(const FREE_IMAGE_FORMAT fif, const char* message)
     {
-        // Validate
-        LC_ASSERT(mip != nullptr);
-        LC_ASSERT(bitmap != nullptr);
-        LC_ASSERT(width != 0);
-        LC_ASSERT(height != 0);
-        LC_ASSERT(channel_count != 0);
+        const auto text = (message != nullptr) ? message : "Unknown error";
+        const auto format = (fif != FIF_UNKNOWN) ? FreeImage_GetFormatFromFIF(fif) : "Unknown";
 
-        // Compute expected data size and reserve enough memory
-        const size_t size_bytes = static_cast<size_t>(width) * static_cast<size_t>(height) * static_cast<size_t>(channel_count) * static_cast<size_t>(bits_per_channel / 8);
-        if (size_bytes != mip->bytes.size())
+        DEBUG_LOG_ERROR("{}, Format: {}", text, format);
+    };
+
+    uint32_t calculate_mip_count(uint32_t width, uint32_t height)
+    {
+        uint32_t mip_count = 0;
+        while (width > 1 || height > 1)
         {
-            mip->bytes.clear();
-            mip->bytes.reserve(size_bytes);
-            mip->bytes.resize(size_bytes);
+            width >>= 1;
+            height >>= 1;
+            if (width > 0 && height > 0)
+            {
+                mip_count++;
+            }
         }
-
-        // Copy the data over to our vector
-        BYTE* bytes = FreeImage_GetBits(bitmap);
-        memcpy(&mip->bytes[0], bytes, size_bytes);
+        return mip_count;
     }
 
+    bool has_transparent_pixels(FIBITMAP* bitmap)
+    {
+        LC_ASSERT(FreeImage_GetBPP(bitmap) == 32);
+
+        for (unsigned y = 0; y < FreeImage_GetHeight(bitmap); ++y)
+        {
+            BYTE* bits = FreeImage_GetScanLine(bitmap, y);
+            for (unsigned x = 0; x < FreeImage_GetWidth(bitmap); ++x)
+            {
+                BYTE alpha = bits[FI_RGBA_ALPHA];
+                if (alpha != 255)
+                    return true;
+
+                bits += 4; // move to the next pixel (assuming 4 bytes per pixel)
+            }
+        }
+
+        return false;
+    }
+    
     void ImageImporter::Initialize()
     {
         FreeImage_Initialise();
-
-        // Register error handler
-        const auto free_image_error_handler = [](const FREE_IMAGE_FORMAT fif, const char* message)
-        {
-            const auto text     = (message != nullptr) ? message : "Unknown error";
-            const auto format   = (fif != FIF_UNKNOWN) ? FreeImage_GetFormatFromFIF(fif) : "Unknown";
-            
-            DEBUG_LOG_ERROR("%s, Format: %s", text, format);
-        };
         FreeImage_SetOutputMessage(free_image_error_handler);
 
         //// Get version
@@ -310,6 +321,95 @@ namespace LitchiRuntime
 
     bool ImageImporter::Load(const string& file_path, const uint32_t slice_index, RHI_Texture* texture)
     {
+        //LC_ASSERT(texture != nullptr);
+
+        //if (!FileSystem::Exists(file_path))
+        //{
+        //    DEBUG_LOG_ERROR("Path {} is invalid.", file_path.c_str());
+        //    return false;
+        //}
+
+        //// Acquire image format
+        //FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
+        //{
+        //    format = FreeImage_GetFileType(file_path.c_str(), 0);
+
+        //    // If the format is unknown, try to work it out from the file path
+        //    if (format == FIF_UNKNOWN)
+        //    {
+        //        format = FreeImage_GetFIFFromFilename(file_path.c_str());
+        //    }
+
+        //    // If the format is still unknown, give up
+        //    if (!FreeImage_FIFSupportsReading(format)) 
+        //    {
+        //        DEBUG_LOG_ERROR("Unsupported format");
+        //        return false;
+        //    }
+        //}
+
+        //// Load the image
+        //FIBITMAP* bitmap = FreeImage_Load(format, file_path.c_str());
+        //if (!bitmap)
+        //{
+        //    DEBUG_LOG_ERROR("Failed to load {}", file_path.c_str());
+        //    return false;
+        //}
+
+        //// Deduce image properties. Important that this is done here, before ApplyBitmapCorrections(), as after that, results for grayscale seem to be always false
+        //const bool is_transparent = FreeImage_IsTransparent(bitmap);
+        //const bool is_greyscale   = FreeImage_GetColorType(bitmap) == FREE_IMAGE_COLOR_TYPE::FIC_MINISBLACK;
+        //const bool is_srgb        = get_is_srgb(bitmap);
+
+        //// Perform some corrections
+        //bitmap = apply_bitmap_corrections(bitmap);
+        //if (!bitmap)
+        //{
+        //    DEBUG_LOG_ERROR("Failed to apply bitmap corrections");
+        //    return false;
+        //}
+
+        //// Deduce image properties
+        //const uint32_t bits_per_channel   = get_bits_per_channel(bitmap);
+        //const uint32_t channel_count      = get_channel_count(bitmap);
+        //const RHI_Format image_format     = get_rhi_format(bits_per_channel, channel_count);
+        //const bool user_define_dimensions = (texture->GetWidth() != 0 && texture->GetHeight() != 0);
+        //const bool dimension_mismatch     = (FreeImage_GetWidth(bitmap) != texture->GetWidth() && FreeImage_GetHeight(bitmap) != texture->GetHeight());
+        //const bool scale                  = user_define_dimensions && dimension_mismatch;
+        //bitmap                            = scale ? rescale(bitmap, texture->GetWidth(), texture->GetHeight()) : bitmap;
+        //const unsigned int width          = FreeImage_GetWidth(bitmap);
+        //const unsigned int height         = FreeImage_GetHeight(bitmap);
+
+        //// Fill RGBA vector with the data from the FIBITMAP
+        //RHI_Texture_Mip& mip = texture->CreateMip(slice_index);
+        //get_bits_from_bitmap(&mip, bitmap, width, height, channel_count, bits_per_channel);
+
+        //// Free memory 
+        //FreeImage_Unload(bitmap);
+
+        //// Fill RHI_Texture with image properties
+        //{
+        //    LC_ASSERT(bits_per_channel != 0);
+        //    LC_ASSERT(channel_count != 0);
+        //    LC_ASSERT(width != 0);
+        //    LC_ASSERT(height != 0);
+
+        //    texture->SetBitsPerChannel(bits_per_channel);
+        //    texture->SetWidth(width);
+        //    texture->SetHeight(height);
+        //    texture->SetChannelCount(channel_count);
+        //    texture->SetFormat(image_format);
+
+        //    uint32_t flags = texture->GetFlags();
+
+        //    flags |= is_transparent ? RHI_Texture_Transparent : 0;
+        //    flags |= is_greyscale   ? RHI_Texture_Greyscale : 0;
+        //    flags |= is_srgb        ? RHI_Texture_Srgb : 0;
+
+        //    texture->SetFlags(flags);
+        //}
+
+        //return true;
         LC_ASSERT(texture != nullptr);
 
         if (!FileSystem::Exists(file_path))
@@ -318,26 +418,76 @@ namespace LitchiRuntime
             return false;
         }
 
-        // Acquire image format
+        // acquire image format
         FREE_IMAGE_FORMAT format = FIF_UNKNOWN;
         {
             format = FreeImage_GetFileType(file_path.c_str(), 0);
 
-            // If the format is unknown, try to work it out from the file path
+            // if the format is unknown, try to work it out from the file path
             if (format == FIF_UNKNOWN)
             {
                 format = FreeImage_GetFIFFromFilename(file_path.c_str());
             }
 
-            // If the format is still unknown, give up
-            if (!FreeImage_FIFSupportsReading(format)) 
+            // if the format is still unknown, give up
+            if (!FreeImage_FIFSupportsReading(format))
             {
                 DEBUG_LOG_ERROR("Unsupported format");
                 return false;
             }
         }
 
-        // Load the image
+        uint32_t texture_flags = texture->GetFlags();
+
+        // freeimage partially supports dds, they are certain configurations that it can't load
+        // So in the case of a dds format in general, we don't rely on freeimage
+        if (format == FIF_DDS)
+        {
+            DEBUG_LOG_WARN("FIF_DDS Not Surpport");
+            return false;
+            //// load
+            //tinyddsloader::DDSFile dds_file;
+            //auto result = dds_file.Load(file_path.c_str());
+            //if (result != tinyddsloader::Success)
+            //{
+            //    DEBUG_LOG_ERROR("Failed to load DSS file");
+            //    return false;
+            //}
+
+            //// get format
+            //auto format_dxgi = dds_file.GetFormat();
+            //RHI_Format format = RHI_Format::Max;
+            //if (format_dxgi == tinyddsloader::DDSFile::DXGIFormat::BC1_UNorm)
+            //{
+            //    format = RHI_Format::BC1_Unorm;
+            //}
+            //else if (format_dxgi == tinyddsloader::DDSFile::DXGIFormat::BC3_UNorm)
+            //{
+            //    format = RHI_Format::BC3_Unorm;
+            //}
+            //else if (format_dxgi == tinyddsloader::DDSFile::DXGIFormat::BC5_UNorm)
+            //{
+            //    format = RHI_Format::BC5_Unorm;
+            //}
+            //LC_ASSERT(format != RHI_Format::Max);
+
+            //// set properties
+            //texture->SetWidth(dds_file.GetWidth());
+            //texture->SetHeight(dds_file.GetHeight());
+            //texture->SetFormat(format);
+
+            //// set data
+            //for (uint32_t mip_index = 0; mip_index < dds_file.GetMipCount(); mip_index++)
+            //{
+            //    RHI_Texture_Mip& mip = texture->CreateMip(0);
+            //    const auto& data = dds_file.GetImageData(mip_index, 0);
+            //    memcpy(&mip.bytes[0], data->m_mem, mip.bytes.size());
+            //}
+
+            //return true;
+        }
+
+        // load
         FIBITMAP* bitmap = FreeImage_Load(format, file_path.c_str());
         if (!bitmap)
         {
@@ -345,12 +495,13 @@ namespace LitchiRuntime
             return false;
         }
 
-        // Deduce image properties. Important that this is done here, before ApplyBitmapCorrections(), as after that, results for grayscale seem to be always false
-        const bool is_transparent = FreeImage_IsTransparent(bitmap);
-        const bool is_greyscale   = FreeImage_GetColorType(bitmap) == FREE_IMAGE_COLOR_TYPE::FIC_MINISBLACK;
-        const bool is_srgb        = get_is_srgb(bitmap);
+        // deduce certain properties
+        // done before ApplyBitmapCorrections(), as after that, results for grayscale seem to be always false
+        texture_flags |= (FreeImage_GetColorType(bitmap) == FREE_IMAGE_COLOR_TYPE::FIC_MINISBLACK) ? RHI_Texture_Greyscale : 0;
+        texture_flags |= get_is_srgb(bitmap) ? RHI_Texture_Srgb : 0;
+        texture->SetFlags(texture_flags);
 
-        // Perform some corrections
+        // perform some corrections
         bitmap = apply_bitmap_corrections(bitmap);
         if (!bitmap)
         {
@@ -358,46 +509,105 @@ namespace LitchiRuntime
             return false;
         }
 
-        // Deduce image properties
-        const uint32_t bits_per_channel   = get_bits_per_channel(bitmap);
-        const uint32_t channel_count      = get_channel_count(bitmap);
-        const RHI_Format image_format     = get_rhi_format(bits_per_channel, channel_count);
+        // scale if needed
         const bool user_define_dimensions = (texture->GetWidth() != 0 && texture->GetHeight() != 0);
-        const bool dimension_mismatch     = (FreeImage_GetWidth(bitmap) != texture->GetWidth() && FreeImage_GetHeight(bitmap) != texture->GetHeight());
-        const bool scale                  = user_define_dimensions && dimension_mismatch;
-        bitmap                            = scale ? rescale(bitmap, texture->GetWidth(), texture->GetHeight()) : bitmap;
-        const unsigned int width          = FreeImage_GetWidth(bitmap);
-        const unsigned int height         = FreeImage_GetHeight(bitmap);
+        const bool dimension_mismatch = (FreeImage_GetWidth(bitmap) != texture->GetWidth() && FreeImage_GetHeight(bitmap) != texture->GetHeight());
+        const bool scale = user_define_dimensions && dimension_mismatch;
+        bitmap = scale ? rescale(bitmap, texture->GetWidth(), texture->GetHeight()) : bitmap;
 
-        // Fill RGBA vector with the data from the FIBITMAP
-        RHI_Texture_Mip& mip = texture->CreateMip(slice_index);
-        get_bits_from_bitmap(&mip, bitmap, width, height, channel_count, bits_per_channel);
+        // set properties
+        texture->SetBitsPerChannel(get_bits_per_channel(bitmap));
+        texture->SetWidth(FreeImage_GetWidth(bitmap));
+        texture->SetHeight(FreeImage_GetHeight(bitmap));
+        texture->SetChannelCount(get_channel_count(bitmap));
+        texture->SetFormat(get_rhi_format(texture->GetBitsPerChannel(), texture->GetChannelCount()));
 
-        // Free memory 
-        FreeImage_Unload(bitmap);
-
-        // Fill RHI_Texture with image properties
+        // fill in all the mips
+        uint32_t mip_count = calculate_mip_count(texture->GetWidth(), texture->GetHeight());
+        FIBITMAP* current_bitmap = bitmap;
+        for (uint32_t mip_index = 0; mip_index < mip_count; mip_index++)
         {
-            LC_ASSERT(bits_per_channel != 0);
-            LC_ASSERT(channel_count != 0);
-            LC_ASSERT(width != 0);
-            LC_ASSERT(height != 0);
+            if (mip_index != 0) // rescale bitmap for next mip levels
+            {
+                uint32_t width = texture->GetWidth() >> mip_index;
+                uint32_t height = texture->GetHeight() >> mip_index;
+                FIBITMAP* resized_bitmap = FreeImage_Rescale(current_bitmap, width, height, FILTER_BICUBIC);
+                if (!resized_bitmap)
+                {
+                    DEBUG_LOG_ERROR("Failed to resize image for mip level %d", mip_index);
+                    FreeImage_Unload(bitmap);
+                    return false;
+                }
 
-            texture->SetBitsPerChannel(bits_per_channel);
-            texture->SetWidth(width);
-            texture->SetHeight(height);
-            texture->SetChannelCount(channel_count);
-            texture->SetFormat(image_format);
+                if (mip_index > 1)
+                {
+                    FreeImage_Unload(current_bitmap);
+                }
 
-            uint32_t flags = texture->GetFlags();
+                current_bitmap = resized_bitmap;
+            }
 
-            flags |= is_transparent ? RHI_Texture_Transparent : 0;
-            flags |= is_greyscale   ? RHI_Texture_Greyscale : 0;
-            flags |= is_srgb        ? RHI_Texture_Srgb : 0;
+            if (mip_index == 2)
+            {
+                texture->SetFlag(RHI_Texture_Transparent, has_transparent_pixels(current_bitmap));
+            }
 
-            texture->SetFlags(flags);
+            // copy data over to the texture
+            RHI_Texture_Mip& mip = texture->CreateMip(slice_index);
+            BYTE* bytes = FreeImage_GetBits(current_bitmap);
+            size_t bytes_size = FreeImage_GetPitch(current_bitmap) * FreeImage_GetHeight(current_bitmap);
+            mip.bytes.resize(bytes_size);
+            memcpy(&mip.bytes[0], bytes, bytes_size);
         }
 
+        FreeImage_Unload(current_bitmap);
+
         return true;
+    }
+
+    void ImageImporter::Save(const std::string& file_path, const uint32_t width, const uint32_t height, const uint32_t channel_count, const uint32_t bits_per_channel, void* data)
+    {
+        uint32_t bytes_per_pixel = (bits_per_channel / 8) * channel_count;
+
+        // determine the FreeImage type based on bits_per_channel
+        FREE_IMAGE_TYPE image_type;
+        switch (bits_per_channel)
+        {
+        case 8:  image_type = FIT_BITMAP; break;
+        case 16: image_type = FIT_RGB16;  break;
+        case 32: image_type = FIT_RGBAF;  break;
+        default:
+        {
+            DEBUG_LOG_ERROR("Unhandled bits per channel");
+            return;
+        }
+        }
+
+        // create a FreeImage bitmap
+        FIBITMAP* bitmap = FreeImage_AllocateT(image_type, width, height, bits_per_channel * channel_count);
+        if (!bitmap)
+        {
+            DEBUG_LOG_ERROR("Failed to allocate FreeImage bitmap");
+            return;
+        }
+
+        // get the data
+        BYTE* bits = FreeImage_GetBits(bitmap);
+        if (!bits)
+        {
+            DEBUG_LOG_ERROR("Failed to get FreeImage bits");
+            FreeImage_Unload(bitmap);
+            return;
+        }
+
+        // copy the data
+        size_t data_size = width * height * bytes_per_pixel;
+        memcpy(bits, data, data_size);
+
+        // save the bitmap as a PNG
+        FreeImage_Save(FIF_PNG, bitmap, file_path.c_str(), 0);
+
+        // clean up
+        FreeImage_Unload(bitmap);
     }
 }
