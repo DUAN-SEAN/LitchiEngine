@@ -10,10 +10,12 @@ file(GLOB_RECURSE rttr_cpp "../../ThirdParty/rttr/*.cpp")
 file(GLOB_RECURSE GLAD_FILES "../../ThirdParty/glad/*.c")
 file(GLOB_RECURSE HEADER_FILES "*.h" "*.inl")
 file(GLOB_RECURSE SOURCE_FILES "*.cpp")
+file(GLOB_RECURSE SHADER_FILES "${ENGINE_ASSET_DIR}/*.hlsl")
 
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}" FILES ${HEADER_FILES} ${SOURCE_FILES})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${rttr_cpp})
 source_group(TREE "${CMAKE_CURRENT_SOURCE_DIR}../../../" FILES ${GLAD_FILES})
+source_group(TREE "${ENGINE_ASSET_DIR}/Engine/" FILES ${SHADER_FILES})
 
 # 根据不同的构建模式添加特定的宏
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
@@ -25,7 +27,8 @@ elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 # 添加目标库
-add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${HEADER_FILES} ${SOURCE_FILES})
+add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
+set_source_files_properties(${SHADER_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # 设置Target工程 C++17版本
 set_target_properties(${TARGET_NAME} PROPERTIES CXX_STANDARD 17)
