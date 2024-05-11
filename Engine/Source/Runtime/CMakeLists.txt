@@ -28,6 +28,9 @@ endif()
 
 # 添加目标库
 add_library(${TARGET_NAME} ${rttr_cpp} ${GLAD_FILES} ${HEADER_FILES} ${SOURCE_FILES} ${SHADER_FILES})
+
+# 设置shaders不参与项目编译
+# https://cmake.org/pipermail/cmake/2008-June/022387.html
 set_source_files_properties(${SHADER_FILES} PROPERTIES HEADER_FILE_ONLY TRUE)
 
 # 设置Target工程 C++17版本
