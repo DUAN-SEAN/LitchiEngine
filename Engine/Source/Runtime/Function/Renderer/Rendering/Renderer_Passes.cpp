@@ -720,7 +720,9 @@ namespace LitchiRuntime
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.material_shader = selectMaterial->GetShader();
 
-		// todo: 
+		// todo:
+		m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
+		cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
 		//UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
 
 		cmd_list->BeginMarker("Pass_SelectedAssetViewResourcePass");

@@ -124,6 +124,11 @@ namespace LitchiRuntime
 
 	size_t RendererPath::GetLightCount() const
 	{
+		if (m_rendererPathType == RendererPathType_AssetView)
+		{
+			return 0;
+		}
+
 		if (this->m_renderables.find(Renderer_Entity::Light) != m_renderables.end())
 		{
 			return this->m_renderables.at(Renderer_Entity::Light).size();

@@ -1,32 +1,32 @@
 {
-    "vertexType": "PosUvNorTanBone",
+    "vertexType": "PosUvNorTan",
     "shaderPath": ":Shaders/Forward/PBR/PBRTest.hlsl",
     "uniformInfoList": [
-      {
-        "Type": "UniformInfoTexture",
-        "name": "u_aO",
-        "path": ":Textures/black.png"
-      },
-      {
-        "Type": "UniformInfoTexture",
-        "name": "u_albedo",
-        "path": "NPC_female_024/NPC_female_024/NPC_female_24_BD_col.tga"
-      },
-      {
-        "Type": "UniformInfoTexture",
-        "name": "u_metallic",
-        "path": ":Textures/black.png"
-      },
-      {
-        "Type": "UniformInfoTexture",
-        "name": "u_normal",
-        "path": "NPC_female_024/NPC_female_024/NPC_female_24_BD_nml.tga"
-      },
-      {
-        "Type": "UniformInfoTexture",
-        "name": "u_roughness",
-        "path": ":Textures/black.png"
-      },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_aO",
+            "path": ":Textures/black.png"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_albedo",
+            "path": "NPC_female_024/NPC_female_024/NPC_female_24_BD_col.tga"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_metallic",
+            "path": ":Textures/black.png"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_normal",
+            "path": "NPC_female_024/NPC_female_024/NPC_female_24_BD_nml.tga"
+        },
+        {
+            "Type": "UniformInfoTexture",
+            "name": "u_roughness",
+            "path": ":Textures/black.png"
+        },
         {
             "Type": "UniformInfoVector2",
             "name": "u_textureOffset",
