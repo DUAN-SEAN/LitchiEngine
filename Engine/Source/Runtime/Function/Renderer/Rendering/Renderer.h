@@ -122,7 +122,7 @@ namespace LitchiRuntime
 		static void PushPassConstants(RHI_CommandList* cmd_list);
 		//static void UpdateConstantBufferLightArr(RHI_CommandList* cmd_list, Light** lightArr,const int lightCount, RendererPath* rendererPath);// todo remove
 		//static void UpdateDefaultConstantBufferLightArr(RHI_CommandList* cmd_list,const int lightCount, RendererPath* rendererPath);// todo remove
-		static void UpdateMaterial(RHI_CommandList* cmd_list, Material* material);
+		static void SetMaterialBuffer(RHI_CommandList* cmd_list, Material* material);
 		static void UpdateConstantBufferRenderPath(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& renderPathBufferData);
 
 		// Resource creation

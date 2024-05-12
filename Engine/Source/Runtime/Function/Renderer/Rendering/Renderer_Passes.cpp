@@ -358,8 +358,8 @@ namespace LitchiRuntime
 			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
 			EASY_END_BLOCK
 
-			EASY_BLOCK("UpdateMaterial")
-			UpdateMaterial(cmd_list, material);
+			EASY_BLOCK("SetMaterialBuffer")
+			SetMaterialBuffer(cmd_list, material);
 			EASY_END_BLOCK
 
 			// 如果是skinnedMesh 更新蒙皮数据
@@ -720,38 +720,37 @@ namespace LitchiRuntime
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 		pso.material_shader = selectMaterial->GetShader();
 
-		// todo:
-		m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
-		cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
-		//UpdateDefaultConstantBufferLightArr(cmd_list, 1, rendererPath);
-
 		cmd_list->BeginMarker("Pass_SelectedAssetViewResourcePass");
 
 		// set pipeline state
-		// pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Depth_read).get();
-
 		cmd_list->SetPipelineState(pso,true);
+
 		// push pass constants
 		{
 			/*m_cb_pass_cpu.set_resolution_out(GetResolutionRender());*/
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform
 			m_cb_pass_cpu.transform = transform;
+			m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
 			PushPassConstants(cmd_list);
 			EASY_END_BLOCK
 		}
 		cmd_list->SetBufferVertex(m_vertex_buffer);
 		cmd_list->SetBufferIndex(m_index_buffer);
 
-		// 如果是skinnedMesh 更新蒙皮数据
+		// if skin set bone buffer
 		if (selectedResType == SelectedResourceType_Mesh && selectedMesh->IsAnimationModel())
 		{
 			cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, selectedMeshBoneConstantBuffer);
 		}
 
-		EASY_BLOCK("UpdateMaterial")
-		UpdateMaterial(cmd_list, selectMaterial);
+		// set material buffer
+		EASY_BLOCK("SetMaterialBuffer")
+		SetMaterialBuffer(cmd_list, selectMaterial);
 		EASY_END_BLOCK
+
+		// set light  buffer
+		cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
 
 		EASY_BLOCK("DrawCall")
 		// Draw 

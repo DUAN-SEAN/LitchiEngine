@@ -126,7 +126,7 @@ namespace LitchiRuntime
 	{
 		if (m_rendererPathType == RendererPathType_AssetView)
 		{
-			return 0;
+			return 1;
 		}
 
 		if (this->m_renderables.find(Renderer_Entity::Light) != m_renderables.end())
@@ -527,7 +527,7 @@ namespace LitchiRuntime
 	{
 		static std::array<Cb_Light, rhi_max_array_size_lights> properties;
 		int32_t index = 0;
-		properties[index].intensity = 2500.0f;
+		properties[index].intensity = 4.35f;
 		properties[index].color = Color::White;
 		properties[index].range = 200.0f;
 		properties[index].angle = 0.5;

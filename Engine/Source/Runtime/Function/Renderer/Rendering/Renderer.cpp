@@ -635,7 +635,7 @@ namespace LitchiRuntime
 	//	GetConstantBuffer(Renderer_ConstantBuffer::LightArr)->Update(&m_cb_light_arr_cpu);
 	//}
 
-	void Renderer::UpdateMaterial(RHI_CommandList* cmd_list, Material* material)
+	void Renderer::SetMaterialBuffer(RHI_CommandList* cmd_list, Material* material)
 	{
 		EASY_BLOCK("SetMaterialGlobalBuffer")
 		cmd_list->SetMaterialGlobalBuffer(material->GetValuesCBuffer().get());
