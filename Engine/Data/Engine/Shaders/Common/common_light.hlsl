@@ -74,11 +74,14 @@ float ShadowCalculation(float3 fragWorldNormal,float3 fragWorldPos)
         
         float3 light_to_pixel = compute_direction(light, fragWorldPos);
         float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
-
+        
+        float2 resolution = light.compute_resolution();
+        float2 texel_size = 1.0f / resolution;
 
         // compute world position with normal offset bias to reduce shadow acne
         //float3 normal_offset_bias = surface.normal * (1.0f - saturate(light.n_dot_l)) * light.normal_bias * get_shadow_texel_size();
-        float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * light.normal_bias * 1.0f;
+        //float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * light.normal_bias * 1.0f;
+        float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x * 200.0f;
         // float3 normal_offset_bias = fragWorldNormal * light.normal_bias;
         float3 position_world = fragWorldPos + normal_offset_bias;
         
@@ -90,6 +93,20 @@ float ShadowCalculation(float3 fragWorldNormal,float3 fragWorldPos)
         {
         // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
             shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+        }
+
+        // blend with the far cascade for the directional lights
+        float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
+        if (light.light_is_directional() && cascade_fade > 0.0f)
+        {
+            // sample shadow map
+            slice_index = 1;
+            pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
+            pos_uv = ndc_to_uv(pos_ndc);
+            float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+
+            // blend/lerp
+            shadow = lerp(shadow, shadow_far, cascade_fade);
         }
     }
 

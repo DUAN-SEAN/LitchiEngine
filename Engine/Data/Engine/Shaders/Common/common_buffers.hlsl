@@ -51,18 +51,17 @@ struct LightBufferData
 {
     matrix view_projection[6];
     
-    float intensity;
-    float range;
-    float angle;
-    float bias;
-
     float4 color;
-    
+
     float3 position;
-    float normal_bias;
-    
+    float intensity;
+
     float3 direction;
+    float range;
+    
+    float angle;
     uint flags;
+    float2 padding;
 
     
     // lighting properties
@@ -141,6 +140,29 @@ struct LightBufferData
         
         return 0.0f;
     }
+    
+    float2 compute_resolution()
+    {
+        float2 resolution;
+        
+        if (light_is_directional())
+        {
+            uint layer_count;
+            tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
+        }
+        else if (light_is_point())
+        {
+            tex_light_point_depth.GetDimensions(resolution.x, resolution.y);
+        }
+        else if (light_is_spot())
+        {
+            tex_light_spot_depth.GetDimensions(resolution.x, resolution.y);
+        }
+
+        return resolution;
+    }
+
+
 };
 RWStructuredBuffer<LightBufferData> buffer_lights : register(u1);
 

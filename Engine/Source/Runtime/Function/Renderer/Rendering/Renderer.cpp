@@ -34,7 +34,7 @@ using namespace LitchiRuntime::Math;
 namespace LitchiRuntime
 {
 	Pcb_Pass Renderer::m_cb_pass_cpu;
-	Cb_Light Renderer::m_cb_light_cpu;
+	Sb_Light Renderer::m_cb_light_cpu;
 	Cb_Light_Arr Renderer::m_cb_light_arr_cpu;
 
 	RHI_CommandPool* Renderer::m_cmd_pool = nullptr;

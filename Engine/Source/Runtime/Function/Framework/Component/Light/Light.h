@@ -78,10 +78,8 @@ namespace LitchiRuntime
         float GetIntensityWatt(RenderCamera* camera) const;
 
         // bias
-        static float GetBias() { return -0.0005f; } // small values to avoid disconnected shadows
-        static float GetBiasSlopeScaled() { return -2.0f; }
-        void SetNormalBias(float value) { m_normal_bias = value; }
-        auto GetNormalBias() { return m_normal_bias; }
+        static float GetBias() { return -0.002f; } // small values to avoid disconnected shadows
+        static float GetBiasSlopeScaled() { return -2.5f; }
 
         // range
         void SetRange(float range);
@@ -114,10 +112,6 @@ namespace LitchiRuntime
 
         bool m_shadows_enabled = true;
         bool m_shadows_transparent_enabled = true;
-
-        // Bias
-        float m_bias = 0.0f;
-        float m_normal_bias = 5.0f;
 
         // Misc
         LightType m_light_type = LightType::Directional;

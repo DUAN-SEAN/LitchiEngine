@@ -12,9 +12,9 @@
 #define SampleShadowMap Technique_Vogel
 
 // technique - all
-static const uint   g_shadow_samples                 = 3;
-static const float  g_shadow_filter_size             = 3.0f;
-static const float  g_shadow_cascade_blend_threshold = 0.8f;
+static const uint   g_shadow_samples                 = 4;
+static const float g_shadow_filter_size = 6.0f;
+static const float  g_shadow_cascade_blend_threshold = 0.7f;
 // technique - vogel
 static const uint   g_penumbra_samples               = 8;
 static const float  g_penumbra_filter_size           = 128.0f;

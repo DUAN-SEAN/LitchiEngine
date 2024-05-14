@@ -107,25 +107,24 @@ namespace LitchiRuntime
 	};
 
 	// medium frequency - updates per light
-	struct Cb_Light
+	struct Sb_Light
 	{
 		Matrix view_projection[6];
-
-		float intensity;
-		float range;
-		float angle;
-		float bias;
 
 		Color color;
 
 		Vector3 position;
-		float normal_bias;
+		float intensity;
 
 		Vector3 direction;
+		float range;
+
+		float angle;
 		uint32_t flags;
+		Vector2 padding;
 
 
-		bool operator==(const Cb_Light& rhs)
+		bool operator==(const Sb_Light& rhs)
 		{
 			return
 				view_projection[0] == rhs.view_projection[0] &&
@@ -137,8 +136,6 @@ namespace LitchiRuntime
 				intensity == rhs.intensity &&
 				range == rhs.range &&
 				angle == rhs.angle &&
-				bias == rhs.bias &&
-				normal_bias == rhs.normal_bias &&
 				color == rhs.color &&
 				position == rhs.position &&
 				direction == rhs.direction &&
@@ -195,7 +192,7 @@ namespace LitchiRuntime
 	{
 		int lightCount;
 		int padding[3];
-		Cb_Light lightArr[MaxLightCount];
+		Sb_Light lightArr[MaxLightCount];
 		bool operator==(const Cb_Light_Arr& rhs)
 		{
 			if (lightCount != rhs.lightCount)
@@ -321,7 +318,7 @@ namespace LitchiRuntime
 			m_value.m33 = is_transparent ? 1.0f : 0.0f;
 		}
 
-		void set_light(int array_index,int light_index,int light_count)
+		void set_light(int array_index, int light_index, int light_count)
 		{
 			set_f3_value2(array_index, light_index, light_count);
 		}

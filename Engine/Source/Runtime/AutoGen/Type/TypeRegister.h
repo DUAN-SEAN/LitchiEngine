@@ -237,10 +237,9 @@ namespace LitchiRuntime {
 			.property("color", &Light::GetColor, &Light::SetColor)
 			.property("intensityLumens", &Light::GetIntensityLumens, &Light::SetIntensityLumens)
 			.property("shadowsEnabled", &Light::GetShadowsEnabled, &Light::SetShadowsEnabled)
-			.property("shadowsTransparentEnabled", &Light::GetShadowsTransparentEnabled,&Light::SetShadowsTransparentEnabled)
+			.property("shadowsTransparentEnabled", &Light::GetShadowsTransparentEnabled, &Light::SetShadowsTransparentEnabled)
 			.property("range", &Light::GetRange, &Light::SetRange)
-			.property("angle", &Light::GetAngle, &Light::SetAngle)
-			.property("normalBias", &Light::GetNormalBias, &Light::SetNormalBias);
+			.property("angle", &Light::GetAngle, &Light::SetAngle);
 
 		// Animator
 		registration::class_<Animator>("Animator").constructor<>()(rttr::policy::ctor::as_raw_ptr);

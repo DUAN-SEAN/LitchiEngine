@@ -1,5 +1,6 @@
 // = INCLUDES ========
 #include "../../Common/common_light.hlsl"
+#include "../../Common/common_colorspace.hlsl"
 //====================
 
 struct MaterialData
@@ -65,27 +66,30 @@ Pixel mainVS(Vertex_PosUvNorTanBone input)
 
 float4 mainPS(Pixel input) : SV_Target
 {
-	float PI = 3.14;
-	float3 colorSpaceDielectricSpecRgb = float3(0.04, 0.04, 0.04);
+    float3 colorSpaceDielectricSpecRgb = float3(0.04, 0.04, 0.04);
 	//input.normal = normalize(input.normal);
 	
 	// sample for texture
-	float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
-	float4 albedo = u_albedo.Sample(samplers[sampler_point_wrap], g_TexCoords);
-	float metallic = u_metallic.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
-	float perceptualRoughness = 1 - u_roughness.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
-	float roughness = perceptualRoughness * perceptualRoughness;
-	float squareRoughness = roughness * roughness;
-	float lerpSquareRoughness = pow(lerp(0.002, 1, roughness), 2);
+    float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
+    float4 albedo = u_albedo.Sample(samplers[sampler_point_wrap], g_TexCoords);
+    float3 albedoLinear = srgb_to_linear(albedo.xyz);
+    albedo = float4(albedoLinear, albedo.a);
+	
+    float metallic = u_metallic.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
+    float perceptualRoughness = 1 - u_roughness.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
+    float roughness = perceptualRoughness * perceptualRoughness;
+    float squareRoughness = roughness * roughness;
+    float lerpSquareRoughness = pow(lerp(0.002, 1, roughness), 2);
 
 	// get normal by sample
-	float3 sampleNormal = u_normal.Sample(samplers[sampler_point_wrap], g_TexCoords).xyz;
-	float3 binormal = cross(normalize(input.normal), normalize(input.tangent));
-	float3x3 rotation = float3x3(input.tangent, binormal, sampleNormal);
-	float3 normal = mul(rotation, sampleNormal);
+    float3 sampleNormal = u_normal.Sample(samplers[sampler_point_wrap], g_TexCoords).xyz;
+    float3 binormal = cross(normalize(input.normal), normalize(input.tangent));
+    float3x3 rotation = float3x3(input.tangent, binormal, sampleNormal);
+    float3 normal = mul(rotation, sampleNormal);
+    normal = normalize(input.normal);
 
-	float3 viewDir = normalize(buffer_rendererPath.camera_position.xyz - input.fragPos.xyz);
-	float nv = max(saturate(dot(normal, viewDir)), 0.000001);
+    float3 viewDir = normalize(buffer_rendererPath.camera_position.xyz - input.fragPos.xyz);
+    float nv = max(saturate(dot(normal, viewDir)), 0.000001);
 
 	// calculate for each light source
 	uint index_light = (uint)pass_get_f3_value2().y;
@@ -132,6 +136,9 @@ float4 mainPS(Pixel input) : SV_Target
 
 		lightSum += directLightResult + indirectResult;
 	}
-
-	return float4(lightSum.x, lightSum.y, lightSum.z,1);
+	
+    // float3 color = lightSum + float3(0.03) * albedo.xyz * ao;
+    float3 color = linear_to_srgb(lightSum + float3(0.03, 0.03, 0.03) * albedo.xyz);
+	
+    return float4(color.x, color.y, color.z, albedo.a);
 }

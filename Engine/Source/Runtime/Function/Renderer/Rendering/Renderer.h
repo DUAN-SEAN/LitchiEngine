@@ -170,7 +170,7 @@ namespace LitchiRuntime
 		static std::unordered_map<RendererPathType, RendererPath*> m_rendererPaths;
 
 		static Pcb_Pass m_cb_pass_cpu;
-		static Cb_Light m_cb_light_cpu;
+		static Sb_Light m_cb_light_cpu;
 		static  Cb_Light_Arr m_cb_light_arr_cpu;
 		static std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer_skyBox;
 		static std::shared_ptr<RHI_IndexBuffer> m_index_buffer_skyBox;
