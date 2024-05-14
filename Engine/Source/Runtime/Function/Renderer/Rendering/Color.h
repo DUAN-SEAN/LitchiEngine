@@ -33,8 +33,7 @@ namespace LitchiRuntime
         float a = 0.0f;
 
         const float* Data() const { return &r; }
-
-        // Standard
+        // standard
         static const Color standard_black;
         static const Color standard_white;
         static const Color standard_transparent;
@@ -42,8 +41,9 @@ namespace LitchiRuntime
         static const Color standard_green;
         static const Color standard_blue;
         static const Color standard_cornflower_blue;
+        static const Color standard_renderer_lines;
 
-        // Materials
+        // materials
         static const Color material_aluminum;
         static const Color material_blood;
         static const Color material_bone;
@@ -97,7 +97,7 @@ namespace LitchiRuntime
         static const Color material_water;
         static const Color material_zinc;
 
-        // Lights
+        // lights
         static const Color light_sky_clear;
         static const Color light_sky_daylight_overcast;
         static const Color light_sky_moonlight;
@@ -109,7 +109,6 @@ namespace LitchiRuntime
         static const Color light_kerosene_lamp;
         static const Color light_light_bulb;
         static const Color light_photo_flash;
-
 
         static const Color Red;
         static const Color Green;

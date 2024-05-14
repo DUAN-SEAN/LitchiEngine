@@ -379,11 +379,11 @@ namespace LitchiRuntime
 
         m_is_ready_for_use = true;
 
-        // Request GPU based mip generation (if needed)
-        if (m_flags & RHI_Texture_Mips)
-        {
-            Renderer::AddTextureForMipGeneration(this);
-        }
+        //// Request GPU based mip generation (if needed)
+        //if (m_flags & RHI_Texture_Mips)
+        //{
+        //    Renderer::AddTextureForMipGeneration(this);
+        //}
 
         return true;
     }

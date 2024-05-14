@@ -3,6 +3,7 @@
 #include "Runtime/Core/pch.h"
 #include "Renderer.h"
 #include "../RHI/RHI_Vertex.h"
+#include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
@@ -21,7 +22,7 @@ namespace LitchiRuntime
     uint32_t m_lines_index_depth_off = 0;
     uint32_t m_lines_index_depth_on  = 0;
 
-    void Renderer::DrawLine(const Vector3& from, const Vector3& to, const Vector4& color_from, const Vector4& color_to, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawLine(const Vector3& from, const Vector3& to, const Color& color_from, const Color& color_to, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         // Get vertex index.
         uint32_t& index = depth ? m_lines_index_depth_on : m_lines_index_depth_off;
@@ -48,26 +49,40 @@ namespace LitchiRuntime
             m_lines_duration.resize(new_vertex_count);
         }
 
-        // Write lines.
+        // write lines
         {
             index++;
-            m_line_vertices[index]  = RHI_Vertex_PosCol(from, color_from);
+            RHI_Vertex_PosCol& line_start = m_line_vertices[index];
+            line_start.pos[0] = from.x;
+            line_start.pos[1] = from.y;
+            line_start.pos[2] = from.z;
+            line_start.col[0] = color_from.r;
+            line_start.col[1] = color_from.g;
+            line_start.col[2] = color_from.b;
+            line_start.col[3] = 1.0f;
             m_lines_duration[index] = duration;
 
             index++;
-            m_line_vertices[index]  = RHI_Vertex_PosCol(to, color_to);
+            RHI_Vertex_PosCol& line_end = m_line_vertices[index];
+            line_end.pos[0] = to.x;
+            line_end.pos[1] = to.y;
+            line_end.pos[2] = to.z;
+            line_end.col[0] = color_to.r;
+            line_end.col[1] = color_to.g;
+            line_end.col[2] = color_to.b;
+            line_end.col[3] = 1.0f;
             m_lines_duration[index] = duration;
         }
     }
 
-    void Renderer::DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
+    void Renderer::DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
     {
         DrawLine(v0, v1, color, color, duration, depth);
         DrawLine(v1, v2, color, color, duration, depth);
         DrawLine(v2, v0, color, color, duration, depth);
     }
 
-    void Renderer::DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Vector4& color /*= DebugColor*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
+    void Renderer::DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Color& color /*= DebugColor*/, const float duration /*= 0.0f*/, bool depth /*= true*/)
     {
         const float cam_z = camera->GetPosition().z + camera->GetNearPlane() + 5.0f;
 
@@ -77,11 +92,11 @@ namespace LitchiRuntime
         DrawLine(Vector3(rectangle.left,  rectangle.bottom, cam_z), Vector3(rectangle.left,  rectangle.top,    cam_z), color, color, duration, depth);
     }
 
-    void Renderer::DrawBox(const BoundingBox& box, const Vector4& color, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawBox(const BoundingBox& box, const Color& color, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         const Vector3& min = box.GetMin();
         const Vector3& max = box.GetMax();
-    
+
         DrawLine(Vector3(min.x, min.y, min.z), Vector3(max.x, min.y, min.z), color, color, duration, depth);
         DrawLine(Vector3(max.x, min.y, min.z), Vector3(max.x, max.y, min.z), color, color, duration, depth);
         DrawLine(Vector3(max.x, max.y, min.z), Vector3(min.x, max.y, min.z), color, color, duration, depth);
@@ -96,7 +111,7 @@ namespace LitchiRuntime
         DrawLine(Vector3(min.x, max.y, max.z), Vector3(min.x, min.y, max.z), color, color, duration, depth);
     }
 
-    void Renderer::DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Vector4& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         if (radius <= 0.0f)
             return;
@@ -134,7 +149,7 @@ namespace LitchiRuntime
         }
     }
 
-    void Renderer::DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Vector4& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         // Need at least 4 segments
         segment_count = Helper::Max<uint32_t>(segment_count, 4);
@@ -179,7 +194,7 @@ namespace LitchiRuntime
         }
     }
 
-    void Renderer::DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Vector4& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         arrow_size = Helper::Max<float>(0.1f, arrow_size);
 
@@ -206,7 +221,7 @@ namespace LitchiRuntime
         DrawLine(end, end + TM * Vector3(-arrow_sqrt, -arrow_sqrt, 0), color, color, duration, depth);
     }
 
-    void Renderer::DrawPlane(const Plane& plane, const Vector4& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
+    void Renderer::DrawPlane(const Plane& plane, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
     {
         // Arrow indicating normal
         Vector3 plane_origin = plane.normal * plane.d;
@@ -217,5 +232,124 @@ namespace LitchiRuntime
         static const float scale = 10000.0f;
         DrawLine(plane_origin - U * scale, plane_origin + U * scale, color, color, duration, depth);
         DrawLine(plane_origin - V * scale, plane_origin + V * scale, color, color, duration, depth);
+    }
+
+
+    void Renderer::AddLinesToBeRendered()
+    {
+        // only render debug lines when not in game mode
+        if (ApplicationBase::Instance()->GetApplicationType() == LitchiApplicationType::Game)// todo
+            return;
+
+        // only rendererPathSceneView Exist and Active
+        auto rendererPath4SceneView = m_rendererPaths[RendererPathType_SceneView];
+        if(rendererPath4SceneView == nullptr || rendererPath4SceneView->GetActive() == false)
+        {
+            return;
+        }
+        auto camera = rendererPath4SceneView->GetRenderCamera();
+
+        if (GetOption<bool>(Renderer_Option::PickingRay))
+        {
+            const auto& ray = camera->GetPickingRay();
+            DrawLine(ray.GetStart(), ray.GetStart() + ray.GetDirection() * camera->GetFarPlane(), Color(0, 1, 0, 1));
+        }
+
+        if (GetOption<bool>(Renderer_Option::Lights) && rendererPath4SceneView->GetLightCount() > 0)
+        {
+            auto& lights = rendererPath4SceneView->GetRenderables()[Renderer_Entity::Light];
+            for (auto entity : lights)
+            {
+                // if (shared_ptr<Camera> camera = GetCamera())
+                {
+                    auto entity_selected = camera->GetSelectedEntity();
+                    if (entity_selected && entity_selected->GetObjectId() == entity->GetObjectId())
+                    {
+                        auto light = entity->GetComponent<Light>();
+
+                        if (light->GetLightType() == LightType::Directional)
+                        {
+                            Vector3 pos = light->GetGameObject()->GetTransform()->GetPosition() - light->GetGameObject()->GetTransform()->GetForward() * 1000.0f;
+                            DrawDirectionalArrow(pos, Vector3::Zero, 2.5f);
+                        }
+                        else if (light->GetLightType() == LightType::Point)
+                        {
+                            Vector3 center = light->GetGameObject()->GetTransform()->GetPosition();
+                            float radius = light->GetRange();
+                            uint32_t segment_count = 64;
+
+                            DrawCircle(center, Vector3::Up, radius, segment_count);
+                            DrawCircle(center, Vector3::Right, radius, segment_count);
+                            DrawCircle(center, Vector3::Forward, radius, segment_count);
+                        }
+                        else if (light->GetLightType() == LightType::Spot)
+                        {
+                            // tan(angle) = opposite/adjacent
+                            // opposite = adjacent * tan(angle)
+                            float opposite = light->GetRange() * Math::Helper::Tan(light->GetAngle());
+
+                            Vector3 pos_end_center = light->GetGameObject()->GetTransform()->GetForward() * light->GetRange();
+                            Vector3 pos_end_up = pos_end_center + light->GetGameObject()->GetTransform()->GetUp() * opposite;
+                            Vector3 pos_end_right = pos_end_center + light->GetGameObject()->GetTransform()->GetRight() * opposite;
+                            Vector3 pos_end_down = pos_end_center + light->GetGameObject()->GetTransform()->GetDown() * opposite;
+                            Vector3 pos_end_left = pos_end_center + light->GetGameObject()->GetTransform()->GetLeft() * opposite;
+
+                            Vector3 pos_start = light->GetGameObject()->GetTransform()->GetPosition();
+                            DrawLine(pos_start, pos_start + pos_end_center);
+                            DrawLine(pos_start, pos_start + pos_end_up);
+                            DrawLine(pos_start, pos_start + pos_end_right);
+                            DrawLine(pos_start, pos_start + pos_end_down);
+                            DrawLine(pos_start, pos_start + pos_end_left);
+                        }
+                    }
+                }
+            }
+        }
+
+        if (GetOption<bool>(Renderer_Option::Aabb))
+        {
+            auto get_color = [](GameObject* renderable)
+                {
+                    static const Color color_visible = Color::standard_renderer_lines;
+                    static const Color color_occluded = Color(1.0f, 0.0f, 0.0f, 1.0f);
+                    static const Color color_ignore_culling = Color(1.0f, 1.0f, 0.0f, 1.0f);
+
+                    Color color = color_visible;
+                    color = !renderable->GetActive() ? color_occluded : color;
+
+                    return color;
+                };
+
+            auto draw_bounding_boxes = [&get_color, rendererPath4SceneView](const Renderer_Entity entity_type)
+                {
+                    for (const auto& entity : rendererPath4SceneView->GetRenderables()[entity_type])
+                    {
+                        if (auto meshFilter = entity->GetComponent<MeshFilter>())
+                        {
+                            BoundingBoxType bounding_box_type = meshFilter->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+                            DrawBox(meshFilter->GetBoundingBox(bounding_box_type), get_color(entity));
+                        }
+                    }
+                };
+
+          /*  auto draw_instance_group_bounding_boxes = [&get_color, rendererPath4SceneView](const Renderer_Entity entity_type)
+                {
+                    for (const auto& entity : rendererPath4SceneView->GetRenderables()[entity_type])
+                    {
+                        if (auto renderable = entity->GetComponent<MeshFilter>())
+                        {
+                            uint32_t group_count = static_cast<uint32_t>(renderable->GetBoundingBoxGroupEndIndices().size());
+                            for (uint32_t group_index = 0; group_index < group_count; group_index++)
+                            {
+                                const BoundingBox& bounding_box_group = renderable->GetBoundingBox(BoundingBoxType::TransformedInstanceGroup, group_index);
+                                DrawBox(bounding_box_group, get_color(entity));
+                            }
+                        }
+                    }
+                };*/
+
+            draw_bounding_boxes(Renderer_Entity::Mesh);
+            //draw_instance_group_bounding_boxes(Renderer_Entity::Mesh);
+        }
     }
 }

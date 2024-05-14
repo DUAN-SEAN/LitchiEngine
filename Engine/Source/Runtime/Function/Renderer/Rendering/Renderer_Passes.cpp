@@ -531,6 +531,90 @@ namespace LitchiRuntime
 		cmd_list->EndTimeblock();
 	}
 
+	void Renderer::Pass_LinesPass(RHI_CommandList* cmd_list, RendererPath* rendererPath)
+	{
+		// acquire resources
+		RHI_Shader* shader_v = GetShader(Renderer_Shader::line_v).get();
+		RHI_Shader* shader_p = GetShader(Renderer_Shader::line_p).get();
+		if (!shader_v->IsCompiled() || !shader_p->IsCompiled())
+			return;
+
+		cmd_list->BeginTimeblock("lines");
+
+		// set pipeline state
+		static RHI_PipelineState pso;
+		pso.shader_vertex = shader_v;
+		pso.shader_pixel = shader_p;
+		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get();
+		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
+		pso.clear_color[0] = rhi_color_load;
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();
+		pso.primitive_topology = RHI_PrimitiveTopology::LineList;
+
+		// world space rendering
+		m_cb_pass_cpu.transform = Matrix::Identity;
+		cmd_list->PushConstants(m_cb_pass_cpu);
+
+		// draw independent lines
+		const bool draw_lines_depth_off = m_lines_index_depth_off != numeric_limits<uint32_t>::max();
+		const bool draw_lines_depth_on = m_lines_index_depth_on > ((m_line_vertices.size() / 2) - 1);
+		if (draw_lines_depth_off || draw_lines_depth_on)
+		{
+			cmd_list->SetCullMode(RHI_CullMode::None);
+
+			// grow vertex buffer (if needed)
+			uint32_t vertex_count = static_cast<uint32_t>(m_line_vertices.size());
+			if (vertex_count > m_vertex_buffer_lines->GetVertexCount())
+			{
+				m_vertex_buffer_lines->CreateDynamic<RHI_Vertex_PosCol>(vertex_count);
+			}
+
+			if (vertex_count != 0)
+			{
+				// update vertex buffer
+				RHI_Vertex_PosCol* buffer = static_cast<RHI_Vertex_PosCol*>(m_vertex_buffer_lines->GetMappedData());
+				copy(m_line_vertices.begin(), m_line_vertices.end(), buffer);
+
+				// depth off
+				if (draw_lines_depth_off)
+				{
+					cmd_list->BeginMarker("depth_off");
+
+					// set pipeline state
+					pso.blend_state = GetBlendState(Renderer_BlendState::Off).get();
+					pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Off).get();
+					cmd_list->SetPipelineState(pso);
+
+					cmd_list->SetBufferVertex(m_vertex_buffer_lines.get());
+					cmd_list->Draw(m_lines_index_depth_off + 1);
+
+					cmd_list->EndMarker();
+				}
+
+				// depth on
+				if (m_lines_index_depth_on > (vertex_count / 2) - 1)
+				{
+					cmd_list->BeginMarker("depth_on");
+
+					// set pipeline state
+					pso.blend_state = GetBlendState(Renderer_BlendState::Alpha).get();
+					pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::Read).get();
+					cmd_list->SetPipelineState(pso);
+
+					cmd_list->SetBufferVertex(m_vertex_buffer_lines.get());
+					cmd_list->Draw((m_lines_index_depth_on - (vertex_count / 2)) + 1, vertex_count / 2);
+
+					cmd_list->EndMarker();
+				}
+			}
+		}
+
+		m_lines_index_depth_off = numeric_limits<uint32_t>::max();                         // max +1 will wrap it to 0
+		m_lines_index_depth_on = (static_cast<uint32_t>(m_line_vertices.size()) / 2) - 1; // -1 because +1 will make it go to size / 2
+
+		cmd_list->EndTimeblock();
+	}
+
 	void Renderer::Pass_IconPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& rendererPathBufferData)
 	{
 
@@ -775,9 +859,5 @@ namespace LitchiRuntime
 		EASY_END_BLOCK
 
 		cmd_list->EndMarker();
-	}
-
-	void Renderer::Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture)
-	{
 	}
 }

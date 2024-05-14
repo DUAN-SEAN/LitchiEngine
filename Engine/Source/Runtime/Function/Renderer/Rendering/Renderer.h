@@ -44,14 +44,14 @@ namespace LitchiRuntime
 		static void Tick();
 
 		// Primitive rendering (excellent for debugging)
-		static void DrawLine(const Vector3& from, const Vector3& to, const Vector4& color_from = DEBUG_COLOR, const Vector4& color_to = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawBox(const BoundingBox& box, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
-		static void DrawPlane(const Plane& plane, const Vector4& color = DEBUG_COLOR, const float duration = 0.0f, const bool depth = true);
+		static void DrawLine(const Vector3& from, const Vector3& to, const Color& color_from = Color::standard_renderer_lines, const Color& color_to = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawBox(const BoundingBox& box, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawPlane(const Plane& plane, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 
 		// Options
 		template<typename T>
@@ -63,10 +63,6 @@ namespace LitchiRuntime
 		// Swapchain
 		static RHI_SwapChain* GetSwapChain();
 		static void BlitToBackBuffer(RHI_CommandList* cmd_list, RHI_Texture* texture);
-
-		// Mip generation
-		static void AddTextureForMipGeneration(RHI_Texture* texture);
-		static void Pass_GenerateMips(RHI_CommandList* cmd_list, RHI_Texture* texture);
 
 		// Misc
 		static void SetStandardResources(RHI_CommandList* cmd_list);
@@ -150,6 +146,7 @@ namespace LitchiRuntime
 		static void Pass_UIPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		// passes - debug/editor
 		static void Pass_GridPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
+		static void Pass_LinesPass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 		static void Pass_IconPass(RHI_CommandList* cmd_list, RendererPath* rendererPath, Cb_RendererPath& rendererPathBufferData);
 		static void Pass_SelectedAssetViewResourcePass(RHI_CommandList* cmd_list, RendererPath* rendererPath);
 
@@ -160,6 +157,7 @@ namespace LitchiRuntime
 		// Event handlers
 		// static void OnFullScreenToggled();
 		static void OnSyncPoint(RHI_CommandList* cmd_list);
+		static void AddLinesToBeRendered();
 
 		static void DestroyResources();
 

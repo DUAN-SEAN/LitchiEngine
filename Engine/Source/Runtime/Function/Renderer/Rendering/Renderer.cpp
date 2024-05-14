@@ -69,10 +69,6 @@ namespace LitchiRuntime
 		const uint8_t swap_chain_buffer_count = 3;
 		shared_ptr<RHI_SwapChain> swap_chain;
 
-		// mip generation
-		mutex mutex_mip_generation;
-		vector<RHI_Texture*> textures_mip_generation;
-
 		// rhi resources
 		RHI_CommandList* cmd_current = nullptr;
 
@@ -171,6 +167,10 @@ namespace LitchiRuntime
 		SetOption(Renderer_Option::Lights, 1.0f);
 		SetOption(Renderer_Option::Physics, 0.0f);
 		SetOption(Renderer_Option::PerformanceMetrics, 1.0f);
+
+		// todo
+		SetOption(Renderer_Option::Lights, 1.0f);
+		SetOption(Renderer_Option::Aabb, 1.0f);
 
 		// resources
 		CreateConstantBuffers();
@@ -381,6 +381,7 @@ namespace LitchiRuntime
 			EASY_BLOCK("Pass_Debug_Pass")
 			Pass_GridPass(cmd_list, rendererPath);
 			Pass_IconPass(cmd_list, rendererPath, rendererPathBufferData);
+			Pass_LinesPass(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
 
@@ -689,18 +690,6 @@ namespace LitchiRuntime
 				RHI_Device::DeletionQueueParse();
 				DEBUG_LOG_INFO("Parsed deletion queue");
 			}
-			{
-			
-			// reset dynamic buffer offsets
-	/*		GetStructuredBuffer(Renderer_StructuredBuffer::Spd)->ResetOffset();
-			GetConstantBufferFrame()->ResetOffset();*/
-
-			/*if (bindless_materials_dirty)
-			{
-				RHI_Device::UpdateBindlessResources(nullptr, &bindless_textures);
-				bindless_materials_dirty = false;
-			}*/	
-			}
 		}
 
 		// update frame constant buffer // todo
@@ -709,43 +698,7 @@ namespace LitchiRuntime
 		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&frameBufferData);
 		EASY_END_BLOCK
 
-		// generate mips - if any
-		{
-			lock_guard lock(mutex_mip_generation);
-			for (RHI_Texture* texture : textures_mip_generation)
-			{
-				Pass_GenerateMips(cmd_list, texture);
-			}
-			textures_mip_generation.clear();
-		}
-
-		// filter environment on directional light change
-		{
-		/*	static Quaternion rotation;
-			static float intensity;
-			static Color color;
-
-			for (const shared_ptr<Entity>& entity : m_renderables[Renderer_Entity::Light])
-			{
-				if (const shared_ptr<Light>& light = entity->GetComponent<Light>())
-				{
-					if (light->GetLightType() == LightType::Directional)
-					{
-						if (light->GetEntity()->GetRotation() != rotation ||
-							light->GetIntensityLumens() != intensity ||
-							light->GetColor() != color
-							)
-						{
-							rotation = light->GetEntity()->GetRotation();
-							intensity = light->GetIntensityLumens();
-							color = light->GetColor();
-
-							m_environment_mips_to_filter_count = GetRenderTarget(Renderer_RenderTarget::skysphere)->GetMipCount() - 1;
-						}
-					}
-				}
-			}*/
-		}
+		AddLinesToBeRendered();
 	}
 
 	void Renderer::SetOption(Renderer_Option option, float value)
@@ -921,12 +874,6 @@ namespace LitchiRuntime
 		cmd_list->BeginMarker("blit_to_back_buffer");
 		cmd_list->Blit(texture, swap_chain.get());
 		cmd_list->EndMarker();
-	}
-
-	void Renderer::AddTextureForMipGeneration(RHI_Texture* texture)
-	{
-		lock_guard<mutex> guard(mutex_mip_generation);
-		textures_mip_generation.push_back(texture);
 	}
 
 	RHI_CommandList* Renderer::GetCmdList()
