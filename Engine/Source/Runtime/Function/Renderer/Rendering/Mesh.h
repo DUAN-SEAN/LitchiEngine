@@ -85,6 +85,7 @@ namespace LitchiRuntime
 
         // AABB
         const BoundingBox& GetAabb() const { return m_aabb; }
+        const BoundingBox& GetSubAabb(uint32_t subMeshIndex) { return m_subMesh_aabb_arr[subMeshIndex]; }
         void ComputeAabb();
 
         // GPU buffers
@@ -153,6 +154,9 @@ namespace LitchiRuntime
 
         // AABB
         BoundingBox m_aabb;
+
+        // sub Mesh AABB
+        std::vector<BoundingBox> m_subMesh_aabb_arr{};
 
         // sub Mesh collection
         std::vector<SubMesh> m_subMeshArr{};

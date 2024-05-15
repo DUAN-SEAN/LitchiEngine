@@ -98,7 +98,7 @@ namespace LitchiRuntime
 
         if (m_bounding_box_untransformed == BoundingBox::Undefined)
         {
-            m_bounding_box_untransformed = m_mesh->GetAabb();
+            m_bounding_box_untransformed = m_mesh->GetSubAabb(subMeshIndex);
         }
 
         LC_ASSERT(m_subMesh.m_geometryIndexCount != 0)

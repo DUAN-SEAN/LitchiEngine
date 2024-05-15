@@ -38,12 +38,12 @@ namespace LitchiRuntime
         }
     }
 
-    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count)
+    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count, const uint32_t vertex_index)
     {
         m_min = Vector3::Infinity;
         m_max = Vector3::InfinityNeg;
 
-        for (uint32_t i = 0; i < vertex_count; i++)
+        for (uint32_t i = vertex_index; i < vertex_index+vertex_count; i++)
         {
             m_max.x = Math::Helper::Max(m_max.x, vertices[i].pos[0]);
             m_max.y = Math::Helper::Max(m_max.y, vertices[i].pos[1]);
@@ -55,12 +55,12 @@ namespace LitchiRuntime
         }
     }
 
-    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count)
+    BoundingBox::BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count, const uint32_t vertex_index)
     {
         m_min = Vector3::Infinity;
         m_max = Vector3::InfinityNeg;
 
-        for (uint32_t i = 0; i < vertex_count; i++)
+        for (uint32_t i = vertex_index; i < vertex_index+vertex_count; i++)
         {
             m_max.x = Math::Helper::Max(m_max.x, vertices[i].pos[0]);
             m_max.y = Math::Helper::Max(m_max.y, vertices[i].pos[1]);

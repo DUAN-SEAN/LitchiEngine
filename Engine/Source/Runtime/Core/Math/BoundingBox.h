@@ -43,15 +43,17 @@ namespace LitchiRuntime
 		 * @brief Construct from vertices
 		 * @param vertices RHI_Vertex_PosTexNorTan without bone
 		 * @param vertex_count 
+		 * @param vertex_index 
 		*/
-		BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count);
+		BoundingBox(const RHI_Vertex_PosTexNorTan* vertices, const uint32_t vertex_count,const uint32_t vertex_index = 0);
 
 		/**
 		 * @brief Construct from vertices with bone
 		 * @param vertices RHI_Vertex_PosTexNorTanBone
 		 * @param vertex_count 
+		 * @param vertex_index 
 		*/
-		BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count);
+		BoundingBox(const RHI_Vertex_PosTexNorTanBone* vertices, const uint32_t vertex_count, const uint32_t vertex_index = 0);
 
 		/**
 		 * @brief cctor
