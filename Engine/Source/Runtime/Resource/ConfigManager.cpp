@@ -4,6 +4,9 @@
 
 #include "AssetManager.h"
 #include "Runtime/Core/Log/debug.h"
+#include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
+
+#define ENUM_TO_STRING(x) #x
 
 namespace LitchiRuntime
 {
@@ -41,7 +44,6 @@ namespace LitchiRuntime
 	{
 		if (m_isDirty)
 		{
-			m_configRes.m_data = m_dataIniFile.GetData();
 			Save();
 			m_isDirty = false;
 		}
@@ -82,6 +84,7 @@ namespace LitchiRuntime
 		auto path = m_projectRootFolder + ConfigFileName;
 		DEBUG_LOG_INFO("ConfigManager::Save Config Path: {}", path);
 
+		m_configRes.m_data = m_dataIniFile.GetData();
 		if (!AssetManager::SaveAsset(m_configRes, path))
 		{
 			DEBUG_LOG_INFO("ConfigManager::Save Config Fail Path: {}", path);
@@ -100,13 +103,26 @@ namespace LitchiRuntime
 		m_dataIniFile.Add<int>("y_resolution", 720);
 		m_dataIniFile.Add<bool>("fullscreen", false);
 		m_dataIniFile.Add<std::string>("executable_name", "Game");
-		m_dataIniFile.Add<std::string>("start_scene", "Scene.ovscene");
-		m_dataIniFile.Add<bool>("vsync", true);
+		m_dataIniFile.Add<std::string>("start_scene", "Scene.scene");
 		m_dataIniFile.Add<bool>("multisampling", true);
 		m_dataIniFile.Add<int>("samples", 4);
-		m_dataIniFile.Add<int>("opengl_major", 4);
-		m_dataIniFile.Add<int>("opengl_minor", 3);
 		m_dataIniFile.Add<bool>("dev_build", true);
+
+
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Hdr), false);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Aabb), true);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Lights), true);
+		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::Anisotropy), 16.0f);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Vsync), false);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Grid), true);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Physics), false);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline), true);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle), true);
+		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale), 1.0f);
+		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::Exposure), 1.0f);
+		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::ShadowResolution), 2048.0f);
+		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::Antialiasing), static_cast<float>(Renderer_Antialiasing::Taa));
+
 		Save();
 	}
 

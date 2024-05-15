@@ -7,8 +7,92 @@
     "isFullScreen": true,
     "data": [
         {
-            "key": "test1",
-            "value": "test2"
+            "key": "executable_name",
+            "value": "Game"
+        },
+        {
+            "key": "gravity",
+            "value": "-9.810000"
+        },
+        {
+            "key": "x_resolution",
+            "value": "1280"
+        },
+        {
+            "key": "multisampling",
+            "value": "true"
+        },
+        {
+            "key": "y_resolution",
+            "value": "720"
+        },
+        {
+            "key": "start_scene",
+            "value": "Scene.scene"
+        },
+        {
+            "key": "fullscreen",
+            "value": "false"
+        },
+        {
+            "key": "samples",
+            "value": "4"
+        },
+        {
+            "key": "dev_build",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::TransformHandle",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::Aabb",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::Hdr",
+            "value": "false"
+        },
+        {
+            "key": "Renderer_Option::Lights",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::Anisotropy",
+            "value": "16.000000"
+        },
+        {
+            "key": "Renderer_Option::Vsync",
+            "value": "false"
+        },
+        {
+            "key": "Renderer_Option::Grid",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::Physics",
+            "value": "false"
+        },
+        {
+            "key": "Renderer_Option::SelectionOutline",
+            "value": "true"
+        },
+        {
+            "key": "Renderer_Option::ResolutionScale",
+            "value": "1.000000"
+        },
+        {
+            "key": "Renderer_Option::Exposure",
+            "value": "1.000000"
+        },
+        {
+            "key": "Renderer_Option::ShadowResolution",
+            "value": "2048.000000"
+        },
+        {
+            "key": "Renderer_Option::Antialiasing",
+            "value": "2.000000"
         }
     ]
 }

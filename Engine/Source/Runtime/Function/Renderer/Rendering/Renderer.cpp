@@ -143,33 +143,18 @@ namespace LitchiRuntime
 		  // options
 		m_options.clear();
 		SetOption(Renderer_Option::Hdr, swap_chain->IsHdr() ? 1.0f : 0.0f);
-		SetOption(Renderer_Option::WhitePoint, 350.0f);
 		//SetOption(Renderer_Option::Tonemapping, static_cast<float>(Renderer_Tonemapping::Max));
-		SetOption(Renderer_Option::Bloom, 0.03f);                                                // non-zero values activate it and define the blend factor
-		SetOption(Renderer_Option::MotionBlur, 1.0f);
-		SetOption(Renderer_Option::ScreenSpaceGlobalIllumination, 1.0f);
-		//SetOption(Renderer_Option::ScreenSpaceShadows, static_cast<float>(Renderer_ScreenspaceShadow::Bend));
-		SetOption(Renderer_Option::ScreenSpaceReflections, 1.0f);
 		SetOption(Renderer_Option::Anisotropy, 16.0f);
 		SetOption(Renderer_Option::ShadowResolution, 2048.0f);
-		SetOption(Renderer_Option::Exposure, 1.0f);
-		SetOption(Renderer_Option::Sharpness, 0.5f);                                                 // becomes the upsampler's sharpness as well
-		SetOption(Renderer_Option::Fog, 0.3f);                                                 // controls the intensity of the volumetric fog as well
-		SetOption(Renderer_Option::FogVolumetric, 1.0f);                                                 // these is only a toggle for the volumetric fog
+		SetOption(Renderer_Option::Exposure, 1.0f);                                             // these is only a toggle for the volumetric fog
 		SetOption(Renderer_Option::Antialiasing, static_cast<float>(Renderer_Antialiasing::Taa));       // this is using fsr 2 for taa
-		SetOption(Renderer_Option::Upsampling, static_cast<float>(Renderer_Upsampling::Fsr2));
 		SetOption(Renderer_Option::ResolutionScale, 1.0f);
-		SetOption(Renderer_Option::VariableRateShading, 0.0f);
 		SetOption(Renderer_Option::Vsync, 0.0f);
 		SetOption(Renderer_Option::TransformHandle, 1.0f);
 		SetOption(Renderer_Option::SelectionOutline, 1.0f);
 		SetOption(Renderer_Option::Grid, 1.0f);
 		SetOption(Renderer_Option::Lights, 1.0f);
 		SetOption(Renderer_Option::Physics, 0.0f);
-		SetOption(Renderer_Option::PerformanceMetrics, 1.0f);
-
-		// todo
-		SetOption(Renderer_Option::Lights, 1.0f);
 		SetOption(Renderer_Option::Aabb, 1.0f);
 
 		// resources
@@ -760,8 +745,7 @@ namespace LitchiRuntime
             if (option == Renderer_Option::Antialiasing)
             {
                 bool taa_enabled = value == static_cast<float>(Renderer_Antialiasing::Taa) || value == static_cast<float>(Renderer_Antialiasing::TaaFxaa);
-                bool fsr_enabled = GetOption<Renderer_Upsampling>(Renderer_Option::Upsampling) == Renderer_Upsampling::Fsr2;
-
+       
                 if (taa_enabled)
                 {
 					// todo
@@ -772,41 +756,7 @@ namespace LitchiRuntime
                     //    RHI_FidelityFX::FSR2_ResetHistory();
                     //}
                 }
-                else
-                {
-                    // implicitly disable FSR since it's doing TAA
-                    if (fsr_enabled)
-                    {
-                        m_options[Renderer_Option::Upsampling] = static_cast<float>(Renderer_Upsampling::Linear);
-                    }
-                }
             }
-            // upsampling
-            else if (option == Renderer_Option::Upsampling)
-            {
-                bool taa_enabled = GetOption<Renderer_Antialiasing>(Renderer_Option::Antialiasing) == Renderer_Antialiasing::Taa;
-
-                if (value == static_cast<float>(Renderer_Upsampling::Linear))
-                {
-                    // Implicitly disable TAA since FSR 2.0 is doing it
-                    if (taa_enabled)
-                    {
-                        m_options[Renderer_Option::Antialiasing] = static_cast<float>(Renderer_Antialiasing::Disabled);
-                        DEBUG_LOG_INFO("Disabled TAA since it's done by FSR 2.0.");
-                    }
-                }
-      //          else if (value == static_cast<float>(Renderer_Upsampling::Fsr2))
-      //          {
-      //              // Implicitly enable TAA since FSR 2.0 is doing it
-      //              if (!taa_enabled)
-      //              {
-      //                  m_options[Renderer_Option::Antialiasing] = static_cast<float>(Renderer_Antialiasing::Taa);
-      //                  RHI_FidelityFX::FSR2_ResetHistory();
-						//DEBUG_LOG_INFO("Enabled TAA since FSR 2.0 does it.");
-      //              }
-      //          }
-            }
-
         	// shadow resolution
             else if (option == Renderer_Option::ShadowResolution)
             {
@@ -834,21 +784,6 @@ namespace LitchiRuntime
                 {
                     swap_chain->SetVsync(value == 1.0f);
                 }
-            }
-            else if (option == Renderer_Option::FogVolumetric || option == Renderer_Option::ScreenSpaceShadows)
-            {
-				// todo
-                // SP_FIRE_EVENT(EventType::LightOnChanged);
-            }
-            else if (option == Renderer_Option::PerformanceMetrics)
-            {
-               /* static bool enabled = false;
-                if (!enabled && value == 1.0f)
-                {
-                    Profiler::ClearMetrics();
-                }
-
-                enabled = value != 0.0f;*/
             }
         }
 	}
@@ -914,10 +849,10 @@ namespace LitchiRuntime
 		cb_frame_cpu.frame = static_cast<uint32_t>(LitchiRuntime::frame_num);
 
 		// These must match what Common_Buffer.hlsl is reading
-		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
+		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceReflections), 1 << 0);
 		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::Ssgi), 1 << 1);
 		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::VolumetricFog), 1 << 2);
-		cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
+		//cb_frame_cpu.set_bit(GetOption<bool>(Renderer_Option::ScreenSpaceShadows), 1 << 3);
 		return cb_frame_cpu;
 	}
 
