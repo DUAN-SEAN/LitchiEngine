@@ -61,6 +61,9 @@ void LitchiEditor::EditorActions::LoadSceneFromDisk(const std::string& p_path, b
 	m_panelsManager.GetPanelAs<LitchiEditor::SceneView>("Scene View").Focus();
 	m_panelsManager.GetPanelAs<LitchiEditor::Hierarchy>("Hierarchy").Refresh();
 
+	// save default scene
+	ApplicationBase::Instance()->configManager->SetDefaultScenePath(p_path);
+
 	DEBUG_LOG_INFO("Scene loaded from disk: " + LitchiEditor::ApplicationEditor::Instance()->sceneManager->GetCurrentSceneSourcePath());
 }
 

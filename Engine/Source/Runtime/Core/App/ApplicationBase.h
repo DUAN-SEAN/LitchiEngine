@@ -119,6 +119,8 @@ namespace LitchiRuntime
 		 * @brief Called callback function , When SceneManager Load Scene
 		*/
 		virtual void OnSceneLoaded();
+		virtual void OnApplyProjectSettings();
+		virtual void OnResetProjectSettings();
 
 		/**
 		 * @brief Config Manager, Include Project Config

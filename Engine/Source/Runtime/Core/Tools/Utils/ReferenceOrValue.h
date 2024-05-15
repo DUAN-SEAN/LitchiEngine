@@ -3,7 +3,7 @@
 
 #include <variant>
 
-namespace LitchiRuntie
+namespace LitchiRuntime
 {
 	/**
 	* A simple class that can represent a reference or a value of the given type.

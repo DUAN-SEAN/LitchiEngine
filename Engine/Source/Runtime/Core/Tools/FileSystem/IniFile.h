@@ -16,11 +16,14 @@ namespace LitchiRuntime
 		using AttributePair = std::pair<std::string, std::string>;
 		using AttributeMap = std::unordered_map<std::string, std::string>;
 
+		IniFile() = default;
 		/**
 		 * @brief Create an IniFile by parsing the given file path and extracting key/values pairs for future usage
 		 * @param p_filePath 
 		*/
 		IniFile(const std::string& p_filePath);
+
+		IniFile(AttributeMap& data);
 
 		/**
 		 * @brief Overwrite the content of the current data by reloading the file
@@ -98,6 +101,8 @@ namespace LitchiRuntime
 		 * @return 
 		*/
 		std::vector<std::string> GetFormattedContent() const;
+
+		AttributeMap	GetData() { return m_data; }
 
 	private:
 

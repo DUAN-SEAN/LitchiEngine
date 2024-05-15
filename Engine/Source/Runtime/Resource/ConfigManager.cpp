@@ -24,6 +24,8 @@ namespace LitchiRuntime
 			Save();
 		}
 
+		m_dataIniFile = IniFile(m_configRes.m_data);
+
 		//const bool NeedInitAndSave = true;
 		//if(NeedInitAndSave)
 		//{
@@ -39,6 +41,7 @@ namespace LitchiRuntime
 	{
 		if (m_isDirty)
 		{
+			m_configRes.m_data = m_dataIniFile.GetData();
 			Save();
 			m_isDirty = false;
 		}
@@ -87,6 +90,24 @@ namespace LitchiRuntime
 		}
 
 		return true;
+	}
+
+	void ConfigManager::ResetProjectSetting()
+	{
+		m_dataIniFile.RemoveAll();
+		m_dataIniFile.Add<float>("gravity", -9.81f);
+		m_dataIniFile.Add<int>("x_resolution", 1280);
+		m_dataIniFile.Add<int>("y_resolution", 720);
+		m_dataIniFile.Add<bool>("fullscreen", false);
+		m_dataIniFile.Add<std::string>("executable_name", "Game");
+		m_dataIniFile.Add<std::string>("start_scene", "Scene.ovscene");
+		m_dataIniFile.Add<bool>("vsync", true);
+		m_dataIniFile.Add<bool>("multisampling", true);
+		m_dataIniFile.Add<int>("samples", 4);
+		m_dataIniFile.Add<int>("opengl_major", 4);
+		m_dataIniFile.Add<int>("opengl_minor", 3);
+		m_dataIniFile.Add<bool>("dev_build", true);
+		Save();
 	}
 
 	void ConfigManager::InitDefaultConfig(const std::string& projectRootFolder)

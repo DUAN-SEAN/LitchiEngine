@@ -26,6 +26,7 @@
 #include "Editor/include/Panels/GameView.h"
 #include "Editor/include/Panels/Profiler.h"
 #include "Editor/include/Panels/ProjectHubPanel.h"
+#include "Editor/include/Panels/ProjectSettings.h"
 #include "Editor/include/Panels/Toolbar.h"
 #include "Runtime/Function/Framework/Component/Script/ScriptComponent.h"
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
@@ -138,10 +139,6 @@ void LitchiEditor::ApplicationEditor::Run()
 			// PreUpdate
 			window->PollEvents();
 
-			// EASY_FUNCTION(profiler::colors::Magenta);
-			Time::Update();
-			InputManager::Tick();
-
 			EASY_BLOCK("Update") {
 				Update();
 			}  EASY_END_BLOCK;
@@ -174,6 +171,7 @@ void LitchiEditor::ApplicationEditor::Run()
 
 void LitchiEditor::ApplicationEditor::Update()
 {
+	ApplicationBase::Update();
 	auto scene = this->sceneManager->GetCurrentScene();
 	if(scene)
 	{
@@ -424,7 +422,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<AssetView>("Asset View", false, settings, m_rendererPath4AssetView);
 	m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
-	//m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
+	m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
 	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
 
 	m_canvas.MakeDockspace(true);

@@ -141,7 +141,10 @@ namespace LitchiRuntime
 
 	void ApplicationBase::Update()
 	{
+		Time::Update();
+		InputManager::Tick();
 
+		configManager->Tick(Time::GetDeltaTime());
 	}
 
 	void ApplicationBase::Exit()
@@ -150,5 +153,11 @@ namespace LitchiRuntime
 	void ApplicationBase::OnSceneLoaded()
 	{
 		// donothing
+	}
+	void ApplicationBase::OnApplyProjectSettings()
+	{
+	}
+	void ApplicationBase::OnResetProjectSettings()
+	{
 	}
 }

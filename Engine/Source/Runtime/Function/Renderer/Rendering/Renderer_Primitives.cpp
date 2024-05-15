@@ -270,7 +270,7 @@ namespace LitchiRuntime
                         if (light->GetLightType() == LightType::Directional)
                         {
                             Vector3 pos = light->GetGameObject()->GetTransform()->GetPosition() - light->GetGameObject()->GetTransform()->GetForward() * 1000.0f;
-                            DrawDirectionalArrow(pos, Vector3::Zero, 2.5f);
+                            DrawDirectionalArrow(pos, Vector3::Zero, 2.5f,Color::Yellow);
                         }
                         else if (light->GetLightType() == LightType::Point)
                         {

@@ -2863,10 +2863,10 @@
                         "z": -2.0042266845703127
                     },
                     "localRotation": {
-                        "x": 0.2894122004508972,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 0.9572045803070068
+                        "x": 0.25,
+                        "y": 0.25,
+                        "z": -0.0669872835278511,
+                        "w": 0.9330126643180847
                     },
                     "localScale": {
                         "x": 0.9999999403953552,
@@ -2887,8 +2887,7 @@
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
                     "range": 200.0,
-                    "angle": 0.5,
-                    "normalBias": 5.0
+                    "angle": 0.5
                 }
             ]
         },
@@ -3024,7 +3023,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": -2.032360792160034,
+                        "y": 0.0,
                         "z": 0.0
                     },
                     "localRotation": {

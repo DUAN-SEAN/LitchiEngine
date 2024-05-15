@@ -123,11 +123,9 @@ namespace LitchiStandalone
 	}
 	void ApplicationStandalone::Update()
 	{
-		Time::Update();
-		InputManager::Tick();
+		ApplicationBase::Update();
 
 		auto scene = this->sceneManager->GetCurrentScene();
-
 		if(scene->IsPlaying())
 		{
 			// Physics Tick

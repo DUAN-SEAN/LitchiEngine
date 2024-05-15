@@ -10,6 +10,11 @@ LitchiRuntime::IniFile::IniFile(const std::string& p_filePath) : m_filePath(p_fi
 	Load();
 }
 
+LitchiRuntime::IniFile::IniFile(AttributeMap& data)
+{
+	m_data = data;
+}
+
 void LitchiRuntime::IniFile::Reload()
 {
 	RemoveAll();

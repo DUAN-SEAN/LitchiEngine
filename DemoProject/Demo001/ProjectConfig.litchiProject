@@ -1,8 +1,14 @@
 {
     "assetFolder": "Assets/",
     "scriptFolder": "Scripts/",
-    "defaultScenePath": "",
+    "defaultScenePath": "Scenes/NPC PBR.scene",
     "resolutionWidth": 1920,
     "resolutionHeight": 1080,
-    "isFullScreen": true
+    "isFullScreen": true,
+    "data": [
+        {
+            "key": "test1",
+            "value": "test2"
+        }
+    ]
 }

@@ -117,7 +117,8 @@ namespace LitchiRuntime {
 			.property("defaultScenePath", &ConfigRes::m_default_scene_path)
 			.property("resolutionWidth", &ConfigRes::m_resolution_width)
 			.property("resolutionHeight", &ConfigRes::m_resolution_height)
-			.property("isFullScreen", &ConfigRes::m_is_fullScreen);
+			.property("isFullScreen", &ConfigRes::m_is_fullScreen)
+			.property("data", &ConfigRes::m_data);
 
 		registration::class_<UniformInfoBase>("UniformInfoBase")(rttr::metadata("Serializable", true),
 																 rttr::metadata("Polymorphic", true))

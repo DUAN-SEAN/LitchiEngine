@@ -12,6 +12,8 @@ namespace LitchiRuntime
 		int32_t m_resolution_height;
 		bool m_is_fullScreen;
 
+		std::unordered_map<std::string, std::string>	m_data;
+
 		RTTR_ENABLE()
 	};
 
@@ -30,7 +32,11 @@ namespace LitchiRuntime
 		const std::pair<int32_t, int32_t> GetResolutionSize();
 		const bool IsFullScreen();
 
+		IniFile& GetDataIniFile() { return m_dataIniFile; }
+
 		bool Save();
+		void ResetProjectSetting();
+
 	private:
 		void InitDefaultConfig(const std::string& projectRootFolder);
 
@@ -39,5 +45,6 @@ namespace LitchiRuntime
 		std::string m_projectRootFolder{};
 		bool m_isDirty{ false };
 
+		IniFile m_dataIniFile;
 	};
 } // namespace LitchiRuntime
