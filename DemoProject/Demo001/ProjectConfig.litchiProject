@@ -7,10 +7,6 @@
     "isFullScreen": true,
     "data": [
         {
-            "key": "executable_name",
-            "value": "Game"
-        },
-        {
             "key": "gravity",
             "value": "-9.810000"
         },
@@ -19,20 +15,24 @@
             "value": "1280"
         },
         {
-            "key": "multisampling",
-            "value": "true"
-        },
-        {
             "key": "y_resolution",
             "value": "720"
+        },
+        {
+            "key": "fullscreen",
+            "value": "false"
+        },
+        {
+            "key": "executable_name",
+            "value": "Game"
         },
         {
             "key": "start_scene",
             "value": "Scene.scene"
         },
         {
-            "key": "fullscreen",
-            "value": "false"
+            "key": "multisampling",
+            "value": "true"
         },
         {
             "key": "samples",
@@ -88,7 +88,7 @@
         },
         {
             "key": "Renderer_Option::ShadowResolution",
-            "value": "2048.000000"
+            "value": "4096.000000"
         },
         {
             "key": "Renderer_Option::Antialiasing",

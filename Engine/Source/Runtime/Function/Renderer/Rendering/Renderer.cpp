@@ -142,6 +142,9 @@ namespace LitchiRuntime
 
 		  // options
 		m_options.clear();
+
+		
+
 		SetOption(Renderer_Option::Hdr, swap_chain->IsHdr() ? 1.0f : 0.0f);
 		//SetOption(Renderer_Option::Tonemapping, static_cast<float>(Renderer_Tonemapping::Max));
 		SetOption(Renderer_Option::Anisotropy, 16.0f);

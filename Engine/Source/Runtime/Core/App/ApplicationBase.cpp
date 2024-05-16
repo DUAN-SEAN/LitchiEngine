@@ -114,7 +114,10 @@ namespace LitchiRuntime
 			// ResourceCache::Initialize(m_projectPath);
 
 			Renderer::Initialize();
-
+			if(configManager)
+			{
+				OnApplyProjectSettings();
+			}
 		}
 
 		//初始化 fmod
@@ -156,8 +159,43 @@ namespace LitchiRuntime
 	}
 	void ApplicationBase::OnApplyProjectSettings()
 	{
+		if(configManager)
+		{
+			auto& inFile = configManager->GetDataIniFile();
+			Renderer::SetOption(Renderer_Option::Hdr, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Hdr)));
+			Renderer::SetOption(Renderer_Option::Aabb, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Aabb)));
+			Renderer::SetOption(Renderer_Option::Lights, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Lights)));
+			Renderer::SetOption(Renderer_Option::Anisotropy, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Anisotropy)));
+			Renderer::SetOption(Renderer_Option::Vsync, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Vsync)));
+			Renderer::SetOption(Renderer_Option::Grid, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Grid)));
+			Renderer::SetOption(Renderer_Option::Physics, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Physics)));
+			Renderer::SetOption(Renderer_Option::SelectionOutline, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)));
+			Renderer::SetOption(Renderer_Option::TransformHandle, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)));
+			Renderer::SetOption(Renderer_Option::ResolutionScale, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)));
+			Renderer::SetOption(Renderer_Option::Exposure, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Exposure)));
+			Renderer::SetOption(Renderer_Option::ShadowResolution, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ShadowResolution)));
+			Renderer::SetOption(Renderer_Option::Antialiasing, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Antialiasing)));
+		}
 	}
+
 	void ApplicationBase::OnResetProjectSettings()
 	{
+		if (configManager)
+		{
+			auto& inFile = configManager->GetDataIniFile();
+			Renderer::SetOption(Renderer_Option::Hdr, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Hdr)));
+			Renderer::SetOption(Renderer_Option::Aabb, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Aabb)));
+			Renderer::SetOption(Renderer_Option::Lights, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Lights)));
+			Renderer::SetOption(Renderer_Option::Anisotropy, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Anisotropy)));
+			Renderer::SetOption(Renderer_Option::Vsync, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Vsync)));
+			Renderer::SetOption(Renderer_Option::Grid, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Grid)));
+			Renderer::SetOption(Renderer_Option::Physics, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Physics)));
+			Renderer::SetOption(Renderer_Option::SelectionOutline, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)));
+			Renderer::SetOption(Renderer_Option::TransformHandle, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)));
+			Renderer::SetOption(Renderer_Option::ResolutionScale, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)));
+			Renderer::SetOption(Renderer_Option::Exposure, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Exposure)));
+			Renderer::SetOption(Renderer_Option::ShadowResolution, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ShadowResolution)));
+			Renderer::SetOption(Renderer_Option::Antialiasing, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Antialiasing)));
+		}
 	}
 }

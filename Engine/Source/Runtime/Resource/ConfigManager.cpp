@@ -6,8 +6,6 @@
 #include "Runtime/Core/Log/debug.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
 
-#define ENUM_TO_STRING(x) #x
-
 namespace LitchiRuntime
 {
 	const std::string ConfigFileName = "ProjectConfig.litchiProject";

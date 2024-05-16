@@ -1,4 +1,6 @@
 
+#include "Runtime/Core/pch.h"
+
 #include "Editor/include/Panels/ProjectSettings.h"
 #include "Editor/include//Core/EditorActions.h"
 
@@ -10,7 +12,6 @@
 
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Renderer/Rendering/Renderer_Definitions.h"
-#define ENUM_TO_STRING(x) #x
 
 using namespace LitchiRuntime;
 namespace LitchiEditor

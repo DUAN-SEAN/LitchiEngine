@@ -84,4 +84,6 @@
 #include <easy/profiler.h>
 //===========================
 
+#define ENUM_TO_STRING(x) #x
+
 

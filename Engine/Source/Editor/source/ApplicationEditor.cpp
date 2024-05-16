@@ -385,6 +385,11 @@ void LitchiEditor::ApplicationEditor::OnProjectOpen()
 
 	FileSystem::SetAssetDirectoryPath(projectAssetsPath,m_engineAssetsPath);
 
+	if (configManager)
+	{
+		OnApplyProjectSettings();
+	}
+
 	// Setup RendererPath
 	SetupRendererPath();
 
