@@ -552,11 +552,20 @@ namespace LitchiRuntime
 			return false;
 		}
 
+		// Early exit if there is no change in shadow map resolution
+		bool resolution_changed = false;
+		const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
+		if(m_shadow_map.texture_depth)
+		{
+			resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
+		}
+
 		if (m_mainLight->GetShadowsEnabled() == m_last_shadows_enabled &&
-			m_mainLight->GetShadowsTransparentEnabled() == m_last_shadows_transparent_enabled)
+			m_mainLight->GetShadowsTransparentEnabled() == m_last_shadows_transparent_enabled && !resolution_changed)
 		{
 			return false;
 		}
+
 
 		m_last_shadows_enabled = m_mainLight->GetShadowsEnabled();
 		m_last_shadows_transparent_enabled = m_mainLight->GetShadowsTransparentEnabled();
