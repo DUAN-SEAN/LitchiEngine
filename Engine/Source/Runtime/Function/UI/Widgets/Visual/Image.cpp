@@ -18,6 +18,7 @@ LitchiRuntime::Image::Image(RHI_Texture* p_renderTarget, const Vector2& p_size) 
 
 void LitchiRuntime::Image::_Draw_Impl()
 {
+	//ImGui::SetNextItemAllowOverlap();
 	if(renderTarget)
 	{
 		ImGuiSp::image(renderTarget, ImVec2(static_cast<float>(size.x), static_cast<float>(size.y)));

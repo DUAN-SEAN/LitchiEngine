@@ -71,12 +71,16 @@ void LitchiRuntime::WidgetContainer::DrawWidgets()
     if (m_reversedDrawOrder)
     {
         for (auto it = m_widgets.crbegin(); it != m_widgets.crend(); ++it)
-            it->first->Draw();
+        {
+			it->first->Draw();
+        }
     }
     else
     {
         for (const auto& widget : m_widgets)
-            widget.first->Draw();
+        {
+			widget.first->Draw();
+        }
     }
 }
 

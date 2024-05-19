@@ -7,6 +7,11 @@
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/UI/ImGui/ImGui_TransformGizmo.h"
+#include "Runtime/Function/UI/Widgets/Buttons/Button.h"
+#include "Runtime/Function/UI/Widgets/Selection/CheckBox.h"
+#include "Runtime/Function/UI/Widgets/Texts/Text.h"
+#include "Runtime/Function/UI/Widgets/Visual/OverlapStart.h"
+#include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 
 LitchiEditor::SceneView::SceneView
 (
@@ -14,21 +19,17 @@ LitchiEditor::SceneView::SceneView
 	bool p_opened,
 	const PanelWindowSettings& p_windowSettings,
 	RendererPath* rendererPath
-) : AViewControllable(p_title, p_opened, p_windowSettings, rendererPath,true)
+) : AViewControllable(p_title, p_opened, p_windowSettings, rendererPath, true)
 {
 	m_camera->SetClearColor({ 0.098f, 0.098f, 0.098f });
 
 	m_transform_gizmo = &CreateWidget<TransformGizmo>(m_camera);
-	//m_image->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [this](auto p_data)
-	//{
-	//	std::string path = p_data.first;
 
-	//	switch (PathParser::GetFileType(path))
-	//	{
-	//	case PathParser::EFileType::SCENE:	EDITOR_EXEC(LoadSceneFromDisk(path));			break;
-	//	case PathParser::EFileType::MODEL:	EDITOR_EXEC(CreateActorWithModel(path, true));	break;
-	//	}
-	//};
+	CreateWidget<OverlapStart>(Vector2(0.0f, 50.0f));
+	auto& resetButton = CreateWidget<Button>("SceneView Button");
+	resetButton.idleBackgroundColor = { 0.0f, 0.5f, 0.0f };
+	CreateWidget<LitchiRuntime::Text>("SceneView Text").lineBreak = false;
+	CreateWidget<LitchiRuntime::CheckBox>(false, "");
 
 	GameObject::DestroyedEvent += std::bind(&SceneView::DeleteActorByInstance, this, std::placeholders::_1);
 }
@@ -51,7 +52,7 @@ void LitchiEditor::SceneView::OnDraw()
 		if (auto camera = m_camera)
 		{
 			camera->Pick();
-			auto selectedGO= camera->GetSelectedEntity();
+			auto selectedGO = camera->GetSelectedEntity();
 			ApplicationEditor::Instance()->SelectActor(selectedGO);// temp
 		}
 	}
@@ -84,7 +85,7 @@ void LitchiEditor::SceneView::DeleteActorByInstance(GameObject* p_actor)
 	if (auto camera = m_camera)
 	{
 		auto selectedGO = camera->GetSelectedEntity();
-		if(selectedGO == p_actor)
+		if (selectedGO == p_actor)
 		{
 			camera->SetSelectedEntity(nullptr);
 		}
