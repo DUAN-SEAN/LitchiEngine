@@ -170,6 +170,7 @@ namespace LitchiRuntime
 			Renderer::SetOption(Renderer_Option::Grid, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Grid)));
 			Renderer::SetOption(Renderer_Option::Physics, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Physics)));
 			Renderer::SetOption(Renderer_Option::SelectionOutline, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)));
+			Renderer::SetOption(Renderer_Option::Wireframe, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Wireframe)));
 			Renderer::SetOption(Renderer_Option::TransformHandle, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)));
 			Renderer::SetOption(Renderer_Option::ResolutionScale, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)));
 			Renderer::SetOption(Renderer_Option::Exposure, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Exposure)));
@@ -191,6 +192,7 @@ namespace LitchiRuntime
 			Renderer::SetOption(Renderer_Option::Grid, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Grid)));
 			Renderer::SetOption(Renderer_Option::Physics, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Physics)));
 			Renderer::SetOption(Renderer_Option::SelectionOutline, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)));
+			Renderer::SetOption(Renderer_Option::Wireframe, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::Wireframe)));
 			Renderer::SetOption(Renderer_Option::TransformHandle, inFile.Get<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)));
 			Renderer::SetOption(Renderer_Option::ResolutionScale, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)));
 			Renderer::SetOption(Renderer_Option::Exposure, inFile.Get<float>(ENUM_TO_STRING(Renderer_Option::Exposure)));

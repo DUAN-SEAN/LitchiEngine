@@ -2,7 +2,7 @@
     "vertexType": "PosUvNorTan",
     "shaderPath": ":Shaders/Forward/PBR/PBRTest.hlsl",
     "materialSetting": {
-        "isTransparent": false
+        "isTransparent": true
     },
     "uniformInfoList": [
         {
@@ -19,10 +19,10 @@
             "Type": "UniformInfoVector4",
             "name": "u_color",
             "vector": {
-                "x": 0.847058892250061,
-                "y": 0.847058892250061,
-                "z": 0.847058892250061,
-                "w": 1.0
+                "x": 0.8470588326454163,
+                "y": 0.8470588326454163,
+                "z": 0.8470588326454163,
+                "w": 0.43921568989753725
             }
         },
         {

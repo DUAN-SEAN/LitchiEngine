@@ -116,6 +116,7 @@ namespace LitchiRuntime
 		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Physics), false);
 		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline), true);
 		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle), true);
+		m_dataIniFile.Add<bool>(ENUM_TO_STRING(Renderer_Option::Wireframe), false);
 		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale), 1.0f);
 		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::Exposure), 1.0f);
 		m_dataIniFile.Add<float>(ENUM_TO_STRING(Renderer_Option::ShadowResolution), 2048.0f);

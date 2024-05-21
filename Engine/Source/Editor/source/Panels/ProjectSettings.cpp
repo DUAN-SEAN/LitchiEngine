@@ -89,6 +89,7 @@ namespace LitchiEditor
 			GUIDrawer::DrawBoolean(columns, "Show Physics", GenerateGatherer<bool>(ENUM_TO_STRING(Renderer_Option::Physics)), GenerateProvider<bool>(ENUM_TO_STRING(Renderer_Option::Physics)));
 			GUIDrawer::DrawBoolean(columns, "Show SelectionOutline", GenerateGatherer<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)), GenerateProvider<bool>(ENUM_TO_STRING(Renderer_Option::SelectionOutline)));
 			GUIDrawer::DrawBoolean(columns, "Show TransformHandle", GenerateGatherer<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)), GenerateProvider<bool>(ENUM_TO_STRING(Renderer_Option::TransformHandle)));
+			GUIDrawer::DrawBoolean(columns, "Show Wireframe", GenerateGatherer<bool>(ENUM_TO_STRING(Renderer_Option::Wireframe)), GenerateProvider<bool>(ENUM_TO_STRING(Renderer_Option::Wireframe)));
 			GUIDrawer::DrawBoolean(columns, "Vsync", GenerateGatherer<bool>(ENUM_TO_STRING(Renderer_Option::Vsync)), GenerateProvider<bool>(ENUM_TO_STRING(Renderer_Option::Vsync)));
 			GUIDrawer::DrawScalar<float>(columns, "ResolutionScale", GenerateGatherer<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)), GenerateProvider<float>(ENUM_TO_STRING(Renderer_Option::ResolutionScale)));
 			GUIDrawer::DrawScalar<float>(columns, "Anisotropy", GenerateGatherer<float>(ENUM_TO_STRING(Renderer_Option::Anisotropy)), GenerateProvider<float>(ENUM_TO_STRING(Renderer_Option::Anisotropy)));

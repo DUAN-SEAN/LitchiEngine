@@ -7,10 +7,6 @@
     "isFullScreen": true,
     "data": [
         {
-            "key": "executable_name",
-            "value": "Game"
-        },
-        {
             "key": "gravity",
             "value": "-9.810000"
         },
@@ -19,20 +15,24 @@
             "value": "1280"
         },
         {
-            "key": "multisampling",
-            "value": "true"
-        },
-        {
             "key": "y_resolution",
             "value": "720"
+        },
+        {
+            "key": "fullscreen",
+            "value": "false"
+        },
+        {
+            "key": "executable_name",
+            "value": "Game"
         },
         {
             "key": "start_scene",
             "value": "Scene.scene"
         },
         {
-            "key": "fullscreen",
-            "value": "false"
+            "key": "multisampling",
+            "value": "true"
         },
         {
             "key": "samples",
@@ -43,20 +43,20 @@
             "value": "true"
         },
         {
-            "key": "Renderer_Option::Hdr",
-            "value": "false"
+            "key": "Renderer_Option::TransformHandle",
+            "value": "true"
         },
         {
             "key": "Renderer_Option::Aabb",
             "value": "false"
         },
         {
-            "key": "Renderer_Option::TransformHandle",
-            "value": "true"
+            "key": "Renderer_Option::Hdr",
+            "value": "false"
         },
         {
             "key": "Renderer_Option::Lights",
-            "value": "false"
+            "value": "true"
         },
         {
             "key": "Renderer_Option::Anisotropy",
@@ -68,7 +68,7 @@
         },
         {
             "key": "Renderer_Option::Grid",
-            "value": "true"
+            "value": "false"
         },
         {
             "key": "Renderer_Option::Physics",
@@ -77,6 +77,10 @@
         {
             "key": "Renderer_Option::SelectionOutline",
             "value": "true"
+        },
+        {
+            "key": "Renderer_Option::Wireframe",
+            "value": "false"
         },
         {
             "key": "Renderer_Option::ResolutionScale",
@@ -88,7 +92,7 @@
         },
         {
             "key": "Renderer_Option::ShadowResolution",
-            "value": "4096.000000"
+            "value": "2048.000000"
         },
         {
             "key": "Renderer_Option::Antialiasing",
