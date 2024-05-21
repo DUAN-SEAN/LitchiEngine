@@ -7,7 +7,8 @@ struct MaterialData
 {
 	// Global Var
 	float2 u_textureTiling;
-	float2 u_textureOffset;
+    float2 u_textureOffset;
+    float4 u_color;
 };
 
 // Material Buffer Name Must Be "Material"
@@ -73,7 +74,11 @@ float4 mainPS(Pixel input) : SV_Target
     float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
     float4 albedo = u_albedo.Sample(samplers[sampler_point_wrap], g_TexCoords);
     float3 albedoLinear = srgb_to_linear(albedo.xyz);
-    albedo = float4(albedoLinear, albedo.a);
+    albedo = float4(albedoLinear * materialData.u_color.rgb, albedo.a * materialData.u_color.a);
+    if (!pass_is_transparent())
+    {
+        albedo.a = 1.0f;
+    }
 	
     float metallic = u_metallic.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
     float perceptualRoughness = 1 - u_roughness.Sample(samplers[sampler_point_wrap], g_TexCoords).x;
