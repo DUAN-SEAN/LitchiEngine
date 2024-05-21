@@ -111,11 +111,7 @@ namespace LitchiRuntime
 	class MaterialResSetting
 	{
 	public:
-		bool blendable;
-		bool backfaceCulling;
-		bool depthTest;
-		int gpuInstances;
-
+		bool isTransparent;
 		RTTR_ENABLE()
 	};
 
@@ -125,6 +121,7 @@ namespace LitchiRuntime
 	public:
 		RHI_Vertex_Type vertexType;
 		std::string shaderPath;
+		MaterialResSetting materialSetting;
 		std::vector<UniformInfoBase*> uniformInfoList;
 
 		RTTR_ENABLE()
@@ -213,15 +210,15 @@ namespace LitchiRuntime
 
 		void Tick();
 		bool IsTransparent();
-
-	private:
+		void SetIsTransparent(bool isTransparent);
+		RHI_Vertex_Type GetVertexType();
+		void SetVertexType(RHI_Vertex_Type vertexType);
 
 		void SyncToDataBuffer(const std::string& name);
 		int CalcValueSize();
 		void ClearMaterialRes();
 
 		void UpdateRenderData();
-
 
 	private:
 

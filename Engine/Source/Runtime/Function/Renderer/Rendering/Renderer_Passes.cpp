@@ -282,30 +282,36 @@ namespace LitchiRuntime
 
 
 		cmd_list->BeginTimeblock(!is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent");
-		
+
+		// deduce rasterizer state
+		bool is_wireframe = GetOption<bool>(Renderer_Option::Wireframe);
+		RHI_RasterizerState* rasterizer_state = is_wireframe ? GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get() : GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
 	
 		// define PipelineState
 		static RHI_PipelineState pso;
 		pso.name = !is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent";
 		//pso.shader_vertex = shader_v;
 		//pso.shader_pixel = shader_p; // 
-		pso.rasterizer_state = GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
-		pso.blend_state = GetBlendState(Renderer_BlendState::Off).get();
-		pso.depth_stencil_state = GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
+		pso.rasterizer_state = rasterizer_state;
+		pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Off).get();
+		pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Read).get() : GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
 		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::forward_pass_depth).get();// 不需要输出深度蒙版缓冲
 		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// 不需要输出深度蒙版缓冲
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTarget::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
-		pso.clear_depth = 0.0f; // reverse-z
+		pso.clear_depth = is_transparent_pass? rhi_depth_dont_care :0.0f; // reverse-z
 		//pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 
 		EASY_BLOCK("Render Entities")
 
 		bool needBeginRenderPass = true;
-		// draw non skin gameObject
-		for (GameObject* entity : entities)
+		int64_t index_start = !is_transparent_pass ? 0 : rendererPath->GetMeshIndexTransparent();
+		int64_t index_end = !is_transparent_pass ? rendererPath->GetMeshIndexTransparent() : static_cast<int64_t>(rendererPath->GetRenderables()[Renderer_Entity::Mesh].size());
+		for (int64_t i = index_start; i < index_end; i++)
 		{
+			GameObject* entity = entities[i];
+		
 			EASY_BLOCK("Render Entity")
 			EASY_BLOCK("Prevoius SetPSO")
 			// Acquire renderable component
@@ -380,6 +386,7 @@ namespace LitchiRuntime
 
 			EASY_BLOCK("PushPassConstants")
 			m_cb_pass_cpu.set_resolution_out(rendererPath->GetDepthRenderTarget().get());
+			m_cb_pass_cpu.set_is_transparent(is_transparent_pass);
 			m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 			PushPassConstants(cmd_list);
 			EASY_END_BLOCK

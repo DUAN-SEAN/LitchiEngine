@@ -332,34 +332,25 @@ namespace LitchiRuntime
 		if (camera && scene)
 		{
 			// determine if a transparent pass is required
-			// const bool do_transparent_pass = !rendererables[Renderer_Entity::GeometryTransparent].empty();
+			const bool do_transparent_pass = rendererPath->HasTransparentMesh();
 
-			// shadow maps
-			{
-				// todo: temp commit
-				/*Pass_ShadowMaps(cmd_list, false);
-				if (do_transparent_pass)
-				{
-					Pass_ShadowMaps(cmd_list, true);
-				}*/
-			}
-
-			// opaque
-
-			bool is_transparent_pass = false;
 			EASY_BLOCK("Pass_SkyBox")
 			Pass_SkyBox(cmd_list, rendererPath);
 			EASY_END_BLOCK
 
 			EASY_BLOCK("Pass_ShadowMaps")
-			Pass_ShadowMaps(cmd_list, rendererPath, is_transparent_pass);
+			Pass_ShadowMaps(cmd_list, rendererPath, false);
 			EASY_END_BLOCK
 
 			// Get All Geometry Depth 
 			// Pass_ForwardPass_Depth
 
 			EASY_BLOCK("Pass_ForwardPass")
-			Pass_ForwardPass(cmd_list, rendererPath, is_transparent_pass);
+			Pass_ForwardPass(cmd_list, rendererPath, false);
+			if(do_transparent_pass)
+			{
+				Pass_ForwardPass(cmd_list, rendererPath, true);
+			}
 			EASY_END_BLOCK
 
 			EASY_BLOCK("Pass_UIPass")

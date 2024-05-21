@@ -48,6 +48,7 @@ namespace LitchiRuntime
 		void SetScene(Scene* scene);
 		Scene* GetRenderScene() { return m_renderScene; }
 		std::unordered_map<Renderer_Entity, std::vector<GameObject*>>& GetRenderables() { return m_renderables; }
+		bool HasTransparentMesh();
 		int64_t GetMeshIndexTransparent() const {return m_meshIndexTransparent; }
 		int64_t GetMeshIndexNonInstancedOpaque()const { return m_meshIndexNonInstancedOpaque; }
 		int64_t GetMeshIndexNonInstancedTransparent()const { return m_meshIndexNonInstancedTransparent; }

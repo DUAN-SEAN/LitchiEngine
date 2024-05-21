@@ -20,7 +20,7 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
-	namespace 
+	namespace
 	{
 		std::string GetPBRUniformNameFromMaterialTextureType(MaterialTexture textureType)
 		{
@@ -52,7 +52,7 @@ namespace LitchiRuntime
 		m_valueConstantBuffer = make_shared<RHI_ConstantBuffer>(GetObjectName() + "CBuffer");
 	}
 
-	Material::Material(const std::string& obsolutePath):Material()
+	Material::Material(const std::string& obsolutePath) :Material()
 	{
 		m_materialRes = new MaterialRes();
 		SetResourceFilePath(obsolutePath);
@@ -77,7 +77,7 @@ namespace LitchiRuntime
 		LC_ASSERT_MSG(materialRes->vertexType != RHI_Vertex_Type::Undefined, "Load Material Not Specify VertexType");
 
 		SetResourceFilePath(file_path);
-		if(m_materialRes!=nullptr)
+		if (m_materialRes != nullptr)
 		{
 			ClearMaterialRes();
 			delete m_materialRes;
@@ -118,53 +118,53 @@ namespace LitchiRuntime
 					switch (shaderUniform.type)
 					{
 					case UniformType::UNIFORM_BOOL:
-						{
-							auto uniformBool = new UniformInfoBool();
-							uniformBool->name = shaderUniform.name;
-							uniformBool->value = value.type() == typeid(bool) ? std::any_cast<bool>(value) : false;
-							m_materialRes->uniformInfoList.push_back(uniformBool);
-						}
-						break;
+					{
+						auto uniformBool = new UniformInfoBool();
+						uniformBool->name = shaderUniform.name;
+						uniformBool->value = value.type() == typeid(bool) ? std::any_cast<bool>(value) : false;
+						m_materialRes->uniformInfoList.push_back(uniformBool);
+					}
+					break;
 					case UniformType::UNIFORM_INT:
-						{
-							auto uniformInt = new UniformInfoInt();
-							uniformInt->name = shaderUniform.name;
-							uniformInt->value = value.type() == typeid(int) ? std::any_cast<int>(value) : 0;
-							m_materialRes->uniformInfoList.push_back(uniformInt);
-						}
-						break;
+					{
+						auto uniformInt = new UniformInfoInt();
+						uniformInt->name = shaderUniform.name;
+						uniformInt->value = value.type() == typeid(int) ? std::any_cast<int>(value) : 0;
+						m_materialRes->uniformInfoList.push_back(uniformInt);
+					}
+					break;
 					case UniformType::UNIFORM_FLOAT:
-						{
-							auto uniformFloat = new UniformInfoFloat();
-							uniformFloat->name = shaderUniform.name;
-							uniformFloat->value = value.type() == typeid(float)?std::any_cast<float>(value):0.0f;
-							m_materialRes->uniformInfoList.push_back(uniformFloat);
-						}
-						break;
+					{
+						auto uniformFloat = new UniformInfoFloat();
+						uniformFloat->name = shaderUniform.name;
+						uniformFloat->value = value.type() == typeid(float) ? std::any_cast<float>(value) : 0.0f;
+						m_materialRes->uniformInfoList.push_back(uniformFloat);
+					}
+					break;
 					case UniformType::UNIFORM_FLOAT_VEC2:
-						{
-							auto uniformVec2 = new UniformInfoVector2();
-							uniformVec2->name = shaderUniform.name;
-							uniformVec2->vector = value.type() == typeid(Vector2)?std::any_cast<Vector2>(value):Vector2::Zero;
-							m_materialRes->uniformInfoList.push_back(uniformVec2);
-						}
-						break;
+					{
+						auto uniformVec2 = new UniformInfoVector2();
+						uniformVec2->name = shaderUniform.name;
+						uniformVec2->vector = value.type() == typeid(Vector2) ? std::any_cast<Vector2>(value) : Vector2::Zero;
+						m_materialRes->uniformInfoList.push_back(uniformVec2);
+					}
+					break;
 					case UniformType::UNIFORM_FLOAT_VEC3:
-						{
-							auto uniformVec3 = new UniformInfoVector3();
-							uniformVec3->name = shaderUniform.name;
-							uniformVec3->vector = value.type() == typeid(Vector3)?std::any_cast<Vector3>(value):Vector3::Zero;
-							m_materialRes->uniformInfoList.push_back(uniformVec3);
-						}
-						break;
+					{
+						auto uniformVec3 = new UniformInfoVector3();
+						uniformVec3->name = shaderUniform.name;
+						uniformVec3->vector = value.type() == typeid(Vector3) ? std::any_cast<Vector3>(value) : Vector3::Zero;
+						m_materialRes->uniformInfoList.push_back(uniformVec3);
+					}
+					break;
 					case UniformType::UNIFORM_FLOAT_VEC4:
-						{
-							auto uniformVec4 = new UniformInfoVector4();
-							uniformVec4->name = shaderUniform.name;
-							uniformVec4->vector = value.type() == typeid(Vector4)?std::any_cast<Vector4>(value):Vector4::Zero;
-							m_materialRes->uniformInfoList.push_back(uniformVec4);
-						}
-						break;
+					{
+						auto uniformVec4 = new UniformInfoVector4();
+						uniformVec4->name = shaderUniform.name;
+						uniformVec4->vector = value.type() == typeid(Vector4) ? std::any_cast<Vector4>(value) : Vector4::Zero;
+						m_materialRes->uniformInfoList.push_back(uniformVec4);
+					}
+					break;
 					default:
 						DEBUG_LOG_ERROR("RebuildResourceFromMemory Not Found UniformType type:{}", shaderUniform.type);
 						break;
@@ -221,7 +221,7 @@ namespace LitchiRuntime
 	void Material::SetTexture(MaterialTexture textureType, RHI_Texture* texture)
 	{
 		auto name = GetPBRUniformNameFromMaterialTextureType(textureType);
-		if(name.empty())
+		if (name.empty())
 		{
 			DEBUG_LOG_WARN("Not support TextureType In PBR textureType:{}", textureType);
 			return;
@@ -234,34 +234,58 @@ namespace LitchiRuntime
 	{
 		switch (materialProperty) {
 		case MaterialProperty::UvTilingX:
-			{
+		{
 
 			auto tilingX = GetValue<Vector2>("u_textureTiling");
 			tilingX.x = value;
 			SetValue<Vector2>("u_textureTiling", tilingX);
-			}
-			break;
+		}
+		break;
 		case MaterialProperty::UvTilingY:
-			{
+		{
 			auto tilingY = GetValue<Vector2>("u_textureTiling");
 			tilingY.y = value;
 			SetValue<Vector2>("u_textureTiling", tilingY); }
-			break;
+		break;
 		case MaterialProperty::UvOffsetX:
-			{
+		{
 			auto offsetX = GetValue<Vector2>("u_textureOffset");
 			offsetX.x = value;
 			SetValue<Vector2>("u_textureOffset", offsetX);
-			}
-			break;
+		}
+		break;
 		case MaterialProperty::UvOffsetY:
-			{
+		{
 			auto offsetY = GetValue<Vector2>("u_textureOffset");
 			offsetY.y = value;
 			SetValue<Vector2>("u_textureOffset", offsetY);
-				
-			}
-			break;
+
+		}
+		break;
+		case MaterialProperty::ColorR:
+		{
+			auto colorR = GetValue<Vector4>("u_color");
+			colorR.x = value;
+			SetValue<Vector4>("u_color", colorR);
+		}
+		case MaterialProperty::ColorG:
+		{
+			auto colorG = GetValue<Vector4>("u_color");
+			colorG.y = value;
+			SetValue<Vector4>("u_color", colorG);
+		}
+		case MaterialProperty::ColorB:
+		{
+			auto colorB = GetValue<Vector4>("u_color");
+			colorB.z = value;
+			SetValue<Vector4>("u_color", colorB);
+		}
+		case MaterialProperty::ColorA:
+		{
+			auto colorA = GetValue<Vector4>("u_color");
+			colorA.w = value;
+			SetValue<Vector4>("u_color", colorA);
+		}
 		case MaterialProperty::Clearcoat:
 		case MaterialProperty::Clearcoat_Roughness:
 		case MaterialProperty::Anisotropic:
@@ -269,10 +293,6 @@ namespace LitchiRuntime
 		case MaterialProperty::Sheen:
 		case MaterialProperty::SheenTint:
 		case MaterialProperty::ColorTint:
-		case MaterialProperty::ColorR:
-		case MaterialProperty::ColorG:
-		case MaterialProperty::ColorB:
-		case MaterialProperty::ColorA:
 		case MaterialProperty::RoughnessMultiplier:
 		case MaterialProperty::MetalnessMultiplier:
 		case MaterialProperty::NormalMultiplier:
@@ -287,7 +307,7 @@ namespace LitchiRuntime
 	void Material::SetShader(MaterialShader* shader, RHI_Vertex_Type vertexType)
 	{
 		m_shader = shader;
-		if(vertexType != RHI_Vertex_Type::Undefined)
+		if (vertexType != RHI_Vertex_Type::Undefined)
 		{
 			m_materialRes->vertexType = vertexType;
 		}
@@ -295,7 +315,7 @@ namespace LitchiRuntime
 
 	void* Material::GetValues4DescriptorSet(uint32_t& size)
 	{
-		if(m_isValueDirty)
+		if (m_isValueDirty)
 		{
 			DEBUG_LOG_WARN("GetValues Data is Dirty");
 		}
@@ -424,7 +444,7 @@ namespace LitchiRuntime
 
 	void Material::Tick()
 	{
-		if(m_isValueDirty)
+		if (m_isValueDirty)
 		{
 			UpdateRenderData();
 			m_isValueDirty = false;
@@ -433,9 +453,27 @@ namespace LitchiRuntime
 
 	bool Material::IsTransparent()
 	{
-		return false;
+		return m_materialRes->materialSetting.isTransparent;
 	}
-	
+
+	void Material::SetIsTransparent(bool isTransparent)
+	{
+		m_materialRes->materialSetting.isTransparent = isTransparent;
+		m_isValueDirty = true;
+	}
+
+	RHI_Vertex_Type Material::GetVertexType()
+	{
+		return m_materialRes->vertexType;
+	}
+
+	void Material::SetVertexType(RHI_Vertex_Type vertexType)
+	{
+
+		m_materialRes->vertexType = vertexType;
+		m_isValueDirty = true;
+	}
+
 	int Material::CalcValueSize()
 	{
 		return m_shader->GetGlobalSize();
@@ -443,7 +481,7 @@ namespace LitchiRuntime
 
 	void Material::ClearMaterialRes()
 	{
-		if(m_materialRes)
+		if (m_materialRes)
 		{
 			// clear uniform Data
 			for (auto value : m_materialRes->uniformInfoList)
@@ -461,11 +499,11 @@ namespace LitchiRuntime
 	{
 		EASY_FUNCTION(profiler::colors::Brown200)
 
-		// update value buffer
-		for (auto& uniform : m_uniformDataList)
-		{
-			SyncToDataBuffer(uniform.first);
-		}
+			// update value buffer
+			for (auto& uniform : m_uniformDataList)
+			{
+				SyncToDataBuffer(uniform.first);
+			}
 
 		m_valueConstantBuffer->UpdateWithReset(m_value);
 

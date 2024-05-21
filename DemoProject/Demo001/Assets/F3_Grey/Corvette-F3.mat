@@ -13,15 +13,15 @@
         {
             "Type": "UniformInfoTexture",
             "name": "u_albedo",
-            "path": "F3_Red/F3_Red.tif"
+            "path": "F3_Grey/F3_Grey.tif"
         },
         {
             "Type": "UniformInfoVector4",
             "name": "u_color",
             "vector": {
-                "x": 1.0,
-                "y": 1.0,
-                "z": 1.0,
+                "x": 0.847058892250061,
+                "y": 0.847058892250061,
+                "z": 0.847058892250061,
                 "w": 1.0
             }
         },
@@ -33,12 +33,12 @@
         {
             "Type": "UniformInfoTexture",
             "name": "u_normal",
-            "path": "F3_Red/F3_normal.tif"
+            "path": "F3_Grey/F3_normal.tif"
         },
         {
             "Type": "UniformInfoTexture",
             "name": "u_roughness",
-            "path": "F3_Red/F3_roughness.tif"
+            "path": "F3_Grey/F3_roughness.tif"
         },
         {
             "Type": "UniformInfoVector2",

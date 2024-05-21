@@ -320,15 +320,16 @@ void LitchiEditor::MaterialEditor::GenerateShaderSettingsContent()
 	// Draw VertexType
 	auto getString = [this]
 		{
-			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().value_to_name(m_target->GetMaterialRes()->vertexType);
+			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().value_to_name(m_target->GetVertexType());
 			return modifyVertexType.to_string();
 		};
 
 	auto setString = [this](std::string value)
 		{
 			auto modifyVertexType = type::get<RHI_Vertex_Type>().get_enumeration().name_to_value(value).convert<RHI_Vertex_Type>();
-			m_target->GetMaterialRes()->vertexType = modifyVertexType;
+			m_target->SetVertexType(modifyVertexType);
 		};
+
 	enumeration enum_align = type::get<RHI_Vertex_Type>().get_enumeration();
 	std::vector<std::string> enumValueList;
 	for (auto enumName : enum_align.get_names())
@@ -410,8 +411,8 @@ void LitchiEditor::MaterialEditor::GenerateMaterialSettingsContent()
 {
 	m_materialSettingsColumns->RemoveAllWidgets(); // Ensure that the m_shaderSettingsColumns is empty
 
-	/*GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Blendable", std::bind(&Resource::Material::IsBlendable, m_target), std::bind(&Resource::Material::SetBlendable, m_target, std::placeholders::_1));
-	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Back-face Culling", std::bind(&Resource::Material::HasBackfaceCulling, m_target), std::bind(&Resource::Material::SetBackfaceCulling, m_target, std::placeholders::_1));
+	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "IsTransparent", std::bind(&Material::IsTransparent, m_target), std::bind(&Material::SetIsTransparent, m_target, std::placeholders::_1));
+	/*GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Back-face Culling", std::bind(&Resource::Material::HasBackfaceCulling, m_target), std::bind(&Resource::Material::SetBackfaceCulling, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Front-face Culling", std::bind(&Resource::Material::HasFrontfaceCulling, m_target), std::bind(&Resource::Material::SetFrontfaceCulling, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Depth Test", std::bind(&Resource::Material::HasDepthTest, m_target), std::bind(&Resource::Material::SetDepthTest, m_target, std::placeholders::_1));
 	GUIDrawer::DrawBoolean(*m_materialSettingsColumns, "Depth Writing", std::bind(&Resource::Material::HasDepthWriting, m_target), std::bind(&Resource::Material::SetDepthWriting, m_target, std::placeholders::_1));

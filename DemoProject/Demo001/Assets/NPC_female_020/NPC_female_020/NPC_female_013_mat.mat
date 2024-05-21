@@ -1,47 +1,57 @@
 {
     "vertexType": "PosUvNorTan",
     "shaderPath": ":Shaders/Forward/PBR/PBRTest.hlsl",
-    "uniformInfoList": [
-        {
-            "Type": "UniformInfoTexture",
-            "name": "u_aO",
-            "path": ":Textures/black.png"
-        },
-        {
-            "Type": "UniformInfoTexture",
-            "name": "u_albedo",
-            "path": "NPC_female_020/NPC_female_020/NPC_female_013_col.tga"
-        },
-        {
-            "Type": "UniformInfoTexture",
-            "name": "u_metallic",
-            "path": ":Textures/black.png"
-        },
-        {
-            "Type": "UniformInfoTexture",
-            "name": "u_normal",
-            "path": "NPC_female_020/NPC_female_020/NPC_female_013_Hair_nml.tga"
-        },
-        {
-            "Type": "UniformInfoTexture",
-            "name": "u_roughness",
-            "path": "Capoeira/rp_sophia_animated_003_gloss.jpg"
-        },
-        {
-            "Type": "UniformInfoVector2",
-            "name": "u_textureOffset",
-            "vector": {
-                "x": 0.0,
-                "y": 0.0
-            }
-        },
-        {
-            "Type": "UniformInfoVector2",
-            "name": "u_textureTiling",
-            "vector": {
-                "x": 1.0,
-                "y": 1.0
-            }
-        }
-    ]
+  "uniformInfoList": [
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_aO",
+      "path": ":Textures/black.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_albedo",
+      "path": "NPC_female_020/NPC_female_020/NPC_female_013_col.tga"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_metallic",
+      "path": ":Textures/black.png"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_normal",
+      "path": "NPC_female_020/NPC_female_020/NPC_female_013_Hair_nml.tga"
+    },
+    {
+      "Type": "UniformInfoTexture",
+      "name": "u_roughness",
+      "path": "Capoeira/rp_sophia_animated_003_gloss.jpg"
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureOffset",
+      "vector": {
+        "x": 0.0,
+        "y": 0.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector2",
+      "name": "u_textureTiling",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0
+      }
+    },
+    {
+      "Type": "UniformInfoVector4",
+      "name": "u_color",
+      "vector": {
+        "x": 1.0,
+        "y": 1.0,
+        "z": 1.0,
+        "w": 1.0
+      }
+    }
+  ]
 }

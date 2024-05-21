@@ -76,6 +76,27 @@ namespace LitchiRuntime
 		m_mainLight = nullptr;
 	}
 
+	bool RendererPath::HasTransparentMesh()
+	{
+		if (this->m_renderables.find(Renderer_Entity::Mesh) == m_renderables.end())
+		{
+			return false;
+		}
+
+		auto& meshEntityList  = m_renderables[Renderer_Entity::Mesh];
+		if(meshEntityList.size()==0)
+		{
+			return false;
+		}
+
+		if(meshEntityList.size() == m_meshIndexTransparent)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
 	void RendererPath::SetRenderCamera(RenderCamera* camera)
 	{
 		if (CheckIsBuildInRendererCamera())

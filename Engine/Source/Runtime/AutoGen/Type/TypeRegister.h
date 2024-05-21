@@ -160,15 +160,13 @@ namespace LitchiRuntime {
 		registration::class_<MaterialResSetting>("MaterialResSetting")(
 			rttr::metadata("Serializable", true))
 			.constructor<>()
-			.property("blendable", &MaterialResSetting::blendable)
-			.property("backfaceCulling", &MaterialResSetting::backfaceCulling)
-			.property("depthTest", &MaterialResSetting::depthTest)
-			.property("gpuInstances", &MaterialResSetting::gpuInstances);
+			.property("isTransparent", &MaterialResSetting::isTransparent);
 
 		registration::class_<MaterialRes>("MaterialRes")(rttr::metadata("Serializable", true))
 			.constructor<>()
 			.property("vertexType", &MaterialRes::vertexType)
 			.property("shaderPath", &MaterialRes::shaderPath)
+			.property("materialSetting", &MaterialRes::materialSetting)
 			.property("uniformInfoList", &MaterialRes::uniformInfoList);
 
 		/* Resource Types End */

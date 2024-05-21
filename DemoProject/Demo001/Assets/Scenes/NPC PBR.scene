@@ -1,6 +1,6 @@
 {
     "name": "Empty Scene",
-    "availableID": 255,
+    "availableID": 263,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -7207,6 +7207,248 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 255,
+            "parentId": 0,
+            "layer": 1,
+            "name": "F3_Grey",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 1.706335186958313,
+                        "z": -0.5938437581062317
+                    },
+                    "localRotation": {
+                        "x": 0.7071066498756409,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.0014799245400354267,
+                        "y": 0.0014792989240959287,
+                        "z": 0.0014792989240959287
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 256,
+            "parentId": 255,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_Rotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 257,
+            "parentId": 256,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_GeometricRotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 258,
+            "parentId": 257,
+            "layer": 1,
+            "name": "Corvette-F3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "F3_Grey/F3_Grey.FBX",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "F3_Grey/Corvette-F3.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 259,
+            "parentId": 0,
+            "layer": 1,
+            "name": "F3_Grey",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -3.8473775386810304,
+                        "y": 1.6050902605056763,
+                        "z": -1.2498904466629029
+                    },
+                    "localRotation": {
+                        "x": 0.7071066498756409,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.0014799245400354267,
+                        "y": 0.0014797052135691047,
+                        "z": 0.0014797052135691047
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 260,
+            "parentId": 259,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_Rotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": -0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 261,
+            "parentId": 260,
+            "layer": 1,
+            "name": "Corvette-F3_$AssimpFbx$_GeometricRotation",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.7071067690849304,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 262,
+            "parentId": 261,
+            "layer": 1,
+            "name": "Corvette-F3",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": "F3_Grey/F3_Grey.FBX",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": "F3_Grey/Corvette-F3.mat"
                 }
             ]
         }
