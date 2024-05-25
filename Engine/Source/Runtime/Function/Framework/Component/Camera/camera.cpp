@@ -260,7 +260,7 @@ namespace LitchiRuntime
 
         m_renderCamera->SetNearPlane(m_near_plane);
         m_renderCamera->SetFarPlane(m_far_plane);
-        m_renderCamera->SetFovHorizontalDeg(Math::Helper::DegreesToRadians(m_fov_horizontal));
+        m_renderCamera->SetFovHorizontalDeg(m_fov_horizontal);
 
         m_is_dirty = true;
     }

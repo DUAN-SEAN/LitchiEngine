@@ -265,16 +265,7 @@ namespace LitchiRuntime
 		{
 			// todo: only camera change need prepare camera
 			rendererPath4GameView->Update();
-			auto cameras = rendererPath4GameView->GetRenderables().at(Renderer_Entity::Camera);
-			if (cameras.size() > 0)
-			{
-				// Get First Camera
-				auto firstCamera = cameras[0]->GetComponent<Camera>()->GetRenderCamera();
-				rendererPath4GameView->SetRenderCamera(firstCamera);
-			}
-
-			rendererPath4GameView->Update();
-
+			
 			// Render GameView
 			Render4BuildInGameView(cmd_current, rendererPath4GameView);
 		}

@@ -74,6 +74,17 @@ namespace LitchiRuntime
 	{
 		m_renderScene = scene;
 		m_mainLight = nullptr;
+		m_needUpdateRenderScene = true;
+	}
+
+	bool RendererPath::HasRenderable(Renderer_Entity rendererEntity)
+	{
+		if (this->m_renderables.find(rendererEntity) != m_renderables.end())
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	bool RendererPath::HasTransparentMesh()
@@ -112,8 +123,6 @@ namespace LitchiRuntime
 		m_renderCamera = camera;
 		m_width = m_renderCamera->GetViewport().width;
 		m_height = m_renderCamera->GetViewport().height;
-
-		m_renderables.clear();
 
 		CreateColorRenderTarget();
 		CreateDepthRenderTarget();
@@ -256,6 +265,13 @@ namespace LitchiRuntime
 
 		UpdateSceneObject();
 
+		if(!CheckIsBuildInRendererCamera() && HasRenderable(Renderer_Entity::Camera))
+		{
+			auto cameraObject = m_renderables[Renderer_Entity::Camera][0];
+			auto camera = cameraObject->GetComponent<Camera>();
+			SetRenderCamera(camera->GetRenderCamera());
+		}
+
 		// Sort
 		FrustumCullAndSort(m_renderables[Renderer_Entity::Mesh]);
 
@@ -270,7 +286,7 @@ namespace LitchiRuntime
 		}
 
 		// EASY_FUNCTION(profiler::colors::Magenta);
-		if (!m_renderScene->IsNeedResolve())
+		if (!m_needUpdateRenderScene && !m_renderScene->IsNeedResolve())
 		{
 			return;
 		}
@@ -359,6 +375,7 @@ namespace LitchiRuntime
 
 		// Reset
 		m_renderScene->ResetResolve();
+		m_needUpdateRenderScene = false;
 	}
 
 	void RendererPath::UpdateLight()
