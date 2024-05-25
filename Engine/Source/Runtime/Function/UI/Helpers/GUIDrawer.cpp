@@ -455,6 +455,16 @@ void LitchiRuntime::GUIDrawer::DrawColor(WidgetContainer& p_root, const std::str
 	dispatcher.RegisterGatherer(p_gatherer);
 	dispatcher.RegisterProvider(p_provider);
 }
+
+void LitchiRuntime::GUIDrawer::DrawInputField4UInt8(WidgetContainer& p_root, const std::string& p_name, std::function<uint8_t(void)> p_gatherer, std::function<void(uint8_t)> p_provider)
+{
+	CreateTitle(p_root, p_name);
+	auto& widget = p_root.CreateWidget<InputInt>();
+	auto& dispatcher = widget.AddPlugin<DataDispatcher<uint8_t>>();
+	dispatcher.RegisterGatherer(p_gatherer);
+	dispatcher.RegisterProvider(p_provider);
+}
+
 void LitchiRuntime::GUIDrawer::DrawInputField4Int(WidgetContainer& p_root, const std::string& p_name, std::function<int(void)> p_gatherer, std::function<void(int)> p_provider)
 {
 	CreateTitle(p_root, p_name);
@@ -520,4 +530,9 @@ void LitchiRuntime::GUIDrawer::DrawEnum(WidgetContainer& p_root, const std::stri
 			};
 	}
 
+}
+
+void LitchiRuntime::GUIDrawer::DrawContent(WidgetContainer& p_root, const std::string& content)
+{
+	CreateTitle(p_root, content);
 }

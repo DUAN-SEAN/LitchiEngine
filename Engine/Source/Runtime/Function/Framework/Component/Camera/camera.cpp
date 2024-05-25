@@ -24,7 +24,7 @@ namespace LitchiRuntime
     void Camera::OnAwake()
     {
         // todo default select
-        m_renderCamera->SetViewport(1920, 1080);
+        m_renderCamera->SetViewport(m_cameraViewport.m_size.x, m_cameraViewport.m_size.y);
     }
 
     void Camera::OnUpdate()
@@ -63,41 +63,6 @@ namespace LitchiRuntime
         m_is_dirty = false;
     }
 	
-
-    void Camera::SetNearPlane(const float near_plane)
-    {
-        m_renderCamera->SetNearPlane(near_plane);
-        m_is_dirty = true;
-    }
-
-    void Camera::SetFarPlane(const float far_plane)
-    {
-        m_renderCamera->SetFarPlane(far_plane);
-        m_is_dirty = true;
-    }
-
-    void Camera::SetProjection(const ProjectionType projection)
-    {
-        m_renderCamera->SetProjection(projection);
-        m_is_dirty = true;
-    }
-
-    float Camera::GetFovHorizontalDeg() const
-    {
-        return m_renderCamera->GetFovHorizontalDeg();
-    }
-
-    float Camera::GetFovVerticalRad() const
-    {
-        return m_renderCamera->GetFovVerticalRad();
-    }
-
-    void Camera::SetFovHorizontalDeg(const float fov)
-    {
-        m_is_dirty = true;
-        return m_renderCamera->SetFovHorizontalDeg(fov);
-    }
-
     bool Camera::IsInViewFrustum(MeshFilter* renderable) const
     {
         BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
@@ -245,6 +210,59 @@ namespace LitchiRuntime
     Vector3 Camera::ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const
     {
         return m_renderCamera->ScreenToWorldCoordinates(position_screen, z);
+    }
+
+    void Camera::PostResourceLoaded()
+    {
+        PostResourceModify();
+    }
+
+    void Camera::PostResourceModify()
+    {
+        if(m_renderCamera==nullptr)
+        {
+            m_renderCamera = new RenderCamera();
+            m_renderCamera->Initialize();
+        }
+
+        // todo clearFlag
+
+        m_renderCamera->SetClearColor(m_clearColor);
+
+        if (m_renderCamera->GetProjectionType() != m_projection_type)
+        {
+            m_renderCamera->SetProjection(m_projection_type);
+        }
+
+        // Light DESC
+        if(m_renderCamera->GetAperture() != m_cameraLightDesc.m_aperture)
+        {
+            m_renderCamera->SetAperture(m_cameraLightDesc.m_aperture);
+        }
+        if (m_renderCamera->GetShutterSpeed() != m_cameraLightDesc.m_shutter_speed)
+        {
+            m_renderCamera->SetShutterSpeed(m_cameraLightDesc.m_shutter_speed);
+        }
+        if (m_renderCamera->GetIso() != m_cameraLightDesc.m_iso)
+        {
+            m_renderCamera->SetIso(m_cameraLightDesc.m_iso);
+        }
+
+        auto renderCameraViewport = m_renderCamera->GetViewport();
+        renderCameraViewport.x = m_cameraViewport.m_pos.x;
+        renderCameraViewport.y= m_cameraViewport.m_pos.y;
+        renderCameraViewport.width= m_cameraViewport.m_size.x;
+        renderCameraViewport.height= m_cameraViewport.m_size.y;
+        if (m_renderCamera->GetViewport() != renderCameraViewport)
+        {
+            m_renderCamera->SetViewport(renderCameraViewport.width, renderCameraViewport.height);
+        }
+
+        m_renderCamera->SetNearPlane(m_near_plane);
+        m_renderCamera->SetFarPlane(m_far_plane);
+        m_renderCamera->SetFovHorizontalDeg(Math::Helper::DegreesToRadians(m_fov_horizontal));
+
+        m_is_dirty = true;
     }
 
     void Camera::ProcessInput()

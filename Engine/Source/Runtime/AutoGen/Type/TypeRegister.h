@@ -84,15 +84,35 @@ namespace LitchiRuntime {
 			.property("b", &Color::b)
 			.property("a", &Color::a);
 
+		// Camera param
+		registration::class_<CameraLightDesc>("CameraLightDesc")
+			.constructor()
+			.property("aperture", &CameraLightDesc::m_aperture)
+			.property("shutter speed", &CameraLightDesc::m_shutter_speed)
+			.property("iso", &CameraLightDesc::m_iso);
+
+		registration::class_<CameraViewport>("Viewport")
+			.constructor()
+			.property("pos", &CameraViewport::m_pos)
+			.property("size", &CameraViewport::m_size);
+
 		/* Basic Enum Types Start */
+
+		registration::enumeration<ClearFlags>("ClearFlags")
+			(value("SolidColor", ClearFlags::SolidColor),
+			value("SkyBox", ClearFlags::SkyBox),
+			value("DepthOnly", ClearFlags::DepthOnly),
+			value("DontClear", ClearFlags::DontClear));
 
 		registration::enumeration<LightType>("LightType")(value("Directional", LightType::Directional),
 														  value("Spot", LightType::Spot),
 														  value("Point", LightType::Point));
 
 		registration::enumeration<RHI_Vertex_Type>("VertexType")(
-			value("Undefined", RHI_Vertex_Type::Undefined), value("Pos", RHI_Vertex_Type::Pos),
-			value("PosCol", RHI_Vertex_Type::PosCol), value("PosUv", RHI_Vertex_Type::PosUv),
+			value("Undefined", RHI_Vertex_Type::Undefined), 
+			value("Pos", RHI_Vertex_Type::Pos),
+			value("PosCol", RHI_Vertex_Type::PosCol), 
+			value("PosUv", RHI_Vertex_Type::PosUv),
 			value("PosUvNorTan", RHI_Vertex_Type::PosUvNorTan),
 			value("Pos2dUvCol8", RHI_Vertex_Type::Pos2dUvCol8),
 			value("PosUvNorTanBone", RHI_Vertex_Type::PosUvNorTanBone));
@@ -223,11 +243,19 @@ namespace LitchiRuntime {
 					  &Transform::SetRotationLocal)(rttr::metadata("QuatToEuler", true))
 			.property("localScale", &Transform::GetScaleLocal, &Transform::SetScaleLocal);
 
+
 		// Camera
 		registration::class_<Camera>("Camera")
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
-			.property("aperture", &Camera::GetAperture, &Camera::SetAperture)
-			.property("shutter speed", &Camera::GetShutterSpeed, &Camera::SetShutterSpeed);
+			.property("clearFlags", &Camera::GetClearFlags, &Camera::SetClearFlags)
+			.property("clearColor", &Camera::GetClearColor, &Camera::SetClearColor)
+			.property("projectionType", &Camera::GetProjectionType, &Camera::SetProjectionType)
+			.property("nearPlane", &Camera::GetNearPlane, &Camera::SetNearPlane)
+			.property("farPlane", &Camera::GetFarPlane, &Camera::SetFarPlane)
+			.property("fovHorizontal", &Camera::GetFovHorizontal, &Camera::SetFovHorizontal)
+			.property("viewport", &Camera::GetViewport, &Camera::SetViewport)
+			.property("cameraLightDesc", &Camera::GetCameraLightDesc, &Camera::SetCameraLightDesc)
+			.property("depth", &Camera::GetDepth, &Camera::SetDepth);
 
 		// Light Base Component
 		registration::class_<Light>("Light")

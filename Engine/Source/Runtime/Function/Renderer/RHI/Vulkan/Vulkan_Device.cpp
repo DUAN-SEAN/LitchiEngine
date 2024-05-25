@@ -29,6 +29,16 @@ using namespace LitchiRuntime::Math;
 
 namespace LitchiRuntime
 {
+	namespace version
+	{
+		uint32_t used = 0;
+
+		string to_string()
+		{
+			return std::to_string(VK_VERSION_MAJOR(used)) + "." + std::to_string(VK_VERSION_MINOR(used)) + "." + std::to_string(VK_VERSION_PATCH(used));
+		}
+	}
+
 	namespace
 	{
 		static mutex mutex_allocation;
@@ -181,6 +191,56 @@ namespace LitchiRuntime
 			return flags;
 		}
 
+		VkApplicationInfo create_application_info()
+		{
+			VkApplicationInfo app_info = {};
+			app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
+			app_info.pApplicationName = Litchi_info::name;             // for gpu vendors to do game specific driver optimizations
+			app_info.pEngineName = app_info.pApplicationName; // for gpu vendors to do engine specific driver optimizations
+			app_info.engineVersion = VK_MAKE_VERSION(Litchi_info::version_major, Litchi_info::version_minor, Litchi_info::version_revision);
+			app_info.applicationVersion = app_info.engineVersion;
+
+			// deduce api version to use based on the SDK and what the driver supports
+			{
+				uint32_t driver_version = 0;
+				{
+					// per LunarG, if vkEnumerateInstanceVersion is not present, we are running on Vulkan 1.0
+					// https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf
+					auto eiv = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
+
+					if (eiv)
+					{
+						eiv(&driver_version);
+					}
+					else
+					{
+						driver_version = VK_API_VERSION_1_0;
+					}
+				}
+
+				// choose the version which is supported by both the sdk and the driver
+				uint32_t sdk_version = VK_HEADER_VERSION_COMPLETE;
+				app_info.apiVersion = Helper::Min(sdk_version, driver_version);
+
+				// 1.3 the minimum required version as we are using extensions from 1.3
+				LC_ASSERT_MSG(app_info.apiVersion >= VK_API_VERSION_1_3, "Vulkan 1.3 is not supported");
+
+				// in case the SDK is not supported by the driver, prompt the user to update
+				if (sdk_version > driver_version)
+				{
+					// detect and log version
+					string driver_version_str = to_string(VK_API_VERSION_MAJOR(driver_version)) + "." + to_string(VK_API_VERSION_MINOR(driver_version)) + "." + to_string(VK_API_VERSION_PATCH(driver_version));
+					string sdk_version_str = to_string(VK_API_VERSION_MAJOR(sdk_version)) + "." + to_string(VK_API_VERSION_MINOR(sdk_version)) + "." + to_string(VK_API_VERSION_PATCH(sdk_version));
+					DEBUG_LOG_WARN("Using Vulkan {}, update drivers or wait for GPU vendor to support Vulkan {}, engine may still work", driver_version_str.c_str(), sdk_version_str.c_str());
+				}
+
+				// save the api version we ended up using
+				version::used = app_info.apiVersion;
+				RHI_Context::api_version_str = version::to_string();
+			}
+
+			return app_info;
+		}
 	}
 
 	namespace command_pools
@@ -888,95 +948,41 @@ namespace LitchiRuntime
 		}
 		// #endif
 
-		//// TODO: ÃÌº”glfw¿©’π
-		//uint32_t count;
-		//const char** extensions = glfwGetRequiredInstanceExtensions(&count);
-		//std::vector<const char*> extensionArr(extensions, extensions + count);
-		//// RHI_Context::extensions_instance.emplace_back(*extensionArr.data());
+		// get the supported extensions out of the requested extensions
+		vector<const char*> extensions_supported = get_supported_extensions(RHI_Context::extensions_instance);
 
-		// Create instance
-		VkApplicationInfo app_info = {};
+		VkInstanceCreateInfo create_info = {};
+		create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
+		VkApplicationInfo app_info = create_application_info();
+		create_info.pApplicationInfo = &app_info;
+
+		create_info.enabledExtensionCount = static_cast<uint32_t>(extensions_supported.size());
+		create_info.ppEnabledExtensionNames = extensions_supported.data();
+		create_info.enabledLayerCount = 0;
+
+		// validation features
+		VkValidationFeaturesEXT validation_features = {};
+		validation_features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
+		validation_features.enabledValidationFeatureCount = static_cast<uint32_t>(RHI_Context::validation_extensions.size());
+		validation_features.pEnabledValidationFeatures = RHI_Context::validation_extensions.data();
+
+		if (RHI_Context::validation)
 		{
-			app_info.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
-			app_info.pApplicationName = Litchi_info::name;
-			app_info.pEngineName = app_info.pApplicationName;
-			app_info.engineVersion = VK_MAKE_VERSION(Litchi_info::version_major, Litchi_info::version_minor, Litchi_info::version_revision);
-			app_info.applicationVersion = app_info.engineVersion;
-
-			// Deduce API version to use
+			// Enable validation layer
+			if (is_present_instance_layer(RHI_Context::validation_layers.front()))
 			{
-				// Get sdk version
-				uint32_t sdk_version = VK_HEADER_VERSION_COMPLETE;
-
-				// Get driver version
-				uint32_t driver_version = 0;
-				{
-					// Per LunarG, if vkEnumerateInstanceVersion is not present, we are running on Vulkan 1.0
-					// https://www.lunarg.com/wp-content/uploads/2019/02/Vulkan-1.1-Compatibility-Statement_01_19.pdf
-					auto eiv = reinterpret_cast<PFN_vkEnumerateInstanceVersion>(vkGetInstanceProcAddr(nullptr, "vkEnumerateInstanceVersion"));
-
-					if (eiv)
-					{
-						eiv(&driver_version);
-					}
-					else
-					{
-						driver_version = VK_API_VERSION_1_0;
-					}
-				}
-
-				// Choose the version which is supported by both the sdk and the driver
-				app_info.apiVersion = Helper::Min(sdk_version, driver_version);
-
-				LC_ASSERT_MSG(app_info.apiVersion >= VK_API_VERSION_1_3, "Vulkan 1.3 is not supported");
-
-				// In case the SDK is not supported by the driver, prompt the user to update
-				if (sdk_version > driver_version)
-				{
-					// Detect and log version
-					string driver_version_str = to_string(VK_API_VERSION_MAJOR(driver_version)) + "." + to_string(VK_API_VERSION_MINOR(driver_version)) + "." + to_string(VK_API_VERSION_PATCH(driver_version));
-					string sdk_version_str = to_string(VK_API_VERSION_MAJOR(sdk_version)) + "." + to_string(VK_API_VERSION_MINOR(sdk_version)) + "." + to_string(VK_API_VERSION_PATCH(sdk_version));
-					DEBUG_LOG_WARN("Falling back to Vulkan {}. Please update your graphics drivers to support Vulkan {}.", driver_version_str.c_str(), sdk_version_str.c_str());
-				}
-
-				//  Save API version
-				RHI_Context::api_version_str = to_string(VK_API_VERSION_MAJOR(app_info.apiVersion)) + "." + to_string(VK_API_VERSION_MINOR(app_info.apiVersion)) + "." + to_string(VK_API_VERSION_PATCH(app_info.apiVersion));
+				// Validation layers
+				create_info.enabledLayerCount = static_cast<uint32_t>(RHI_Context::validation_layers.size());
+				create_info.ppEnabledLayerNames = RHI_Context::validation_layers.data();
+				create_info.pNext = &validation_features;
 			}
-
-			// get the supported extensions out of the requested extensions
-			vector<const char*> extensions_supported = get_supported_extensions(RHI_Context::extensions_instance);
-
-			VkInstanceCreateInfo create_info = {};
-			create_info.sType = VK_STRUCTURE_TYPE_INSTANCE_CREATE_INFO;
-			create_info.pApplicationInfo = &app_info;
-			create_info.enabledExtensionCount = static_cast<uint32_t>(extensions_supported.size());
-			create_info.ppEnabledExtensionNames = extensions_supported.data();
-			create_info.enabledLayerCount = 0;
-
-			// validation features
-			VkValidationFeaturesEXT validation_features = {};
-			validation_features.sType = VK_STRUCTURE_TYPE_VALIDATION_FEATURES_EXT;
-			validation_features.enabledValidationFeatureCount = static_cast<uint32_t>(RHI_Context::validation_extensions.size());
-			validation_features.pEnabledValidationFeatures = RHI_Context::validation_extensions.data();
-
-			if (RHI_Context::validation)
+			else
 			{
-				// Enable validation layer
-				if (is_present_instance_layer(RHI_Context::validation_layers.front()))
-				{
-					// Validation layers
-					create_info.enabledLayerCount = static_cast<uint32_t>(RHI_Context::validation_layers.size());
-					create_info.ppEnabledLayerNames = RHI_Context::validation_layers.data();
-					create_info.pNext = &validation_features;
-				}
-				else
-				{
-					DEBUG_LOG_ERROR("Validation layer was requested, but not available.");
-				}
+				DEBUG_LOG_ERROR("Validation layer was requested, but not available.");
 			}
-
-			LC_ASSERT_MSG(vkCreateInstance(&create_info, nullptr, &RHI_Context::instance) == VK_SUCCESS, "Failed to create instance");
 		}
+
+		LC_ASSERT_MSG(vkCreateInstance(&create_info, nullptr, &RHI_Context::instance) == VK_SUCCESS, "Failed to create instance");
 
 		// Get function pointers (from extensions)
 		functions::initialize(RHI_Context::validation, RHI_Context::gpu_markers);

@@ -156,4 +156,10 @@ namespace LitchiRuntime
 
 	};
 
+
+
+	class MultiCameraRendererPath:public RendererPath
+	{
+		
+	};
 }

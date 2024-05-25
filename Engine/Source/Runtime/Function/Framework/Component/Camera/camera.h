@@ -19,6 +19,27 @@ namespace LitchiRuntime
 {
 	class MeshFilter;
 
+    enum class ClearFlags
+    {
+        SolidColor,
+        SkyBox,
+        DontClear,
+        DepthOnly
+    };
+
+    struct CameraLightDesc
+    {
+        float m_aperture = 2.8f;         // Aperture value in f-stop. Controls the amount of light, depth of field and chromatic aberration.
+        float m_shutter_speed = 1.0f / 60.0f; // Length of time for which the camera shutter is open (sec). Also controls the amount of motion blur.
+        float m_iso = 500.0f;       // Sensitivity to light.
+    };
+
+    struct CameraViewport
+    {
+        Vector2 m_pos;
+        Vector2 m_size;
+    };
+
     class Camera : public Component {
     public:
         Camera();
@@ -50,45 +71,42 @@ namespace LitchiRuntime
         Vector3 ScreenToWorldCoordinates(const Vector2& position_screen, const float z) const;
         //=================================================================================================================
 
-        // Aperture
-        float GetAperture() const { return m_renderCamera->GetAperture(); }
-        void SetAperture(const float aperture) { m_renderCamera->SetAperture(aperture); }
+        // Clear Flags
+        ClearFlags GetClearFlags() { return m_clearFlags; }
+        void SetClearFlags(ClearFlags clearFlags) { m_clearFlags = clearFlags; }
 
-        // Shutter speed
-        float GetShutterSpeed() const { return m_renderCamera->GetShutterSpeed(); }
-        void SetShutterSpeed(const float shutter_speed) { m_renderCamera->SetShutterSpeed(shutter_speed); }
+        // Clear color
+        const Color& GetClearColor()                   const { return m_clearColor; }
+        void SetClearColor(const Color& color) { m_clearColor = color; }
 
-        // ISO
-        float GetIso() const { return m_renderCamera->GetIso(); }
-        void SetIso(const float iso) { m_renderCamera->SetIso(iso); }
-
-        // Exposure
+        // LightDesc
+        CameraLightDesc GetCameraLightDesc() { return m_cameraLightDesc; }
+        void SetCameraLightDesc(CameraLightDesc cameraLightDesc) { m_cameraLightDesc = cameraLightDesc; }
         float GetEv100()    const { return m_renderCamera->GetEv100(); }
         float GetExposure() const { return m_renderCamera->GetExposure(); }
 
-
         // Planes/projection
-        void SetNearPlane(float near_plane);
-        void SetFarPlane(float far_plane);
-        void SetProjection(ProjectionType projection);
-        float GetNearPlane()               const { return m_renderCamera->GetNearPlane(); }
-        float GetFarPlane()                const { return m_renderCamera->GetFarPlane(); }
-        ProjectionType GetProjectionType() const { return m_renderCamera->GetProjectionType(); }
+        void SetProjectionType(ProjectionType projection) { m_projection_type = projection; }
+        ProjectionType GetProjectionType() const { return m_projection_type; }
+        void SetNearPlane(float near_plane) { m_near_plane = near_plane; }
+        float GetNearPlane()               const { return m_near_plane; }
+        void SetFarPlane(float far_plane) { m_far_plane = far_plane; }
+        float GetFarPlane()                const { return m_far_plane; }
 
         // FOV
-        float GetFovHorizontalRad() const { return m_renderCamera->GetFovHorizontalRad(); }
-        float GetFovVerticalRad()   const;
-        float GetFovHorizontalDeg() const;
-        void SetFovHorizontalDeg(float fov);
+        void SetFovHorizontal(float fov) { m_fov_horizontal = fov; }
+        float GetFovHorizontal() const { return m_fov_horizontal; }
+
+        void SetViewport(CameraViewport viewport) { m_cameraViewport = viewport; }
+        CameraViewport GetViewport() { return m_cameraViewport; }
+
+        void SetDepth(unsigned char depth) { m_depth = depth; }
+        unsigned char GetDepth() { return m_depth; }
 
         // Frustum
         bool IsInViewFrustum(MeshFilter* renderable) const;
         bool IsInViewFrustum(const Vector3& center, const Vector3& extents) const;
         
-        // Clear color
-        const Color& GetClearColor()                   const { return m_renderCamera->GetClearColor(); }
-        void SetClearColor(const Color& color) { m_renderCamera->SetClearColor(color); }
-
         // First person control
         bool GetFirstPersonControlEnabled()            const { return m_first_person_control_enabled; }
         void SetFirstPersonControlEnabled(const bool enabled) { m_first_person_control_enabled = enabled; }
@@ -104,6 +122,9 @@ namespace LitchiRuntime
 
         RenderCamera* GetRenderCamera() { return m_renderCamera; }
 
+    public:
+        void PostResourceLoaded() override;
+        void PostResourceModify() override;
     private:
         void ProcessInput();
         void ProcessInputFpsControl();
@@ -143,8 +164,17 @@ namespace LitchiRuntime
 
         // todo Remove
 
-        unsigned char m_depth;//排序深度
+        ClearFlags m_clearFlags = ClearFlags::SolidColor;
+        Color m_clearColor;
+        ProjectionType m_projection_type = Projection_Perspective;
+        float m_near_plane = 0.1f;
+        float m_far_plane = 4000.0f;
+        float m_fov_horizontal = 90.0f;
+        CameraLightDesc m_cameraLightDesc;
+        CameraViewport m_cameraViewport{Vector2::Zero,Vector2(1920,1080)};
 
-        unsigned char m_culling_mask;//控制渲染哪些Layer的物体
+        unsigned char m_depth;// multi camera sort flag, smaller values are rendering first
+
+        unsigned char m_culling_mask;// control what game object draw
     };
 }

@@ -291,6 +291,19 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 			};
 
 			GUIDrawer::DrawBoolean(propertyRoot, propertyName.to_string(), getBool, setBool);
+		}else if(t == type::get<unsigned char>() || t == type::get<uint8_t>())
+		{
+			auto get = [var, property_field]
+				{
+					return property_field.GetValue().to_uint8();
+				};
+
+			auto set = [property_field](uint8_t value)
+				{
+					property_field.SetValue(value);
+				};
+
+			GUIDrawer::DrawInputField4UInt8(propertyRoot, propertyName.to_string(), get, set);
 		}
 		else if (t == type::get<int>())
 		{
@@ -368,6 +381,8 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 		}
 		else
 		{
+			std::string content = propertyName.to_string() + " "+t.get_name()+" NotSupport";
+			GUIDrawer::DrawContent(propertyRoot, content);
 			return false;
 		}
 

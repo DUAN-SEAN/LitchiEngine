@@ -64,6 +64,7 @@ namespace LitchiRuntime
 		static void DrawString(WidgetContainer& p_root, const std::string& p_name, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider);
 		static void DrawColor(WidgetContainer& p_root, const std::string& p_name, std::function<Color(void)> p_gatherer, std::function<void(Color)> p_provider, bool p_hasAlpha = false);
 
+		static void LitchiRuntime::GUIDrawer::DrawInputField4UInt8(WidgetContainer& p_root, const std::string& p_name, std::function<uint8_t(void)> p_gatherer, std::function<void(uint8_t)> p_provider);
 		static void LitchiRuntime::GUIDrawer::DrawInputField4Int(WidgetContainer& p_root, const std::string& p_name, std::function<int(void)> p_gatherer, std::function<void(int)> p_provider);
 		static void LitchiRuntime::GUIDrawer::DrawInputField4Int32(WidgetContainer& p_root, const std::string& p_name, std::function<int32_t(void)> p_gatherer, std::function<void(int32_t)> p_provider);
 		static void LitchiRuntime::GUIDrawer::DrawInputField4UInt64(WidgetContainer& p_root, const std::string& p_name, std::function<uint64_t(void)> p_gatherer, std::function<void(uint64_t)> p_provider);
@@ -71,6 +72,8 @@ namespace LitchiRuntime
 		static void DrawInputField4Double(WidgetContainer& p_root, const std::string& p_name, std::function<double(void)> p_gatherer, std::function<void(double)> p_provider);
 
 		static void DrawEnum(WidgetContainer& p_root, const std::string& p_name, const std::vector<std::string>& enumValueList, std::function<std::string(void)> p_gatherer, std::function<void(std::string)> p_provider, Event<>* p_updateNotifier = nullptr);
+
+		static void DrawContent(WidgetContainer& p_root, const std::string& content);
 
 		template <typename T>
 		static ImGuiDataType_ GetDataType();

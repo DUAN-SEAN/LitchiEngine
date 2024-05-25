@@ -1,6 +1,6 @@
 {
     "name": "Empty Scene",
-    "availableID": 263,
+    "availableID": 264,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -7449,6 +7449,64 @@
                 {
                     "Type": "MeshRenderer",
                     "materialPath": "F3_Grey/Corvette-F3.mat"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 263,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Test",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 2.058546304702759,
+                        "z": -7.459308624267578
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "clearFlags": "SolidColor",
+                    "clearColor": {
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0,
+                        "a": 0.0
+                    },
+                    "projectionType": 0,
+                    "nearPlane": 0.10000000149011612,
+                    "farPlane": 4000.0,
+                    "fovHorizontal": 90.0,
+                    "viewport": {
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "size": {
+                            "x": 1920.0,
+                            "y": 1080.0
+                        }
+                    },
+                    "cameraLightDesc": {
+                        "aperture": 2.799999952316284,
+                        "shutter speed": 0.01666666753590107,
+                        "iso": 500.0
+                    },
+                    "depth": 0
                 }
             ]
         }
