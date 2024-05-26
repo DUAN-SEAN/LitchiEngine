@@ -54,6 +54,7 @@ namespace LitchiEditor
 		void HandleActorPicking();
 	private:
 		void DeleteActorByInstance(GameObject* p_actor);
+		void CreateCameraControlPanel();
 	private:
 		GameObject* m_highlightedActor;
 		TransformGizmo* m_transform_gizmo;

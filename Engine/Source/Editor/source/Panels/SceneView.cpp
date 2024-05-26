@@ -6,8 +6,12 @@
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
 #include "Runtime/Function/Renderer/Light/Light.h"
+#include "Runtime/Function/UI/Helpers/GUIDrawer.h"
 #include "Runtime/Function/UI/ImGui/ImGui_TransformGizmo.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
+#include "Runtime/Function/UI/Widgets/Layout/Columns.h"
+#include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
+#include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
 #include "Runtime/Function/UI/Widgets/Selection/CheckBox.h"
 #include "Runtime/Function/UI/Widgets/Texts/Text.h"
 #include "Runtime/Function/UI/Widgets/Visual/OverlapStart.h"
@@ -25,11 +29,9 @@ LitchiEditor::SceneView::SceneView
 
 	m_transform_gizmo = &CreateWidget<TransformGizmo>(m_camera);
 
-	CreateWidget<OverlapStart>(Vector2(0.0f, 50.0f));
-	auto& resetButton = CreateWidget<Button>("SceneView Button");
-	resetButton.idleBackgroundColor = { 0.0f, 0.5f, 0.0f };
-	CreateWidget<LitchiRuntime::Text>("SceneView Text").lineBreak = false;
-	CreateWidget<LitchiRuntime::CheckBox>(false, "");
+	CreateWidget<OverlapStart>(Vector2(0.0f, 20.0f));
+
+	CreateCameraControlPanel();
 
 	GameObject::DestroyedEvent += std::bind(&SceneView::DeleteActorByInstance, this, std::placeholders::_1);
 }
@@ -53,7 +55,10 @@ void LitchiEditor::SceneView::OnDraw()
 		{
 			camera->Pick();
 			auto selectedGO = camera->GetSelectedEntity();
-			ApplicationEditor::Instance()->SelectActor(selectedGO);// temp
+			if(selectedGO)
+			{
+				ApplicationEditor::Instance()->SelectActor(selectedGO);// temp
+			}
 		}
 	}
 
@@ -90,5 +95,25 @@ void LitchiEditor::SceneView::DeleteActorByInstance(GameObject* p_actor)
 			camera->SetSelectedEntity(nullptr);
 		}
 	}
+}
+
+void LitchiEditor::SceneView::CreateCameraControlPanel()
+{
+	auto& cameraControlPanelRoot2 = CreateWidget<Columns<1>>();
+	cameraControlPanelRoot2.widths[0] = 350.0f;
+
+	auto& cameraControlPanelRoot = cameraControlPanelRoot2.CreateWidget<GroupCollapsable>("CameraControlPanel",350.0f);
+	cameraControlPanelRoot.opened = true;
+
+	auto& propertyRoot = cameraControlPanelRoot.CreateWidget<Columns<2>>();
+	propertyRoot.widths[0] = 100.0;
+	propertyRoot.widths[1] = 200.0f;
+	GUIDrawer::DrawInputField4Float(propertyRoot, "NearPlane", [this](){return m_camera->GetNearPlane();}, [this](float value) { m_camera->SetNearPlane(value); });
+	GUIDrawer::DrawInputField4Float(propertyRoot, "FarPlane", [this](){return m_camera->GetFarPlane();}, [this](float value) { m_camera->SetFarPlane(value); });
+	GUIDrawer::DrawInputField4Float(propertyRoot, "FovHorizontal", [this](){return m_camera->GetFovHorizontalDeg();}, [this](float value) { m_camera->SetFovHorizontalDeg(value); });
+
+	auto& lightControlPanelRoot = CreateWidget<Group>();
+	lightControlPanelRoot.CreateWidget<Text>("LightControlPanel");
+	auto resetButton = lightControlPanelRoot.CreateWidget<Button>("SceneView Button");
 }
 
