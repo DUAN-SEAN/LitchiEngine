@@ -133,6 +133,26 @@ void LitchiEditor::SceneView::CreateCameraControlPanel()
 	GUIDrawer::DrawInputField4Float(propertyRoot, "FarPlane", [this](){return m_camera->GetFarPlane();}, [this](float value) { m_camera->SetFarPlane(value); });
 	GUIDrawer::DrawInputField4Float(propertyRoot, "FovHorizontal", [this](){return m_camera->GetFovHorizontalDeg();}, [this](float value) { m_camera->SetFovHorizontalDeg(value); });
 
+	// Draw ProjectType
+	auto getString = [this]
+		{
+			auto type = type::get<ProjectionType>().get_enumeration().value_to_name(m_camera->GetProjectionType());
+			return type.to_string();
+		};
+
+	auto setString = [this](std::string value)
+		{
+			auto type = type::get<ProjectionType>().get_enumeration().name_to_value(value).convert<ProjectionType>();
+			m_camera->SetProjection(type);
+		};
+	enumeration enum_align = type::get<ProjectionType>().get_enumeration();
+	std::vector<std::string> enumValueList;
+	for (auto enumName : enum_align.get_names())
+	{
+		enumValueList.push_back(enumName.to_string());
+	}
+	GUIDrawer::DrawEnum(propertyRoot, "ProjectionType", enumValueList, getString, setString, nullptr);
+
 	auto& lightControlPanelRoot = m_innerPropertyWindow->CreateWidget<Group>();
 	lightControlPanelRoot.CreateWidget<Text>("LightControlPanel");
 	auto resetButton = lightControlPanelRoot.CreateWidget<Button>("SceneView Button");

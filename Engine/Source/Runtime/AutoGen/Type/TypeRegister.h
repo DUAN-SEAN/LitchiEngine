@@ -104,6 +104,11 @@ namespace LitchiRuntime {
 			value("DepthOnly", ClearFlags::DepthOnly),
 			value("DontClear", ClearFlags::DontClear));
 
+
+		registration::enumeration<ProjectionType>("ProjectionType")
+			(value("Perspective", ProjectionType::Projection_Perspective),
+				value("Orthographic", ProjectionType::Projection_Orthographic));
+
 		registration::enumeration<LightType>("LightType")(value("Directional", LightType::Directional),
 														  value("Spot", LightType::Spot),
 														  value("Point", LightType::Point));

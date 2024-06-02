@@ -7457,13 +7457,13 @@
             "id": 263,
             "parentId": 0,
             "layer": 1,
-            "name": "Test",
+            "name": "Camera",
             "componentList": [
                 {
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 2.058546304702759,
+                        "y": 2.569519519805908,
                         "z": -7.459308624267578
                     },
                     "localRotation": {
@@ -7487,7 +7487,7 @@
                         "b": 0.0,
                         "a": 0.0
                     },
-                    "projectionType": 0,
+                    "projectionType": "Perspective",
                     "nearPlane": 0.10000000149011612,
                     "farPlane": 4000.0,
                     "fovHorizontal": 90.0,
