@@ -40,6 +40,8 @@ namespace LitchiEditor
 		void UpdateToggleableItems();
 		void OpenEveryWindows(bool p_state);
 
+		void _Draw_Impl() override;
+
 	private:
 		PanelMap m_panels;
 

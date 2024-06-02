@@ -7,6 +7,7 @@
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 
 #include "Runtime/Function/Renderer/Rendering/Renderer.h"
+#include "Runtime/Function/UI/Panels/InnerPanelWindow.h"
 
 namespace LitchiEditor
 {
@@ -58,5 +59,7 @@ namespace LitchiEditor
 	private:
 		GameObject* m_highlightedActor;
 		TransformGizmo* m_transform_gizmo;
+		InnerPanelWindow* m_innerMenuWindow;
+		InnerPanelWindow* m_innerPropertyWindow;
 	};
 }

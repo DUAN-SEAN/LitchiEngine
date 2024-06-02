@@ -8,7 +8,9 @@
 #include "Runtime/Function/Renderer/Light/Light.h"
 #include "Runtime/Function/UI/Helpers/GUIDrawer.h"
 #include "Runtime/Function/UI/ImGui/ImGui_TransformGizmo.h"
+#include "Runtime/Function/UI/Panels/InnerPanelWindow.h"
 #include "Runtime/Function/UI/Widgets/Buttons/Button.h"
+#include "Runtime/Function/UI/Widgets/Buttons/ButtonSmall.h"
 #include "Runtime/Function/UI/Widgets/Layout/Columns.h"
 #include "Runtime/Function/UI/Widgets/Layout/GroupCollapsable.h"
 #include "Runtime/Function/UI/Widgets/Layout/TreeNode.h"
@@ -99,21 +101,42 @@ void LitchiEditor::SceneView::DeleteActorByInstance(GameObject* p_actor)
 
 void LitchiEditor::SceneView::CreateCameraControlPanel()
 {
-	auto& cameraControlPanelRoot2 = CreateWidget<Columns<1>>();
-	cameraControlPanelRoot2.widths[0] = 350.0f;
+	PanelWindowSettings settings;
+	settings.resizable = false;
+	settings.autoSize = false;
+	settings.titleBar = false;
+	settings.allowHorizontalScrollbar = true;
+	settings.closable = false;
+	settings.dockable = false;
+	settings.movable = false;
+	settings.scrollable = true;
 
-	auto& cameraControlPanelRoot = cameraControlPanelRoot2.CreateWidget<GroupCollapsable>("CameraControlPanel",350.0f);
-	cameraControlPanelRoot.opened = true;
+	m_innerMenuWindow = &CreateWidget<InnerPanelWindow>("SceneViewMenu", true, Vector2(0.0f,20.0f), Color(0, 0, 0, 0.1f), settings);
+	auto& propertyBtn = m_innerMenuWindow->CreateWidget<ButtonSmall>("Property");
+	propertyBtn.ClickedEvent += [this]() {
+		if (m_innerPropertyWindow->IsOpened())
+		{
+			m_innerPropertyWindow->Close();
+		}
+		else
+		{
+			m_innerPropertyWindow->Open();
+		}
+		};
 
-	auto& propertyRoot = cameraControlPanelRoot.CreateWidget<Columns<2>>();
+
+	m_innerPropertyWindow = &CreateWidget<InnerPanelWindow>("SceneViewProperty",true,Vector2(300.0f,200.0f), Color(0, 0, 0, 0.1f), settings);
+	auto& propertyRoot = m_innerPropertyWindow->CreateWidget<Columns<2>>();
 	propertyRoot.widths[0] = 100.0;
 	propertyRoot.widths[1] = 200.0f;
 	GUIDrawer::DrawInputField4Float(propertyRoot, "NearPlane", [this](){return m_camera->GetNearPlane();}, [this](float value) { m_camera->SetNearPlane(value); });
 	GUIDrawer::DrawInputField4Float(propertyRoot, "FarPlane", [this](){return m_camera->GetFarPlane();}, [this](float value) { m_camera->SetFarPlane(value); });
 	GUIDrawer::DrawInputField4Float(propertyRoot, "FovHorizontal", [this](){return m_camera->GetFovHorizontalDeg();}, [this](float value) { m_camera->SetFovHorizontalDeg(value); });
 
-	auto& lightControlPanelRoot = CreateWidget<Group>();
+	auto& lightControlPanelRoot = m_innerPropertyWindow->CreateWidget<Group>();
 	lightControlPanelRoot.CreateWidget<Text>("LightControlPanel");
 	auto resetButton = lightControlPanelRoot.CreateWidget<Button>("SceneView Button");
+
+
 }
 

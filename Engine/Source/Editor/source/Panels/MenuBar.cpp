@@ -9,6 +9,8 @@
 #include "Runtime/Function/UI/Widgets/Visual/Separator.h"
 #include <Runtime/Function/UI/Widgets/Texts/Text.h>
 
+#include "Runtime/Function/UI/Widgets/Buttons/Button.h"
+
 using namespace LitchiRuntime;
 
 LitchiEditor::MenuBar::MenuBar()
@@ -210,13 +212,18 @@ void LitchiEditor::MenuBar::CreateLayoutMenu()
 	auto& layoutMenu = CreateWidget<MenuList>("Layout");
 	layoutMenu.CreateWidget<MenuItem>("Reset").ClickedEvent += EDITOR_BIND(ResetLayout);
 }
-
+bool demoOpen = false;
 void LitchiEditor::MenuBar::CreateHelpMenu()
 {
 	auto& helpMenu = CreateWidget<MenuList>("Help");
     helpMenu.CreateWidget<MenuItem>("GitHub").ClickedEvent += [] {SystemCalls::OpenURL("https://github.com/DUAN-SEAN/LitchiEngine/tree/vulkanDev"); };
     helpMenu.CreateWidget<Separator>();
     helpMenu.CreateWidget<Text>("Version: 1.0.0");
+	auto& btn = helpMenu.CreateWidget<Button>("OpenImGuiDemo");
+	btn.ClickedEvent += []()
+	{
+		demoOpen = !demoOpen;
+	};
 }
 
 void LitchiEditor::MenuBar::UpdateToggleableItems()
@@ -229,4 +236,14 @@ void LitchiEditor::MenuBar::OpenEveryWindows(bool p_state)
 {
 		for (auto&[name, panel] : m_panels)
 		panel.first.get().SetOpened(p_state);
+}
+
+void LitchiEditor::MenuBar::_Draw_Impl()
+{
+	PanelMenuBar::_Draw_Impl();
+
+	if(demoOpen)
+	{
+		ImGui::ShowDemoWindow();
+	}
 }
