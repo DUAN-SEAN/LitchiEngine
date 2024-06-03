@@ -30,12 +30,18 @@ set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$
     # add_definitions(-D _DEBUG)
 # endif ()
 
-# 此步骤将引用LitchiRuntime提供给外界的include，以及其Link 目标的include以及库
+# PhysX
+set(PHYSX_DEBUG_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/debug)
+set(PHYSX_RELEASE_LIB_PATH ${THIRD_PARTY_DIR}/PhysX/lib/release)
 target_link_directories(${TARGET_NAME}
 	PUBLIC
-    $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/debug>
-    $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/release>
+    $<$<CONFIG:Debug>:${PHYSX_DEBUG_LIB_PATH}>
+    $<$<CONFIG:Release>:${PHYSX_RELEASE_LIB_PATH}>
+
+
 )
+
+# 链接LitchiRuntime和PhysX库
 target_link_libraries(${TARGET_NAME} LitchiRuntime PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
 
 # set(POST_BUILD_COMMANDS
@@ -54,9 +60,8 @@ if(MSVC)
         file(GLOB MODEL ${PHYSX_RELEASE_LIB_PATH}/*.dll ${THIRD_PARTY_DIR}/dxcompiler/lib/Release/*.dll ${THIRD_PARTY_DIR}/assimp/bin/Release/*.dll)
     endif()
 	
-
 	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different ${MODEL} $<TARGET_FILE_DIR:${TARGET_NAME}>)
 	
 	#file(GLOB DATA ${ENGINE_ASSET_DIR})
-	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${ENGINE_ASSET_DIR} $<TARGET_FILE_DIR:${TARGET_NAME}>/Data)
+	add_custom_command(TARGET ${TARGET_NAME} POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${ENGINE_ASSET_DIR} $<TARGET_FILE_DIR:${TARGET_NAME}>/Data)
 endif()

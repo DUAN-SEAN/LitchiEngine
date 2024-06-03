@@ -81,9 +81,10 @@ namespace LitchiStandalone
 
 				auto cameraRotation = Quaternion::FromEulerAngles((Vector3(Math::Helper::DegreesToRadians(45.0f), Math::Helper::DegreesToRadians(0.0f), 0.0f)));
 
-				camera->SetFovHorizontalDeg(60.0f);
+				camera->SetFovHorizontal(60.0f);
 				cameraObject->GetComponent<Transform>()->SetPosition(cameraPosition);
 				cameraObject->GetComponent<Transform>()->SetRotation(cameraRotation);
+				camera->PostResourceModify();
 
 			}
 			
