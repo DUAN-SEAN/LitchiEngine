@@ -129,7 +129,7 @@ namespace LitchiRuntime
 
 		UICanvas* GetCanvas();
 		/*Light* GetMainLight() const { return m_mainLight; }*/
-		size_t GetLightCount() const;
+		size_t GetLightGameObjectCount() const;
 		const RendererLightGroup& GetRendererLightGroup()const { return m_rendererLightGroup; }
 
 		//-- SelectedAsset  --//

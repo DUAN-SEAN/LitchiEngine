@@ -171,14 +171,14 @@ namespace LitchiRuntime
 
 			}
 
-			// clear here and not via the render pass, which can dynamically start and end based on various toggles
-			{
-				if (pso.render_target_color_textures[0])
-				{
-					cmd_list->ClearRenderTarget(pso.render_target_color_textures[0], Color::standard_white);
-				}
-				cmd_list->ClearRenderTarget(pso.render_target_depth_texture, rhi_color_dont_care, 0.0f);
-			}
+			//// clear here and not via the render pass, which can dynamically start and end based on various toggles
+			//{
+			//	if (pso.render_target_color_textures[0])
+			//	{
+			//		cmd_list->ClearRenderTarget(pso.render_target_color_textures[0], Color::standard_white);
+			//	}
+			//	cmd_list->ClearRenderTarget(pso.render_target_depth_texture, rhi_color_dont_care, 0.0f);
+			//}
 
 
 

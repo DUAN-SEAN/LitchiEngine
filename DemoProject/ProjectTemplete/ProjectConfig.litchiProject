@@ -1,8 +1,9 @@
 {
-  "assetFolder": "Assets/",
-  "scriptFolder": "Scripts/",
-  "defaultScenePath": "Scenes/New Scene4.scene",
-  "resolutionWidth": 1920,
-  "resolutionHeight": 1080,
-  "isFullScreen": true
+    "assetFolder": "Assets/",
+    "scriptFolder": "Scripts/",
+    "defaultScenePath": "Scenes/New Scene4.scene",
+    "resolutionWidth": 1920,
+    "resolutionHeight": 1080,
+    "isFullScreen": true,
+    "data": []
 }

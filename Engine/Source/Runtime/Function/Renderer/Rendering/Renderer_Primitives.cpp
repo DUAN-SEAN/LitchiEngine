@@ -255,7 +255,7 @@ namespace LitchiRuntime
             DrawLine(ray.GetStart(), ray.GetStart() + ray.GetDirection() * camera->GetFarPlane(), Color(0, 1, 0, 1));
         }
 
-        if (GetOption<bool>(Renderer_Option::Lights) && rendererPath4SceneView->GetLightCount() > 0)
+        if (GetOption<bool>(Renderer_Option::Lights) && rendererPath4SceneView->GetLightGameObjectCount() > 0)
         {
             auto& lights = rendererPath4SceneView->GetRenderables()[Renderer_Entity::Light];
             for (auto entity : lights)
