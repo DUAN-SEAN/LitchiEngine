@@ -20,7 +20,8 @@ Pixel_PosUv mainVS(Vertex_PosUvNorTan input)
     uint light_count = (uint) f3_value2.z;
     LightBufferData lightBufferData = buffer_lights[index_light];
     input.position.w     = 1.0f; 
-    output.position = mul(input.position, buffer_pass.transform * lightBufferData.view_projection[index_array]);
+    output.position = mul(input.position, buffer_pass.transform);
+    output.position = mul(output.position,lightBufferData.view_projection[index_array]);
 
     // for point lights, output.position is in view space this because we do the paraboloid projection here
     if (lightBufferData.light_is_point())

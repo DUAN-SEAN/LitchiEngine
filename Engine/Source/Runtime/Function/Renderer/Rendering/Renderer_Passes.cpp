@@ -100,7 +100,6 @@ namespace LitchiRuntime
 		// All objects are rendered from the lights point of view.
 		// Opaque objects write their depth information to a depth buffer, using just a vertex shader.
 		// Transparent objects read the opaque depth but don't write their own, instead, they write their color information using a pixel shader.
-
 		auto camera = rendererPath->GetRenderCamera();
 		auto& rendererables = rendererPath->GetRenderables();
 
@@ -140,6 +139,15 @@ namespace LitchiRuntime
 		pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
 		pso.render_target_depth_texture = tex_depth;
 
+		// clear here and not via the render pass, which can dynamically start and end based on various toggles
+		{
+			if (pso.render_target_color_textures[0])
+			{
+				cmd_list->ClearRenderTarget(pso.render_target_color_textures[0], Color::standard_white);
+			}
+			cmd_list->ClearRenderTarget(pso.render_target_depth_texture, rhi_color_dont_care, 0.0f);
+		}
+
 		for (uint32_t light_index = 0; light_index < lightCount; light_index++)
 		{
 			const auto& lightData = rendererLightGroup.m_light_arr[light_index];
@@ -170,17 +178,6 @@ namespace LitchiRuntime
 				}
 
 			}
-
-			//// clear here and not via the render pass, which can dynamically start and end based on various toggles
-			//{
-			//	if (pso.render_target_color_textures[0])
-			//	{
-			//		cmd_list->ClearRenderTarget(pso.render_target_color_textures[0], Color::standard_white);
-			//	}
-			//	cmd_list->ClearRenderTarget(pso.render_target_depth_texture, rhi_color_dont_care, 0.0f);
-			//}
-
-
 
 			for (uint32_t array_index = 0; array_index < lightData.m_shadow_count; array_index++)
 			{

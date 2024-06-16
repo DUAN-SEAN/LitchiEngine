@@ -397,7 +397,8 @@ namespace LitchiRuntime
 			if (needUpdated)
 			{
 
-				const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
+				const uint32_t resolution = 4096;
+				//const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
 				if (this->m_renderables.find(Renderer_Entity::Light) != m_renderables.end())
 				{
 					m_rendererLightGroup.m_light_arr.clear();
