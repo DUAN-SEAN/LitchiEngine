@@ -501,6 +501,28 @@ float microw_shadowing_cod(float n_dot_l, float visibility)
     return microShadow * microShadow;
 }
 
+float3 project_onto_paraboloid(float3 light_to_vertex_view, float near_plane, float far_plane)
+{
+    float3 ndc = 0.0f;
+
+    // normalize the light to vertex vector
+    float d = length(light_to_vertex_view);
+    light_to_vertex_view /= d;
+
+    // project onto paraboloid
+    ndc.xy = light_to_vertex_view.xy / (light_to_vertex_view.z + 1.0f);
+
+     // calculate reverse depth
+    ndc.z = (far_plane - d) / (far_plane - near_plane);
+
+    // if the vertex is behind the light, clamp it to the edge of the circular paraboloid
+    float is_valid = step(0.0f, light_to_vertex_view.z);
+    float radius_squared = dot(ndc.xy, ndc.xy);
+    float clamped_radius = sqrt(clamp(radius_squared, 0.0f, 1.0f));
+    ndc.xy = is_valid * ndc.xy + (1.0f - is_valid) * (ndc.xy / clamped_radius);
+
+    return ndc;
+}
 /*------------------------------------------------------------------------------
     PRIMITIVES
 ------------------------------------------------------------------------------*/

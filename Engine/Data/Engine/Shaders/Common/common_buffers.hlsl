@@ -92,72 +92,78 @@ struct LightBufferData
     
     float compare_depth(float3 uv, float compare)
     {
-        // float3 -> uv, slice
-        if (light_is_directional())
-            return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
+        return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
+        //// float3 -> uv, slice
+        //if (light_is_directional())
+        //    return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
         
-        // float3 -> direction
-        if (light_is_point())
-            return tex_light_point_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
+        //// float3 -> direction
+        //if (light_is_point())
+        //    return tex_light_point_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
         
-        // float3 -> uv, 0
-        if (light_is_spot()) 
-            return tex_light_spot_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv.xy, compare).r;
+        //// float3 -> uv, 0
+        //if (light_is_spot()) 
+        //    return tex_light_spot_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv.xy, compare).r;
     
-        return 0.0f;
+        //return 0.0f;
     }
     
     float sample_depth(float3 uv)
     {
-        // float3 -> uv, slice
-        if (light_is_directional())
-            return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
+        return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
+        //// float3 -> uv, slice
+        //if (light_is_directional())
+        //    return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
         
-        // float3 -> direction
-        if (light_is_point())
-            return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
+        //// float3 -> direction
+        //if (light_is_point())
+        //    return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
     
-        // float3 -> uv, 0
-        if (light_is_spot())
-            return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
+        //// float3 -> uv, 0
+        //if (light_is_spot())
+        //    return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
     
-        return 0.0f;
+        //return 0.0f;
     }
     
     float3 sample_color(float3 uv)
     {
-        // float3 -> uv, slice
-        if (light_is_directional())
-            return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
+        return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
+        //// float3 -> uv, slice
+        //if (light_is_directional())
+        //    return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
     
-        // float3 -> direction
-        if (light_is_point())
-            return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
+        //// float3 -> direction
+        //if (light_is_point())
+        //    return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
     
-        // float3 -> uv, 0
-        if (light_is_spot())
-            return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
+        //// float3 -> uv, 0
+        //if (light_is_spot())
+        //    return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
         
-        return 0.0f;
+        //return 0.0f;
     }
     
     float2 compute_resolution()
     {
         float2 resolution;
         
-        if (light_is_directional())
-        {
-            uint layer_count;
-            tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
-        }
-        else if (light_is_point())
-        {
-            tex_light_point_depth.GetDimensions(resolution.x, resolution.y);
-        }
-        else if (light_is_spot())
-        {
-            tex_light_spot_depth.GetDimensions(resolution.x, resolution.y);
-        }
+        //if (light_is_directional())
+        //{
+        //    uint layer_count;
+        //    tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
+        //}
+        //else if (light_is_point())
+        //{
+        //    tex_light_point_depth.GetDimensions(resolution.x, resolution.y);
+        //}
+        //else if (light_is_spot())
+        //{
+        //    tex_light_spot_depth.GetDimensions(resolution.x, resolution.y);
+        //}
+        
+        uint layer_count;
+        tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
 
         return resolution;
     }

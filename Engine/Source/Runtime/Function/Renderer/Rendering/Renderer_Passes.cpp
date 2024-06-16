@@ -63,7 +63,7 @@ namespace LitchiRuntime
 				return;
 
 			// Skip objects outside of the view frustum
-			if (!rendererPath->IsInLightViewFrustum(renderable, array_index))
+			if (!rendererPath->GetRenderCamera()->IsInViewFrustum(renderable))
 				return;
 
 
@@ -129,11 +129,21 @@ namespace LitchiRuntime
 
 
 		// Go through all of the lights
-		const auto& entities_light = rendererables[Renderer_Entity::Light];
-		size_t lightCount = entities_light.size();
+		const auto& rendererLightGroup = rendererPath->GetRendererLightGroup();
+		const auto& lightCount = rendererLightGroup.GetLightCount();
+		// Acquire light's shadow maps
+		RHI_Texture* tex_depth = rendererLightGroup.m_texture_depth.get();
+		RHI_Texture* tex_color = rendererLightGroup.m_texture_color.get();
+		if (!tex_depth)
+			return;
+
+		pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
+		pso.render_target_depth_texture = tex_depth;
+
 		for (uint32_t light_index = 0; light_index < lightCount; light_index++)
 		{
-			Light* light = entities_light[light_index]->GetComponent<Light>();
+			const auto& lightData = rendererLightGroup.m_light_arr[light_index];
+			Light* light = lightData.m_light;
 
 			// Can happen when loading a new scene and the lights get deleted
 			if (!light)
@@ -147,16 +157,8 @@ namespace LitchiRuntime
 			if (is_transparent_pass && !light->GetShadowsTransparentEnabled())
 				continue;
 
-			// Acquire light's shadow maps
-			RHI_Texture* tex_depth = rendererPath->GetShadowDepthTexture();
-			RHI_Texture* tex_color = rendererPath->GetShadowColorTexture();
-			if (!tex_depth)
-				continue;
-
 			// define light pso
 			{
-				pso.render_target_color_textures[0] = tex_color; // always bind so we can clear to white (in case there are no transparent objects)
-				pso.render_target_depth_texture = tex_depth;
 				if (light->GetLightType() == LightType::Directional)
 				{
 					// disable depth clipping so that we can capture silhouettes even behind the light
@@ -179,39 +181,43 @@ namespace LitchiRuntime
 			}
 
 
-			for (uint32_t array_index = 0; array_index < tex_depth->GetArrayLength(); array_index++)
+
+			for (uint32_t array_index = 0; array_index < lightData.m_shadow_count; array_index++)
 			{
-				const Matrix& view_projection = rendererPath->GetLightViewMatrix(array_index) * rendererPath->GetLightProjectionMatrix(array_index);
+				pso.render_target_array_index = 2 * light_index + array_index;
 
 				bool needBeginRenderPass = true;
 
 				if(!entities.empty())
 				{
+					int64_t index_start = !is_transparent_pass ? 0 : rendererPath->GetMeshIndexTransparent();
+					int64_t index_end = !is_transparent_pass ? rendererPath->GetMeshIndexTransparent() : static_cast<int64_t>(rendererPath->GetRenderables()[Renderer_Entity::Mesh].size());
+
 					// draw non skin go
-					for (GameObject* entity : entities)
+					for (int i= index_start ; i<index_end;i++)
 					{
+						bool needs_pixel_shader =  is_transparent_pass;
+						GameObject* entity = entities[i];
 						if(SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>())
 						{
 							// draw has skin go
 							pso.shader_vertex = shader_skin_v;
-							pso.shader_pixel = shader_skin_p;
+							pso.shader_pixel = needs_pixel_shader?shader_skin_p:nullptr;
 						}else
 						{
 							// Set pipeline state
 							pso.shader_vertex = shader_v;
-							pso.shader_pixel = shader_p;
+							pso.shader_pixel = needs_pixel_shader?shader_p:nullptr;
 						}
 
-						pso.render_target_array_index = array_index;
 
 						cmd_list->SetPipelineState(pso, needBeginRenderPass);
+						cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
 						needBeginRenderPass = false;
 
 						// Set pass constants with cascade transform
-
-						// m_cb_pass_cpu.set_f3_value2(static_cast<float>(array_index), static_cast<float>(light->GetIndex()), 0.0f);
 						m_cb_pass_cpu.set_light(static_cast<float>(array_index), static_cast<float>(light_index), lightCount);
-						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix() * view_projection;
+						m_cb_pass_cpu.transform = entity->GetComponent<Transform>()->GetMatrix();
 
 						/*m_pcb_pass_cpu.set_f3_value(
 							material->HasTexture(MaterialTexture::AlphaMask) ? 1.0f : 0.0f,
@@ -308,6 +314,8 @@ namespace LitchiRuntime
 		bool needBeginRenderPass = true;
 		int64_t index_start = !is_transparent_pass ? 0 : rendererPath->GetMeshIndexTransparent();
 		int64_t index_end = !is_transparent_pass ? rendererPath->GetMeshIndexTransparent() : static_cast<int64_t>(rendererPath->GetRenderables()[Renderer_Entity::Mesh].size());
+		const auto& rendererLightGroup = rendererPath->GetRendererLightGroup();
+		const auto& lightCount = rendererLightGroup.GetLightCount();
 		for (int64_t i = index_start; i < index_end; i++)
 		{
 			GameObject* entity = entities[i];
@@ -375,11 +383,11 @@ namespace LitchiRuntime
 				cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
 			}
 
-			if(rendererPath->GetMainLight()!=nullptr)
+			if(lightCount>0)
 			{
 				// just main light
-				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererPath->GetShadowDepthTexture());
-				m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererLightGroup.m_texture_depth);
+				m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), lightCount);
 				cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererPath->GetLightBuffer());
 				
 			}
@@ -795,6 +803,8 @@ namespace LitchiRuntime
 		RHI_Shader* shader_p = selectMaterial->GetPixelShader();
 
 		auto camera = rendererPath->GetRenderCamera();
+		const auto& rendererLightGroup = rendererPath->GetRendererLightGroup();
+		const auto& lightCount = rendererLightGroup.GetLightCount();
 
 		// define PipelineState
 		static RHI_PipelineState pso;
@@ -822,7 +832,7 @@ namespace LitchiRuntime
 			EASY_BLOCK("PushPassConstants")
 			// Set pass constants with cascade transform
 			m_cb_pass_cpu.transform = transform;
-			m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), rendererPath->GetLightCount());
+			m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), lightCount);
 			PushPassConstants(cmd_list);
 			EASY_END_BLOCK
 		}

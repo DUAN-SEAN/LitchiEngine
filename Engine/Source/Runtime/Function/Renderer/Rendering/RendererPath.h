@@ -2,6 +2,7 @@
 #pragma once
 
 #include "Renderer_Definitions.h"
+#include "LibTIFF4/tiff.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
@@ -27,6 +28,68 @@ namespace LitchiRuntime
 		SelectedResourceType_Material,
 		SelectedResourceType_Mesh,
 		SelectedResourceType_Texture2D,
+	};
+
+	struct RendererLightData
+	{
+		// Light & Shadow
+		const Matrix& GetLightViewMatrix(uint32_t index = 0) const
+		{
+			return m_matrix_view[index];
+		}
+
+		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const
+		{
+			return m_matrix_projection[index];
+		}
+
+		bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const
+		{
+			if (!m_light)
+			{
+				return true;
+			}
+
+			BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+			const BoundingBox& box = renderable->GetBoundingBox(type);
+			const auto center = box.GetCenter();
+			const auto extents = box.GetExtents();
+
+			// ensure that potential shadow casters from behind the near plane are not rejected
+			const bool ignore_near_plane = (m_light->GetLightType() == LightType::Directional) ? true : false;
+
+			return m_frustums[index].IsVisible(center, extents, ignore_near_plane);
+		}
+
+		Light* m_light = nullptr;
+		std::array<Matrix, 6> m_matrix_view;
+		std::array<Matrix, 6> m_matrix_projection;
+		std::array<Frustum, 6> m_frustums;
+		int32_t m_shadow_count{0};
+	};
+
+	struct RendererLightGroup
+	{
+		/* Light Limit Count */
+		inline static int32_t MaxDirectionalLightCount = 1;
+		inline static int32_t MaxPointLightCount = 128;
+		inline static int32_t MaxSpotLightCount = 128;
+
+		const int32_t GetLightCount()const { return m_light_arr.size(); }
+
+		int32_t m_directional_light_count{0};
+		int32_t m_point_light_count{ 0 };
+		int32_t m_spot_light_count{ 0 };
+
+		/* Light RendererData */
+		std::vector<RendererLightData> m_light_arr{};
+
+		/* Light shadow map, per lightType two texture buffer(depth/color) */
+		std::shared_ptr<RHI_Texture> m_texture_color{};
+		std::shared_ptr<RHI_Texture> m_texture_depth{};
+
+		// Light buffer
+		std::shared_ptr<RHI_StructuredBuffer> m_light_structure_buffer;
 	};
 
 	// rendererPath, completed once pass, render to texture
@@ -62,11 +125,12 @@ namespace LitchiRuntime
 		void SetRenderTarget(float width, float height);
 		std::shared_ptr<RHI_Texture> GetColorRenderTarget() { return m_colorRenderTarget; }
 		std::shared_ptr<RHI_Texture> GetDepthRenderTarget() { return m_depthRenderTarget; }
-		std::shared_ptr<RHI_StructuredBuffer> GetLightBuffer() { return m_light_structure_buffer; }
+		std::shared_ptr<RHI_StructuredBuffer> GetLightBuffer() { return m_rendererLightGroup.m_light_structure_buffer; }
 
 		UICanvas* GetCanvas();
-		Light* GetMainLight() const { return m_mainLight; }
+		/*Light* GetMainLight() const { return m_mainLight; }*/
 		size_t GetLightCount() const;
+		const RendererLightGroup& GetRendererLightGroup()const { return m_rendererLightGroup; }
 
 		//-- SelectedAsset  --//
 		void UpdateSelectedAssetViewResource(Material* material, Mesh* mesh, RHI_Texture2D* texture_2d);
@@ -76,12 +140,12 @@ namespace LitchiRuntime
 		SelectedResourceType GetSelectedResourceType() const { return m_selectedResType; }
 
 		// Light & Shadow
-		const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
+	/*	const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
 		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
 		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
-		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }
-		uint32_t GetShadowArraySize() const;
-		bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
+		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }*/
+		//uint32_t GetShadowArraySize() const;
+		//bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
 
 		// Bone
 		std::shared_ptr<RHI_ConstantBuffer>  GetSelectedMeshBoneConstantBuffer() { return m_selectedMesh_bone_constant_buffer; }
@@ -93,17 +157,17 @@ namespace LitchiRuntime
 
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
-		void CreateLightBuffer();
+		//void CreateLightBuffer();
 
 		std::string GetRenderPathName() const;
 		bool CheckIsBuildInRendererCamera();
 
-		void UpdateLightBuffer();
-		void UpdateDefaultLightBuffer();
-		bool CheckShadowMapNeedRecreate();
-		void CreateShadowMap();
-		void ComputeLightViewMatrix();
-		void ComputeLightProjectionMatrix();
+		//void UpdateLightBuffer();
+		//void UpdateDefaultLightBuffer();
+		//bool CheckShadowMapNeedRecreate();
+		//void CreateShadowMap();
+	/*	void ComputeLightViewMatrix();
+		void ComputeLightProjectionMatrix();*/
 
 
         float GetSquaredDistance(const GameObject* entity);
@@ -135,14 +199,17 @@ namespace LitchiRuntime
 
 		//-- Light --//
 		// Light buffer
-		std::shared_ptr<RHI_StructuredBuffer> m_light_structure_buffer;
-		// one camera to light
-		Light* m_mainLight = nullptr;
-		std::array<Matrix, 6> m_matrix_view;
-		std::array<Matrix, 6> m_matrix_projection;
-		std::array<Frustum, 6> m_frustums;
-		// shadow
-		ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
+		//std::shared_ptr<RHI_StructuredBuffer> m_light_structure_buffer;
+
+		//// one camera to light
+		//Light* m_mainLight = nullptr;
+		RendererLightGroup m_rendererLightGroup;
+		//std::array<Matrix, 6> m_matrix_view;
+		//std::array<Matrix, 6> m_matrix_projection;
+		//std::array<Frustum, 6> m_frustums;
+		//// shadow
+		//ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
+
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;
 

@@ -49,7 +49,7 @@ namespace LitchiRuntime
 			CreateDepthRenderTarget();
 		}
 
-		CreateLightBuffer();
+		//CreateLightBuffer();
 	}
 
 	RendererPath::~RendererPath()
@@ -62,7 +62,6 @@ namespace LitchiRuntime
 
 		m_depthRenderTarget = nullptr;
 		m_colorRenderTarget = nullptr;
-		m_light_structure_buffer = nullptr;
 
 		if (m_selectedMesh_bone_constant_buffer)
 		{
@@ -73,7 +72,7 @@ namespace LitchiRuntime
 	void RendererPath::SetScene(Scene* scene)
 	{
 		m_renderScene = scene;
-		m_mainLight = nullptr;
+		//m_mainLight = nullptr;
 		m_needUpdateRenderScene = true;
 	}
 
@@ -94,13 +93,13 @@ namespace LitchiRuntime
 			return false;
 		}
 
-		auto& meshEntityList  = m_renderables[Renderer_Entity::Mesh];
-		if(meshEntityList.size()==0)
+		auto& meshEntityList = m_renderables[Renderer_Entity::Mesh];
+		if (meshEntityList.size() == 0)
 		{
 			return false;
 		}
 
-		if(meshEntityList.size() == m_meshIndexTransparent)
+		if (meshEntityList.size() == m_meshIndexTransparent)
 		{
 			return false;
 		}
@@ -230,11 +229,11 @@ namespace LitchiRuntime
 		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, flags_depth_buffer, rtName.c_str());
 	}
 
-	void RendererPath::CreateLightBuffer()
-	{
-		uint32_t stride = static_cast<uint32_t>(sizeof(Sb_Light)) * rhi_max_array_size_lights;
-		m_light_structure_buffer = std::make_shared<RHI_StructuredBuffer>(stride, 1, "lights");
-	}
+	//void RendererPath::CreateLightBuffer()
+	//{
+	//	uint32_t stride = static_cast<uint32_t>(sizeof(Sb_Light)) * rhi_max_array_size_lights;
+	//	m_light_structure_buffer = std::make_shared<RHI_StructuredBuffer>(stride, 1, "lights");
+	//}
 
 	std::string RendererPath::GetRenderPathName() const
 	{
@@ -265,7 +264,7 @@ namespace LitchiRuntime
 
 		UpdateSceneObject();
 
-		if(!CheckIsBuildInRendererCamera() && HasRenderable(Renderer_Entity::Camera))
+		if (!CheckIsBuildInRendererCamera() && HasRenderable(Renderer_Entity::Camera))
 		{
 			auto cameraObject = m_renderables[Renderer_Entity::Camera][0];
 			auto camera = cameraObject->GetComponent<Camera>();
@@ -382,307 +381,526 @@ namespace LitchiRuntime
 	{
 		if (m_rendererPathType == RendererPathType_AssetView)
 		{
-			UpdateDefaultLightBuffer();
+			// TODO
+			//UpdateDefaultLightBuffer();
 		}
 		else
 		{
 
-			if (GetLightCount() == 0)
+			const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
+			if (this->m_renderables.find(Renderer_Entity::Light) != m_renderables.end())
 			{
-				m_mainLight = nullptr;
-			}
-			else
-			{
-				auto lightObject = this->m_renderables.at(Renderer_Entity::Light)[0];
-				m_mainLight = lightObject->GetComponent<Light>();
+				m_rendererLightGroup.m_light_arr.clear();
+
+				float near_plane = 0.01f;
+				auto& lightObjectArr = m_renderables[Renderer_Entity::Light];
+				for (auto lightObject : lightObjectArr)
+				{
+					auto light = lightObject->GetComponent<Light>();
+					const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
+					const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
+					RendererLightData rendererLightData{};
+					// set light
+					rendererLightData.m_light = light;
+					rendererLightData.m_shadow_count = 2;
+					switch (light->GetLightType())
+					{
+					case LightType::Directional:
+					{
+
+						// View matrix
+						Vector3 target = Vector3::Zero;
+						if (m_renderCamera)
+						{
+							target = m_renderCamera->GetPosition();
+						}
+						Vector3 directinalDeployPosition = target - forward * orthographic_depth * 0.8f;
+						rendererLightData.m_matrix_view[0] = Matrix::CreateLookAtLH(directinalDeployPosition, target, Vector3::Up); // near
+						rendererLightData.m_matrix_view[1] = rendererLightData.m_matrix_view[0];                                      // far
+
+						// Projection matrix
+						for (uint32_t i = 0; i < 2; i++)
+						{
+							// determine the orthographic extent based on the cascade index
+							float extent = (i == 0) ? orthographic_extent_near : orthographic_extent_far;
+
+							// orthographic bounds
+							float left = -extent;
+							float right = extent;
+							float bottom = -extent;
+							float top = extent;
+							float far_plane = orthographic_depth;
+
+							rendererLightData.m_matrix_projection[i] = Matrix::CreateOrthoOffCenterLH(left, right, bottom, top, far_plane, near_plane);
+							rendererLightData.m_frustums[i] = Frustum(rendererLightData.m_matrix_view[i], rendererLightData.m_matrix_projection[i], far_plane - near_plane);
+						}
+
+					}
+					break;
+					case LightType::Point:
+					{
+						// View matrix
+						rendererLightData.m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, Vector3::Up); // front paraboloid
+						rendererLightData.m_matrix_view[1] = Matrix::CreateLookAtLH(position, position - forward, Vector3::Up); // back paraboloid
+
+						//const float aspect_ratio = static_cast<float>(m_shadow_map.texture_depth->GetWidth()) / static_cast<float>(m_shadow_map.texture_depth->GetHeight());
+						const float aspect_ratio = 1.0f;
+						const float fov = light->GetAngle() * 2.0f;
+						Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(fov, aspect_ratio, light->GetRange(), near_plane);
+
+						rendererLightData.m_matrix_projection[0] = projection;
+						rendererLightData.m_frustums[0] = Frustum(rendererLightData.m_matrix_view[0], projection, light->GetRange());
+					}
+					break;
+					case LightType::Spot:
+					{
+						// View matrix
+						rendererLightData.m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, Vector3::Up);
+
+						//const float aspect_ratio = static_cast<float>(m_shadow_map.texture_depth->GetWidth()) / static_cast<float>(m_shadow_map.texture_depth->GetHeight());
+						const float aspect_ratio = 1.0f;
+						const float fov = light->GetAngle() * 2.0f;
+						Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(fov, aspect_ratio, light->GetRange(), near_plane);
+
+						rendererLightData.m_matrix_projection[0] = projection;
+						rendererLightData.m_frustums[0] = Frustum(rendererLightData.m_matrix_view[0], projection, light->GetRange());
+					}
+
+					break;
+					}
+
+
+
+					// add to light cache
+					m_rendererLightGroup.m_light_arr.push_back(rendererLightData);
+				}
 			}
 
-			if (!m_mainLight)
+			// create shadow map
+			RHI_Format format_depth = RHI_Format::D32_Float;
+			RHI_Format format_color = RHI_Format::R16G16B16A16_Float;// same other
+			uint32_t flags = RHI_Texture_Rtv | RHI_Texture_Srv | RHI_Texture_ClearBlit;
+			auto directionalLightCount = m_rendererLightGroup.GetLightCount();
+			if (m_rendererLightGroup.m_texture_depth == nullptr || m_rendererLightGroup.m_texture_depth->GetArrayLength() != directionalLightCount)
 			{
-				return;
+				if (m_rendererLightGroup.m_texture_depth)
+				{
+					m_rendererLightGroup.m_texture_depth.reset();
+				}
+				m_rendererLightGroup.m_texture_depth = std::make_unique<RHI_Texture2DArray>(
+					resolution, resolution, format_depth, 2 * directionalLightCount, flags, GetRenderPathName() + "_directional_light_depth_arr");
+
+				if (m_rendererLightGroup.m_texture_color)
+				{
+					m_rendererLightGroup.m_texture_color.reset();
+				}
+				//if (shadowsTransparentEnabled)
+				{
+					m_rendererLightGroup.m_texture_color = std::make_unique<RHI_Texture2DArray>(
+						resolution, resolution, format_color, 2 * directionalLightCount, flags, GetRenderPathName() + "_directional_light_color_arr");
+				}
 			}
 
-			// check need Create New ShadowMap
-			if (CheckShadowMapNeedRecreate())
+			// update light buffer
+			static std::array<Sb_Light, rhi_max_array_size_lights> properties;
+
+			// clear
+			properties.fill(Sb_Light{});
+			size_t lightCount = m_rendererLightGroup.GetLightCount();
+			for (int index = 0; index < lightCount; index++)
 			{
-				CreateShadowMap();
+				const auto& rendererLightData = m_rendererLightGroup.m_light_arr[index];
+				const auto light = rendererLightData.m_light;
+
+				for (uint32_t i = 0; i < rendererLightData.m_shadow_count; i++)
+				{
+					if (light->GetLightType() == LightType::Point)
+					{
+						// we do paraboloid projection in the vertex shader so we only want the view here
+						properties[index].view_projection[i] = rendererLightData.GetLightViewMatrix(i);
+					}
+					else
+					{
+						properties[index].view_projection[i] = rendererLightData.GetLightViewMatrix(i) * rendererLightData.GetLightProjectionMatrix(i);
+					}
+				}
+
+				properties[index].intensity = light->GetIntensityWatt(m_renderCamera);
+				properties[index].color = light->GetColor();
+				properties[index].range = light->GetRange();
+				properties[index].angle = light->GetAngle();
+
+				properties[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+				properties[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+
+				properties[index].flags = 0;
+				properties[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
+				properties[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
+				properties[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
+				properties[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
+				properties[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
+				/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
+				m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
 			}
 
-			// Update Light Shader
-			if (m_mainLight && m_mainLight->GetShadowsEnabled() && m_renderCamera)
+			// cpu to gpu
+			uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * lightCount;
+			if(m_rendererLightGroup.m_light_structure_buffer==nullptr)
 			{
-				ComputeLightViewMatrix();
-				ComputeLightProjectionMatrix();
+				uint32_t stride = static_cast<uint32_t>(sizeof(Sb_Light)) * rhi_max_array_size_lights;
+				m_rendererLightGroup.m_light_structure_buffer = std::make_shared<RHI_StructuredBuffer>(stride, 1, "lights");
 			}
+			m_rendererLightGroup.m_light_structure_buffer->ResetOffset();
+			m_rendererLightGroup.m_light_structure_buffer->Update(&properties[0], update_size);
 
-			UpdateLightBuffer();
+
+			// todo: old code
+			//if (GetLightCount() == 0)
+			//{
+			//	m_mainLight = nullptr;
+			//}
+			//else
+			//{
+			//	auto lightObject = this->m_renderables.at(Renderer_Entity::Light)[0];
+			//	m_mainLight = lightObject->GetComponent<Light>();
+			//}
+
+			//if (!m_mainLight)
+			//{
+			//	return;
+			//}
+
+			//// check need Create New ShadowMap
+			//if (CheckShadowMapNeedRecreate())
+			//{
+			//	CreateShadowMap();
+			//}
+
+			//// Update Light Shader
+			//if (m_mainLight && m_mainLight->GetShadowsEnabled() && m_renderCamera)
+			//{
+			//	ComputeLightViewMatrix();
+			//	ComputeLightProjectionMatrix();
+			//}
+
+			//UpdateLightBuffer();
 		}
 	}
 
-	const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
-	{
-		LC_ASSERT(index < static_cast<uint32_t>(m_matrix_view.size()));
+	//const Matrix& RendererPath::GetLightViewMatrix(uint32_t index /*= 0*/) const
+	//{
+	//	LC_ASSERT(index < static_cast<uint32_t>(m_matrix_view.size()));
 
-		return m_matrix_view[index];
-	}
+	//	return m_matrix_view[index];
+	//}
 
-	const Matrix& RendererPath::GetLightProjectionMatrix(uint32_t index /*= 0*/) const
-	{
-		LC_ASSERT(index < static_cast<uint32_t>(m_matrix_projection.size()));
+	//const Matrix& RendererPath::GetLightProjectionMatrix(uint32_t index /*= 0*/) const
+	//{
+	//	LC_ASSERT(index < static_cast<uint32_t>(m_matrix_projection.size()));
 
-		return m_matrix_projection[index];
-	}
+	//	return m_matrix_projection[index];
+	//}
 
-	uint32_t RendererPath::GetShadowArraySize() const
-	{
-		return m_shadow_map.texture_depth ? m_shadow_map.texture_depth->GetArrayLength() : 0;
-	}
+	//uint32_t RendererPath::GetShadowArraySize() const
+	//{
+	//	return m_shadow_map.texture_depth ? m_shadow_map.texture_depth->GetArrayLength() : 0;
+	//}
 
-	void RendererPath::CreateShadowMap()
-	{
-		// Early exit if there is no change in shadow map resolution
-		const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
+	//void RendererPath::CreateShadowMap()
+	//{
+	//	// Early exit if there is no change in shadow map resolution
+	//	const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
 
-		if (m_shadow_map.texture_depth)
-		{
-			const bool resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
-			if (!resolution_changed)
-				return;
-		}
+	//	if (m_shadow_map.texture_depth)
+	//	{
+	//		const bool resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
+	//		if (!resolution_changed)
+	//			return;
+	//	}
 
-		// Early exit if this light casts no shadows
-		if (!m_mainLight->GetShadowsEnabled())
-		{
-			m_shadow_map.texture_depth.reset();
-			return;
-		}
-		bool shadowsTransparentEnabled = m_mainLight->GetShadowsTransparentEnabled();
-		if (!shadowsTransparentEnabled)
-		{
-			m_shadow_map.texture_color.reset();
-		}
+	//	// Early exit if this light casts no shadows
+	//	if (!m_mainLight->GetShadowsEnabled())
+	//	{
+	//		m_shadow_map.texture_depth.reset();
+	//		return;
+	//	}
+	//	bool shadowsTransparentEnabled = m_mainLight->GetShadowsTransparentEnabled();
+	//	if (!shadowsTransparentEnabled)
+	//	{
+	//		m_shadow_map.texture_color.reset();
+	//	}
 
-		RHI_Format format_depth = RHI_Format::D32_Float;
-		RHI_Format format_color = RHI_Format::R16G16B16A16_Float;// same other
+	//	RHI_Format format_depth = RHI_Format::D32_Float;
+	//	RHI_Format format_color = RHI_Format::R16G16B16A16_Float;// same other
 
-		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv | RHI_Texture_ClearBlit;
-		if (m_mainLight->GetLightType() == LightType::Directional)
-		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, flags_depth_buffer, "shadow_map_directional");
+	//	/*uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv | RHI_Texture_ClearBlit;
+	//	if (m_mainLight->GetLightType() == LightType::Directional)
+	//	{
+	//		m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, flags_depth_buffer, "shadow_map_directional");
 
-			if (shadowsTransparentEnabled)
-			{
-				m_shadow_map.texture_color = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_color, 2, flags_depth_buffer, "shadow_map_directional_color");
-			}
+	//		if (shadowsTransparentEnabled)
+	//		{
+	//			m_shadow_map.texture_color = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_color, 2, flags_depth_buffer, "shadow_map_directional_color");
+	//		}
 
-		}
-		else if (m_mainLight->GetLightType() == LightType::Point)
-		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_TextureCube>(resolution, resolution, format_depth, flags_depth_buffer, "shadow_map_point_color");
+	//	}
+	//	else if (m_mainLight->GetLightType() == LightType::Point)
+	//	{
+	//		m_shadow_map.texture_depth = std::make_unique<RHI_TextureCube>(resolution, resolution, format_depth, flags_depth_buffer, "shadow_map_point_color");
 
-			if (shadowsTransparentEnabled)
-			{
-				m_shadow_map.texture_color = std::make_unique<RHI_TextureCube>(resolution, resolution, format_color, flags_depth_buffer, "shadow_map_point_color");
-			}
-		}
-		else if (m_mainLight->GetLightType() == LightType::Spot)
-		{
-			m_shadow_map.texture_depth = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_depth, flags_depth_buffer, "shadow_map_spot_color");
+	//		if (shadowsTransparentEnabled)
+	//		{
+	//			m_shadow_map.texture_color = std::make_unique<RHI_TextureCube>(resolution, resolution, format_color, flags_depth_buffer, "shadow_map_point_color");
+	//		}
+	//	}
+	//	else if (m_mainLight->GetLightType() == LightType::Spot)
+	//	{
+	//		m_shadow_map.texture_depth = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_depth, flags_depth_buffer, "shadow_map_spot_color");
 
-			if (shadowsTransparentEnabled)
-			{
-				m_shadow_map.texture_color = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_color, flags_depth_buffer, "shadow_map_spot_color");
-			}
-		}
-	}
+	//		if (shadowsTransparentEnabled)
+	//		{
+	//			m_shadow_map.texture_color = std::make_unique<RHI_Texture2D>(resolution, resolution, 1, format_color, flags_depth_buffer, "shadow_map_spot_color");
+	//		}
+	//	}*/
 
-	bool RendererPath::IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const
-	{
-		if (!m_mainLight)
-		{
-			return true;
-		}
+	//	// spot light:        1 slice
+	//	// directional light: 2 slices for cascades
+	//	// point light:       2 slices for front and back paraboloid
+	//	uint32_t flags = RHI_Texture_Rtv | RHI_Texture_Srv | RHI_Texture_ClearBlit;
+	//	m_shadow_map.texture_depth = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_depth, 2, flags, "light_depth");
+	//	if (shadowsTransparentEnabled)
+	//	{
+	//		m_shadow_map.texture_color = std::make_unique<RHI_Texture2DArray>(resolution, resolution, format_color, 2, flags, "light_color");
+	//	}
+	//}
 
-		BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
-		const BoundingBox& box = renderable->GetBoundingBox(type);
-		const auto center = box.GetCenter();
-		const auto extents = box.GetExtents();
+	//bool RendererPath::IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const
+	//{
+	//	if (!m_mainLight)
+	//	{
+	//		return true;
+	//	}
 
-		// ensure that potential shadow casters from behind the near plane are not rejected
-		const bool ignore_near_plane = (m_mainLight->GetLightType() == LightType::Directional) ? true : false;
+	//	BoundingBoxType type = renderable->HasInstancing() ? BoundingBoxType::TransformedInstances : BoundingBoxType::Transformed;
+	//	const BoundingBox& box = renderable->GetBoundingBox(type);
+	//	const auto center = box.GetCenter();
+	//	const auto extents = box.GetExtents();
 
-		return m_frustums[index].IsVisible(center, extents, ignore_near_plane);
-	}
+	//	// ensure that potential shadow casters from behind the near plane are not rejected
+	//	const bool ignore_near_plane = (m_mainLight->GetLightType() == LightType::Directional) ? true : false;
 
-	void RendererPath::UpdateLightBuffer()
-	{
-		if (GetLightCount() == 0)
-		{
-			return;
-		}
+	//	return m_frustums[index].IsVisible(center, extents, ignore_near_plane);
+	//}
 
-		static std::array<Sb_Light, rhi_max_array_size_lights> properties;
+	//void RendererPath::UpdateLightBuffer()
+	//{
+	//	if (GetLightCount() == 0)
+	//	{
+	//		return;
+	//	}
 
-		// clear
-		properties.fill(Sb_Light{});
+	//	static std::array<Sb_Light, rhi_max_array_size_lights> properties;
 
-		const auto& lightEntities = GetRenderables().at(Renderer_Entity::Light);
-		size_t lightCount = lightEntities.size();
-		for (int index = 0; index < lightCount; index++)
-		{
-			const auto light = lightEntities[index]->GetComponent<Light>();
+	//	// clear
+	//	properties.fill(Sb_Light{});
 
-			// todo only one light(m_mainLight) has shadow
-			for (uint32_t i = 0; i < GetShadowArraySize(); i++)
-			{
-				properties[index].view_projection[i] = GetLightViewMatrix(i) * GetLightProjectionMatrix(i);
-			}
+	//	const auto& lightEntities = GetRenderables().at(Renderer_Entity::Light);
+	//	size_t lightCount = lightEntities.size();
+	//	for (int index = 0; index < lightCount; index++)
+	//	{
+	//		const auto light = lightEntities[index]->GetComponent<Light>();
 
-			properties[index].intensity = light->GetIntensityWatt(m_renderCamera);
-			properties[index].color = light->GetColor();
-			properties[index].range = light->GetRange();
-			properties[index].angle = light->GetAngle();
+	//		for (uint32_t i = 0; i < GetShadowArraySize(); i++)
+	//		{
+	//			if (light->GetLightType() == LightType::Point)
+	//			{
+	//				// we do paraboloid projection in the vertex shader so we only want the view here
+	//				properties[index].view_projection[i] = GetLightViewMatrix(i);
+	//			}
+	//			else
+	//			{
+	//				properties[index].view_projection[i] = GetLightViewMatrix(i) * GetLightProjectionMatrix(i);
+	//			}
+	//		}
 
-			properties[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
-			properties[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
+	//		properties[index].intensity = light->GetIntensityWatt(m_renderCamera);
+	//		properties[index].color = light->GetColor();
+	//		properties[index].range = light->GetRange();
+	//		properties[index].angle = light->GetAngle();
 
-			properties[index].flags = 0;
-			properties[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
-			properties[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
-			properties[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
-			properties[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
-			properties[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
-			/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
-			m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
-		}
+	//		properties[index].position = light->GetGameObject()->GetComponent<Transform>()->GetPosition();
+	//		properties[index].direction = light->GetGameObject()->GetComponent<Transform>()->GetForward();
 
-		// cpu to gpu
-		uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * lightCount;
-		m_light_structure_buffer->ResetOffset();
-		m_light_structure_buffer->Update(&properties[0], update_size);
-	}
+	//		properties[index].flags = 0;
+	//		properties[index].flags |= light->GetLightType() == LightType::Directional ? (1 << 0) : 0;
+	//		properties[index].flags |= light->GetLightType() == LightType::Point ? (1 << 1) : 0;
+	//		properties[index].flags |= light->GetLightType() == LightType::Spot ? (1 << 2) : 0;
+	//		properties[index].flags |= light->GetShadowsEnabled() ? (1 << 3) : 0;
+	//		properties[index].flags |= light->GetShadowsTransparentEnabled() ? (1 << 4) : 0;
+	//		/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
+	//		m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
+	//	}
 
-	void RendererPath::UpdateDefaultLightBuffer()
-	{
-		static std::array<Sb_Light, rhi_max_array_size_lights> properties;
-		int32_t index = 0;
-		properties[index].intensity = 4.35f;
-		properties[index].color = Color::White;
-		properties[index].range = 200.0f;
-		properties[index].angle = 0.5;
+	//	// cpu to gpu
+	//	uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * lightCount;
+	//	m_light_structure_buffer->ResetOffset();
+	//	m_light_structure_buffer->Update(&properties[0], update_size);
+	//}
 
-		properties[index].position = Vector3::Zero;
-		properties[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
+	//void RendererPath::UpdateDefaultLightBuffer()
+	//{
+	//	static std::array<Sb_Light, rhi_max_array_size_lights> properties;
+	//	int32_t index = 0;
+	//	properties[index].intensity = 4.35f;
+	//	properties[index].color = Color::White;
+	//	properties[index].range = 200.0f;
+	//	properties[index].angle = 0.5;
 
-		properties[index].flags = 0;
-		properties[index].flags |= (1 << 0);
+	//	properties[index].position = Vector3::Zero;
+	//	properties[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
 
-		// cpu to gpu
-		uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * 1;
-		m_light_structure_buffer->ResetOffset();
-		m_light_structure_buffer->Update(&properties[0], update_size);
-	}
+	//	properties[index].flags = 0;
+	//	properties[index].flags |= (1 << 0);
 
-	bool RendererPath::CheckShadowMapNeedRecreate()
-	{
-		if (!m_mainLight)
-		{
-			return false;
-		}
+	//	// cpu to gpu
+	//	uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * 1;
+	//	m_light_structure_buffer->ResetOffset();
+	//	m_light_structure_buffer->Update(&properties[0], update_size);
+	//}
 
-		// Early exit if there is no change in shadow map resolution
-		bool resolution_changed = false;
-		const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
-		if(m_shadow_map.texture_depth)
-		{
-			resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
-		}
+	//bool RendererPath::CheckShadowMapNeedRecreate()
+	//{
+	//	if (!m_mainLight)
+	//	{
+	//		return false;
+	//	}
 
-		if (m_mainLight->GetShadowsEnabled() == m_last_shadows_enabled &&
-			m_mainLight->GetShadowsTransparentEnabled() == m_last_shadows_transparent_enabled && !resolution_changed)
-		{
-			return false;
-		}
+	//	// Early exit if there is no change in shadow map resolution
+	//	bool resolution_changed = false;
+	//	const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
+	//	if (m_shadow_map.texture_depth)
+	//	{
+	//		resolution_changed = resolution != m_shadow_map.texture_depth->GetWidth();
+	//	}
+
+	//	if (m_mainLight->GetShadowsEnabled() == m_last_shadows_enabled &&
+	//		m_mainLight->GetShadowsTransparentEnabled() == m_last_shadows_transparent_enabled && !resolution_changed)
+	//	{
+	//		return false;
+	//	}
 
 
-		m_last_shadows_enabled = m_mainLight->GetShadowsEnabled();
-		m_last_shadows_transparent_enabled = m_mainLight->GetShadowsTransparentEnabled();
+	//	m_last_shadows_enabled = m_mainLight->GetShadowsEnabled();
+	//	m_last_shadows_transparent_enabled = m_mainLight->GetShadowsTransparentEnabled();
 
-		return true;
-	}
+	//	return true;
+	//}
 
-	void RendererPath::ComputeLightViewMatrix()
-	{
-		auto lightObject = m_mainLight->GetGameObject();
-		const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
-		const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
-		const Vector3 up = lightObject->GetComponent<Transform>()->GetUp();
+	//void RendererPath::ComputeLightViewMatrix()
+	//{
+	//	auto lightObject = m_mainLight->GetGameObject();
+	//	//const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
+	//	//const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
+	//	//const Vector3 up = lightObject->GetComponent<Transform>()->GetUp();
 
-		if (m_mainLight->GetLightType() == LightType::Directional)
-		{
-			if (m_renderCamera)
-			{
-				Vector3 target = m_renderCamera->GetPosition();
+	//	//if (m_mainLight->GetLightType() == LightType::Directional)
+	//	//{
+	//	//	if (m_renderCamera)
+	//	//	{
+	//	//		Vector3 target = m_renderCamera->GetPosition();
 
-				// near cascade
-				Vector3 position = target - forward * orthographic_depth * 0.8f;
-				m_matrix_view[0] = Matrix::CreateLookAtLH(position, target, Vector3::Up);
+	//	//		// near cascade
+	//	//		Vector3 position = target - forward * orthographic_depth * 0.8f;
+	//	//		m_matrix_view[0] = Matrix::CreateLookAtLH(position, target, Vector3::Up);
 
-				// far cascade
-				m_matrix_view[1] = m_matrix_view[0];
-			}
-		}
-		else if (m_mainLight->GetLightType() == LightType::Spot)
-		{
-			// Compute
-			m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, up);
-		}
-		else if (m_mainLight->GetLightType() == LightType::Point)
-		{
-			// Compute view for each side of the cube map
-			m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + Vector3::Right, Vector3::Up);       // x+
-			m_matrix_view[1] = Matrix::CreateLookAtLH(position, position + Vector3::Left, Vector3::Up);       // x-
-			m_matrix_view[2] = Matrix::CreateLookAtLH(position, position + Vector3::Up, Vector3::Backward); // y+
-			m_matrix_view[3] = Matrix::CreateLookAtLH(position, position + Vector3::Down, Vector3::Forward);  // y-
-			m_matrix_view[4] = Matrix::CreateLookAtLH(position, position + Vector3::Forward, Vector3::Up);       // z+
-			m_matrix_view[5] = Matrix::CreateLookAtLH(position, position + Vector3::Backward, Vector3::Up);       // z-
-		}
-	}
+	//	//		// far cascade
+	//	//		m_matrix_view[1] = m_matrix_view[0];
+	//	//	}
+	//	//}
+	//	//else if (m_mainLight->GetLightType() == LightType::Spot)
+	//	//{
+	//	//	// Compute
+	//	//	m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, up);
+	//	//}
+	//	//else if (m_mainLight->GetLightType() == LightType::Point)
+	//	//{
+	//	//	// Compute view for each side of the cube map
+	//	//	m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + Vector3::Right, Vector3::Up);       // x+
+	//	//	m_matrix_view[1] = Matrix::CreateLookAtLH(position, position + Vector3::Left, Vector3::Up);       // x-
+	//	//	m_matrix_view[2] = Matrix::CreateLookAtLH(position, position + Vector3::Up, Vector3::Backward); // y+
+	//	//	m_matrix_view[3] = Matrix::CreateLookAtLH(position, position + Vector3::Down, Vector3::Forward);  // y-
+	//	//	m_matrix_view[4] = Matrix::CreateLookAtLH(position, position + Vector3::Forward, Vector3::Up);       // z+
+	//	//	m_matrix_view[5] = Matrix::CreateLookAtLH(position, position + Vector3::Backward, Vector3::Up);       // z-
+	//	//}
 
-	void RendererPath::ComputeLightProjectionMatrix()
-	{
-		if (m_mainLight->GetLightType() == LightType::Directional)
-		{
-			for (uint32_t i = 0; i < 2; i++)
-			{
-				// determine the orthographic extent based on the cascade index
-				float extent = (i == 0) ? orthographic_extent_near : orthographic_extent_far;
 
-				// orthographic bounds
-				float left = -extent;
-				float right = extent;
-				float bottom = -extent;
-				float top = extent;
-				float near_plane = 0.0f;
-				float far_plane = orthographic_depth;
+	//	const Vector3 position = lightObject->GetComponent<Transform>()->GetPosition();
+	//	const Vector3 forward = lightObject->GetComponent<Transform>()->GetForward();
 
-				m_matrix_projection[i] = Matrix::CreateOrthoOffCenterLH(left, right, bottom, top, far_plane, near_plane);
-				m_frustums[i] = Frustum(m_matrix_view[i], m_matrix_projection[i], far_plane - near_plane);
-			}
-		}
-		else
-		{
-			const float aspect_ratio = static_cast<float>(m_shadow_map.texture_depth->GetWidth()) / static_cast<float>(m_shadow_map.texture_depth->GetHeight());
-			const float fov = m_mainLight->GetLightType() == LightType::Spot ? m_mainLight->GetAngle() * 2.0f : Math::Helper::PI_DIV_2;
-			Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(fov, aspect_ratio, m_mainLight->GetRange(), 0.3f);
+	//	if (m_mainLight->GetLightType() == LightType::Directional)
+	//	{
+	//		Vector3 target = Vector3::Zero;
+	//		if (m_renderCamera)
+	//		{
+	//			target = m_renderCamera->GetPosition();
+	//		}
+	//		Vector3 position = target - forward * orthographic_depth * 0.8f;
 
-			for (uint32_t i = 0; i < m_shadow_map.texture_depth->GetArrayLength(); i++)
-			{
-				m_matrix_projection[i] = projection;
-				m_frustums[i] = Frustum(m_matrix_view[i], projection, m_mainLight->GetRange());
-			}
-		}
-	}
+	//		m_matrix_view[0] = Matrix::CreateLookAtLH(position, target, Vector3::Up); // near
+	//		m_matrix_view[1] = m_matrix_view[0];                                      // far
+	//	}
+	//	else if (m_mainLight->GetLightType() == LightType::Spot)
+	//	{
+	//		m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, Vector3::Up);
+	//	}
+	//	else if (m_mainLight->GetLightType() == LightType::Point)
+	//	{
+	//		m_matrix_view[0] = Matrix::CreateLookAtLH(position, position + forward, Vector3::Up); // front paraboloid
+	//		m_matrix_view[1] = Matrix::CreateLookAtLH(position, position - forward, Vector3::Up); // back paraboloid
+	//	}
+	//}
+
+	//void RendererPath::ComputeLightProjectionMatrix()
+	//{
+	//	float near_plane = 0.01f;
+	//	if (m_mainLight->GetLightType() == LightType::Directional)
+	//	{
+	//		for (uint32_t i = 0; i < 2; i++)
+	//		{
+	//			// determine the orthographic extent based on the cascade index
+	//			float extent = (i == 0) ? orthographic_extent_near : orthographic_extent_far;
+
+	//			// orthographic bounds
+	//			float left = -extent;
+	//			float right = extent;
+	//			float bottom = -extent;
+	//			float top = extent;
+	//			float far_plane = orthographic_depth;
+
+	//			m_matrix_projection[i] = Matrix::CreateOrthoOffCenterLH(left, right, bottom, top, far_plane, near_plane);
+	//			m_frustums[i] = Frustum(m_matrix_view[i], m_matrix_projection[i], far_plane - near_plane);
+	//		}
+	//	}
+	//	else
+	//	{
+	//		/*	const float aspect_ratio = static_cast<float>(m_shadow_map.texture_depth->GetWidth()) / static_cast<float>(m_shadow_map.texture_depth->GetHeight());
+	//			const float fov = m_mainLight->GetLightType() == LightType::Spot ? m_mainLight->GetAngle() * 2.0f : Math::Helper::PI_DIV_2;
+	//			Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(fov, aspect_ratio, m_mainLight->GetRange(), 0.3f);
+
+	//			for (uint32_t i = 0; i < m_shadow_map.texture_depth->GetArrayLength(); i++)
+	//			{
+	//				m_matrix_projection[i] = projection;
+	//				m_frustums[i] = Frustum(m_matrix_view[i], projection, m_mainLight->GetRange());
+	//			}*/
+
+	//		const float aspect_ratio = static_cast<float>(m_shadow_map.texture_depth->GetWidth()) / static_cast<float>(m_shadow_map.texture_depth->GetHeight());
+	//		const float fov = m_mainLight->GetAngle() * 2.0f;
+	//		Matrix projection = Matrix::CreatePerspectiveFieldOfViewLH(fov, aspect_ratio, m_mainLight->GetRange(), near_plane);
+
+	//		m_matrix_projection[0] = projection;
+	//		m_frustums[0] = Frustum(m_matrix_view[0], projection, m_mainLight->GetRange());
+	//	}
+	//}
 
 	float RendererPath::GetSquaredDistance(const GameObject* entity)
 	{
