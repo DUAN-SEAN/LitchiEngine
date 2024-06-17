@@ -64,30 +64,29 @@ float4 mainPS(Pixel input) : SV_Target
     float4 specularTexel = u_specularMap.Sample(samplers[sampler_point_wrap], g_TexCoords) * float4(materialData.u_specular, 1.0);
     float3 normal = normalize(input.normal);
     
-    uint index_light = (uint) pass_get_f3_value2().y;
-    uint index_array = (uint) pass_get_f3_value2().x;
     uint lightCount = (uint) pass_get_f3_value2().z;
     
-    float3 lightSum = float3(0, 0, 0);
+    float3 shadowedColor = float3(0, 0, 0);
     for (int index = 0; index < lightCount; index++)
     {
-        lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
+        float3 lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
 				materialData.u_shininess, -buffer_lights[index].direction.xyz, buffer_lights[index].color.xyz, 
         buffer_lights[index].intensity);
+
+        // temp code
+        float shadow = 0;
+        bool t = pass_is_transparent();
+        if (t)
+        {
+            shadow = ShadowCalculation2(normal, input.fragPos, index);
+        }
+        else
+        {
+            shadow = ShadowCalculation2(normal, input.fragPos, index);
+        }
+        shadowedColor += (shadow) * lightSum;
     }
 
-    // temp code
-    float shadow = 0;
-    bool t = pass_is_transparent();
-    if (t)
-    {
-        shadow = ShadowCalculation(normal, input.fragPos);
-    }else
-    {
-        shadow = ShadowCalculation(normal, input.fragPos);
-    }
-
-    float3 shadowedColor = (shadow) * lightSum;
     float4 color = float4(shadowedColor, diffuseTexel.a);
     return color;
 }

@@ -26,7 +26,7 @@ Pixel_PosUv mainVS(Vertex_PosUvNorTan input)
     // for point lights, output.position is in view space this because we do the paraboloid projection here
     if (lightBufferData.light_is_point())
     {
-        float3 ndc = project_onto_paraboloid(output.position.xyz, 0.01f, lightBufferData.angle);
+        float3 ndc = project_onto_paraboloid(output.position.xyz, 0.01f, lightBufferData.range);
         output.position = float4(ndc, 1.0);
     }
 

@@ -392,7 +392,25 @@ namespace LitchiRuntime
 			if (m_rendererLightGroup.m_light_arr.size() != lightGameObjectCount)
 			{
 				needUpdated = true;
+			}else
+			{
+				for (int32_t index = 0 ;index < lightGameObjectCount; index++)
+				{
+					auto lightObject = m_renderables[Renderer_Entity::Light][index];
+					auto tempLight = lightObject->GetComponent<Light>();
+
+					auto& rendererLight = m_rendererLightGroup.m_light_arr[index];
+					if(rendererLight.m_light->GetObjectId() != tempLight->GetObjectId() ||
+						rendererLight.m_light->GetLightType() != tempLight->GetLightType() ||
+						rendererLight.m_light->GetAngle() != tempLight->GetAngle() ||
+						rendererLight.m_light->GetRange() != tempLight->GetRange()
+						)
+					{
+						needUpdated = true;
+					}
+				}
 			}
+
 
 			const uint32_t resolution = 4096;
 			//const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
@@ -554,6 +572,7 @@ namespace LitchiRuntime
 				/*m_cb_light_arr_cpu.lightArr[index].flags |= light->GetShadowsScreenSpaceEnabled() ? (1 << 5) : 0;
 				m_cb_light_arr_cpu.lightArr[index].flags |= light->GetVolumetricEnabled() ? (1 << 5) : 0;*/
 			}
+
 
 			// cpu to gpu
 			uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * lightGameObjectCount;
