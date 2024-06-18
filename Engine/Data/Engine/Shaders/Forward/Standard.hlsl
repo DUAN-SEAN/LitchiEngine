@@ -69,9 +69,11 @@ float4 mainPS(Pixel input) : SV_Target
     float3 shadowedColor = float3(0, 0, 0);
     for (int index = 0; index < lightCount; index++)
     {
+        LightBufferData lightData = buffer_lights[index];
+        float attenuation = compute_attenuation(lightData, input.fragPos);
         float3 lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -buffer_lights[index].direction.xyz, buffer_lights[index].color.xyz, 
-        buffer_lights[index].intensity);
+				materialData.u_shininess, -lightData.direction.xyz, lightData.color.xyz,
+        lightData.intensity * attenuation);
 
         // temp code
         float shadow = 0;

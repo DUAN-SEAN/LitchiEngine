@@ -57,6 +57,48 @@ float3 compute_direction(LightBufferData light, float3 fragment_position)
     return direction;
 }
 
+// attenuation over distance
+float compute_attenuation_distance(const float3 surface_position, const float3 position,const float far)
+{
+    float distance_to_pixel = length(surface_position - position);
+    float attenuation = saturate(1.0f - distance_to_pixel / far);
+    return attenuation * attenuation;
+}
+
+float compute_attenuation_angle(float angle,float3 to_pixel,float3 forward)
+{
+    float cos_outer = cos(angle);
+    float cos_inner = cos(angle * 0.9f);
+    float cos_outer_squared = cos_outer * cos_outer;
+    float scale = 1.0f / max(0.001f, cos_inner - cos_outer);
+    float offset = -cos_outer * scale;
+    float cd = dot(to_pixel, forward);
+    float attenuation = saturate(cd * scale + offset);
+        
+    return attenuation * attenuation;
+}
+
+float compute_attenuation(LightBufferData light,const float3 surface_position)
+{
+    float attenuation = 0.0f;
+        
+    if (light.light_is_directional())
+    {
+        attenuation = saturate(dot(-light.direction, float3(0.0f, 1.0f, 0.0f)));
+    }
+    else if (light.light_is_point())
+    {
+        attenuation = compute_attenuation_distance(surface_position,light.position,light.range);
+    }
+    else if (light.light_is_spot())
+    {
+        attenuation = compute_attenuation_distance(surface_position, light.position, light.range) * 
+        compute_attenuation_angle(light.angle,compute_direction(light,surface_position),light.direction);
+    }
+
+    return attenuation;
+}
+
 // return shadow ratio
 float ShadowCalculation(float3 fragWorldNormal, float3 fragWorldPos)
 {
