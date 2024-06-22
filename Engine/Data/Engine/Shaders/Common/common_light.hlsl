@@ -164,17 +164,20 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
     LightBufferData light = buffer_lights[lightIndex];
     if (light.light_has_shadows())
     {
-        int shadowIndex = 0;
-        
         float3 light_to_pixel = compute_direction(light, fragWorldPos);
         float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
-
+        
+        float2 resolution = light.compute_resolution();
+        float2 texel_size = 1.0f / resolution;
+        float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x;
+        float3 position_world = fragWorldPos + normal_offset_bias;
+        
 
         if (light.light_is_point())
         {
              // compute paraboloid coordinates and depth
-            uint slice_index = dot(light.direction, light_to_pixel) < 0.0f; // 0 = front, 1 = back
-            float3 pos_view = mul(float4(fragWorldPos, 1.0f), light.view_projection[slice_index]).xyz;
+            uint slice_index = 2 * lightIndex + dot(light.direction, light_to_pixel) < 0.0f; // 0 = front, 1 = back
+            float3 pos_view = mul(float4(position_world, 1.0f), light.view_projection[slice_index]).xyz;
             float3 light_to_vertex_view = pos_view;
             float3 ndc = project_onto_paraboloid(light_to_vertex_view, 0.01, light.range);
 
@@ -190,46 +193,35 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
         }
         else
         {
-            
-            // 检查是否在视口范围内
-
             // project to light space
-            // uint slice_index = light.light_is_point() ? direction_to_cube_face_index(light.to_pixel) : 0;
             uint slice_index = 2 * lightIndex + 0;
-        
-        
-            float2 resolution = light.compute_resolution();
-            float2 texel_size = 1.0f / resolution;
 
-            // compute world position with normal offset bias to reduce shadow acne
-            //float3 normal_offset_bias = surface.normal * (1.0f - saturate(light.n_dot_l)) * light.normal_bias * get_shadow_texel_size();
-            //float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * light.normal_bias * 1.0f;
-            float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x * 200.0f;
-            // float3 normal_offset_bias = fragWorldNormal * light.normal_bias;
-            float3 position_world = fragWorldPos + normal_offset_bias;
-        
             // project into light space
             float3 pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
             float2 pos_uv = ndc_to_uv(pos_ndc);
 
             if (is_valid_uv(pos_uv))
             {
-                // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
                 shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
-            }
 
-            // blend with the far cascade for the directional lights
-            float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
-            if (light.light_is_directional() && cascade_fade > 0.0f)
-            {
-            // sample shadow map
-                slice_index = 1;
-                pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
-                pos_uv = ndc_to_uv(pos_ndc);
-                float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+                //if (shadow.a > 0.0f && light.has_shadows_transparent())
+                //{
+                //    shadow.rgb = Technique_Vogel_Color(light, surface, sample_coords);
+                //}
 
-            // blend/lerp
-                shadow = lerp(shadow, shadow_far, cascade_fade);
+                  // blend with the far cascade for the directional lights
+                float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
+                if (light.light_is_directional() && cascade_fade > 0.0f)
+                {
+                    // sample shadow map
+                    slice_index = 2 * lightIndex +1;
+                    pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
+                    pos_uv = ndc_to_uv(pos_ndc);
+                    float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+
+                    // blend/lerp
+                    shadow = lerp(shadow, shadow_far, cascade_fade);
+                }
             }
         }
 

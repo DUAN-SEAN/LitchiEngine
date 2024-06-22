@@ -57,6 +57,8 @@ Pixel mainVS(Vertex_PosUvNorTan input)
 
 float4 mainPS(Pixel input) : SV_Target
 {
+    float ambientStrength = 0.1;
+
     float2 g_TexCoords = materialData.u_textureOffset + float2((input.uv.x * materialData.u_textureTiling.x) % 1.0, (input.uv.y * materialData.u_textureTiling.y) % 1.0);
 
     float3 viewDir = normalize(buffer_rendererPath.camera_position - input.fragPos);
@@ -75,6 +77,8 @@ float4 mainPS(Pixel input) : SV_Target
 				materialData.u_shininess, -lightData.direction.xyz, lightData.color.xyz,
         lightData.intensity * attenuation);
 
+        float3 ambient = ambientStrength * lightData.color.xyz;
+
         // temp code
         float shadow = 0;
         bool t = pass_is_transparent();
@@ -86,7 +90,7 @@ float4 mainPS(Pixel input) : SV_Target
         {
             shadow = ShadowCalculation2(normal, input.fragPos, index);
         }
-        shadowedColor += (shadow) * lightSum;
+        shadowedColor += (shadow) * lightSum + ambient;
     }
 
     float4 color = float4(shadowedColor, diffuseTexel.a);
