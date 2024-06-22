@@ -71,7 +71,6 @@ namespace LitchiRuntime
             {
                 // update
                 descriptor.data = static_cast<void*>(sampler);
-
                 return;
             }
         }

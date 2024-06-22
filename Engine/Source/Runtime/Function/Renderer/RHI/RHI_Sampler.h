@@ -1,11 +1,9 @@
 
 #pragma once
 
-//= INCLUDES =================
 #include <memory>
 #include "RHI_Definitions.h"
 #include "Runtime/Core/Meta/Reflection/object.h"
-//============================
 
 namespace LitchiRuntime
 {
