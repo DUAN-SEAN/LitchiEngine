@@ -13,8 +13,8 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 8.471729278564454,
+                        "z": 0.33592134714126589
                     },
                     "localRotation": {
                         "x": 0.3583679497241974,
@@ -30,17 +30,18 @@
                 },
                 {
                     "Type": "Light",
-                    "lightType": "Directional",
+                    "lightType": "Point",
                     "color": {
                         "r": 0.30000001192092898,
                         "g": 0.6000000238418579,
                         "b": 0.699999988079071,
                         "a": 1.0
                     },
-                    "intensityLumens": 1600.0,
+                    "intensityLumens": 2000.0,
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
-                    "bias": 0.0
+                    "range": 10.0,
+                    "angle": 0.0
                 }
             ]
         }

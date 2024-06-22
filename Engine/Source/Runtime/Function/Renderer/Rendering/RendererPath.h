@@ -2,7 +2,6 @@
 #pragma once
 
 #include "Renderer_Definitions.h"
-#include "LibTIFF4/tiff.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/UI/UICanvas.h"
 #include "Runtime/Function/Renderer/RenderCamera.h"
@@ -128,7 +127,6 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_StructuredBuffer> GetLightBuffer() { return m_rendererLightGroup.m_light_structure_buffer; }
 
 		UICanvas* GetCanvas();
-		/*Light* GetMainLight() const { return m_mainLight; }*/
 		size_t GetLightGameObjectCount() const;
 		const RendererLightGroup& GetRendererLightGroup()const { return m_rendererLightGroup; }
 
@@ -138,16 +136,6 @@ namespace LitchiRuntime
 		Mesh* GetSelectedMesh() const { return m_selectedMesh; }
 		RHI_Texture2D* GetSelectedTexture2D() const { return m_selectedTexture2D; }
 		SelectedResourceType GetSelectedResourceType() const { return m_selectedResType; }
-
-		// Light & Shadow
-	/*	const Matrix& GetLightViewMatrix(uint32_t index = 0) const;
-		const Matrix& GetLightProjectionMatrix(uint32_t index = 0) const;
-		RHI_Texture* GetShadowDepthTexture() const { return m_shadow_map.texture_depth.get(); }
-		RHI_Texture* GetShadowColorTexture() const { return m_shadow_map.texture_color.get(); }*/
-		//uint32_t GetShadowArraySize() const;
-		//bool IsInLightViewFrustum(MeshFilter* renderable, uint32_t index) const;
-
-		// Bone
 		std::shared_ptr<RHI_ConstantBuffer>  GetSelectedMeshBoneConstantBuffer() { return m_selectedMesh_bone_constant_buffer; }
 
 	private:
@@ -157,23 +145,18 @@ namespace LitchiRuntime
 
 		void CreateColorRenderTarget();
 		void CreateDepthRenderTarget();
-		//void CreateLightBuffer();
 
 		std::string GetRenderPathName() const;
 		bool CheckIsBuildInRendererCamera();
-
-		//void UpdateLightBuffer();
-		//void UpdateDefaultLightBuffer();
-		//bool CheckShadowMapNeedRecreate();
-		//void CreateShadowMap();
-	/*	void ComputeLightViewMatrix();
-		void ComputeLightProjectionMatrix();*/
-
 
         float GetSquaredDistance(const GameObject* entity);
         void FrustumCulling(std::vector<GameObject*>& renderables);
         void Sort(std::vector<GameObject*>& renderables);
         void FrustumCullAndSort(std::vector<GameObject*>& renderables);
+
+		bool CheckNeedRebuildRendererLightArr(int32_t lightGameObjectCount);
+		bool CheckNeedRebuildLightBuffer(int32_t lightGameObjectCount);
+		void FillRendererLightData(RendererLightData& lightData);
 	private:
 
 		//-- Common --//
@@ -197,18 +180,9 @@ namespace LitchiRuntime
 		std::shared_ptr<RHI_Texture> m_depthRenderTarget = nullptr;
 		std::shared_ptr<RHI_Texture> m_colorRenderTarget = nullptr;
 
-		//-- Light --//
-		// Light buffer
-		//std::shared_ptr<RHI_StructuredBuffer> m_light_structure_buffer;
-
-		//// one camera to light
+		// one camera to light
 		//Light* m_mainLight = nullptr;
 		RendererLightGroup m_rendererLightGroup;
-		//std::array<Matrix, 6> m_matrix_view;
-		//std::array<Matrix, 6> m_matrix_projection;
-		//std::array<Frustum, 6> m_frustums;
-		//// shadow
-		//ShadowMap m_shadow_map; // correct is <tuple<light,camera>,shadowMap>
 
 		bool m_last_shadows_enabled = false;
 		bool m_last_shadows_transparent_enabled = false;
@@ -219,7 +193,6 @@ namespace LitchiRuntime
 		RHI_Texture2D* m_selectedTexture2D = nullptr;
 		Mesh* m_selectedMesh = nullptr;
 		SelectedResourceType m_selectedResType{SelectedResourceType_None};
-
 		// Bone
 		std::shared_ptr<RHI_ConstantBuffer> m_selectedMesh_bone_constant_buffer;
 

@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 882,
+    "availableID": 883,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -13,7 +13,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 4.0,
+                        "y": 3.525606632232666,
                         "z": 0.0
                     },
                     "localRotation": {
@@ -65,9 +65,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 0.00042907893657684326,
-                        "y": 6.29703426361084,
-                        "z": -1.7071020603179932
+                        "x": -0.691679060459137,
+                        "y": 7.314332008361816,
+                        "z": -1.9543923139572144
                     },
                     "localRotation": {
                         "x": 0.0,
@@ -118,9 +118,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
+                        "x": -14.791543960571289,
+                        "y": 8.471729278564454,
+                        "z": 0.33592134714126589
                     },
                     "localRotation": {
                         "x": 0.3583679497241974,
@@ -136,7 +136,7 @@
                 },
                 {
                     "Type": "Light",
-                    "lightType": "Directional",
+                    "lightType": "Point",
                     "color": {
                         "r": 0.30000001192092898,
                         "g": 0.6000000238418579,
@@ -147,8 +147,7 @@
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
                     "range": 10.0,
-                    "angle": 0.0,
-                    "normalBias": 0.20000000298023225
+                    "angle": 0.0
                 }
             ]
         },
@@ -180,8 +179,76 @@
                 },
                 {
                     "Type": "Camera",
-                    "aperture": 2.799999952316284,
-                    "shutter speed": 0.01666666753590107
+                    "clearFlags": "SolidColor",
+                    "clearColor": {
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0,
+                        "a": 0.0
+                    },
+                    "projectionType": "Perspective",
+                    "nearPlane": 0.10000000149011612,
+                    "farPlane": 4000.0,
+                    "fovHorizontal": 90.0,
+                    "viewport": {
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "size": {
+                            "x": 1920.0,
+                            "y": 1080.0
+                        }
+                    },
+                    "cameraLightDesc": {
+                        "aperture": 2.799999952316284,
+                        "shutter speed": 0.01666666753590107,
+                        "iso": 500.0
+                    },
+                    "depth": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 882,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Directional Light",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.0465977191925049,
+                        "y": 8.427703857421875,
+                        "z": 2.4956393241882326
+                    },
+                    "localRotation": {
+                        "x": 0.3583679497241974,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9335803985595703
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Point",
+                    "color": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2000.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 9.900004386901856,
+                    "angle": 0.0
                 }
             ]
         }
