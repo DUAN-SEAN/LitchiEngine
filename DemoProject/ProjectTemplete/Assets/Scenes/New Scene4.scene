@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 890,
+    "availableID": 891,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -113,7 +113,7 @@
             "id": 3,
             "parentId": 884,
             "layer": 1,
-            "name": "Spoint 1",
+            "name": "Point 1",
             "componentList": [
                 {
                     "Type": "Transform",
@@ -214,7 +214,7 @@
             "id": 882,
             "parentId": 884,
             "layer": 1,
-            "name": "Spont 2",
+            "name": "Point 2",
             "componentList": [
                 {
                     "Type": "Transform",
@@ -496,6 +496,49 @@
                     "shadowsTransparentEnabled": true,
                     "range": 1.0,
                     "angle": 0.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 890,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Spot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.1301608085632326,
+                        "y": 6.358887672424316,
+                        "z": -1.161177158355713
+                    },
+                    "localRotation": {
+                        "x": 0.23684236407279969,
+                        "y": 0.0738416314125061,
+                        "z": -0.07606884092092514,
+                        "w": 0.9657467007637024
+                    },
+                    "localScale": {
+                        "x": 0.9999933838844299,
+                        "y": 0.9999977946281433,
+                        "z": 0.9999986886978149
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Spot",
+                    "color": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 500.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 200.0,
+                    "angle": 0.30000001192092898
                 }
             ]
         }
