@@ -172,18 +172,18 @@
 
     // float3 compute_direction(float3 light_position, float3 fragment_position)
     // {
-        // float3 direction = 0.0f;
+        // float3 forward = 0.0f;
         
         // if (light_is_directional())
         // {
-            // direction = normalize(forward.xyz);
+            // forward = normalize(forward.xyz);
         // }
         // else if (light_is_point() || light_is_spot())
         // {
-            // direction = normalize(fragment_position - light_position);
+            // forward = normalize(fragment_position - light_position);
         // }
 
-        // return direction;
+        // return forward;
     // }
 
     // void Build(float3 surface_position, float3 surface_normal, float occlusion)
@@ -194,7 +194,7 @@
         // far               = buffer_light.intensity_range_angle_bias.y;
         // angle             = buffer_light.intensity_range_angle_bias.z;
         // bias              = buffer_light.intensity_range_angle_bias.w;
-        // forward           = buffer_light.direction.xyz;
+        // forward           = buffer_light.forward.xyz;
         // normal_bias       = buffer_light.normal_bias;
         // near              = 0.1f;
         // distance_to_pixel = length(surface_position - position);
@@ -227,7 +227,7 @@
 
     // void Build(Light light, Surface surface)
     // {
-        // n = normalize(surface.normal);           // Outward direction of surface point
+        // n = normalize(surface.normal);           // Outward forward of surface point
         // v = normalize(-surface.camera_to_pixel); // Direction from surface point to view
         // l = normalize(-light.to_pixel);          // Direction from surface point to light
         // h = normalize(l + v);                    // Direction of the vector between l and v

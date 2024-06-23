@@ -383,7 +383,7 @@ namespace LitchiRuntime
 			if(lightCount>0)
 			{
 				// just main light
-				cmd_list->SetTexture(Renderer_BindingsSrv::light_directional_depth, rendererLightGroup.m_texture_depth);
+				cmd_list->SetTexture(Renderer_BindingsSrv::light_depth, rendererLightGroup.m_texture_depth);
 				m_cb_pass_cpu.set_light(static_cast<float>(0), static_cast<float>(0), lightCount);
 				cmd_list->SetStructuredBuffer(Renderer_BindingsUav::sb_lights, rendererLightGroup.m_light_structure_buffer);
 				

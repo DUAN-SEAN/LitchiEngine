@@ -32,7 +32,7 @@
 using namespace rttr;
 namespace LitchiRuntime {
 	RTTR_REGISTRATION 
-	{
+	{ 
 		/* Basic Struct Types */
 		registration::class_<Vector2>("Vec2")
 			.constructor()

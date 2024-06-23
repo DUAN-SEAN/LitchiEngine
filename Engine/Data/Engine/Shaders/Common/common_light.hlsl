@@ -27,7 +27,7 @@ float3 BilinnPhong(float3 viewDir, float3 normal, float3 diffuseTex, float3 spec
 float3 CalcPointLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data)
 {
     float3 lightPosition = light_buffer_data.position.xyz;
-    float3 lightDir = light_buffer_data.direction.xyz;
+    float3 lightDir = light_buffer_data.forward.xyz;
     float3 lightColor = light_buffer_data.color.rgb;
     float luminosity = light_buffer_data.intensity;
 
@@ -38,65 +38,7 @@ float3 CalcPointLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 s
 
 float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, float3 specularTex, float shininess, LightBufferData light_buffer_data, float luminosity)
 {
-    return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, light_buffer_data.direction.xyz, light_buffer_data.color.rgb, luminosity);
-}
-
-float3 compute_direction(LightBufferData light, float3 fragment_position)
-{
-    float3 direction = 0.0f;
-        
-    if (light.light_is_directional())
-    {
-        direction = normalize(light.direction.xyz);
-    }
-    else if (light.light_is_point() || light.light_is_spot())
-    {
-        direction = normalize(fragment_position - light.position.xyz);
-    }
-
-    return direction;
-}
-
-// attenuation over distance
-float compute_attenuation_distance(const float3 surface_position, const float3 position,const float far)
-{
-    float distance_to_pixel = length(surface_position - position);
-    float attenuation = saturate(1.0f - distance_to_pixel / far);
-    return attenuation * attenuation;
-}
-
-float compute_attenuation_angle(float angle,float3 to_pixel,float3 forward)
-{
-    float cos_outer = cos(angle);
-    float cos_inner = cos(angle * 0.9f);
-    float cos_outer_squared = cos_outer * cos_outer;
-    float scale = 1.0f / max(0.001f, cos_inner - cos_outer);
-    float offset = -cos_outer * scale;
-    float cd = dot(to_pixel, forward);
-    float attenuation = saturate(cd * scale + offset);
-        
-    return attenuation * attenuation;
-}
-
-float compute_attenuation(LightBufferData light,const float3 surface_position)
-{
-    float attenuation = 0.0f;
-        
-    if (light.light_is_directional())
-    {
-        attenuation = saturate(dot(-light.direction, float3(0.0f, 1.0f, 0.0f)));
-    }
-    else if (light.light_is_point())
-    {
-        attenuation = compute_attenuation_distance(surface_position,light.position,light.range);
-    }
-    else if (light.light_is_spot())
-    {
-        attenuation = compute_attenuation_distance(surface_position, light.position, light.range) * 
-        compute_attenuation_angle(light.angle,compute_direction(light,surface_position),light.direction);
-    }
-
-    return attenuation;
+    return BilinnPhong(viewDir, normal, diffuseTex, specularTex, shininess, light_buffer_data.forward.xyz, light_buffer_data.color.rgb, luminosity);
 }
 
 // return shadow ratio
@@ -114,7 +56,7 @@ float ShadowCalculation(float3 fragWorldNormal, float3 fragWorldPos)
         // uint slice_index = light.light_is_point() ? direction_to_cube_face_index(light.to_pixel) : 0;
         uint slice_index = 0;
         
-        float3 light_to_pixel = compute_direction(light, fragWorldPos);
+        float3 light_to_pixel = light.compute_direction(fragWorldPos);
         float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
         
         float2 resolution = light.compute_resolution();
@@ -164,7 +106,7 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
     LightBufferData light = buffer_lights[lightIndex];
     if (light.light_has_shadows())
     {
-        float3 light_to_pixel = compute_direction(light, fragWorldPos);
+        float3 light_to_pixel = light.compute_direction(fragWorldPos);
         float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
         
         float2 resolution = light.compute_resolution();
@@ -176,7 +118,7 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
         if (light.light_is_point())
         {
              // compute paraboloid coordinates and depth
-            uint light_slice_index = dot(light.direction, light_to_pixel) < 0.0f; // 0 = front, 1 = back
+            uint light_slice_index = dot(light.forward, light_to_pixel) < 0.0f; // 0 = front, 1 = back
             uint slice_index = 2 * lightIndex + light_slice_index;
             float3 pos_view = mul(float4(position_world, 1.0f), light.view_projection[light_slice_index]).xyz;
             float3 light_to_vertex_view = pos_view;

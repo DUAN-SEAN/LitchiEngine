@@ -241,8 +241,11 @@ namespace LitchiRuntime
 			// Render SceneView
 			Render4BuildInSceneView(cmd_current, rendererPath4SceneView);
 
+			AddLinesToBeRendered();
 		}
 		EASY_END_BLOCK
+
+
 
 		EASY_BLOCK("Render4BuildInAssetView")
 		// 绘制SceneView Path
@@ -667,8 +670,6 @@ namespace LitchiRuntime
 		Cb_Frame frameBufferData = BuildFrameBufferData();
 		GetConstantBuffer(Renderer_ConstantBuffer::Frame)->Update(&frameBufferData);
 		EASY_END_BLOCK
-
-		AddLinesToBeRendered();
 	}
 
 	void Renderer::SetOption(Renderer_Option option, float value)

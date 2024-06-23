@@ -25,8 +25,8 @@ namespace LitchiRuntime
 	namespace
 	{
 		float orthographic_depth = 4096.0f; // depth of all cascades
-		float orthographic_extent_near = 12.0f;
-		float orthographic_extent_far = 64.0f;
+		float orthographic_extent_near = 64.0f;
+		float orthographic_extent_far = 256.0f;
 	}
 
 	RendererPath::RendererPath(RendererPathType rendererPathType)

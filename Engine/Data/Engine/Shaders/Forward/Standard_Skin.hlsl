@@ -86,7 +86,7 @@ float4 mainPS(Pixel input) : SV_Target
     for (int index = 0; index < lightCount; index++)
     {
         lightSum += BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -buffer_lights[index].direction.xyz, buffer_lights[index].color.xyz,
+				materialData.u_shininess, -buffer_lights[index].forward.xyz, buffer_lights[index].color.xyz,
         buffer_lights[index].intensity);
     }
     

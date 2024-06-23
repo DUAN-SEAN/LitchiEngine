@@ -72,12 +72,8 @@ namespace LitchiRuntime
     {
         forward_pass_depth = 16,
         // Light depth/color maps
-        light_directional_depth = 20,
-        light_directional_color = 21,
-        light_point_depth       = 22,
-        light_point_color       = 23,
-        light_spot_depth        = 24,
-        light_spot_color        = 25,
+        light_depth = 20,
+        light_color = 21,
     
         // Noise
         noise_normal = 26,

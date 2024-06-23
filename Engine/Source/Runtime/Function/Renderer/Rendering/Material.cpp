@@ -413,7 +413,15 @@ namespace LitchiRuntime
 			{
 				auto uniformTexture = static_cast<UniformInfoTexture*>(uniformInfo);
 				auto texturePath = uniformTexture->path;
-				RHI_Texture* tex = ApplicationBase::Instance()->textureManager->LoadResource(texturePath);
+				RHI_Texture* tex = nullptr;
+				if(!texturePath.empty() && texturePath!="")
+				{
+					tex = ApplicationBase::Instance()->textureManager->LoadResource(texturePath);
+				} 
+				/*	else
+				{
+					tex = Renderer::GetStandardTexture(Renderer_StandardTexture::White);
+				}*/
 				uniformData->second = make_any<RHI_Texture*>(tex);
 				break;
 			}

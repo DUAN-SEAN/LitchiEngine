@@ -56,7 +56,7 @@ struct LightBufferData
     float3 position;
     float intensity;
 
-    float3 direction;
+    float3 forward;
     float range;
     
     float angle;
@@ -92,80 +92,85 @@ struct LightBufferData
     
     float compare_depth(float3 uv, float compare)
     {
-        return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
-        //// float3 -> uv, slice
-        //if (light_is_directional())
-        //    return tex_light_directional_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
-        
-        //// float3 -> direction
-        //if (light_is_point())
-        //    return tex_light_point_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
-        
-        //// float3 -> uv, 0
-        //if (light_is_spot()) 
-        //    return tex_light_spot_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv.xy, compare).r;
-    
-        //return 0.0f;
+        return tex_light_depth.SampleCmpLevelZero(samplers_comparison[sampler_compare_depth], uv, compare).r;
     }
     
     float sample_depth(float3 uv)
     {
-        return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
-        //// float3 -> uv, slice
-        //if (light_is_directional())
-        //    return tex_light_directional_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
-        
-        //// float3 -> direction
-        //if (light_is_point())
-        //    return tex_light_point_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
-    
-        //// float3 -> uv, 0
-        //if (light_is_spot())
-        //    return tex_light_spot_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).r;
-    
-        //return 0.0f;
+        return tex_light_depth.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).r;
     }
     
     float3 sample_color(float3 uv)
     {
-        return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
-        //// float3 -> uv, slice
-        //if (light_is_directional())
-        //    return tex_light_directional_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
-    
-        //// float3 -> direction
-        //if (light_is_point())
-        //    return tex_light_point_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
-    
-        //// float3 -> uv, 0
-        //if (light_is_spot())
-        //    return tex_light_spot_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv.xy, 0).rgb;
-        
-        //return 0.0f;
+        return tex_light_color.SampleLevel(samplers[sampler_bilinear_clamp_border], uv, 0).rgb;
     }
     
     float2 compute_resolution()
     {
         float2 resolution;
-        
-        //if (light_is_directional())
-        //{
-        //    uint layer_count;
-        //    tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
-        //}
-        //else if (light_is_point())
-        //{
-        //    tex_light_point_depth.GetDimensions(resolution.x, resolution.y);
-        //}
-        //else if (light_is_spot())
-        //{
-        //    tex_light_spot_depth.GetDimensions(resolution.x, resolution.y);
-        //}
-        
         uint layer_count;
-        tex_light_directional_depth.GetDimensions(resolution.x, resolution.y, layer_count);
+        tex_light_depth.GetDimensions(resolution.x, resolution.y, layer_count);
 
         return resolution;
+    }
+
+    float3 compute_direction(float3 fragment_position)
+    {
+        float3 direction = 0.0f;
+        
+        if (light_is_directional())
+        {
+            direction = normalize(forward.xyz);
+        }
+        else if (light_is_point() || light_is_spot())
+        {
+            direction = normalize(fragment_position - position);
+        }
+
+        return direction;
+    }
+
+    // attenuation over distance
+    float compute_attenuation_distance(const float3 surface_position)
+    {
+        float distance_to_pixel = length(surface_position - position);
+        float attenuation = saturate(1.0f - distance_to_pixel / range);
+        return attenuation * attenuation;
+    }
+
+    float compute_attenuation_angle(float3 surface_position)
+    {
+
+        float3 to_pixel = compute_direction(surface_position);
+        float cos_outer = cos(angle);
+        float cos_inner = cos(angle * 0.9f);
+        float cos_outer_squared = cos_outer * cos_outer;
+        float scale = 1.0f / max(0.001f, cos_inner - cos_outer);
+        float offset = -cos_outer * scale;
+        float cd = dot(to_pixel, forward);
+        float attenuation = saturate(cd * scale + offset);
+        
+        return attenuation * attenuation;
+    }
+
+    float compute_attenuation(const float3 surface_position)
+    {
+        float attenuation = 0.0f;
+        
+        if (light_is_directional())
+        {
+            attenuation = saturate(dot(-forward, float3(0.0f, 1.0f, 0.0f)));
+        }
+        else if (light_is_point())
+        {
+            attenuation = compute_attenuation_distance(surface_position);
+        }
+        else if (light_is_spot())
+        {
+            attenuation = compute_attenuation_distance(surface_position) * compute_attenuation_angle(surface_position);
+        }
+
+        return attenuation;
     }
 
 

@@ -72,9 +72,10 @@ float4 mainPS(Pixel input) : SV_Target
     for (int index = 0; index < lightCount; index++)
     {
         LightBufferData lightData = buffer_lights[index];
-        float attenuation = compute_attenuation(lightData, input.fragPos);
+        float3 lightDirection = lightData.compute_direction(input.fragPos);
+        float attenuation = lightData.compute_attenuation(input.fragPos);
         float3 lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -lightData.direction.xyz, lightData.color.xyz,
+				materialData.u_shininess, -lightDirection, lightData.color.xyz,
         lightData.intensity * attenuation);
 
         float3 ambient = ambientStrength * lightData.color.xyz;

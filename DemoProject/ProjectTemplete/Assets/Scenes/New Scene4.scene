@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 889,
+    "availableID": 890,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -13,7 +13,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 3.525606632232666,
+                        "y": 2.1333374977111818,
                         "z": 0.0
                     },
                     "localRotation": {
@@ -66,7 +66,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": -4.394299507141113,
-                        "y": 4.639156341552734,
+                        "y": 2.719597339630127,
                         "z": 4.207761764526367
                     },
                     "localRotation": {
@@ -118,9 +118,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": -8.701269149780274,
+                        "x": -5.506885051727295,
                         "y": 8.471729278564454,
-                        "z": 0.33592134714126589
+                        "z": -3.0956549644470217
                     },
                     "localRotation": {
                         "x": 0.3583679497241974,
@@ -219,9 +219,9 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": -1.0465977191925049,
-                        "y": 8.427703857421875,
-                        "z": 2.4956393241882326
+                        "x": -4.280424118041992,
+                        "y": 3.1816132068634035,
+                        "z": 3.5235328674316408
                     },
                     "localRotation": {
                         "x": 0.3583679497241974,
@@ -263,8 +263,8 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": -14.743966102600098,
-                        "y": 0.0,
-                        "z": 0.0
+                        "y": 5.408261775970459,
+                        "z": 9.348663330078125
                     },
                     "localRotation": {
                         "x": 0.0,
@@ -327,7 +327,7 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 13.386569023132325,
+                        "x": 13.421998977661133,
                         "y": 0.0,
                         "z": 0.0
                     },
@@ -453,6 +453,49 @@
                     "Type": "MeshFilter",
                     "MeshPath": ":Models/Cube.fbx",
                     "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 889,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Directional Light",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.343557596206665,
+                        "y": 10.465215682983399,
+                        "z": 2.251483917236328
+                    },
+                    "localRotation": {
+                        "x": 0.2466774880886078,
+                        "y": -0.4289120137691498,
+                        "z": 0.1229884997010231,
+                        "w": 0.8602665066719055
+                    },
+                    "localScale": {
+                        "x": 0.9999986290931702,
+                        "y": 1.0000191926956177,
+                        "z": 0.9999843239784241
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Directional",
+                    "color": {
+                        "r": 0.9959016442298889,
+                        "g": 0.9620447754859924,
+                        "b": 0.6203977465629578,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2600.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 1.0,
+                    "angle": 0.0
                 }
             ]
         }

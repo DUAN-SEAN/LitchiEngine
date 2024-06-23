@@ -95,7 +95,7 @@ float Technique_Vogel(LightBufferData light ,float3 uv, float compare)
     float temporal_angle = temporal_offset * PI2;
     float penumbra = light.light_is_directional() ? 1.0f : compute_penumbra(light,temporal_angle, uv, compare);
 
-    // todo: in the case of the point light, the uv is the direction, filtering works ok but I could improved it.
+    // todo: in the case of the point light, the uv is the forward, filtering works ok but I could improved it.
 
     for (uint i = 0; i < g_shadow_samples; i++)
     {
@@ -113,7 +113,7 @@ float Technique_Vogel(LightBufferData light ,float3 uv, float compare)
 //    float3 shadow     = 0.0f;
 //    float vogel_angle = get_noise_interleaved_gradient(surface.uv * pass_get_resolution_out(), true, false) * PI2;
 
-//    // todo: in the case of the point light, the uv is the direction, filtering works ok but I could improved it.
+//    // todo: in the case of the point light, the uv is the forward, filtering works ok but I could improved it.
     
 //    for (uint i = 0; i < g_shadow_samples; i++)
 //    {

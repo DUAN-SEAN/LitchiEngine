@@ -87,7 +87,7 @@ float4 mainPS(Pixel input) : SV_Target
 	for (int index = 0; index < lightCount; index++) {
 		LightBufferData lightBufferData = buffer_lights[index];
 
-		float3 lightDir = normalize(-lightBufferData.direction.xyz).xyz;
+		float3 lightDir = normalize(-lightBufferData.forward.xyz).xyz;
         // float3 lightDir = normalize(lightBufferData.position - input.fragPos.xyz);
         float3 lightColor = lightBufferData.color.xyz * lightBufferData.intensity;
 		float3 halfVector = normalize(lightDir + viewDir);

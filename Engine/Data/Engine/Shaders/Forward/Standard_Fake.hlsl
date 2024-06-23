@@ -113,7 +113,7 @@ float4 mainPS(Pixel input) : SV_Target
 
 
     float3 lightSum = BilinnPhong(viewDir, normal, diffuseTexel.rgb, specularTexel.rgb,
-				materialData.u_shininess, -buffer_light.direction.xyz, buffer_light.color.xyz, 1.0f);
+				materialData.u_shininess, -buffer_light.forward.xyz, buffer_light.color.xyz, 1.0f);
     
     float4 color = float4(lightSum, diffuseTexel.a);
     
