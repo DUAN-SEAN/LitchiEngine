@@ -1,13 +1,13 @@
 {
     "name": "New Scene4",
-    "availableID": 883,
+    "availableID": 889,
     "gameObjects": [
         {
             "Type": "GameObject",
             "id": 1,
             "parentId": 0,
             "layer": 1,
-            "name": "Cube",
+            "name": "Plane",
             "componentList": [
                 {
                     "Type": "Transform",
@@ -60,14 +60,14 @@
             "id": 2,
             "parentId": 0,
             "layer": 1,
-            "name": "Cube",
+            "name": "Player",
             "componentList": [
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": -0.691679060459137,
-                        "y": 7.314332008361816,
-                        "z": -1.9543923139572144
+                        "x": -4.394299507141113,
+                        "y": 4.639156341552734,
+                        "z": 4.207761764526367
                     },
                     "localRotation": {
                         "x": 0.0,
@@ -76,7 +76,7 @@
                         "w": 1.0
                     },
                     "localScale": {
-                        "x": 1.0,
+                        "x": 0.9725359678268433,
                         "y": 2.3969712257385256,
                         "z": 1.0
                     }
@@ -111,14 +111,14 @@
         {
             "Type": "GameObject",
             "id": 3,
-            "parentId": 0,
+            "parentId": 884,
             "layer": 1,
-            "name": "Directional Light",
+            "name": "Spoint 1",
             "componentList": [
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": -14.791543960571289,
+                        "x": -8.701269149780274,
                         "y": 8.471729278564454,
                         "z": 0.33592134714126589
                     },
@@ -212,9 +212,9 @@
         {
             "Type": "GameObject",
             "id": 882,
-            "parentId": 0,
+            "parentId": 884,
             "layer": 1,
-            "name": "Directional Light",
+            "name": "Spont 2",
             "componentList": [
                 {
                     "Type": "Transform",
@@ -249,6 +249,210 @@
                     "shadowsTransparentEnabled": true,
                     "range": 9.900004386901856,
                     "angle": 0.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 883,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -14.743966102600098,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0026191368233412506,
+                        "z": 0.0,
+                        "w": 0.999996542930603
+                    },
+                    "localScale": {
+                        "x": 0.9999577403068543,
+                        "y": 39.02278137207031,
+                        "z": 81.5914535522461
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 884,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Lights",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.431525707244873,
+                        "y": -1.0382702350616456,
+                        "z": 3.1773366928100588
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 885,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 13.386569023132325,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 39.02278137207031,
+                        "z": 90.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 886,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -7.934902191162109,
+                        "y": 0.0,
+                        "z": 10.839609146118164
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.7071067690849304,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 0.9998339414596558,
+                        "y": 39.02278137207031,
+                        "z": 81.5828857421875
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 887,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Walls",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.5400960445404053
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.5,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 888,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.7517929077148438,
+                        "y": 0.0,
+                        "z": -4.193519592285156
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.7071066498756409,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.9998010396957398,
+                        "y": 46.0,
+                        "z": 29.993633270263673
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
                 }
             ]
         }

@@ -1,0 +1,43 @@
+{
+    "availableID": 1,
+    "rootEntityId": 883,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 883,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -14.743966102600098,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 39.02278137207031,
+                        "z": 81.58271026611328
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        }
+    ]
+}
