@@ -1,6 +1,6 @@
 {
     "name": "Empty Scene",
-    "availableID": 264,
+    "availableID": 265,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -7507,6 +7507,49 @@
                         "iso": 500.0
                     },
                     "depth": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 264,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Test",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 1.2513642311096192,
+                        "y": 2.01076078414917,
+                        "z": -2.363557815551758
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Point",
+                    "color": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2600.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 5.0,
+                    "angle": 0.5
                 }
             ]
         }

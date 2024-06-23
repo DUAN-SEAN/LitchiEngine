@@ -49,8 +49,6 @@ Pixel mainVS(Vertex_PosUvNorTan input)
 
 float4 mainPS(Pixel input) : SV_Target
 {
-	float PI = 3.14;
-	float3 colorSpaceDielectricSpecRgb = float3(0.04, 0.04, 0.04);
 	//input.normal = normalize(input.normal);
 	
 	// sample for texture
@@ -85,44 +83,10 @@ float4 mainPS(Pixel input) : SV_Target
 	uint lightCount = (uint)pass_get_f3_value2().z;
 	float3 lightSum = float3(0, 0, 0);
 	for (int index = 0; index < lightCount; index++) {
-		LightBufferData lightBufferData = buffer_lights[index];
 
-		float3 lightDir = normalize(-lightBufferData.forward.xyz).xyz;
-        // float3 lightDir = normalize(lightBufferData.position - input.fragPos.xyz);
-        float3 lightColor = lightBufferData.color.xyz * lightBufferData.intensity;
-		float3 halfVector = normalize(lightDir + viewDir);
-
-		float nl = max(saturate(dot(normal, lightDir)), 0.000001);
-		float lh = max(saturate(dot(lightDir, halfVector)), 0.000001);
-		float vh = max(saturate(dot(viewDir, halfVector)), 0.000001);
-		float nh = max(saturate(dot(normal, halfVector)), 0.000001);
-
-		// calculate D F G for Specular
-		float D = lerpSquareRoughness / (pow((pow(nh, 2) * (lerpSquareRoughness - 1) + 1), 2) * PI);
-
-		float3 F0 = lerp(colorSpaceDielectricSpecRgb, albedo.xyz, metallic);
-		float3 F = F0 + (1 - F0) * exp2((-5.55473 * vh - 6.98316) * vh);
-
-		float kInDirectLight = pow(squareRoughness + 1, 2) / 8;
-		float kInIBL = pow(squareRoughness, 2) / 8;
-		float GLeft = nl / lerp(nl, 1, kInDirectLight);
-		float GRight = nv / lerp(nv, 1, kInDirectLight);
-		float G = GLeft * GRight;
-
-		float3 kd = (1 - F) * (1 - metallic);
-
-		// calculate directLightResult with diffuse and specular
-        float3 diffColor = kd * albedo.xyz / PI;
-        float3 specColor = (D * G * F) / (4 * nv * nl);
-        float3 directLightResult = (diffColor + specColor) * lightColor * nl;
-
-		// calculate indirectLightResult todo
-		float3 iblDiffuseResult = 0;
-		float3 iblSpecularResult = 0;
-		float3 indirectResult = iblDiffuseResult + iblSpecularResult;
-
-		lightSum += directLightResult + indirectResult;
-	}
+        lightSum += CalcOneLightColorPBR(input.fragPos, albedo, metallic, squareRoughness, lerpSquareRoughness,
+		                  normal, viewDir, nv, index);
+    }
 
     // float3 color = lightSum + float3(0.03) * albedo.xyz * ao;
     float3 color = linear_to_srgb(lightSum + float3(0.03, 0.03, 0.03) * albedo.xyz);

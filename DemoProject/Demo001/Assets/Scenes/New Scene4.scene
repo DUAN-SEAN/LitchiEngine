@@ -1,0 +1,546 @@
+{
+    "name": "New Scene4",
+    "availableID": 891,
+    "gameObjects": [
+        {
+            "Type": "GameObject",
+            "id": 1,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Plane",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 2.1333374977111818,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 28.430198669433595,
+                        "y": 1.0,
+                        "z": 81.81254577636719
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "RigidStatic"
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "Size": {
+                        "x": 5.5,
+                        "y": 1.0,
+                        "z": 10.5
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 2,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Player",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -4.394299507141113,
+                        "y": 2.719597339630127,
+                        "z": 4.207761764526367
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.9725359678268433,
+                        "y": 2.3969712257385256,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "RigidDynamic"
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 3,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Point 1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -5.506885051727295,
+                        "y": 8.471729278564454,
+                        "z": -3.0956549644470217
+                    },
+                    "localRotation": {
+                        "x": 0.3583679497241974,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9335803985595703
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Point",
+                    "color": {
+                        "r": 0.30000001192092898,
+                        "g": 0.6000000238418579,
+                        "b": 0.699999988079071,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2000.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 10.0,
+                    "angle": 0.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 8,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Camera",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 5.0,
+                        "z": -10.0
+                    },
+                    "localRotation": {
+                        "x": 0.006853838451206684,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9999765157699585
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Camera",
+                    "clearFlags": "SolidColor",
+                    "clearColor": {
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0,
+                        "a": 0.0
+                    },
+                    "projectionType": "Perspective",
+                    "nearPlane": 0.10000000149011612,
+                    "farPlane": 4000.0,
+                    "fovHorizontal": 90.0,
+                    "viewport": {
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "size": {
+                            "x": 1920.0,
+                            "y": 1080.0
+                        }
+                    },
+                    "cameraLightDesc": {
+                        "aperture": 2.799999952316284,
+                        "shutter speed": 0.01666666753590107,
+                        "iso": 500.0
+                    },
+                    "depth": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 882,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Point 2",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -4.280424118041992,
+                        "y": 3.1816132068634035,
+                        "z": 3.5235328674316408
+                    },
+                    "localRotation": {
+                        "x": 0.3583679497241974,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 0.9335803985595703
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Point",
+                    "color": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2000.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 9.900004386901856,
+                    "angle": 0.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 883,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -14.743966102600098,
+                        "y": 5.408261775970459,
+                        "z": 9.348663330078125
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0026191368233412506,
+                        "z": 0.0,
+                        "w": 0.999996542930603
+                    },
+                    "localScale": {
+                        "x": 0.9999577403068543,
+                        "y": 39.02278137207031,
+                        "z": 81.5914535522461
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 884,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Lights",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.431525707244873,
+                        "y": -1.0382702350616456,
+                        "z": 3.1773366928100588
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 885,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 13.421998977661133,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 39.02278137207031,
+                        "z": 90.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 886,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -7.934902191162109,
+                        "y": 0.0,
+                        "z": 10.839609146118164
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.7071067690849304,
+                        "z": 0.0,
+                        "w": 0.7071067690849304
+                    },
+                    "localScale": {
+                        "x": 0.9998339414596558,
+                        "y": 39.02278137207031,
+                        "z": 81.5828857421875
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 887,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Walls",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": -0.5400960445404053
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 0.5,
+                        "z": 1.0
+                    }
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 888,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -1.7517929077148438,
+                        "y": 0.0,
+                        "z": -4.193519592285156
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.7071066498756409,
+                        "z": 0.0,
+                        "w": 0.70710688829422
+                    },
+                    "localScale": {
+                        "x": 0.9998010396957398,
+                        "y": 46.0,
+                        "z": 29.993633270263673
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 889,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Directional Light",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.343557596206665,
+                        "y": 10.465215682983399,
+                        "z": 2.251483917236328
+                    },
+                    "localRotation": {
+                        "x": 0.2466774880886078,
+                        "y": -0.4289120137691498,
+                        "z": 0.1229884997010231,
+                        "w": 0.8602665066719055
+                    },
+                    "localScale": {
+                        "x": 0.9999986290931702,
+                        "y": 1.0000191926956177,
+                        "z": 0.9999843239784241
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Directional",
+                    "color": {
+                        "r": 0.9959016442298889,
+                        "g": 0.9620447754859924,
+                        "b": 0.6203977465629578,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 2600.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 1.0,
+                    "angle": 0.0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 890,
+            "parentId": 884,
+            "layer": 1,
+            "name": "Spot",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.1301608085632326,
+                        "y": 6.358887672424316,
+                        "z": -1.161177158355713
+                    },
+                    "localRotation": {
+                        "x": 0.23684236407279969,
+                        "y": 0.0738416314125061,
+                        "z": -0.07606884092092514,
+                        "w": 0.9657467007637024
+                    },
+                    "localScale": {
+                        "x": 0.9999933838844299,
+                        "y": 0.9999977946281433,
+                        "z": 0.9999986886978149
+                    }
+                },
+                {
+                    "Type": "Light",
+                    "lightType": "Spot",
+                    "color": {
+                        "r": 1.0,
+                        "g": 1.0,
+                        "b": 1.0,
+                        "a": 1.0
+                    },
+                    "intensityLumens": 500.0,
+                    "shadowsEnabled": true,
+                    "shadowsTransparentEnabled": true,
+                    "range": 200.0,
+                    "angle": 0.30000001192092898
+                }
+            ]
+        }
+    ]
+}
