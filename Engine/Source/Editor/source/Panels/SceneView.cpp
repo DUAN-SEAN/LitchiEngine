@@ -64,6 +64,8 @@ void LitchiEditor::SceneView::OnDraw()
 		}
 	}
 
+	//DEBUG_LOG_INFO("SceneView focused:{},hovered:{}", IsFocused(), IsHovered());
+
 	AView::OnDraw();
 }
 

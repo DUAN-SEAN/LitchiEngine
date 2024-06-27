@@ -45,57 +45,62 @@ float3 CalcDirectionalLight(float3 viewDir, float3 normal, float3 diffuseTex, fl
 // return shadow ratio
 float ShadowCalculation(float3 fragWorldNormal, float3 fragWorldPos)
 {
+    // default shadow value for fully lit (no shadow)
     float shadow = 1.0f;
     int mainLightIndex = 0;
     if (buffer_lights[mainLightIndex].light_has_shadows())
     {
-        int shadowIndex = 0;
         LightBufferData light = buffer_lights[mainLightIndex];
-        // 检查是否在视口范围内
-
-        // project to light space
-        // uint slice_index = light.light_is_point() ? direction_to_cube_face_index(light.to_pixel) : 0;
-        uint slice_index = 0;
         
-        float3 light_to_pixel = light.compute_direction(fragWorldPos);
-        float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
-        
-        float2 resolution = light.compute_resolution();
-        float2 texel_size = 1.0f / resolution;
-
-        // compute world position with normal offset bias to reduce shadow acne
-        //float3 normal_offset_bias = surface.normal * (1.0f - saturate(light.n_dot_l)) * light.normal_bias * get_shadow_texel_size();
-        //float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * light.normal_bias * 1.0f;
-        float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x * 200.0f;
-        // float3 normal_offset_bias = fragWorldNormal * light.normal_bias;
-        float3 position_world = fragWorldPos + normal_offset_bias;
-        
-	    // project into light space
-        float3 pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
-        float2 pos_uv = ndc_to_uv(pos_ndc);
-
-        if (is_valid_uv(pos_uv))
+        // process only if the pixel is within the light's effective range
+        float distance_to_pixel = length(fragWorldPos - light.position);
+        if (distance_to_pixel < light.range)
         {
-        // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
-            shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
-        }
+            
+            // project to light space
+            // uint slice_index = light.light_is_point() ? direction_to_cube_face_index(light.to_pixel) : 0;
+            uint slice_index = 0;
+        
+            float3 light_to_pixel = light.compute_direction(fragWorldPos);
+            float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
+        
+            float2 resolution = light.compute_resolution();
+            float2 texel_size = 1.0f / resolution;
 
-        // blend with the far cascade for the directional lights
-        float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
-        if (light.light_is_directional() && cascade_fade > 0.0f)
-        {
+            // compute world position with normal offset bias to reduce shadow acne
+            //float3 normal_offset_bias = surface.normal * (1.0f - saturate(light.n_dot_l)) * light.normal_bias * get_shadow_texel_size();
+            //float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * light.normal_bias * 1.0f;
+            float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x * 200.0f;
+            // float3 normal_offset_bias = fragWorldNormal * light.normal_bias;
+            float3 position_world = fragWorldPos + normal_offset_bias;
+        
+	        // project into light space
+            float3 pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
+            float2 pos_uv = ndc_to_uv(pos_ndc);
+
+            if (is_valid_uv(pos_uv))
+            {
+                // 取得最近点的深度(使用[0,1]范围下的fragPosLight当坐标)
+                shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+            }
+
+            // blend with the far cascade for the directional lights
+            float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
+            if (light.light_is_directional() && cascade_fade > 0.0f)
+            {
             // sample shadow map
-            slice_index = 1;
-            pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
-            pos_uv = ndc_to_uv(pos_ndc);
-            float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+                slice_index = 1;
+                pos_ndc = world_to_ndc(position_world, light.view_projection[slice_index]);
+                pos_uv = ndc_to_uv(pos_ndc);
+                float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
 
             // blend/lerp
-            shadow = lerp(shadow, shadow_far, cascade_fade);
+                shadow = lerp(shadow, shadow_far, cascade_fade);
+            }
         }
+
     }
 
- 
     return shadow;
 }
 
@@ -107,70 +112,76 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
     LightBufferData light = buffer_lights[lightIndex];
     if (light.light_has_shadows())
     {
-        float3 light_to_pixel = light.compute_direction(fragWorldPos);
-        float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
+        // process only if the pixel is within the light's effective range
+        float distance_to_pixel = length(fragWorldPos - light.position);
+        if (distance_to_pixel < light.range)
+        {
+            float3 light_to_pixel = light.compute_direction(fragWorldPos);
+            float light_n_dot_l = saturate(dot(fragWorldNormal, -light_to_pixel));
         
-        float2 resolution = light.compute_resolution();
-        float2 texel_size = 1.0f / resolution;
-        float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x;
-        float3 position_world = fragWorldPos + normal_offset_bias;
+            float2 resolution = light.compute_resolution();
+            float2 texel_size = 1.0f / resolution;
+            float3 normal_offset_bias = fragWorldNormal * (1.0f - saturate(light_n_dot_l)) * texel_size.x;
+            float3 position_world = fragWorldPos + normal_offset_bias;
         
 
-        if (light.light_is_point())
-        {
+            if (light.light_is_point())
+            {
              // compute paraboloid coordinates and depth
-            uint light_slice_index = dot(light.forward, light_to_pixel) < 0.0f; // 0 = front, 1 = back
-            uint slice_index = 2 * lightIndex + light_slice_index;
-            float3 pos_view = mul(float4(position_world, 1.0f), light.view_projection[light_slice_index]).xyz;
-            float3 light_to_vertex_view = pos_view;
-            float3 ndc = project_onto_paraboloid(light_to_vertex_view, 0.01, light.range);
+                uint light_slice_index = dot(light.forward, light_to_pixel) < 0.0f; // 0 = front, 1 = back
+                uint slice_index = 2 * lightIndex + light_slice_index;
+                float3 pos_view = mul(float4(position_world, 1.0f), light.view_projection[light_slice_index]).xyz;
+                float3 light_to_vertex_view = pos_view;
+                float3 ndc = project_onto_paraboloid(light_to_vertex_view, 0.01, light.range);
 
             // sample shadow map
-            float3 sample_coords = float3(ndc_to_uv(ndc.xy), slice_index);
-            shadow = SampleShadowMap(light, sample_coords, ndc.z);
+                float3 sample_coords = float3(ndc_to_uv(ndc.xy), slice_index);
+                shadow = SampleShadowMap(light, sample_coords, ndc.z);
 
             // // handle transparent shadows if necessary
             //if (shadow.a > 0.0f && light.has_shadows_transparent())
             //{
             //    shadow.rgb = Technique_Vogel_Color(light, surface, sample_coords);
             //}
-        }
-        else
-        {
-            // project to light space
-            uint light_slice_index = 2 * lightIndex + 0;
-            uint slice_index = 2 * lightIndex + light_slice_index;
-
-            // project into light space
-            float3 pos_ndc = world_to_ndc(position_world, light.view_projection[light_slice_index]);
-            float2 pos_uv = ndc_to_uv(pos_ndc);
-
-            if (is_valid_uv(pos_uv))
+            }
+            else
             {
-                shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+                // project to light space
+                uint light_slice_index = 2 * lightIndex + 0;
+                uint slice_index = 2 * lightIndex + light_slice_index;
 
-                //if (shadow.a > 0.0f && light.has_shadows_transparent())
-                //{
-                //    shadow.rgb = Technique_Vogel_Color(light, surface, sample_coords);
-                //}
+                // project into light space
+                float3 pos_ndc = world_to_ndc(position_world, light.view_projection[light_slice_index]);
+                float2 pos_uv = ndc_to_uv(pos_ndc);
 
-                  // blend with the far cascade for the directional lights
-                float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
-                if (light.light_is_directional() && cascade_fade > 0.0f)
+                if (is_valid_uv(pos_uv))
                 {
-                    // sample shadow map
-                    light_slice_index = 2 * lightIndex + 1;
-                    slice_index = 2 * lightIndex + light_slice_index;
-                    pos_ndc = world_to_ndc(position_world, light.view_projection[light_slice_index]);
-                    pos_uv = ndc_to_uv(pos_ndc);
-                    float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+                    shadow = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
 
-                    // blend/lerp
-                    shadow = lerp(shadow, shadow_far, cascade_fade);
+                    //if (shadow.a > 0.0f && light.has_shadows_transparent())
+                    //{
+                    //    shadow.rgb = Technique_Vogel_Color(light, surface, sample_coords);
+                    //}
+
+                    // blend with the far cascade for the directional lights
+                    float cascade_fade = saturate((max(abs(pos_ndc.x), abs(pos_ndc.y)) - g_shadow_cascade_blend_threshold) * 4.0f);
+                    if (light.light_is_directional() && cascade_fade > 0.0f)
+                    {
+                        // sample shadow map
+                        light_slice_index = 2 * lightIndex + 1;
+                        slice_index = 2 * lightIndex + light_slice_index;
+                        pos_ndc = world_to_ndc(position_world, light.view_projection[light_slice_index]);
+                        pos_uv = ndc_to_uv(pos_ndc);
+                        float shadow_far = SampleShadowMap(light, float3(pos_uv, slice_index), pos_ndc.z);
+
+                        // blend/lerp
+                        shadow = lerp(shadow, shadow_far, cascade_fade);
+                    }
                 }
             }
-        }
 
+        }
+       
     }
 
  
@@ -182,7 +193,7 @@ float ShadowCalculation2(float3 fragWorldNormal, float3 fragWorldPos, int lightI
 float3 CalcOneLightColorPBR(
 float3 fragPos,
 float4 albedo, float metallic, float squareRoughness, float lerpSquareRoughness,
-float3 normal, float3 viewDir, float nv, 
+float3 normal, float3 viewDir, float nv,
 int light_index)
 {
     float PI = 3.14;
@@ -200,6 +211,20 @@ int light_index)
     float nh = max(saturate(dot(normal, halfVector)), 0.000001);
 
     float3 randiance = lightBufferData.color.xyz * lightBufferData.intensity * attenuation * nl * 1.0f;;
+    
+	// temp code
+    float shadow = 0;
+    bool t = pass_is_transparent();
+    if (t)
+    {
+        shadow = ShadowCalculation2(normal, fragPos, light_index);
+    }
+    else
+    {
+        shadow = ShadowCalculation2(normal, fragPos, light_index);
+    }
+
+    randiance *= shadow;
 
 	// calculate D F G for Specular
     float D = lerpSquareRoughness / (pow((pow(nh, 2) * (lerpSquareRoughness - 1) + 1), 2) * PI);
@@ -218,7 +243,6 @@ int light_index)
 	// calculate directLightResult with diffuse and specular
     float3 diffColor = kd * albedo.xyz / PI;
     float3 specColor = (D * G * F) / (4 * nv * nl);
-	//float3 directLightResult = (diffColor + specColor) * randiance * nl;
     float3 directLightResult = (diffColor + specColor) * randiance;
 
 	// calculate indirectLightResult todo
@@ -226,17 +250,5 @@ int light_index)
     float3 iblSpecularResult = 0;
     float3 indirectResult = iblDiffuseResult + iblSpecularResult;
 
-	// temp code
-    float shadow = 0;
-    bool t = pass_is_transparent();
-    if (t)
-    {
-        shadow = ShadowCalculation2(normal, fragPos, light_index);
-    }
-    else
-    {
-        shadow = ShadowCalculation2(normal, fragPos, light_index);
-    }
-
-    return (shadow) * directLightResult + indirectResult;
+    return directLightResult + indirectResult;
 }

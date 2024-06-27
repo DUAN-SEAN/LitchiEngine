@@ -163,7 +163,7 @@ namespace LitchiRuntime
         // Check if there are any hits
         if (hits.empty())
         {
-            m_selected_entity = nullptr;
+            // m_selected_entity = nullptr;
             return;
         }
 
