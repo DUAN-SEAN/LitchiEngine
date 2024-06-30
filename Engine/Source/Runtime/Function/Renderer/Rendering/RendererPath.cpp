@@ -484,8 +484,28 @@ namespace LitchiRuntime
 	{
 		if (m_rendererPathType == RendererPathType_AssetView)
 		{
-			// TODO
-			//UpdateDefaultLightBuffer();
+			static std::array<Sb_Light, rhi_max_array_size_lights> properties;
+			int32_t index = 0;
+			properties[index].intensity = 4.35f;
+			properties[index].color = Color::White;
+			properties[index].range = 200.0f;
+			properties[index].angle = 0.5;
+
+			properties[index].position = Vector3::Zero;
+			properties[index].direction = Quaternion::FromAngleAxis(30.0f, Vector3::Forward) * Vector3::Forward;
+
+			properties[index].flags = 0;
+			properties[index].flags |= (1 << 0);
+
+			// cpu to gpu
+			uint32_t update_size = static_cast<uint32_t>(sizeof(Sb_Light)) * 1;
+			if (m_rendererLightGroup.m_light_structure_buffer == nullptr)
+			{
+				uint32_t stride = static_cast<uint32_t>(sizeof(Sb_Light)) * rhi_max_array_size_lights;
+				m_rendererLightGroup.m_light_structure_buffer = std::make_shared<RHI_StructuredBuffer>(stride, 1, "lights");
+			}
+			m_rendererLightGroup.m_light_structure_buffer->ResetOffset();
+			m_rendererLightGroup.m_light_structure_buffer->Update(&properties[0], update_size);
 		}
 		else
 		{

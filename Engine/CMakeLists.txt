@@ -10,6 +10,7 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT LitchiEditor)
 endif()
 
+    #set(CMAKE_BUILD_TYPE "Release")
 # 如果没有指定构建类型，那么默认为Release
 if(NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_INSTALL_PREFIX Release CACHE STRING "Build Type" FORCE)

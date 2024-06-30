@@ -101,7 +101,29 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 	std::string ext = GetExtension(p_path);
 	std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
 
-	if (ext == "fbx" || ext == "obj")											return EFileType::MODEL;
+	if(FileSystem::IsSupportedModelFile(p_path))
+	{
+		return EFileType::MODEL;
+
+	}else if(FileSystem::IsSupportedImageFile(p_path))
+	{
+		return EFileType::TEXTURE;
+	}
+	else if (FileSystem::IsSupportedShaderFile(p_path))
+	{
+		return EFileType::SHADER;
+	}
+	else if (FileSystem::IsEngineMaterialFile(p_path))
+	{
+		return EFileType::MATERIAL;
+	}
+	else if (ext == "wav" || ext == "mp3" || ext == "ogg")						return EFileType::SOUND;
+	else if (ext == "scene")													return EFileType::SCENE;
+	else if (ext == "cs")														return EFileType::SCRIPT;
+	else if (ext == "ttf")														return EFileType::FONT;
+	else if (ext == "prefab")														return EFileType::PREFAB;
+
+	/*if (ext == "fbx" || ext == "obj")											return EFileType::MODEL;
 	else if (ext == "png" || ext == "jpeg" || ext == "jpg" || ext == "tga" || ext == "tif")		return EFileType::TEXTURE;
 	else if (ext == "glsl" || ext == "vs" || ext  == "fs")														return EFileType::SHADER;
 	else if (ext == "mat")													return EFileType::MATERIAL;
@@ -109,7 +131,7 @@ LitchiRuntime::PathParser::EFileType LitchiRuntime::PathParser::GetFileType(cons
 	else if (ext == "scene")													return EFileType::SCENE;
 	else if (ext == "cs")														return EFileType::SCRIPT;
 	else if (ext == "ttf")														return EFileType::FONT;
-	else if (ext == "prefab")														return EFileType::PREFAB;
+	else if (ext == "prefab")														return EFileType::PREFAB;*/
 
 	return EFileType::UNKNOWN;
 }

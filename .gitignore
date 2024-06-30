@@ -54,3 +54,4 @@ bld/
 # /Engine/ThirdParty/free_image/lib/FreeImageLib_debug.lib
 
 Tools/easy_profiler-v2.1.0-msvc15-win64
+/DemoProject/
