@@ -11,7 +11,7 @@
 
 namespace LitchiRuntime
 {
-    Collider::Collider() : m_pxShape(nullptr), m_pxMaterial(nullptr), m_isTrigger(false), m_offset(0.0f) , m_rigidActor(nullptr){
+    Collider::Collider(){
 
     }
 
@@ -84,6 +84,7 @@ namespace LitchiRuntime
         if(m_pxShape)
         {
             Physics::ReleaseShape(m_pxShape);
+            m_pxShape = nullptr;
         }
 
         CreateShape();

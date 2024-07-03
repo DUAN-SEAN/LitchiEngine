@@ -112,6 +112,7 @@ void LitchiEditor::SceneView::CreateCameraControlPanel()
 	settings.dockable = false;
 	settings.movable = false;
 	settings.scrollable = true;
+	settings.allowInputs = true;
 
 	m_innerMenuWindow = &CreateWidget<InnerPanelWindow>("SceneViewMenu", true, Vector2(0.0f,20.0f), Color(0, 0, 0, 0.1f), settings);
 	auto& propertyBtn = m_innerMenuWindow->CreateWidget<ButtonSmall>("Property");

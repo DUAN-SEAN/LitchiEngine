@@ -206,28 +206,28 @@ namespace LitchiRuntime
 		/**
 		 * @brief PhysX PxShape pointer
 		*/
-		PxShape* m_pxShape;
+		PxShape* m_pxShape = nullptr;
 
 		/**
 		 * @brief PhysX PxMaterial pointer
 		*/
-		PxMaterial* m_pxMaterial;
+		PxMaterial* m_pxMaterial = nullptr;
 
 		/**
 		 * @brief Trigger collider
 		 * @note Triggers can only collide with non-triggers
 		*/
-		bool m_isTrigger;
+		bool m_isTrigger = false;
 
 		/**
 		 * @brief Relative local transform
 		*/
-		Vector3 m_offset;
+		Vector3 m_offset{0.0f};
 
 		/**
 		 * @brief PhysX PxMaterial pointer
 		*/
-		RigidActor* m_rigidActor;
+		RigidActor* m_rigidActor = nullptr;
 
 		/**
 		 * @brief PhysicMaterialRes

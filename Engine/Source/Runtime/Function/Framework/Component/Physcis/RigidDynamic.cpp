@@ -33,6 +33,21 @@ namespace LitchiRuntime
 
     void RigidDynamic::OnUpdate() {
 
+        auto transform = GetGameObject()->GetComponent<Transform>();
+        if(m_pxRigidActor != nullptr && transform != nullptr)
+        {
+            auto globalPose = m_pxRigidActor->getGlobalPose();
+            auto globalPosition = Vector3(globalPose.p.x, globalPose.p.y, globalPose.p.z);
+            auto globalRotation = Quaternion(globalPose.q.x, globalPose.q.y, globalPose.q.z, globalPose.q.w);
+
+            auto& gameObjectWorldPos = transform->GetPosition();
+            auto& gameObjectWorldRotation = transform->GetRotation();
+
+            if(gameObjectWorldPos != globalPosition || gameObjectWorldRotation != globalRotation)
+            {
+                m_pxRigidActor->setGlobalPose(PxTransform(PxVec3(gameObjectWorldPos.x,gameObjectWorldPos.y,gameObjectWorldPos.z),PxQuat(gameObjectWorldRotation.x, gameObjectWorldRotation.y, gameObjectWorldRotation.z, gameObjectWorldRotation.w)));
+            }
+        }
     }
 
     void RigidDynamic::OnFixedUpdate() {
@@ -40,9 +55,10 @@ namespace LitchiRuntime
             DEBUG_LOG_ERROR("px_rigid_actor_== nullptr");
             return;
         }
-        //PxRigidBody受Physx物理模拟驱动，位置被改变。获取最新的位置，去更新Transform。
+
         PxTransform px_transform = m_pxRigidActor->getGlobalPose();
         Transform* transform = GetGameObject()->GetComponent<Transform>();
         transform->SetPosition(Vector3(px_transform.p.x, px_transform.p.y, px_transform.p.z));
+        transform->SetRotation(Quaternion(px_transform.q.x, px_transform.q.y, px_transform.q.z, px_transform.q.w));
     }
 }
