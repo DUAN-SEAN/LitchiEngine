@@ -133,22 +133,22 @@ namespace LitchiRuntime
         auto bottomLeftBack = matrix * Vector3(-halfX, -halfY, -halfZ);
 
         // top face
-        DrawLine(topRightFront, topRightBack, Color::Yellow, Color::Yellow);
-        DrawLine(topRightFront, topLeftFront, Color::Yellow, Color::Yellow);
-        DrawLine(topRightFront, topLeftBack, Color::Yellow, Color::Yellow);
-        DrawLine(topRightBack, topLeftBack, Color::Yellow, Color::Yellow);
+        DrawLine(topRightFront, topRightBack, color, color);
+        DrawLine(topRightFront, topLeftFront, color, color);
+        DrawLine(topRightFront, topLeftBack, color, color);
+        DrawLine(topRightBack, topLeftBack, color, color);
 
         // bottom face
-        DrawLine(bottomRightFront, bottomRightBack, Color::Yellow, Color::Yellow);
-        DrawLine(bottomRightFront, bottomLeftFront, Color::Yellow, Color::Yellow);
-        DrawLine(bottomRightFront, bottomLeftBack, Color::Yellow, Color::Yellow);
-        DrawLine(bottomRightBack, bottomLeftBack, Color::Yellow, Color::Yellow);
+        DrawLine(bottomRightFront, bottomRightBack, color, color);
+        DrawLine(bottomRightFront, bottomLeftFront, color, color);
+        DrawLine(bottomRightFront, bottomLeftBack, color, color);
+        DrawLine(bottomRightBack, bottomLeftBack, color, color);
 
         // top to bottom line
-        DrawLine(topRightFront, bottomRightFront, Color::Yellow, Color::Yellow);
-        DrawLine(topLeftFront, bottomLeftFront, Color::Yellow, Color::Yellow);
-        DrawLine(topLeftBack, bottomLeftBack, Color::Yellow, Color::Yellow);
-        DrawLine(topRightBack, bottomRightBack, Color::Yellow, Color::Yellow);
+        DrawLine(topRightFront, bottomRightFront, color, color);
+        DrawLine(topLeftFront, bottomLeftFront, color, color);
+        DrawLine(topLeftBack, bottomLeftBack, color, color);
+        DrawLine(topRightBack, bottomRightBack, color, color);
     }
 
     void Renderer::DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
@@ -498,8 +498,9 @@ namespace LitchiRuntime
                     height = Math::Helper::Max(height, 0.05f);
                     const float halfHeight = height / 2.0f;
 
-                    DrawSphere(position + dir * halfHeight, radius,30, Color::Green);
-                    DrawSphere(position - dir * halfHeight, radius,30, Color::Green);
+                    auto localRotation = Quaternion::FromEulerAngles(90.0f, 0, 0);
+                    DrawSphere(((position + localRotation*(dir * halfHeight))), radius,20, Color::Green);
+                    DrawSphere((position - localRotation*(dir * halfHeight)), radius,20, Color::Green);
                     DrawCylinder(position, rotation, radius, height, Color::Green);
                 }
             }

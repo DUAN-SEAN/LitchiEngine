@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 892,
+    "availableID": 894,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -13,7 +13,7 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 2.1333374977111818,
+                        "y": 1.7143198251724244,
                         "z": 0.0
                     },
                     "localRotation": {
@@ -46,6 +46,11 @@
                         "dynamicFriction": 0.6000000238418579,
                         "restitution": 0.10000000149011612,
                         "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Size": {
                         "x": 5.5,
@@ -99,6 +104,11 @@
                         "dynamicFriction": 0.6000000238418579,
                         "restitution": 0.10000000149011612,
                         "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Size": {
                         "x": 1.0,
@@ -583,10 +593,108 @@
                         "dynamicFriction": 0.6000000238418579,
                         "restitution": 0.10000000149011612,
                         "staticFriction": 0.6000000238418579
-                    }
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Radius": 1.0
                 },
                 {
                     "Type": "RigidDynamic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 892,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Cylinder",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -2.5146520137786867,
+                        "y": 5.866687297821045,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cylinder.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "CapsuleCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Radius": 1.0000007152557374,
+                    "Height": 2.000002861022949
+                },
+                {
+                    "Type": "RigidDynamic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 893,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Cube",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 3.0444345474243166,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
                 }
             ]
         }
