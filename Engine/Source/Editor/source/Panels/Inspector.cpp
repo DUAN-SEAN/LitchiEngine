@@ -9,6 +9,7 @@
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/CapsuleCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/collider.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
@@ -73,6 +74,7 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(12, "RigidDynamic");
 		componentSelectorWidget.choices.emplace(13, "BoxCollider");
 		componentSelectorWidget.choices.emplace(14, "SphereCollider");
+		componentSelectorWidget.choices.emplace(15, "CapsuleCollider");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f ));
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -93,6 +95,7 @@ LitchiEditor::Inspector::Inspector
 			case 12: GetTargetActor()->AddComponent<RigidDynamic>();				break;
 			case 13: GetTargetActor()->AddComponent<BoxCollider>();				break;
 			case 14: GetTargetActor()->AddComponent<SphereCollider>();				break;
+			case 15: GetTargetActor()->AddComponent<CapsuleCollider>();				break;
 			}
 
 			Refresh();
@@ -123,6 +126,7 @@ LitchiEditor::Inspector::Inspector
 			case 12: defineButtonsStates(GetTargetActor()->GetComponent<RigidDynamic>());		return;
 			case 13: defineButtonsStates(GetTargetActor()->GetComponent<BoxCollider>());		return;
 			case 14: defineButtonsStates(GetTargetActor()->GetComponent<SphereCollider>());		return;
+			case 15: defineButtonsStates(GetTargetActor()->GetComponent<CapsuleCollider>());		return;
 			}
 		};
 

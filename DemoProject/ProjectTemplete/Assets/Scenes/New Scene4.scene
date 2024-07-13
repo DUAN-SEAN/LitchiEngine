@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 891,
+    "availableID": 892,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -65,20 +65,20 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": -4.394299507141113,
-                        "y": 2.719597339630127,
-                        "z": 4.207761764526367
+                        "x": 1.3637874126434327,
+                        "y": 6.25148868560791,
+                        "z": 1.216477632522583
                     },
                     "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0,
-                        "w": 1.0
+                        "x": -0.42356958985328677,
+                        "y": -0.40470317006111147,
+                        "z": -0.24769383668899537,
+                        "w": 0.7716553211212158
                     },
                     "localScale": {
-                        "x": 0.9725359678268433,
-                        "y": 2.3969712257385256,
-                        "z": 1.0
+                        "x": 0.9679463505744934,
+                        "y": 2.372910737991333,
+                        "z": 0.9887281060218811
                     }
                 },
                 {
@@ -539,6 +539,54 @@
                     "shadowsTransparentEnabled": true,
                     "range": 200.0,
                     "angle": 0.30000001192092898
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 891,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Sphere",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 0.0,
+                        "y": 5.517270088195801,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Sphere.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    }
+                },
+                {
+                    "Type": "RigidDynamic"
                 }
             ]
         }

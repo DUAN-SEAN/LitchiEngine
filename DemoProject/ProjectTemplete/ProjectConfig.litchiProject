@@ -1,38 +1,38 @@
 {
     "assetFolder": "Assets/",
     "scriptFolder": "Scripts/",
-    "defaultScenePath": "Scenes/New Scene4.scene",
+    "defaultScenePath": "",
     "resolutionWidth": 1920,
     "resolutionHeight": 1080,
     "isFullScreen": true,
     "data": [
         {
-            "key": "executable_name",
-            "value": "Game"
-        },
-        {
             "key": "gravity",
             "value": "-9.810000"
+        },
+        {
+            "key": "executable_name",
+            "value": "Game"
         },
         {
             "key": "x_resolution",
             "value": "1280"
         },
         {
-            "key": "multisampling",
-            "value": "true"
-        },
-        {
             "key": "y_resolution",
             "value": "720"
         },
         {
-            "key": "start_scene",
-            "value": "Scene.scene"
+            "key": "multisampling",
+            "value": "true"
         },
         {
             "key": "fullscreen",
             "value": "false"
+        },
+        {
+            "key": "start_scene",
+            "value": "Scene.scene"
         },
         {
             "key": "samples",
@@ -43,16 +43,16 @@
             "value": "true"
         },
         {
-            "key": "Renderer_Option::TransformHandle",
-            "value": "true"
+            "key": "Renderer_Option::Hdr",
+            "value": "false"
         },
         {
             "key": "Renderer_Option::Aabb",
-            "value": "true"
+            "value": "false"
         },
         {
-            "key": "Renderer_Option::Hdr",
-            "value": "false"
+            "key": "Renderer_Option::TransformHandle",
+            "value": "true"
         },
         {
             "key": "Renderer_Option::Lights",
@@ -72,7 +72,7 @@
         },
         {
             "key": "Renderer_Option::Physics",
-            "value": "false"
+            "value": "true"
         },
         {
             "key": "Renderer_Option::SelectionOutline",

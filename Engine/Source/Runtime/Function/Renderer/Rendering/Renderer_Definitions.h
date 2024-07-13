@@ -136,6 +136,7 @@ namespace LitchiRuntime
         AudioSource,
         UI,
         Canvas,
+        Collider,
     };
 
     enum class Renderer_Sampler

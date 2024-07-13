@@ -13,6 +13,7 @@
 #include "Runtime/Function/Framework/Component/Transform/transform.h"
 
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/CapsuleCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidActor.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
@@ -331,7 +332,8 @@ namespace LitchiRuntime {
 
 		// Collider
 		registration::class_<Collider>("Collider")
-			.property("physicsMaterial", &Collider::GetPhysicMaterial, &Collider::SetPhysicMaterial);
+			.property("physicsMaterial", &Collider::GetPhysicMaterial, &Collider::SetPhysicMaterial)
+			.property("offset", &Collider::GetOffset, &Collider::SetOffset);
 
 		// RigidDynamic
 		registration::class_<RigidDynamic>("RigidDynamic")
@@ -347,7 +349,14 @@ namespace LitchiRuntime {
 
 		// SphereCollider
 		registration::class_<SphereCollider>("SphereCollider")
-			.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("Radius", &SphereCollider::GetRadius, &SphereCollider::SetRadius);
+
+		// CapsuleCollider
+		registration::class_<CapsuleCollider>("CapsuleCollider")
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("Radius", &CapsuleCollider::GetRadius, &CapsuleCollider::SetRadius)
+			.property("Height", &CapsuleCollider::GetHeight, &CapsuleCollider::SetHeight);
 
 		registration::class_<ScriptComponent>("ScriptComponent")
 			.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName)

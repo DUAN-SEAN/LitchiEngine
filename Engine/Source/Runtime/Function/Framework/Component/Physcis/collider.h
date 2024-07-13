@@ -134,6 +134,25 @@ namespace LitchiRuntime
 		*/
 		PxShape* GetPxShape() { return m_pxShape; }
 
+
+		/**
+		 * @brief Set Collider offset
+		 * @param offset
+		*/
+		void SetOffset(Vector3 offwwwwwwwwwwwset)
+		{
+			m_offset = offset;
+		}
+
+		/**
+		 * @brief Get Collider Offset
+		 * @return
+		*/
+		Vector3 GetOffset()
+		{
+			return m_offset;
+		}
+
 	public:
 
 		/**

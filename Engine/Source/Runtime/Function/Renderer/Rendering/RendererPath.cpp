@@ -290,6 +290,7 @@ namespace LitchiRuntime
 		m_renderables[Renderer_Entity::Light];
 		m_renderables[Renderer_Entity::UI];
 		m_renderables[Renderer_Entity::Canvas];
+		m_renderables[Renderer_Entity::Collider];
 
 		for (auto entity : m_renderScene->GetAllGameObjectList())
 		{
@@ -352,6 +353,11 @@ namespace LitchiRuntime
 			if (auto canvas = entity->GetComponent<UICanvas>())
 			{
 				m_renderables[Renderer_Entity::Canvas].emplace_back(entity);
+			}
+
+			if(auto collider = entity->GetComponent<Collider>())
+			{
+				m_renderables[Renderer_Entity::Collider].emplace_back(entity);
 			}
 
 			/* if (auto reflection_probe = entity->GetComponent<ReflectionProbe>())

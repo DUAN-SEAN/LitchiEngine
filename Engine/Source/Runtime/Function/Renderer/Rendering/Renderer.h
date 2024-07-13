@@ -48,10 +48,12 @@ namespace LitchiRuntime
 		static void DrawTriangle(const Vector3& v0, const Vector3& v1, const Vector3& v2, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawRectangle(RenderCamera* camera,const Rectangle& rectangle, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawBox(const BoundingBox& box, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawBox(const Vector3& position, const Quaternion& orientation,const Vector3& size, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawSphere(const Vector3& center, float radius, uint32_t segment_count, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawDirectionalArrow(const Vector3& start, const Vector3& end, float arrow_size, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 		static void DrawPlane(const Plane& plane, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
+		static void DrawCylinder(const Vector3& position, const Quaternion& orientation, float radius, float height, const Color& color = Color::standard_renderer_lines, const float duration = 0.0f, const bool depth = true);
 
 		// Options
 		template<typename T>

@@ -6,6 +6,9 @@
 #include "Runtime/Core/App/ApplicationBase.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
+#include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/CapsuleCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/SphereCollider.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/GameObject/GameObject.h"
 //=========================================
@@ -109,6 +112,43 @@ namespace LitchiRuntime
         DrawLine(Vector3(max.x, min.y, max.z), Vector3(max.x, max.y, max.z), color, color, duration, depth);
         DrawLine(Vector3(max.x, max.y, max.z), Vector3(min.x, max.y, max.z), color, color, duration, depth);
         DrawLine(Vector3(min.x, max.y, max.z), Vector3(min.x, min.y, max.z), color, color, duration, depth);
+    }
+
+    void Renderer::DrawBox(const Vector3& position, const Quaternion& orientation, const Vector3& size, const Color& color, const float duration, const bool depth)
+    {
+
+        float halfX = size.x / 2.0f;
+        float halfY = size.y / 2.0f;
+        float halfZ = size.z / 2.0f;
+
+        auto matrix = Matrix(position, orientation, Vector3::One);
+        auto topRightFront = matrix * Vector3(halfX, halfY, halfZ);
+        auto topRightBack = matrix * Vector3(halfX, halfY, -halfZ);
+        auto topLeftFront = matrix * Vector3(-halfX, halfY, halfZ);
+        auto topLeftBack = matrix * Vector3(-halfX, halfY, -halfZ);
+
+        auto bottomRightFront = matrix * Vector3(halfX, -halfY, halfZ);
+        auto bottomRightBack = matrix * Vector3(halfX, -halfY, -halfZ);
+        auto bottomLeftFront = matrix * Vector3(-halfX, -halfY, halfZ);
+        auto bottomLeftBack = matrix * Vector3(-halfX, -halfY, -halfZ);
+
+        // top face
+        DrawLine(topRightFront, topRightBack, Color::Yellow, Color::Yellow);
+        DrawLine(topRightFront, topLeftFront, Color::Yellow, Color::Yellow);
+        DrawLine(topRightFront, topLeftBack, Color::Yellow, Color::Yellow);
+        DrawLine(topRightBack, topLeftBack, Color::Yellow, Color::Yellow);
+
+        // bottom face
+        DrawLine(bottomRightFront, bottomRightBack, Color::Yellow, Color::Yellow);
+        DrawLine(bottomRightFront, bottomLeftFront, Color::Yellow, Color::Yellow);
+        DrawLine(bottomRightFront, bottomLeftBack, Color::Yellow, Color::Yellow);
+        DrawLine(bottomRightBack, bottomLeftBack, Color::Yellow, Color::Yellow);
+
+        // top to bottom line
+        DrawLine(topRightFront, bottomRightFront, Color::Yellow, Color::Yellow);
+        DrawLine(topLeftFront, bottomLeftFront, Color::Yellow, Color::Yellow);
+        DrawLine(topLeftBack, bottomLeftBack, Color::Yellow, Color::Yellow);
+        DrawLine(topRightBack, bottomRightBack, Color::Yellow, Color::Yellow);
     }
 
     void Renderer::DrawCircle(const Vector3& center, const Vector3& axis, const float radius, uint32_t segment_count, const Color& color /*= DEBUG_COLOR*/, const float duration /*= 0.0f*/, const bool depth /*= true*/)
@@ -234,6 +274,83 @@ namespace LitchiRuntime
         DrawLine(plane_origin - V * scale, plane_origin + V * scale, color, color, duration, depth);
     }
 
+    void Renderer::DrawCylinder(const Vector3& position, const Quaternion& orientation, float radius, float height, const Color& color, const float duration, const bool depth)
+    {
+
+#define DEBUG_DRAW_CYLINDER_RESOLUTION 12
+#define DEBUG_DRAW_CYLINDER_VERTICES (DEBUG_DRAW_CYLINDER_RESOLUTION * 4)
+
+        // Setup cache
+        Vector3 CylinderCache[DEBUG_DRAW_CYLINDER_VERTICES];
+        const float angleBetweenFacets = LitchiRuntime::Math::Helper::PI_2 / DEBUG_DRAW_CYLINDER_RESOLUTION;
+        const float verticalOffset = height * 0.5f;
+        int32_t index = 0;
+        for (int32_t i = 0; i < DEBUG_DRAW_CYLINDER_RESOLUTION; i++)
+        {
+            const float theta = i * angleBetweenFacets;
+            const float x = LitchiRuntime::Math::Helper::Cos(theta) * radius;
+            const float z = LitchiRuntime::Math::Helper::Sin(theta) * radius;
+
+            // Top cap
+            CylinderCache[index++] = Vector3(x, verticalOffset, z);
+
+            // Top part of body
+            CylinderCache[index++] = Vector3(x, verticalOffset, z);
+
+            // Bottom part of body
+            CylinderCache[index++] = Vector3(x, -verticalOffset, z);
+
+            // Bottom cap
+            CylinderCache[index++] = Vector3(x, -verticalOffset, z);
+        }
+
+        Vector3 v0;
+        Vector3 v1;
+        Vector3 v2;
+        const auto world = Matrix(position, orientation, Vector3::One);
+
+        // Write triangles
+        for (int32_t i = 0; i < DEBUG_DRAW_CYLINDER_VERTICES; i += 4)
+        {
+            // Each iteration, the loop advances to the next vertex column
+            // Four triangles per column (except for the four degenerate cap triangles)
+
+            // Top cap triangles
+            auto nextIndex = (uint16_t)((i + 4) % DEBUG_DRAW_CYLINDER_VERTICES);
+            if (nextIndex != 0)
+            {
+
+                v0 = world * CylinderCache[i];
+                v1 = world * CylinderCache[nextIndex];
+                v2 = world * CylinderCache[0];
+                DrawTriangle(v0, v1, v2,Color::Green);
+            }
+
+            // Body triangles
+            nextIndex = (uint16_t)((i + 5) % DEBUG_DRAW_CYLINDER_VERTICES);
+
+            v0 = world * CylinderCache[(i + 1)];
+            v1 = world * CylinderCache[(i + 2)];
+            v2 = world * CylinderCache[nextIndex];
+            DrawTriangle(v0, v1, v2, Color::Green);
+
+            v0 = world * CylinderCache[nextIndex];
+            v1 = world * CylinderCache[(i + 2)];
+            v2 = world * CylinderCache[((i + 6) % DEBUG_DRAW_CYLINDER_VERTICES)];
+            DrawTriangle(v0, v1, v2, Color::Green);
+
+            // Bottom cap triangles
+            nextIndex = (uint16_t)((i + 7) % DEBUG_DRAW_CYLINDER_VERTICES);
+            if (nextIndex != 3)
+            {
+                v0 = world * CylinderCache[(i + 3)];
+                v1 = world * CylinderCache[3];
+                v2 = world * CylinderCache[nextIndex];
+                DrawTriangle(v0, v1, v2, Color::Green);
+            }
+        }
+    }
+
 
     void Renderer::AddLinesToBeRendered()
     {
@@ -350,6 +467,42 @@ namespace LitchiRuntime
 
             draw_bounding_boxes(Renderer_Entity::Mesh);
             //draw_instance_group_bounding_boxes(Renderer_Entity::Mesh);
+        }
+
+
+        if(GetOption<bool>(Renderer_Option::Physics))
+        {
+            for (const auto& entity : rendererPath4SceneView->GetRenderables()[Renderer_Entity::Collider])
+            {
+                auto transform = entity->GetComponent<Transform>();
+                const auto position = transform->GetPosition();
+                const auto rotation = transform->GetRotation();
+                if (SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>())
+                {
+                    DrawSphere(position, sphereCollider->GetRadius(), 30, Color::Green);
+                }
+
+                if(BoxCollider* boxCollider = entity->GetComponent<BoxCollider>())
+                {
+                    Vector3 size = boxCollider->GetSize();
+
+                    DrawBox(position, rotation, size, Color::Green);
+                }
+
+                if(CapsuleCollider* capsuleCollier = entity->GetComponent<CapsuleCollider>())
+                {
+                    const Vector3 dir = transform->GetForward();
+                    float radius = capsuleCollier->GetRadius();
+                    float height = capsuleCollier->GetHeight();
+                    radius = Math::Helper::Max(radius, 0.05f);
+                    height = Math::Helper::Max(height, 0.05f);
+                    const float halfHeight = height / 2.0f;
+
+                    DrawSphere(position + dir * halfHeight, radius,30, Color::Green);
+                    DrawSphere(position - dir * halfHeight, radius,30, Color::Green);
+                    DrawCylinder(position, rotation, radius, height, Color::Green);
+                }
+            }
         }
     }
 }
