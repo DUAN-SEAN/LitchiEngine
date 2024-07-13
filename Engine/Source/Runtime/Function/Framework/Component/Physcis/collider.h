@@ -139,7 +139,7 @@ namespace LitchiRuntime
 		 * @brief Set Collider offset
 		 * @param offset
 		*/
-		void SetOffset(Vector3 offwwwwwwwwwwwset)
+		void SetOffset(Vector3 offset)
 		{
 			m_offset = offset;
 		}
