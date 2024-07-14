@@ -27,11 +27,18 @@ namespace LitchiRuntime
 		static PxController* CreateDefaultCapsuleController(const Vector3& position, PxMaterial* shapeMaterial, const Vector3& shapePosition, const Quaternion& shapeRotation, float shapeRadius, float shapeHalfHeight);
 
 		static void ReleaseController(PxController* controller);
-		static void MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime);
+		static int32_t MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime);
 		static PxRigidActor* GetControllerRigidActor(PxController* controller);
 		static Vector3 GetControllerPosition(PxController* controller);
 		static Vector3 GetControllerFootPosition(PxController* controller);
-
+		static void SetControllerSize(PxController* controller, float radius, float height);
+		static void SetControllerSlopeLimit(PxController* controller, float value);
+		static void SetControllerNonWalkableMode(PxController* controller, int32_t value);
+		static void SetControllerStepOffset(PxController* controller, float value);
+		static Vector3 GetControllerUpDirection(PxController* controller);
+		static void SetControllerUpDirection(PxController* controller, const Vector3& value);
+		static void SetControllerPosition(PxController* controller, const Vector3& value);
+		static Vector3 GetGravity();
 
 
 		/* Actor */
@@ -53,8 +60,8 @@ namespace LitchiRuntime
 		static void SetAngularDamping(PxRigidBody* actor, float damping);
 		static void SetLinearVelocity(PxRigidDynamic* actor, const Vector3& velocity);
 		static void SetAngularVelocitySet(PxRigidDynamic* actor, const Vector3& velocity);
-		static PxVec3 GetLinearVelocity(PxRigidBody* actor);
-		static PxVec3 GetAngularVelocity(PxRigidBody* actor);
+		static Vector3 GetLinearVelocity(PxRigidBody* actor);
+		static Vector3 GetAngularVelocity(PxRigidBody* actor);
 
 		///* Cooking */
 		//static PxCooking* CookingCreateDefault();

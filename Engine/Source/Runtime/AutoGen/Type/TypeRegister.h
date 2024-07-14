@@ -14,6 +14,7 @@
 
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/CapsuleCollider.h"
+#include "Runtime/Function/Framework/Component/Physcis/CharacterController.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidActor.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidDynamic.h"
 #include "Runtime/Function/Framework/Component/Physcis/RigidStatic.h"
@@ -357,6 +358,17 @@ namespace LitchiRuntime {
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("Radius", &CapsuleCollider::GetRadius, &CapsuleCollider::SetRadius)
 			.property("Height", &CapsuleCollider::GetHeight, &CapsuleCollider::SetHeight);
+
+
+		// CharacterController
+		registration::class_<CharacterController>("CharacterController")
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("Radius", &CharacterController::GetRadius, &CharacterController::SetRadius)
+			.property("Height", &CharacterController::GetHeight, &CharacterController::SetHeight)
+			.property("StepOffset", &CharacterController::GetStepOffset, &CharacterController::SetStepOffset)
+			.property("SlopeLimit", &CharacterController::GetSlopeLimit, &CharacterController::SetSlopeLimit)
+			.property("MinMoveDistance", &CharacterController::GetMinMoveDistance, &CharacterController::SetMinMoveDistance)
+			.property("UpDirection", &CharacterController::GetUpDirection, &CharacterController::SetUpDirection);
 
 		registration::class_<ScriptComponent>("ScriptComponent")
 			.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName)

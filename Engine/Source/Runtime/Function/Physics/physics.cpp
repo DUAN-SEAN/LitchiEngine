@@ -240,14 +240,14 @@ namespace LitchiRuntime
         }
     }
 
-    PxVec3 Physics::GetLinearVelocity(PxRigidBody* actor)
+    Vector3 Physics::GetLinearVelocity(PxRigidBody* actor)
     {
-        return actor->getLinearVelocity();
+        return PhysXMathConvertHelper::ConvertToVector3(actor->getLinearVelocity());
     }
 
-    PxVec3 Physics::GetAngularVelocity(PxRigidBody* actor)
+    Vector3 Physics::GetAngularVelocity(PxRigidBody* actor)
     {
-        return actor->getAngularVelocity();
+        return PhysXMathConvertHelper::ConvertToVector3(actor->getAngularVelocity());
     }
 
   /*  PxCooking* Physics::CookingCreateDefault()
@@ -329,11 +329,24 @@ namespace LitchiRuntime
         }
     }
 
-    void Physics::MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime)
+    int32_t Physics::MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime)
     {
         if (controller != nullptr) {
-            controller->move(PhysXMathConvertHelper::ConvertToPxVec3(displacement), minDist, elapsedTime, 0, 0);
+            PxControllerCollisionFlags flag = controller->move(PhysXMathConvertHelper::ConvertToPxVec3(displacement), minDist, elapsedTime, 0, 0);
+
+            if(flag== PxControllerCollisionFlag::eCOLLISION_SIDES)
+            {
+                return 1;
+            }else if (flag == PxControllerCollisionFlag::eCOLLISION_UP)
+            {
+                return 2;
+            }else if(flag == PxControllerCollisionFlag::eCOLLISION_DOWN)
+            {
+                return 4;
+            }
         }
+
+        return 0;
     }
 
     PxRigidActor* Physics::GetControllerRigidActor(PxController* controller)
@@ -364,6 +377,59 @@ namespace LitchiRuntime
         return Vector3::Zero;
     }
 
+    void Physics::SetControllerSize(PxController* controller, float radius, float height)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        controllerPhysX->setRadius(radius);
+        controllerPhysX->resize(height);
+    }
+
+    void Physics::SetControllerSlopeLimit(PxController* controller, float value)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        controllerPhysX->setSlopeLimit(Math::Helper::Cos(Math::Helper::DegreesToRadians(value)));
+    }
+
+    void Physics::SetControllerNonWalkableMode(PxController* controller, int32_t value)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        controllerPhysX->setNonWalkableMode(static_cast<PxControllerNonWalkableMode::Enum>(value));
+    }
+
+    void Physics::SetControllerStepOffset(PxController* controller, float value)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        controllerPhysX->setStepOffset(value);
+    }
+
+    Vector3 Physics::GetControllerUpDirection(PxController* controller)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        return PhysXMathConvertHelper::ConvertToVector3(controllerPhysX->getUpDirection());
+    }
+
+    void Physics::SetControllerUpDirection(PxController* controller, const Vector3& value)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        controllerPhysX->setUpDirection(PhysXMathConvertHelper::ConvertToPxVec3(value));
+    }
+
+    void Physics::SetControllerPosition(PxController* controller, const Vector3& value)
+    {
+        auto controllerPhysX = (PxCapsuleController*)controller;
+        //const Vector3 sceneOrigin = SceneOrigins[controllerPhysX->getScene()];
+        controllerPhysX->setPosition(PxExtendedVec3(value.x,value.y,value.z));
+    }
+
+    Vector3 Physics::GetGravity()
+    {
+        if(px_scene_!= nullptr)
+        {
+            return PhysXMathConvertHelper::ConvertToVector3(px_scene_->getGravity());
+        }
+
+        return Vector3(0.0f, -9.81f, 0.0f);
+    }
     PxShape* Physics::CreateSphereShape(float radius, PxMaterial* material, const Vector3& position, const Quaternion& rotation) {
         PxShape* shape = px_physics_->createShape(PxSphereGeometry(radius), *material,false);
         shape->setLocalPose(PhysXMathConvertHelper::ConvertToPxTransform(position,rotation));
