@@ -19,8 +19,20 @@ namespace LitchiRuntime
 		static void Init();
 		static void FixedUpdate(float fixedDeltaTime);
 		
-		static PxScene* CreatePxScene();
+		static void CreatePxScene();
 		static PxMaterial* CreateMaterial(float static_friction, float dynamic_friction, float restitution);
+		static void CreateControllerManager();
+		static void ReleaseControllerManager();
+		static void PurgeControllers();
+		static PxController* CreateDefaultCapsuleController(const Vector3& position, PxMaterial* shapeMaterial, const Vector3& shapePosition, const Quaternion& shapeRotation, float shapeRadius, float shapeHalfHeight);
+
+		static void ReleaseController(PxController* controller);
+		static void MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime);
+		static PxRigidActor* GetControllerRigidActor(PxController* controller);
+		static Vector3 GetControllerPosition(PxController* controller);
+		static Vector3 GetControllerFootPosition(PxController* controller);
+
+
 
 		/* Actor */
 		static PxRigidDynamic* CreateRigidDynamic(const Vector3& position, const Quaternion& rotation, const char* name);
@@ -59,9 +71,6 @@ namespace LitchiRuntime
 		static void UpdateBoxShapeSize(PxShape* shape, const Vector3& size);
 		static void UpdateSphereShapeSize(PxShape* shape, float radius);
 
-		/* Character Controller */
-		static PxControllerManager* BJControllerManagerCreate(PxScene* scene);
-
 		static bool enable_ccd() { return enable_ccd_; }
 		static void set_enable_ccd(bool enable_ccd) { enable_ccd_ = enable_ccd; }
 
@@ -79,7 +88,9 @@ namespace LitchiRuntime
 
 		static PxDefaultCpuDispatcher* px_cpu_dispatcher_;
 		static PxScene* px_scene_; // global scene
+		static PxControllerManager* px_controller_manager_;// global controller manager
 		static PxPvd* px_pvd_;
+
 
 		static bool                     enable_ccd_;// continue collision detection
 	};

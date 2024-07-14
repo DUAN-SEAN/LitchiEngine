@@ -479,7 +479,7 @@ namespace LitchiRuntime
                 const auto rotation = transform->GetRotation();
                 if (SphereCollider* sphereCollider = entity->GetComponent<SphereCollider>())
                 {
-                    DrawSphere(position, sphereCollider->GetRadius(), 30, Color::Green);
+                    DrawSphere(position, sphereCollider->GetRadius(), 15, Color::Green);
                 }
 
                 if(BoxCollider* boxCollider = entity->GetComponent<BoxCollider>())
@@ -499,8 +499,8 @@ namespace LitchiRuntime
                     const float halfHeight = height / 2.0f;
 
                     auto localRotation = Quaternion::FromEulerAngles(90.0f, 0, 0);
-                    DrawSphere(((position + localRotation*(dir * halfHeight))), radius,20, Color::Green);
-                    DrawSphere((position - localRotation*(dir * halfHeight)), radius,20, Color::Green);
+                    DrawSphere(((position + localRotation*(dir * halfHeight))), radius,15, Color::Green);
+                    DrawSphere((position - localRotation*(dir * halfHeight)), radius,15, Color::Green);
                     DrawCylinder(position, rotation, radius, height, Color::Green);
                 }
             }

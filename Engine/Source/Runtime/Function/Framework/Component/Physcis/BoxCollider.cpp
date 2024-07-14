@@ -19,6 +19,10 @@ namespace LitchiRuntime
 
     void BoxCollider::UpdateShapeSize(const Vector3& size)
     {
+        m_size.x = Math::Helper::Max(size.x, 0.05f);
+        m_size.y= Math::Helper::Max(size.y, 0.05f);
+        m_size.z= Math::Helper::Max(size.z, 0.05f);
+
         m_size = size;
         UpdateShape();
     }

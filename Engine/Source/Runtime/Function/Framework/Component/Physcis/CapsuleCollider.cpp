@@ -23,7 +23,9 @@ namespace LitchiRuntime
 
     void CapsuleCollider::UpdateShapeRadiusHeight(float radius, float height)
     {
-        m_radius = radius;
+        m_radius = Math::Helper::Max(radius,0.05f);
+        m_height = Math::Helper::Max(height,0.05f);
+        
         UpdateShape();
     }
 

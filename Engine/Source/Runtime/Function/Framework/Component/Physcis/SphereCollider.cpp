@@ -23,7 +23,8 @@ namespace LitchiRuntime
 
     void SphereCollider::UpdateShapeRadius(float radius)
     {
-        m_radius = radius;
+        m_radius = Math::Helper::Max(radius, 0.05f);
+
         UpdateShape();
     }
 

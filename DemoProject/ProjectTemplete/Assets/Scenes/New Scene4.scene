@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 894,
+    "availableID": 899,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -13,18 +13,18 @@
                     "Type": "Transform",
                     "localPosition": {
                         "x": 0.0,
-                        "y": 1.7143198251724244,
+                        "y": -0.09771612286567688,
                         "z": 0.0
                     },
                     "localRotation": {
-                        "x": 0.0,
+                        "x": 0.054337892681360248,
                         "y": 0.0,
                         "z": 0.0,
-                        "w": 1.0
+                        "w": 0.9985226392745972
                     },
                     "localScale": {
                         "x": 28.430198669433595,
-                        "y": 1.0,
+                        "y": 0.9999945163726807,
                         "z": 81.81254577636719
                     }
                 },
@@ -53,67 +53,9 @@
                         "z": 0.0
                     },
                     "Size": {
-                        "x": 5.5,
+                        "x": 26.0,
                         "y": 1.0,
-                        "z": 10.5
-                    }
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
-            "id": 2,
-            "parentId": 0,
-            "layer": 1,
-            "name": "Player",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": 1.3637874126434327,
-                        "y": 6.25148868560791,
-                        "z": 1.216477632522583
-                    },
-                    "localRotation": {
-                        "x": -0.42356958985328677,
-                        "y": -0.40470317006111147,
-                        "z": -0.24769383668899537,
-                        "w": 0.7716553211212158
-                    },
-                    "localScale": {
-                        "x": 0.9679463505744934,
-                        "y": 2.372910737991333,
-                        "z": 0.9887281060218811
-                    }
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": ":Models/Cube.fbx",
-                    "SubMeshIndex": 0
-                },
-                {
-                    "Type": "MeshRenderer",
-                    "materialPath": ":Materials/Standard4Phong.mat"
-                },
-                {
-                    "Type": "RigidDynamic"
-                },
-                {
-                    "Type": "BoxCollider",
-                    "physicsMaterial": {
-                        "dynamicFriction": 0.6000000238418579,
-                        "restitution": 0.10000000149011612,
-                        "staticFriction": 0.6000000238418579
-                    },
-                    "offset": {
-                        "x": 0.0,
-                        "y": 0.0,
-                        "z": 0.0
-                    },
-                    "Size": {
-                        "x": 1.0,
-                        "y": 1.0,
-                        "z": 1.0
+                        "z": 85.0
                     }
                 }
             ]
@@ -264,43 +206,6 @@
         },
         {
             "Type": "GameObject",
-            "id": 883,
-            "parentId": 887,
-            "layer": 1,
-            "name": "Wall1",
-            "componentList": [
-                {
-                    "Type": "Transform",
-                    "localPosition": {
-                        "x": -14.743966102600098,
-                        "y": 5.408261775970459,
-                        "z": 9.348663330078125
-                    },
-                    "localRotation": {
-                        "x": 0.0,
-                        "y": 0.0026191368233412506,
-                        "z": 0.0,
-                        "w": 0.999996542930603
-                    },
-                    "localScale": {
-                        "x": 0.9999577403068543,
-                        "y": 39.02278137207031,
-                        "z": 81.5914535522461
-                    }
-                },
-                {
-                    "Type": "MeshRenderer",
-                    "materialPath": ":Materials/Standard4Phong.mat"
-                },
-                {
-                    "Type": "MeshFilter",
-                    "MeshPath": ":Models/Cube.fbx",
-                    "SubMeshIndex": 0
-                }
-            ]
-        },
-        {
-            "Type": "GameObject",
             "id": 884,
             "parentId": 0,
             "layer": 1,
@@ -361,6 +266,27 @@
                     "Type": "MeshFilter",
                     "MeshPath": ":Models/Cube.fbx",
                     "SubMeshIndex": 0
+                },
+                {
+                    "Type": "RigidStatic"
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Size": {
+                        "x": 1.0,
+                        "y": 25.0,
+                        "z": 89.0
+                    }
                 }
             ]
         },
@@ -376,18 +302,18 @@
                     "localPosition": {
                         "x": -7.934902191162109,
                         "y": 0.0,
-                        "z": 10.839609146118164
+                        "z": 24.787090301513673
                     },
                     "localRotation": {
                         "x": 0.0,
-                        "y": 0.7071067690849304,
+                        "y": 0.7071066498756409,
                         "z": 0.0,
-                        "w": 0.7071067690849304
+                        "w": 0.70710688829422
                     },
                     "localScale": {
-                        "x": 0.9998339414596558,
+                        "x": 0.9997968673706055,
                         "y": 39.02278137207031,
-                        "z": 81.5828857421875
+                        "z": 81.57814025878906
                     }
                 },
                 {
@@ -398,6 +324,27 @@
                     "Type": "MeshFilter",
                     "MeshPath": ":Models/Cube.fbx",
                     "SubMeshIndex": 0
+                },
+                {
+                    "Type": "RigidStatic"
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Size": {
+                        "x": 1.0,
+                        "y": 24.049999237060548,
+                        "z": 69.05000305175781
+                    }
                 }
             ]
         },
@@ -463,6 +410,27 @@
                     "Type": "MeshFilter",
                     "MeshPath": ":Models/Cube.fbx",
                     "SubMeshIndex": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Size": {
+                        "x": 1.0,
+                        "y": 28.0,
+                        "z": 30.0
+                    }
+                },
+                {
+                    "Type": "RigidStatic"
                 }
             ]
         },
@@ -562,7 +530,7 @@
                 {
                     "Type": "Transform",
                     "localPosition": {
-                        "x": 0.0,
+                        "x": 5.153979301452637,
                         "y": 5.517270088195801,
                         "z": 0.0
                     },
@@ -599,7 +567,7 @@
                         "y": 0.0,
                         "z": 0.0
                     },
-                    "Radius": 1.0
+                    "Radius": 0.5
                 },
                 {
                     "Type": "RigidDynamic"
@@ -695,6 +663,226 @@
                     "Type": "MeshFilter",
                     "MeshPath": ":Models/Cube.fbx",
                     "SubMeshIndex": 0
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 894,
+            "parentId": 887,
+            "layer": 1,
+            "name": "Wall1",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -14.743966102600098,
+                        "y": 5.408261775970459,
+                        "z": 9.348663330078125
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.9999577403068543,
+                        "y": 39.02278137207031,
+                        "z": 81.5914535522461
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cube.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "BoxCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Size": {
+                        "x": 1.0,
+                        "y": 23.0,
+                        "z": 78.0
+                    }
+                },
+                {
+                    "Type": "RigidStatic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 896,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Sphere",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 6.501338005065918,
+                        "y": 5.517270088195801,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Sphere.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Radius": 0.5
+                },
+                {
+                    "Type": "RigidDynamic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 897,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Sphere",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 5.615152835845947,
+                        "y": 6.6740288734436039,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Sphere.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Radius": 0.5
+                },
+                {
+                    "Type": "RigidDynamic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 898,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Sphere",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": 7.695962429046631,
+                        "y": 6.953287601470947,
+                        "z": 0.0
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 0.5,
+                        "y": 0.5,
+                        "z": 0.5
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Sphere.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "SphereCollider",
+                    "physicsMaterial": {
+                        "dynamicFriction": 0.6000000238418579,
+                        "restitution": 0.10000000149011612,
+                        "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
+                    "Radius": 0.5
+                },
+                {
+                    "Type": "RigidDynamic"
                 }
             ]
         }

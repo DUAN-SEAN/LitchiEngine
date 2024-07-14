@@ -82,7 +82,7 @@ target_link_directories(${TARGET_NAME}
     $<$<CONFIG:Debug>:${THIRD_PARTY_DIR}/PhysX/lib/debug>
     $<$<CONFIG:Release>:${THIRD_PARTY_DIR}/PhysX/lib/release>
 )
-target_link_libraries(${TARGET_NAME} PUBLIC PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64)
+target_link_libraries(${TARGET_NAME} PUBLIC PhysX_64 PhysXCommon_64 PhysXCooking_64 PhysXExtensions_static_64 PhysXFoundation_64 PhysXPvdSDK_static_64 PhysXCharacterKinematic_static_64)
 
 # Vulkan
 target_link_directories(${TARGET_NAME} PUBLIC ${THIRD_PARTY_DIR}/VulkanSDK/lib/Win32)

@@ -26,6 +26,7 @@ namespace LitchiRuntime
     PxDefaultCpuDispatcher* Physics::px_cpu_dispatcher_;
     PxScene* Physics::px_scene_;
     PxPvd* Physics::px_pvd_;
+    PxControllerManager* Physics::px_controller_manager_;
     bool                    Physics::enable_ccd_ = true;
 
     //~zh 设置在碰撞发生时，Physx需要做的事情
@@ -73,7 +74,8 @@ namespace LitchiRuntime
         //~zh 创建Physx SDK实例
         px_physics_ = PxCreatePhysics(PX_PHYSICS_VERSION, *px_foundation_, PxTolerancesScale(), true, px_pvd_);
 
-        px_scene_ = CreatePxScene();
+        CreatePxScene();
+        CreateControllerManager();
     }
 
     void Physics::FixedUpdate(float fixedDeltaTime) {
@@ -85,10 +87,9 @@ namespace LitchiRuntime
         px_scene_->fetchResults(true);
     }
 
-    PxScene* Physics::CreatePxScene() {
+    void Physics::CreatePxScene() {
         if (px_physics_ == nullptr) {
             DEBUG_LOG_ERROR("px_physics_==nullptr,please call Physics::Init() first");
-            return nullptr;
         }
         //~zh 创建Physx Scene
         PxSceneDesc sceneDesc(px_physics_->getTolerancesScale());
@@ -108,17 +109,15 @@ namespace LitchiRuntime
             //~en Enable CCD
             sceneDesc.flags |= PxSceneFlag::eENABLE_CCD;
         }
-        PxScene* px_scene = px_physics_->createScene(sceneDesc);
+        px_scene_ = px_physics_->createScene(sceneDesc);
         //~zh 设置PVD
-        PxPvdSceneClient* pvd_client = px_scene->getScenePvdClient();
+        PxPvdSceneClient* pvd_client = px_scene_->getScenePvdClient();
         if (pvd_client)
         {
             pvd_client->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
             pvd_client->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
             pvd_client->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
         }
-
-        return px_scene;
     }
 
     PxRigidDynamic* Physics::CreateRigidDynamic(const Vector3& position, const Quaternion& rotation, const char* name) {
@@ -268,6 +267,101 @@ namespace LitchiRuntime
     PxMaterial* Physics::CreateMaterial(float static_friction, float dynamic_friction, float restitution) {
         PxMaterial* material = px_physics_->createMaterial(static_friction, dynamic_friction, restitution);
         return material;
+    }
+
+    void Physics::CreateControllerManager()
+    {
+        if (px_scene_ != nullptr) {
+            px_controller_manager_ =PxCreateControllerManager(*px_scene_);
+        }
+    }
+
+    void Physics::ReleaseControllerManager()
+    {
+        if (px_controller_manager_ != nullptr) {
+            px_controller_manager_->release();
+        }
+    }
+
+    void Physics::PurgeControllers()
+    {
+        if (px_controller_manager_ != nullptr) {
+            px_controller_manager_->purgeControllers();
+        }
+    }
+
+    PxController* Physics::CreateDefaultCapsuleController(const Vector3& position, PxMaterial* shapeMaterial, const Vector3& shapePosition, const Quaternion& shapeRotation, float shapeRadius, float shapeHalfHeight)
+    {
+        if (px_controller_manager_ != nullptr) {
+            PxCapsuleControllerDesc desc;
+            desc.setToDefault();
+            desc.material = shapeMaterial;
+            desc.position = PxExtendedVec3(position.x, position.y, position.z);
+            desc.height = shapeHalfHeight * 2.0f;
+            desc.radius = shapeRadius;
+            desc.slopeLimit = 0.0f;
+            desc.contactOffset = 0.01f;
+            desc.stepOffset = 0.02f;
+            desc.reportCallback = nullptr;
+            desc.behaviorCallback = nullptr;
+            desc.scaleCoeff = 0.99f;
+            desc.upDirection = PxVec3(0.0f, 1.0f, 0.0f);
+
+            PxController* controller = px_controller_manager_->createController(desc);
+            PxShape* shape = nullptr;
+            controller->getActor()->getShapes(&shape, 1, 0);
+            // 将胶囊体旋转为y轴方向
+            // 左手坐标系,绕y轴正方向旋转90度
+            //PxTransform relativePose(PxQuat(PxHalfPi, PxVec3(0, 0, 1)));
+            // 下面的方法将改变shape的局部姿势,不会唤醒物体,也不会重新计算其惯性,仅仅就是改变了数值
+            //shape->setLocalPose(shapeLocalPose * relativePose);
+            return controller;
+        }
+        return NULL;
+    }
+
+    void Physics::ReleaseController(PxController* controller)
+    {
+        if (controller != nullptr) {
+
+            controller->release();
+
+        }
+    }
+
+    void Physics::MoveController(PxController* controller, const Vector3& displacement, float minDist, float elapsedTime)
+    {
+        if (controller != nullptr) {
+            controller->move(PhysXMathConvertHelper::ConvertToPxVec3(displacement), minDist, elapsedTime, 0, 0);
+        }
+    }
+
+    PxRigidActor* Physics::GetControllerRigidActor(PxController* controller)
+    {
+        if (controller != nullptr) {
+            return controller->getActor();
+        }
+        return nullptr;
+    }
+
+    Vector3 Physics::GetControllerPosition(PxController* controller)
+    {
+        if (controller != nullptr) {
+            PxExtendedVec3 position = controller->getPosition();
+            PxVec3 pos((float)position.x, (float)position.y, (float)position.z);
+            return PhysXMathConvertHelper::ConvertToVector3(pos);
+        }
+        return Vector3::Zero;
+    }
+
+    Vector3 Physics::GetControllerFootPosition(PxController* controller)
+    {
+        if (controller != nullptr) {
+            PxExtendedVec3 position = controller->getFootPosition();
+            PxVec3 pos((float)position.x, (float)position.y, (float)position.z);
+            return PhysXMathConvertHelper::ConvertToVector3(pos);
+        }
+        return Vector3::Zero;
     }
 
     PxShape* Physics::CreateSphereShape(float radius, PxMaterial* material, const Vector3& position, const Quaternion& rotation) {
