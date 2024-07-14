@@ -24,7 +24,7 @@ namespace LitchiRuntime
         m_size.z= Math::Helper::Max(size.z, 0.05f);
 
         m_size = size;
-        UpdateShape();
+        // UpdateShape();
     }
 
     void BoxCollider::PostResourceModify()

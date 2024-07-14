@@ -25,7 +25,7 @@ namespace LitchiRuntime
     {
         m_radius = Math::Helper::Max(radius, 0.05f);
 
-        UpdateShape();
+        // UpdateShape();
     }
 
     void SphereCollider::CreateShape() {

@@ -20,6 +20,8 @@ namespace LitchiRuntime
         {
             // if attach shape, internal release shape ref count, if shape ref = 0 shape will be released
             Physics::ReleaseRigidActor(m_pxRigidActor);
+
+            m_pxRigidActor = nullptr;
         }
     }
 
