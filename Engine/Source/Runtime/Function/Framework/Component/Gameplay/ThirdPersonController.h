@@ -78,6 +78,8 @@ namespace LitchiRuntime
 		 */
 		float m_rotateSpeed = 60.0f;
 
+		Vector3 m_fallVelocity = Vector3::Zero;
+
 	public:
 
 		RTTR_ENABLE(Component)

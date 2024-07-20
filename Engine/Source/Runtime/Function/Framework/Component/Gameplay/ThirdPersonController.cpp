@@ -46,7 +46,15 @@ namespace LitchiRuntime
 				moveDist = -transform->GetForward() * m_moveLinearSpeed * Time::GetDeltaTime();
 			}
 
+			m_fallVelocity += Physics::GetGravity() * Time::GetDeltaTime();
+			moveDist += m_fallVelocity * Time::GetDeltaTime();
+
 			auto flag  = m_controller->Move(moveDist);
+			if(flag == CharacterController::CollisionFlags::Below)
+			{
+				m_fallVelocity = Vector3::Zero;
+			}
+
 
 			Quaternion rotate = Quaternion::Identity;
 			if (leftKeyState == EKeyState::KEY_DOWN)
