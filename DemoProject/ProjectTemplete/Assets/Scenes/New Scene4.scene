@@ -1,6 +1,6 @@
 {
     "name": "New Scene4",
-    "availableID": 899,
+    "availableID": 900,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -883,6 +883,56 @@
                 },
                 {
                     "Type": "RigidDynamic"
+                }
+            ]
+        },
+        {
+            "Type": "GameObject",
+            "id": 899,
+            "parentId": 0,
+            "layer": 1,
+            "name": "Player",
+            "componentList": [
+                {
+                    "Type": "Transform",
+                    "localPosition": {
+                        "x": -6.365982532501221,
+                        "y": 1.7801578044891358,
+                        "z": 2.5822792053222658
+                    },
+                    "localRotation": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0,
+                        "w": 1.0
+                    },
+                    "localScale": {
+                        "x": 1.0,
+                        "y": 1.0,
+                        "z": 1.0
+                    }
+                },
+                {
+                    "Type": "MeshRenderer",
+                    "materialPath": ":Materials/Standard4Phong.mat"
+                },
+                {
+                    "Type": "MeshFilter",
+                    "MeshPath": ":Models/Cylinder.fbx",
+                    "SubMeshIndex": 0
+                },
+                {
+                    "Type": "CharacterController",
+                    "Radius": 1.0,
+                    "Height": 3.0,
+                    "StepOffset": 0.6000000238418579,
+                    "SlopeLimit": 45.0,
+                    "MinMoveDistance": 0.0,
+                    "UpDirection": {
+                        "x": 0.0,
+                        "y": 1.0,
+                        "z": 0.0
+                    }
                 }
             ]
         }

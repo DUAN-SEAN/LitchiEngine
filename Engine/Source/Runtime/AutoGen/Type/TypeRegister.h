@@ -7,6 +7,7 @@
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Gameplay/ThirdPersonController.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshFilter.h"
 #include "Runtime/Function/Framework/Component/Renderer/MeshRenderer.h"
@@ -365,14 +366,21 @@ namespace LitchiRuntime {
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			.property("Radius", &CharacterController::GetRadius, &CharacterController::SetRadius)
 			.property("Height", &CharacterController::GetHeight, &CharacterController::SetHeight)
+			.property("physicsMaterial", &CharacterController::GetPhysicMaterial, &CharacterController::SetPhysicMaterial)
 			.property("StepOffset", &CharacterController::GetStepOffset, &CharacterController::SetStepOffset)
 			.property("SlopeLimit", &CharacterController::GetSlopeLimit, &CharacterController::SetSlopeLimit)
 			.property("MinMoveDistance", &CharacterController::GetMinMoveDistance, &CharacterController::SetMinMoveDistance)
 			.property("UpDirection", &CharacterController::GetUpDirection, &CharacterController::SetUpDirection);
 
+		registration::class_<ThirdPersonController>("ThirdPersonController")
+			.constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			.property("MoveLinearSpeed", &ThirdPersonController::GetMoveLinearSpeed, &ThirdPersonController::SetMoveLinearSpeed)
+			.property("RotateSpeed", &ThirdPersonController::GetwRotateSpeed, &ThirdPersonController::SetRotateSpeed);
+
 		registration::class_<ScriptComponent>("ScriptComponent")
 			.property("ClassName", &ScriptComponent::GetClassName, &ScriptComponent::SetClassName)
 			.constructor<>()(rttr::policy::ctor::as_raw_ptr);
+
 
 		/* Framework Object Types End */
 	}

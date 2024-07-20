@@ -7,6 +7,7 @@
 #include "Runtime/Core/Tools/Utils/PathParser.h"
 #include "Runtime/Function/Framework/Component/Animation/animator.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
+#include "Runtime/Function/Framework/Component/Gameplay/ThirdPersonController.h"
 #include "Runtime/Function/Framework/Component/Light/Light.h"
 #include "Runtime/Function/Framework/Component/Physcis/BoxCollider.h"
 #include "Runtime/Function/Framework/Component/Physcis/CapsuleCollider.h"
@@ -77,6 +78,7 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(14, "SphereCollider");
 		componentSelectorWidget.choices.emplace(15, "CapsuleCollider");
 		componentSelectorWidget.choices.emplace(16, "CharacterController");
+		componentSelectorWidget.choices.emplace(17, "ThirdPersonController");
 
 		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f ));
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
@@ -99,6 +101,7 @@ LitchiEditor::Inspector::Inspector
 			case 14: GetTargetActor()->AddComponent<SphereCollider>();				break;
 			case 15: GetTargetActor()->AddComponent<CapsuleCollider>();				break;
 			case 16: GetTargetActor()->AddComponent<CharacterController>();				break;
+			case 17: GetTargetActor()->AddComponent<ThirdPersonController>();				break;
 			}
 
 			Refresh();
@@ -131,6 +134,7 @@ LitchiEditor::Inspector::Inspector
 			case 14: defineButtonsStates(GetTargetActor()->GetComponent<SphereCollider>());		return;
 			case 15: defineButtonsStates(GetTargetActor()->GetComponent<CapsuleCollider>());		return;
 			case 16: defineButtonsStates(GetTargetActor()->GetComponent<CharacterController>());		return;
+			case 17: defineButtonsStates(GetTargetActor()->GetComponent<ThirdPersonController>());		return;
 			}
 		};
 

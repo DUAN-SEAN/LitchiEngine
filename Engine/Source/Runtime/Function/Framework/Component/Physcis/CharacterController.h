@@ -87,6 +87,23 @@ namespace LitchiRuntime
 			return m_height;
 		}
 
+		/**
+		 * @brief Set PhysicMaterial
+		 * @param physicMaterialRes
+		*/
+		void SetPhysicMaterial(PhysicMaterialRes physicMaterialRes)
+		{
+			m_physicMaterial = physicMaterialRes;
+		}
+
+		/**
+		 * @brief Get PhysicMaterial
+		 * @return
+		*/
+		PhysicMaterialRes GetPhysicMaterial()
+		{
+			return m_physicMaterial;
+		}
 
 		/**
 		 * \brief Gets the step height. The character will step up a stair only if it is closer to the ground than the indicated value. This should not be greater than the Character Controller’s height or it will generate an error.
@@ -164,6 +181,8 @@ namespace LitchiRuntime
 		 * @brief Call before object resource change
 		*/
 		void PostResourceModify() override;
+
+		void OnAwake() override;
 	public:
 
 		/**
@@ -202,9 +221,19 @@ namespace LitchiRuntime
 	private:
 
 		/**
+		 * @brief Create PhysicMaterial
+		*/
+		void CreatePhysicMaterial();
+
+		/**
 		 * \brief PhysX Controller Handle
 		 */
 		PxController* m_controller = nullptr;
+
+		/**
+		 * @brief PhysX PxMaterial pointer
+		*/
+		PxMaterial* m_pxMaterial = nullptr;
 
 		/**
 		 * @brief Radius of capsule collision body. measured in the object's local space. The sphere radius will be scaled by the actor's world scale.
@@ -236,7 +265,11 @@ namespace LitchiRuntime
 		 */
 		Vector3 m_upDirection = Vector3::Up;
 
-		
+		/**
+		 * @brief PhysicMaterialRes
+		*/
+		PhysicMaterialRes m_physicMaterial;
+
 		/**
 		 * \brief last move collision flags
 		 */

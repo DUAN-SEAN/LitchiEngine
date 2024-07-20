@@ -22,6 +22,16 @@ namespace LitchiRuntime
         Component::PostResourceLoaded();
     }
 
+    void CharacterController::OnAwake()
+    {
+        if(m_controller == nullptr)
+        {
+            CreatePhysicMaterial();
+            auto transform = GetGameObject()->GetTransform();
+            m_controller = Physics::CreateDefaultCapsuleController(transform->GetPosition(), m_pxMaterial, Vector3::Zero, Quaternion::Identity, m_radius, m_height / 2.0f);
+        }
+    }
+
     Vector3 CharacterController::GetVelocity() const
     {
         return Physics::GetLinearVelocity(dynamic_cast<PxRigidBody*>(Physics::GetControllerRigidActor(m_controller)));
@@ -63,6 +73,14 @@ namespace LitchiRuntime
         }
 
         return result;
+    }
+
+    void CharacterController::CreatePhysicMaterial() {
+
+        if (m_pxMaterial == nullptr) {
+            m_pxMaterial = Physics::CreateMaterial(m_physicMaterial.GetStaticFriction(), m_physicMaterial.GetDynamicFriction(), m_physicMaterial.GetRestitution());
+            m_pxMaterial->setRestitutionCombineMode(PxCombineMode::eAVERAGE);
+        }
     }
 
 }
