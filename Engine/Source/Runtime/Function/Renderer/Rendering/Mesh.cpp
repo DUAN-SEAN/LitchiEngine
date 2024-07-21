@@ -45,12 +45,12 @@ namespace LitchiRuntime
 		m_indices.clear();
 		m_indices.shrink_to_fit();
 
-		if (m_model_is_animation)
+		// if (m_model_is_animation)
 		{
 			m_verticesWithBone.clear();
 			m_verticesWithBone.shrink_to_fit();
 		}
-		else
+		// else
 		{
 			m_vertices.clear();
 			m_vertices.shrink_to_fit();
@@ -139,11 +139,11 @@ namespace LitchiRuntime
 		uint32_t size = 0;
 		size += uint32_t(m_indices.size() * sizeof(uint32_t));
 
-		if (m_model_is_animation)
+		// if (m_model_is_animation)
 		{
 			size += uint32_t(m_verticesWithBone.size() * sizeof(RHI_Vertex_PosTexNorTanBone));
 		}
-		else
+		// else
 		{
 			size += uint32_t(m_vertices.size() * sizeof(RHI_Vertex_PosTexNorTan));
 		}
@@ -235,14 +235,17 @@ namespace LitchiRuntime
 
 	uint32_t Mesh::GetVertexCount() const
 	{
-		if (m_model_is_animation)
+		uint32_t size = 0;
+		// if (m_model_is_animation)
 		{
-			return static_cast<uint32_t>(m_verticesWithBone.size());
+			size +=  static_cast<uint32_t>(m_verticesWithBone.size());
 		}
-		else
+		// else
 		{
-			return static_cast<uint32_t>(m_vertices.size());
+			size += static_cast<uint32_t>(m_vertices.size());
 		}
+
+		return size;
 	}
 
 	uint32_t Mesh::GetIndexCount() const
@@ -252,28 +255,25 @@ namespace LitchiRuntime
 
 	void Mesh::ComputeAabb()
 	{
-		if (m_model_is_animation)
+		if(m_verticesWithBone.size()> 0)
 		{
-			LC_ASSERT_MSG(m_verticesWithBone.size() != 0, "There are no vertices");
-			m_aabb = BoundingBox(m_verticesWithBone.data(), static_cast<uint32_t>(m_verticesWithBone.size()));
-
-			// compute sub mesh aabb
-			for (int subMeshIndex= 0; subMeshIndex < m_subMeshArr.size(); subMeshIndex++)
-			{
-				auto& subMesh = m_subMeshArr[subMeshIndex];
-				m_subMesh_aabb_arr.push_back(BoundingBox(m_verticesWithBone.data(), subMesh.m_geometryVertexCount, subMesh.m_geometryVertexOffset));
-			}
-
+			m_aabbWithBone = BoundingBox(m_verticesWithBone.data(), static_cast<uint32_t>(m_verticesWithBone.size()));
 		}
-		else
-		{
-			LC_ASSERT_MSG(m_vertices.size() != 0, "There are no vertices");
-			m_aabb = BoundingBox(m_vertices.data(), static_cast<uint32_t>(m_vertices.size()));
 
-			// compute sub mesh aabb
-			for (int subMeshIndex = 0; subMeshIndex < m_subMeshArr.size(); subMeshIndex++)
+		if(m_vertices.size() > 0)
+		{
+			m_aabb = BoundingBox(m_vertices.data(), static_cast<uint32_t>(m_vertices.size()));
+		}
+
+		// compute sub mesh aabb
+		for (int subMeshIndex = 0; subMeshIndex < m_subMeshArr.size(); subMeshIndex++)
+		{
+			auto& subMesh = m_subMeshArr[subMeshIndex];
+			if (subMesh.m_isSkinnedMesh)
 			{
-				auto& subMesh = m_subMeshArr[subMeshIndex];
+				m_subMesh_aabb_arr.push_back(BoundingBox(m_verticesWithBone.data(), subMesh.m_geometryVertexCount, subMesh.m_geometryVertexOffset));
+			}else
+			{
 				m_subMesh_aabb_arr.push_back(BoundingBox(m_vertices.data(), subMesh.m_geometryVertexCount, subMesh.m_geometryVertexOffset));
 			}
 		}
@@ -339,16 +339,16 @@ namespace LitchiRuntime
 		m_index_buffer = make_shared<RHI_IndexBuffer>(false, (string("mesh_index_buffer_") + m_object_name).c_str());
 		m_index_buffer->Create(m_indices);
 
-		if (m_model_is_animation)
+		if (!m_verticesWithBone.empty())
 		{
 			LC_ASSERT_MSG(!m_verticesWithBone.empty(), "There are no vertices");
-			m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
-			m_vertex_buffer->Create(m_verticesWithBone);
+			m_vertex_bufferWithBone = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_withBone") + m_object_name).c_str());
+			m_vertex_bufferWithBone->Create(m_verticesWithBone);
 		}
-		else
+
+		if(!m_vertices.empty())
 		{
-			LC_ASSERT_MSG(!m_vertices.empty(), "There are no vertices");
-			m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_") + m_object_name).c_str());
+			m_vertex_buffer = make_shared<RHI_VertexBuffer>(false, (string("mesh_vertex_buffer_withoutBone") + m_object_name).c_str());
 			m_vertex_buffer->Create(m_vertices);
 		}
 	}

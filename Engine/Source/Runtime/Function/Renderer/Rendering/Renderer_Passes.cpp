@@ -39,7 +39,6 @@ namespace LitchiRuntime
 			MeshFilter* renderable = entity->GetComponent<MeshFilter>();
 			MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
 			SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>();
-
 			if (skinned_mesh_renderer)
 			{
 				meshRenderer = skinned_mesh_renderer;
@@ -54,7 +53,10 @@ namespace LitchiRuntime
 
 			// Acquire geometry
 			Mesh* mesh = renderable->GetMesh();
-			if (!mesh || !mesh->GetVertexBuffer() || !mesh->GetIndexBuffer())
+			RHI_VertexBuffer* vertex_buffer = skinned_mesh_renderer != nullptr ? mesh->GetVertexBufferWithBone() : mesh->GetVertexBuffer();
+			RHI_IndexBuffer* index_buffer = mesh->GetIndexBuffer();
+			
+			if (!mesh || !vertex_buffer || !index_buffer)
 				return;
 
 			// Acquire material
@@ -68,8 +70,8 @@ namespace LitchiRuntime
 
 
 			// Bind geometry
-			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
-			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
+			cmd_list->SetBufferIndex(index_buffer);
+			cmd_list->SetBufferVertex(vertex_buffer);
 
 			// 如果是skinnedMesh 更新蒙皮数据
 			if (skinned_mesh_renderer)
@@ -321,12 +323,12 @@ namespace LitchiRuntime
 			EASY_BLOCK("Prevoius SetPSO")
 			// Acquire renderable component
 			MeshFilter* renderable = entity->GetComponent<MeshFilter>();
-			SkinnedMeshRenderer* skinnedMeshRenderer = entity->GetComponent<SkinnedMeshRenderer>();
+			SkinnedMeshRenderer* skinned_mesh_renderer = entity->GetComponent<SkinnedMeshRenderer>();
 			MeshRenderer* meshRenderer = entity->GetComponent<MeshRenderer>();
 
-			if (skinnedMeshRenderer)
+			if (skinned_mesh_renderer)
 			{
-				meshRenderer = skinnedMeshRenderer;
+				meshRenderer = skinned_mesh_renderer;
 			}
 
 			if (!meshRenderer)
@@ -339,8 +341,11 @@ namespace LitchiRuntime
 
 			// Acquire geometry
 			Mesh* mesh = renderable->GetMesh();
-			if (!mesh || !mesh->GetVertexBuffer() || !mesh->GetIndexBuffer())
-				continue;
+			RHI_VertexBuffer* vertex_buffer = skinned_mesh_renderer != nullptr ? mesh->GetVertexBufferWithBone() : mesh->GetVertexBuffer();
+			RHI_IndexBuffer* index_buffer = mesh->GetIndexBuffer();
+
+			if (!mesh || !vertex_buffer || !index_buffer)
+				return;
 
 			// Acquire material
 			Material* material = meshRenderer->GetMaterial();
@@ -365,8 +370,8 @@ namespace LitchiRuntime
 
 			EASY_BLOCK("SetBuffer")
 			// Bind geometry
-			cmd_list->SetBufferIndex(mesh->GetIndexBuffer());
-			cmd_list->SetBufferVertex(mesh->GetVertexBuffer());
+			cmd_list->SetBufferIndex(index_buffer);
+			cmd_list->SetBufferVertex(vertex_buffer);
 			EASY_END_BLOCK
 
 			EASY_BLOCK("SetMaterialBuffer")
@@ -374,9 +379,9 @@ namespace LitchiRuntime
 			EASY_END_BLOCK
 
 			// 如果是skinnedMesh 更新蒙皮数据
-			if(skinnedMeshRenderer)
+			if(skinned_mesh_renderer)
 			{
-				auto boneCbuffer = skinnedMeshRenderer->GetBoneConstantBuffer();
+				auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();
 				cmd_list->SetConstantBuffer(Renderer_BindingsCb::boneArr, boneCbuffer);
 			}
 
@@ -769,7 +774,7 @@ namespace LitchiRuntime
 			transform = worldMatrix;
 			break;
 		case SelectedResourceType_Mesh:
-			m_vertex_buffer = selectedMesh->GetVertexBuffer();
+			m_vertex_buffer = selectedMesh->IsAnimationModel()? selectedMesh->GetVertexBufferWithBone() : selectedMesh->GetVertexBuffer();
 			m_index_buffer = selectedMesh->GetIndexBuffer();
 			indexCount = selectedMesh->GetIndexCount();
 			// transform = ;

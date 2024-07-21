@@ -1,5 +1,6 @@
 {
-    "availableID": 9,
+    "name": "Empty Scene",
+    "availableID": 393,
     "gameObjects": [
         {
             "Type": "GameObject",
@@ -45,6 +46,11 @@
                         "dynamicFriction": 0.6000000238418579,
                         "restitution": 0.10000000149011612,
                         "staticFriction": 0.6000000238418579
+                    },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
                     },
                     "Size": {
                         "x": 5.5,
@@ -99,6 +105,11 @@
                         "restitution": 0.10000000149011612,
                         "staticFriction": 0.6000000238418579
                     },
+                    "offset": {
+                        "x": 0.0,
+                        "y": 0.0,
+                        "z": 0.0
+                    },
                     "Size": {
                         "x": 1.0,
                         "y": 1.0,
@@ -145,7 +156,8 @@
                     "intensityLumens": 1600.0,
                     "shadowsEnabled": true,
                     "shadowsTransparentEnabled": true,
-                    "bias": 0.0
+                    "range": 200.0,
+                    "angle": 0.5
                 }
             ]
         },
@@ -177,8 +189,33 @@
                 },
                 {
                     "Type": "Camera",
-                    "aperture": 2.799999952316284,
-                    "shutter speed": 0.01666666753590107
+                    "clearFlags": "SolidColor",
+                    "clearColor": {
+                        "r": 0.0,
+                        "g": 0.0,
+                        "b": 0.0,
+                        "a": 0.0
+                    },
+                    "projectionType": "Perspective",
+                    "nearPlane": 0.10000000149011612,
+                    "farPlane": 4000.0,
+                    "fovHorizontal": 90.0,
+                    "viewport": {
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "size": {
+                            "x": 1920.0,
+                            "y": 1080.0
+                        }
+                    },
+                    "cameraLightDesc": {
+                        "aperture": 2.799999952316284,
+                        "shutter speed": 0.01666666753590107,
+                        "iso": 500.0
+                    },
+                    "depth": 0
                 }
             ]
         }

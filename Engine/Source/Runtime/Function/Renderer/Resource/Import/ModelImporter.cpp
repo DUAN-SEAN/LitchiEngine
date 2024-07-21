@@ -267,7 +267,7 @@ namespace LitchiRuntime
 		return true;
 	}
 
-	static Material* load_material(Mesh* mesh, const string& file_path, const bool is_gltf, const aiMaterial* material_assimp)
+	static Material* load_material(Mesh* mesh, const string& file_path, const bool is_gltf, const aiMaterial* material_assimp, const bool isSkinnedMesh)
 	{
 		LC_ASSERT(material_assimp != nullptr);
 
@@ -282,8 +282,8 @@ namespace LitchiRuntime
 		}
 
 		Material* material = ApplicationBase::Instance()->materialManager->CreateMaterial(materialPath);
-		RHI_Vertex_Type vertexType = model_has_animation? RHI_Vertex_Type::PosUvNorTanBone:RHI_Vertex_Type::PosUvNorTan;
-		material->SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(model_has_animation?":Shaders/Forward/PBR/PBRTest_Skin.hlsl":":Shaders/Forward/PBR/PBRTest.hlsl"), vertexType);
+		RHI_Vertex_Type vertexType = isSkinnedMesh ? RHI_Vertex_Type::PosUvNorTanBone:RHI_Vertex_Type::PosUvNorTan;
+		material->SetShader(ApplicationBase::Instance()->shaderManager->LoadResource(isSkinnedMesh ?":Shaders/Forward/PBR/PBRTest_Skin.hlsl":":Shaders/Forward/PBR/PBRTest.hlsl"), vertexType);
 		material->PostResourceLoaded();
 
 		//                                                                         texture type,                texture type assimp (pbr),       texture type assimp (legacy/fallback)
@@ -418,10 +418,10 @@ namespace LitchiRuntime
 			compute_node_count(scene->mRootNode, &job_count);
 			ProgressTracker::GetProgress(ProgressType::ModelImporter).Start(job_count, "Parsing model...");
 
-			model_has_animation = scene->mNumAnimations != 0;
+			model_has_animation = scene->HasAnimations();
 
 			// pre parse node build node hierarchy
-			if (model_has_animation)
+			// if (model_has_animation)
 			{
 				ReadNodeHierarchy(scene->mRootNode, -1);
 			}
@@ -631,7 +631,9 @@ namespace LitchiRuntime
 		LC_ASSERT(assimp_mesh != nullptr);
 		LC_ASSERT(entity_parent != nullptr);
 
-		if (model_has_animation)
+
+		bool isSkinnMesh = assimp_mesh->HasBones();
+		if (isSkinnMesh)
 		{
 			ParseMeshWithBone(assimp_mesh, entity_parent);
 		}
@@ -640,16 +642,15 @@ namespace LitchiRuntime
 			ParseMeshWithoutBone(assimp_mesh, entity_parent);
 		}
 
-
-		if (!model_has_animation)
+		if (isSkinnMesh)
 		{
 			// Create a Renderable and pass the material to it
-			entity_parent->AddComponent<MeshRenderer>()->SetDefaultMaterial();
+			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetDefaultMaterial();
 		}
 		else
 		{
 			// Create a Renderable and pass the material to it
-			entity_parent->AddComponent<SkinnedMeshRenderer>()->SetDefaultMaterial();
+			entity_parent->AddComponent<MeshRenderer>()->SetDefaultMaterial();
 		}
 
 		// material
@@ -661,23 +662,14 @@ namespace LitchiRuntime
 			const aiMaterial* assimp_material = scene->mMaterials[assimp_mesh->mMaterialIndex];
 
 			// convert it and add it to the model
-			Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material);
+			Material* material = load_material(mesh, model_file_path, model_is_gltf, assimp_material, isSkinnMesh);
 
 			mesh->AddMaterial(material, entity_parent);
 		}
 		else
 		{
 			// todo temp
-			if (!model_has_animation)
-			{
-				// Create a Renderable and pass the material to it
-
-				auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
-
-				mesh->AddMaterial(material, entity_parent);
-				//entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
-			}
-			else
+			if (isSkinnMesh)
 			{
 				// Create a Renderable and pass the material to it
 
@@ -685,6 +677,15 @@ namespace LitchiRuntime
 
 				mesh->AddMaterial(material, entity_parent);
 				//entity_parent->AddComponent<SkinnedMeshRenderer>()->SetMaterial(material);
+			}
+			else
+			{
+				// Create a Renderable and pass the material to it
+
+				auto material = ApplicationBase::Instance()->materialManager->LoadResource(":Materials/Standard4Phong.mat");
+
+				mesh->AddMaterial(material, entity_parent);
+				//entity_parent->AddComponent<MeshRenderer>()->SetMaterial(material);;
 			}
 
 		}
@@ -777,6 +778,7 @@ namespace LitchiRuntime
 		subMesh.m_geometryIndexCount = indices.size();
 		subMesh.m_geometryVertexOffset = vertex_offset;
 		subMesh.m_geometryVertexCount = vertices.size();
+		subMesh.m_isSkinnedMesh = true;
 		int subMeshIndex;
 		mesh->AddSubMesh(subMesh, subMeshIndex);
 		// add a renderable component to this entity

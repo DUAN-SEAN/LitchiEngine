@@ -32,6 +32,7 @@ namespace LitchiRuntime
         uint32_t m_geometryIndexCount = 0;
         uint32_t m_geometryVertexOffset = 0;
         uint32_t m_geometryVertexCount = 0;
+        bool m_isSkinnedMesh = false;
     };
 
     class Mesh : public IResource
@@ -92,6 +93,7 @@ namespace LitchiRuntime
         void CreateGpuBuffers();
         RHI_IndexBuffer* GetIndexBuffer()   { return m_index_buffer.get();  }
         RHI_VertexBuffer* GetVertexBuffer() { return m_vertex_buffer.get(); }
+        RHI_VertexBuffer* GetVertexBufferWithBone() { return m_vertex_bufferWithBone.get(); }
 
         // Root entity
         Prefab* GetModelPrefab() { return m_model_prefab; }
@@ -150,10 +152,13 @@ namespace LitchiRuntime
 
         // GPU buffers
         std::shared_ptr<RHI_VertexBuffer> m_vertex_buffer;
+        std::shared_ptr<RHI_VertexBuffer> m_vertex_bufferWithBone;
         std::shared_ptr<RHI_IndexBuffer> m_index_buffer;
+
 
         // AABB
         BoundingBox m_aabb;
+        BoundingBox m_aabbWithBone;
 
         // sub Mesh AABB
         std::vector<BoundingBox> m_subMesh_aabb_arr{};

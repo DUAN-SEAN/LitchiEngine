@@ -208,7 +208,7 @@ struct LightBufferDataArr
     LightBufferData lightBufferDataArr[MaxLight];
 };
 
-const static int MaxBone = 250;
+const static int MaxBone = 512;
 struct BoneDataArr
 {
     //int boneCount;

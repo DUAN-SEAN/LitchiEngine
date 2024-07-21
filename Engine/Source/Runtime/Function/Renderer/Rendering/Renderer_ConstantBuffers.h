@@ -218,7 +218,7 @@ namespace LitchiRuntime
 		}
 	};
 
-	const static int MaxBoneCount = 250;
+	const static int MaxBoneCount = 512;
 
 	struct Cb_Bone_Arr
 	{
