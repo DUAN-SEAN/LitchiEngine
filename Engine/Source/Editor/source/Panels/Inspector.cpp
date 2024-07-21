@@ -80,63 +80,63 @@ LitchiEditor::Inspector::Inspector
 		componentSelectorWidget.choices.emplace(16, "CharacterController");
 		componentSelectorWidget.choices.emplace(17, "ThirdPersonController");
 
-		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f ));
+		auto& addComponentButton = m_inspectorHeader->CreateWidget<Button>("Add Component", Vector2(100.f, 0.0f));
 		addComponentButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
 		addComponentButton.textColor = Color::White;
 		addComponentButton.ClickedEvent += [&componentSelectorWidget, this]
-		{
-			switch (componentSelectorWidget.currentChoice)
 			{
-			case 0: GetTargetActor()->AddComponent<MeshRenderer>(); break;
-			case 1: GetTargetActor()->AddComponent<MeshFilter>(); break;
-			case 2: GetTargetActor()->AddComponent<Camera>();				break;
-			case 3: GetTargetActor()->AddComponent<SkinnedMeshRenderer>();				break;
-			case 5: GetTargetActor()->AddComponent<Light>();				break;
-			case 8: GetTargetActor()->AddComponent<Animator>();				break;
-			case 9: GetTargetActor()->AddComponent<UIText>();				break;
-			case 10: GetTargetActor()->AddComponent<UIImage>();				break;
-			case 11: GetTargetActor()->AddComponent<RigidStatic>();				break;
-			case 12: GetTargetActor()->AddComponent<RigidDynamic>();				break;
-			case 13: GetTargetActor()->AddComponent<BoxCollider>();				break;
-			case 14: GetTargetActor()->AddComponent<SphereCollider>();				break;
-			case 15: GetTargetActor()->AddComponent<CapsuleCollider>();				break;
-			case 16: GetTargetActor()->AddComponent<CharacterController>();				break;
-			case 17: GetTargetActor()->AddComponent<ThirdPersonController>();				break;
-			}
+				switch (componentSelectorWidget.currentChoice)
+				{
+				case 0: GetTargetActor()->AddComponent<MeshRenderer>(); break;
+				case 1: GetTargetActor()->AddComponent<MeshFilter>(); break;
+				case 2: GetTargetActor()->AddComponent<Camera>();				break;
+				case 3: GetTargetActor()->AddComponent<SkinnedMeshRenderer>();				break;
+				case 5: GetTargetActor()->AddComponent<Light>();				break;
+				case 8: GetTargetActor()->AddComponent<Animator>();				break;
+				case 9: GetTargetActor()->AddComponent<UIText>();				break;
+				case 10: GetTargetActor()->AddComponent<UIImage>();				break;
+				case 11: GetTargetActor()->AddComponent<RigidStatic>();				break;
+				case 12: GetTargetActor()->AddComponent<RigidDynamic>();				break;
+				case 13: GetTargetActor()->AddComponent<BoxCollider>();				break;
+				case 14: GetTargetActor()->AddComponent<SphereCollider>();				break;
+				case 15: GetTargetActor()->AddComponent<CapsuleCollider>();				break;
+				case 16: GetTargetActor()->AddComponent<CharacterController>();				break;
+				case 17: GetTargetActor()->AddComponent<ThirdPersonController>();				break;
+				}
 
-			Refresh();
+				Refresh();
 
-			componentSelectorWidget.ValueChangedEvent.Invoke(componentSelectorWidget.currentChoice);
-		};
-
-		componentSelectorWidget.ValueChangedEvent += [this, &addComponentButton](int p_value)
-		{
-			auto defineButtonsStates = [&addComponentButton](bool p_componentExists)
-			{
-				addComponentButton.disabled = p_componentExists;
-				addComponentButton.idleBackgroundColor = !p_componentExists ? Color{ 0.7f, 0.5f, 0.f } : Color{ 0.1f, 0.1f, 0.1f };
+				componentSelectorWidget.ValueChangedEvent.Invoke(componentSelectorWidget.currentChoice);
 			};
 
-			if (GetTargetActor() == nullptr) { return; }
-			switch (p_value)
+		componentSelectorWidget.ValueChangedEvent += [this, &addComponentButton](int p_value)
 			{
-			case 0: defineButtonsStates(GetTargetActor()->GetComponent<MeshRenderer>());		return;
-			case 1: defineButtonsStates(GetTargetActor()->GetComponent<MeshFilter>());				return;
-			case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
-			case 3: defineButtonsStates(GetTargetActor()->GetComponent<SkinnedMeshRenderer>());		return;
-			case 5: defineButtonsStates(GetTargetActor()->GetComponent<Light>());		return;
-			case 8: defineButtonsStates(GetTargetActor()->GetComponent<Animator>());		return;
-			case 9: defineButtonsStates(GetTargetActor()->GetComponent<UIText>());		return;
-			case 10: defineButtonsStates(GetTargetActor()->GetComponent<UIImage>());		return;
-			case 11: defineButtonsStates(GetTargetActor()->GetComponent<RigidStatic>());		return;
-			case 12: defineButtonsStates(GetTargetActor()->GetComponent<RigidDynamic>());		return;
-			case 13: defineButtonsStates(GetTargetActor()->GetComponent<BoxCollider>());		return;
-			case 14: defineButtonsStates(GetTargetActor()->GetComponent<SphereCollider>());		return;
-			case 15: defineButtonsStates(GetTargetActor()->GetComponent<CapsuleCollider>());		return;
-			case 16: defineButtonsStates(GetTargetActor()->GetComponent<CharacterController>());		return;
-			case 17: defineButtonsStates(GetTargetActor()->GetComponent<ThirdPersonController>());		return;
-			}
-		};
+				auto defineButtonsStates = [&addComponentButton](bool p_componentExists)
+					{
+						addComponentButton.disabled = p_componentExists;
+						addComponentButton.idleBackgroundColor = !p_componentExists ? Color{ 0.7f, 0.5f, 0.f } : Color{ 0.1f, 0.1f, 0.1f };
+					};
+
+				if (GetTargetActor() == nullptr) { return; }
+				switch (p_value)
+				{
+				case 0: defineButtonsStates(GetTargetActor()->GetComponent<MeshRenderer>());		return;
+				case 1: defineButtonsStates(GetTargetActor()->GetComponent<MeshFilter>());				return;
+				case 2: defineButtonsStates(GetTargetActor()->GetComponent<Camera>());		return;
+				case 3: defineButtonsStates(GetTargetActor()->GetComponent<SkinnedMeshRenderer>());		return;
+				case 5: defineButtonsStates(GetTargetActor()->GetComponent<Light>());		return;
+				case 8: defineButtonsStates(GetTargetActor()->GetComponent<Animator>());		return;
+				case 9: defineButtonsStates(GetTargetActor()->GetComponent<UIText>());		return;
+				case 10: defineButtonsStates(GetTargetActor()->GetComponent<UIImage>());		return;
+				case 11: defineButtonsStates(GetTargetActor()->GetComponent<RigidStatic>());		return;
+				case 12: defineButtonsStates(GetTargetActor()->GetComponent<RigidDynamic>());		return;
+				case 13: defineButtonsStates(GetTargetActor()->GetComponent<BoxCollider>());		return;
+				case 14: defineButtonsStates(GetTargetActor()->GetComponent<SphereCollider>());		return;
+				case 15: defineButtonsStates(GetTargetActor()->GetComponent<CapsuleCollider>());		return;
+				case 16: defineButtonsStates(GetTargetActor()->GetComponent<CharacterController>());		return;
+				case 17: defineButtonsStates(GetTargetActor()->GetComponent<ThirdPersonController>());		return;
+				}
+			};
 
 		m_componentSelectorWidget = &componentSelectorWidget;
 	}
@@ -147,7 +147,7 @@ LitchiEditor::Inspector::Inspector
 		m_scriptSelectorWidget->lineBreak = false;
 		auto& ddTarget = m_scriptSelectorWidget->AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File");
 
-		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", Vector2{ 100.f, 0.0f});
+		auto& addScriptButton = m_inspectorHeader->CreateWidget<Button>("Add Script", Vector2{ 100.f, 0.0f });
 		addScriptButton.idleBackgroundColor = Color{ 0.7f, 0.5f, 0.f };
 		addScriptButton.textColor = Color::White;
 
@@ -187,10 +187,10 @@ LitchiEditor::Inspector::Inspector
 	m_inspectorHeader->CreateWidget<Separator>();
 
 	m_destroyedListener = GameObject::DestroyedEvent += [this](GameObject* p_destroyed)
-	{
-		if (p_destroyed == m_targetActor)
-			UnFocus();
-	};
+		{
+			if (p_destroyed == m_targetActor)
+				UnFocus();
+		};
 }
 
 LitchiEditor::Inspector::~Inspector()
@@ -293,17 +293,18 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 		if (t == type::get<bool>() || t == type::get<char>())
 		{
 			auto getBool = [var, property_field]
-			{
-				return property_field.GetValue().to_bool();
-			};
+				{
+					return property_field.GetValue().to_bool();
+				};
 
 			auto setBool = [property_field](bool value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 
 			GUIDrawer::DrawBoolean(propertyRoot, propertyName.to_string(), getBool, setBool);
-		}else if(t == type::get<unsigned char>() || t == type::get<uint8_t>())
+		}
+		else if (t == type::get<unsigned char>() || t == type::get<uint8_t>())
 		{
 			auto get = [var, property_field]
 				{
@@ -320,30 +321,31 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 		else if (t == type::get<int>())
 		{
 			auto getInt = [var, property_field]
-			{
-				return property_field.GetValue().to_int32();
-			};
+				{
+					return property_field.GetValue().to_int32();
+				};
 
 			auto setInt = [property_field](int value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 
 			GUIDrawer::DrawInputField4Int(propertyRoot, propertyName.to_string(), getInt, setInt);
-		}else if(t == type::get<uint64_t>())
+		}
+		else if (t == type::get<uint64_t>())
 		{
 			auto getInt = [var, property_field]
-			{
-				return property_field.GetValue().to_uint64();
-			};
+				{
+					return property_field.GetValue().to_uint64();
+				};
 
 			auto setInt = [property_field](uint64_t value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 
 			GUIDrawer::DrawInputField4UInt64(propertyRoot, propertyName.to_string(), getInt, setInt);
-			
+
 		}
 		/*else if (t == type::get<int8_t>())
 		{
@@ -366,34 +368,34 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 		else if (t == type::get<float>())
 		{
 			auto getFloat = [var, property_field]
-			{
-				return property_field.GetValue().to_float();
-			};
+				{
+					return property_field.GetValue().to_float();
+				};
 
 			auto setFloat = [property_field](float value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 
 			GUIDrawer::DrawInputField4Float(propertyRoot, propertyName.to_string(), getFloat, setFloat);
 		}
 		else if (t == type::get<double>())
 		{
 			auto getDouble = [var, property_field]
-			{
-				return property_field.GetValue().to_double();
-			};
+				{
+					return property_field.GetValue().to_double();
+				};
 
 			auto setDouble = [property_field](double value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 
 			GUIDrawer::DrawInputField4Double(propertyRoot, propertyName.to_string(), getDouble, setDouble);
 		}
 		else
 		{
-			std::string content = propertyName.to_string() + " "+t.get_name()+" NotSupport";
+			std::string content = propertyName.to_string() + " " + t.get_name() + " NotSupport";
 			GUIDrawer::DrawContent(propertyRoot, content);
 			return false;
 		}
@@ -407,14 +409,14 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 		if (ok)
 		{
 			auto getString = [var, property_field]
-			{
-				return property_field.GetValue().to_string();
-			};
+				{
+					return property_field.GetValue().to_string();
+				};
 
 			auto setString = [property_field](std::string value)
-			{
-				property_field.SetValue(value);
-			};
+				{
+					property_field.SetValue(value);
+				};
 			enumeration enum_align = t.get_enumeration();
 			std::vector<std::string> enumValueList;
 			for (auto enumName : enum_align.get_names())
@@ -422,7 +424,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 				enumValueList.push_back(enumName.to_string());
 			}
 			GUIDrawer::DrawEnum(propertyRoot, propertyName.to_string(), enumValueList, getString, setString);
-		
+
 		}
 		else
 		{
@@ -439,14 +441,14 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 	else if (t == type::get<std::string>())
 	{
 		auto getString = [var, property_field]
-		{
-			return property_field.GetValue().to_string();
-		};
+			{
+				return property_field.GetValue().to_string();
+			};
 
 		auto setString = [property_field](std::string value)
-		{
-			property_field.SetValue(value);
-		};
+			{
+				property_field.SetValue(value);
+			};
 
 		GUIDrawer::DrawString(propertyRoot, propertyName.to_string(), getString, setString);
 		return true;
@@ -455,29 +457,38 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 	return false;
 }
 
-//static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName)
-//{
-//	for (const auto& item : view)
-//	{
-//		if (item.is_sequential_container())
-//		{
-//			DrawArray(item.create_sequential_view(), propertyName);
-//		}
-//		else
-//		{
-//			variant wrapped_var = item.extract_wrapped_value();
-//			type value_type = wrapped_var.get_type();
-//			if (value_type.is_arithmetic() || value_type == type::get<std::string>() || value_type.is_enumeration())
-//			{
-//				DrawAtomicTypeObject(value_type, wrapped_var, propertyName);
-//			}
-//			else // object
-//			{
-//				DrawInstanceInternalRecursively(wrapped_var, propertyName);
-//			}
-//		}
-//	}
-//}
+static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
+{
+	// draw size
+
+	// draw item
+	auto& propertyRoot = p_root.CreateWidget<TreeNode>(propertyName.to_string(), true, true);
+	int index = 0;
+	for (const auto& item : view)
+	{
+		propertyPathList.push_back(std::to_string(index));
+		// todo: dont support item is arr
+		/*if (item.is_sequential_container())
+		{
+			DrawArray(p_root,item.create_sequential_view(), propertyName, propertyPathList);
+		}
+		else*/
+		{
+			variant wrapped_var = item.extract_wrapped_value();
+			type value_type = wrapped_var.get_type();
+			if (value_type.is_arithmetic() || value_type == type::get<std::string>() || value_type.is_enumeration())
+			{
+				DrawAtomicTypeObject(propertyRoot,value_type, wrapped_var, propertyName, obj, propertyPathList);
+			}
+			else
+			{
+				DrawInstanceInternalRecursively(propertyRoot, wrapped_var, obj, propertyPathList);
+			}
+		}
+
+		index++;
+	}
+}
 
 //
 //static void DrawAssociativeContainer(WidgetContainer& p_root, const variant_associative_view& view, const string_view propertyName)
@@ -519,14 +530,14 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 	auto value_type = var.get_type();
 	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
 	bool is_wrapper = wrapped_type != value_type;
-	
+
 	if (DrawAtomicTypeObject(p_root, is_wrapper ? wrapped_type : value_type,
 		is_wrapper ? var.extract_wrapped_value() : var, propertyName, obj, propertyPathList))
 	{
 	}
 	else if (var.is_sequential_container())
 	{
-		// DrawArray(p_root, var.create_sequential_view(), propertyName);
+		DrawArray(p_root, var.create_sequential_view(), propertyName, obj, propertyPathList);
 	}
 	/*else if (var.is_associative_container())
 	{
@@ -586,7 +597,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
 
 		propertyPathList.push_back(name.to_string());
-		if(prop.get_type() == type::get_by_name("Vector2"))
+		if (prop.get_type() == type::get_by_name("Vector2"))
 		{
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
@@ -606,7 +617,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 
 			GUIDrawer::DrawVec2(p_root, name.to_string(), getVec, setVec);
 		}
-		else if(prop.get_type() == type::get_by_name("Vector3"))
+		else if (prop.get_type() == type::get_by_name("Vector3"))
 		{
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
@@ -626,7 +637,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 
 			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec, setVec);
 		}
-		else if(prop.get_type() == type::get_by_name("Vector4"))
+		else if (prop.get_type() == type::get_by_name("Vector4"))
 		{
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
@@ -646,7 +657,7 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 
 			GUIDrawer::DrawVec4(p_root, name.to_string(), getVec, setVec);
 		}
-		else if(prop.get_type() == type::get_by_name("Color"))
+		else if (prop.get_type() == type::get_by_name("Color"))
 		{
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
@@ -672,32 +683,32 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 			// 绘制rotation
 			PropertyField property_field(obj, propertyPathList);
 			auto getVec3 = [prop_value, property_field]
-			{
-				auto localRotation = property_field.GetValue().get_value<Quaternion>();
-				auto localRotation4Euler = localRotation.ToEulerAngles();
-				auto localRotation4DegreesEuler = Vector3((localRotation4Euler.x), (localRotation4Euler.y), (localRotation4Euler.z));
-				return localRotation4DegreesEuler;
-			};
+				{
+					auto localRotation = property_field.GetValue().get_value<Quaternion>();
+					auto localRotation4Euler = localRotation.ToEulerAngles();
+					auto localRotation4DegreesEuler = Vector3((localRotation4Euler.x), (localRotation4Euler.y), (localRotation4Euler.z));
+					return localRotation4DegreesEuler;
+				};
 			auto setVec3 = [property_field](Vector3 eulerVec3)
-			{
-				// 万向节(x,y,z)(pitch, yaw, roll)
-				//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
-				eulerVec3.x = std::max(std::min(eulerVec3.x, 180.0f), -180.0f);
-				eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
-				eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
-				// 处理奇点问题
-				if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
 				{
-					eulerVec3.z = 0.0f;
-				}
-				
-				//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
-				bool result = property_field.SetValue(Quaternion::FromEulerAngles((eulerVec3.x), (eulerVec3.y), (eulerVec3.z)));
-				if (!result)
-				{
-					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
-				}
-			};
+					// 万向节(x,y,z)(pitch, yaw, roll)
+					//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
+					eulerVec3.x = std::max(std::min(eulerVec3.x, 180.0f), -180.0f);
+					eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
+					eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
+					// 处理奇点问题
+					if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
+					{
+						eulerVec3.z = 0.0f;
+					}
+
+					//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
+					bool result = property_field.SetValue(Quaternion::FromEulerAngles((eulerVec3.x), (eulerVec3.y), (eulerVec3.z)));
+					if (!result)
+					{
+						DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
+					}
+				};
 
 			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
 
@@ -708,23 +719,23 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 			PropertyField property_field(obj, propertyPathList);
 			auto path = property_field.GetValue().get_value<std::string>();
 			p_root.CreateWidget<TextColored>(name.to_string(), GUIDrawer::TitleColor);
-			if(path.empty())
+			if (path.empty())
 			{
 				path = "Empty";
 			}
 			auto& widget = p_root.CreateWidget<Text>(path);
-			widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType,&widget, property_field](auto p_receivedData)
-			{
-				auto& newPath = p_receivedData.first;
-				if(PathParser::GetFileType(newPath) == assetType)
+			widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType, &widget, property_field](auto p_receivedData)
 				{
-					if(property_field.SetValue(newPath))
+					auto& newPath = p_receivedData.first;
+					if (PathParser::GetFileType(newPath) == assetType)
 					{
-						widget.content = newPath;
+						if (property_field.SetValue(newPath))
+						{
+							widget.content = newPath;
+						}
 					}
-				}
 
-			};
+				};
 		}
 		else
 		{
@@ -754,12 +765,12 @@ void LitchiEditor::Inspector::DrawComponent(std::string name, Component* p_compo
 	auto& header = m_actorInfo->CreateWidget<GroupCollapsable>(name);
 	header.closable = !dynamic_cast<Transform*>(p_component);
 	header.CloseEvent += [this, &header, p_component]
-	{
-		if (p_component->GetGameObject()->RemoveComponent(p_component))
 		{
-			m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
-		}
-	};
+			if (p_component->GetGameObject()->RemoveComponent(p_component))
+			{
+				m_componentSelectorWidget->ValueChangedEvent.Invoke(m_componentSelectorWidget->currentChoice);
+			}
+		};
 	auto& columns = header.CreateWidget<Columns<2>>();
 	columns.widths[0] = 200;
 	columns.widths[1] = 200;

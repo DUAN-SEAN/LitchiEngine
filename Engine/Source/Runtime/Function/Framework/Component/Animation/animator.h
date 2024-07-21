@@ -66,6 +66,8 @@ namespace LitchiRuntime
 		*/
 		void SetAnimationClipMap(std::unordered_map<std::string, AnimationClip>& clipMap);
 
+		std::vector<std::string> m_animationNameArr;
+
 	private:
 
 		/* temp fields */
@@ -73,6 +75,7 @@ namespace LitchiRuntime
 		std::string m_clipName = "";
 		std::unordered_map<std::string, AnimationClip> m_animationClipMap{};
 		AnimationClip* m_currentClip = nullptr;
+
 
 		RTTR_ENABLE(Component)
 	};

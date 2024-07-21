@@ -277,8 +277,9 @@ namespace LitchiRuntime {
 			.property("angle", &Light::GetAngle, &Light::SetAngle);
 
 		// Animator
-		registration::class_<Animator>("Animator").constructor<>()(rttr::policy::ctor::as_raw_ptr);
-		// .property("CurrentClipName", &Animator::GetCurrentClipName)
+		registration::class_<Animator>("Animator").constructor<>()(rttr::policy::ctor::as_raw_ptr)
+			 //.property("CurrentClipName", &Animator::GetCurrentClipName)
+			.property("AnimationClipNameArr", &Animator::m_animationNameArr);
 
 		// MeshRenderer
 		registration::class_<MeshRenderer>("MeshRenderer")

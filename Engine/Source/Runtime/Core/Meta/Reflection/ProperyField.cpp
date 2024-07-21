@@ -124,7 +124,7 @@ variant ReadArray(const variant_sequential_view& view, const std::vector<std::st
 	const auto arrayItemType = view.get_rank_type(itemIndex);
 
 	// 检查是否已经到达根,只可能是基础类型,因此直接向数组中写入
-	if (itemIndex == propertyNameList.size() - 1)
+	if (propIndex == propertyNameList.size() - 1)
 	{
 		return view.get_value(itemIndex);
 	}

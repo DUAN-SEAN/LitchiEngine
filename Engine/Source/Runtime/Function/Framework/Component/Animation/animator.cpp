@@ -11,6 +11,8 @@ using namespace LitchiRuntime;
 
 LitchiRuntime::Animator::Animator()
 {
+	m_animationNameArr.push_back("Test1");
+	m_animationNameArr.push_back("Test2");
 }
 
 LitchiRuntime::Animator::~Animator()
