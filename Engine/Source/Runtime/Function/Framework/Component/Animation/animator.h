@@ -7,6 +7,17 @@
 
 namespace LitchiRuntime
 {
+	struct AnimationClipInfo
+	{
+		std::string m_clipName;
+		std::string m_clipPath;
+	};
+
+	struct AnimationControlInfo
+	{
+		// clip 
+	};
+
 	/**
 	 * @brief Simple Animator Component
 	 * todo: This Component need add more function

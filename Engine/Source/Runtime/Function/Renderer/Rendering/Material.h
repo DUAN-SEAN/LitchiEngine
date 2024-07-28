@@ -5,7 +5,6 @@
 #include <any>
 #include <memory>
 #include <array>
-#include <assimp/color4.h>
 
 #include "MaterialShader.h"
 #include "../RHI/RHI_Definitions.h"

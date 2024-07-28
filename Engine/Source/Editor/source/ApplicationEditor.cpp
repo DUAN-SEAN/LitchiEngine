@@ -22,6 +22,7 @@
 #include "Runtime/Resource/TextureManager.h"
 #include <Runtime/Function/Framework/Component/UI/UIText.h>
 
+#include "Editor/include/Panels/AssetProperties.h"
 #include "Editor/include/Panels/Console.h"
 #include "Editor/include/Panels/GameView.h"
 #include "Editor/include/Panels/Profiler.h"
@@ -428,7 +429,7 @@ void LitchiEditor::ApplicationEditor::SetupEditorUI()
 	m_panelsManager.CreatePanel<Toolbar>("Toolbar", true, settings);
 	m_panelsManager.CreatePanel<MaterialEditor>("Material Editor", false, settings);
 	m_panelsManager.CreatePanel<ProjectSettings>("Project Settings", false, settings);
-	//m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
+	m_panelsManager.CreatePanel<AssetProperties>("Asset Properties", false, settings);
 
 	m_canvas.MakeDockspace(true);
 	// 

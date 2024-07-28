@@ -18,6 +18,7 @@
 #include <Runtime/Function/UI/Plugins/DDSource.h>
 
 #include "Editor/include/ApplicationEditor.h"
+#include "Editor/include/Panels/AssetProperties.h"
 
 #include "Editor/include/Panels/AssetView.h"
 #include "Editor/include/Panels/MaterialEditor.h"
@@ -432,11 +433,11 @@ public:
 
 		editMetadata.ClickedEvent += [this]
 		{
-			/* auto& panel = EDITOR_PANEL(LitchiEditor::AssetProperties, "Asset Properties");
+			 auto& panel = EDITOR_PANEL(LitchiEditor::AssetProperties, "Asset Properties");
 			 std::string resourcePath = EDITOR_EXEC(GetResourcePath(filePath, m_protected));
 			 panel.SetTarget(resourcePath);
 			 panel.Open();
-			 panel.Focus();*/
+			 panel.Focus();
 		};
 	}
 
