@@ -478,7 +478,7 @@ static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& vi
 			type value_type = wrapped_var.get_type();
 			if (value_type.is_arithmetic() || value_type == type::get<std::string>() || value_type.is_enumeration())
 			{
-				DrawAtomicTypeObject(propertyRoot,value_type, wrapped_var, propertyName, obj, propertyPathList);
+				DrawAtomicTypeObject(propertyRoot,value_type, wrapped_var, std::to_string(index), obj, propertyPathList);
 			}
 			else
 			{
@@ -486,6 +486,7 @@ static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& vi
 			}
 		}
 
+		propertyPathList.pop_back();
 		index++;
 	}
 }

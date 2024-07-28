@@ -31,7 +31,7 @@ void WriteArray(variant_sequential_view& view, const std::vector<std::string>& p
 	const auto arrayItemType = view.get_rank_type(itemIndex);
 
 	// 检查是否已经到达根,只可能是基础类型,因此直接向数组中写入
-	if (itemIndex == propertyNameList.size() - 1)
+	if (propIndex == propertyNameList.size() - 1)
 	{
 		isValid = value.convert(arrayItemType);
 		isValid = view.set_value(itemIndex, value);
@@ -82,6 +82,7 @@ void WriteChild(rttr::instance intInput, const std::vector<std::string>& propert
 		{
 			auto view = childIns.create_sequential_view();
 			WriteArray(view, propertyNameList, ++propIndex, value);
+			isValid = prop.set_value(instance, childIns);
 		}
 		// 如果不是数组类型,而是复合Object类型,则嵌套写入
 		else
@@ -126,7 +127,10 @@ variant ReadArray(const variant_sequential_view& view, const std::vector<std::st
 	// 检查是否已经到达根,只可能是基础类型,因此直接向数组中写入
 	if (propIndex == propertyNameList.size() - 1)
 	{
-		return view.get_value(itemIndex);
+		auto size = view.get_size();
+		auto valueType = view.get_value_type();
+		auto extract_wrapped_value = view.get_value(itemIndex).extract_wrapped_value();
+		return extract_wrapped_value;
 	}
 	else
 	{
