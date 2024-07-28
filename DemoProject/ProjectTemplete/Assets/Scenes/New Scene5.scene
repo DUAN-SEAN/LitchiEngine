@@ -318,20 +318,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/DefaultFemaleHair.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -397,13 +383,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/Cornea.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -441,13 +420,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/Eyeball.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -513,13 +485,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/Cornea.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -557,13 +522,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/Eyeball.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -673,13 +631,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/DefaultLashesBrows.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -717,13 +668,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/AsunaHead.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
@@ -761,13 +705,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/AsunaBody.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },
