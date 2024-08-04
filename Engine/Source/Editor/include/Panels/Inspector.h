@@ -85,11 +85,12 @@ namespace LitchiEditor
 
 		void DrawInstance(WidgetContainer& p_root, rttr::instance ins, Object* obj);
 		void DrawInstanceInternalRecursively(WidgetContainer& p_root, const rttr::instance& inputIns, Object* obj, std::vector<std::string> propertyPathList);
+		bool DrawCustomInstanceInternal(WidgetContainer& p_root, rttr::property prop, rttr::variant prop_value, const rttr::string_view name, Object* obj, std::vector<std::string> propertyPathList);
 		void DrawArray(WidgetContainer& p_root, const rttr::variant_sequential_view& view, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
 		bool DrawProperty(WidgetContainer& p_root, const rttr::variant& var, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
 
 		bool DrawAtomicTypeObject(WidgetContainer& p_root, const rttr::type& t, const rttr::variant& var, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
-
+		
 		void NeedRefresh() { m_needRefresh = true; }
 		void ResetNeedRefresh() { m_needRefresh = false; }
 	private:

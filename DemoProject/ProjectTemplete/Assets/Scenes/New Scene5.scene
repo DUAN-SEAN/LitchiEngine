@@ -245,21 +245,21 @@
                         "z": 1.0
                     }
                 },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        {
-                            "clipName": "Idle",
-                            "clipPath": "FreeTestCharacterAsuna/FBX/Animations/001Idle.fbx",
-                            "selectClipResName": ""
-                        },
-                        {
-                            "clipName": "Walk",
-                            "clipPath": "FreeTestCharacterAsuna/FBX/Animations/003Run.fbx",
-                            "selectClipResName": ""
-                        }
-                    ]
-                }
+              {
+                "Type": "Animator",
+                "animationClipInfoArr": [
+                  {
+                    "clipName": "Idle",
+                    "clipPath": "FreeTestCharacterAsuna/FBX/Animations/001Idle.fbx",
+                    "selectClipResName": ""
+                  },
+                  {
+                    "clipName": "Walk",
+                    "clipPath": "FreeTestCharacterAsuna/FBX/Animations/003Run.fbx",
+                    "selectClipResName": ""
+                  }
+                ]
+              }
             ]
         },
         {

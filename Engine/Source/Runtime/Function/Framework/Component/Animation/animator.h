@@ -78,7 +78,7 @@ namespace LitchiRuntime
 		*/
 		void SetAnimationClipMap(std::unordered_map<std::string, AnimationClip>& clipMap);
 
-		std::vector<AnimationClipInfo> m_animationNameArr;
+		std::vector<AnimationClipInfo> m_animationClipInfoArr;
 
 	private:
 

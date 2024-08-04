@@ -289,7 +289,7 @@ namespace LitchiRuntime {
 		// Animator
 		registration::class_<Animator>("Animator").constructor<>()(rttr::policy::ctor::as_raw_ptr)
 			 //.property("CurrentClipName", &Animator::GetCurrentClipName)
-			.property("AnimationClipNameArr", &Animator::m_animationNameArr);
+			.property("animationClipInfoArr", &Animator::m_animationClipInfoArr);
 
 		// MeshRenderer
 		registration::class_<MeshRenderer>("MeshRenderer")

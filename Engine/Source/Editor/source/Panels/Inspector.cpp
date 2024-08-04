@@ -486,9 +486,8 @@ void LitchiEditor::Inspector::DrawArray(WidgetContainer& p_root, const variant_s
 		index++;
 	}
 
-
-	PropertyField property_field(obj, propertyPathList);
 	// draw add and remove button
+	PropertyField property_field(obj, propertyPathList);
 
 	auto& arrBtnCol = p_root.CreateWidget<Columns<2>>();
 	arrBtnCol.widths[0] = 50.0f;
@@ -616,151 +615,8 @@ void LitchiEditor::Inspector::DrawInstanceInternalRecursively(WidgetContainer& p
 
 		const auto name = prop.get_name();
 
-		// auto propertyObj = prop.get_value(obj);
-		// writer.String(name.data(), static_cast<rapidjson::SizeType>(name.length()), false);
-
 		propertyPathList.push_back(name.to_string());
-		if (prop.get_type() == type::get_by_name("Vector2"))
-		{
-			// 绘制rotation
-			PropertyField property_field(obj, propertyPathList);
-			auto getVec = [prop_value, property_field]
-				{
-					auto vec = property_field.GetValue().get_value<Vector2>();
-					return vec;
-				};
-			auto setVec = [property_field](Vector2 vec)
-				{
-					bool result = property_field.SetValue(vec);
-					if (!result)
-					{
-						DEBUG_LOG_ERROR("Vector2 Write Fail!");
-					}
-				};
-
-			GUIDrawer::DrawVec2(p_root, name.to_string(), getVec, setVec);
-		}
-		else if (prop.get_type() == type::get_by_name("Vector3"))
-		{
-			// 绘制rotation
-			PropertyField property_field(obj, propertyPathList);
-			auto getVec = [prop_value, property_field]
-				{
-					auto vec = property_field.GetValue().get_value<Vector3>();
-					return vec;
-				};
-			auto setVec = [property_field](Vector3 vec)
-				{
-					bool result = property_field.SetValue(vec);
-					if (!result)
-					{
-						DEBUG_LOG_ERROR("Vector3 Write Fail!");
-					}
-				};
-
-			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec, setVec);
-		}
-		else if (prop.get_type() == type::get_by_name("Vector4"))
-		{
-			// 绘制rotation
-			PropertyField property_field(obj, propertyPathList);
-			auto getVec = [prop_value, property_field]
-				{
-					auto vec = property_field.GetValue().get_value<Vector4>();
-					return vec;
-				};
-			auto setVec = [property_field](Vector4 vec)
-				{
-					bool result = property_field.SetValue(vec);
-					if (!result)
-					{
-						DEBUG_LOG_ERROR("Vector4 Write Fail!");
-					}
-				};
-
-			GUIDrawer::DrawVec4(p_root, name.to_string(), getVec, setVec);
-		}
-		else if (prop.get_type() == type::get_by_name("Color"))
-		{
-			// 绘制rotation
-			PropertyField property_field(obj, propertyPathList);
-			auto getVec = [prop_value, property_field]
-				{
-					auto vec = property_field.GetValue().get_value<Color>();
-					return vec;
-				};
-			auto setVec = [property_field](Color vec)
-				{
-					bool result = property_field.SetValue(vec);
-					if (!result)
-					{
-						DEBUG_LOG_ERROR("Color Write Fail!");
-					}
-				};
-
-			GUIDrawer::DrawColor(p_root, name.to_string(), getVec, setVec);
-		}
-		// property 特殊绘制
-		else if (prop.get_metadata("QuatToEuler"))
-		{
-			// 绘制rotation
-			PropertyField property_field(obj, propertyPathList);
-			auto getVec3 = [prop_value, property_field]
-				{
-					auto localRotation = property_field.GetValue().get_value<Quaternion>();
-					auto localRotation4Euler = localRotation.ToEulerAngles();
-					auto localRotation4DegreesEuler = Vector3((localRotation4Euler.x), (localRotation4Euler.y), (localRotation4Euler.z));
-					return localRotation4DegreesEuler;
-				};
-			auto setVec3 = [property_field](Vector3 eulerVec3)
-				{
-					// 万向节(x,y,z)(pitch, yaw, roll)
-					//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
-					eulerVec3.x = std::max(std::min(eulerVec3.x, 180.0f), -180.0f);
-					eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
-					eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
-					// 处理奇点问题
-					if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
-					{
-						eulerVec3.z = 0.0f;
-					}
-
-					//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
-					bool result = property_field.SetValue(Quaternion::FromEulerAngles((eulerVec3.x), (eulerVec3.y), (eulerVec3.z)));
-					if (!result)
-					{
-						DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
-					}
-				};
-
-			GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
-
-		}
-		else if (prop.get_metadata("AssetPath"))
-		{
-			auto assetType = prop.get_metadata("AssetType").get_value<PathParser::EFileType>();
-			PropertyField property_field(obj, propertyPathList);
-			auto path = property_field.GetValue().get_value<std::string>();
-			p_root.CreateWidget<TextColored>(name.to_string(), GUIDrawer::TitleColor);
-			if (path.empty())
-			{
-				path = "Empty";
-			}
-			auto& widget = p_root.CreateWidget<Text>(path);
-			widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType, &widget, property_field](auto p_receivedData)
-				{
-					auto& newPath = p_receivedData.first;
-					if (PathParser::GetFileType(newPath) == assetType)
-					{
-						if (property_field.SetValue(newPath))
-						{
-							widget.content = newPath;
-						}
-					}
-
-				};
-		}
-		else
+		if(!DrawCustomInstanceInternal(p_root, prop, prop_value,name, obj,propertyPathList))
 		{
 			// default 绘制
 			if (!DrawProperty(p_root, prop_value, name, obj, propertyPathList))
@@ -768,9 +624,162 @@ void LitchiEditor::Inspector::DrawInstanceInternalRecursively(WidgetContainer& p
 				DEBUG_LOG_ERROR("cannot serialize property:{}", name.to_string());
 			}
 		}
+		
 		propertyPathList.pop_back();
 	}
 
+}
+
+bool LitchiEditor::Inspector::DrawCustomInstanceInternal(WidgetContainer& p_root, property prop, variant prop_value , const string_view name,Object* obj, std::vector<std::string> propertyPathList)
+{
+	if (prop.get_type() == type::get_by_name("Vector2"))
+	{
+		// 绘制rotation
+		PropertyField property_field(obj, propertyPathList);
+		auto getVec = [prop_value, property_field]
+			{
+				auto vec = property_field.GetValue().get_value<Vector2>();
+				return vec;
+			};
+		auto setVec = [property_field](Vector2 vec)
+			{
+				bool result = property_field.SetValue(vec);
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("Vector2 Write Fail!");
+				}
+			};
+
+		GUIDrawer::DrawVec2(p_root, name.to_string(), getVec, setVec);
+	}
+	else if (prop.get_type() == type::get_by_name("Vector3"))
+	{
+		// 绘制rotation
+		PropertyField property_field(obj, propertyPathList);
+		auto getVec = [prop_value, property_field]
+			{
+				auto vec = property_field.GetValue().get_value<Vector3>();
+				return vec;
+			};
+		auto setVec = [property_field](Vector3 vec)
+			{
+				bool result = property_field.SetValue(vec);
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("Vector3 Write Fail!");
+				}
+			};
+
+		GUIDrawer::DrawVec3(p_root, name.to_string(), getVec, setVec);
+	}
+	else if (prop.get_type() == type::get_by_name("Vector4"))
+	{
+		// 绘制rotation
+		PropertyField property_field(obj, propertyPathList);
+		auto getVec = [prop_value, property_field]
+			{
+				auto vec = property_field.GetValue().get_value<Vector4>();
+				return vec;
+			};
+		auto setVec = [property_field](Vector4 vec)
+			{
+				bool result = property_field.SetValue(vec);
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("Vector4 Write Fail!");
+				}
+			};
+
+		GUIDrawer::DrawVec4(p_root, name.to_string(), getVec, setVec);
+	}
+	else if (prop.get_type() == type::get_by_name("Color"))
+	{
+		// 绘制rotation
+		PropertyField property_field(obj, propertyPathList);
+		auto getVec = [prop_value, property_field]
+			{
+				auto vec = property_field.GetValue().get_value<Color>();
+				return vec;
+			};
+		auto setVec = [property_field](Color vec)
+			{
+				bool result = property_field.SetValue(vec);
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("Color Write Fail!");
+				}
+			};
+
+		GUIDrawer::DrawColor(p_root, name.to_string(), getVec, setVec);
+	}
+	// property 特殊绘制
+	else if (prop.get_metadata("QuatToEuler"))
+	{
+		// 绘制rotation
+		PropertyField property_field(obj, propertyPathList);
+		auto getVec3 = [prop_value, property_field]
+			{
+				auto localRotation = property_field.GetValue().get_value<Quaternion>();
+				auto localRotation4Euler = localRotation.ToEulerAngles();
+				auto localRotation4DegreesEuler = Vector3((localRotation4Euler.x), (localRotation4Euler.y), (localRotation4Euler.z));
+				return localRotation4DegreesEuler;
+			};
+		auto setVec3 = [property_field](Vector3 eulerVec3)
+			{
+				// 万向节(x,y,z)(pitch, yaw, roll)
+				//-180 <Yaw<= 180  -90<= Pitch<= 90  -180 <Roll<= 180 if (Pitch == -90 || Pitch == 90) Roll = 0
+				eulerVec3.x = std::max(std::min(eulerVec3.x, 180.0f), -180.0f);
+				eulerVec3.y = std::max(std::min(eulerVec3.y, 180.0f), -180.0f);
+				eulerVec3.z = std::max(std::min(eulerVec3.z, 180.0f), -180.0f);
+				// 处理奇点问题
+				if (eulerVec3.y == -90.0f || eulerVec3.y == 90.0f)
+				{
+					eulerVec3.z = 0.0f;
+				}
+
+				//bool result = property_field.SetValue(Quaternion(glm::radians(eulerVec3)));
+				bool result = property_field.SetValue(Quaternion::FromEulerAngles((eulerVec3.x), (eulerVec3.y), (eulerVec3.z)));
+				if (!result)
+				{
+					DEBUG_LOG_ERROR("QuatToEuler Write Fail!");
+				}
+			};
+
+		GUIDrawer::DrawVec3(p_root, name.to_string(), getVec3, setVec3);
+
+	}
+	else if (prop.get_metadata("AssetPath"))
+	{
+		auto assetType = prop.get_metadata("AssetType").get_value<PathParser::EFileType>();
+		PropertyField property_field(obj, propertyPathList);
+		auto path = property_field.GetValue().get_value<std::string>();
+		auto& col  = p_root.CreateWidget<Columns<2>>();
+		col.widths[0] = 125.0f;
+		col.CreateWidget<TextColored>(name.to_string(), GUIDrawer::TitleColor);
+		if (path.empty())
+		{
+			path = "Empty";
+		}
+		auto& widget = col.CreateWidget<Text>(path);
+		widget.AddPlugin<DDTarget<std::pair<std::string, Group*>>>("File").DataReceivedEvent += [assetType, &widget, property_field](auto p_receivedData)
+			{
+				auto& newPath = p_receivedData.first;
+				if (PathParser::GetFileType(newPath) == assetType)
+				{
+					if (property_field.SetValue(newPath))
+					{
+						widget.content = newPath;
+					}
+				}
+
+			};
+	}
+	else
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void LitchiEditor::Inspector::OnDraw()
