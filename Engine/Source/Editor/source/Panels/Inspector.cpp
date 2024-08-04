@@ -712,6 +712,12 @@ bool LitchiEditor::Inspector::DrawCustomInstanceInternal(WidgetContainer& p_root
 
 		GUIDrawer::DrawColor(p_root, name.to_string(), getVec, setVec);
 	}
+	//else if(prop.get_type() == type::get_by_name("AnimationClipInfo"))
+	//{
+	//	// 绘制名字
+	//	// 绘制clip
+	//	// 绘制动画枚举
+	//}
 	// property 特殊绘制
 	else if (prop.get_metadata("QuatToEuler"))
 	{

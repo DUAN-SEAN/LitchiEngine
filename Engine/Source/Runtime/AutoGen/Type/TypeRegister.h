@@ -198,7 +198,7 @@ namespace LitchiRuntime {
 			.property("uniformInfoList", &MaterialRes::uniformInfoList);
 
 
-		registration::class_<AnimationClipInfo>("MaterialRes")(rttr::metadata("Serializable", true))
+		registration::class_<AnimationClipInfo>("AnimationClipInfo")(rttr::metadata("Serializable", true))
 			.constructor<>()
 			.property("clipName", &AnimationClipInfo::m_clipName)
 			.property("clipPath", &AnimationClipInfo::m_clipPath)(
