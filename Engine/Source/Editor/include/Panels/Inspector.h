@@ -2,6 +2,7 @@
 #pragma once
 #include <string>
 
+#include "Runtime/Core/Meta/Reflection/Object.h"
 #include "Runtime/Function/UI/Panels/PanelWindow.h"
 #include "Runtime/Function/UI/Settings/PanelWindowSettings.h"
 #include "Runtime/Function/UI/Widgets/InputFields/InputText.h"
@@ -79,6 +80,19 @@ namespace LitchiEditor
 		void Refresh();
 
 	private:
+
+		void OnDraw() override;
+
+		void DrawInstance(WidgetContainer& p_root, rttr::instance ins, Object* obj);
+		void DrawInstanceInternalRecursively(WidgetContainer& p_root, const rttr::instance& inputIns, Object* obj, std::vector<std::string> propertyPathList);
+		void DrawArray(WidgetContainer& p_root, const rttr::variant_sequential_view& view, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
+		bool DrawProperty(WidgetContainer& p_root, const rttr::variant& var, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
+
+		bool DrawAtomicTypeObject(WidgetContainer& p_root, const rttr::type& t, const rttr::variant& var, const rttr::string_view propertyName, Object* obj, std::vector<std::string> propertyPathList);
+
+		void NeedRefresh() { m_needRefresh = true; }
+		void ResetNeedRefresh() { m_needRefresh = false; }
+	private:
 		GameObject* m_targetActor = nullptr;
 		Group* m_actorInfo;
 		Group* m_inspectorHeader;
@@ -90,5 +104,7 @@ namespace LitchiEditor
 		uint64_t m_behaviourAddedListener	= 0;
 		uint64_t m_behaviourRemovedListener = 0;
 		uint64_t m_destroyedListener		= 0;
+
+		bool m_needRefresh;
 	};
 }

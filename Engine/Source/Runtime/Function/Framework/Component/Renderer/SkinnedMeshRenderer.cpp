@@ -39,7 +39,7 @@ void SkinnedMeshRenderer::OnUpdate()
 
 	// 通过MeshFilter获取当前的Mesh
 	auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
-	auto animator = GetGameObject()->GetComponent<Animator>();
+	auto animator = FindAnimatorInHierarchy();
 	if (meshFilter == nullptr || animator == nullptr)
 	{
 		return;
@@ -167,6 +167,31 @@ void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip,
 		m_boneArr.boneArr[i] = boneOffsets[i]* toRootTransforms[i];
 	}
 
+}
+
+Animator* LitchiRuntime::SkinnedMeshRenderer::FindAnimatorInHierarchy()
+{
+	GameObject* currGo = GetGameObject();
+	while (true)
+	{
+		if(currGo == nullptr)
+		{
+			return nullptr;
+		}
+
+		auto* animator = currGo->GetComponent<Animator>();
+		if(animator != nullptr)
+		{
+			return animator;
+		}
+
+		if(!currGo->HasParent())
+		{
+			return nullptr;
+		}
+
+		currGo = currGo->GetParent();
+	}
 }
 
 void LitchiRuntime::SkinnedMeshRenderer::CreateBoneBuffer()

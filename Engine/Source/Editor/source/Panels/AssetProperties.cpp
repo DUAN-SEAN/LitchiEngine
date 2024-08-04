@@ -200,14 +200,10 @@ void LitchiEditor::AssetProperties::CreateInfo()
 				const auto& animationClipMap = resource->GetAnimationClipMap();
 				if (animationClipMap.begin() != animationClipMap.end())
 				{
-					auto& treeNode = m_infoColumns->CreateWidget<TreeNode>("AnimationClips");
 					for (const auto & animation_clip_map : animationClipMap)
 					{
-						auto animationClipGroup  = treeNode.CreateWidget<GroupCollapsable>(animation_clip_map.first);
-						auto animationClipTree = animationClipGroup.CreateWidget<Columns<3>>();
-						animationClipTree.CreateWidget<Text>("ClipCount:" + animation_clip_map.second.boneAnimations.size());
-						animationClipTree.CreateWidget<Text>("StartTime:" + std::to_string(animation_clip_map.second.GetClipStartTime()));
-						animationClipTree.CreateWidget<Text>("EndTime:" + std::to_string(animation_clip_map.second.GetClipEndTime()));
+						GUIDrawer::CreateTitle(*m_infoColumns, "ClipName:" + animation_clip_map.first);
+						m_infoColumns->CreateWidget<Text>("ClipCount:" + std::to_string(animation_clip_map.second.boneAnimations.size()) + " StartTime:" + std::to_string(animation_clip_map.second.GetClipStartTime())+ " EndTime:" + std::to_string(animation_clip_map.second.GetClipEndTime()));
 					}
 				}
 			}

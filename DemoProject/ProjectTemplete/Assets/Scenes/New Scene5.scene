@@ -244,6 +244,21 @@
                         "y": 1.0,
                         "z": 1.0
                     }
+                },
+                {
+                    "Type": "Animator",
+                    "AnimationClipNameArr": [
+                        {
+                            "clipName": "Idle",
+                            "clipPath": "FreeTestCharacterAsuna/FBX/Animations/001Idle.fbx",
+                            "selectClipResName": ""
+                        },
+                        {
+                            "clipName": "Walk",
+                            "clipPath": "FreeTestCharacterAsuna/FBX/Animations/003Run.fbx",
+                            "selectClipResName": ""
+                        }
+                    ]
                 }
             ]
         },
@@ -559,13 +574,6 @@
                 {
                     "Type": "SkinnedMeshRenderer",
                     "materialPath": "FreeTestCharacterAsuna/FBX/Animations/AsunaBody.mat"
-                },
-                {
-                    "Type": "Animator",
-                    "AnimationClipNameArr": [
-                        "Test01",
-                        "Test02"
-                    ]
                 }
             ]
         },

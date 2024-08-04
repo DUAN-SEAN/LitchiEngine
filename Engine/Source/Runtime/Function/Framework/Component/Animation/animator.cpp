@@ -11,6 +11,8 @@ using namespace LitchiRuntime;
 
 LitchiRuntime::Animator::Animator()
 {
+	m_animationNameArr.push_back({ "Test","TestClipPath","TestSelectName" });
+	m_animationNameArr.push_back({ "Test2","TestClipPath2","TestSelectName2" });
 }
 
 LitchiRuntime::Animator::~Animator()
@@ -61,7 +63,7 @@ void LitchiRuntime::Animator::PostResourceLoaded()
 	// todo 实例化时可以做一些事情
 	// get default clip map
 
-	if (m_animationClipMap.empty())
+	/*if (m_animationClipMap.empty())
 	{
 		auto meshFilter = GetGameObject()->GetComponent<MeshFilter>();
 		auto mesh = meshFilter->GetMesh();
@@ -70,7 +72,7 @@ void LitchiRuntime::Animator::PostResourceLoaded()
 		auto firstClipName = animations.begin()->first;
 		SetAnimationClipMap(animations);
 		Play(firstClipName);
-	}
+	}*/
 }
 
 void LitchiRuntime::Animator::PostResourceModify()

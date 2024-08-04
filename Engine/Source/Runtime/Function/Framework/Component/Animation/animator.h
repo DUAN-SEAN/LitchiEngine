@@ -11,6 +11,7 @@ namespace LitchiRuntime
 	{
 		std::string m_clipName;
 		std::string m_clipPath;
+		std::string m_selectClipResName;
 	};
 
 	struct AnimationControlInfo
@@ -77,7 +78,7 @@ namespace LitchiRuntime
 		*/
 		void SetAnimationClipMap(std::unordered_map<std::string, AnimationClip>& clipMap);
 
-		std::vector<std::string> m_animationNameArr;
+		std::vector<AnimationClipInfo> m_animationNameArr;
 
 	private:
 

@@ -272,11 +272,7 @@ void LitchiEditor::Inspector::CreateActorInspector(GameObject* p_target)
 		DrawBehaviour(behaviour);*/
 }
 
-static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& inputIns, Object* obj, std::vector<string> propertyPathList);
-
-static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList);
-
-static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
+bool LitchiEditor::Inspector::DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
 {
 	/*auto& col = p_root.CreateWidget<Columns<2>>();
 	col.widths[0] = 10.0f;
@@ -457,7 +453,7 @@ static bool DrawAtomicTypeObject(WidgetContainer& p_root, const type& t, const v
 	return false;
 }
 
-static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
+void LitchiEditor::Inspector::DrawArray(WidgetContainer& p_root, const variant_sequential_view& view, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
 {
 	// draw size
 
@@ -478,7 +474,7 @@ static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& vi
 			type value_type = wrapped_var.get_type();
 			if (value_type.is_arithmetic() || value_type == type::get<std::string>() || value_type.is_enumeration())
 			{
-				DrawAtomicTypeObject(propertyRoot,value_type, wrapped_var, std::to_string(index), obj, propertyPathList);
+				DrawAtomicTypeObject(propertyRoot, value_type, wrapped_var, std::to_string(index), obj, propertyPathList);
 			}
 			else
 			{
@@ -489,6 +485,31 @@ static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& vi
 		propertyPathList.pop_back();
 		index++;
 	}
+
+
+	PropertyField property_field(obj, propertyPathList);
+	// draw add and remove button
+
+	auto& arrBtnCol = p_root.CreateWidget<Columns<2>>();
+	arrBtnCol.widths[0] = 50.0f;
+
+	auto& addBtn = arrBtnCol.CreateWidget<Button>("Add");
+	addBtn.ClickedEvent += [index, property_field, this] {
+
+		property_field.SetSize(index+1);
+		NeedRefresh();
+		};
+
+	auto& removeBtn = arrBtnCol.CreateWidget<Button>("Remove");
+	removeBtn.ClickedEvent += [this, index, property_field]
+		{
+			
+			if(index>0)
+			{
+				property_field.SetSize(index - 1);
+				NeedRefresh();
+			}
+		};
 }
 
 //
@@ -526,7 +547,7 @@ static void DrawArray(WidgetContainer& p_root, const variant_sequential_view& vi
 //	writer.EndArray();
 //}
 
-static bool DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
+bool LitchiEditor::Inspector::DrawProperty(WidgetContainer& p_root, const variant& var, const string_view propertyName, Object* obj, std::vector<string> propertyPathList)
 {
 	auto value_type = var.get_type();
 	auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
@@ -539,6 +560,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 	else if (var.is_sequential_container())
 	{
 		DrawArray(p_root, var.create_sequential_view(), propertyName, obj, propertyPathList);
+
 	}
 	/*else if (var.is_associative_container())
 	{
@@ -577,7 +599,7 @@ static bool DrawProperty(WidgetContainer& p_root, const variant& var, const stri
 	return true;
 }
 
-static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& inputIns, Object* obj, std::vector<string> propertyPathList)
+void LitchiEditor::Inspector::DrawInstanceInternalRecursively(WidgetContainer& p_root, const instance& inputIns, Object* obj, std::vector<string> propertyPathList)
 {
 	instance ins = inputIns.get_type().get_raw_type().is_wrapper() ? inputIns.get_wrapped_instance() : inputIns;
 
@@ -751,7 +773,18 @@ static void DrawInstanceInternalRecursively(WidgetContainer& p_root, const insta
 
 }
 
-void DrawInstance(WidgetContainer& p_root, rttr::instance ins, Object* obj)
+void LitchiEditor::Inspector::OnDraw()
+{
+	PanelWindow::OnDraw();
+
+	if(m_needRefresh)
+	{
+		Refresh();
+		ResetNeedRefresh();
+	}
+}
+
+void LitchiEditor::Inspector::DrawInstance(WidgetContainer& p_root, rttr::instance ins, Object* obj)
 {
 	if (!ins.is_valid())
 		return;

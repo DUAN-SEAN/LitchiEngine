@@ -34,6 +34,11 @@ namespace LitchiRuntime
 		bool SetValue(rttr::variant value) const;
 
 		/**
+		 * @brief Set Field(Array) Instance Size
+		*/
+		bool SetSize(int newSize) const;
+
+		/**
 		 * @brief Get reflection warp value
 		 * @return reflection warp value
 		*/

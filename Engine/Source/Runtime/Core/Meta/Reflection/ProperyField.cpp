@@ -16,6 +16,7 @@ LitchiRuntime::PropertyField::~PropertyField()
 }
 
 void WriteChild(rttr::instance intInput, const std::vector<std::string>& propertyNameList, int propIndex, rttr::variant value);
+void WriteChildSize(rttr::instance intInput, const std::vector<std::string>& propertyNameList, int propIndex,int32_t size);
 
 void WriteArray(variant_sequential_view& view, const std::vector<std::string>& propertyNameList, int propIndex, rttr::variant value)
 {
@@ -38,22 +39,35 @@ void WriteArray(variant_sequential_view& view, const std::vector<std::string>& p
 	}
 	else
 	{
-		// 否则先判断数组中元素是否依旧是数组类型
-		if (arrayItemType.is_sequential_container())
+		if (arrayItemType.is_arithmetic() || arrayItemType == type::get<std::string>() || arrayItemType.is_enumeration())
 		{
-			// 创建元素的视图
-			auto childView = itemVar.create_sequential_view();
-			WriteArray(childView, propertyNameList, ++propIndex, value);
+			isValid = value.convert(arrayItemType);
+			isValid = view.set_value(itemIndex, value);
 		}
-		// 如果不是数组类型,而是复合Object类型,则嵌套写入
 		else
 		{
 			variant var_tmp = view.get_value(itemIndex);
 			variant wrapped_var = var_tmp.extract_wrapped_value();
 			WriteChild(wrapped_var, propertyNameList, ++propIndex, value);
 			isValid = view.set_value(itemIndex, wrapped_var);
-
 		}
+
+		//// 否则先判断数组中元素是否依旧是数组类型
+		//if (arrayItemType.is_sequential_container())
+		//{
+		//	// 创建元素的视图
+		//	auto childView = itemVar.create_sequential_view();
+		//	WriteArray(childView, propertyNameList, ++propIndex, value);
+		//}
+		//// 如果不是数组类型,而是复合Object类型,则嵌套写入
+		//else
+		//{
+		//	variant var_tmp = view.get_value(itemIndex);
+		//	variant wrapped_var = var_tmp.extract_wrapped_value();
+		//	WriteChild(wrapped_var, propertyNameList, ++propIndex, value);
+		//	isValid = view.set_value(itemIndex, wrapped_var);
+
+		//}
 	}
 }
 
@@ -95,6 +109,79 @@ void WriteChild(rttr::instance intInput, const std::vector<std::string>& propert
 
 }
 
+void WriteArraySize(variant_sequential_view& view, const std::vector<std::string>& propertyNameList, int propIndex, int32_t size)
+{
+	bool isValid = false;
+
+	// 解析字符串为元素索引
+	int itemIndex = std::stoi(propertyNameList[propIndex]);
+
+	// 获取索引所指定的Item
+	auto itemVar = view.get_value(itemIndex);
+
+	// 获取元素类型
+	const auto arrayItemType = view.get_rank_type(itemIndex);
+
+	if (propIndex == propertyNameList.size() - 1)
+	{
+		// 唯一设置的地方
+		view.set_size(size);
+	}
+	else
+	{
+		if (arrayItemType.is_arithmetic() || arrayItemType == type::get<std::string>() || arrayItemType.is_enumeration())
+		{
+			// 不可能发生
+		}
+		else
+		{
+			variant var_tmp = view.get_value(itemIndex);
+			variant wrapped_var = var_tmp.extract_wrapped_value();
+			WriteChildSize(wrapped_var, propertyNameList, ++propIndex, size);
+			isValid = view.set_value(itemIndex, wrapped_var);
+		}
+	}
+}
+
+void WriteChildSize(rttr::instance intInput, const std::vector<std::string>& propertyNameList, int propIndex, int32_t size)
+{
+	bool isValid = false;
+
+	instance instance = intInput.get_type().get_raw_type().is_wrapper() ? intInput.get_wrapped_instance() : intInput;
+
+	auto propName = propertyNameList[propIndex]; // 获取属性名
+	auto insType = instance.get_derived_type(); // 获取实例的真实类型
+	auto prop = insType.get_property(propName); // 通过真实类型和属性名获取属性
+	auto propType = prop.get_type(); // 获取属性的类型
+	auto childIns = prop.get_value(instance); // 获取属性的值
+
+	// 检查是否已经到达根,只可能是基础类型,因此直接向数组中写入
+	if (propIndex == propertyNameList.size() - 1)
+	{
+		auto& view = childIns.create_sequential_view();
+		view.set_size(size);
+		isValid = prop.set_value(instance, childIns);
+	}
+	else
+	{
+		// 否则先判断数组中元素是否依旧是数组类型
+		if (propType.is_sequential_container())
+		{
+			auto view = childIns.create_sequential_view();
+			WriteArraySize(view, propertyNameList, ++propIndex, size);
+			isValid = prop.set_value(instance, childIns);
+		}
+		// 如果不是数组类型,而是复合Object类型,则嵌套写入
+		else
+		{
+			WriteChildSize(childIns, propertyNameList, ++propIndex, size);
+			isValid = prop.set_value(instance, childIns);
+		}
+	}
+
+
+}
+
 bool LitchiRuntime::PropertyField::SetValue(rttr::variant value) const
 {
 	rttr::instance instance = *m_root;
@@ -105,6 +192,18 @@ bool LitchiRuntime::PropertyField::SetValue(rttr::variant value) const
 	// 调用资源加载完毕接口,重新刷新资源
 	m_root->PostResourceModify();
 
+	return true;
+}
+
+bool LitchiRuntime::PropertyField::SetSize(int newSize) const
+{
+	rttr::instance instance = *m_root;
+
+	int propIndex = 0;
+	WriteChildSize(instance, m_propertyNameList, propIndex, newSize);
+
+	// 调用资源加载完毕接口,重新刷新资源
+	m_root->PostResourceModify();
 	return true;
 }
 
@@ -134,20 +233,33 @@ variant ReadArray(const variant_sequential_view& view, const std::vector<std::st
 	}
 	else
 	{
-		// 否则先判断数组中元素是否依旧是数组类型
-		if (arrayItemType.is_sequential_container())
+		if (arrayItemType.is_arithmetic() || arrayItemType == type::get<std::string>() || arrayItemType.is_enumeration())
 		{
-			// 创建元素的视图
-			auto childView = itemVar.create_sequential_view();
-			return ReadArray(childView, propertyNameList, ++propIndex);
+			auto extract_wrapped_value = view.get_value(itemIndex).extract_wrapped_value();
+			return extract_wrapped_value;
 		}
-		// 如果不是数组类型,而是复合Object类型,则嵌套写入
 		else
 		{
 			variant var_tmp = view.get_value(itemIndex);
 			variant wrapped_var = var_tmp.extract_wrapped_value();
 			return ReadChild(wrapped_var, propertyNameList, ++propIndex);
 		}
+
+
+		//// 否则先判断数组中元素是否依旧是数组类型
+		//if (arrayItemType.is_sequential_container())
+		//{
+		//	// 创建元素的视图
+		//	auto childView = itemVar.create_sequential_view();
+		//	return ReadArray(childView, propertyNameList, ++propIndex);
+		//}
+		//// 如果不是数组类型,而是复合Object类型,则嵌套写入
+		//else
+		//{
+		//	variant var_tmp = view.get_value(itemIndex);
+		//	variant wrapped_var = var_tmp.extract_wrapped_value();
+		//	return ReadChild(wrapped_var, propertyNameList, ++propIndex);
+		//}
 	}
 }
 

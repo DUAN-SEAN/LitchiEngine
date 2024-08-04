@@ -197,6 +197,16 @@ namespace LitchiRuntime {
 			.property("materialSetting", &MaterialRes::materialSetting)
 			.property("uniformInfoList", &MaterialRes::uniformInfoList);
 
+
+		registration::class_<AnimationClipInfo>("MaterialRes")(rttr::metadata("Serializable", true))
+			.constructor<>()
+			.property("clipName", &AnimationClipInfo::m_clipName)
+			.property("clipPath", &AnimationClipInfo::m_clipPath)(
+				rttr::metadata("AssetPath", true),
+				rttr::metadata("AssetType", PathParser::EFileType::MODEL))
+			.property("selectClipResName", &AnimationClipInfo::m_selectClipResName);
+
+		
 		/* Resource Types End */
 
 		/* Framework Object Types Start */
