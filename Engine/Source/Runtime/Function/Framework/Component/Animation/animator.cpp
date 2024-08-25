@@ -14,8 +14,6 @@ using namespace LitchiRuntime;
 
 LitchiRuntime::Animator::Animator()
 {
-	m_animationClipInfoArr.push_back({ "Test","TestClipPath","TestSelectName" });
-	m_animationClipInfoArr.push_back({ "Test2","TestClipPath2","TestSelectName2" });
 }
 
 LitchiRuntime::Animator::~Animator()
@@ -68,16 +66,33 @@ void LitchiRuntime::Animator::PostResourceLoaded()
 
 void LitchiRuntime::Animator::PostResourceModify()
 {
-	/*if(!m_animationClipInfoArr.empty())
+	if (!m_animationClipInfoArr.empty())
 	{
-		for (const auto & animator_clip_info : m_animationClipInfoArr)
+		m_animationClipMap.empty();
+		for (auto animation_clip_info : m_animationClipInfoArr)
 		{
-			auto& path = animator_clip_info.m_clipPath;
+			auto& path = animation_clip_info.m_clipPath;
 			auto model = ApplicationBase::Instance()->modelManager->LoadResource(path);
-			auto& animationClipMap  =model->GetAnimationClipMap();
-			auto& animationClip = animationClipMap.at(animator_clip_info.m_selectClipResName);
+			auto& animationClipMap = model->GetAnimationClipMap();
+
+			// if selectResName = empty, try find first clip
+			if (animation_clip_info.m_selectClipResName.empty() && animationClipMap.size() > 0)
+			{
+				auto& animationClip = animationClipMap.cbegin()->second;
+				m_animationClipMap.emplace(animation_clip_info.m_clipName, animationClip);
+			}
+			else
+			{
+				auto& animationClip = animationClipMap.at(animation_clip_info.m_selectClipResName);
+				m_animationClipMap.emplace(animation_clip_info.m_clipName, animationClip);
+			}
 		}
-	}*/
+
+
+		m_currentClip = &m_animationClipMap[m_animationClipInfoArr.front().m_selectClipResName];
+	}
+
+
 }
 
 
