@@ -58,12 +58,12 @@ void SkinnedMeshRenderer::OnUpdate()
 
 	// get curr frame time and clip
 	auto timePos = animator->GetCurrentTimePos();
-	auto animationClip = animator->GetCurrentClip();
+	auto& animationClip = animator->GetCurrentClip();
 
 	// reset anim default trans
-	animationClip->boneAnimations.resize(defaultTransform.size());
+	animationClip.boneAnimations.resize(defaultTransform.size());
 	for (size_t i = 0; i < defaultTransform.size(); i++)
-		animationClip->boneAnimations[i].defaultTransform = defaultTransform[i];
+		animationClip.boneAnimations[i].defaultTransform = defaultTransform[i];
 
 	// calc bone trans to m_boneArr
 	CalcFinalTransform(timePos, animationClip, boneHierarchy, boneOffsets);
@@ -146,12 +146,12 @@ void SkinnedMeshRenderer::CalcDefaultFinalTransform(std::vector<int>& boneHierar
  * \param boneOffsets T-Pose 矩阵, 用于将顶点转换到骨骼空间
  * \param finalTransforms 输出顶点的最终变换矩阵
  */
-void SkinnedMeshRenderer::CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets)
+void SkinnedMeshRenderer::CalcFinalTransform(float timePos,  AnimationClip& clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets)
 {
 	uint32_t numBones = boneOffsets.size();
 	std::vector<Matrix> toParentTransforms(numBones);
 
-	clip->Interpolate(timePos, toParentTransforms);
+	clip.Interpolate(timePos, toParentTransforms);
 
 	std::vector<Matrix> toRootTransforms(numBones);
 	toRootTransforms[0] = toParentTransforms[0];

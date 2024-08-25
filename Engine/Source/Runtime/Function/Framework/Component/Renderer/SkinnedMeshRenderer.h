@@ -96,7 +96,7 @@ namespace LitchiRuntime
 		 * @param boneHierarchy Bone Hierarchy indices
 		 * @param boneOffsets T-Pose transform, make vertex transform to bone space
 		*/
-		void CalcFinalTransform(float timePos, AnimationClip* clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets);
+		void CalcFinalTransform(float timePos, AnimationClip& clip, std::vector<int>& boneHierarchy, std::vector<Matrix>& boneOffsets);
 
 		/**
 		 * @brief Find Animator, if current object not have, find parent util not exist

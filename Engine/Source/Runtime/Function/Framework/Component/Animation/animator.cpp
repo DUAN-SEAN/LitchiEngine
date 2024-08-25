@@ -29,9 +29,13 @@ void Animator::OnUpdate()
 	m_timePos += Time::GetDeltaTime();
 
 	// 更新Clip中的信息
-	if(m_currentClip!=nullptr && m_timePos > m_currentClip->GetClipEndTime())
+	if(!m_clipName.empty())
 	{
-		m_timePos = 0.0f;
+		auto& currClip = GetCurrentClip();
+		if(m_timePos > currClip.GetClipEndTime())
+		{
+			m_timePos = 0.0f;
+		}
 	}
 }
 
@@ -43,15 +47,22 @@ bool Animator::Play(std::string clipName)
 	}
 
 	m_clipName = clipName;
-	m_currentClip = &m_animationClipMap[clipName];
 	m_timePos = 0.0f;
 
 	return true;
 }
 
-AnimationClip* LitchiRuntime::Animator::GetCurrentClip() const
+AnimationClip& LitchiRuntime::Animator::GetCurrentClip()
 {
-	return m_currentClip;
+	if(!m_clipName.empty() && m_animationClipMap.size()>0)
+	{
+		if(m_animationClipMap.find(m_clipName)!= m_animationClipMap.end())
+		{
+			return m_animationClipMap.at(m_clipName);
+		}
+	}
+
+	return m_emptyAnimationClip;
 }
 
 void LitchiRuntime::Animator::SetAnimationClipMap(std::unordered_map<std::string, AnimationClip>& clipMap)
@@ -68,11 +79,11 @@ void LitchiRuntime::Animator::PostResourceModify()
 {
 	if (!m_animationClipInfoArr.empty())
 	{
-		m_animationClipMap.empty();
-		for (auto animation_clip_info : m_animationClipInfoArr)
+		m_animationClipMap.clear();
+		for (const auto& animation_clip_info : m_animationClipInfoArr)
 		{
 			auto& path = animation_clip_info.m_clipPath;
-			auto model = ApplicationBase::Instance()->modelManager->LoadResource(path);
+			const auto model = ApplicationBase::Instance()->modelManager->LoadResource(path);
 			auto& animationClipMap = model->GetAnimationClipMap();
 
 			// if selectResName = empty, try find first clip
@@ -83,13 +94,15 @@ void LitchiRuntime::Animator::PostResourceModify()
 			}
 			else
 			{
-				auto& animationClip = animationClipMap.at(animation_clip_info.m_selectClipResName);
-				m_animationClipMap.emplace(animation_clip_info.m_clipName, animationClip);
+				if(animationClipMap.find((animation_clip_info.m_selectClipResName)) != animationClipMap.end())
+				{
+					auto& animationClip = animationClipMap.at(animation_clip_info.m_selectClipResName);
+					m_animationClipMap.emplace(animation_clip_info.m_clipName, animationClip);
+				}
 			}
 		}
 
-
-		m_currentClip = &m_animationClipMap[m_animationClipInfoArr.front().m_selectClipResName];
+		m_clipName = m_animationClipInfoArr.front().m_clipName;
 	}
 
 

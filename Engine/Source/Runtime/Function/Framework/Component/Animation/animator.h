@@ -52,7 +52,7 @@ namespace LitchiRuntime
 		 * @brief Get current playing AnimationClip
 		 * @return 
 		*/
-		AnimationClip* GetCurrentClip() const;
+		AnimationClip& GetCurrentClip();
 
 		/**
 		 * @brief Get current playing AnimationClip name
@@ -85,8 +85,8 @@ namespace LitchiRuntime
 		/* temp fields */
 		float m_timePos = 0.0f;
 		std::string m_clipName = "";
+		AnimationClip m_emptyAnimationClip{};
 		std::unordered_map<std::string, AnimationClip> m_animationClipMap{};
-		AnimationClip* m_currentClip = nullptr;
 
 
 		RTTR_ENABLE(Component)
