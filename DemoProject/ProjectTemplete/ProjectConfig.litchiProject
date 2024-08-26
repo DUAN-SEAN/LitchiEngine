@@ -1,7 +1,7 @@
 {
     "assetFolder": "Assets/",
     "scriptFolder": "Scripts/",
-    "defaultScenePath": "",
+    "defaultScenePath": "Scenes/New Scene5.scene",
     "resolutionWidth": 1920,
     "resolutionHeight": 1080,
     "isFullScreen": true,
