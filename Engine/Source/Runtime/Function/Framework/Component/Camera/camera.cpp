@@ -50,7 +50,8 @@ namespace LitchiRuntime
             m_is_dirty = true;
         }
 
-        ProcessInput();
+        // todo dont process input
+        // ProcessInput();
 
         if (!m_is_dirty)
             return;

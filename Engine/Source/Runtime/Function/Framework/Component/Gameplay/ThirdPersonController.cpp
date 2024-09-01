@@ -11,7 +11,7 @@
 
 namespace LitchiRuntime
 {
-	ThirdPersonController::ThirdPersonController() : m_controller(nullptr) {
+	ThirdPersonController::ThirdPersonController() : m_controller(nullptr),m_animator(nullptr) {
 
 	}
 
@@ -23,18 +23,19 @@ namespace LitchiRuntime
 	void ThirdPersonController::OnAwake()
 	{
 		m_controller = GetGameObject()->GetComponent<CharacterController>();
+		m_animator = GetGameObject()->GetComponent<Animator>();
 	}
 
 	void ThirdPersonController::OnUpdate()
 	{
+		auto forwardKeyState = InputManager::GetKeyState(EKey::KEY_W);
+		auto backKeyState = InputManager::GetKeyState(EKey::KEY_S);
+		auto leftKeyState = InputManager::GetKeyState(EKey::KEY_A);
+		auto rightKeyState = InputManager::GetKeyState(EKey::KEY_D);
+
 		if (m_controller)
 		{
 			auto transform = GetGameObject()->GetTransform();
-
-			auto forwardKeyState = InputManager::GetKeyState(EKey::KEY_W);
-			auto backKeyState = InputManager::GetKeyState(EKey::KEY_S);
-			auto leftKeyState = InputManager::GetKeyState(EKey::KEY_A);
-			auto rightKeyState = InputManager::GetKeyState(EKey::KEY_D);
 
 			Vector3 moveDist = Vector3::Zero;
 			if (forwardKeyState == EKeyState::KEY_DOWN)
@@ -66,6 +67,27 @@ namespace LitchiRuntime
 				rotate = Quaternion::FromAngleAxis(-Math::Helper::DegreesToRadians(m_rotateSpeed) * Time::GetDeltaTime(), Vector3::Up);
 			}
 			transform->Rotate(rotate);
+		}
+
+		if(m_animator)
+		{
+			if (forwardKeyState == EKeyState::KEY_DOWN || 
+				backKeyState == EKeyState::KEY_DOWN ||
+				leftKeyState == EKeyState::KEY_DOWN ||
+				rightKeyState == EKeyState::KEY_DOWN)
+			{
+				if (m_animator->GetCurrentClipName() != "Walk")
+				{
+					m_animator->Play("Walk");
+				}
+			}else
+			{
+				if (m_animator->GetCurrentClipName() != "Idle")
+				{
+					m_animator->Play("Idle");
+				}
+			}
+
 		}
 	}
 

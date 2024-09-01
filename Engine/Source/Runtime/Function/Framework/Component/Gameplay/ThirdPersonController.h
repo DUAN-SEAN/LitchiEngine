@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Runtime/Function/Framework/Component/Animation/Animator.h"
 #include "Runtime/Function/Framework/Component/Base/component.h"
 #include "Runtime/Function/Framework/Component/Camera/camera.h"
 #include "Runtime/Function/Framework/Component/Physcis/CharacterController.h"
@@ -67,6 +68,11 @@ namespace LitchiRuntime
 		 * \brief character controller
 		 */
 		CharacterController* m_controller;
+
+		/**
+		 * \brief Animator
+		 */
+		Animator* m_animator;
 
 		/**
 		 * \brief linear move speed per second

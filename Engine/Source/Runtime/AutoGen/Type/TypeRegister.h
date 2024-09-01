@@ -204,7 +204,10 @@ namespace LitchiRuntime {
 			.property("clipPath", &AnimationClipInfo::m_clipPath)(
 				rttr::metadata("AssetPath", true),
 				rttr::metadata("AssetType", PathParser::EFileType::MODEL))
-			.property("selectClipResName", &AnimationClipInfo::m_selectClipResName);
+			.property("selectClipResName", &AnimationClipInfo::m_selectClipResName)
+			.property("startTime", &AnimationClipInfo::m_startTime)
+			.property("endTime", &AnimationClipInfo::m_endTime)
+			.property("isLoop", &AnimationClipInfo::m_isLoop);
 
 		
 		/* Resource Types End */

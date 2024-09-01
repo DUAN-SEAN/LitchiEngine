@@ -12,6 +12,9 @@ namespace LitchiRuntime
 		std::string m_clipName;
 		std::string m_clipPath;
 		std::string m_selectClipResName;
+		float m_startTime;
+		float m_endTime;
+		bool m_isLoop;
 	};
 
 	struct AnimationControlInfo
