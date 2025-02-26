@@ -73,7 +73,7 @@ namespace LitchiRuntime
 			cmd_list->SetBufferIndex(index_buffer);
 			cmd_list->SetBufferVertex(vertex_buffer);
 
-			// Èç¹ûÊÇskinnedMesh ¸üÐÂÃÉÆ¤Êý¾Ý
+			// å¦‚æžœæ˜¯skinnedMesh æ›´æ–°è’™çš®æ•°æ®
 			if (skinned_mesh_renderer)
 			{
 				auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();
@@ -92,11 +92,11 @@ namespace LitchiRuntime
 		//cmd_list->SetConstantBuffer(Renderer_BindingsCb::lightArr, GetConstantBuffer(Renderer_ConstantBuffer::LightArr));
 		cmd_list->SetConstantBuffer(Renderer_BindingsCb::rendererPath, GetConstantBuffer(Renderer_ConstantBuffer::RendererPath));
 
-		// textures todo: 
+		// textures todo:
 		/*cmd_list->SetTexture(Renderer_BindingsSrv::noise_normal, GetStandardTexture(Renderer_StandardTexture::Noise_normal));
 		cmd_list->SetTexture(Renderer_BindingsSrv::noise_blue, GetStandardTexture(Renderer_StandardTexture::Noise_blue));*/
 	}
-	
+
 	void Renderer::Pass_ShadowMaps(RHI_CommandList* cmd_list, RendererPath* rendererPath, const bool is_transparent_pass)
 	{
 		// All objects are rendered from the lights point of view.
@@ -228,7 +228,7 @@ namespace LitchiRuntime
 						draw_renderable(cmd_list, pso, rendererPath, entity);
 					}
 				}
-				
+
 			}
 		}
 
@@ -291,20 +291,21 @@ namespace LitchiRuntime
 		// deduce rasterizer state
 		bool is_wireframe = GetOption<bool>(Renderer_Option::Wireframe);
 		RHI_RasterizerState* rasterizer_state = is_wireframe ? GetRasterizerState(Renderer_RasterizerState::Wireframe_cull_none).get() : GetRasterizerState(Renderer_RasterizerState::Solid_cull_back).get();
-	
+
 		// define PipelineState
 		static RHI_PipelineState pso;
 		pso.name = !is_transparent_pass ? "Pass_ForwardPass" : "Pass_ForwardPass_Transparent";
 		//pso.shader_vertex = shader_v;
-		//pso.shader_pixel = shader_p; // 
+		//pso.shader_pixel = shader_p; //
 		pso.rasterizer_state = rasterizer_state;
 		pso.blend_state = is_transparent_pass ? GetBlendState(Renderer_BlendState::Alpha).get() : GetBlendState(Renderer_BlendState::Off).get();
 		pso.depth_stencil_state = is_transparent_pass ? GetDepthStencilState(Renderer_DepthStencilState::Read).get() : GetDepthStencilState(Renderer_DepthStencilState::ReadWrite).get();
-		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::forward_pass_depth).get();// ²»ÐèÒªÊä³öÉî¶ÈÃÉ°æ»º³å
-		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// ²»ÐèÒªÊä³öÉî¶ÈÃÉ°æ»º³å
+		// pso.render_target_depth_texture = GetRenderTarget(Renderer_RenderTarget::forward_pass_depth).get();// ä¸éœ€è¦è¾“å‡ºæ·±åº¦è’™ç‰ˆç¼“å†²
+		pso.render_target_depth_texture = rendererPath->GetDepthRenderTarget().get();// ä¸éœ€è¦è¾“å‡ºæ·±åº¦è’™ç‰ˆç¼“å†²
 		// pso.render_target_color_textures[0] = GetRenderTarget(Renderer_RenderTarget::frame_output).get();
 		pso.render_target_color_textures[0] = rendererPath->GetColorRenderTarget().get();
-		pso.clear_depth = is_transparent_pass? rhi_depth_dont_care :0.0f; // reverse-z
+		// pso.clear_depth = is_transparent_pass? rhi_depth_dont_care :0.0f; // reverse-z
+		pso.clear_depth = 0.0f; // reverse-z
 		//pso.clear_color[0] = camera->GetClearColor();
 		pso.primitive_topology = RHI_PrimitiveTopology::TriangleList;
 
@@ -318,7 +319,7 @@ namespace LitchiRuntime
 		for (int64_t i = index_start; i < index_end; i++)
 		{
 			GameObject* entity = entities[i];
-		
+
 			EASY_BLOCK("Render Entity")
 			EASY_BLOCK("Prevoius SetPSO")
 			// Acquire renderable component
@@ -378,7 +379,7 @@ namespace LitchiRuntime
 			SetMaterialBuffer(cmd_list, material);
 			EASY_END_BLOCK
 
-			// Èç¹ûÊÇskinnedMesh ¸üÐÂÃÉÆ¤Êý¾Ý
+			// å¦‚æžœæ˜¯skinnedMesh æ›´æ–°è’™çš®æ•°æ®
 			if(skinned_mesh_renderer)
 			{
 				auto boneCbuffer = skinned_mesh_renderer->GetBoneConstantBuffer();

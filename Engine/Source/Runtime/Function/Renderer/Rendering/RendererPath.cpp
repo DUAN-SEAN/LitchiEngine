@@ -195,7 +195,7 @@ namespace LitchiRuntime
 
 			Cb_Bone_Arr m_bone_arr;
 			uint32_t numBones = defaultTransform.size();
-			// 
+			//
 			for (uint32_t i = 0; i < numBones; i++) {
 				m_bone_arr.boneArr[i] = defaultTransform[i];
 			}
@@ -517,7 +517,7 @@ namespace LitchiRuntime
 		{
 
 
-			const uint32_t resolution = 4096;// todo: 
+			const uint32_t resolution = 4096;// todo:
 			//const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
 
 
@@ -585,7 +585,7 @@ namespace LitchiRuntime
 				}
 			}
 
-			
+
 			// update light buffer
 			static std::array<Sb_Light, rhi_max_array_size_lights> properties;
 
@@ -714,6 +714,16 @@ namespace LitchiRuntime
 				return entity->GetComponent<MeshRenderer>()->GetMaterial()->IsTransparent();
 			});
 		m_meshIndexTransparent = distance(renderables.begin(), transparent_start);
+
+        // 透明物体从远到近排序
+        Vector3 camera_pos = m_renderCamera->GetPosition();
+        stable_sort(transparent_start, renderables.end(), [&camera_pos](GameObject *a, GameObject *b) {
+            auto transformA = a->GetComponent<Transform>();
+            auto transformB = b->GetComponent<Transform>();
+            float distA = Vector3::DistanceSquared(transformA->GetPosition(), camera_pos);
+            float distB = Vector3::DistanceSquared(transformB->GetPosition(), camera_pos);
+            return (distA > distB);
+        });
 
 		// find non-instanced index for opaque objects
 		auto non_instanced_opaque_start = find_if(renderables.begin(), renderables.end(), [&](GameObject* entity)
