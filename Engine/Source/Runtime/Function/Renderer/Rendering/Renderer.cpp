@@ -315,6 +315,7 @@ namespace LitchiRuntime
 		auto scene = rendererPath->GetRenderScene();
 
 		GetCmdList()->ClearRenderTarget(rendererPath->GetColorRenderTarget().get(), camera->GetClearColor());
+		GetCmdList()->ClearRenderTarget(rendererPath->GetDepthRenderTarget().get(),rhi_color_load,0.0f);
 
 		// update rendererPath buffer
 		EASY_BLOCK("Build cb_rendererPath")
@@ -334,6 +335,9 @@ namespace LitchiRuntime
 
 			EASY_BLOCK("Pass_ShadowMaps")
 			Pass_ShadowMaps(cmd_list, rendererPath, false);
+			// if (do_transparent_pass) {
+			// 	Pass_ShadowMaps(cmd_list, rendererPath, true);
+			// }
 			EASY_END_BLOCK
 
 			// Get All Geometry Depth 
