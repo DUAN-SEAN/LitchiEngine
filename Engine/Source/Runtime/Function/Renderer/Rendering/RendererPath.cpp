@@ -33,7 +33,7 @@ namespace LitchiRuntime
 	{
 		m_rendererPathType = rendererPathType;
 
-		// ³õÊ¼»¯Cameraf
+		// ï¿½ï¿½Ê¼ï¿½ï¿½Cameraf
 		if (CheckIsBuildInRendererCamera())
 		{
 			auto renderCamera4SceneView = new RenderCamera();
@@ -195,7 +195,7 @@ namespace LitchiRuntime
 
 			Cb_Bone_Arr m_bone_arr;
 			uint32_t numBones = defaultTransform.size();
-			// 
+			//
 			for (uint32_t i = 0; i < numBones; i++) {
 				m_bone_arr.boneArr[i] = defaultTransform[i];
 			}
@@ -225,7 +225,7 @@ namespace LitchiRuntime
 		uint32_t flags_depth_buffer = RHI_Texture_Rtv | RHI_Texture_Srv;
 		std::string rtName = GetRenderPathName() + std::string("_frame_depth");
 
-		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, flags_depth_buffer, rtName.c_str());
+		m_depthRenderTarget = std::make_shared<RHI_Texture2D>(m_width, m_height, 1, RHI_Format::D32_Float, flags_depth_buffer | RHI_Texture_ClearBlit, rtName.c_str());
 	}
 
 	std::string RendererPath::GetRenderPathName() const
@@ -517,7 +517,7 @@ namespace LitchiRuntime
 		{
 
 
-			const uint32_t resolution = 4096;// todo: 
+			const uint32_t resolution = 4096;// todo:
 			//const uint32_t resolution = Renderer::GetOption<uint32_t>(Renderer_Option::ShadowResolution);
 
 
@@ -585,7 +585,7 @@ namespace LitchiRuntime
 				}
 			}
 
-			
+
 			// update light buffer
 			static std::array<Sb_Light, rhi_max_array_size_lights> properties;
 
@@ -714,6 +714,16 @@ namespace LitchiRuntime
 				return entity->GetComponent<MeshRenderer>()->GetMaterial()->IsTransparent();
 			});
 		m_meshIndexTransparent = distance(renderables.begin(), transparent_start);
+
+        // sort transparent object
+        Vector3 camera_pos = m_renderCamera->GetPosition();
+        stable_sort(transparent_start, renderables.end(), [&camera_pos](GameObject *a, GameObject *b) {
+            auto transformA = a->GetComponent<Transform>();
+            auto transformB = b->GetComponent<Transform>();
+            float distA = Vector3::DistanceSquared(transformA->GetPosition(), camera_pos);
+            float distB = Vector3::DistanceSquared(transformB->GetPosition(), camera_pos);
+            return (distA > distB);
+        });
 
 		// find non-instanced index for opaque objects
 		auto non_instanced_opaque_start = find_if(renderables.begin(), renderables.end(), [&](GameObject* entity)
